@@ -124,34 +124,57 @@ function smf_openID_getAssociation($server, $handle = null, $no_delete = false)
 
 function smf_openID_makeAssociation($server)
 {
-	global $smcFunc, $modSettings;
+	global $smcFunc, $modSettings, $p;
 
 	$parameters = array(
 		'openid.mode=associate',
-		'openid.session_type=',
 	);
+
+	// We'll need to get our keys for the Diffie-Hellman key exchange.
+	$dh_keys = smf_openID_setup_DH();
+	
+	// If we don't support DH we'll have to see if the provider will accept no encryption.
+	if ($dh_keys === false)
+		$parameters[] = 'openid.session_type=';
+	else
+	{
+		$parameters[] = 'openid.session_type=DH-SHA1';
+		$parameters[] = 'openid.dh_consumer_public=' . urlencode(base64_encode(long_to_binary($dh_keys['public'])));
+	}
 
 	// The data to post to the server.
 	$post_data = implode('&', $parameters);
 	$data = fetch_web_data($server, $post_data);
 
-	// parse the data given
+	// Parse the data given.
 	preg_match_all('~^([^:]+):(.+)$~m', $data, $matches);
 	$assoc_data = array();
 
 	foreach ($matches[1] as $key => $match)
 		$assoc_data[$match] = $matches[2][$key];
 
-	if (!isset($assoc_data['assoc_type']) || empty($assoc_data['mac_key']))
+	if (!isset($assoc_data['assoc_type']) || (empty($assoc_data['mac_key']) && empty($assoc_data['enc_mac_key'])))
 		fatal_lang_error('openid_server_bad_response');
 
-	$secret = $assoc_data['mac_key'];
-
-	// Clean things up a bit
+	// Clean things up a bit.
 	$handle = isset($assoc_data['assoc_handle']) ? $assoc_data['assoc_handle'] : '';
 	$issued = time();
 	$expires = $issued + min((int)$assoc_data['expires_in'], 60);
 	$assoc_type = isset($assoc_data['assoc_type']) ? $assoc_data['assoc_type'] : '';
+
+	// !!! Is this really needed?
+	foreach (array('dh_server_public', 'enc_mac_key') AS $key)
+		if (isset($assoc_data[$key]))
+			$assoc_data[$key] = str_replace(' ', '+', $assoc_data[$key]);
+
+	// Figure out the Diffie-Hellman secret.
+	if (!empty($assoc_data['enc_mac_key']))
+	{
+		$dh_secret = bcpowmod(binary_to_long(base64_decode($assoc_data['dh_server_public'])), $dh_keys['private'], $p);
+		$secret = base64_encode(binary_xor(sha1_raw(long_to_binary($dh_secret)), base64_decode($assoc_data['enc_mac_key'])));
+	}
+	else
+		$secret = $assoc_data['mac_key'];
 
 	// Store the data
 	$smcFunc['db_insert']('replace',
@@ -308,7 +331,7 @@ function smf_openID_canonize($uri)
 {
 	// !!! Add in discovery.
 
-	if (strpos($uri, 'http://') !== 0)
+	if (strpos($uri, 'http://') !== 0 && strpos($uri, 'https://') !== 0)
 		$uri = 'http://' . $uri;
 
 	if (strpos(substr($uri, strpos($uri, '://') + 3), '/') === false)
@@ -335,20 +358,34 @@ function smf_openid_member_exists($url)
 	return $member;
 }
 
-/*
-function smf_openID_get_keys($p)
+// Prepare for a Diffie-Hellman key exchange.
+function smf_openID_setup_DH()
 {
-	global $modSettings;
-
-	// First step, can we even support using keys?
+	global $p, $g;
+	
+	// First off, do we have BC Math available?
 	if (!function_exists('bcpow'))
-		return null;
+		return false;
+	
+	// Defined in OpenID spec.
+	$p = '155172898181473697471232257763715539915724801966915404479707795314057629378541917580651227423698188993727816152646631438561595825688188889951272158842675419950341258706556549803580104870537681476726513255747040765857479291291572334510643245094715007229621094194349783925984760375594985848253359305585439638443';
+	$g = '2';
+	
+	// Make sure the scale is set.
+	bcscale(0);
+	
+	return smf_openID_get_keys();
+}
 
-	// Ok lets take the easy way out, are their any keys already defined for us?
-	if (!empty($modSettings['dh_keys']))
+function smf_openID_get_keys()
+{
+	global $modSettings, $p, $g;
+	
+	// Ok lets take the easy way out, are their any keys already defined for us? We really shouldn't keep the same keys forever, though.
+	if (!empty($modSettings['dh_keys']) && mt_rand(1, 250) != 1)
 	{
 		// Sweeeet!
-		list($public, $private) = explode("\n", $modSettings['dh_keys']);
+		list ($public, $private) = explode("\n", $modSettings['dh_keys']);
 		return array(
 			'public' => base64_decode($public),
 			'private' => base64_decode($private),
@@ -356,8 +393,8 @@ function smf_openID_get_keys($p)
 	}
 
 	// Dang it, now I have to do math.  And it's not just ordinary math, its the evil big interger math.  This will take a few seconds.
-	$private = smf_openid_generate_private_key($p);
-	$public = bcpowmod(2, $private, $p);
+	$private = smf_openid_generate_private_key();
+	$public = bcpowmod($g, $private, $p);
 
 	// Now that we did all that work, lets save it so we don't have to keep doing it.
 	$keys = array('dh_keys' => base64_encode($public) . "\n" . base64_encode($private));
@@ -369,11 +406,12 @@ function smf_openID_get_keys($p)
 	);
 }
 
-function smf_openid_generate_private_key($p_value)
+function smf_openid_generate_private_key()
 {
+	global $p;
 	static $cache = array();
 
-	$byte_string = long_to_binary($p_value);
+	$byte_string = long_to_binary($p);
 
 	if (isset($cache[$byte_string]))
 		list ($dup, $num_bytes) = $cache[$byte_string];
@@ -399,8 +437,8 @@ function smf_openid_generate_private_key($p_value)
 		$num = binary_to_long($bytes);
 	} while (bccomp($num, $dup) < 0);
 
-	return bcadd(bcmod($num, $p_value), 1);
-}*/
+	return bcadd(bcmod($num, $p), 1);
+}
 
 function smf_openID_getServerInfo($openid_url)
 {
@@ -413,14 +451,26 @@ function smf_openID_getServerInfo($openid_url)
 
 	$response_data = array();
 
-	if (preg_match_all('~<link rel="openid.(server|delegate)" +href="([^"]+)" ?/?>~', $webdata, $matches) == 0)
+	// Some OpenID servers have strange but still valid HTML which makes our job hard.
+	if (preg_match_all('~<link([\s\S]*?)/?>~i', $webdata, $link_matches) == 0)
 		fatal_lang_error('openid_server_bad_response');
 
-	foreach ($matches[1] as $key => $match)
-		$response_data[$match] = $matches[2][$key];
-
+	foreach ($link_matches[1] as $link_match)
+	{
+		if (preg_match('~rel="([\s\S]*?)"~i', $link_match, $rel_match) == 0 || preg_match('~href="([\s\S]*?)"~i', $link_match, $href_match) == 0)
+			continue;
+		
+		$rels = preg_split('~\s+~', $rel_match[1]);
+		foreach ($rels as $rel)
+			if (preg_match('~openid2?\.(server|delegate|provider)~i', $rel, $match) != 0)
+				$response_data[$match[1]] = $href_match[1];
+	}	
+	
 	if (empty($response_data['server']))
-		fatal_lang_error('openid_server_bad_response');
+		if (empty($response_data['provider']))
+			fatal_lang_error('openid_server_bad_response');
+		else
+			$response_data['server'] = $response_data['provider'];
 
 	return $response_data;
 }
@@ -497,6 +547,25 @@ function long_to_binary($value)
 		$return .= pack('C', $byte);
 
 	return $return;
+}
+
+function binary_xor($num1, $num2)
+{
+	$return = '';
+	
+	for ($i = 0; $i < strlen($num2); $i++)
+		$return .= $num1[$i] ^ $num2[$i];
+		
+	return $return;
+}
+
+// PHP 4 didn't have bcpowmod.
+if (!function_exists('bcpowmod') && function_exists('bcpow'))
+{
+	function bcpowmod($num1, $num2, $num3)
+	{
+		return bcmod(bcpow($num1, $num2), $num3);
+	}
 }
 
 ?>

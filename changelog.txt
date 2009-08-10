@@ -34,6 +34,10 @@ August 2009
  * Newsfader lacked overflow: auto for longer news (index.css) [Bug 3595]
  * Minor adjustments to paddings and markup (ManageSettings.php, Admin.template, Profile.template, Memberlist.template, css/admin.css)
  * Server stored avatars not were not aligned properly in the forum profile section. (index.css) [Bug 3661]
+ + OpenID authentication now supports Diffie-Hellman key exchanges. (Subs-OpenID.php) [Bug 3654]
+ ! Secure OpenID URLs were not handled quite right - thanks forum user bobjol. (Subs-OpenID.php, Subs-Package.php)
+ ! The query string was still being decoded twice in some cases. (QueryString.php)
+ ! Some OpenID providers gave link tags which SMF couldn't parse. (Subs-OpenID.php)
 
 
 July 2009

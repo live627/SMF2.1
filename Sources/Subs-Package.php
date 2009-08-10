@@ -2842,7 +2842,7 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 		if (empty($post_data))
 		{
 			fwrite($fp, 'GET ' . $match[6] . ' HTTP/1.0' . "\r\n");
-			fwrite($fp, 'Host: ' . $match[3] . (empty($match[5]) ? ($match[2] ? '443' : '') : ':' . $match[5]) . "\r\n");
+			fwrite($fp, 'Host: ' . $match[3] . (empty($match[5]) ? ($match[2] ? ':443' : '') : ':' . $match[5]) . "\r\n");
 			fwrite($fp, 'User-Agent: PHP/SMF' . "\r\n");
 			if ($keep_alive)
 				fwrite($fp, 'Connection: Keep-Alive' . "\r\n\r\n");
@@ -2852,7 +2852,7 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 		else
 		{
 			fwrite($fp, 'POST ' . $match[6] . ' HTTP/1.0' . "\r\n");
-			fwrite($fp, 'Host: ' . $match[3] . (empty($match[5]) ? ($match[2] ? '443' : '') : ':' . $match[5]) . "\r\n");
+			fwrite($fp, 'Host: ' . $match[3] . (empty($match[5]) ? ($match[2] ? ':443' : '') : ':' . $match[5]) . "\r\n");
 			fwrite($fp, 'User-Agent: PHP/SMF' . "\r\n");
 			if ($keep_alive)
 				fwrite($fp, 'Connection: Keep-Alive' . "\r\n");

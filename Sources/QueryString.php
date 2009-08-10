@@ -148,8 +148,6 @@ function cleanRequest()
 	}
 	elseif (strpos(@ini_get('arg_separator.input'), ';') !== false)
 	{
-		$_GET = urldecode__recursive($_GET);
-
 		if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc() != 0 && empty($modSettings['integrate_magic_quotes']))
 			$_GET = $removeMagicQuoteFunction($_GET);
 
