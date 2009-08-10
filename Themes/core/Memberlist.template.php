@@ -14,7 +14,7 @@ function template_main()
 
 	echo '
 	<div class="main_section clearfix" id="memberlist">
-		<div id="modbuttons_top" class="mlistbuttons clearfix margintop">
+		<div id="modbuttons_top" class="modbuttons clearfix margintop">
 			<div class="floatleft middletext">
 				', $txt['pages'], ': ', $context['page_index'], '
 			</div>
@@ -154,7 +154,7 @@ function template_search()
 	echo '
 	<form action="', $scripturl, '?action=mlist;sa=search" method="post" accept-charset="', $context['character_set'], '">
 		<div id="memberlist">
-			<div id="modbuttons_top" class="mlistbuttons clearfix margintop">
+			<div id="modbuttons_top" class="modbuttons clearfix margintop">
 				', template_button_strip($membersearch_buttons, 'right'), '
 			</div>
 			<div class="tborder">

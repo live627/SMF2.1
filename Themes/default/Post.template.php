@@ -22,7 +22,7 @@ function template_main()
 			var icon_urls = {';
 	foreach ($context['icons'] as $icon)
 		echo '
-				"', $icon['value'], '": "', $icon['url'], '"', $icon['is_last'] ? '' : ',';
+				', $icon['value'], ': \'', $icon['url'], '\'', $icon['is_last'] ? '' : ',';
 	echo '
 			};';
 
@@ -589,7 +589,7 @@ function template_main()
 					if (\'opera\' in window)
 					{
 						var test = new XMLHttpRequest();
-						if (typeof(test.setRequestHeader) != "function")
+						if (!(setRequestHeader in test))
 							return submitThisOnce(document.forms.postmodify);
 					}
 					// !!! Currently not sending poll options and option checkboxes.
@@ -615,10 +615,10 @@ function template_main()
 								x[x.length] = textFields[i] + "=" + document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#").php_to8bit().php_urlencode();
 						}
 					for (i in numericFields)
-						if (document.forms.postmodify.elements[numericFields[i]] && typeof(document.forms.postmodify[numericFields[i]].value) != "undefined")
+						if (numericFields[i] in document.forms.postmodify.elements && \'value\' in document.forms.postmodify[numericFields[i]])
 							x[x.length] = numericFields[i] + "=" + parseInt(document.forms.postmodify.elements[numericFields[i]].value);
 					for (i in checkboxFields)
-						if (document.forms.postmodify.elements[checkboxFields[i]] && document.forms.postmodify.elements[checkboxFields[i]].checked)
+						if (checkboxFields[i] in document.forms.postmodify.elements && checked in document.forms.postmodify.elements[checkboxFields[i]])
 							x[x.length] = checkboxFields[i] + "=" + document.forms.postmodify.elements[checkboxFields[i]].value;
 
 					sendXMLDocument(smf_scripturl + "?action=post2" + (current_board ? ";board=" + current_board : "") + (make_poll ? ";poll" : "") + ";preview;xml", x.join("&"), onDocSent);
@@ -676,14 +676,14 @@ function template_main()
 					document.forms.postmodify.', $context['post_box_name'], '.style.border = "1px solid red";
 				else if (document.forms.postmodify.', $context['post_box_name'], '.style.borderColor == "red" || document.forms.postmodify.', $context['post_box_name'], '.style.borderColor == "red red red red")
 				{
-					if (typeof(document.forms.postmodify.', $context['post_box_name'], '.runtimeStyle) == "undefined")
-						document.forms.postmodify.', $context['post_box_name'], '.style.border = null;
-					else
+					if (\'runtimeStyle\' in document.forms.postmodify.', $context['post_box_name'], ')
 						document.forms.postmodify.', $context['post_box_name'], '.style.borderColor = "";
+					else
+						document.forms.postmodify.', $context['post_box_name'], '.style.border = null;
 				}
 
 				// Set the new number of replies.
-				if (document.forms.postmodify.elements["num_replies"])
+				if (\'num_replies\' in document.forms.postmodify.elements)
 					document.forms.postmodify.num_replies.value = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("num_replies")[0].firstChild.nodeValue;
 
 				var newPosts = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("new_posts")[0] ? XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("new_posts")[0].getElementsByTagName("post") : {length: 0};
@@ -894,14 +894,14 @@ function template_quotefast()
 		// Lucky for us, Internet Explorer has an "innerText" feature which basically converts entities <--> text. Use it if possible ;).
 		echo '
 			var quote = \'', $context['quote']['text'], '\';
-			var stage = document.createElement ? document.createElement("DIV") : document.getElementById("temporary_posting_area");
+			var stage = \'createElement\' in document ? document.createElement("DIV") : document.getElementById("temporary_posting_area");
 
 			if (\'DOMParser\' in window && !(\'opera\' in window))
 			{
 				var xmldoc = new DOMParser().parseFromString("<temp>" + \'', $context['quote']['mozilla'], '\'.replace(/\n/g, "_SMF-BREAK_").replace(/\t/g, "_SMF-TAB_") + "</temp>", "text/xml");
 				quote = xmldoc.childNodes[0].textContent.replace(/_SMF-BREAK_/g, "\n").replace(/_SMF-TAB_/g, "\t");
 			}
-			else if (\'innerText\' in stage != "undefined")
+			else if (\'innerText\' in stage)
 			{
 				setInnerHTML(stage, quote.replace(/\n/g, "_SMF-BREAK_").replace(/\t/g, "_SMF-TAB_").replace(/</g, "&lt;").replace(/>/g, "&gt;"));
 				quote = stage.innerText.replace(/_SMF-BREAK_/g, "\n").replace(/_SMF-TAB_/g, "\t");
