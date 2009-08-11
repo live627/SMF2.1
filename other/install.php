@@ -1999,9 +1999,6 @@ function template_install_above()
 {
 	global $incontext, $txt, $smfsite, $installurl;
 
-
-
-
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"', !empty($txt['lang_rtl']) ? ' dir="rtl"' : '', '>
 	<head>
@@ -2010,73 +2007,62 @@ function template_install_above()
 		<title>', $txt['smf_installer'], '</title>
 		<script type="text/javascript" src="Themes/default/scripts/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="Themes/default/css/index.css?rc2" />
+		<link rel="stylesheet" type="text/css" href="install.css?rc2" />
 	</head>
 	<body>
 	<div id="header"><div class="frame">
 		<div id="top_section">
 			<h1 class="forumtitle">', $txt['smf_installer'], '</h1>
-			<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />
+			<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" /> 
 		</div>
-	</div></div>
-	<div id="content_section"><div class="frame">
-		<div id="main_content_section">
-
-
-		<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
-			<tr>
-				<td width="250" valign="top" style="padding-right: 10px;">
-					<table border="0" cellpadding="8" cellspacing="0" class="tborder" width="240">
-						<tr>
-							<td class="titlebg">', $txt['upgrade_steps'], '</td>
-						</tr>
-						<tr>
-							<td class="windowbg2">';
-
-	foreach ($incontext['steps'] as $num => $step)
-		echo '
-						<span class="', $num < $incontext['current_step'] ? 'stepdone' : ($num == $incontext['current_step'] ? 'stepcurrent' : 'stepwaiting'), '">', $txt['upgrade_step'], ' ', $step[0], ': ', $step[1], '</span><br />';
-
-	echo '
-							</td>
-						</tr>
-						<tr>
-							<td class="titlebg">', $txt['upgrade_progress'], '</td>
-						</tr>
-						<tr>
-							<td class="windowbg2">
-								<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; position: relative;">
-									<div id="overall_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $incontext['overall_percent'], '%</div>
-									<div id="overall_progress" style="width: ', $incontext['overall_percent'], '%; height: 12pt; z-index: 1; background-color: lime;">&nbsp;</div>
-								</div>
-							</td>
-						</tr>
-					</table>
-				</td>
-				<td width="100%" valign="top">';
+		<div id="upper_section" class="middletext" style="overflow: hidden;">
+			<div class="user"></div>
+			<div class="news normaltext">';
 
 	// Have we got a language drop down - if so do it on the first step only.
 	if (!empty($incontext['detected_languages']) && count($incontext['detected_languages']) > 1 && $incontext['current_step'] == 0)
 	{
 		echo '
-		<div style="padding-bottom: 2ex; text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';">
-			<form action="', $installurl, '" method="get">
-				<label for="installer_language">', $txt['installer_language'], ':</label> <select id="installer_language" name="lang_file" onchange="location.href = \'', $installurl, '?lang_file=\' + this.options[this.selectedIndex].value;">';
+				<div style="text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';">
+					<form action="', $installurl, '" method="get">
+						<label for="installer_language">', $txt['installer_language'], ':</label> <select id="installer_language" name="lang_file" onchange="location.href = \'', $installurl, '?lang_file=\' + this.options[this.selectedIndex].value;">';
 
 		foreach ($incontext['detected_languages'] as $lang => $name)
 			echo '
-					<option', isset($_SESSION['installer_temp_lang']) && $_SESSION['installer_temp_lang'] == $lang ? ' selected="selected"' : '', ' value="', $lang, '">', $name, '</option>';
+							<option', isset($_SESSION['installer_temp_lang']) && $_SESSION['installer_temp_lang'] == $lang ? ' selected="selected"' : '', ' value="', $lang, '">', $name, '</option>';
 
 		echo '
-				</select>
-				<noscript><input type="submit" value="', $txt['installer_language_set'], '" class="button_submit" /></noscript>
-			</form>
-		</div>';
+						</select>
+						<noscript><input type="submit" value="', $txt['installer_language_set'], '" class="button_submit" /></noscript>
+					</form>
+				</div>';
 	}
 
 	echo '
-					<div class="panel">
-						<h2>', $incontext['page_title'], '</h2>
-						<div style="max-height: 560px; overflow: auto;">';
+			</div>
+		</div>
+	</div></div>
+	<div id="content_section"><div class="frame">
+		<div id="main_content_section">
+			<div id="main-steps">
+				<h2>', $txt['upgrade_progress'], '</h2>
+				<ul>';
+
+	foreach ($incontext['steps'] as $num => $step)
+		echo '
+					<li class="', $num < $incontext['current_step'] ? 'stepdone' : ($num == $incontext['current_step'] ? 'stepcurrent' : 'stepwaiting'), '">', $txt['upgrade_step'], ' ', $step[0], ': ', $step[1], '</li>';
+
+	echo '
+				</ul>
+			</div>
+			<div style="font-size: 12pt; height: 25pt; border: 1px solid black; background: white; float: left; margin-left: 12%; width: 25%;">
+				<div id="overall_text" style="padding-top: 8pt;  z-index: 2; color: black; margin-left: -4em; position: absolute; text-align: center; font-weight: bold;">', $incontext['overall_percent'], '%</div>
+				<div id="overall_progress" style="width: ', $incontext['overall_percent'], '%; height: 25pt; z-index: 1; background-color: lime;">&nbsp;</div>
+			</div>
+			<div id="main_screen" style="clear: both;">
+				<h2>', $incontext['page_title'], '</h2>
+				<div class="panel">
+					<div style="max-height: 560px; overflow: auto;">';
 }
 
 function template_install_below()
@@ -2087,16 +2073,16 @@ function template_install_below()
 	if (!empty($incontext['continue']) || !empty($incontext['skip']))
 	{
 		echo '
-								<div class="righttext" style="margin: 1ex;">';
+						<div class="righttext" style="margin: 1ex;">';
 
 		if (!empty($incontext['continue']))
 			echo '
-									<input type="submit" id="contbutt" name="contbutt" value="', $txt['upgrade_continue'], '"  onclick="return submitThisOnce(this);" class="button_submit" />';
+							<input type="submit" id="contbutt" name="contbutt" value="', $txt['upgrade_continue'], '"  onclick="return submitThisOnce(this);" class="button_submit" />';
 		if (!empty($incontext['skip']))
 			echo '
-									<input type="submit" id="skip" name="skip" value="', $txt['upgrade_skip'], '"  onclick="return submitThisOnce(this);" class="button_submit" />';
+							<input type="submit" id="skip" name="skip" value="', $txt['upgrade_skip'], '"  onclick="return submitThisOnce(this);" class="button_submit" />';
 		echo '
-								</div>';
+						</div>';
 	}
 
 	// Show the closing form tag and other data only if not in the last step
@@ -2105,160 +2091,18 @@ function template_install_below()
 							</form>';
 
 	echo '
-						</div>
 					</div>
-				</td>
-			</tr>
-		</table>
-		</div></div>
-	</div>
+				</div>
+			</div>
+		</div>
+	</div></div>
+	<div id="footer_section"><div class="frame" style="height: 40px;">
+		<div class="smalltext"><a href="http://www.simplemachines.org">Simple Machines Forum</a></div>
+	</div></div>
 	</body>
 </html>';
 }
 
-// This is just a backup, incase simplemachines.org is not responding.
-function template_css()
-{
-	echo 'body
-{
-	background-color: #E5E5E8;
-	margin: 0px;
-	padding: 0px;
-}
-body, td
-{
-	color: #000000;
-	font-size: small;
-	font-family: verdana, sans-serif;
-}
-div#header
-{
-	background-image: url(Themes/default/images/catbg.jpg);
-	background-repeat: repeat-x;
-	background-color: #88A6C0;
-	padding: 22px 4% 12px 4%;
-	color: white;
-	font-family: Georgia, serif;
-	font-size: xx-large;
-	border-bottom: 1px solid black;
-	height: 40px;
-}
-div#content
-{
-	padding: 20px 30px;
-}
-div.error_message
-{
-	border: 2px dashed red;
-	background-color: #E1E1E1;
-	margin: 1ex 4ex;
-	padding: 1.5ex;
-}
-div.panel
-{
-	border: 1px solid gray;
-	background-color: #F6F6F6;
-	margin: 0 0 10px 0;
-	padding: 1.2ex;
-	overflow: auto;
-}
-div.panel h2
-{
-	margin: 0;
-	margin-bottom: 0.5ex;
-	padding-bottom: 3px;
-	border-bottom: 1px dashed black;
-	font-size: 14pt;
-	font-weight: normal;
-}
-div.panel h3
-{
-	margin: 0;
-	margin-bottom: 2ex;
-	font-size: 10pt;
-	font-weight: normal;
-}
-form
-{
-	margin: 0;
-}
-td.textbox
-{
-	padding-top: 2px;
-	font-weight: bold;
-	white-space: nowrap;
-	padding-left: 2ex;
-}
-td.leftcol
-{
-	width: 20%;
-	vertical-align: text-top;
-}
-/* This is used for tables that have a grid/border background color (such as the topic listing.) */
-.bordercolor
-{
-	background-color: #ADADAD;
-	padding: 0px;
-}
-.stepdone
-{
-	color: darkgreen;
-	font-size: xx-small;
-}
-.stepcurrent
-{
-	color: darkblue;
-	font-size: xx-small;
-	font-weight: bold;
-}
-.stepwaiting
-{
-	color: black;
-	font-size: xx-small;
-}
-.smalltext
-{
-	font-size: x-small;
-	font-family: verdana, sans-serif;
-}
-/* This is used on tables that should just have a border around them. */
-.tborder
-{
-	padding: 1px;
-	border: 1px solid #696969;
-	background-color: #FFFFFF;
-}
-/* These are used primarily for titles, but also for headers (the row that says what everything in the table is.) */
-.titlebg, tr.titlebg th, tr.titlebg td
-{
-	color: black;
-	font-style: normal;
-	background: url(Themes/default/images/titlebg.jpg) #E9F0F6 repeat-x;
-	border-bottom: solid 1px #9BAEBF;
-	border-top: solid 1px #FFFFFF;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-.titlebg, .titlebg a:link, .titlebg a:visited
-{
-	font-weight: bold;
-	color: black;
-	font-style: normal;
-}
-
-.titlebg a:hover
-{
-	color: #404040;
-}
-
-
-.windowbg
-{
-	color: #000000;
-	background-color: #ECEDF3;
-}';
-
-}
 
 // Welcome them to the wonderful world of SMF!
 function template_welcome_message()
@@ -2268,7 +2112,7 @@ function template_welcome_message()
 	echo '
 	<script type="text/javascript" src="http://www.simplemachines.org/smf/current-version.js?version=' . $GLOBALS['current_smf_version'] . '"></script>
 	<form action="', $incontext['form_url'], '" method="post">
-		<h3>', sprintf($txt['install_welcome_desc'], $GLOBALS['current_smf_version']), '</h3>
+		<p>', sprintf($txt['install_welcome_desc'], $GLOBALS['current_smf_version']), '</p>
 		<div id="version_warning" style="margin: 2ex; padding: 2ex; border: 2px dashed #A92174; color: black; background-color: #FBBBE2; display: none;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
 			<strong style="text-decoration: underline;">', $txt['error_warning_notice'], '</strong><br />
@@ -2349,7 +2193,7 @@ function template_chmod_files()
 	global $txt, $incontext;
 
 	echo '
-		<h3>', $txt['ftp_setup_why_info'], '</h3>
+		<p>', $txt['ftp_setup_why_info'], '</p>
 		<ul style="margin: 2.5ex; font-family: monospace;">
 			<li>', implode('</li>
 			<li>', $incontext['writable_files']), '</li>
@@ -2361,7 +2205,7 @@ function template_chmod_files()
 
 	echo '
 		<hr />
-		<h3>', $txt['ftp_setup_info'], '</h3>';
+		<p>', $txt['ftp_setup_info'], '</p>';
 
 	if (!empty($incontext['ftp_error']))
 		echo '
@@ -2376,7 +2220,7 @@ function template_chmod_files()
 
 	echo '
 		<form action="', $incontext['form_url'], '" method="post">
-			<table width="520" cellspacing="0" cellpadding="0" border="0" align="center" style="margin-bottom: 1ex;">
+			<table width="520" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 1em 0;">
 				<tr>
 					<td width="26%" valign="top" class="textbox"><label for="ftp_server">', $txt['ftp_server'], ':</label></td>
 					<td>
@@ -2416,12 +2260,12 @@ function template_database_settings()
 
 	echo '
 	<form action="', $incontext['form_url'], '" method="post">
-		<h3>', $txt['db_settings_info'], '</h3>';
+		<p>', $txt['db_settings_info'], '</p>';
 
 	template_warning_divs();
 
 	echo '
-		<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 2ex;">';
+		<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 1em 0;">';
 
 	// More than one database type?
 	if (count($incontext['supported_databases']) > 1)
@@ -2535,7 +2379,7 @@ function template_forum_settings()
 	template_warning_divs();
 
 	echo '
-		<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 2ex;">
+		<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 1em 0;">
 			<tr>
 				<td width="20%" valign="top" class="textbox"><label for="mbname_input">', $txt['install_settings_name'], ':</label></td>
 				<td>
@@ -2590,7 +2434,7 @@ function template_populate_database()
 
 	echo '
 	<form action="', $incontext['form_url'], '" method="post">
-		<h3>', !empty($incontext['was_refresh']) ? $txt['user_refresh_install_desc'] : $txt['db_populate_info'], '</h3>';
+		<p>', !empty($incontext['was_refresh']) ? $txt['user_refresh_install_desc'] : $txt['db_populate_info'], '</p>';
 
 	if (!empty($incontext['sql_results']))
 	{
@@ -2615,7 +2459,7 @@ function template_populate_database()
 	}
 
 	echo '
-		<h3>', $txt['db_populate_info2'], '</h3>';
+		<p>', $txt['db_populate_info2'], '</p>';
 
 	template_warning_divs();
 
@@ -2630,12 +2474,12 @@ function template_admin_account()
 
 	echo '
 	<form action="', $incontext['form_url'], '" method="post">
-		<h3>', $txt['user_settings_info'], '</h3>';
+		<p>', $txt['user_settings_info'], '</p>';
 
 	template_warning_divs();
 
 	echo '
-		<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 2ex;">
+		<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 2em 0;">
 			<tr>
 				<td width="18%" valign="top" class="textbox"><label for="username">', $txt['user_settings_username'], ':</label></td>
 				<td>
@@ -2666,7 +2510,7 @@ function template_admin_account()
 	if ($incontext['require_db_confirm'])
 		echo '
 		<h2>', $txt['user_settings_database'], '</h2>
-		<h3>', $txt['user_settings_database_info'], '</h3>
+		<p>', $txt['user_settings_database_info'], '</p>
 
 		<div style="margin-bottom: 2ex; padding-', empty($txt['lang_rtl']) ? 'left' : 'right', ': 50px;">
 			<input type="password" name="password3" size="30" class="input_password" />
@@ -2679,7 +2523,7 @@ function template_delete_install()
 	global $incontext, $installurl, $txt, $boardurl;
 
 	echo '
-		<h3>', $txt['congratulations_help'], '</h3>';
+		<p>', $txt['congratulations_help'], '</p>';
 
 	template_warning_divs();
 
