@@ -59,7 +59,7 @@ function smf_addButton(sButtonStripId, bUseImage, oOptions)
 }
 
 
-var main_menu = function() 
+var main_menu = function()
 {
 	var cssRule;
 	var newSelector;
@@ -74,7 +74,7 @@ var main_menu = function()
 			}
 		}
 	var getElm = document.getElementById('main_menu').getElementsByTagName('LI');
-	for (var i = 0; i < getElm.length; i++) 
+	for (var i = 0; i < getElm.length; i++)
 	{
 		getElm[i].onmouseover = function() {
 			this.className += ' iehover';
@@ -84,7 +84,7 @@ var main_menu = function()
 		}
 	}
 }
-var adm_menu = function() 
+var adm_menu = function()
 {
 	var cssRule;
 	var newSelector;
@@ -103,7 +103,7 @@ var adm_menu = function()
 	if (possibleAdminMenu)
 	{
 		var getElm = document.getElementById('admin_menu').getElementsByTagName('LI');
-		for (var i = 0; i < getElm.length; i++) 
+		for (var i = 0; i < getElm.length; i++)
 		{
 			getElm[i].onmouseover = function() {
 				this.className+=' iehover';
@@ -116,7 +116,7 @@ var adm_menu = function()
 	}
 }
 
-if ('attachEvent' in window && is_ie6) 
+if ('attachEvent' in window && is_ie6)
 {
 	window.attachEvent('onload', main_menu);
 	window.attachEvent('onload', adm_menu);

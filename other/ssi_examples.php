@@ -31,7 +31,7 @@ require(dirname(__FILE__) . '/SSI.php');
 			}
 			#content_section
 			{
-				position: relative; 
+				position: relative;
 				top: -20px;
 			}
 			#main_content_section
@@ -60,17 +60,17 @@ require(dirname(__FILE__) . '/SSI.php');
 			}
 			#liftup
 			{
-				position: relative; 
+				position: relative;
 				top: -70px;
 			}
 			#footer_section
 			{
-				position: relative; 
+				position: relative;
 				top: -20px;
 			}
 			#footer_section
 			{
-				position: relative; 
+				position: relative;
 				top: -20px;
 			}
 			tt
@@ -93,7 +93,7 @@ require(dirname(__FILE__) . '/SSI.php');
 	<div id="header"><div class="frame">
 		<div id="top_section">
 			<h1 class="forumtitle">SSI.php functions (SMF 2.0 RC1)</h1>
-			<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" /> 
+			<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />
 		</div>
 		<div id="upper_section" class="middletext" style="overflow: hidden;">
 			<div class="user"></div>

@@ -23,20 +23,20 @@ $request = convert_query("
 		SELECT groupid
 		FROM {$from_prefix}groups_users_link
 		WHERE uid=$row[id_member] AND groupid > 3; ");
-	
+
 $groups = convert_fetch_assoc($request);
-	
-if(!empty($groups))	
+
+if(!empty($groups))
 	$row['_'] = implode(',', $groups);
-	
-convert_free_result($request);	
+
+convert_free_result($request);
 ---}
 
 SELECT
 	uid AS id_member, SUBSTRING(uname, 1, 80) AS _,
 	user_regdate AS _, SUBSTRING(pass, 1, 64) AS passwd,
 	SUBSTRING(IF(name = '', uname, name), 1, 255) AS _, posts,
-	SUBSTRING(email, 1, 255) AS _, 
+	SUBSTRING(email, 1, 255) AS _,
 	SUBSTRING(url, 1, 255) AS _,
 	SUBSTRING(url, 1, 255) AS _, IF(rank = 7, 1, 0) AS id_group,
 	SUBSTRING(user_icq, 1, 255) AS icq, SUBSTRING(user_aim, 1, 16) AS aim,
@@ -58,7 +58,7 @@ DELETE FROM {$to_prefix}membergroups
 WHERE id_group >3;
 
 ---* {$to_prefix}membergroups
-SELECT 
+SELECT
 	g.groupid AS id_group, g.name AS _, '-1' AS _, '' AS stars
 FROM {$from_prefix}groups AS g
 WHERE g.groupid >=4;
@@ -70,7 +70,7 @@ WHERE g.groupid >=4;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT 
+SELECT
 	cat_id AS id_cat, SUBSTRING(cat_title, 1, 255) AS name,
 	cat_order AS _
 FROM {$from_prefix}bb_categories;
@@ -95,23 +95,23 @@ $result = convert_query("
 		FROM {$from_prefix}group_permission
 		WHERE gperm_itemid = $boards AND gperm_name = 'forum_view'; ");
 
-		while ($groupaccess=mysql_fetch_assoc($result))	
+		while ($groupaccess=mysql_fetch_assoc($result))
 		{
-			if($groupaccess['gperm_groupid'] == 3) 
+			if($groupaccess['gperm_groupid'] == 3)
 				$groupaccess['gperm_groupid']= '-1';
-					
-			if($groupaccess['gperm_groupid'] == 2)	
+
+			if($groupaccess['gperm_groupid'] == 2)
 			{
 				$groupaccess['gperm_groupid'] = '0';
 				array_push($groups,$groupaccess['gperm_groupid']);
 			}
-	
+
 		}
-	
-		if(!empty($groups))	
+
+		if(!empty($groups))
 			$row['_'] = implode(',', $groups);
-	
-convert_free_result($result);	
+
+convert_free_result($result);
 ---}
 
 SELECT
@@ -120,7 +120,7 @@ SELECT
 	SUBSTRING(forum_desc, 1, 65534) AS description, forum_topics AS _,
 	parent_forum AS id_parent, forum_order AS _, forum_posts AS _,
 	'0,-1,2' AS _
-	
+
 FROM {$from_prefix}bb_forums;
 ---*
 
@@ -137,7 +137,7 @@ SELECT
 	t.topic_id AS id_topic, t.topic_sticky AS _, t.forum_id AS id_board,
 	t.topic_last_post_id AS id_last_msg, t.topic_poster AS id_member_started,
 	t.topic_replies AS _, t.topic_views AS _,
-	t.poll_id AS id_poll, 
+	t.poll_id AS id_poll,
 	t.topic_status AS locked, MIN(p.post_id) AS id_first_msg
 FROM {$from_prefix}bb_topics AS t
 INNER JOIN {$from_prefix}bb_posts AS p ON (p.topic_id = t.topic_id)
@@ -259,10 +259,10 @@ TRUNCATE {$to_prefix}moderators;
 ---#
 ---{
 $request = convert_query("
-		SELECT forum_id AS id_board, forum_moderator 
+		SELECT forum_id AS id_board, forum_moderator
 		FROM {$from_prefix}bb_forums;");
-	
-	while ($mods=mysql_fetch_array($request))	
+
+	while ($mods=mysql_fetch_array($request))
 	{
 		$moderators =unserialize($mods['forum_moderator']);
 		foreach ($moderators as $id_member)
@@ -271,11 +271,11 @@ $request = convert_query("
 				INSERT IGNORE INTO {$to_prefix}moderators
 					(id_board, id_member)
 				VALUES ('$mods[id_board]' , '$id_member')");
-		}		
+		}
 	}
 
 convert_free_result($request);
-	
+
 ---}
 ---#
 
@@ -284,7 +284,7 @@ convert_free_result($request);
 /******************************************************************************/
 
 ---* {$to_prefix}membergroups
-SELECT 
+SELECT
 	rank_max AS _, rank_title AS GroupName
 FROM {$from_prefix}ranks
 WHERE rank_special ='0';
@@ -303,31 +303,31 @@ $request = convert_query("
 	SELECT conf_value
 	FROM {$from_prefix}config
 	WHERE conf_name ='dir_attachments'; ");
-		
+
 list ($xoops_attachment_path) = convert_fetch_row($request);
-convert_free_result($request);	
-		
-$attachments = unserialize(base64_decode($row['attachment']));	
+convert_free_result($request);
+
+$attachments = unserialize(base64_decode($row['attachment']));
 foreach ($attachments as $attachedfile)
 	{
 		$newfilename = getLegacyAttachmentFilename(basename($attachedfile['name_display']), $id_attach);
 		$oldfile=$_POST['path_from'] . '/'.$xoops_attachment_path.'/'.$attachedfile['name_saved'];
-				
+
 			if (file_exists($oldfile))
 			{
 				if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/'.$xoops_attachment_path.'/'.$attachedfile['name_saved'], $attachmentUploadDir . '/' . $newfilename))
 				{
 					$size=filesize($oldfile);
-					@touch($attachmentUploadDir . '/' .$newfilename, filemtime($attachedfile['name_saved']));	
+					@touch($attachmentUploadDir . '/' .$newfilename, filemtime($attachedfile['name_saved']));
 					convert_query("
 						INSERT IGNORE INTO {$to_prefix}attachments
 						(id_attach, id_msg, filename, size)
-						VALUES ('$id_attach','$row[post_id]', 
+						VALUES ('$id_attach','$row[post_id]',
 								'$attachedfile[name_display]', '$size')");
-						$id_attach++;					
-				}				
-			}	
-	}	
+						$id_attach++;
+				}
+			}
+	}
 
 ---}
 SELECT post_id, attachment
@@ -415,7 +415,7 @@ convert_query("
 		(variable, value)
 	VALUES ('censor_vulgar', '$censored_vulgar'),
 		('censor_proper', '$censored_proper')");
-		
+
 convert_free_result($result);
 ---}
 ---#

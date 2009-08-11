@@ -571,8 +571,8 @@ $helptxt['custom_mask'] = 'The input mask is important for your forum\'s securit
 		&nbsp;&nbsp;"[A-Za-z]+" - Match all upper and lower case alphabet characters.<br />
 		&nbsp;&nbsp;"[0-9]+" - Match all numeric characters.<br />
 		&nbsp;&nbsp;"[A-Za-z0-9]{7}" - Match all upper and loser case alphabet and numeric characters seven times.<br />
-		&nbsp;&nbsp;"[^0-9]?" - Forbid any number from being matched.<br />		
-		&nbsp;&nbsp;"^([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$" - Only allow 3 or 6 character hexcodes.<br />		
+		&nbsp;&nbsp;"[^0-9]?" - Forbid any number from being matched.<br />
+		&nbsp;&nbsp;"^([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$" - Only allow 3 or 6 character hexcodes.<br />
 	</span><br /><br />
 	Additionally, special metacharacters ?+*^$ and {xx} can be defined.
 	<span class="smalltext">

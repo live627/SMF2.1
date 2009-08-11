@@ -2788,7 +2788,7 @@ function logAction($action, $extra = array(), $log_type = 'moderate')
 				'column_name' => !empty($msg_id) ? 'id_msg' : 'id_topic',
 				'reported' => !empty($msg_id) ? $msg_id : $topic_id,
 		));
-	
+
 		// Alright, if we get any result back, update open reports.
 		if ($smcFunc['db_num_rows']($request) > 0)
 		{
@@ -3484,7 +3484,7 @@ function db_debug_junk()
 			// But actual creation of the temporary tables are.
 			elseif (preg_match('~^CREATE TEMPORARY TABLE .+?SELECT .+$~s', trim($qq['q'])) != 0)
 				$is_select = true;
-			
+
 			echo '
 	<strong>', $is_select ? '<a href="' . $scripturl . '?action=viewquery;qq=' . ($q + 1) . '#qq' . $q . '" target="_blank" class="new_win" style="text-decoration: none;">' : '', nl2br(str_replace("\t", '&nbsp;&nbsp;&nbsp;', htmlspecialchars(ltrim($qq['q'], "\n\r")))) . ($is_select ? '</a></strong>' : '</strong>') . '<br />
 	&nbsp;&nbsp;&nbsp;';

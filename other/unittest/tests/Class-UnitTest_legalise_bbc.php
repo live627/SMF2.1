@@ -39,7 +39,7 @@
 				'input' => 'a[left]b[/left]c[right][/right]d',
 				'output' => 'a[left]b[/left]cd',
 			),
-			
+
 			'block_vs_inline_1' => array(
 				'name' => 'Block vs. inline (1)',
 				'description' => "Make sure that block tags don't intersect inline tags.\n\nClose inline tags before opening block tags, reopen them inside the block and reopen them after the block.",
@@ -137,14 +137,14 @@
 				'output' => "[hr]a\n[hr]",
 			),
 		);
-		
+
 		public function initialize()
 		{
 			global $sourcedir;
-			
+
 			require_once($sourcedir . '/Subs-Editor.php');
 		}
-		
+
 		public function getTests()
 		{
 			$tests = array();
@@ -153,41 +153,41 @@
 					'name' => $testInfo['name'],
 					'description' => $testInfo['description'],
 				);
-			
+
 			return $tests;
 		}
-		
+
 		public function doTest($testID)
 		{
 			if (!isset($this->_tests[$testID]))
 				return 'Invalid test ID given';
-				
+
 			// Special tests.
 			switch ($testID)
 			{
 				case 'large_chunks_1':
-					
+
 					$this->_tests[$testID]['input'] = '';
-					
+
 					// Generate 500,000 random characters.
 					for ($i = 0; $i < 50000; $i++)
 						$this->_tests[$testID]['input'] .= pack('C*', mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126));
-						
+
 					// Remove closing square brackets.
 					$this->_tests[$testID]['input'] = strtr($this->_tests[$testID]['input'], array(']' => ''));
-						
+
 					$this->_tests[$testID]['output'] = $this->_tests[$testID]['input'];
-				break;	
+				break;
 			}
-				
+
 			$output = legalise_bbc($this->_tests[$testID]['input']);
 			if ($output === $this->_tests[$testID]['output'])
 				return true;
-				
+
 			else
 				return sprintf("Unexpected output received from legalise_bbc().\nInput: %1\$s\nExpected output: %2\$s\nReal output: %3\$s", htmlspecialchars($this->_tests[$testID]['input']), htmlspecialchars($this->_tests[$testID]['output']), htmlspecialchars($output));
 		}
-		
+
 		public function getTestDescription($testID)
 		{
 			if (isset($this->_tests[$testID]['description']))
@@ -196,8 +196,8 @@
 				return 'No description available';
 			else
 				return 'Invalid test ID given';
-					
-			
-			
+
+
+
 		}
 	}

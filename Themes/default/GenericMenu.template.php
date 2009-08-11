@@ -22,7 +22,7 @@ function template_generic_menu_sidebar_above()
 		// Show the section header - and pump up the line spacing for readability.
 		echo '
 			<div class="adm_section">
-				<h4 class="catbg"><span class="left"></span><span class="right"></span>
+				<h4 class="catbg"><span class="left"></span>
 					', $section['title'];
 
 		if ($firstSection && !empty($menu_context['can_toggle_drop_down']))
@@ -66,7 +66,7 @@ function template_generic_menu_sidebar_above()
 
 	// This is where the actual "main content" area for the admin section starts.
 	echo '
-		</div>	
+		</div>
 		<div id="main_admsection">';
 
 	// If there are any "tabs" setup, this is the place to shown them.
@@ -208,7 +208,7 @@ function template_generic_menu_tabs(&$menu_context)
 	$tab_context = &$menu_context['tab_data'];
 
 	echo '
-	<h3 class="catbg"><span class="left"></span><span class="right"></span>';
+	<h3 class="catbg"><span class="left"></span>';
 
 	// Exactly how many tabs do we have?
 	foreach ($context['tabs'] as $id => $tab)

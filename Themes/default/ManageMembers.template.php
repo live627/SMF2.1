@@ -8,7 +8,7 @@ function template_search_members()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=viewmembers" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				<span class="align_left">', $txt['search_for'], '</span>
 				<span class="smalltext align_right">', $txt['wild_cards_allowed'], '</span>
 			</h3>
@@ -39,7 +39,7 @@ function template_search_members()
 									<option value="=" selected="selected">=</option>
 									<option value="+">&gt;=</option>
 									<option value="++">&gt;</option>
-								</select>	
+								</select>
 							</dt>
 							<dd>
 								<input type="text" name="age" value="" size="6" class="input_text" />
@@ -91,7 +91,7 @@ function template_search_members()
 								<strong>', $txt['username'], ':</strong>
 							</dt>
 							<dd>
-								<input type="text" name="membername" value="" class="input_text" /> 
+								<input type="text" name="membername" value="" class="input_text" />
 							</dd>
 							<dt class="righttext">
 								<strong>', $txt['email_address'], ':</strong>
@@ -145,8 +145,8 @@ function template_search_members()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+
+			<h3 class="titlebg"><span class="left"></span>
 				', $txt['member_part_of_these_membergroups'], '
 			</h3>
 			<div class="flow_auto">
@@ -182,7 +182,7 @@ function template_search_members()
 						</td>
 					</tr>
 				</table>
-			
+
 				<table width="49%" class="table_grid align_right">
 					<tr class="catbg">
 						<th class="smalltext" scope="col" colspan="2">
@@ -235,9 +235,9 @@ function template_admin_browse()
 		echo '
 		<br />
 		<form action="', $scripturl, '?action=admin;area=viewmembers" method="post" accept-charset="', $context['character_set'], '" name="postFormOutstanding" id="postFormOutstanding" onsubmit="return onOutstandingSubmit();">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['admin_browse_outstanding'], '
-			</h3>		
+			</h3>
 			<script type="text/javascript"><!-- // --><![CDATA[
 				function onOutstandingSubmit()
 				{
@@ -260,7 +260,7 @@ function template_admin_browse()
 						return false;
 				}
 			// ]]></script>
-	
+
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -301,7 +301,7 @@ function template_admin_browse()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>';
 	}
-	
+
 	echo '
 	</div>
 	<br style="clear: both;" />';

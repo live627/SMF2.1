@@ -164,7 +164,7 @@ function preparse_sql($script_filename)
 		// String value?
 		if (in_array($matches[1][$i], array('name', 'table_test', 'from_prefix', 'version', 'database_type', 'block_size', 'step2_block_size')))
 			$convert_data[$matches[1][$i]] = stripslashes(substr(trim($matches[2][$i]), 1, -1));
-		// Maybe it is a eval statement? 
+		// Maybe it is a eval statement?
 		elseif ($matches[1][$i] == 'eval')
 			$convert_data['eval'][] = $matches[2][$i];
 		// No... so it must be an array.
@@ -2440,7 +2440,7 @@ if (!function_exists('updateSettingsFile'))
 		for ($i = 0; $i < $lines - 1; $i++)
 			fwrite($fp, strtr($settingsArray[$i], "\r", ''));
 
-		// The last line should have no \n.	
+		// The last line should have no \n.
 		fwrite($fp, rtrim($settingsArray[$i]));
 		fclose($fp);
 	}
@@ -2743,7 +2743,7 @@ function convert_result($request, $offset = 0, $field_name = '')
 				return $row[$field_name];
 			else
 				return $row[0];
-		}	
+		}
 	}
 	// Luckily Postgresql is with it.
 	elseif ($smcFunc['db_title'] == 'PostgreSQL')
@@ -3205,7 +3205,7 @@ function convert_error_handler($error_level, $error_string, $file, $line, $is_da
 
 		fwrite($fp, $error_data);
 		fclose($fp);
-	}	
+	}
 
 	// Based on if we are command line or not, this will handle things for us.
 	if ($command_line && !$is_database_error)

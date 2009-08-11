@@ -35,7 +35,7 @@ function template_summary()
 	// Display the basic information about the user
 	echo '
 <div id="profileview">
-	<h3 class="catbg"><span class="left"></span><span class="right"></span>
+	<h3 class="catbg"><span class="left"></span>
 		<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
 		', $txt['summary'], '
 	</h3>
@@ -85,7 +85,7 @@ function template_summary()
 			<p id="infolinks">';
 
 	if (!$context['user']['is_owner'] && $context['can_send_pm'])
-		echo '			
+		echo '
 				<a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], '">', $txt['profile_sendpm_short'], '</a><br />';
 	echo '
 				<a href="', $scripturl, '?action=profile;area=showposts;u=', $context['id_member'], '">', $txt['showPosts'], '</a><br />
@@ -176,12 +176,12 @@ function template_summary()
 			<dl>';
 				$shown = true;
 			}
-				
+
 			echo '
 				<dt>', $field['name'], ':</dt>
 				<dd>', $field['output_html'], '</dd>';
 		}
-		
+
 		if (!empty($shown))
 			echo '
 			</dl>';
@@ -312,7 +312,7 @@ function template_showPosts()
 
 	echo '
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
 			', (!isset($context['attachments']) && empty($context['is_topics']) ? $txt['showMessages'] : (!empty($context['is_topics']) ? $txt['showTopics'] : $txt['showAttachments'])), ' - ', $context['member']['name'], '
 		</h3>
@@ -446,7 +446,7 @@ function template_editBuddies()
 
 	echo '
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
 			', $txt['editBuddies'], '
 		</h3>
@@ -497,18 +497,16 @@ function template_editBuddies()
 	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=buddies" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder add_buddy">
 			<h3 class="titlebg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				', $txt['buddy_add'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe">
-				<div class="innerframe content">
+			<div class="roundframe content">
 					<label for="new_buddy">
 						<strong>', $txt['who_member'], ':</strong>
 					</label>
 					<input type="text" name="new_buddy" id="new_buddy" size="25" class="input_text" />
 					<input type="submit" value="', $txt['buddy_add_button'], '" class="button_submit" />
-				</div>
 			</div>
 			<span class="lowerframe"><span></span></span>
 		</div>
@@ -537,7 +535,7 @@ function template_trackActivity()
 	echo '
 	<div id="profileview">
 			<h3 class="titlebg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				<strong>', $txt['view_ips_by'], ' ', $context['member']['name'], '</strong>
 			</h3>';
 
@@ -586,7 +584,7 @@ function template_trackActivity()
 
 	// Show the track user list.
 	template_show_list('track_user_list');
-	
+
 	echo '
 	</div>';
 }
@@ -600,7 +598,7 @@ function template_trackIP()
 	// The first table in the template gives an input box to allow the admin to enter another IP to track.
 	echo '
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['trackIP'], '
 		</h3>
 		<div class="windowbg2">
@@ -617,7 +615,7 @@ function template_trackIP()
 	{
 		echo '
 		<h3 class="titlebg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['whois_title'], ' ', $context['ip'], '
 		</h3>
 		<div class="windowbg2">
@@ -636,7 +634,7 @@ function template_trackIP()
 	// The second table lists all the members who have been logged as using this IP address.
 	echo '
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['members_from_ip'], ' ', $context['ip'], '
 		</h3>';
 	if (empty($context['ips']))
@@ -670,7 +668,7 @@ function template_showPermissions()
 
 	echo '
 		<h3 class="titlebg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
 			', $txt['showPermissions'], '
 		</h3>';
@@ -689,7 +687,7 @@ function template_showPermissions()
 		{
 			echo '
 			<h3 class="catbg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				', $txt['showPermissions_restricted_boards'], '
 			</h3>
 			<div class="windowbg smalltext">
@@ -707,14 +705,14 @@ function template_showPermissions()
 		// General Permissions section.
 		echo '
 			<h3 class="catbg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				', $txt['showPermissions_general'], '
 			</h3>';
 		if (!empty($context['member']['permissions']['general']))
 		{
 			echo '
 			<h3 class="titlebg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				', $txt['showPermissions_permission'], '
 			</h3>
 			<dl class="windowbg">';
@@ -746,7 +744,7 @@ function template_showPermissions()
 		echo '
 			<form action="' . $scripturl . '?action=profile;u=', $context['id_member'], ';area=permissions#board_permissions" method="post" accept-charset="', $context['character_set'], '">
 				<h3 class="catbg">
-					<span class="left"></span><span class="right"></span>
+					<span class="left"></span>
 					<a id="board_permissions"></a>
 					', $txt['showPermissions_select'], ':
 					<select name="board" onchange="if (this.options[this.selectedIndex].value) this.form.submit();">
@@ -768,7 +766,7 @@ function template_showPermissions()
 		{
 			echo '
 			<h3 class="titlebg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				', $txt['showPermissions_permission'], '
 			</h3>
 			<dl>';
@@ -813,7 +811,7 @@ function template_statPanel()
 	echo '
 	<div id="profileview">
 		<div id="generalstats">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				<img src="', $settings['images_url'], '/stats_info.gif" alt="" />
 				', $txt['statPanel_generalStats'], ' - ', $context['member']['name'], '
 			</h3>
@@ -840,7 +838,7 @@ function template_statPanel()
 	// Two columns with the most popular boards by posts and activity (activity = users posts / total posts).
 	echo '
 		<div id="popularposts">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				<img src="', $settings['images_url'], '/stats_replies.gif" alt="" />
 				', $txt['statPanel_topBoards'], '
 			</h3>
@@ -875,7 +873,7 @@ function template_statPanel()
 	echo '
 		<div id="activitytime">
 			<h3 class="titlebg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				<img src="', $settings['images_url'], '/stats_views.gif" alt="" />
 				', $txt['statPanel_activityTime'], '
 			</h3>
@@ -910,7 +908,7 @@ function template_statPanel()
 	echo '
 		<div id="popularactivity">
 			<h3 class="titlebg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				<img src="', $settings['images_url'], '/stats_replies.gif" alt="" class="icon" />
 				', $txt['statPanel_topBoardsActivity'], '
 			</h3>
@@ -939,7 +937,7 @@ function template_statPanel()
 				<span class="botslice"><span></span></span>
 			</div>
 		</div>';
-	
+
 	echo '
 		<div style="clear: both;"></div>
 	</div>
@@ -955,7 +953,7 @@ function template_edit_options()
 	echo '
 		<form action="', (!empty($context['profile_custom_submit_url']) ? $context['profile_custom_submit_url'] : $scripturl . '?action=profile;area=' . $context['menu_item_selected'] . ';save'), '" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data" onsubmit="return checkProfileSubmit();">
 			<h3 class="catbg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
 				', $txt['profile'], '
 			</h3>';
@@ -1095,10 +1093,10 @@ function template_edit_options()
 								', $field['input_html'], '
 							</dd>';
 		}
-		
+
 		echo '
 						</dl>';
-		
+
 	}
 
 	// Any closing HTML?
@@ -1222,7 +1220,7 @@ function template_profile_pm_settings()
 						</ul>
 						<dl>
 							<dd></dd>';
-						
+
 }
 
 // Template for showing theme settings. Note: template_options() actually adds the theme specific options.
@@ -1349,7 +1347,7 @@ function template_notification()
 	// The main containing header.
 	echo '
 			<h3 class="catbg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
 				', $txt['profile'], '
 			</h3>
@@ -1422,7 +1420,7 @@ function template_groupMembership()
 	echo '
 		<form action="', $scripturl, '?action=profile;area=groupmembership;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 			<h3 class="titlebg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />
 				', $txt['profile'], '
 			</h3>
@@ -1591,7 +1589,7 @@ function template_ignoreboards()
 
 	<form action="', $scripturl, '?action=profile;area=ignoreboards;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 			<h3 class="titlebg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
 				', $txt['profile'], '
 			</h3>
@@ -1662,7 +1660,7 @@ function template_viewWarning()
 
 	echo '
 	<h3 class="titlebg">
-		<span class="left"></span><span class="right"></span>
+		<span class="left"></span>
 		<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
 		', sprintf($txt['profile_viewwarning_for_user'], $context['member']['name']), '
 	</h3>
@@ -1847,7 +1845,7 @@ function template_issueWarning()
 	echo '
 	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=issuewarning" method="post" accept-charset="', $context['character_set'], '">
 		<h3 class="titlebg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
 			', $context['user']['is_owner'] ? $txt['profile_warning_level'] : $txt['profile_issue_warning'], '
 		</h3>';
@@ -2041,7 +2039,7 @@ function template_deleteAccount()
 	echo '
 		<form action="', $scripturl, '?action=profile;area=deleteaccount;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 			<h3 class="titlebg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
 				', $txt['deleteAccount'], '
 				</td>
@@ -2084,7 +2082,7 @@ function template_deleteAccount()
 		if ($context['can_delete_posts'])
 			echo '
 						<div>
-							', $txt['deleteAccount_posts'], ': 
+							', $txt['deleteAccount_posts'], ':
 							<select name="remove_type">
 								<option value="none">', $txt['deleteAccount_none'], '</option>
 								<option value="posts">', $txt['deleteAccount_all_posts'], '</option>
@@ -2137,13 +2135,13 @@ function template_profile_save()
 							', $field['input_html'], '
 						</dd>';
 		}
-		
+
 		echo '
 					</dl>';
 	}
 */
 	echo '
-			
+
 					<hr width="100%" size="1" class="hrcolor" />';
 
 	// Only show the password box if it's actually needed.
@@ -2495,13 +2493,13 @@ function template_profile_avatar_select()
 									', ($context['member']['avatar']['id_attach'] > 0 ? '<br /><br /><img src="' . $context['member']['avatar']['href'] . (strpos($context['member']['avatar']['href'], '?') === false ? '?' : '&amp;') . 'time=' . time() . '" alt="" /><input type="hidden" name="id_attach" value="' . $context['member']['avatar']['id_attach'] . '" />' : ''), '
 								</div>';
 	}
-	
+
 	echo '
 								<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 									', !empty($context['member']['avatar']['allow_server_stored']) ? 'document.getElementById("avatar_server_stored").style.display = "' . ($context['member']['avatar']['choice'] == 'server_stored' ? '' : 'none') . '";' : '', '
 									', !empty($context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "' . ($context['member']['avatar']['choice'] == 'external' ? '' : 'none') . '";' : '', '
 									', !empty($context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "' . ($context['member']['avatar']['choice'] == 'upload' ? '' : 'none') . '";' : '', '
-									
+
 									function swap_avatar(type)
 									{
 										switch(type.id)
@@ -2624,7 +2622,7 @@ function template_authentication_method()
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/register.js"></script>
 		<form action="', $scripturl, '?action=profile;area=authentication;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data">
 			<h3 class="titlebg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
 				', $txt['authentication'], '
 			</h3>

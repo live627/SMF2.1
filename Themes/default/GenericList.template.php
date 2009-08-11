@@ -17,7 +17,7 @@ function template_show_list($list_id = null)
 		echo '
 	<form action="', $cur_list['form']['href'], '" method="post"', empty($cur_list['form']['name']) ? '' : ' name="'. $cur_list['form']['name'] . '" id="' . $cur_list['form']['name'] . '"', ' accept-charset="', $context['character_set'], '">
 		<div class="generic_list">';
-	
+
 	// Show the title of the table (if any).
 	if (!empty($cur_list['title']))
 		echo '
@@ -31,19 +31,19 @@ function template_show_list($list_id = null)
 
 	if (isset($cur_list['additional_rows']['top_of_list']))
 		template_additional_rows('top_of_list', $cur_list);
-				
+
 	if (isset($cur_list['additional_rows']['after_title']))
-	{	
+	{
 		echo '
 			<div class="information">';
 		template_additional_rows('after_title', $cur_list);
 		echo '
 			</div>';
 	}
-		
+
 	if (isset($cur_list['additional_rows']['above_column_headers']))
 	{
-		echo '	
+		echo '
 			<div class="floatright">';
 		template_additional_rows('above_column_headers', $cur_list);
 		echo '
@@ -54,12 +54,12 @@ function template_show_list($list_id = null)
 	if (!empty($cur_list['items_per_page']))
 		echo '
 		<div class="pagesection">', $txt['pages'], ': ', $cur_list['page_index'], '</div>';
-	
-	
+
+
 	echo '
 		<table class="table_grid" cellspacing="0" width="', !empty($cur_list['width']) ? $cur_list['width'] : '100%', '">';
 
-	
+
 	// Show the column headers.
 	if(!(count($cur_list['headers']) < 2 && empty($cur_list['headers'][0]['label'])))
 	{
@@ -100,10 +100,10 @@ function template_show_list($list_id = null)
 
 	echo '
 		</table>';
-	
+
 	echo '
 		<div class="flow_auto">';
-	
+
 	// Show the page index (if this list doesn't intend to show all items).
 	if (!empty($cur_list['items_per_page']))
 		echo '
@@ -111,16 +111,16 @@ function template_show_list($list_id = null)
 				<div class="pagesection">', $txt['pages'], ': ', $cur_list['page_index'], '</div>
 			</div>';
 
-		
+
 	if (isset($cur_list['additional_rows']['below_table_data']))
 	{
-		echo '	
+		echo '
 			<div class="floatright">';
 		template_additional_rows('below_table_data', $cur_list);
 		echo '
 			</div>';
 	}
-	
+
 	if (isset($cur_list['additional_rows']['bottom_of_list']))
 	{
 		echo '
@@ -128,17 +128,17 @@ function template_show_list($list_id = null)
 		template_additional_rows('bottom_of_list', $cur_list);
 		echo '
 			</div>';
-	}	
+	}
 	echo '
 		</div>';
-	
+
 	if (isset($cur_list['form']))
 	{
 		foreach ($cur_list['form']['hidden_fields'] as $name => $value)
 			echo '
 		<input type="hidden" name="', $name, '" value="', $value, '" />';
 		echo '
-		</div>	
+		</div>
 	</form>';
 	}
 

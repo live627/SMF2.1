@@ -8,7 +8,7 @@ if (empty($_GET['format']))
 $latest_news = array(
 	array(
 		'time' => 1233807001,
-		
+
 		'subject_english' => 'SMF 2.0 RC1 Public Released',
 		'message_english' => 'Simple Machines are very pleased to annouce the release of the first Release Candidate of SMF 2.0. Please visit the Simple Machines site for more information on how you can help test this new release.',
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=290609.0',
@@ -44,7 +44,7 @@ $latest_news = array(
 
 	array(
 		'time' => 1208742974,
-		
+
 		'subject_english' => 'SMF 1.1.5',
 		'message_english' => 'A patch has been released fixing a few bugs and addressing some security vulnerabilities.  We urge all forum administrators to upgrade to SMF 1.1.5&mdash;simply visit the package manager to install the patch.',
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=236816.0',
@@ -52,7 +52,7 @@ $latest_news = array(
 	),
 	array(
 		'time' => 1205781621,
-		
+
 		'subject_english' => 'SMF 2.0 Beta 3 Public Released',
 		'message_english' => 'Simple Machines are very pleased to annouce the release of the first public beta of SMF 2.0. Please visit the Simple Machines site for more information on how you can help test this new release.',
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=228921.0',
@@ -60,7 +60,7 @@ $latest_news = array(
 	),
 	array(
 		'time' => 1190682456,
-		
+
 		'subject_english' => 'SMF 1.1.4',
 		'message_english' => 'A patch has been released to address some security vulnerabilities discovered in SMF 1.1.3.  We urge all forum administrators to upgrade to SMF 1.1.4&mdash;simply visit the package manager to install the patch.',
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=196380.0',
@@ -169,7 +169,7 @@ $latest_news = array(
 		'message_turkish' => 'SMF nin 1.0.6 sürümü çikti.  Bu sürümde 1.0.5 de bulunan bazi küçük hatalar ve potansiyel bir güvenlik açigi düzeltilmis bulunuyor. Bu güncellemeyi paket yöneticinizi veya diger metotlari kullanarak hemen uygulamaniz önerilir.',
 
 		'subject_german' => 'SMF 1.0.6',
-		'message_german' => 'SMF 1.0.6 wurde ver&ouml;ffentlicht. Diese Version behebt ein potentielles Sicherheitsrisiko und mehrere kleine Fehler, die nach Version 1.0.5 gefunden worden sind. Sie k&ouml;nnen Ihr Forum sofort mit Hilfe des Paket-Managers aktualisieren oder das Update-Paket herunterladen. Diese Version darf nicht mit SMF 1.1 benutzt werden!', 
+		'message_german' => 'SMF 1.0.6 wurde ver&ouml;ffentlicht. Diese Version behebt ein potentielles Sicherheitsrisiko und mehrere kleine Fehler, die nach Version 1.0.5 gefunden worden sind. Sie k&ouml;nnen Ihr Forum sofort mit Hilfe des Paket-Managers aktualisieren oder das Update-Paket herunterladen. Diese Version darf nicht mit SMF 1.1 benutzt werden!',
 	),
 	array(
 		'time' => 1138108185,

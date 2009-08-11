@@ -41,11 +41,11 @@
 				'output' => '[url=mailto:David@bla.com]',
 			),
 		);
-		
+
 		public function initialize()
 		{
 			global $sourcedir, $smcFunc;
-			
+
 			require_once($sourcedir . '/Subs.php');
 
 			$smileys = array(
@@ -69,10 +69,10 @@
 						'unit_test' => '[UnitTest] ' . $index,
 					)
 				);
-				
+
 				if ($smcFunc['db_num_rows']($request) === 0)
 				{
-					$smcFunc['db_insert']('', 
+					$smcFunc['db_insert']('',
 						'{db_prefix}smileys',
 						array(
 							'code' => 'string',
@@ -97,7 +97,7 @@
 				$smcFunc['db_free_result']($request);
 			}
 		}
-		
+
 		public function getTests()
 		{
 			$tests = array();
@@ -106,27 +106,27 @@
 					'name' => $testInfo['name'],
 					'description' => $testInfo['description'],
 				);
-			
+
 			return $tests;
 		}
-		
+
 		public function doTest($testID)
 		{
 			global $modSettings, $user_info;
 
 			if (!isset($this->_tests[$testID]))
 				return 'Invalid test ID given';
-				
+
 			$this->_tests[$testID]['output'] = strtr($this->_tests[$testID]['output'], array('{smiley_url}' => $modSettings['smileys_url'] . '/' . $user_info['smiley_set']));
 			$message = $this->_tests[$testID]['input'];
 			parsesmileys($message);
 			if ($message === $this->_tests[$testID]['output'])
 				return true;
-				
+
 			else
 				return sprintf("Unexpected output received from parsesmileys().\n\nInput:\n%1\$s\n\nExpected output:\n%2\$s\n\nReal output:\n%3\$s", htmlspecialchars($this->_tests[$testID]['input']), htmlspecialchars($this->_tests[$testID]['output']), htmlspecialchars($message));
 		}
-		
+
 		public function getTestDescription($testID)
 		{
 			if (isset($this->_tests[$testID]['description']))
@@ -135,8 +135,8 @@
 				return 'No description available';
 			else
 				return 'Invalid test ID given';
-					
-			
-			
+
+
+
 		}
 	}

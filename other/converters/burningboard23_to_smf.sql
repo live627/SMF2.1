@@ -22,8 +22,8 @@ WHERE min_posts != -1
 if (trim($row['stars']) != '')
 	$row['stars'] = sprintf("%d#star.gif", substr_count($row['stars'], ';') + 1);
 ---}
-SELECT 
-	SUBSTRING(ranktitle, 1, 80) AS group_name, needposts AS min_posts, 
+SELECT
+	SUBSTRING(ranktitle, 1, 80) AS group_name, needposts AS min_posts,
 	'' AS online_color, rankimages AS stars
 FROM {$from_prefix}ranks
 WHERE groupid NOT IN (1, 2, 3)
@@ -112,9 +112,9 @@ $row['signature'] = substr(preg_replace('~\[size=([789]|[012]\d)\]~is', '[size=$
 ---}
 SELECT
 	u.userid AS id_member, SUBSTRING(u.username, 1, 80) AS member_name,
-	u.userposts AS posts, u.regdate AS date_registered, 
-	{$_SESSION['group_id_clause']} AS id_group, 
-	SUBSTRING(u.title, 1, 255) AS usertitle, u.lastvisit AS last_login, 
+	u.userposts AS posts, u.regdate AS date_registered,
+	{$_SESSION['group_id_clause']} AS id_group,
+	SUBSTRING(u.title, 1, 255) AS usertitle, u.lastvisit AS last_login,
 	SUBSTRING(u.username, 1, 255) AS real_name,
 	SUBSTRING(u.email, 1, 255) AS email_address,
 	{$_SESSION['password_clause']} AS passwd,
@@ -124,7 +124,7 @@ SELECT
 	SUBSTRING(u.homepage, 1, 255) AS website_url, u.birthday AS birthdate,
 	IF(u.invisible = 0, 1, 0) AS show_online, u.gender,
 	SUBSTRING(u.usertext, 1, 255) AS personal_text,
-	IF(u.showemail = 0, 1, 0) AS hide_email, 
+	IF(u.showemail = 0, 1, 0) AS hide_email,
 	u.signature AS signature, u.timezoneoffset AS time_offset, '' AS lngfile,
 	'' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
 	'' AS location, '' AS time_format, '' AS avatar, '' AS member_ip,
@@ -165,8 +165,8 @@ FROM {$from_prefix}avatars;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT 
-	boardid AS id_cat, SUBSTRING(title, 1, 255) AS name, 
+SELECT
+	boardid AS id_cat, SUBSTRING(title, 1, 255) AS name,
 	boardorder AS cat_order
 FROM {$from_prefix}boards
 WHERE isboard = 0;
@@ -253,7 +253,7 @@ SELECT
 	IF(p.timeout = 0, 0, (p.starttime + 86400 * p.timeout)) AS expire_time,
 	SUBSTRING(IFNULL(u.username, ''), 1, 255) AS poster_name,
 	choicecount AS max_votes
-FROM {$from_prefix}polls AS p 
+FROM {$from_prefix}polls AS p
 	INNER JOIN {$from_prefix}threads AS t ON (p.threadid = t.threadid)
 	LEFT JOIN {$from_prefix}users AS u ON (u.userid = t.starterid);
 
@@ -273,7 +273,7 @@ if (!isset($_SESSION['convert_last_poll']) || $_SESSION['convert_last_poll'] != 
 
 $row['id_choice'] = ++$_SESSION['convert_last_choice'];
 ---}
-SELECT 
+SELECT
 	pollid AS id_poll, 1 AS id_choice,
 	SUBSTRING(polloption, 1, 255) AS label, votes
 FROM {$from_prefix}polloptions
@@ -285,7 +285,7 @@ ORDER BY pollid;
 /******************************************************************************/
 
 ---* {$to_prefix}log_polls
-SELECT 
+SELECT
 	id AS id_poll, userid AS id_member
 FROM {$from_prefix}votes
 GROUP BY id_poll, id_member;
@@ -332,7 +332,7 @@ FROM {$from_prefix}privatemessagereceipts;
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
-SELECT 
+SELECT
 	userid AS id_member, threadid AS id_topic
 FROM {$from_prefix}subscribethreads;
 ---*
@@ -342,7 +342,7 @@ FROM {$from_prefix}subscribethreads;
 /******************************************************************************/
 
 ---* {$to_prefix}log_notify
-SELECT 
+SELECT
 	userid AS id_member, boardid AS id_board
 FROM {$from_prefix}subscribeboards;
 ---*
@@ -354,7 +354,7 @@ FROM {$from_prefix}subscribeboards;
 TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
-SELECT 
+SELECT
 	userid AS id_member, boardid AS id_board
 FROM {$from_prefix}moderators;
 ---*
@@ -527,7 +527,7 @@ $currentCodes = array();
 
 while ($row = convert_fetch_assoc($request))
 	$currentCodes[] = $row['code'];
-	
+
 convert_free_result($request);
 
 $rows = array();

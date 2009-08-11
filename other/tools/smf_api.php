@@ -463,7 +463,7 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 	// We could, build a custom function to figure out if it is a string or int, but assuming string is quicker.
 	$register_keys = array_combine(array_keys($extra_fields + $register_vars), array_fill(0, count($register_vars), 'string'));
 
-	$smcFunc['db_insert']('insert', 
+	$smcFunc['db_insert']('insert',
 		$smf_settings['db_prefix'] . 'members',
 		$register_keys,
 		$register_vars,
@@ -497,7 +497,7 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 				'cur_date' => strftime('%Y-%m-%d'),
 		));
 	if ($smcFunc['db_affected_rows']($smf_connection) == 0)
-		$smcFunc['db_insert']('insert', 
+		$smcFunc['db_insert']('insert',
 			$smf_settings['db_prefix'] . 'log_activity',
 			array('date' => 'string', 'registers' => 'int'),
 			array(strftime('%Y-%m-%d'), 1),
@@ -558,7 +558,7 @@ function smf_logOnline($action = null)
 				'last_active' => time() - $lastActive,
 				'cur_ip' => 'ip' . $_SERVER['REMOTE_ADDR'],
 		));
-		$smcFunc['db_insert']('insert', 
+		$smcFunc['db_insert']('insert',
 			$smf_settings['db_prefix'] . 'log_online',
 			array('session' => 'string', 'id_member' => 'int', 'ip' => 'raw', 'url' => 'string', 'url' => 'string', 'log_time' => 'int'),
 			array('ip' . $_SERVER['REMOTE_ADDR'], 0, 'IFNULL(INET_ATON("' . $_SERVER['REMOTE_ADDR'] . '"), 0)', $serialized, time()),
@@ -632,7 +632,7 @@ function smf_logError($error_message, $file = null, $line = null)
 		$smf_user_info['id'] = 0;
 
 	// Insert the error into the database.
-	$smcFunc['db_insert']('insert', 
+	$smcFunc['db_insert']('insert',
 		$smf_settings['db_prefix'] . 'log_errors'
 		array(
 			'id_member' => 'int', 'log_time' => 'int', 'ip' => 'string', 'url' => 'string', 'message' => 'string', 'session' => 'string'

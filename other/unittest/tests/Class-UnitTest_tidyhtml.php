@@ -3,13 +3,13 @@
 	class UnitTest_tidyhtml extends UnitTest
 	{
 		protected $_tidyPath;
-		
+
 		protected $_tests = array();
-		
+
 		protected $_ignoreErrors = array(
 			'~Warning: trimming empty <[^>]+>~',
 		);
-		
+
 		protected $_id_board;
 		protected $_id_topic;
 		protected $_id_topic2;
@@ -18,21 +18,21 @@
 		protected $_id_msg3;
 		protected $_id_member;
 		protected $_id_cat;
-		
+
 		public function __construct()
 		{
 			global $boarddir, $scripturl;
-			
+
 			$this->_tidyPath = $boarddir . '/other/unittest/validation/tidy.exe';
 			$this->_openSpPath = $boarddir . '/other/unittest/validation/onsgmls.exe';
-			
+
 			$this->_id_board = $this->_getUnitTestBoardId();
-			
+
 			$this->_id_member = $this->_getUnitTestMemberId('admin');
-			
+
 			list($this->_id_msg, $this->_id_topic) = $this->_getUnitTestTopic($this->_id_board, $this->_id_member, 'Testing HTML tidy', 'This topic will is only there to check if the display page is properly xHTML compatible.');
 			$this->_createReply($this->_id_board, $this->_id_topic, $this->_id_member, 'HTML tidy reply', 'A reply to the topic');
-			
+
 			list($this->_id_msg3, $this->_id_topic2) = $this->_getUnitTestTopic($this->_id_board, $this->_id_member, 'Testing HTML tidy - merge topic', 'This topic is needed to test the second step of a topic merge.');
 			$this->_id_cat = $this->_getUnitTestCatId();
 
@@ -1067,14 +1067,14 @@
 					'url' => $scripturl . '?action=who',
 				),
 			);
-					
+
 		}
-				
+
 		public function initialize()
 		{
-			
+
 		}
-		
+
 		public function getTests()
 		{
 			$tests = array();
@@ -1083,29 +1083,29 @@
 					'name' => $testInfo['name'],
 					'description' => $testInfo['description'],
 				);
-			
+
 			return $tests;
 		}
-		
+
 		public function doTest($testID)
 		{
 			global $scripturl;
-			
+
 			if (!isset($this->_tests[$testID]))
 				return 'Invalid test ID given';
-				
+
 			$returnDoc = $this->_simulateClick($this->_tests[$testID]['url'], isset($this->_tests[$testID]['id_member']) ? $this->_tests[$testID]['id_member'] : $this->_id_member);
 			//
 			$testResults = $this->_testHtml($returnDoc['html'], $this->_openSpPath . ' -wvalid -wnon-sgml-char-ref -wno-duplicate -E0 -s ' . dirname($this->_openSpPath) . '/xml.dcl -');
 			if (empty($testResults))
 				$testResults = $this->_testHtml($returnDoc['html'], $this->_tidyPath . ' -errors -quiet -access -1');
-				
+
 			if (empty($testResults))
 				return true;
 			else
 				return htmlspecialchars(implode("\n", $testResults) . "\n" . $this->_tests[$testID]['url']);
 		}
-		
+
 		public function getTestDescription($testID)
 		{
 			if (isset($this->_tests[$testID]['description']))
@@ -1119,50 +1119,50 @@
 		protected function _testHtml($html, $tool)
 		{
 			global $cachedir;
-			
-			
-			
+
+
+
 			// Apparently windows can't handle large stdin values, therefor a file streaming is needed..
 			$tempFile = $cachedir . '/tmp_validator_' . md5(mt_rand(0, 10000000000)) . '.html';
 			file_put_contents($tempFile, $html);
-			
-			
+
+
 			$descriptorspec = array(
 			   0 => array('file', $tempFile, 'r'),  // stdin
 			   1 => array('pipe', 'w'),  // stdout
 			   2 => array('pipe', 'w') // stder
 			);
-			
+
 			$process = @proc_open($tool, $descriptorspec, $pipes, null, null, array('bypass_shell' => true));
-			
+
 			if (is_resource($process))
 			{
 			    fclose($pipes[1]);
-			
+
 			    $errorList = array();
 			    while (!feof($pipes[2]))
 			    {
 				    $line = trim(fgets($pipes[2], 1024), "\n\r");
 				    if (empty($line))
 				    	continue;
-				    	
+
 					foreach ($this->_ignoreErrors as $ignorePattern)
 						if (preg_match($ignorePattern, $line) === 1)
 							continue 2;
 					$errorList[] = $line;
 			    }
 			    fclose($pipes[2]);
-			    
+
 				proc_close($process);
 			}
 			else
 				$errorList = array('Unable to test page');
-				
-				
+
+
 			@unlink($tempFile);
-				
+
 			return $errorList;
 		}
 	}
-	
+
 ?>

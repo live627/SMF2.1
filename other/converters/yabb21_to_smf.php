@@ -167,7 +167,7 @@ if (empty($preparsing))
 				if ($match[3] < 1)
 					$newbie = true;
 			}
-			elseif (preg_match('~\$NoPost\{(\d+)\} = [\'|"]([^|]*)\|(\d*)\|([^|]*)\|([^|]*)~', $group, $match) != 0) 
+			elseif (preg_match('~\$NoPost\{(\d+)\} = [\'|"]([^|]*)\|(\d*)\|([^|]*)\|([^|]*)~', $group, $match) != 0)
 			{
 				$match = addslashes_recursive($match);
 				$extraGroups[] = "SUBSTRING('$match[2]', 1, 80), SUBSTRING('$match[5]', 1, 20), 0, SUBSTRING('$match[3]#$match[4]', 1, 255)";
@@ -205,7 +205,7 @@ if (empty($preparsing))
 
 	function convertStep3()
 	{
-//return true;	
+//return true;
 		global $to_prefix, $yabb, $block_settings;
 
 		// Change the block size as needed
@@ -598,9 +598,9 @@ if (empty($preparsing))
 // THEN HAVING THIS NOT RETURN SHOULD LET THEM CONVERT!
 	function convertStep6()
 	{
-return true;		
+return true;
 		global $to_prefix, $yabb, $block_settings;
-		
+
 		// Change the block size as needed
 		$block_size = $block_settings['pms'];
 
@@ -689,7 +689,7 @@ return true;
 
 	function convertStep7()
 	{
-//return true;		
+//return true;
 		global $to_prefix, $yabb;
 
 		print_line('Converting boards and categories...');
@@ -820,7 +820,7 @@ return true;
 
 	function convertStep8()
 	{
-//return true;	
+//return true;
 		global $to_prefix, $yabb, $block_settings;
 
 		// Change the block size as needed
@@ -856,7 +856,7 @@ return true;
 			$topicListing = file($yabb['boardsdir'] . '/' . $boardname . '.txt');
 			$topicListing = array_reverse($topicListing);
 			$counter = '1';
-			
+
 			foreach ($topicListing as $topicData)
 			{
 				if ($data_n++ < $_GET['substep'])
@@ -886,7 +886,7 @@ return true;
 					doBlock('topics', $block);
 					pastTime($data_n);
 				}
-				
+
 			}
 		}
 
@@ -901,7 +901,7 @@ return true;
 
 	function convertStep9()
 	{
-//return true;	
+//return true;
 		global $to_prefix, $yabb;
 
 		if ($_GET['substep'] == 0 && !empty($_SESSION['purge']))
@@ -1003,13 +1003,13 @@ return true;
 		doBlock('log_mark_read', $mark_read_block, true);
 		doBlock('log_boards', $boards_block, true);
 		doBlock('log_topics', $topics_block, true);
-		
+
 		print_line($file_n . ' Converted...', true);
 	}
 
 	function convertStep10()
 	{
-//return true;		
+//return true;
 		global $to_prefix, $yabb, $block_settings;
 
 		// Change the block size as needed
@@ -1085,7 +1085,7 @@ return true;
 							'[/glow]',
 						),
 					$row['body']
-					); 
+					);
 
 					if (isset($yabb['uploaddir']) && !empty($message[12]) && file_exists($yabb['uploaddir'] . '/' . $message[12]))
 					{
@@ -1136,7 +1136,7 @@ return true;
 
 	function convertStep11()
 	{
-//return true;		
+//return true;
 		global $to_prefix, $yabb, $block_settings;
 
 		// Change the block size as needed
@@ -1261,7 +1261,7 @@ return true;
 
 	function convertStep13()
 	{
-//return true;		
+//return true;
 		global $to_prefix, $yabb, $block_settings;
 
 		// Change the block size as needed
@@ -1343,15 +1343,15 @@ return true;
 		{
 			if ($_GET['substep'] < 0)
 				break;
-			
+
 			if ($file_n++ < $_GET['substep'])
 				continue;
-			
+
 			if (strrchr($entry, '.') != '.poll')
 				continue;
 			//print $entry. '<br>';
 			$pollData = file($yabb['datadir'] . '/' . $entry);
-			
+
 			$id_poll = substr($entry, 0, strrpos($entry, '.'));
 			foreach ($pollData as $i => $v)
 			{
@@ -1436,7 +1436,7 @@ return true;
 
 			// Now for the choices.
 			doBlock('poll_choices', $pollChoicesBlock);
-			
+
 			// Increase the time
 			//$_GET['substep'] += $file_n;
 			pastTime($file_n);
@@ -1453,7 +1453,7 @@ return true;
 		$block_size = $block_settings['polls2'];
 		// How long to take a break?
 		$_GET['substep'] = 0;
-		
+
 		print_line('Converting polls and poll choices (part 2)...');
 
 		while (true)
@@ -1685,7 +1685,7 @@ return true;
 				$temp = $row['temp'];
 				unset($row['temp']);
 			}
-			
+
 			convert_query("
 				INSERT IGNORE INTO {$to_prefix}$table
 					(" . implode(', ', array_keys($row)) . ")
@@ -1700,17 +1700,17 @@ return true;
 				$rec = $temp;
 				if (preg_match('/\.ou/i', $rec))
 					$rec = substr($temp, 0 , -3);
-									
+
 				convert_query("
 					INSERT INTO {$to_prefix}convert
 						(real_id, temp, rec, type)
 					VALUES ({$last}, '{$temp}', '{$rec}', '{$table}')");
-					
+
 			}
 		}
 
 		$block = array();
-		
+
 		if ($return_first && $return_last)
 			return array($first, $last);
 		elseif ($return_first)

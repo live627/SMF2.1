@@ -6,18 +6,18 @@ function template_main()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 
-	// Build the memberlist button array.	
+	// Build the memberlist button array.
 	$memberlist_buttons = array(
 			'view_all_members' => array('text' => 'view_all_members', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' . ';sa=all', 'active'=> true),
 			'mlist_search' => array('text' => 'mlist_search', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' .';sa=search'),
 		);
-	
+
 	echo '
 	<div class="main_section" id="memberlist">
 		<h4 class="catbg"><span class="left"></span>
 			<span class="align_left">', $txt['members_list'], '</span>';
 	if (!isset($context['old_search']))
-			echo '	
+			echo '
 			<span class="align_right">', $context['letter_links'], '</span>';
 	echo '
 		</h4>
@@ -25,7 +25,7 @@ function template_main()
 		', template_button_strip($memberlist_buttons, 'right'), '
 			<div class="align_left">', $txt['pages'], ': ', $context['page_index'], '</div>
 		</div>';
-			
+
 	echo '
 		<div id="mlist" class="tborder topic_table">
 			<table class="table_grid" cellspacing="0" width="100%">
@@ -121,7 +121,7 @@ function template_main()
 			</tbody>
 			</table>
 		</div>';
-	
+
 	echo '
 		<div class="pagesection">
 			<div class="align_left">', $txt['pages'], ': ', $context['page_index'], '</div>';
@@ -135,7 +135,7 @@ function template_main()
 	echo '
 		</div>
 	</div>';
-	
+
 }
 
 // A page allowing people to search the member list.
@@ -143,7 +143,7 @@ function template_search()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 
-	// Build the memberlist button array.	
+	// Build the memberlist button array.
 	$memberlist_buttons = array(
 			'view_all_members' => array('text' => 'view_all_members', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' . ';sa=all'),
 			'mlist_search' => array('text' => 'mlist_search', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' .';sa=search', 'active' => true),
@@ -153,7 +153,7 @@ function template_search()
 	// Start the submission form for the search!
 	echo '
 	<form action="', $scripturl, '?action=mlist;sa=search" method="post" accept-charset="', $context['character_set'], '">
-		<div id="memberlist">	
+		<div id="memberlist">
 			<h3 class="catbg mlist"><span class="left"></span>
 				', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />' : '', $txt['mlist_search'], '
 			</h3>
@@ -170,7 +170,7 @@ function template_search()
 							<input type="text" name="search" value="', $context['old_search'], '" size="35" class="input_text" /> <input type="submit" name="submit" value="' . $txt['search'] . '" class="button_submit" />
 						</div>
 						<span class="align_left">';
-	
+
 	$count = 0;
 	foreach ($context['search_fields'] as $id => $title)
 	{
@@ -182,7 +182,7 @@ function template_search()
 						</span>
 						<span class="align_left">';
 	}
-		echo '		
+		echo '
 						</span>
 					</div>
 				</div>

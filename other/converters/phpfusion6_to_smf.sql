@@ -21,7 +21,7 @@ $temp = explode('.', $row['additional_groups']);
 $new_groups = array();
 foreach ($temp AS $grp)
 	$new_groups[] = $grp + 8;
-	
+
 $row['additional_groups'] = implode(',', $new_groups);
 ---}
 SELECT
@@ -134,7 +134,7 @@ $row['body'] = preg_replace(
 		'[email]$1[/email]',
 		'[email=$1]$2[/email]',
 		'[size=8px]$1[/size]',
-		
+
 	), $row['body']);
 
 ---}

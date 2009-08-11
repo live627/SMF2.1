@@ -153,8 +153,8 @@ function template_manual_above()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>', $txt['help'], '</h3>
-		<h4 class="titlebg"><span class="left"></span><span class="right"></span>', $context['manual_area_data']['label'], '</h4>
+		<h3 class="catbg"><span class="left"></span>', $txt['help'], '</h3>
+		<h4 class="titlebg"><span class="left"></span>', $context['manual_area_data']['label'], '</h4>
 		<div id="help_container">
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>

@@ -9,7 +9,7 @@
 
 // Categories
 $txt['manual_category_getting_started'] = 'Getting Started';
-$txt['manual_category_registering'] = 'Registering'; 
+$txt['manual_category_registering'] = 'Registering';
 $txt['manual_category_profile_features'] = 'Profile Features';
 $txt['manual_category_posting_basics'] = 'Posting Basics';
 $txt['manual_category_personal_messages'] = 'Personal Messages';

@@ -9,18 +9,18 @@ function template_main()
 	<br />
 	<form action="', $scripturl, '?action=reminder;sa=picktype" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder login">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['authentication_reminder'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe"><div class="innerframe">
+			<div class="roundframe">
 				<p class="smalltext centertext">', $txt['password_reminder_desc'], '</p>
 				<dl>
 					<dt>', $txt['user_email'], ':</dt>
 					<dd><input type="text" name="user" size="30" class="input_text" /></dd>
 				</dl>
 				<p class="centertext"><input type="submit" value="', $txt['reminder_continue'], '" class="button_submit" /></p>
-			</div></div>
+			</div>
 			<span class="lowerframe"><span></span></span>
 		</div>
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -35,11 +35,11 @@ function template_reminder_pick()
 	<br />
 	<form action="', $scripturl, '?action=reminder;sa=picktype" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder login">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['authentication_reminder'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe"><div class="innerframe">
+			<div class="roundframe">
 				<p><strong>', $txt['authentication_options'], ':</strong></p>
 				<p>
 					<input type="radio" name="reminder_type" id="reminder_type_email" value="email" checked="checked" class="input_radio" /></dt>
@@ -50,7 +50,7 @@ function template_reminder_pick()
 					<label for="reminder_type_secret">', $txt['authentication_' . $context['account_type'] . '_secret'], '</label>
 				</p>
 				<p class="centertext"><input type="submit" value="', $txt['reminder_continue'], '" class="button_submit" /></p>
-			</div></div>
+			</div>
 			<span class="lowerframe"><span></span></span>
 		</div>
 		<input type="hidden" name="uid" value="', $context['current_member']['id'], '" />
@@ -65,7 +65,7 @@ function template_sent()
 	echo '
 		<br />
 		<div class="tborder login" id="reminder_sent">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				' . $context['page_title'] . '
 			</h3>
 			<p class="information">' . $context['description'] . '</p>
@@ -81,11 +81,11 @@ function template_set_password()
 	<br />
 	<form action="', $scripturl, '?action=reminder;sa=setpassword2" name="reminder_form" id="reminder_form" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder login">
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span>
 				', $context['page_title'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe"><div class="innerframe">
+			<div class="roundframe">
 				<dl>
 					<dt>', $txt['choose_pass'], ': </dt>
 					<dd>
@@ -103,7 +103,7 @@ function template_set_password()
 					</dd>
 				</dl>
 				<p class="align_center"><input type="submit" value="', $txt['save'], '" class="button_submit" /></p>
-			</div></div>
+			</div>
 			<span class="upperframe"><span></span></span>
 		</div>
 		<input type="hidden" name="code" value="', $context['code'], '" />
@@ -131,11 +131,11 @@ function template_ask()
 	<br />
 	<form action="', $scripturl, '?action=reminder;sa=secret2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 		<div class="tborder login">
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span>
 				', $txt['authentication_reminder'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe"><div class="innerframe">
+			<div class="roundframe">
 				<p class="smalltext">', $context['account_type'] == 'password' ? $txt['enter_new_password'] : $txt['openid_secret_reminder'], '</p>
 				<dl>
 					<dt>', $txt['secret_question'], ':</dt>
@@ -163,7 +163,7 @@ function template_ask()
 	echo '
 				</dl>
 				<p class="align_center"><input type="submit" value="', $txt['save'], '" class="button_submit" /></p>
-			</div></div>	
+			</div>
 			<span class="lowerframe"><span></span></span>
 		</div>
 		<input type="hidden" name="uid" value="', $context['remind_user'], '" />

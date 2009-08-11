@@ -102,7 +102,7 @@ SELECT
 FROM {$from_prefix}users AS u
 	LEFT JOIN {$from_prefix}bbranks AS r ON (r.rank_id = u.user_rank AND r.rank_special = 1)
 	LEFT JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.group_name = CONCAT('phpBB ', r.rank_title))
-	
+
 WHERE u.user_id != -1
 GROUP BY u.user_id;
 ---*

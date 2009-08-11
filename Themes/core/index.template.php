@@ -296,7 +296,7 @@ function template_body_above()
 		echo '
 			</div>
 		</div>';
-		
+
 	echo '
 		<div id="news_section" class="titlebg2 clearfix"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>
 			<form class="floatright" id="search_form" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
@@ -513,7 +513,7 @@ function template_button_strip($button_strip, $direction = 'top', $strip_options
 		// Make the last one, as easy as possible.
 		$list_item = array('<li>','<li class="active">');
 		$active_item = array('<li class="last">','<li class="active last">');
-		
+
 		$buttons[count($buttons) - 1] = str_replace($list_item, $active_item, $buttons[count($buttons) - 1]);
 	}
 

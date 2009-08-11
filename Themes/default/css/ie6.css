@@ -19,18 +19,18 @@
 }
 
 /* the page section*/
-.pagesecttion 
+.pagesecttion
 {
 	overflow: auto;
 }
 /* the user section needs some attention */
 #main_menu
 {
-    width: 98%;
+	width: 98%;
 }
 #top_section
 {
-    height: 65px;
+	height: 65px;
 }
 
 /* the tabled definition lists */

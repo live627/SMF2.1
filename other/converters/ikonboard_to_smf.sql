@@ -63,7 +63,7 @@ FROM {$from_prefix}member_profiles;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT 
+SELECT
 	CAT_ID AS id_cat, SUBSTRING(CAT_NAME, 1, 255) AS name, CAT_POS AS cat_order
 FROM {$from_prefix}categories;
 ---*
@@ -108,13 +108,13 @@ TRUNCATE {$to_prefix}log_boards;
 TRUNCATE {$to_prefix}log_mark_read;
 
 ALTER TABLE {$to_prefix}tmp_messages ORDER BY date;
-ALTER TABLE {$to_prefix}tmp_messages 
+ALTER TABLE {$to_prefix}tmp_messages
 	ADD id_msg INT( 12 ) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
-	
-ALTER TABLE {$to_prefix}tmp_messages  
+
+ALTER TABLE {$to_prefix}tmp_messages
 	ADD INDEX old_id_msg (old_id_msg);
-	
-ALTER TABLE {$to_prefix}tmp_messages  
+
+ALTER TABLE {$to_prefix}tmp_messages
 	ADD INDEX old_id_topic (old_id_topic);
 
 

@@ -110,7 +110,7 @@ function template_main()
 		</table>
 	</div>
 </div>';
-	}		
+	}
 
 	if (!empty($options['show_board_desc']) && $context['description'] != '')
 		echo '
@@ -158,15 +158,15 @@ function template_main()
 			if (empty($context['can_quick_mod']))
 			    echo '
 							<th scope="col" class="smalltext last_th" width="22%"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>';
-            else
+			else
 			    echo '
 				         	<th scope="col" class="smalltext" width="22%"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>';
-  
+
 			// Show a "select all" box for quick moderation?
 			if (!empty($context['can_quick_mod']) && $options['display_quick_mod'] == 1)
 				echo '
 							<th scope="col" class="smalltext last_th" width="24"><input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" /></th>';
-							
+
 			// If it's on in "image" mode, don't show anything but the column.
 			elseif (!empty($context['can_quick_mod']))
 				echo '

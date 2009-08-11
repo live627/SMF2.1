@@ -8,7 +8,7 @@ function template_main()
 
 	echo '
 		<div id="calendar">
-			<div id="month_grid">			
+			<div id="month_grid">
 				', template_show_month_grid('prev'), '
 				', template_show_month_grid('current'), '
 				', template_show_month_grid('next'), '
@@ -20,7 +20,7 @@ function template_main()
 	$calendar_buttons = array(
 		'post_event' => array('test' => 'can_post', 'text' => 'calendar_post_event', 'image' => 'calendarpe.gif', 'lang' => true, 'url' => $scripturl . '?action=calendar;sa=post;month=' . $context['current_month'] . ';year=' . $context['current_year'] . ';' . $context['session_var'] . '=' . $context['session_id']),
 	);
-	
+
 	template_button_strip($calendar_buttons, 'right');
 
 	// Show some controls to allow easy calendar navigation.
@@ -99,7 +99,7 @@ function template_event_post()
 	echo '
 			<div id="post_event">
 			<h3 class="catbg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				', $context['page_title'], '
 			</h3>
 			<div class="windowbg">
@@ -232,7 +232,7 @@ function template_event_post()
 						</table>
 				</div>
 				<span class="botslice"><span></span></span>
-			</div>	
+			</div>
 		</form>';
 }
 
@@ -248,9 +248,9 @@ function template_show_month_grid($grid_name)
 	$colspan = !empty($calendar_data['show_week_links']) ? 8 : 7;
 
 	if (empty($calendar_data['disable_title']))
-	{     
+	{
 		echo '
-				<h3 class="catbg centertext" style="font-size: ', $calendar_data['size'] == 'large' ? 'large' : 'small', ';"><span class="left"></span><span class="right"></span>';
+				<h3 class="catbg centertext" style="font-size: ', $calendar_data['size'] == 'large' ? 'large' : 'small', ';"><span class="left"></span>';
 
 	    if (empty($calendar_data['previous_calendar']['disabled']) && $calendar_data['show_next_prev'])
 			echo '
@@ -271,7 +271,7 @@ function template_show_month_grid($grid_name)
 	            </h3>';
 	}
 
-	echo ' 	
+	echo '
 				<table cellspacing="1" class="calendar_table">';
 
 	// Show each day of the week.
@@ -415,7 +415,7 @@ function template_show_week_grid($grid_name)
 	foreach ($calendar_data['months'] as $month_data)
 	{
 		echo '
-				<h3 class="catbg weekly"><span class="left"></span><span class="right"></span>';
+				<h3 class="catbg weekly"><span class="left"></span>';
 
 		if (empty($calendar_data['previous_calendar']['disabled']) && $calendar_data['show_next_prev'] && empty($done_title))
 			echo '
@@ -432,14 +432,14 @@ function template_show_week_grid($grid_name)
 		$done_title = true;
 
 		echo '
-	 		   <table width="100%" class="calendar_table weeklist" cellspacing="1" cellpadding="0">';		
+	 		   <table width="100%" class="calendar_table weeklist" cellspacing="1" cellpadding="0">';
 
 		foreach ($month_data['days'] as $day)
 		{
 			echo '
 					<tr>
 						<td colspan="2">
-							<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+							<h4 class="titlebg"><span class="left"></span>
 							', $txt['days'][$day['day_of_week']], '</h4>
 						</td>
 					</tr>

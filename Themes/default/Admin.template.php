@@ -9,7 +9,7 @@ function template_admin()
 	// Welcome message for the admin.
 	echo '
 	<div id="admincenter">
-		<h3 class="titlebg"><span class="left"></span><span class="right"></span>'; 
+		<h3 class="titlebg"><span class="left"></span>';
 
 	if ($context['user']['is_admin'])
 		echo '
@@ -25,16 +25,16 @@ function template_admin()
 					<input type="submit" name="search_go" value="', $txt['admin_search_go'], '" class="button_submit" />
 				</form>
 			</div>';
-			
+
 	echo $txt['admin_center'], '
 		</h3>
 		<span class="upperframe"><span></span></span>
-		<div class="roundframe"><div class="innerframe">
+		<div class="roundframe">
 			<div id="welcome">
 				<strong>', $txt['hello_guest'], ' ', $context['user']['name'], '!</strong>
 				', sprintf($txt['admin_main_welcome'], $txt['admin_center'], $txt['help'], $txt['help']), '
 			</div>
-		</div></div>
+		</div>
 		<span class="lowerframe"><span></span></span>';
 
 	// Is there an update available?
@@ -47,7 +47,7 @@ function template_admin()
 	// Display the "live news" from simplemachines.org.
 	echo '
 			<div id="live_news" class="align_left">
-				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<h3 class="catbg"><span class="left"></span>
 					<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" /></a> ', $txt['live'], '
 				</h3>
 				<div class="windowbg">
@@ -62,7 +62,7 @@ function template_admin()
 	// Show the user version information from their server.
 	echo '
 			<div id="supportVersionsTable" class="align_right">
-				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<h3 class="catbg"><span class="left"></span>
 					<a href="', $scripturl, '?action=admin;area=credits">', $txt['support_title'], '</a>
 				</h3>
 				<div class="windowbg">
@@ -104,7 +104,7 @@ function template_admin()
 					</div>
 					<span class="botslice"><span></span></span>
 				</div>
-			</div>			
+			</div>
 		</div>';
 
 
@@ -197,7 +197,7 @@ function template_manage_copyright()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=copyright" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['copyright_removal'], '
 			</h3>
 			<div class="windowbg">
@@ -231,9 +231,9 @@ function template_credits()
 
 	// Show the user version information from their server.
 	echo '
-		
-	<div id="admincenter">		
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+
+	<div id="admincenter">
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['support_title'], '
 		</h3>
 		<div class="windowbg">
@@ -244,13 +244,13 @@ function template_credits()
 				<em id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</em>', $context['can_admin'] ? ' <a href="' . $scripturl . '?action=admin;area=maintain;sa=routine;activity=version">' . $txt['version_check_more'] . '</a>' : '', '<br />
 					', $txt['support_versions_current'], ':
 				<em id="smfVersion" style="white-space: nowrap;">??</em><br />';
-	
+
 	// Display all the variables we have server information for.
 	foreach ($context['current_versions'] as $version)
 		echo '
 					', $version['title'], ':
 				<em>', $version['version'], '</em><br />';
-		
+
 	echo '
 		</div>
 		<span class="botslice"><span></span></span>
@@ -259,7 +259,7 @@ function template_credits()
 
 	// Display latest support questions from simplemachines.org.
 	echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			<a href="', $scripturl, '?action=helpadmin;help=latest_support" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['support_latest'], '
 		</h3>
 		<div class="windowbg2">
@@ -272,20 +272,20 @@ function template_credits()
 
 	// The most important part - the credits :P.
 	echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['admin_credits'], '
 		</h3>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">';
-		
+
 
 	foreach ($context['credits'] as $section)
 	{
 		if (isset($section['pretext']))
 			echo '
 					<p>', $section['pretext'], '</p>';
-		
+
 		echo '
 					<dl>';
 
@@ -299,9 +299,9 @@ function template_credits()
 
 			echo implode(', ', $group['members']), '</dd>';
 		}
-		
+
 		echo '
-					</dl>'; 
+					</dl>';
 
 		if (isset($section['posttext']))
 			echo '
@@ -378,12 +378,12 @@ function template_view_versions()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['admin_version_check'], '
 		</h3>
 		<div class="information">', $txt['version_check_desc'], '</div>
 			<table width="100%" class="table_grid">
-			<thead>	
+			<thead>
 				<tr class="catbg">
 					<th scope="col" class="smalltext" width="50%">
 						<strong>', $txt['admin_smffile'], '</strong>
@@ -427,7 +427,7 @@ function template_view_versions()
 				</tr>
 			</tbody>
 			</table>
-	
+
 			<table id="Sources" width="100%" class="table_grid">
 			<tbody>';
 
@@ -450,7 +450,7 @@ function template_view_versions()
 	echo '
 			</tbody>
 			</table>
-			
+
 			<table width="100%" class="table_grid">
 			<tbody>
 				<tr>
@@ -488,7 +488,7 @@ function template_view_versions()
 	echo '
 			</tbody>
 			</table>
-	
+
 			<table width="100%" class="table_grid">
 			<tbody>
 				<tr>
@@ -582,7 +582,7 @@ function template_view_versions()
 	echo '
 		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=detailed-version.js"></script>
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/admin.js?rc2"></script>
-		<script type="text/javascript"><!-- // --><![CDATA[ 
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var oViewVersions = new smf_ViewVersions({
 				aKnownLanguages: [
 					\'.', implode('\',
@@ -608,7 +608,7 @@ function template_edit_censored()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=postsettings;sa=censor" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['admin_censored_words'], '
 			</h3>
 			<div class="windowbg2">
@@ -657,7 +657,7 @@ function template_edit_censored()
 
 	// This table lets you test out your filters by typing in rude words and seeing what comes out.
 	echo '
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['censor_test'], '
 			</h3>
 			<div class="windowbg">
@@ -684,7 +684,7 @@ function template_not_done()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['not_done_title'], '
 		</h3>
 		<div class="windowbg">
@@ -776,11 +776,11 @@ function template_show_settings()
 	echo '
 	<div id="admincenter">
 		<form action="', $context['post_url'], '" method="post" accept-charset="', $context['character_set'], '"', !empty($context['force_form_onsubmit']) ? ' onsubmit="' . $context['force_form_onsubmit'] . '"' : '', '>';
-	
+
 	// Is there a custom title?
 	if (isset($context['settings_title']))
 		echo '
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $context['settings_title'], '
 			</h3>';
 
@@ -788,7 +788,7 @@ function template_show_settings()
 	if (!empty($context['settings_message']))
 		echo '
 			<div class="information">', $context['settings_message'], '</div>';
-		
+
 	// Now actually loop through all the variables.
 	$is_open = false;
 	foreach ($context['config_vars'] as $config_var)
@@ -809,7 +809,7 @@ function template_show_settings()
 
 			echo '
 					<h3 class="', !empty($config_var['class']) ? $config_var['class'] : 'catbg', '"', !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>
-						<span class="left"></span><span class="right"></span>
+						<span class="left"></span>
 						', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), '
 						', $config_var['label'], '
 					</h3>';
@@ -908,7 +908,7 @@ function template_show_settings()
 					echo '
 								<fieldset id="', $config_var['name'], '">
 									<legend>', $txt['bbcTagsToUse_select'], '</legend>';
-									
+
 					foreach ($context['bbc_columns'] as $bbcColumn)
 					{
 						foreach ($bbcColumn as $bbcTag)
@@ -1050,7 +1050,7 @@ function template_edit_profile_field()
 				<div class="content">
 					<fieldset>
 						<legend>', $txt['custom_edit_general'], '</legend>
-						
+
 						<dl class="settings">
 							<dt>
 								<strong>', $txt['custom_edit_name'], ':</strong>
@@ -1092,7 +1092,7 @@ function template_edit_profile_field()
 							<dd>
 								<input type="checkbox" name="display" id="display"', $context['field']['display'] ? ' checked="checked"' : '', ' class="input_check" />
 							</dd>
-							
+
 							<dt>
 								<strong>', $txt['custom_edit_placement'], ':</strong>
 							</dt>
@@ -1249,7 +1249,7 @@ function template_admin_search_results()
 	global $context, $txt, $settings, $options, $scripturl;
 
 	echo '
-	<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+	<h3 class="titlebg"><span class="left"></span>
 		<div class="align_right">
 			<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" style="font-weight: normal; display: inline;">
 				<input type="text" name="search_term" value="', $context['search_term'], '" class="input_text" />
@@ -1340,7 +1340,7 @@ function template_core_features()
 	if ($context['is_new_install'])
 	{
 		echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['core_settings_welcome_msg'], '
 		</h3>
 		<div class="information">
@@ -1350,7 +1350,7 @@ function template_core_features()
 
 	echo '
 		<form action="', $scripturl, '?action=admin;area=corefeatures;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span>
 				', $txt['core_settings_title'], '
 			</h3>';
 
@@ -1376,7 +1376,7 @@ function template_core_features()
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';
-		
+
 		$alternate = !$alternate;
 	}
 
@@ -1409,7 +1409,7 @@ function template_add_language()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=languages;sa=add;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['add_language'], '
 			</h3>
 			<div class="windowbg">
@@ -1425,8 +1425,8 @@ function template_add_language()
 						<div class="smalltext error">', $txt['add_language_error_' . $context['smf_error']], '</div>';
 
 	echo '
-					
-						
+
+
 					</fieldset>
 					<p>
 						', $context['browser']['is_ie'] ? '<input type="text" name="ie_fix" style="display: none;" class="input_text" /> ' : '', '
@@ -1442,7 +1442,7 @@ function template_add_language()
 	{
 		echo '
 			<div class="information">', $txt['add_language_smf_found'], '</div>
-		
+
 				<table class="table_grid" cellspacing="0" width="100%">
 					<thead>
 					<tr class="catbg">
@@ -1465,7 +1465,7 @@ function template_add_language()
 						<td align="left"><a href="', $language['link'], '">', $txt['add_language_smf_install'], '</a></td>
 					</tr>';
 
-		echo '	
+		echo '
 					</tbody>
 					</table>';
 	}
@@ -1486,7 +1486,7 @@ function template_download_language()
 	{
 		echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['languages_download_complete'], '
 		</h3>
 		<div class="windowbg">
@@ -1512,7 +1512,7 @@ function template_download_language()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=languages;sa=downloadlang;did=', $context['download_id'], ';', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['languages_download'], '
 			</h3>
 			<div class="windowbg">
@@ -1533,7 +1533,7 @@ function template_download_language()
 
 	// Now all the images and the like, javascript hidden cause there are so fecking many.
 	echo '
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span>
 				', $txt['languages_download'], '
 			</h3>
 			<table class="table_grid" cellspacing="0" width="100%">
@@ -1598,9 +1598,9 @@ function template_download_language()
 			<div class="errorbox">
 				<tt>', $context['package_ftp']['error'], '</tt>
 			</div>';
-		
+
 		echo '
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['package_ftp_necessary'], '
 			</h3>
 			<div class="windowbg">
@@ -1615,27 +1615,27 @@ function template_download_language()
 							<div class="floatright" style="margin-right: 1px;"><label for="ftp_port" style="padding-top: 2px; padding-right: 2ex;">', $txt['package_ftp_port'], ':&nbsp;</label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', isset($context['package_ftp']['port']) ? $context['package_ftp']['port'] : (isset($modSettings['package_port']) ? $modSettings['package_port'] : '21'), '" class="input_text" /></div>
 							<input type="text" size="30" name="ftp_server" id="ftp_server" value="', isset($context['package_ftp']['server']) ? $context['package_ftp']['server'] : (isset($modSettings['package_server']) ? $modSettings['package_server'] : 'localhost'), '" style="width: 70%;" class="input_text" />
 						</dd>
-					
+
 						<dt>
 							<label for="ftp_username">', $txt['package_ftp_username'], ':</label>
 						</dt>
 						<dd>
 							<input type="text" size="50" name="ftp_username" id="ftp_username" value="', isset($context['package_ftp']['username']) ? $context['package_ftp']['username'] : (isset($modSettings['package_username']) ? $modSettings['package_username'] : ''), '" style="width: 99%;" class="input_text" />
 						</dd>
-					
+
 						<dt>
 							<label for="ftp_password">', $txt['package_ftp_password'], ':</label>
 						</dt>
 						<dd>
 							<input type="password" size="50" name="ftp_password" id="ftp_password" style="width: 99%;" class="input_text" />
 						</dd>
-					
+
 						<dt>
 							<label for="ftp_path">', $txt['package_ftp_path'], ':</label>
 						</dt>
 						<dd>
 							<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $context['package_ftp']['path'], '" style="width: 99%;" class="input_text" />
-						</dd>		
+						</dd>
 					</dl>
 				</div>
 				<span class="botslice"><span></span></span>
@@ -1692,10 +1692,10 @@ function template_modify_language_entries()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=languages;sa=editlang;lid=', $context['lang_id'], ';', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['edit_languages'], '
 			</h3>';
-	
+
 	// Not writable?
 	if ($context['lang_file_not_writable_message'])
 		echo '
@@ -1757,9 +1757,9 @@ function template_modify_language_entries()
 				<span class="botslice"><span></span></span>
 			</div>
 		</form>
-	
+
 		<form action="', $scripturl, '?action=admin;area=languages;sa=editlang;lid=', $context['lang_id'], ';', $context['session_var'], '=', $context['session_id'], ';entries" id="entry_form" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span>
 				', $txt['edit_language_entries'], '
 			</h3>
 			<div id="taskpad" class="align_right">
@@ -1779,7 +1779,7 @@ function template_modify_language_entries()
 					</select>
 					<input type="submit" value="', $txt['go'], '" class="button_submit" />
 			</div>';
-		
+
 		// Is it not writable?
 	if (!empty($context['entries_not_writable_message']))
 		echo '
@@ -1795,7 +1795,7 @@ function template_modify_language_entries()
 				<span class="topslice"><span></span></span>
 				<div class="content">
 					<dl class="settings">';
-					
+
 		$cached = array();
 		foreach ($context['file_entries'] as $entry)
 		{
@@ -1827,7 +1827,7 @@ function template_modify_language_entries()
 		// Odd number?
 		if (!empty($cached))
 			echo '
-			
+
 						<dt>
 							<span class="smalltext">', $cached['key'], '</span>
 						</dt>
@@ -1839,7 +1839,7 @@ function template_modify_language_entries()
 						</dt>
 						<dd>
 						</dd>';
-						
+
 		echo '
 					</dl>
 					<input type="submit" name="save_entries" value="', $txt['save'], '"', !empty($context['entries_not_writable_message']) ? ' disabled="disabled"' : '', ' class="button_submit" />';
@@ -1870,7 +1870,7 @@ function template_callback_question_answer_list()
 
 	foreach ($context['question_answers'] as $data)
 		echo '
-		
+
 			<dt>
 				<input type="text" name="question[', $data['id'], ']" value="', $data['question'], '" size="50" class="input_text verification_question" />
 			</dt>
@@ -1892,7 +1892,7 @@ function template_callback_question_answer_list()
 		<dt id="add_more_question_placeholder" style="display: none;"></dt><dd></dd>
 		<dt id="add_more_link_div" style="display: none;">
 			<a href="#" onclick="addAnotherQuestion(); return false;">&#171; ', $txt['setup_verification_add_more'], ' &#187;</a>
-			
+
 		</dt><dd></dd>';
 
 	// The javascript needs to go at the end but we'll put it in this template for looks.
@@ -1928,7 +1928,7 @@ function template_callback_question_answer_list()
 		function addAnotherQuestion()
 		{
 			var newDT = document.createElement("dt");
-			
+
 			var newInput = createNamedElement("input", "question[]");
 			newInput.type = "text";
 			newInput.className = "input_text";
@@ -1937,7 +1937,7 @@ function template_callback_question_answer_list()
 			newDT.appendChild(newInput);
 
 			newDD = document.createElement("dd");
-			
+
 			newInput = createNamedElement("input", "answer[]");
 			newInput.type = "text";
 			newInput.className = "input_text";
@@ -1956,10 +1956,10 @@ function template_callback_question_answer_list()
 function template_repair_boards()
 {
 	global $context, $txt, $scripturl;
-	
+
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>',
+		<h3 class="catbg"><span class="left"></span>',
 			$context['error_search'] ? $txt['errors_list'] : $txt['errors_fixing'] , '
 		</h3>
 		<div class="windowbg">
@@ -1996,7 +1996,7 @@ function template_repair_boards()
 				<p class="padding">
 					<a href="', $scripturl, '?action=admin;area=maintain;sa=routine">', $txt['maintain_return'], '</a>
 				</p>';
-	
+
 	}
 	else
 	{
@@ -2005,9 +2005,9 @@ function template_repair_boards()
 				<p class="padding">
 					<a href="', $scripturl, '?action=admin;area=maintain;sa=routine">', $txt['maintain_return'], '</a>
 				</p>';
-	
+
 	}
-	
+
 	echo '
 			</div>
 			<span class="botslice"><span></span></span>

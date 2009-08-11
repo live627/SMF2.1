@@ -66,7 +66,7 @@ echo '
 		<div class="error_message">BE SURE TO RUN BACKUPS BEFORE PROCEEDING WITH THIS!!!</div>
 		<p>This script will recount all your boards IDs to use lower numbers. Why? Well some people during conversions may receive extremely high board IDs that can cause issues. The purpose of this script to to help prevent that by recounting the ids.</p>
 		<p> As well this script may be just useful for those who want to recount the board IDs if they want to be a little picky about them</p>
-		<p>Are you ready? Click <input type="submit" name="submit" value="submit" class="button_submit" /> to start</p>	
+		<p>Are you ready? Click <input type="submit" name="submit" value="submit" class="button_submit" /> to start</p>
 	</div>
 </form>';
 
@@ -229,7 +229,7 @@ function show_pause($next_step)
 	<div class="panel">
 		<h2>Process paused</h2>
 		<p>The script has been halted here to prevent overloading the server.</p>
-		<p>Are you ready? Click <input type="submit" name="submit" value="submit" class="button_submit" /> to continue</p>	
+		<p>Are you ready? Click <input type="submit" name="submit" value="submit" class="button_submit" /> to continue</p>
 	</div>
 </form>';
 }
@@ -286,7 +286,7 @@ function show_footer()
 function script_query($query)
 {
 	global $smcFunc, $func;
-	
+
 	if (isset($smcFunc['db_query']))
 		return $smcFunc['db_query']('', $query, 'security_override');
 	elseif (function_exists('db_query'))

@@ -27,7 +27,7 @@ SELECT
 	MEMBER_ID AS id_member, SUBSTRING(M_NAME, 1, 255) AS real_name,
 	SUBSTRING(M_PASSWORD, 1, 64) AS passwd,
 	SUBSTRING(M_EMAIL, 1, 255) AS email_address,
-	SUBSTRING(M_COUNTRY, 1, 255) AS location, 
+	SUBSTRING(M_COUNTRY, 1, 255) AS location,
 	SUBSTRING(M_HOMEPAGE, 1, 255) AS website_title,
 	SUBSTRING(M_HOMEPAGE, 1, 255) AS website_url,
 	SUBSTRING(REPLACE(M_SIG, '\n', '<br />'), 1, 65534) AS signature,
@@ -104,7 +104,7 @@ FROM {$from_prefix}FORUM_FORUM;
 --- Converting topics...
 /******************************************************************************/
 ALTER TABLE {$to_prefix}convert ORDER BY msg_date;
-ALTER TABLE {$to_prefix}convert 
+ALTER TABLE {$to_prefix}convert
 	ADD id_msg INT( 12 ) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
 
 TRUNCATE {$to_prefix}topics;
@@ -148,7 +148,7 @@ SELECT
 FROM {$to_prefix}convert AS c
 	LEFT JOIN {$from_prefix}FORUM_TOPICS AS ft ON (c.old_id_topic = ft.TOPIC_ID)
 	LEFT JOIN {$to_prefix}members AS ftm ON (ftm.id_member = ft.T_AUTHOR)
-	LEFT JOIN {$to_prefix}members AS fte ON (fte.id_member = ft.T_LAST_EDITBY)	
+	LEFT JOIN {$to_prefix}members AS fte ON (fte.id_member = ft.T_LAST_EDITBY)
 WHERE c.type = 'topic';
 ---*
 
@@ -168,7 +168,7 @@ FROM {$to_prefix}convert AS c
 	INNER JOIN {$from_prefix}FORUM_TOPICS AS ft ON (c.old_id_topic = ft.TOPIC_ID)
 	INNER JOIN {$from_prefix}FORUM_REPLY AS fr ON (c.old_id_msg = fr.REPLY_ID)
 	LEFT JOIN {$to_prefix}members AS ftm ON (ftm.id_member = fr.R_AUTHOR)
-	LEFT JOIN {$to_prefix}members AS fte ON (fte.id_member = fr.R_LAST_EDITBY)	
+	LEFT JOIN {$to_prefix}members AS fte ON (fte.id_member = fr.R_LAST_EDITBY)
 WHERE c.type = 'msg';
 ---*
 

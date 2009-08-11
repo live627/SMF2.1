@@ -664,7 +664,7 @@ function set_settings()
 			$settingsArray[$i++] = '';
 			continue;
 		}
-		
+
 		if (substr($settingsArray[$i], 0, 1) == '$' && preg_match('~^[$]([a-zA-Z_]+)\s*=\s*(["\'])?(.*?)(?:\\2)?;~', $settingsArray[$i], $match) == 1)
 			$settings[$match[1]] = stripslashes($match[3]);
 

@@ -21,7 +21,7 @@ $temp = explode('.', $row['additional_groups']);
 $new_groups = array();
 foreach ($temp AS $grp)
 	$new_groups[] = $grp + 8;
-	
+
 $row['additional_groups'] = implode(',', $new_groups);
 ---}
 SELECT
@@ -134,7 +134,7 @@ $row['body'] = preg_replace(
 		'[email]$1[/email]',
 		'[email=$1]$2[/email]',
 		'[size=8px]$1[/size]',
-		
+
 	), $row['body']);
 
 ---}
@@ -150,7 +150,7 @@ FROM {$from_prefix}posts AS p
 	LEFT JOIN {$from_prefix}threads AS t ON (p.thread_id = t.thread_id)
 	LEFT JOIN {$from_prefix}users AS mem ON (p.post_author = mem.user_id)
 	LEFT JOIN {$from_prefix}users AS modmem ON (p.post_edituser = modmem.user_id);
-	
+
 ---*
 
 /******************************************************************************/

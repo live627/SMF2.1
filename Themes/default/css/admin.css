@@ -80,7 +80,7 @@ ol.search_results li
 }
 #smfAnnouncements
 {
-	height: 13.5em; 
+	height: 13.5em;
 	overflow: auto;
 }
 #smfAnnouncements dt
@@ -246,7 +246,7 @@ ul.packages li
 	vertical-align: middle;
 	padding-bottom: 3px;
 }
-#manage_boards li#recycle_board 
+#manage_boards li#recycle_board
 {
 	background-color: #dee;
 }
@@ -268,9 +268,9 @@ dl.right dt
 /* ManageMaintenance */
 .maintenance_finished, #task_completed
 {
-	margin: 1ex; 
-	padding: 1ex 2ex; 
-	border: 1px dashed green; 
+	margin: 1ex;
+	padding: 1ex 2ex;
+	border: 1px dashed green;
 	color: green;
 	background: #efe;
 }
@@ -368,8 +368,8 @@ ul.package_servers li
 }
 pre.file_content
 {
-	overflow: auto; 
-	width: 100%; 
+	overflow: auto;
+	width: 100%;
 	padding-bottom: 1em;
 }
 .operation
@@ -401,7 +401,7 @@ ul.pending_payments li
 	padding: 0;
 	margin: 0 0 0.6em 0;
 }
-.perm_boards li 
+.perm_boards li
 {
 	list-style-type: none;
 	border: 1px solid #cacdd3;
@@ -421,7 +421,7 @@ ul.pending_payments li
 	padding: 0;
 	margin: 0;
 }
-.permission_groups li 
+.permission_groups li
 {
 	list-style-type: none;
 	padding: 0.2em;
@@ -451,9 +451,9 @@ ul.theme_options li
  }
 .edit_file
 {
-	width: 96%; 
-	font-family: monospace; 
-	margin-top: 1ex; 
+	width: 96%;
+	font-family: monospace;
+	margin-top: 1ex;
 	white-space: pre;
 }
 /*Regcenter*/
@@ -461,7 +461,7 @@ ul.theme_options li
 {
 	padding: 0 5px;
 }
-#agreement 
+#agreement
 {
 	width: 100%;
 }
@@ -489,7 +489,7 @@ ul.theme_options li
 
 .modbox
 {
-	height: 150px; 
+	height: 150px;
 	overflow: auto;
 }
 /* Moderation Notes */
@@ -550,7 +550,7 @@ h3.grid_header
 #error_log td.windowbg2
 {
 	padding: 8px;
-	line-height: 160%;	
+	line-height: 160%;
 }
 
 #error_log td.font
@@ -560,8 +560,8 @@ h3.grid_header
 
 #error_log .filter_url
 {
-	overflow: hidden; 
-	width: 100%; 
+	overflow: hidden;
+	width: 100%;
 	white-space: nowrap;
 }
 

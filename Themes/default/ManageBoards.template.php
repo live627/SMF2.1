@@ -9,10 +9,10 @@ function template_main()
 	// Table header.
 	echo '
 	<div id="manage_boards">
-		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+		<h3 class="titlebg"><span class="left"></span>
 			', $txt['boardsEdit'], '
 		</h3>';
-		
+
 	if (!empty($context['move_board']))
 		echo '
 		<div class="information">
@@ -35,7 +35,7 @@ function template_main()
 	{
 		// Link to modify the category.
 		echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			<a href="' . $scripturl . '?action=admin;area=manageboards;sa=cat;cat=' . $category['id'] . '">', $category['name'], '</a> <a href="' . $scripturl . '?action=admin;area=manageboards;sa=cat;cat=' . $category['id'] . '">', $txt['catModify'], '</a>
 		</h3>';
 
@@ -82,7 +82,7 @@ function template_main()
 		}
 
 		// Button to add a new board.
-		echo '				
+		echo '
 					</ul>
 					<input type="submit" value="', $txt['mboards_new_board'], '" class="button_submit" />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -106,7 +106,7 @@ function template_modify_category()
 	<div id="manage_boards">
 		<form action="', $scripturl, '?action=admin;area=manageboards;sa=cat2" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="cat" value="', $context['category']['id'], '" />
-				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<h3 class="catbg"><span class="left"></span>
 				', isset($context['category']['is_new']) ? $txt['mboards_new_cat_name'] : $txt['catEdit'], '
 				</h3>
 				<div class="windowbg">
@@ -163,7 +163,7 @@ function template_modify_category()
 		echo '
 				<input type="hidden" name="empty" value="1" />';
 
-	echo '				
+	echo '
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
@@ -182,7 +182,7 @@ function template_confirm_category_delete()
 	<div id="manage_boards">
 		<form action="', $scripturl, '?action=admin;area=manageboards;sa=cat2" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="cat" value="', $context['category']['id'], '" />
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['mboards_delete_cat'], '
 			</h3>
 			<div class="windowbg">
@@ -200,7 +200,7 @@ function template_confirm_category_delete()
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['mboards_delete_what_do'], '
 			</h3>
 			<div class="windowbg">
@@ -220,7 +220,7 @@ function template_confirm_category_delete()
 						</select>
 					</p>
 					<input type="submit" name="delete" value="', $txt['mboards_delete_confirm'], '" class="button_submit" />
-					<input type="submit" name="cancel" value="', $txt['mboards_delete_cancel'], '" class="button_submit" />		
+					<input type="submit" name="cancel" value="', $txt['mboards_delete_cancel'], '" class="button_submit" />
 					<input type="hidden" name="confirmation" value="1" />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</div>
@@ -241,7 +241,7 @@ function template_modify_board()
 	<div id="manage_boards">
 		<form action="', $scripturl, '?action=admin;area=manageboards;sa=board2" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="boardid" value="', $context['board']['id'], '" />
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', isset($context['board']['is_new']) ? $txt['mboards_new_board_name'] : $txt['boardsEdit'], '
 			</h3>
 			<div class="windowbg">
@@ -251,10 +251,10 @@ function template_modify_board()
 
 	// Option for choosing the category the board lives in.
 	echo '
-		
+
 						<dt>
 							<strong>', $txt['mboards_category'], ':</strong>
-							
+
 						</dt>
 						<dd>
 							<select name="new_cat" onchange="if (this.form.order) {this.form.order.disabled = this.options[this.selectedIndex].value != 0; this.form.board_order.disabled = this.options[this.selectedIndex].value != 0 || this.form.order.options[this.form.order.selectedIndex].value == \'\';}">';
@@ -305,7 +305,7 @@ function template_modify_board()
 							<input type="text" name="board_name" value="', $context['board']['name'], '" size="30" class="input_text" />
 						</dd>
 						<dt>
-							<strong>', $txt['mboards_description'], ':</strong> 
+							<strong>', $txt['mboards_description'], ':</strong>
 							<p class="smalltext">', $txt['mboards_description_desc'], '</p>
 						</dt>
 						<dd>
@@ -356,9 +356,9 @@ function template_modify_board()
 						</dd>
 					</dl>
 					<hr class="hrcolor" />';
-	
+
 	if (empty($context['board']['is_recycle']) && empty($context['board']['topics']))
-		echo '					
+		echo '
 						<dl class="settings">
 							<dt>
 								<strong', $context['board']['topics'] ? ' style="color: gray;"' : '', '>', $txt['mboards_redirect'], ':</strong><br />
@@ -368,17 +368,17 @@ function template_modify_board()
 								<input type="checkbox" id="redirect_enable" name="redirect_enable"', $context['board']['topics'] ? ' disabled="disabled"' : '', $context['board']['redirect'] != '' ? ' checked="checked"' : '', ' onclick="refreshOptions();" class="input_check" />
 							</dd>
 						</dl>';
-	
+
 	if (!empty($context['board']['is_recycle']))
 		echo '<div class="information">', $txt['mboards_redirect_disabled_recycle'], '</div>';
-	
+
 	if (empty($context['board']['is_recycle']) && !empty($context['board']['topics']))
-		echo '			
+		echo '
 						<div class="information">
 							<strong>', $txt['mboards_redirect'],'</strong><br />
 							', $txt['mboards_redirect_disabled'], '
 						</div>';
-	
+
 	if (!$context['board']['topics'] && empty($context['board']['is_recycle']))
 	{
 		echo '
@@ -458,8 +458,8 @@ function template_modify_board()
 
 	if (!empty($context['board']['is_recycle']))
 		echo '<div class="information">', $txt['mboards_recycle_disabled_delete'], '</div>';
-	
-	
+
+
 	echo '
 					<input type="hidden" name="rid" value="', $context['redirect_location'], '" />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
@@ -476,7 +476,7 @@ function template_modify_board()
 	else
 		echo '
 					<input type="submit" name="edit" value="', $txt['modify'], '" onclick="return !isEmptyText(this.form.board_name);" class="button_submit" />';
-	
+
 	if (!isset($context['board']['is_new']) && empty($context['board']['is_recycle']))
 		echo '
 					<span', $context['board']['is_recycle'] ? ' style="visibility:hidden">' : '>' , '<input type="submit" name="delete" value="'. $txt['mboards_delete_board'], '" onclick="return confirm(\'', $txt['boardConfirm'], '\');"', ' /></span>';
@@ -522,7 +522,7 @@ function template_modify_board()
 		{
 			var redirect = document.getElementById("redirect_enable")
 			if (redirect)
-			{	
+			{
 				var redirectEnabled = document.getElementById("redirect_enable").checked;
 			}
 			var nonDefaultTheme = document.getElementById("boardtheme").value == 0 ? false : true;
@@ -559,7 +559,7 @@ function template_confirm_board_delete()
 		<form action="', $scripturl, '?action=admin;area=manageboards;sa=board2" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="boardid" value="', $context['board']['id'], '" />
 
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['mboards_delete_board'], '
 			</h3>
 			<div class="windowbg">
@@ -577,7 +577,7 @@ function template_confirm_board_delete()
 				</div>
 			<span class="botslice"><span></span></span>
 			</div>
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['mboards_delete_what_do'], '
 			</h3>
 			<div class="windowbg">

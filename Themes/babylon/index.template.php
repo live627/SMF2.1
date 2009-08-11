@@ -136,7 +136,7 @@ function template_html_above()
 		$options['collapse_header'] = !empty($_COOKIE['upshrink']);
 
 	// Output any remaining HTML headers. (from mods, maybe?)
-	echo $context['html_headers']; 
+	echo $context['html_headers'];
 
 	echo '
 </head>

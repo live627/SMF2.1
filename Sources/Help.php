@@ -257,7 +257,7 @@ function ShowSmileyHelp()
 	for ($i = 0; $i < count($smileysfrom); $i ++)
 	{
 		$smileyCode = '<img src="' . $modSettings['smileys_url'] . '/' . $user_info['smiley_set'] . '/' . $smileysto[$i] . '" alt="' . strtr(htmlspecialchars($smileysfrom[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')). '" title="' . strtr(htmlspecialchars($smileysdescs[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')) . '" border="0" class="smiley" />';
-		
+
 		$context['smileys'][] = array(
 			'name' => $smileysdescs[$i],
 			'to' => $smileyCode,

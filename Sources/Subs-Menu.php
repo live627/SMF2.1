@@ -57,7 +57,7 @@ function createMenu($menuData, $menuOptions = array())
 			cache_put_data('theme_settings-' . $theme . ':' . $user_info['id'], null, 60);
 
 		// Redirect as this seems to work best.
-		$redirect_url = isset($menuOptions['toggle_redirect_url']) ? $menuOptions['toggle_redirect_url'] : 'action=' . (isset($_GET['action']) ? $_GET['action'] : 'admin') . ';area=' . (isset($_GET['area']) ? $_GET['area'] : 'index') . ';sa=' . (isset($_GET['sa']) ? $_GET['sa'] : 'settings') . (isset($_GET['u']) ? ';u=' . $_GET['u'] : '') . ';' . $context['session_var'] . '=' . $context['session_id']; 
+		$redirect_url = isset($menuOptions['toggle_redirect_url']) ? $menuOptions['toggle_redirect_url'] : 'action=' . (isset($_GET['action']) ? $_GET['action'] : 'admin') . ';area=' . (isset($_GET['area']) ? $_GET['area'] : 'index') . ';sa=' . (isset($_GET['sa']) ? $_GET['sa'] : 'settings') . (isset($_GET['u']) ? ';u=' . $_GET['u'] : '') . ';' . $context['session_var'] . '=' . $context['session_id'];
 		redirectexit($redirect_url);
 	}
 
@@ -232,10 +232,10 @@ function createMenu($menuData, $menuOptions = array())
 		}
 	}
 
-	// Should we use a custom base url, or use the default? 
+	// Should we use a custom base url, or use the default?
 	$menu_context['base_url'] = isset($menuOptions['base_url']) ? $menuOptions['base_url'] : $scripturl . '?action=' . $menu_context['current_action'];
 
-	// What about the toggle url?   
+	// What about the toggle url?
 	$menu_context['toggle_url'] = isset($menuOptions['toggle_url']) ? $menuOptions['toggle_url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . (!empty($menu_context['current_subsection']) ? ';sa=' . $menu_context['current_subsection'] : '') . $menu_context['extra_parameters'] . ';togglebar';
 
 	// Right to left menu should be in reverse order.

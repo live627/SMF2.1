@@ -24,7 +24,7 @@ function template_edit_news()
 		echo '
 				<tr class="windowbg2">
 					<td align="center">
-					
+
 						<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" name="news[]" style="width: 85%;">', $admin_news['unparsed'], '</textarea></div>
 					</td><td align="left" valign="top">
 						<div style="overflow: auto; width: 100%; height: 10ex;">', $admin_news['parsed'], '</div>
@@ -72,7 +72,7 @@ function template_edit_news()
 function template_email_members()
 {
 	global $context, $settings, $options, $txt, $scripturl;
-	
+
 	// This is some javascript for the simple/advanced toggling stuff.
 	echo '
 	<script type="text/javascript"><!-- // --><![CDATA[
@@ -90,7 +90,7 @@ function template_email_members()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=news;sa=mailingcompose" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['admin_newsletters'], '
 			</h3>
 			<div class="information">
@@ -105,7 +105,7 @@ function template_email_members()
 						<span class="smalltext">', $txt['admin_news_select_group_desc'], '</span>
 					</dt>
 					<dd>';
-	
+
 	foreach ($context['groups'] as $group)
 				echo '
 						<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[', $group['id'], ']" id="groups_', $group['id'], '" value="', $group['id'], '" checked="checked" class="input_check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em><br />';
@@ -113,19 +113,19 @@ function template_email_members()
 	echo '
 						<br />
 						<label for="checkAllGroups"><input type="checkbox" id="checkAllGroups" checked="checked" onclick="invertAll(this, this.form, \'groups\');" class="input_check" /> <em>', $txt['check_all'], '</em></label>';
-	
+
 	echo '
 					</dd>
 				</dl>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
-				
-		<h3 class="catbg" id="advanced_select_div" style="display: none;"><span class="left"></span><span class="right"></span>
+
+		<h3 class="catbg" id="advanced_select_div" style="display: none;"><span class="left"></span>
 			<a href="#" onclick="toggleAdvanced(1); return false;" id="goadvanced"><img src="', $settings['images_url'], '/selected.gif" alt="', $txt['advanced'], '" />&nbsp;<strong>', $txt['advanced'], '</strong></a>
 			<a href="#" onclick="toggleAdvanced(0); return false;" id="gosimple" style="display: none;"><img src="', $settings['images_url'], '/sort_down.gif" alt="', $txt['simple'], '" />&nbsp;<strong>', $txt['simple'], '</strong></a>
 		</h3>
-			
+
 		<div class="windowbg2" id="advanced_settings_div" style="display: none;">
 			<span class="topslice"><span></span></span>
 			<div class="content">
@@ -235,7 +235,7 @@ function template_email_members_compose()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=news;sa=mailingsend" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				<a href="', $scripturl, '?action=helpadmin;help=email_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['admin_newsletters'], '
 			</h3>
 			<div class="information">
@@ -283,7 +283,7 @@ function template_email_members_send()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=news;sa=mailingsend" method="post" accept-charset="', $context['character_set'], '" name="autoSubmit" id="autoSubmit">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				<a href="', $scripturl, '?action=helpadmin;help=email_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['admin_newsletters'], '
 			</h3>
 			<div class="windowbg">

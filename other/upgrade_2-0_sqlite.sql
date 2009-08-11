@@ -105,7 +105,7 @@ $smcFunc['db_insert']('ignore',
 ---{
 	upgrade_query("
 		DELETE FROM {$db_prefix}spiders
-		WHERE user_agent = 'yahoo' 
+		WHERE user_agent = 'yahoo'
 			AND spider_name = 'Yahoo! (Publisher)'
 	");
 ---}

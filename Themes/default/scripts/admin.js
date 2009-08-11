@@ -140,7 +140,7 @@ smf_ViewVersions.prototype.determineVersions = function ()
 		Languages: false,
 		Templates: false
 	};
-	
+
 	var sSections = [
 		'Sources',
 		'Default',

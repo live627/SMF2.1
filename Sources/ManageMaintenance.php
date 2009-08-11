@@ -1043,7 +1043,7 @@ function AdminBoardRecount()
 					)
 				);
 			$smcFunc['db_free_result']($request);
-			
+
 			// Recount unapproved messages
 			$request = $smcFunc['db_query']('', '
 				SELECT /*!40001 SQL_NO_CACHE */ t.id_topic, MAX(t.unapproved_posts) AS unapproved_posts,

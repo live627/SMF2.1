@@ -164,7 +164,7 @@ if (empty($preparsing))
 				if ($match[3] < 1)
 					$newbie = true;
 			}
-			elseif (preg_match('~\$NoPost\{(\d+)\} = [\'|"]([^|]*)\|(\d*)\|([^|]*)\|([^|]*)~', $group, $match) != 0) 
+			elseif (preg_match('~\$NoPost\{(\d+)\} = [\'|"]([^|]*)\|(\d*)\|([^|]*)\|([^|]*)~', $group, $match) != 0)
 			{
 				$match = addslashes_recursive($match);
 				$extraGroups[] = array(substr($match[2], 0, 80), substr($match[5], 0, 20), '-1', substr($match[3] . '#' . $match[4], 0, 255);
@@ -846,7 +846,7 @@ if (empty($preparsing))
 		doBlock('log_mark_read', $mark_read_block, true);
 		doBlock('log_boards', $boards_block, true);
 		doBlock('log_topics', $topics_block, true);
-		
+
 		print_line($file_n . ' Converted...', true);
 	}
 
@@ -1500,7 +1500,7 @@ if (empty($preparsing))
 				$temp = $row['temp'];
 				unset($row['temp']);
 			}
-			
+
 			$result = convert_insert($table, array_keys($row), $row, 'insert', $no_prefix);
 
 			$last = convert_insert_id($result);
@@ -1512,7 +1512,7 @@ if (empty($preparsing))
 		}
 
 		$block = array();
-		
+
 		if ($return_first && $return_last)
 			return array($first, $last);
 		elseif ($return_first)

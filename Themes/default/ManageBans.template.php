@@ -7,15 +7,15 @@ function template_ban_edit()
 
 	echo '
 	<div id="manage_bans">
-	
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+
+		<h3 class="catbg"><span class="left"></span>
 				', $context['ban']['is_new'] ? $txt['ban_add_new'] : $txt['ban_edit'] . ' \'' . $context['ban']['name'] . '\'', '
 		</h3>';
-	
+
 	if($context['ban']['is_new'])
-		echo ' 
+		echo '
 		<div class="information">', $txt['ban_add_notes'], '</div>';
-	
+
 	echo '
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
@@ -78,7 +78,7 @@ function template_ban_edit()
 							<dd>
 								<input type="text" name="main_ip" value="', $context['ban_suggestions']['main_ip'], '" size="50" onfocus="document.getElementById(\'main_ip_check\').checked = true;" class="input_text" />
 							</dd>';
-							
+
 		if (empty($modSettings['disableHostnameLookup']))
 			echo '
 							<dt>
@@ -112,7 +112,7 @@ function template_ban_edit()
 								<input type="hidden" name="bannedUser" value="', $context['ban_suggestions']['member']['id'], '" />';
 		echo '
 							</dd>';
-							
+
 		if (!empty($context['ban_suggestions']['message_ips']))
 		{
 			echo '
@@ -151,7 +151,7 @@ function template_ban_edit()
 							</dl>
 						</fieldset>';
 	}
-	
+
 	echo '
 						<input type="submit" name="', $context['ban']['is_new'] ? 'add_ban' : 'modify_ban', '" value="', $context['ban']['is_new'] ? $txt['ban_add'] : $txt['ban_modify'], '" class="button_submit" />
 						<input type="hidden" name="old_expire" value="', $context['ban']['expiration']['days'], '" />
@@ -216,14 +216,14 @@ function template_ban_edit()
 				</div>
 				<br class="clear: both;" />
 				<input type="hidden" name="bg" value="', $context['ban']['id'], '" />
-				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />		
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			</form>';
 
 	}
 
-	echo ' 
+	echo '
 	</div>
-	<br style="clear: both;" /> 
+	<br style="clear: both;" />
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var fUpdateStatus = function ()
@@ -266,7 +266,7 @@ function template_ban_edit_trigger()
 	echo '
 	<div id="manage_bans">
 		<form action="', $scripturl, '?action=admin;area=ban;sa=edit" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $context['ban_trigger']['is_new'] ? $txt['ban_add_trigger'] : $txt['ban_edit_trigger_title'], '
 			</h3>
 			<div class="windowbg">
@@ -275,7 +275,7 @@ function template_ban_edit_trigger()
 					<fieldset>
 						<legend>
 							', $txt['ban_triggers'], '
-						</legend>	
+						</legend>
 						<dl class="settings">
 							<dt>
 								<input type="radio" name="bantype" value="ip_ban"', $context['ban_trigger']['ip']['selected'] ? ' checked="checked"' : '', ' class="input_radio" />
@@ -303,7 +303,7 @@ function template_ban_edit_trigger()
 							</dd>
 							<dt>
 								<input type="radio" name="bantype" value="user_ban"', $context['ban_trigger']['banneduser']['selected'] ? ' checked="checked"' : '', ' class="input_radio" />
-								', $txt['ban_on_username'], '								
+								', $txt['ban_on_username'], '
 							</dt>
 							<dd>
 								<input type="text" name="user" id="user" value="', $context['ban_trigger']['banneduser']['value'], '" size="50" onfocus="selectRadioByName(this.form.bantype, \'user_ban\');" class="input_text" />
@@ -319,7 +319,7 @@ function template_ban_edit_trigger()
 			<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 		</form>
 	</div>
-	<br style="clear: both;" /> 
+	<br style="clear: both;" />
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var oAddMemberSuggest = new smc_AutoSuggest({

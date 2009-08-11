@@ -355,7 +355,7 @@ tr.catbg th.smalltext
 	color: #000000;
 	background-color: #ECEDF3;
 }
-.windowbg2, .innerframe
+.windowbg2, .roundframe
 {
 	color: #000000;
 	background-color: #F6F6F6;
@@ -614,14 +614,14 @@ dl.settings img
 
 /* The main content area.
 ------------------------------------------------------- */
-.content, .innerframe
+.content, .roundframe
 {
 	padding: 1em 1.5em;
 	margin: 0;
 	border: none;
 	border: 1px solid #adadad;
 }
-.content p, .innerframe p
+.content p, .roundframe p
 {
 	margin: 0 0 0.5em 0;
 }
@@ -2758,7 +2758,7 @@ dd.statsbar span.right
 #main_grid table h3.catbg
 {
 	text-align: center;
-	
+
 	border-top: 1px solid #adadad;
 	border-bottom: none;
 }
@@ -2800,7 +2800,7 @@ dd.statsbar span.right
 #main_grid h3 span.floatleft, #main_grid h3 span.floatright
 {
 	display: block;
-	
+
 }
 
 #main_grid table th.days
@@ -2817,7 +2817,7 @@ dd.statsbar span.right
 #main_grid table td.days
 {
 	vertical-align: top;
-	
+
 }
 
 a.modify_event

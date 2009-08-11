@@ -96,30 +96,30 @@ $row['signature'] = preg_replace(
 SELECT
 	user_id AS id_member, SUBSTRING(user_name, 1, 80) AS member_name,
 	SUBSTRING(user_nick, 1, 255) AS real_name, user_email AS email_address,
-	SUBSTRING(user_pw, 1, 64) AS passwd, '' AS lngfile, '' AS buddy_list, 
+	SUBSTRING(user_pw, 1, 64) AS passwd, '' AS lngfile, '' AS buddy_list,
 	'' AS pm_ignore_list, '' AS message_labels, '' AS personal_text,
-	user_hpage AS website_title, user_hpage AS website_url, 
-	CASE user_country 
+	user_hpage AS website_title, user_hpage AS website_url,
+	CASE user_country
 		WHEN 'ger' THEN 'Germany'
 		WHEN 'aut' THEN 'Austria'
 		WHEN 'ch' THEN 'Swiss'
 		WHEN 'nl' THEN 'Netherlands'
 		WHEN 'aut' THEN 'Austria'
 		ELSE ''
-	END AS location, 
-	user_icqid AS icq, user_aimid AS aim, user_yim AS yim, '' AS msn, '' AS usertitle, 
+	END AS location,
+	user_icqid AS icq, user_aimid AS aim, user_yim AS yim, '' AS msn, '' AS usertitle,
 	'' AS member_ip, '' AS member_ip2, '' AS secret_question,
 	'' AS additional_groups,
-	logtime AS last_login, 
+	logtime AS last_login,
 	CASE user_status
 		WHEN 'admin' THEN '1'
 		WHEN 'mod' THEN '2'
 		ELSE '0'
-	END AS id_group,		
+	END AS id_group,
 	signin AS date_registered, user_avatar AS avatar,
 	user_ghost	AS show_online, IF(user_emailshow ='1', 0, 1) AS hide_email,
-	user_posts AS posts, user_sex AS gender, user_activate AS is_activated,	
-    CONCAT(user_bd_year,'-',user_bd_month,'-',user_bd_day) AS birthdate,	
+	user_posts AS posts, user_sex AS gender, user_activate AS is_activated,
+    CONCAT(user_bd_year,'-',user_bd_month,'-',user_bd_day) AS birthdate,
 	SUBSTRING(user_sig, 1, 65534) AS signature
 FROM {$from_prefix}user where user_id > 0;
 ---*
@@ -156,7 +156,7 @@ SELECT
  	END AS member_groups,
 	IF (forumcat_description_show ='1', forumcat_description, '') AS description,
 	forumcat_threadcount AS num_topics, forumcat_postcount AS num_posts
-FROM {$from_prefix}forumcat;	
+FROM {$from_prefix}forumcat;
 ---*
 
 /******************************************************************************/
@@ -174,15 +174,15 @@ TRUNCATE {$to_prefix}log_polls;
 ---* {$to_prefix}topics
 
 SELECT
-	t.forumthread_id AS id_topic, t.forumthread_catid AS id_board, 
+	t.forumthread_id AS id_topic, t.forumthread_catid AS id_board,
 	CASE t.forumthread_status
 		WHEN '2' THEN '1'
 		WHEN '3' THEN '1'
 		ELSE '0'
 	END AS is_sticky,
-	t.forumthread_viewcount AS num_views, t.forumthread_uid AS id_member_started, t.forumthread_lastreply_autor AS id_member_updated, 
-	MIN(p.forumpost_id) AS id_first_msg, MAX(p.forumpost_id) AS id_last_msg, 
-	t.forumthread_replycount AS num_replies, 
+	t.forumthread_viewcount AS num_views, t.forumthread_uid AS id_member_started, t.forumthread_lastreply_autor AS id_member_updated,
+	MIN(p.forumpost_id) AS id_first_msg, MAX(p.forumpost_id) AS id_last_msg,
+	t.forumthread_replycount AS num_replies,
 	CASE t.forumthread_status
 		WHEN '0' THEN '1'
 		WHEN '3' THEN '1'
@@ -224,10 +224,10 @@ if ($row['subject']=='')
 		WHERE forumpost_threadid = $row[id_topic]
 		ORDER BY forumpost_id ASC
 		LIMIT 1	");
-	
+
 	while ($row2 = convert_fetch_assoc($request))
 		$row['subject'] = $row2['forumpost_title'];
-}		
+}
 $row['body'] = preg_replace(
 	array(
 		'~\[D\]~is',
@@ -300,7 +300,7 @@ $row['body'] = preg_replace(
 SELECT
 	p.forumpost_id AS id_msg, p.forumpost_threadid AS id_topic,
 	t.forumthread_catid  AS id_board, p.forumpost_time AS poster_time, p.forumpost_autorid AS id_member, p.forumpost_edittime AS id_msg_MODIFIED,
-	IF(p.forumpost_title != '', p.forumpost_title, subject.forumpost_title) AS subject, 
+	IF(p.forumpost_title != '', p.forumpost_title, subject.forumpost_title) AS subject,
 	p.forumpost_autor AS poster_name, u.user_email AS poster_email,
 	p.forumpost_ipaddr AS poster_ip, p.forumpost_smilies AS smileys_enabled, p.forumpost_edittime AS modified_time, p.forumpost_editautor AS modified_name,
 	p.forumpost_text AS body, 'xx' AS icon
@@ -334,7 +334,7 @@ FROM {$from_prefix}im AS pm
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT 
+SELECT
 	im_id AS id_pm, im_to AS id_member, IF(im_viewtime !=0, 1, 0) AS is_read,
 	im_del AS deleted, '-1' AS labels
 FROM {$from_prefix}im;
@@ -362,7 +362,7 @@ $keys = array('id_member', 'buddy_list');
 
 $request = convert_query("
 	SELECT buddy_userid AS tmp_member
-	FROM {$from_prefix}buddy 
+	FROM {$from_prefix}buddy
 	GROUP BY buddy_userid");
 
 while ($row = convert_fetch_assoc($request))
@@ -378,7 +378,7 @@ while ($row = convert_fetch_assoc($request))
 	while ($row2 = convert_fetch_assoc($request2))
 	{
 		array_push($buddies, $row2['buddy_list']);
-		$buddylist = implode(',',$buddies);	
+		$buddylist = implode(',',$buddies);
 	}
 
 	convert_query("
@@ -386,7 +386,7 @@ while ($row = convert_fetch_assoc($request))
 		SET buddy_list = '$buddylist'
 		WHERE id_member = $row[tmp_member]");
 }
-convert_free_result($request);	
+convert_free_result($request);
 ---}
 
 /******************************************************************************/
@@ -402,7 +402,7 @@ $request = convert_query("
 	SELECT
 		forumcat_id AS id_board, forumcat_mods as tempmods
 	FROM {$from_prefix}forumcat");
-	
+
 while ($row = convert_fetch_assoc($request))
 {
 	$row['tempmods'] = trim(preg_replace('/-/', ' ', $row['tempmods']));
@@ -410,7 +410,7 @@ while ($row = convert_fetch_assoc($request))
 	foreach ($mod as $moderators)
 		convert_insert('moderators', array('id_board', 'id_board'), array($row['id_board'], $moderators), 'insert');
 }
-convert_free_result($request);			
+convert_free_result($request);
 ---}
 
 /******************************************************************************/
@@ -467,7 +467,7 @@ if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/' . $filepath, $
 }
 ---}
 SELECT
-	user_id AS id_member, user_avatar 
+	user_id AS id_member, user_avatar
 FROM {$from_prefix}user
 WHERE user_avatar LIKE 'avauser_%';
 ---*
@@ -534,7 +534,7 @@ while ($row = convert_fetch_assoc($request))
 
 	++$banid;
 }
-convert_free_result($request);		
+convert_free_result($request);
 ---}
 
 /******************************************************************************/

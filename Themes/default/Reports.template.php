@@ -10,21 +10,21 @@ function template_report_type()
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=reports" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="titlebg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				', $txt['generate_reports'], '
 			</h3>
 			<div class="information">
 				', $txt['generate_reports_desc'], '
 			</div>
 			<h3 class="catbg"><span class="left">
-				</span><span class="right"></span>
+				</span>
 				', $txt['generate_reports_type'], '
 			</h3>
 			<div class="windowbg">
 				<span class="topslice">	<span></span></span>
 				<div class="content">
 					<dl class="generate_report">';
-			
+
 	// Go through each type of report they can run.
 	foreach ($context['report_types'] as $type)
 	{
@@ -35,12 +35,12 @@ function template_report_type()
 						</dt>';
 		if (isset($type['description']))
 			echo '
-						<dd>', $type['description'], '</dd>';			
+						<dd>', $type['description'], '</dd>';
 	}
 		echo '
 					</dl>
 					<input type="submit" name="continue" value="', $txt['generate_reports_continue'], '" class="button_submit" />
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />			
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
@@ -53,8 +53,8 @@ function template_report_type()
 function template_main()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
-	
-	// Build the reports button array.	
+
+	// Build the reports button array.
 	$report_buttons = array(
 			'generate_reports' => array('text' => 'generate_reports', 'image' => 'print.gif', 'lang' => true, 'url' => $scripturl . '?action=admin;area=reports', 'active' => true ),
 			'print' => array('text' => 'print', 'image' => 'print.gif', 'lang' => true, 'url' => $scripturl . '?action=admin;area=reports;rt=' . $context['report_type']. ';st=print', 'custom' => 'target="_blank"'),
@@ -62,17 +62,17 @@ function template_main()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+		<h3 class="titlebg"><span class="left"></span>
 			', $txt['results'], '
 		</h3>
 		<div id="report_buttons">';
-		
+
 	if (!empty($report_buttons) && !empty($settings['use_tabs']))
 		template_button_strip($report_buttons, 'right');
-		
+
 	echo '
 		</div>';
-		
+
 	// Go through each table!
 	foreach ($context['tables'] as $table)
 	{
@@ -102,7 +102,7 @@ function template_main()
 
 			// Now do each column.
 			$column_number = 0;
-			
+
 			foreach ($row as $key => $data)
 			{
 				// If this is a special seperator, skip over!

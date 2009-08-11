@@ -312,7 +312,7 @@ function show_header()
 				white-space:nowrap;
 				margin-left: -2px;
 			}
-				
+
 			/* This is for phpinfo */
 			table.adminlist
 			{
@@ -421,7 +421,7 @@ function show_system_info()
 	global $db_persist, $maintenance, $cookiename, $db_last_error, $db_show_debug;
 
 	get_database_version();
-	
+
 	echo '
 			<script type="text/javascript">
 				var tabPane1 = new WebFXTabPane( document.getElementById( "smfinfo" ), 1 );
@@ -511,7 +511,7 @@ function show_php_info()
 	echo '
 			<div class="tab-page" id="phpinfo"><h2 class="tab">', $txt['phpinfo'], '</h2>
 				<script type="text/javascript">tabPane1.addTabPage( document.getElementById( "phpinfo" ) );</script>';
-	
+
 	// Get the PHP Info
 	ob_start();
 	phpinfo(INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES);
@@ -524,8 +524,8 @@ function show_php_info()
 	$output = preg_replace('#(\w),(\w)#', '\1, \2', $output);
 	$output = preg_replace('#border="0" cellpadding="3" width="600"#', 'border="0" cellspacing="1" cellpadding="4" width="95%"', $output);
 	$output = preg_replace('#<hr />#', '', $output);
-	
-	echo 
+
+	echo
 		$output, '
 			</div>';
 }
@@ -539,7 +539,7 @@ function show_detailed_file()
 				<script type="text/javascript">tabPane1.addTabPage( document.getElementById( "detailedinfo" ) );</script>';
 
 	get_file_versions();
-	
+
 	// The current version of the core SMF package.
 	echo '
 					<table width="60%" cellpadding="2" cellspacing="0" border="0" align="center">
@@ -631,7 +631,7 @@ function show_detailed_file()
 function show_detailed_db()
 {
 	global $txt, $context, $db_type;
-	
+
 	if (empty($db_type) || (!empty($db_type) && $db_type == 'mysql'))
 		get_database_info();
 
@@ -727,10 +727,10 @@ function show_detailed_db()
 					<tr>
 						<td colspan="2"><strong>', $txt['no_detailed_db'], '</strong></td>
 					</tr>';
-			
+
 	echo '
 				</table>';
-	
+
 	// Setup the javascript stuff here
 	echo '
 				<script type="text/javascript"><!-- // --><![CDATA[
@@ -760,7 +760,7 @@ function show_mods()
 						<td><strong>', $txt['package_id'], '</strong></td>
 						<td width="150px"><strong>', $txt['package_version'], '</strong></td>
 					</tr>';
-				
+
 	foreach(loadInstalledPackages() as $package)
 	{
 		echo '
@@ -781,7 +781,7 @@ function show_error_log()
 	global $txt, $context;
 
 	get_error_log();
-	
+
 	echo '
 			<div class="tab-page" id="error_log"><h2 class="tab">', $txt['error_log'], '</h2>
 				<script type="text/javascript">tabPane1.addTabPage( document.getElementById( "error_log" ) );</script>
@@ -795,7 +795,7 @@ function show_error_log()
 					</tr>
 					<tr>
 						<td colspan="2">';
-	
+
 	foreach ($context['errors'] as $error)
 	{
 		echo '
@@ -1148,7 +1148,7 @@ function show_status()
 function show_footer()
 {
 	global $context, $boardurl, $forum_copyright, $forum_version;
-	
+
 	echo '
 			</div>
 			<div style="clear: left">
@@ -1280,7 +1280,7 @@ function show_footer()
 				if (lowVersion[\'Languages\'])
 					document.getElementById(\'yourLanguages\').style.color = \'red\';
 			}
-			
+
 			function smfHideDbColumns()
 			{
 				if (!(\'databaseTables\' in window))
@@ -1290,7 +1290,7 @@ function show_footer()
 				{
 					if (!document.getElementById(filename))
 						continue;
-					
+
 					document.getElementById(filename).style.display = \'none\';
 				}
 			}
@@ -1313,7 +1313,7 @@ function show_footer()
 function initialize()
 {
 	global $txt, $context, $smfInfo, $sourcedir, $forum_version, $db_show_debug, $db_last_error;
-	
+
 	// Set this to true so we get the correct forum value
 	$ssi_gzip = true;
 	// If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
@@ -1324,19 +1324,19 @@ function initialize()
 		die('<strong>Error:</strong> Cannot start - please verify you put this in the same place as SMF\'s SSI.php.');
 
 	$forum_version = get_file_versions(true);
-	
+
 	if (empty($smfInfo) || ($context['user']['is_admin'] && isset($_GET['regenerate'])))
 		generate_password();
-	
+
 	// If the user isn't an admin or they don't have a password in the URL, or its incorrect, kick 'em out
 	if (!$context['user']['is_admin'] && !isset($_POST['pass']))
 		redirectexit();
 	elseif (!$context['user']['is_admin'] && strcmp($_POST['pass'], $smfInfo) != 0)
 		redirectexit();
-	
+
 	// Either their an admin or have the right password
 	require_once($sourcedir . '/Subs-Package.php');
-	
+
 	// Enable error reporting.
 	error_reporting(E_ALL);
 	@session_start();
@@ -1354,13 +1354,13 @@ function initialize()
 function get_database_version()
 {
 	global $db_type, $smcFunc, $context, $db_name;
-	
+
 	if (empty($db_type) || (!empty($db_type) && $db_type == 'mysql'))
 	{
 		// I learned some of this from phpMyAdmin...
 		$match = explode('.',  mysql_get_server_info());
 		$mysql_int_version = (int) sprintf('%d%02d%02d', $match[0], $match[1], intval($match[2]));
-		
+
 		if ( $mysql_int_version >= 50006 )
 			$query = 'SELECT DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = \'' . $db_name . '\' LIMIT 1;';
 		elseif ( $mysql_int_version >= 40101 )
@@ -1374,7 +1374,7 @@ function get_database_version()
 		if (!empty($collation))
 			$context['character_set'] = $collation;
 	}
-	
+
 	if (empty($smcFunc))
 		$context['database_version'] = 'MySQL ' . mysql_get_server_info();
 	else {
@@ -1386,7 +1386,7 @@ function get_database_version()
 function get_file_versions($core = false)
 {
 	global $sourcedir, $boarddir, $context, $txt, $scripturl, $boardurl, $settings;
-	
+
 	$fp = fopen($boarddir . '/index.php', 'rb');
 	$header = fread($fp, 3072);
 	fclose($fp);
@@ -1575,15 +1575,15 @@ function get_smf_setting($val, $rec = '')
 function generate_password()
 {
 	global $sourcedir, $smfInfo, $forum_version, $boardurl;
-	
+
 	if (substr($forum_version, 0, 2) == '1.')
 		require_once($sourcedir . '/Admin.php');
 	else
 		require_once($sourcedir . '/Subs-Admin.php');
 
 	$password = "";
-	$possible = "abcdfghjkmnpqrstvwxyz0123456789ABCDEFGHJKLMNOPQRSTUVXYZ"; 
-	$i = 0; 
+	$possible = "abcdfghjkmnpqrstvwxyz0123456789ABCDEFGHJKLMNOPQRSTUVXYZ";
+	$i = 0;
 	while ($i < 12)
 	{
 		$password .= substr($possible, mt_rand(0, strlen($possible)-1), 1);
@@ -2328,9 +2328,9 @@ function get_database_info()
 		$context['database_size'] += $row['Data_length'];
 	}
 	@mysql_free_result($result);
-	
+
 	$context['database_size'] = convert_memory($context['database_size']);
-	
+
 	foreach($context['database_tables'] as $table => $info)
 	{
 		// Get the columns of the table, and thier stuff...
@@ -2352,9 +2352,9 @@ function get_database_info()
 function get_error_log()
 {
 	global $context, $db_prefix, $smcFunc, $scripturl, $txt;
-	
+
 	$context['errors'] = array();
-	
+
 	// 1.0 queries first... (regular ol' mysql calls)
 	if(empty($smcFunc))
 	{
@@ -2364,7 +2364,7 @@ function get_error_log()
 			FROM {$db_prefix}log_errors");
 		list ($context['num_errors']) = mysql_fetch_row($result);
 		mysql_free_result($result);
-		
+
 		if ($context['num_errors'] == 0)
 			return;
 
@@ -2402,7 +2402,7 @@ function get_error_log()
 
 		if ($context['num_errors'] == 0)
 			return;
-		
+
 		// Find and sort out the errors.
 		$request = $smcFunc['db_query']('', '
 			SELECT id_error, id_member, url, log_time, message, error_type, file, line
@@ -2411,7 +2411,7 @@ function get_error_log()
 			LIMIT 100',
 			array()
 		);
-		
+
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			$show_message = strtr(strtr(preg_replace('~&lt;span class=&quot;remove&quot;&gt;(.+?)&lt;/span&gt;~', '$1', $row['message']), array("\r" => '', '<br />' => "\n", '<' => '&lt;', '>' => '&gt;', '"' => '&quot;')), array("\n" => '<br />'));

@@ -905,7 +905,7 @@ function initialize_inputs()
 		template_css();
 		exit;
 	}
-	
+
 	// Anybody home?
 	if (!isset($_GET['xml']))
 	{
@@ -3181,7 +3181,7 @@ function checkChange(&$change)
 		));
 		if ($smcFunc['db_num_rows'] != 1)
 			return;
-	
+
 		list (, $current_type) = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
 	}
@@ -3760,7 +3760,7 @@ function template_upgrade_above()
 	<div id="header"><div class="frame">
 		<div id="top_section">
 			<h1 class="forumtitle">', $txt['smf_installer'], '</h1>
-			<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" /> 
+			<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />
 		</div>
 		<div id="upper_section" class="middletext" style="overflow: hidden;">
 			<div class="user"></div>

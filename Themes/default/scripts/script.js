@@ -131,7 +131,7 @@ function sendXMLDocument(sUrl, sContent, funcCallback)
 }
 
 // Character-level replacement function.
-String.prototype.php_strtr = function (sFrom, sTo) 
+String.prototype.php_strtr = function (sFrom, sTo)
 {
 	return this.replace(new RegExp('[' + sFrom + ']', 'g'), function (sMatch) {
 		return sTo.charAt(sFrom.indexOf(sMatch));

@@ -1182,7 +1182,7 @@ function loadMemberContext($user, $display_custom_fields = false)
 		'karma' => array(
 			'good' => $profile['karma_good'],
 			'bad' => $profile['karma_bad'],
-			'allow' => !$user_info['is_guest'] && !empty($modSettings['karmaMode']) && $user_info['id'] != $user && allowedTo('karma_edit') && 
+			'allow' => !$user_info['is_guest'] && !empty($modSettings['karmaMode']) && $user_info['id'] != $user && allowedTo('karma_edit') &&
 			($user_info['posts'] >= $modSettings['karmaMinPosts'] || $user_info['is_admin']),
 		),
 		'ip' => htmlspecialchars($profile['member_ip']),
@@ -1228,18 +1228,18 @@ function loadMemberContext($user, $display_custom_fields = false)
 		$memberContext[$user]['custom_fields'] = array();
 		if (!isset($context['display_fields']))
 			$context['display_fields'] = unserialize($modSettings['displayFields']);
-			
+
 		foreach ($context['display_fields'] as $custom)
 		{
 			if (empty($custom['title']) || empty($profile['options'][$custom['colname']]))
 				continue;
-			
+
 			$value = $profile['options'][$custom['colname']];
 
 			// BBC?
 			if ($custom['bbc'])
 				$value = parse_bbc($value);
-			
+
 			// Enclosing the user input within some other text?
 			if (!empty($custom['enclose']))
 				$value = strtr($custom['enclose'], array(
@@ -2128,9 +2128,9 @@ function template_include($filename, $once = false)
 			$error = fetch_web_data($boardurl . strtr($filename, array($boarddir => '', strtr($boarddir, '\\', '/') => '')));
 			if (empty($error))
 				$error = $php_errormsg;
-			
+
 			$error = strtr($error, array('<b>' => '<strong>', '</b>' => '</strong>'));
-			
+
 			echo '
 		<title>', $txt['template_parse_error'], '</title>
 	</head>
@@ -2144,7 +2144,7 @@ function template_include($filename, $once = false)
 
 		<div style="margin: 0 20px;"><tt>', strtr(strtr($error, array('<strong>' . $boarddir => '<strong>...', '<strong>' . strtr($boarddir, '\\', '/') => '<strong>...')), '\\', '/'), '</tt></div>';
 
-		
+
 			// I know, I know... this is VERY COMPLICATED.  Still, it's good.
 			if (preg_match('~ <strong>(\d+)</strong><br( /)?' . '>$~i', $error, $match) != 0)
 			{

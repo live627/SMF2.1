@@ -56,11 +56,11 @@ smf_NewsFader.prototype.init = function init()
 			g: parseInt(oForeColor[2]),
 			b: parseInt(oForeColor[3])
 		};
-	
+
 		oBackEl = this.oFaderHandle;
 		while (oBackEl.currentStyle.backgroundColor == 'transparent' && 'parentNode' in oBackEl)
 			oBackEl = oBackEl.parentNode;
-	
+
 		oBackColor = oBackEl.currentStyle.backgroundColor.match(/#([\da-f][\da-f])([\da-f][\da-f])([\da-f][\da-f])/);
 		this.oFadeTo = {
 			r: eval('0x' + oBackColor[1]),
@@ -73,18 +73,18 @@ smf_NewsFader.prototype.init = function init()
 		oForeEl = this.oFaderHandle;
 		while (document.defaultView.getComputedStyle(oForeEl, null).getPropertyCSSValue('color') == null && 'parentNode' in oForeEl && 'tagName' in oForeEl.parentNode)
 			oForeEl = oForeEl.parentNode;
-	
+
 		oForeColor = document.defaultView.getComputedStyle(oForeEl, null).getPropertyValue('color').match(/rgb\((\d+), (\d+), (\d+)\)/);
 		this.oFadeFrom = {
 			r: parseInt(oForeColor[1]),
 			g: parseInt(oForeColor[2]),
 			b: parseInt(oForeColor[3])
 		};
-	
+
 		oBackEl = this.oFaderHandle;
 		while (document.defaultView.getComputedStyle(oBackEl, null).getPropertyCSSValue('background-color') == null && 'parentNode' in oBackEl && 'tagName' in oBackEl.parentNode)
 			oBackEl = oBackEl.parentNode;
-	
+
 		oBackColor = document.defaultView.getComputedStyle(oBackEl, null).getPropertyValue('background-color');
 		this.oFadeTo = {
 			r: parseInt(oBackColor[1]),
@@ -95,15 +95,15 @@ smf_NewsFader.prototype.init = function init()
 
 	// Did we get our fader items on construction, or should we be gathering them instead?
 	if (!this.bReceivedItemsOnConstruction)
-	{ 
+	{
 		// Get the news from the list in boardindex
 		var oNewsItems = this.oFaderHandle.getElementsByTagName('li');
-		
+
 		// Fill the array that has previously been created
 		for (var i = 0, n = oNewsItems.length; i < n; i ++)
 			this.aFaderItems[i] = oNewsItems[i].innerHTML;
 	}
-	
+
 	// The ranges to fade from for R, G, and B. (how far apart they are.)
 	this.oFadeRange = {
 		'r': this.oFadeFrom.r - this.oFadeTo.r,

@@ -7,12 +7,12 @@ function template_main()
 
 	echo '
 	<div id="statistics" class="main_section">
-		<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+		<h4 class="titlebg"><span class="left"></span>
 			<span>', $context['page_title'], '</span>
 		</h4>
 
 		<div class="flow_hidden">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				<img src="', $settings['images_url'], '/stats_info.gif" class="icon" alt="" /> ', $txt['general_stats'], '
 			</h3>
 			<div id="stats_left">
@@ -47,8 +47,8 @@ function template_main()
 					<span class="botslice"><span></span></span>
 				</div>
 			</div>
-			
-			
+
+
 			<div id="stats_right">
 				<div class="windowbg2">
 					<span class="topslice"><span></span></span>
@@ -85,7 +85,7 @@ function template_main()
 
 		<div class="flow_hidden">
 			<div id="top_posters">
-				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<h3 class="catbg"><span class="left"></span>
 					<img src="', $settings['images_url'], '/stats_posters.gif" class="icon" alt="" /> ', $txt['top_posters'], '
 				</h3>
 					<div class="windowbg2">
@@ -105,21 +105,21 @@ function template_main()
 									<span class="left"></span>
 										<div style="width: ', $poster['post_percent'], 'px;" class="stats_bar"></div>
 									<span class="right"></span>';
-		
-		echo '					
+
+		echo '
 							<span class="righttext">' . $poster['num_posts'] . '</span>
 								</dd>';
 	}
-	
+
 	echo '
 							</dl>
 							<div style="clear: both;"></div>
 						</div>
 					<span class="botslice"><span></span></span>
 					</div>
-			</div>			
+			</div>
 			<div id="top_boards">
-				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<h3 class="catbg"><span class="left"></span>
 					<img src="', $settings['images_url'], '/stats_board.gif" class="icon" alt="" /> ', $txt['top_boards'], '
 				</h3>
 					<div class="windowbg">
@@ -134,7 +134,7 @@ function template_main()
 									', $board['link'], '
 								</dt>
 								<dd class="statsbar">';
-								
+
 		if (!empty($board['post_percent']))
 			echo '
 									<span class="left"></span>
@@ -153,10 +153,10 @@ function template_main()
 					</div>
 			</div>
 		</div>
-		
+
 		<div class="flow_hidden">
 			<div id="top_topics_replies">
-				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<h3 class="catbg"><span class="left"></span>
 					<img src="', $settings['images_url'], '/stats_replies.gif" class="icon" alt="" /> ', $txt['top_topics_replies'], '
 				</h3>
 					<div class="windowbg">
@@ -176,7 +176,7 @@ function template_main()
 									<span class="left"></span>
 										<div style="width: ', $topic['post_percent'], 'px;" class="stats_bar"></div>
 									<span class="right"></span>';
-									
+
 		echo '
 									<span class="righttext">' . $topic['num_replies'] . '</span>
 								</dd>';
@@ -188,9 +188,9 @@ function template_main()
 						<span class="botslice"><span></span></span>
 					</div>
 			</div>
-			
+
 			<div id="top_topics_views">
-				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<h3 class="catbg"><span class="left"></span>
 					<img src="', $settings['images_url'], '/stats_views.gif" class="icon" alt="" /> ', $txt['top_topics_views'], '
 				</h3>
 				<div class="windowbg2">
@@ -203,7 +203,7 @@ function template_main()
 		echo '
 							<dt>', $topic['link'], '</dt>
 							<dd class="statsbar">';
-							
+
 		if (!empty($topic['post_percent']))
 			echo '
 								<span class="left"></span>
@@ -223,10 +223,10 @@ function template_main()
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="flow_hidden">
 			<div id="top_topics_starter">
-				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<h3 class="catbg"><span class="left"></span>
 					<img src="', $settings['images_url'], '/stats_replies.gif" class="icon" alt="" /> ', $txt['top_starters'], '
 				</h3>
 				<div class="windowbg2">
@@ -241,14 +241,14 @@ function template_main()
 								', $poster['link'], '
 							</dt>
 							<dd class="statsbar">';
-		
+
 		if (!empty($poster['post_percent']))
 			echo '
 								<span class="left"></span>
 									<div style="width: ', $poster['post_percent'], 'px;" class="stats_bar"></div>
 								<span class="right"></span>';
 
-		echo '				
+		echo '
 								<span class="righttext">' . $poster['num_topics'] . '</span>
 							</dd>';
 	}
@@ -261,7 +261,7 @@ function template_main()
 				</div>
 			</div>
 			<div id="most_online">
-				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<h3 class="catbg"><span class="left"></span>
 					<img src="', $settings['images_url'], '/stats_views.gif" class="icon" alt="" /> ', $txt['most_time_online'], '
 				</h3>
 				<div class="windowbg">
@@ -276,13 +276,13 @@ function template_main()
 								', $poster['link'], '
 							</dt>
 							<dd class="statsbar">';
-		
+
 		if (!empty($poster['time_online']))
 			echo '
 								<span class="left"></span>
 									<div style="width: ', $poster['time_percent'], 'px;" class="stats_bar"></div>
 								<span class="right"></span>';
-								
+
 		echo '
 								<span>', $poster['time_online'], '</span>
 							</dd>';
@@ -299,7 +299,7 @@ function template_main()
 		<div style="clear: both;"></div>
 
 		<div class="flow_hidden">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				<img src="', $settings['images_url'], '/stats_history.gif" class="icon" alt="" /> ', $txt['forum_history'], '
 			</h3>
 		';
@@ -397,30 +397,30 @@ function template_main()
 	{
 		echo '
 			var yearElements = new Array();';
-		
+
 		foreach ($context['yearly'] as $id => $year)
 		{
 			echo '
 			yearElements[', $id, '] = new smfStats_year("', $id, '", false);';
-		
+
 			foreach ($year['months'] as $month)
 			{
 				echo '
 			yearElements[', $id, '].addMonth("', $month['id'], '", ', $month['expanded'] ? 'false' : 'true', ');';
-		
+
 			if ($month['expanded'])
 			{
 				foreach ($month['days'] as $day)
 					echo '
 			yearElements[', $id, '].addDay(', $month['id'], ', "', $day['year'], '-', $day['month'], '-', $day['day'], '");';
 			}
-		
+
 			if (!$year['expanded'] && !$year['current_year'])
 				echo '
 			yearElements[', $id, '].toggle()';
 			}
 		}
-		
+
 		echo '
 		// ]]></script>';
 	}

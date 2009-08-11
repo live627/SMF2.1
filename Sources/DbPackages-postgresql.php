@@ -106,7 +106,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 	// Strip out the table name, we might not need it in some cases
 	$real_prefix = preg_match('~^("?)(.+?)\\1\\.(.*?)$~', $db_prefix, $match) === 1 ? $match[3] : $db_prefix;
 
-	// With or without the database name, the fullname looks like this.	
+	// With or without the database name, the fullname looks like this.
 	$complete_table_name = empty($parameters['no_prefix']) ? $db_prefix . $table_name : $table_name;
 	$full_table_name = empty($parameters['no_prefix']) ? $real_prefix . $table_name : $table_name;
 

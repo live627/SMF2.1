@@ -15,7 +15,7 @@ function template_maintain_database()
 
 	echo '
 	<div id="manage_maintenance">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['maintain_optimize'], '
 		</h3>
 		<div class="windowbg">
@@ -29,8 +29,8 @@ function template_maintain_database()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+
+		<h3 class="catbg"><span class="left"></span>
 			<a href="', $scripturl, '?action=helpadmin;help=maintenance_backup" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['maintain_backup'], '
 		</h3>
 
@@ -56,12 +56,12 @@ function template_maintain_database()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>';
-	
+
 	// Show an option to convert to UTF-8 if we're not on UTF-8 yet.
 	if ($context['convert_utf8'])
 	{
 		echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 		', $txt['utf8_title'], '
 		</h3>
 		<div class="windowbg">
@@ -81,7 +81,7 @@ function template_maintain_database()
 	if ($context['convert_entities'])
 	{
 		echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 		', $txt['entity_convert_title'], '
 		</h3>
 		<div class="windowbg">
@@ -117,7 +117,7 @@ function template_maintain_routine()
 	// Starts off with general maintenance procedures.
 	echo '
 	<div id="manage_maintenance">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['maintain_version'], '
 		</h3>
 		<div class="windowbg">
@@ -131,7 +131,7 @@ function template_maintain_routine()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['maintain_errors'], '
 		</h3>
 		<div class="windowbg2">
@@ -145,7 +145,7 @@ function template_maintain_routine()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['maintain_recount'], '
 		</h3>
 		<div class="windowbg">
@@ -159,7 +159,7 @@ function template_maintain_routine()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['maintain_logs'], '
 		</h3>
 		<div class="windowbg2">
@@ -173,7 +173,7 @@ function template_maintain_routine()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['maintain_cache'], '
 		</h3>
 		<div class="windowbg">
@@ -255,7 +255,7 @@ function template_maintain_members()
 		setTimeout("checkAttributeValidity();", 500);
 	// ]]></script>
 	<div id="manage_maintenance">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['maintain_reattribute_posts'], '
 		</h3>
 		<div class="windowbg2">
@@ -263,19 +263,19 @@ function template_maintain_members()
 				<div class="content">
 					<form action="', $scripturl, '?action=admin;area=maintain;sa=members;activity=reattribute" method="post" accept-charset="', $context['character_set'], '">
 						<p>', $txt['reattribute_guest_posts'], '</p>
-						
+
 						<p class="maintain_members">
 							<label for="type_email"><input type="radio" name="type" id="type_email" value="email" checked="checked" class="input_radio" />', $txt['reattribute_email'], '</label>
 							<input type="text" name="from_email" id="from_email" value="" onclick="document.getElementById(\'type_email\').checked = \'checked\'; document.getElementById(\'from_name\').value = \'\';" /><br/>
 							<label for="type_name"><input type="radio" name="type" id="type_name" value="name" class="input_radio" />', $txt['reattribute_username'], '</label>
 							<input type="text" name="from_name" id="from_name" value="" onclick="document.getElementById(\'type_name\').checked = \'checked\'; document.getElementById(\'from_email\').value = \'\';" class="input_text" />
 						</p>
-						
+
 						<p class="maintain_members">
 							<label for="from_name">', $txt['reattribute_current_member'], ':</label>
 							<input type="text" name="to" id="to" value="" class="input_text" />
 						</p>
-						
+
 						<p class="maintain_members">
 							<input type="checkbox" name="posts" id="posts" checked="checked" class="input_check" />
 							<label for="posts">', $txt['reattribute_increase_posts'], '</label>
@@ -286,7 +286,7 @@ function template_maintain_members()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			<a href="', $scripturl, '?action=helpadmin;help=maintenance_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['maintain_members'], '
 		</h3>
 		<div class="windowbg">
@@ -317,7 +317,7 @@ function template_maintain_members()
 		</div>
 	</div>
 	<br style="clear: both;" />
-	
+
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var oAttributeMemberSuggest = new smc_AutoSuggest({
@@ -368,7 +368,7 @@ function template_maintain_topics()
 
 	echo '
 	<div id="manage_maintenance">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['maintain_old'], '
 		</h3>
 		<div class="windowbg">
@@ -396,7 +396,7 @@ function template_maintain_topics()
 		echo '
 						<div>
 							<a href="#rotLink" onclick="swapRot();"><img src="', $settings['images_url'], '/expand.gif" alt="+" id="rotIcon" /></a> <a href="#rotLink" onclick="swapRot();" id="rotText" style="font-weight: bold;">', $txt['maintain_old_all'], '</a>
-					
+
 							<div style="display: none;" id="rotPanel" class="flow_hidden">
 								<div class="align_left">';
 
@@ -431,10 +431,10 @@ function template_maintain_topics()
 						<span><input type="submit" value="', $txt['maintain_old_remove'], '" onclick="return confirm(\'', $txt['maintain_old_confirm'], '\');" class="button_submit" /></span>
 						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					</form>
-				</div>				
+				</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['move_topics_maintenance'], '
 		</h3>
 		<div class="windowbg2">
@@ -495,13 +495,13 @@ function template_optimize()
 
 	echo '
 	<div id="manage_maintenance">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['maintain_optimize'], '
 		</h3>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
-					<p>		
+					<p>
 				', $txt['database_numb_tables'], '<br />
 				', $txt['database_optimize_attempt'], '<br />';
 
@@ -514,7 +514,7 @@ function template_optimize()
 	echo '
 			<br />', $context['num_tables_optimized'] == 0 ? $txt['database_already_optimized'] : $context['num_tables_optimized'] . ' ' . $txt['database_optimized'];
 
-	echo '	
+	echo '
 					</p>
 					<p><a href="', $scripturl, '?action=admin;area=maintain">', $txt['maintain_return'], '</a></p>
 				</div>
@@ -530,7 +530,7 @@ function template_convert_utf8()
 
 	echo '
 	<div id="manage_maintenance">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['utf8_title'], '
 		</h3>
 		<div class="windowbg">
@@ -539,7 +539,7 @@ function template_convert_utf8()
 					<form action="', $scripturl, '?action=admin;area=maintain;sa=database;activity=convertutf8" method="post" accept-charset="', $context['character_set'], '">
 						<p>', $txt['utf8_introduction'], '</p>
 						<div>', $txt['utf8_warning'], '</div>
-						
+
 						<dl class="settings">
 							<dt><strong>', $txt['utf8_source_charset'], ':</strong></dt>
 							<dd><select name="src_charset">';
@@ -570,7 +570,7 @@ function template_convert_entities()
 
 	echo '
 	<div id="manage_maintenance">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['entity_convert_title'], '
 		</h3>
 		<div class="windowbg">

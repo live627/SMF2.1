@@ -39,7 +39,7 @@
 }
 #profileview #basicinfo .content
 {
-    padding: 0.7em 0 0 0.7em;
+	padding: 0.7em 0 0 0.7em;
 	height: 100%;
 }
 /* IE6 does't support multiple class selectors */

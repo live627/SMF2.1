@@ -452,7 +452,7 @@ function ModifyProfile($post_errors = array())
 		'url' => $scripturl . '?action=profile' . ($memID != $user_info['id'] ? ';u=' . $memID : ''),
 		'name' => sprintf($txt['profile_of_username'], $context['member']['name']),
 	);
-	
+
 	if (!empty($profile_include_data['label']))
 		$context['linktree'][] = array(
 			'url' => $scripturl . '?action=profile;area=' . $profile_include_data['current_area'] . ($memID != $user_info['id'] ? ';u=' . $memID : ''),
@@ -677,7 +677,7 @@ function loadCustomFields($memID, $area = 'summary')
 	{
 		// Shortcut.
 		$exists = $memID && isset($user_profile[$memID], $user_profile[$memID]['options'][$row['col_name']]);
-		$value = $exists ? $user_profile[$memID]['options'][$row['col_name']] : ''; 
+		$value = $exists ? $user_profile[$memID]['options'][$row['col_name']] : '';
 
 		// If this was submitted already then make the value the posted version.
 		if (isset($_POST['customfield']) && isset($_POST['customfield'][$row['col_name']]))

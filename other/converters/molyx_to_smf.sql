@@ -63,7 +63,7 @@ WHERE id_board != 0;
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
 SELECT
-	id AS id_board, SUBSTRING(name, 1, 255) AS name, parentid AS id_cat, 
+	id AS id_board, SUBSTRING(name, 1, 255) AS name, parentid AS id_cat,
 	SUBSTRING(description, 1, 65534) AS description, displayorder AS board_order,
 	post AS num_posts, thread AS num_topics, parentid AS id_parent,
 	countposts AS count_posts, '-1,0' AS member_groups
@@ -85,8 +85,8 @@ TRUNCATE {$to_prefix}log_mark_read;
 SELECT
 	tid AS id_topic, forumid AS id_board, sticky AS is_sticky,
 	pollstate AS id_poll, views AS num_views, postuserid AS id_member_started,
-	lastposterid AS id_member_updated, post AS num_replies, 
-	IF(open = 1, 0, 1) AS locked, firstpostid AS id_first_msg, 
+	lastposterid AS id_member_updated, post AS num_replies,
+	IF(open = 1, 0, 1) AS locked, firstpostid AS id_first_msg,
 	lastpostid AS id_last_msg
 FROM {$from_prefix}thread;
 ---*
@@ -101,7 +101,7 @@ TRUNCATE {$to_prefix}attachments;
 
 ---* {$to_prefix}messages 200
 SELECT
-	p.pid AS id_msg, p.threadid AS id_topic, t.forumid AS id_board,	
+	p.pid AS id_msg, p.threadid AS id_topic, t.forumid AS id_board,
 	p.userid AS id_member, SUBSTRING(p.username, 1, 255) AS poster_name,
 	p.dateline AS poster_time, SUBSTRING(p.host, 1, 255) AS poster_ip,
 	SUBSTRING(t.title, 1, 255) AS subject, SUBSTRING(u.email, 1, 255) AS poster_email,
@@ -140,7 +140,7 @@ WHERE pm.folderid != -1;
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT 
+SELECT
 	pmid AS id_pm, touserid AS id_member, pmread AS is_read, '-1' AS labels
 FROM {$from_prefix}pm
 WHERE folderid != -1;
@@ -157,7 +157,7 @@ TRUNCATE {$to_prefix}log_notify;
 ---{
 $ignore = true;
 ---}
-SELECT 
+SELECT
 	userid AS id_member, threadid AS id_topic
 FROM {$from_prefix}subscribethread;
 ---*
@@ -171,7 +171,7 @@ FROM {$from_prefix}subscribethread;
 ---{
 $ignore = true;
 ---}
-SELECT 
+SELECT
 	userid AS id_member, forumid AS id_board
 FROM {$from_prefix}subscribeforum;
 ---*
@@ -231,7 +231,7 @@ foreach ($voters as $member)
 		$rows[] = $row['id_poll'] . ', ' . $member . ', ' . '1';
 }
 ---}
-SELECT 
+SELECT
 	pollid AS id_poll, voters, '1' AS id_choice
 FROM {$from_prefix}poll;
 ---*
@@ -244,7 +244,7 @@ FROM {$from_prefix}poll;
 TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
-SELECT 
+SELECT
 	userid AS id_member, forumid AS id_board
 FROM {$from_prefix}moderator
 WHERE forumid != 0;
@@ -270,8 +270,8 @@ if (file_exists($oldfile) && strlen($newfilename) <= 255 && copy($_POST['path_fr
 }
 
 ---}
-SELECT 	
-	postid AS id_msg, location, attachpath, filename AS filename, 
+SELECT
+	postid AS id_msg, location, attachpath, filename AS filename,
 	counter AS downloads
 FROM {$from_prefix}attachment
 WHERE postid !=0;

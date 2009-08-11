@@ -22,7 +22,7 @@
 		$result = $smcFunc['db_query']('', "
 			SELECT ver.ver_name, ver.file_name, ver.public, IFNULL(pkg.access,1) AS access
 			FROM {$customize_prefix}smfVersions AS ver
-			LEFT JOIN {$download_prefix}packages AS pkg ON ( pkg.filename LIKE CONCAT( ver.file_name, 'install', '%' ) ) 
+			LEFT JOIN {$download_prefix}packages AS pkg ON ( pkg.filename LIKE CONCAT( ver.file_name, 'install', '%' ) )
 			WHERE obsolete !=1
 			ORDER BY display_order DESC", __FILE__, __LINE__);
 
@@ -39,10 +39,10 @@
 		$result = $smcFunc['db_query']('', $query = "
 			SELECT ver.ver_name, ver.file_name, pkg.filename
 			FROM customize.smfVersions AS ver
-			LEFT JOIN downloads.download_packages AS pkg ON ( pkg.filename LIKE CONCAT( ver.file_name, '%' ) AND pkg.release_type =1 ) 
+			LEFT JOIN downloads.download_packages AS pkg ON ( pkg.filename LIKE CONCAT( ver.file_name, '%' ) AND pkg.release_type =1 )
 			WHERE obsolete != 1
 				AND public != 0
-				AND NOT ISNULL(pkg.filename) 
+				AND NOT ISNULL(pkg.filename)
 			ORDER BY display_order DESC, pkg.filename ASC", __FILE__, __LINE__);
 
 		while ($row = $smcFunc['db_fetch_assoc']($result))
@@ -72,7 +72,7 @@
 	foreach($data['mirrors'] AS $mirror)
 		echo '
 		<mirror name="', $mirror['name'], '">', $mirror['url'], '</mirror>';
-	
+
 	echo '
 	</mirrors>
 
@@ -82,8 +82,8 @@
 	foreach($data['releases'] AS $release)
 		echo '
 		<install access="', $release['access'], '" name="', $release['name'], '">', $release['file'], '</install>';
-		
-	echo '	
+
+	echo '
 	</installs>';
 
 

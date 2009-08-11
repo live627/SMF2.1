@@ -10,7 +10,7 @@
 			<add><![CDATA[		// BurningBoard3 Login Method (double salted SHA1)
 		elseif (strlen($user_settings['password_salt']) == 40)
 			$other_passwords[] = sha1($user_settings['password_salt'] . sha1($user_settings['password_salt'] . sha1($_REQUEST['passwrd'])));
-		
+
 ]]></add>
 		</operation>
 	</file>

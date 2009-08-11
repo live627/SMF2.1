@@ -125,14 +125,14 @@
 				'output' => "[img width=1]http://[url]javascript:bla[/url][/img]",
 			),
 		);
-		
+
 		public function initialize()
 		{
 			global $sourcedir;
-			
+
 			require_once($sourcedir . '/Subs-Post.php');
 		}
-		
+
 		public function getTests()
 		{
 			$tests = array();
@@ -141,24 +141,24 @@
 					'name' => $testInfo['name'],
 					'description' => $testInfo['description'],
 				);
-			
+
 			return $tests;
 		}
-		
+
 		public function doTest($testID)
 		{
 			if (!isset($this->_tests[$testID]))
 				return 'Invalid test ID given';
-				
+
 			$output = $this->_tests[$testID]['input'];
 			fixTag($output, $this->_tests[$testID]['param'], $this->_tests[$testID]['protocols'], $this->_tests[$testID]['embeddedURL'], $this->_tests[$testID]['hasEqualSign'], $this->_tests[$testID]['hasExtra']);
 			if ($output === $this->_tests[$testID]['output'])
 				return true;
-				
+
 			else
 				return sprintf("Unexpected output received from legalise_bbc().\nInput: %1\$s\nExpected output: %2\$s\nReal output: %3\$s", htmlspecialchars($this->_tests[$testID]['input']), htmlspecialchars($this->_tests[$testID]['output']), htmlspecialchars($output));
 		}
-		
+
 		public function getTestDescription($testID)
 		{
 			if (isset($this->_tests[$testID]['description']))
@@ -167,8 +167,8 @@
 				return 'No description available';
 			else
 				return 'Invalid test ID given';
-					
-			
-			
+
+
+
 		}
 	}

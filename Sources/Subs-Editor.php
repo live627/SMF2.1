@@ -622,7 +622,7 @@ function html_to_bbc($text)
 			{
 				$href = trim($value);
 
-				// Are we dealing with an FTP link?				
+				// Are we dealing with an FTP link?
 				if (preg_match('~^ftps?://~', $href) === 1)
 					$tag_type = 'ftp';
 

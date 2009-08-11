@@ -1128,7 +1128,7 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 						// In case the user put the readme blocks in the wrong order.
 						if (isset($context['readmes']['selected']) && $context['readmes']['selected'] == 'default')
 							$context['readmes'][] = 'default';
-						
+
 						$context['readmes']['selected'] = htmlspecialchars($action->fetch('@lang'));
 					}
 					else
@@ -1141,7 +1141,7 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 				// Fallback readme. Without lang parameter.
 				else
 				{
-					
+
 					// Already selected a readme.
 					if (isset($context['readmes']['selected']))
 					{

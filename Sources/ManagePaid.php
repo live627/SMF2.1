@@ -180,12 +180,12 @@ function ModifySubscriptionSettings($return_config = false)
 			{
 				var otherOn = document.getElementById("paid_currency").value == \'other\';
 				var currencydd = document.getElementById("custom_currency_code_div_dd");
-				
+
 				if (otherOn)
 				{
 					document.getElementById("custom_currency_code_div").style.display = "";
 					document.getElementById("custom_currency_symbol_div").style.display = "";
-					
+
 					if (currencydd)
 					{
 						document.getElementById("custom_currency_code_div_dd").style.display = "";
@@ -196,7 +196,7 @@ function ModifySubscriptionSettings($return_config = false)
 				{
 					document.getElementById("custom_currency_code_div").style.display = "none";
 					document.getElementById("custom_currency_symbol_div").style.display = "none";
-					
+
 					if (currencydd)
 					{
 						document.getElementById("custom_currency_symbol_div_dd").style.display = "none";

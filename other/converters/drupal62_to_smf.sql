@@ -15,13 +15,13 @@ TRUNCATE {$to_prefix}attachments;
 SELECT
 	uid AS id_member, SUBSTRING(name, 1, 255) AS member_name,
 	SUBSTRING(name, 1, 255) AS real_name, mail AS email_address,
-	pass AS passwd, '' AS lngfile, '' AS buddy_list, 
+	pass AS passwd, '' AS lngfile, '' AS buddy_list,
 	'' AS pm_ignore_list, '' AS message_labels, '' AS personal_text,
 	'' AS website_title, '' AS website_url, '' AS location, '' AS icq, '' AS aim,
 	'' AS msn, '' AS usertitle, '' AS member_ip, '' AS member_ip2, '' AS secret_question,
 	'' AS additional_groups,
-	access AS last_login, 	
-	IF(uid = '1' , 1, 0) AS id_group,	
+	access AS last_login,
+	IF(uid = '1' , 1, 0) AS id_group,
 		created AS date_registered, '' AS avatar,
 	SUBSTRING(signature, 1, 65534) AS signature
 FROM {$from_prefix}users where uid > 0;
@@ -74,7 +74,7 @@ $request = convert_query("
 list($containers) = convert_fetch_row($request);
 convert_free_result($request);
 $cont = unserialize($containers);
-	
+
 foreach ($cont as $categories)
 {
 
@@ -85,11 +85,11 @@ foreach ($cont as $categories)
 		LIMIT 1");
 	list($name) = convert_fetch_row($request);
 	convert_free_result($request);
-	
+
 	convert_insert('categories', array('id_cat', 'name', 'catorder'),
 		array($categories, $name ,0)
 	);
-}	
+}
 ---}
 
 ---{
@@ -108,7 +108,7 @@ while ($row= convert_fetch_assoc($request))
 		UPDATE {$to_prefix}categories
 		SET cat_order = " . ++$neworder . "
 		WHERE id_cat = $row[id_cat]");
-convert_free_result($request);		
+convert_free_result($request);
 ---}
 
 /******************************************************************************/
@@ -128,8 +128,8 @@ convert_insert('boards', array('id_board', 'name', 'description', 'id_parent', '
 	'insert ignore');
 ---}
 
-SELECT t.tid AS id_board, SUBSTRING(t.name, 1, 255) AS name, SUBSTRING(t.description, 1, 255) AS description, 
-	IF(h.parent=c.id_cat, 0, h.parent) AS id_parent, 
+SELECT t.tid AS id_board, SUBSTRING(t.name, 1, 255) AS name, SUBSTRING(t.description, 1, 255) AS description,
+	IF(h.parent=c.id_cat, 0, h.parent) AS id_parent,
 	IF(c.id_cat IS NULL , 0, c.id_cat) AS id_cat
 FROM {$from_prefix}term_data AS t
 	INNER JOIN {$from_prefix}term_hierarchy AS h ON (t.tid = h.tid)
@@ -148,7 +148,7 @@ $request = convert_query("
 list($containers) = convert_fetch_row($request);
 convert_free_result($request);
 $cont = unserialize($containers);
-	
+
 foreach ($cont as $categories)
 {
 	$request = convert_query("
@@ -158,7 +158,7 @@ foreach ($cont as $categories)
 		LIMIT 1");
 	list($name) = convert_fetch_row($request);
 	convert_free_result($request);
-	
+
 	convert_query("
 		DELETE FROM {$to_prefix}boards
 		WHERE id_board = $categories ");
@@ -172,7 +172,7 @@ $neworder = -1;
 
 $request = convert_query("
 	SELECT b.id_board AS id_board
-	FROM {$to_prefix}boards AS b 
+	FROM {$to_prefix}boards AS b
 		INNER JOIN {$from_prefix}term_data AS t ON (b.id_board = t.tid)
 	ORDER BY t.weight ASC, b.name ASC");
 
@@ -182,7 +182,7 @@ while ($row= convert_fetch_assoc($request))
 		SET board_order = " . ++$neworder . "
 		WHERE id_board = $row[id_board]");
 convert_free_result($request);
-		
+
 ---}
 
 /******************************************************************************/
@@ -212,10 +212,10 @@ $request = convert_query("
 
 SELECT
 	t.nid AS id_topic, f.tid AS id_board, t.sticky AS is_sticky,
-	t.nid AS id_first_msg, 
+	t.nid AS id_first_msg,
 	IF (MAX(c.nid)>0, MAX(c.nid), t.nid) AS id_last_msg,
 	t.uid AS id_member_started,
-	IF (MAX(c.uid)>0, MAX(c.uid), t.uid) AS id_member_updated 
+	IF (MAX(c.uid)>0, MAX(c.uid), t.uid) AS id_member_updated
 FROM {$from_prefix}node AS t
 	INNER JOIN {$from_prefix}forum AS f ON (f.nid = t.nid)
 	LEFT JOIN {$from_prefix}comments AS c ON (c.nid = t.nid)
@@ -298,7 +298,7 @@ SELECT
 	u.name AS poster_name, '' as poster_ip, '' as modified_name,
 	u.mail AS poster_email,
 	'xx' AS icon
-FROM {$from_prefix}node_revisions AS p 
+FROM {$from_prefix}node_revisions AS p
 	INNER JOIN {$from_prefix}node AS t ON (p.nid = t.nid)
 	INNER JOIN {$from_prefix}forum AS f ON (t.nid = f.nid)
 	INNER JOIN {$from_prefix}users AS u ON (u.uid = t.uid)
@@ -404,7 +404,7 @@ if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/' . $filepath , 
 }
 ---}
 
-SELECT uid AS id_member, picture 
+SELECT uid AS id_member, picture
 FROM {$from_prefix}users
 WHERE picture != '';
 ---*

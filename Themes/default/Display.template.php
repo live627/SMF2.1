@@ -15,7 +15,7 @@ function template_main()
 	{
 		echo '
 <div id="poll">
-	<h3 class="catbg"><span class="left"></span><span class="right"></span>
+	<h3 class="catbg"><span class="left"></span>
 		<img src="', $settings['images_url'], '/topic/', $context['poll']['is_locked'] ? 'normal_poll_locked' : 'normal_poll', '.gif" alt="" align="bottom" /> ', $txt['poll'], '
 	</h3>
 	<div class="windowbg">
@@ -139,7 +139,7 @@ function template_main()
 	// Show the topic information - icon, subject, etc.
 	echo '
 <div id="forumposts" class="tborder">
-	<h3 class="catbg"><span class="left"></span><span class="right"></span>
+	<h3 class="catbg"><span class="left"></span>
 		<img src="', $settings['images_url'], '/topic/', $context['class'], '.gif" align="bottom" alt="" />
 		<span id="author">', $txt['author'], '</span>
 		<span id="top_subject">', $txt['topic'], ': ', $context['subject'], ' &nbsp;(', $txt['read'], ' ', $context['num_views'], ' ', $txt['times'], ')</span>
@@ -322,7 +322,7 @@ function template_main()
 				if ($context['can_send_pm'])
 					echo '
 								<li><a href="', $scripturl, '?action=pm;sa=send;u=', $message['member']['id'], '" title="', $message['member']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/im_' . ($message['member']['online']['is_online'] ? 'on' : 'off') . '.gif" alt="' . ($message['member']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline']) . '" border="0" />' : ($message['member']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline']), '</a></li>';
-				
+
 				echo '
 							</ul>
 						</li>';
@@ -575,6 +575,10 @@ function template_main()
 	<div class="nextlinks_bottom">', $context['previous_next'], '</div>
 </div>';
 
+	// Show the jumpto box, or actually...let Javascript do it.
+	echo '
+	<div style="text-align: ', !$context['right_to_left'] ? 'right' : 'left', ';" id="display_jump_to">&nbsp;</div>';
+
 	// Show the lower breadcrumbs.
 	theme_linktree();
 
@@ -594,18 +598,12 @@ function template_main()
 	echo '
 <div id="moderationbuttons">', 	template_button_strip($mod_buttons, 'bottom', array('id' => 'moderationbuttons_strip')), '</div>';
 
-	// Show the jumpto box, or actually...let Javascript do it.
-	echo '
-<div class="tborder">
-	<div class="titlebg2 padding" style="text-align: ', !$context['right_to_left'] ? 'right' : 'left', ';" id="display_jump_to">&nbsp;</div>
-</div><br />';
-
 	if ($context['can_reply'] && !empty($options['display_quick_reply']))
 	{
 		echo '
 <a id="quickreply"></a>
 <div class="tborder" id="quickreplybox">
-	<h3 class="catbg"><span class="left"></span><span class="right"></span>
+	<h3 class="catbg"><span class="left"></span>
 		<a href="javascript:oQuickReply.swap();">
 			<img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" id="quickReplyExpand" />
 		</a>
@@ -613,7 +611,7 @@ function template_main()
 	</h3>
 	<div id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
 		<span class="upperframe"><span></span></span>
-		<div class="roundframe"><div class="innerframe">
+		<div class="roundframe">
 			<div id="quickReplyWarning" class="smalltext">
 				', $txt['quick_reply_desc'], $context['is_locked'] ? '<p><strong>' . $txt['quick_reply_warning'] . '</strong></p>' : '', $context['oldTopicError'] ? '<p><strong>' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</strong></p>' : '', '
 			</div>
@@ -652,7 +650,7 @@ function template_main()
 					<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 				</form>
 			</div>
-		</div></div>
+		</div>
 		<span class="lowerframe"><span></span></span>
 	</div>
 </div>';
@@ -783,7 +781,7 @@ function template_main()
 			\'msg_', $msgid, '_quick_mod\',
 			\'modify_button_', $msgid, '\',
 			\'msg_', $msgid, '_signature\'
-			
+
 		],
 		aSwapLinks: [
 			{

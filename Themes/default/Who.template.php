@@ -10,7 +10,7 @@ function template_main()
 	echo '
 	<div class="main_section" id="whos_online">
 		<form action="', $scripturl, '?action=who" method="post" id="whoFilter" accept-charset="', $context['character_set'], '">
-			<h4 class="titlebg margin_lower"><span class="left"></span><span class="right"></span>
+			<h4 class="titlebg margin_lower"><span class="left"></span>
 				', $txt['who_title'], '
 			</h4>
 			<div class="topic_table" id="mlist">
@@ -77,7 +77,7 @@ function template_main()
 						</tr>';
 	}
 
-	echo '	
+	echo '
 					</tbody>
 				</table>
 			</div>
@@ -109,7 +109,7 @@ function template_credits()
 	// The most important part - the credits :P.
 	echo '
 	<div class="main_section" id="credits">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['credits'], '
 		</h3>';
 
@@ -127,7 +127,7 @@ function template_credits()
 
 		if (isset($section['title']))
 			echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $section['title'], '
 		</h3>';
 
@@ -154,7 +154,7 @@ function template_credits()
 				$last_peep = array_pop($group['members']);
 				echo implode(', ', $group['members']), ', ', $txt['credits_and'], ' ', $last_peep;
 			}
-			
+
 			echo '
 					</dd>';
 		}
@@ -165,7 +165,7 @@ function template_credits()
 		if (isset($section['posttext']))
 			echo '
 				<p class="posttext">', $section['posttext'], '</p>';
-		
+
 		echo'
 			</div>
 			<span class="botslice"><span></span></span>
@@ -173,7 +173,7 @@ function template_credits()
 	}
 
 	echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['credits_copyright'], '
 		</h3>
 		<div class="windowbg">
@@ -198,7 +198,7 @@ function template_credits()
 					<dd>', implode('</dd><dd>', $context['copyrights']['mods']), '</dd>
 				</dl>';
 	}
-				
+
 	echo '
 			</div>
 			<span class="botslice"><span></span></span>

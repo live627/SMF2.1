@@ -388,7 +388,7 @@ foreach ($nameChanges as $table_name => $table)
 			'method' => 'change_remove',
 			'text' => 'CHANGE ' . $coldef,
 		);
-		
+
 		// Check if this change may need a special edit.
 		checkChange($change);
 
@@ -485,7 +485,7 @@ VALUES
 ---{
 	upgrade_query("
 		DELETE FROM {$db_prefix}spiders
-		WHERE user_agent = 'yahoo' 
+		WHERE user_agent = 'yahoo'
 			AND spider_name = 'Yahoo! (Publisher)'
 	");
 ---}
@@ -2596,7 +2596,7 @@ foreach ($nameChanges as $table_name => $table)
 			$tinytextColumns[$row['Field']] = $row['Field'];
 	}
 	mysql_free_result($request);
-	
+
 	// Check each column!
 	$actualChanges = array();
 	foreach ($table as $colname => $coldef)

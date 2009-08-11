@@ -143,7 +143,7 @@ if (!empty($row['additional_groups']))
 	{
 		if (empty($grp))
 			continue;
-		
+
 		if ($grp > 5)
 			$groups[] = $grp + 3;
 		elseif ($grp == $INFO['admin_group'])
@@ -696,7 +696,7 @@ $perm_equiv = array(
 	),
 );
 
- 
+
 if (!isset($_REQUEST['start']))
 	$_REQUEST['start'] = 0;
 

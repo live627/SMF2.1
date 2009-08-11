@@ -1,4 +1,4 @@
-/* Unfortunately, support for RTL languages isn't ideal yet. We're working on it, though! */ 
+/* Unfortunately, support for RTL languages isn't ideal yet. We're working on it, though! */
 
 .maintab_first
 {
@@ -61,7 +61,7 @@
 	width: 6px;
 }
 
-/* 
+/*
 	- if any attribute differs from left vs right, then we reverse it.
 		Where {attribute}-left or {attribute}-right is used, we might have to undo it before repeating it for the opposite.
 	- float: is reversed
@@ -258,7 +258,7 @@ div#pollmoderation
 #forumposts h3.catbg3 span#top_subject
 {
 	padding-left: 0; /* Was: padding-left: 9.5em; */
-	padding-right: 9.5em; 
+	padding-right: 9.5em;
 }
 .postarea
 {
@@ -602,7 +602,7 @@ ul.admin_menu li ul li a
 	float: left;
 }
 /*
-TODO 
+TODO
  - admin_menu items doesn't select the full width in RTL
  - admin_menu second layer causes IE to cause horizontal scrollbar in RTL
  - linktree to close to tab menu in IE8. Margin-top?

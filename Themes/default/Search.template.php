@@ -7,7 +7,7 @@ function template_main()
 
 	echo '
 	<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" name="searchform" id="searchform">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />' : '', $txt['set_parameters'], '
 		</h3>';
 
@@ -21,7 +21,7 @@ function template_main()
 		echo '
 		<fieldset id="simple_search">
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe"><div class="innerframe">
+			<div class="roundframe">
 				<div id="search_term_input">
 					<strong>', $txt['search_for'], ':</strong>
 					<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" class="input_text" />
@@ -43,7 +43,7 @@ function template_main()
 		echo '
 				<a href="', $scripturl, '?action=search;advanced" onclick="this.href += \';search=\' + escape(document.forms.searchform.search.value);">', $txt['search_advanced'], '</a>
 				<input type="hidden" name="advanced" value="0" />
-			</div></div>
+			</div>
 			<span class="lowerframe"><span></span></span>
 		</fieldset>';
 	}
@@ -54,7 +54,7 @@ function template_main()
 		echo '
 		<fieldset id="advanced_search">
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe"><div class="innerframe">
+			<div class="roundframe">
 				<input type="hidden" name="advanced" value="1" />
 				<span class="enhanced">
 					<strong>', $txt['search_for'], ':</strong>
@@ -118,7 +118,7 @@ function template_main()
 				<input type="hidden" name="topic" value="', $context['search_topic']['id'], '" />';
 
 		echo '
-			</div></div>
+			</div>
 			<span class="lowerframe"><span></span></span>
 		</fieldset>';
 
@@ -127,8 +127,8 @@ function template_main()
 			echo '
 		<fieldset>
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe"><div class="innerframe">
-				<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+			<div class="roundframe">
+				<h4 class="titlebg"><span class="left"></span>
 					<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><strong>', $txt['choose_board'], '</strong></a>
 				</h4>
 				<ul class="reset" id="searchBoardsExpand"', $context['boards_check_all'] ? ' style="display: none;"' : '', '>';
@@ -157,7 +157,7 @@ function template_main()
 					<input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="input_check" />
 					<label for="check_all">', $txt['check_all'], '</label>
 				</p>
-			</div></div>
+			</div>
 			<span class="lowerframe"><span></span></span>
 		</fieldset>';
 		}
@@ -201,7 +201,7 @@ function template_results()
 	{
 		echo '
 	<div class="tborder" id="search_results">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['search_adjust_query'], '
 		</h3>';
 
@@ -456,12 +456,12 @@ function template_results()
 
 				echo '
 			<div class="tborder search_results_posts">
-				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<h3 class="catbg"><span class="left"></span>
 					<div class="align_right">', $txt['on'], ': ', $message['time'], '&nbsp;</div>
 					<span class="counter">', $message['counter'], '</span>
 					', $topic['category']['link'], ' / ', $topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.', $message['start'], ';topicseen#msg', $message['id'], '">', $message['subject_highlighted'], '</a>
 				</h3>
-				<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+				<h4 class="titlebg"><span class="left"></span>
 					<div class="align_right">', $txt['search_relevance'], ': ', $topic['relevance'], '</div>
 					', $txt['started_by'], ' ', $topic['first_post']['member']['link'], ', ', $txt['message'], ' ', $txt['by'], ' ', $message['member']['link'], '
 				</h4>
@@ -471,7 +471,7 @@ function template_results()
 						<div class="post">', $message['body_highlighted'], '</div>
 						<div class="middletext align_right buttons">', implode($context['menu_separator'], $buttonArray), '&nbsp;</div>
 					</div>
-					<span class="botslice"><span></span></span>				
+					<span class="botslice"><span></span></span>
 				</div>
 			</div>';
 			}

@@ -15,16 +15,16 @@ function template_permission_index()
 	echo '
 	<div id="admincenter">
 		<form action="' . $scripturl . '?action=admin;area=permissions;sa=quick" method="post" accept-charset="', $context['character_set'], '" name="permissionForm" id="permissionForm">';
-		
+
 		if (!empty($context['profile']))
 		echo '
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span>
 				', $txt['permissions_for_profile'], ': &quot;', $context['profile']['name'], '&quot;
 			</h3>';
-			
+
 		echo '
 			<table width="100%" class="table_grid">
-			<thead>	
+			<thead>
 				<tr class="catbg">
 					<th valign="middle">', $txt['membergroups_name'], '</th>
 					<th class="smalltext" width="10%" align="center" valign="middle">', $txt['membergroups_members_top'], '</th>
@@ -66,17 +66,17 @@ function template_permission_index()
 					<td class="windowbg" align="center">', $group['allow_modify'] && $context['can_modify'] ? '<input type="checkbox" name="group[]" value="' . $group['id'] . '" class="input_check" />' : '', '</td>
 				</tr>';
 	}
-	
+
 	echo '
 			</tbody>
 			</table>
 			<br />';
-	
+
 	// Advanced stuff...
 	if ($context['can_modify'])
 	{
 		echo '
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				<img src="', $settings['images_url'], '/', empty($context['show_advanced_options']) ? 'selected' : 'sort_down', '.gif" id="permissions_panel_toggle" alt="*" /> ', $txt['permissions_advanced_options'], '
 			</h3>
 			<div id="permissions_panel_advanced" class="windowbg">
@@ -100,7 +100,7 @@ function template_permission_index()
 								<dt>
 									', $txt['permissions_like_group'], ':
 								</dt>
-								<dd>							
+								<dd>
 									<select name="copy_from">
 										<option value="empty">(', $txt['permissions_select_membergroup'], ')</option>';
 		foreach ($context['groups'] as $group)
@@ -159,7 +159,7 @@ function template_permission_index()
 		echo '
 									</select>
 								</dd>
-							</dl>						
+							</dl>
 						</fieldset>
 					<input type="submit" value="', $txt['permissions_set_permissions'], '" onclick="return checkSubmit();" class="button_submit" />
 				</div>
@@ -239,13 +239,13 @@ function template_by_board()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=permissions;sa=board" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['permissions_boards'], '
 			</h3>
 			<div class="information">
 				', $txt['permissions_boards_desc'], '
 			</div>
-			<h3 id="board_permissions" class="titlebg flow_hidden"><span class="left"></span><span class="right"></span>
+			<h3 id="board_permissions" class="titlebg flow_hidden"><span class="left"></span>
 				<span class="perm_name align_left">', $txt['board_name'], '</span>
 				<span class="perm_profile align_left">', $txt['permission_profile'], '</span>
 			</h3>';
@@ -253,25 +253,25 @@ function template_by_board()
 	foreach ($context['categories'] as $category)
 	{
 		echo '
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 							<strong>', $category['name'], '</strong>
 			</h3>';
-		
+
 		if(!empty($category['boards']))
 			echo '
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
 					<ul class="perm_boards flow_hidden">';
-		
+
 		$alternate = false;
 
 		foreach ($category['boards'] as $board)
 		{
 			$alternate = !$alternate;
-			
+
 			echo '
-				
+
 					<li class="flow_hidden' ,' windowbg', $alternate ? '' : '2','">
 						<span class="perm_board align_left">
 							<a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], ';rid=permissions;', $context['session_var'], '=', $context['session_id'], '">', str_repeat('-', $board['child_level']), ' ', $board['name'], '</a>
@@ -297,7 +297,7 @@ function template_by_board()
 						</span>
 					</li>';
 		}
-		
+
 		if(!empty($category['boards']))
 			echo '
 				</ul>
@@ -314,7 +314,7 @@ function template_by_board()
 					<a href="', $scripturl, '?action=admin;area=permissions;sa=board;edit;', $context['session_var'], '=', $context['session_id'], '">[', $txt['permissions_board_all'], ']</a>';
 
 	echo '
-			
+
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
@@ -329,10 +329,10 @@ function template_edit_profiles()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=permissions;sa=profiles" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span>
 				', $txt['permissions_profile_edit'], '
 			</h3>
-			
+
 			<table width="100%" class="table_grid">
 			<thead>
 				<tr class="catbg">
@@ -369,7 +369,7 @@ function template_edit_profiles()
 	echo '
 			</tbody>
 			</table>
-			<div class="pagesection">	
+			<div class="pagesection">
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
 
 	if ($context['can_edit_something'])
@@ -378,11 +378,11 @@ function template_edit_profiles()
 
 	echo '
 				<input type="submit" name="delete" value="', $txt['quickmod_delete_selected'], '" class="button_submit" />
-			</div>			
+			</div>
 		</form>
 		<br />
 		<form action="', $scripturl, '?action=admin;area=permissions;sa=profiles" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['permissions_profile_new'], '
 			</h3>
 			<div class="windowbg">
@@ -487,10 +487,10 @@ function template_modify_group()
 	{
 		echo '
 			<br />
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['permissions_board'], '
 			</h3>
-			
+
 			<div class="information">
 				', $txt['permissions_board_desc'], '
 			</div>';
@@ -953,7 +953,7 @@ function template_modify_group_classic($type)
 							</tr>';
 		}
 	echo '
-						
+
 						</table>';
 	}
 	echo '
@@ -992,7 +992,7 @@ function template_inline_permissions()
 		else
 			echo '
 				<li>';
-				
+
 		if (empty($modSettings['permission_enable_deny']))
 			echo '
 					<input type="checkbox" name="', $context['current_permission'], '[', $group['id'], ']" value="on"', $group['status'] == 'on' ? ' checked="checked"' : '', ' class="input_check" />';
@@ -1001,7 +1001,7 @@ function template_inline_permissions()
 					<span class="perms"><input type="radio" name="', $context['current_permission'], '[', $group['id'], ']" value="on"', $group['status'] == 'on' ? ' checked="checked"' : '', ' class="input_radio" /></span>
 					<span class="perms"><input type="radio" name="', $context['current_permission'], '[', $group['id'], ']" value="off"', $group['status'] == 'off' ? ' checked="checked"' : '', ' class="input_radio" /></span>
 					<span class="perms"><input type="radio" name="', $context['current_permission'], '[', $group['id'], ']" value="deny"', $group['status'] == 'deny' ? ' checked="checked"' : '', ' class="input_radio" /></span>';
-		
+
 		if (!empty($modSettings['permission_enable_deny']))
 			echo '
 				</dt>
@@ -1013,14 +1013,14 @@ function template_inline_permissions()
 					<span', $group['is_postgroup'] ? ' style="font-style: italic;"' : '', '>', $group['name'], '</span>
 				</li>';
 	}
-	
+
 	if (empty($modSettings['permission_enable_deny']))
 		echo '
 			</ul>';
 	else
 		echo '
 			</dl>';
-	
+
 	echo '
 		</fieldset>
 
@@ -1040,15 +1040,15 @@ function template_postmod_permissions()
 	echo '
 	<div id="admincenter">
 		<form action="' . $scripturl . '?action=admin;area=permissions;sa=postmod;', $context['session_var'], '=', $context['session_id'], '" method="post" name="postmodForm" id="postmodForm" accept-charset="', $context['character_set'], '">
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span>
 				', $txt['permissions_post_moderation'], '
 			</h3>';
-			
+
 	// Got advanced permissions - if so warn!
 	if (!empty($modSettings['permission_enable_deny']))
 		echo '
-				<div class="information">', $txt['permissions_post_moderation_deny_note'], '</div>';		
-			
+				<div class="information">', $txt['permissions_post_moderation_deny_note'], '</div>';
+
 	echo '
 				<div class="righttext padding">
 						', $txt['permissions_post_moderation_select'], ':
@@ -1127,7 +1127,7 @@ function template_postmod_permissions()
 				</tr>';
 	}
 
-	echo '		
+	echo '
 			</tbody>
 			</table>
 		</form>

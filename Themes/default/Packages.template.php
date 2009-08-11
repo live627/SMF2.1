@@ -12,10 +12,10 @@ function template_view_package()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt[($context['uninstalling'] ? 'un' : '') . 'install_mod'], '
 		</h3>
-		<div class="information">';		
+		<div class="information">';
 
 	if ($context['is_installed'])
 		echo '
@@ -40,7 +40,7 @@ function template_view_package()
 	if (isset($context['package_readme']))
 	{
 		echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['package_' . ($context['uninstalling'] ? 'un' : '') . 'install_readme'], '
 		</h3>
 		<div class="windowbg2">
@@ -62,7 +62,7 @@ function template_view_package()
 
 	echo '
 		<form action="', $scripturl, '?action=admin;area=packages;sa=', $context['uninstalling'] ? 'uninstall' : 'install', $context['ftp_needed'] ? '' : '2', ';package=', $context['filename'], ';pid=', $context['install_id'], '" onsubmit="submitonce(this);" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $context['uninstalling'] ? $txt['package_uninstall_actions'] : $txt['package_install_actions'], ' &quot;', $context['package_name'], '&quot;
 			</h3>';
 
@@ -91,7 +91,7 @@ function template_view_package()
 
 	echo '
 			<div class="information">';
-			
+
 
 	if (empty($context['actions']) && empty($context['database_changes']))
 		echo '
@@ -173,7 +173,7 @@ function template_view_package()
 			$alternate = !$alternate;
 		}
 					echo '
-			</tbody>			
+			</tbody>
 			</table>
 			';
 
@@ -182,7 +182,7 @@ function template_view_package()
 		{
 			echo '
 			<br />
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				<a href="#" onclick="return swap_theme_actions();"><img id="swap_theme_image" src="', $settings['images_url'], '/', (empty($context['themes_locked']) ? 'expand.gif' : 'collapse.gif'), '" alt="', $txt['package_other_themes'], '" /></a> ', $context['uninstalling'] ? $txt['package_other_themes_uninstall'] : $txt['package_other_themes'], '
 			</h3>
 			<div id="custom_changes">
@@ -282,7 +282,7 @@ function template_view_package()
 	elseif ($context['ftp_needed'])
 	{
 		echo '
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['package_ftp_necessary'], '
 			</h3>
 			<div>
@@ -290,7 +290,7 @@ function template_view_package()
 			</div>';
 	}
 		echo '
-			
+
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />', (isset($context['form_sequence_number']) && !$context['ftp_needed']) ? '
 			<input type="hidden" name="seqnum" value="' . $context['form_sequence_number'] . '" />' : '', '
 		</form>
@@ -384,17 +384,17 @@ function template_extract_package()
 	if (empty($context['redirect_url']))
 	{
 		echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $context['uninstalling'] ? $txt['uninstall'] : $txt['extracting'], '
 		</h3>
 		<div class="information">', $txt['package_installed_extract'], '</div>';
 	}
 	else
 		echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['package_installed_redirecting'], '
 		</h3>';
-	
+
 	echo '
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
@@ -437,7 +437,7 @@ function template_extract_package()
 		echo '<br />';
 		template_show_list('restore_file_permissions');
 	}
-	
+
 	echo '
 	</div>
 	<br style="clear: both;" />';
@@ -449,10 +449,10 @@ function template_list()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['list_file'], '
 		</h3>
-		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+		<h3 class="titlebg"><span class="left"></span>
 			', $txt['files_archive'], ' ', $context['filename'], ':
 		</h3>
 		<div class="windowbg">
@@ -481,10 +481,10 @@ function template_examine()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['package_examine_file'], '
 		</h3>
-		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+		<h3 class="titlebg"><span class="left"></span>
 			', $txt['package_file_contents'], ' ', $context['filename'], ':
 		</h3>
 		<div class="windowbg">
@@ -505,7 +505,7 @@ function template_view_installed()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+		<h3 class="titlebg"><span class="left"></span>
 			' . $txt['view_and_remove'] . '
 		</h3>';
 
@@ -561,7 +561,7 @@ function template_browse()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			<a href="', $scripturl, '?action=helpadmin;help=latest_packages" onclick="return reqWin(this.href);" class="help"><img class="icon" src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['packages_latest'], '
 		</h3>
 		<div class="windowbg2">
@@ -571,7 +571,7 @@ function template_browse()
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
-		
+
 			<script type="text/javascript"><!-- // --><![CDATA[
 				window.smfForum_scripturl = "', $scripturl, '";
 				window.smfForum_sessionid = "', $context['session_id'], '";
@@ -595,7 +595,7 @@ function template_browse()
 				{
 					if (typeof(window.smfLatestPackages) != "undefined")
 						setInnerHTML(document.getElementById("packagesLatest"), window.smfLatestPackages);
-						
+
 					if (tempOldOnload)
 					tempOldOnload();
 				}
@@ -614,7 +614,7 @@ function template_browse()
 			// ]]></script>';
 
 	echo '
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['browse_packages'], '
 			</h3>';
 
@@ -622,11 +622,11 @@ function template_browse()
 	{
 		echo '
 			<br />
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span>
 				', $txt['modification_package'], '
 			</h3>
-			
-			
+
+
 			<table class="table_grid" width="100%">
 			<thead>
 				<tr class="catbg">
@@ -684,9 +684,9 @@ function template_browse()
 	{
 		echo '
 			<br />
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span>
 				', $txt['avatar_package'], '
-			</h3>		
+			</h3>
 			<table class="table_grid" width="100%">
 			<thead>
 				<tr class="catbg">
@@ -740,7 +740,7 @@ function template_browse()
 	{
 		echo '
 			<br />
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span>
 				' . $txt['language_package'] . '
 			</h3>
 			<table class="table_grid" width="100%">
@@ -796,9 +796,9 @@ function template_browse()
 	{
 		echo '
 			<br />
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span>
 				' . $txt['unknown_package'] . '
-			</h3>			
+			</h3>
 			<table class="table_grid" width="100%">
 			<thead>
 				<tr class="catbg">
@@ -853,7 +853,7 @@ function template_browse()
 			<div class="information">', $txt['no_packages'], '</div>';
 
 	echo '
-		
+
 			<div class="padding smalltext align_left">
 				', $txt['package_installed_key'], '
 				<img src="', $settings['images_url'], '/icons/package_installed.gif" alt="" align="middle" style="margin-left: 1ex;" /> ', $txt['package_installed_current'], '
@@ -863,10 +863,10 @@ function template_browse()
 				<a href="#" onclick="document.getElementById(\'advanced_box\').style.display = document.getElementById(\'advanced_box\').style.display == \'\' ? \'none\' : \'\'; return false;">', $txt['package_advanced_button'], '</a>
 			</div>
 			<br style="clear: both;" />
-		
+
 		<form action="', $scripturl, '?action=admin;area=packages;sa=browse" method="get">
 			<div id="advanced_box" style="display: none;">
-				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<h3 class="catbg"><span class="left"></span>
 					', $txt['package_advanced_options'], '
 				</h3>
 				<div class="windowbg">
@@ -889,7 +889,7 @@ function template_browse()
 						<input type="submit" value="', $txt['package_apply'], '" class="button_submit" />
 					</div>
 					<span class="botslice"><span></span></span>
-				</div>		
+				</div>
 			</div>
 			<input type="hidden" name="action" value="admin" />
 			<input type="hidden" name="area" value="packages" />
@@ -902,7 +902,7 @@ function template_browse()
 function template_servers()
 {
 	global $context, $settings, $options, $txt, $scripturl;
-	
+
 	if (!empty($context['package_ftp']['error']))
 			echo '
 					<div class="errorbox">
@@ -911,14 +911,14 @@ function template_servers()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['download_new_package'], '
 		</h3>';
 
 	if ($context['package_download_broken'])
 	{
 		echo '
-		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+		<h3 class="titlebg"><span class="left"></span>
 			', $txt['package_ftp_necessary'], '
 		</h3>
 		<div class="windowbg">
@@ -1025,7 +1025,7 @@ function template_servers()
 		<span class="botslice"><span></span></span>
 		</div>
 		<br />
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			' . $txt['package_upload_title'] . '
 		</h3>
 		<div class="windowbg">
@@ -1056,7 +1056,7 @@ function template_package_confirm()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $context['page_title'], '
 		</h3>
 		<div class="windowbg">
@@ -1068,7 +1068,7 @@ function template_package_confirm()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';	
+	<br style="clear: both;" />';
 }
 
 function template_package_list()
@@ -1077,7 +1077,7 @@ function template_package_list()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			' . $context['page_title'] . '
 		</h3>
 		<div class="windowbg">
@@ -1197,7 +1197,7 @@ function template_package_list()
 		</div>
 	</div>
 	<br style="clear: both;" />
-		
+
 		';
 		// Now go through and turn off all the sections.
 		if (!empty($context['package_list']))
@@ -1258,7 +1258,7 @@ function template_downloaded()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			' . $context['page_title'] . '
 		</h3>
 		<div class="windowbg">
@@ -1286,13 +1286,13 @@ function template_install_options()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['package_install_options'], '
 		</h3>
 		<div class="information">
 			', $txt['package_install_options_ftp_why'], '
 		</div>
-		
+
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
@@ -1316,7 +1316,7 @@ function template_install_options()
 						<dd>
 							<input type="text" name="pack_user" id="pack_user" value="', $context['package_ftp_username'], '" size="30" class="input_text" />
 						</dd>
-					</dl>					
+					</dl>
 					<label for="package_make_backups"><input type="checkbox" name="package_make_backups" id="package_make_backups" value="1" class="input_check"', $context['package_make_backups'] ? ' checked="checked"' : '', ' /> ', $txt['package_install_options_make_backups'], '</label><br /><br />
 					<input type="submit" name="submit" value="', $txt['save'], '" class="button_submit" />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -1723,7 +1723,7 @@ function template_file_permissions()
 						var folderImage = document.createElement("img");
 						folderImage.src = \'', addcslashes($settings['default_images_url'], "\\"), '/board.gif\';
 						linkData.appendChild(folderImage);
-						
+
 						linkData.appendChild(fileName);
 						curCol.appendChild(linkData);
 					}
@@ -1839,9 +1839,9 @@ function template_file_permissions()
 			</div>
 		</div>
 	</div>
-		
+
 	<form action="', $scripturl, '?action=admin;area=packages;sa=perms;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+		<h3 class="titlebg"><span class="left"></span>
 			<span class="align_left">', $txt['package_file_perms'], '</span><span class="fperm align_right">', $txt['package_file_perms_new_status'], '</span>
 		</h3>
 		<table width="100%" class="table_grid">
@@ -1889,14 +1889,14 @@ function template_file_permissions()
 	}
 
 	echo '
-		
+
 		</table><br />
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['package_file_perms_change'], '
 		</h3>
 		<div class="windowbg">
 				<span class="topslice"><span></span></span>
-				<div class="content">			
+				<div class="content">
 					<fieldset>
 						<dl>
 							<dt>
@@ -2038,7 +2038,7 @@ function template_action_permissions()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=packages;sa=perms;', $context['session_var'], '=', $context['session_id'], '" id="perm_submit" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['package_file_perms_applying'], '
 			</h3>';
 

@@ -11,11 +11,11 @@ function template_login()
 
 		<form action="', $scripturl, '?action=login2" name="frmLogin" id="frmLogin" method="post" accept-charset="', $context['character_set'], '" ', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
 		<div class="tborder login">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" /> ', $txt['login'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe"><div class="innerframe">';
+			<div class="roundframe">';
 
 	// Did they make a mistake last time?
 	if (!empty($context['login_errors']))
@@ -60,7 +60,7 @@ function template_login()
 				<p><input type="submit" value="', $txt['login'], '" class="button_submit" /></p>
 				<p class="smalltext"><a href="', $scripturl, '?action=reminder">', $txt['forgot_your_password'], '</a></p>
 				<input type="hidden" name="hash_passwrd" value="" />
-			</div></div>
+			</div>
 			<span class="lowerframe"><span></span></span>
 		</div></form>';
 
@@ -81,7 +81,7 @@ function template_kick_guest()
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 	<form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" name="frmLogin" id="frmLogin"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
 		<div class="tborder login">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['warning'], '
 			</h3>';
 
@@ -98,7 +98,7 @@ function template_kick_guest()
 				<img src="', $settings['images_url'], '/icons/login_sm.gif" alt=""  /> ', $txt['login'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe"><div class="innerframe">
+			<div class="roundframe">
 				<dl>
 					<dt>', $txt['username'], ':</dt>
 					<dd><input type="text" name="user" size="20" class="input_text" /></dd>
@@ -124,7 +124,7 @@ function template_kick_guest()
 				</dl>
 				<p class="centertext"><input type="submit" value="', $txt['login'], '" class="button_submit" /></p>
 				<p class="centertext smalltext"><a href="', $scripturl, '?action=reminder">', $txt['forgot_your_password'], '</a></p>
-			</div></div>
+			</div>
 			<span class="lowerframe"><span></span></span>
 			<input type="hidden" name="hash_passwrd" value="" />
 		</div>
@@ -146,18 +146,18 @@ function template_maintenance()
 	echo '
 <form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '">
 	<div class="tborder login" id="maintenance_mode">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $context['title'], '
 		</h3>
 		<p class="description">
 			<img class="align_left" src="', $settings['images_url'], '/construction.png" width="40" height="40" alt="', $txt['in_maintain_mode'], '" />
 			', $context['description'], '<br style="clear: both;" />
 		</p>
-		<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+		<h4 class="titlebg"><span class="left"></span>
 			', $txt['admin_login'], '
 		</h4>
 		<span class="upperframe"><span></span></span>
-		<div class="roundframe"><div class="innerframe">
+		<div class="roundframe">
 			<dl>
 				<dt>', $txt['username'], ':</dt>
 				<dd><input type="text" name="user" size="15" class="input_text" /></dd>
@@ -169,7 +169,7 @@ function template_maintenance()
 				<dd><input type="checkbox" name="cookieneverexp" class="input_check" /></dd>
 			</dl>
 			<p class="centertext"><input type="submit" value="', $txt['login'], '" class="button_submit" /></p>
-		</div></div>	
+		</div>
 		<span class="lowerframe"><span></span></span>
 	</div>
 </form>';
@@ -186,13 +186,13 @@ function template_admin_login()
 
 <form action="', $scripturl, $context['get_data'], '" method="post" accept-charset="', $context['character_set'], '" name="frmLogin" id="frmLogin" onsubmit="hashAdminPassword(this, \'', $context['user']['username'], '\', \'', $context['session_id'], '\');">
 	<div class="tborder login" id="admin_login">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" /> ', $txt['login'], '
 		</h3>
 		<span class="upperframe"><span></span></span>
-		<div class="roundframe"><div class="innerframe centertext">
-			<strong>', $txt['password'], ':</strong> 
-			<input type="password" name="admin_pass" size="24" class="input_password" /> 
+		<div class="roundframe centertext">
+			<strong>', $txt['password'], ':</strong>
+			<input type="password" name="admin_pass" size="24" class="input_password" />
 			<a href="', $scripturl, '?action=helpadmin;help=securityDisable_why" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '"  /></a><br />';
 
 	if (!empty($context['incorrect_password']))
@@ -204,7 +204,7 @@ function template_admin_login()
 
 	// Make sure to output all the old post data.
 	echo $context['post_data'], '
-		</div></div>
+		</div>
 		<span class="lowerframe"><span></span></span>
 	</div>
 	<input type="hidden" name="admin_hash_pass" value="" />
@@ -225,11 +225,11 @@ function template_retry_activate()
 	// Just ask them for their code so they can try it again...
 	echo '
 		<form action="', $scripturl, '?action=activate;u=', $context['member_id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span>
 				', $context['page_title'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe"><div class="innerframe">';
+			<div class="roundframe">';
 
 	// You didn't even have an ID?
 	if (empty($context['member_id']))
@@ -243,7 +243,7 @@ function template_retry_activate()
 					<dd><input type="text" name="code" size="30" class="input_text" /></dd>
 				</dl>
 				<p><input type="submit" value="', $txt['invalid_activation_submit'], '" class="button_submit" /></p>
-			</div></div>
+			</div>
 			<span class="lowerframe"><span></span></span>
 		</form>';
 }
@@ -256,15 +256,15 @@ function template_resend()
 	// Just ask them for their code so they can try it again...
 	echo '
 		<form action="', $scripturl, '?action=activate;sa=resend" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span>
 				', $context['page_title'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe"><div class="innerfame">
+			<div class="roundframe">
 				<dl>
 					<dt>', $txt['invalid_activation_username'], ':</dt>
 					<dd><input type="text" name="user" size="40" value="', $context['default_username'], '" class="input_text" /></dd>
-				</dl>	
+				</dl>
 				<p>', $txt['invalid_activation_new'], '</p>
 				<dl>
 					<dt>', $txt['invalid_activation_new_email'], ':</dt>
@@ -283,7 +283,7 @@ function template_resend()
 
 	echo '
 				<p><input type="submit" value="', $txt['invalid_activation_resend'], '" class="button_submit" /></p>
-			</div></div>
+			</div>
 			<span class="lowerframe"><span></span></span>
 		</form>';
 }

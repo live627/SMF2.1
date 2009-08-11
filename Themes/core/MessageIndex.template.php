@@ -358,7 +358,7 @@ function template_main()
 	<div id="modbuttons_bottom" class="modbuttons clearfix marginbottom">
 		', template_button_strip($normal_buttons, 'top'), '
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><strong>' . $txt['go_up'] . '</strong></a>' : '', '</div>
-		
+
 	</div>';
 	}
 

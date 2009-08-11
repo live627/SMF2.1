@@ -42,7 +42,7 @@ FROM {$from_prefix}users;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT 
+SELECT
 	cat_id AS id_cat, SUBSTRING(cat_title, 1, 255) AS name,
 	cat_order AS cat_order
 FROM {$from_prefix}bb_categories;
@@ -230,14 +230,14 @@ foreach ($attachments as $attachment)
 
 		// Set the default empty values.
 		$width = '0';
-		$height = '0';	
-	
+		$height = '0';
+
 		// Is an an image?
 		if (!empty($attachmentExtension))
 			list ($width, $height) = getimagesize($oldAttachmentDir . '/' . $oldFilename);
-	
+
 		$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads], '$width', '$height'";
-	
+
 		$id_attach++;
 	}
 }

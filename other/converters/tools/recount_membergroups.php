@@ -83,7 +83,7 @@ function initialize_inputs()
 		'additional_groups' => array('type' => 'tinytext'),
 		'member_groups' => array('type' => 'varchar', 'size' => 255),
 	);
-		
+
 }
 
 // Welcome you.
@@ -104,7 +104,7 @@ echo '
 		<p>Welcome to the recount Membergroup ID script.</p>
 		<div class="error_message">BE SURE TO RUN BACKUPS BEFORE PROCEEDING WITH THIS!!!</div>
 		<p>This script will recount all your membergroup IDs to use lower numbers. Why? Well some people during conversions may receive extremely high membergroup IDs that can cause issues. The purpose of this script to to help prevent that by recounting the ids.</p>
-		<p>Are you ready? Click <input type="submit" name="submit" value="submit" class="button_submit" /> to start</p>	
+		<p>Are you ready? Click <input type="submit" name="submit" value="submit" class="button_submit" /> to start</p>
 	</div>
 </form>';
 
@@ -228,7 +228,7 @@ function doStep3()
 	{
 		// A regular table.
 		if (empty($special_tables[$table]) || $table == 'members')
-		{			
+		{
 			foreach ($groups as $old_id => $new_id)
 				script_query("
 					UPDATE {$db_prefix}{$table}
@@ -357,7 +357,7 @@ function show_pause($next_step)
 	<div class="panel">
 		<h2>Process paused</h2>
 		<p>The script has been halted here to prevent overloading the server.</p>
-		<p>Are you ready? Click <input type="submit" name="submit" value="submit" class="button_submit" /> to continue</p>	
+		<p>Are you ready? Click <input type="submit" name="submit" value="submit" class="button_submit" /> to continue</p>
 	</div>
 </form>';
 }
@@ -414,7 +414,7 @@ function show_footer()
 function script_query($query, $file = __FILE__, $line = __LINE__)
 {
 	global $smcFunc, $func;
-	
+
 	if (isset($smcFunc['db_query']))
 		return $smcFunc['db_query']('', $query, 'security_override');
 	elseif (function_exists('db_query'))

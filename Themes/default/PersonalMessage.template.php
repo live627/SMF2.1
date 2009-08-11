@@ -5,7 +5,7 @@
 function template_pm_above()
 {
 	global $context, $settings, $options, $txt;
-	
+
 	echo '
 	<div id="personal_messages">';
 
@@ -15,7 +15,7 @@ function template_pm_above()
 		// !!! Hardcoded colors = bad.
 		echo '
 		<h3 class="titlebg"><span class="left">
-			</span><span class="right"></span>
+			</span>
 			<span class="floatleft">', $txt['pm_capacity'], ':</span>
 			<span class="floatleft capacity_bar">
 				<span style="border: 0; display: block; background: ', $context['limit_bar']['percent'] > 85 ? '#A53D05' : ($context['limit_bar']['percent'] > 40 ? '#EEA800' : '#468008'), '; height: 7px; width: ', $context['limit_bar']['bar'], '%;"></span>
@@ -31,7 +31,7 @@ function template_pm_above()
 function template_pm_below()
 {
 	global $context, $settings, $options;
-	
+
 	echo '
 	</div>
 	<br style="clear: both;" />';
@@ -139,7 +139,7 @@ function template_folder()
 		if ($context['display_mode'] != 1)
 			echo '
 	<h3 class="catbg">
-		<span class="left"></span><span class="right"></span>
+		<span class="left"></span>
 		<span class="author">', $txt['author'], '</span>
 		<span class="topic_title">', $txt['topic'], '</span>
 	</h3>';
@@ -150,11 +150,11 @@ function template_folder()
 		$reply_all_button = create_button('im_reply_all.gif', 'reply_to_all', 'reply_to_all', 'align="middle"');
 		$forward_button = create_button('quote.gif', 'reply_quote', 'reply_quote', 'align="middle"');
 		$delete_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
-	*/	
+	*/
 		while ($message = $context['get_pmessage']('message'))
 		{
 			$window_class = $message['alternate'] == 0 ? 'windowbg' : 'windowbg2';
-			
+
 
 			echo '
 	<div class="', $window_class, '">
@@ -210,7 +210,7 @@ function template_folder()
 				echo '
 						<li class="karma_allow">
 							<a href="', $scripturl, '?action=modifykarma;sa=applaud;uid=', $message['member']['id'], ';f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pm=', $message['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaApplaudLabel'], '</a> <a href="', $scripturl, '?action=modifykarma;sa=smite;uid=', $message['member']['id'], ';f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pm=', $message['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaSmiteLabel'], '</a>
-							
+
 						</li>';
 
 			// Show the member's gender icon?
@@ -265,7 +265,7 @@ function template_folder()
 				echo '
 						<li class="profile">
 							<ul>';
-				//show the profile button 
+				//show the profile button
 				echo '
 								<li><a href="', $message['member']['href'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" border="0" />' : $txt['view_profile']), '</a></li>';
 
@@ -283,7 +283,7 @@ function template_folder()
 				if ($context['can_send_pm'])
 					echo '
 								<li><a href="', $scripturl, '?action=pm;sa=send;u=', $message['member']['id'], '" title="', $message['member']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/im_' . ($message['member']['online']['is_online'] ? 'on' : 'off') . '.gif" alt="' . ($message['member']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline']) . '" border="0" />' : ($message['member']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline']), '</a></li>';
-				
+
 				echo '
 							</ul>
 						</li>';
@@ -461,7 +461,7 @@ function template_folder()
 		<span class="botslice"><span></span></span>
 	</div>
 	';
-	
+
 		}
 
 	if (empty($context['display_mode']))
@@ -526,7 +526,7 @@ function template_subject_list()
 			<td class="windowbg" colspan="5">', $txt['msg_alert_none'], '</td>
 		</tr>';
 	$next_alternate = false;
-	
+
 	while ($message = $context['get_pmessage']('subject'))
 	{
 		echo '
@@ -616,7 +616,7 @@ function template_search()
 		}
 	// ]]></script>
 	<form action="', $scripturl, '?action=pm;sa=search2" method="post" accept-charset="', $context['character_set'], '" name="pmSearchForm">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['pm_search_title'], '
 		</h3>';
 
@@ -687,7 +687,7 @@ function template_search()
 				<fieldset class="search_options align_right">
 					<legend>', $txt['pm_search_post_age'], '</legend>
 					', $txt['pm_search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" class="input_text" />&nbsp;', $txt['pm_search_between_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" class="input_text" /> ', $txt['pm_search_between_days'], '
-				</fieldset>	
+				</fieldset>
 				<br style="clear: both;" />';
 
 		// Do we have some labels setup? If so offer to search by them!
@@ -731,10 +731,10 @@ function template_search()
 function template_search_results()
 {
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
-	
+
 	echo '
 	<h3 class="catbg">
-		<span class="left"></span><span class="right"></span>
+		<span class="left"></span>
 		', $txt['pm_search_results'], '
 	</h3>
 	<div class="pagesection">
@@ -764,7 +764,7 @@ function template_search_results()
 			// !!! This still needs to be made pretty.
 			echo '
 		<h3 class="titlebg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			<span class="floatleft">
 				', $message['counter'], '&nbsp;&nbsp;<a href="', $message['href'], '">', $message['subject'], '</a>
 			</span>
@@ -773,7 +773,7 @@ function template_search_results()
 			</span>
 		</h3>
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['from'], ': ', $message['member']['link'], ', ', $txt['to'], ': ';
 
 			// Show the recipients.
@@ -844,12 +844,12 @@ function template_search_results()
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>';
-	
+
 	echo '
 		<div class="pagesection">
 			<strong>', $txt['pages'], ':</strong> ', $context['page_index'], '
 		</div>';
-	
+
 }
 
 function template_send()
@@ -861,7 +861,7 @@ function template_send()
 	{
 		echo '
 	<h3 class="catbg">
-		<span class="left"></span><span class="right"></span>
+		<span class="left"></span>
 		', $txt['pm_send_report'], '
 	</h3>
 	<div class="windowbg">
@@ -883,7 +883,7 @@ function template_send()
 	if (isset($context['preview_message']))
 	echo '
 	<h3 class="catbg">
-		<span class="left"></span><span class="right"></span>
+		<span class="left"></span>
 		', $context['preview_subject'], '
 	</h3>
 	<div class="windowbg">
@@ -897,10 +897,10 @@ function template_send()
 	// Main message editing box.
 	echo '
 	<h3 class="titlebg">
-		<span class="left"></span><span class="right"></span>
+		<span class="left"></span>
 		<img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt['new_message'], '" title="', $txt['new_message'], '" />&nbsp;', $txt['new_message'], '
 	</h3>';
-	
+
 	// If there were errors for sending the PM, show them.
 	if (!empty($context['post_error']['messages']))
 	{
@@ -908,17 +908,17 @@ function template_send()
 	<div class="errorbox">
 		', $txt['error_while_submitting'], '
 		<ul>';
-		
+
 		foreach ($context['post_error']['messages'] as $error)
 			echo '
 			<li class="error">', $error, '</li>';
-			
+
 		echo '
 		</ul>
 	</div>
 	';
 	}
-	
+
 	echo '
 	<div class="windowbg2">
 		<span class="topslice"><span></span></span>
@@ -1042,11 +1042,11 @@ function template_send()
 	<br />
 	<br />
 	<h3 class="catbg">
-		<span class="left"></span><span class="right"></span>
+		<span class="left"></span>
 		', $txt['subject'], ': ', $context['quoted_message']['subject'], '
 	</h3>
 	<h3 class="titlebg">
-		<span class="left"></span><span class="right"></span>
+		<span class="left"></span>
 		<span class="align_left">
 			', $txt['from'], ': ', $context['quoted_message']['member']['name'], '
 		</span>
@@ -1114,7 +1114,7 @@ function template_ask_delete()
 
 	echo '
 	<h3 class="catbg">
-		<span class="left"></span><span class="right"></span>
+		<span class="left"></span>
 		', ($context['delete_all'] ? $txt['delete_message'] : $txt['delete_all']), '
 	</h3>
 	<div class="windowbg">
@@ -1135,7 +1135,7 @@ function template_prune()
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=prune" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['pm_prune_warning'], '\');">
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['pm_prune'], '
 		</h3>
 		<div class="windowbg">
@@ -1158,7 +1158,7 @@ function template_labels()
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=manlabels" method="post" accept-charset="', $context['character_set'], '">
 		<h3 class="titlebg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['pm_manage_labels'], '
 		</h3>
 		<div class="description">
@@ -1201,19 +1201,19 @@ function template_labels()
 	echo '
 		</tbody>
 		</table>';
-		
-	if (!count($context['labels']) < 2)	
+
+	if (!count($context['labels']) < 2)
 		echo '
 		<div class="pagesection righttext">
 			<input type="submit" name="save" value="', $txt['save'], '" class="button_submit" />
 			<input type="submit" name="delete" value="', $txt['quickmod_delete_selected'], '" onclick="return confirm(\'', $txt['pm_labels_delete'], '\');" class="button_submit" />
 		</div>';
-	
+
 	echo '
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>
 	<form action="', $scripturl, '?action=pm;sa=manlabels" method="post" accept-charset="', $context['character_set'], '" style="margin-top: 1ex;">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['pm_label_add_new'], '
 		</h3>
 		<div class="windowbg">
@@ -1226,7 +1226,7 @@ function template_labels()
 					<dd>
 						<input type="text" id="add_label" name="label" value="" size="30" maxlength="30" class="input_text" />
 					</dd>
-				</dl>		
+				</dl>
 				<input type="submit" name="add" value="', $txt['pm_label_add_new'], '" class="button_submit" />
 			</div>
 			<span class="botslice"><span></span></span>
@@ -1244,7 +1244,7 @@ function template_report_message()
 	<form action="', $scripturl, '?action=pm;sa=report;l=', $context['current_label_id'], '" method="post" accept-charset="', $context['character_set'], '">
 		<input type="hidden" name="pmsg" value="', $context['pm_id'], '" />
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['pm_report_title'], '
 		</h3>
 		<div class="description">
@@ -1296,7 +1296,7 @@ function template_report_message_complete()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<h3 class="catbg"><span class="left"></span><span class="right"></span>
+	<h3 class="catbg"><span class="left"></span>
 		', $txt['pm_report_title'], '
 	</h3>
 	<div class="windowbg">
@@ -1317,7 +1317,7 @@ function template_rules()
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=manrules" method="post" accept-charset="', $context['character_set'], '" name="manRules">
 		<h3 class="titlebg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['pm_manage_rules'], '
 		</h3>
 		<div class="description">
@@ -1566,7 +1566,7 @@ function template_add_rule()
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=manrules;save;rid=', $context['rid'], '" method="post" accept-charset="', $context['character_set'], '" name="addrule" id="addrule">
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $context['rid'] == 0 ? $txt['pm_add_rule'] : $txt['pm_edit_rule'], '
 		</h3>
 		<div class="windowbg">
@@ -1583,7 +1583,7 @@ function template_add_rule()
 				</dl>
 				<fieldset>
 					<legend>', $txt['pm_rule_criteria'], '</legend>';
-					
+
 	// Add a dummy criteria to allow expansion for none js users.
 	$context['rule']['criteria'][] = array('t' => '', 'v' => '');
 
@@ -1637,7 +1637,7 @@ function template_add_rule()
 				</fieldset>
 				<fieldset>
 					<legend>', $txt['pm_rule_actions'], '</legend>';
-	
+
 	// As with criteria - add a dummy action for "expansion".
 	$context['rule']['actions'][] = array('t' => '', 'v' => '');
 
@@ -1682,7 +1682,7 @@ function template_add_rule()
 			<span class="botslice"><span></span></span>
 		</div>
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['pm_rule_description'], '
 		</h3>
 		<div class="information">

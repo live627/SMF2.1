@@ -8,7 +8,7 @@ function template_main()
 	template_show_list('regular_membergroups_list');
 	echo '<br /><br />';
 	template_show_list('post_count_membergroups_list');
-	
+
 }
 
 function template_new_group()
@@ -18,7 +18,7 @@ function template_new_group()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=membergroups;sa=add" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['membergroups_new_group'], '
 			</h3>
 			<div class="windowbg">
@@ -112,7 +112,7 @@ function template_new_group()
 								<br />
 								<input type="checkbox" id="checkall_check" class="input_check" onclick="invertAll(this, this.form, \'boardaccess\');" /> <label for="checkall_check"><em>', $txt['check_all'], '</em></label>
 							</fieldset>
-						</dd>		
+						</dd>
 					</dl>
 					<input type="submit" value="', $txt['membergroups_add_group'], '" class="button_submit" />
 				</div>
@@ -145,7 +145,7 @@ function template_edit_group()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=membergroups;sa=edit;group=', $context['group']['id'], '" method="post" accept-charset="', $context['character_set'], '" name="groupForm" id="groupForm">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['membergroups_edit_group'], ' - ', $context['group']['name'], '
 			</h3>
 			<div class="windowbg2">
@@ -161,7 +161,7 @@ function template_edit_group()
 
 	if ($context['group']['id'] != 3 && $context['group']['id'] != 4)
 		echo '
-				
+
 						<dt id="group_desc_text">
 							<label for="group_desc_input"><strong>', $txt['membergroups_edit_desc'], ':</strong></label>
 						</dt>
@@ -233,7 +233,7 @@ function template_edit_group()
 
 	if ($context['group']['allow_post_group'])
 		echo '
-				
+
 						<dt id="min_posts_text">
 							<label for="min_posts_input"><strong>', $txt['membergroups_min_posts'], ':</strong></label>
 						</dt>
@@ -362,7 +362,7 @@ function template_group_members()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : '') , ';sa=members;group=', $context['group']['id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $context['page_title'], '
 			</h3>
 			<div class="windowbg">
@@ -375,16 +375,16 @@ function template_group_members()
 						<dd>
 							<span ', $context['group']['online_color'] ? 'style="color: ' . $context['group']['online_color'] . ';"' : '', '>', $context['group']['name'], '</span> ', $context['group']['stars'], '
 						</dd>';
-	//Any description to show?			
-	if(!empty($context['group']['description']))				
-		echo '					
+	//Any description to show?
+	if(!empty($context['group']['description']))
+		echo '
 						<dt>
 							<strong>' . $txt['membergroups_members_description'] . ':</strong>
 						</dt>
 						<dd>
 							', $context['group']['description'] ,'
 						</dd>';
-	
+
 	echo '
 						<dt>
 							<strong>', $txt['membergroups_members_top'], ':</strong>
@@ -413,10 +413,10 @@ function template_group_members()
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
-			
-			
+
+
 			<br />
-			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h4 class="titlebg"><span class="left"></span>
 				', $txt['membergroups_members_group_members'], '
 			</h4>
 			<br />
@@ -485,18 +485,18 @@ function template_group_members()
 			</table>
 			<div class="pagesection flow_hidden">
 				<div class="align_left">', $txt['pages'], ': ', $context['page_index'], '</div>';
-				
+
 	if (!empty($context['group']['assignable']))
 		echo '
-				<div class="align_right"><input type="submit" name="remove" value="', $txt['membergroups_members_remove'], '" class="button_submit" /></div>';			
-	echo '		
+				<div class="align_right"><input type="submit" name="remove" value="', $txt['membergroups_members_remove'], '" class="button_submit" /></div>';
+	echo '
 			</div>
 			<br />';
 
 	if (!empty($context['group']['assignable']))
 	{
 		echo '
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['membergroups_members_add_title'], '
 			</h3>
 			<div class="windowbg">
@@ -545,9 +545,9 @@ function template_group_request_reason()
 	echo '
 	<div id="moderationcenter">
 		<form action="', $scripturl, '?action=groups;sa=requests" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['mc_groups_reason_title'], '
-			</h3>	
+			</h3>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">

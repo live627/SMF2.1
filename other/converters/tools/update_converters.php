@@ -182,7 +182,7 @@ function DoUpdates($type = 'strtr', $updates)
 				continue;
 
 			$file_contents = file_get_contents($path . '/' . $file);
-		
+
 			$new_contents = strtr($file_contents, $updates);
 
 			// Trim the fat!

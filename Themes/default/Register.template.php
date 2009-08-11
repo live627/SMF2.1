@@ -8,13 +8,13 @@ function template_registration_agreement()
 
 	echo '
 		<form action="', $scripturl, '?action=register" method="post" accept-charset="', $context['character_set'], '" id="registration">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['registration_agreement'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe"><div class="innerframe">
+			<div class="roundframe">
 				<p>', $context['agreement'], '</p>
-			</div></div>
+			</div>
 			<span class="lowerframe"><span></span></span>
 			<div id="confirm_buttons">';
 
@@ -25,7 +25,7 @@ function template_registration_agreement()
 				<input type="submit" name="accept_agreement_coppa" value="', $context['coppa_agree_below'], '" class="button_submit" />';
 	else
 		echo '
-				<input type="submit" name="accept_agreement" value="', $txt['agreement_agree'], '" class="button_submit" />'; 
+				<input type="submit" name="accept_agreement" value="', $txt['agreement_agree'], '" class="button_submit" />';
 
 	echo '
 			</div>
@@ -49,10 +49,10 @@ function template_registration_form()
 					alert("', $txt['register_passwords_differ_js'], '");
 					return false;
 				}
-		
+
 				return true;
 			}
-		
+
 			var currentAuthMethod = \'passwd\';
 			function updateAuthMethod()
 			{
@@ -61,17 +61,17 @@ function template_registration_form()
 					currentAuthMethod = \'passwd\';
 				else
 					currentAuthMethod = \'openid\';
-		
+
 				// No openID?
 				if (!document.getElementById(\'auth_openid\'))
 					return true;
-		
+
 				document.forms.registration.openid_url.disabled = currentAuthMethod == \'openid\' ? false : true;
 				document.forms.registration.smf_autov_pwmain.disabled = currentAuthMethod == \'passwd\' ? false : true;
 				document.forms.registration.smf_autov_pwverify.disabled = currentAuthMethod == \'passwd\' ? false : true;
 				document.getElementById(\'smf_autov_pwmain_div\').style.display = currentAuthMethod == \'passwd\' ? \'\' : \'none\';
 				document.getElementById(\'smf_autov_pwverify_div\').style.display = currentAuthMethod == \'passwd\' ? \'\' : \'none\';
-		
+
 				if (currentAuthMethod == \'passwd\')
 				{
 					verificationHandle.refreshMainPassword();
@@ -90,7 +90,7 @@ function template_registration_form()
 					document.getElementById(\'password2_group\').style.display = \'none\';
 					document.getElementById(\'openid_group\').style.display = \'\';
 				}
-		
+
 				return true;
 			}
 		// ]]></script>';
@@ -115,10 +115,10 @@ function template_registration_form()
 
 	echo '
 		<form action="', $scripturl, '?action=register2" method="post" accept-charset="', $context['character_set'], '" name="registration" id="registration" onsubmit="return verifyAgree();">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['registration_form'], '
 			</h3>
-			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h4 class="titlebg"><span class="left"></span>
 				', $txt['required_info'], '
 			</h4>
 			<div class="windowbg2">
@@ -140,7 +140,7 @@ function template_registration_form()
 						</dd>
 						<dt><strong><label for="allow_email">', $txt['allow_user_email'], ':</label></strong></dt>
 						<dd>
-							<input type="checkbox" name="allow_email" id="allow_email" tabindex="', $context['tabindex']++, '" class="input_check" />			
+							<input type="checkbox" name="allow_email" id="allow_email" tabindex="', $context['tabindex']++, '" class="input_check" />
 						</dd>
 					</dl>';
 
@@ -182,7 +182,7 @@ function template_registration_form()
 							<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" class="input_password" />
 							<span id="smf_autov_pwverify_div" style="display: none;">
 								<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" />
-							</span>				
+							</span>
 						</dd>
 					</dl>';
 
@@ -195,7 +195,7 @@ function template_registration_form()
 						<dt><strong>', $txt['authenticate_openid_url'], ':</strong></dt>
 						<dd>
 							<input type="text" name="openid_url" id="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['openid']) ? $context['openid'] : '', '" class="input_text" />
-							<span><img src="', $settings['images_url'], '/openid.gif" alt="', $txt['openid'], '" /></span>				
+							<span><img src="', $settings['images_url'], '/openid.gif" alt="', $txt['openid'], '" /></span>
 						</dd>
 					</dl>';
 
@@ -210,7 +210,7 @@ function template_registration_form()
 	if (!empty($context['profile_fields']) || !empty($context['custom_fields']))
 	{
 		echo '
-			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h4 class="titlebg"><span class="left"></span>
 				', $txt['additional_information'], '
 			</h4>
 			<div class="windowbg2">
@@ -295,7 +295,7 @@ function template_registration_form()
 							', $field['postinput'];
 
 				echo '
-						</dd>';		
+						</dd>';
 			}
 		}
 	}
@@ -325,7 +325,7 @@ function template_registration_form()
 	if ($context['visual_verification'])
 	{
 		echo '
-			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h4 class="titlebg"><span class="left"></span>
 				', $txt['verification'], '
 			</h4>
 			<div class="windowbg2">
@@ -369,7 +369,7 @@ function template_after()
 	echo '
 		<div id="registration_success">
 			<h3 class="catbg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				', $txt['registration_successful'], '
 			</h3>
 			<div class="windowbg">
@@ -388,7 +388,7 @@ function template_coppa()
 	// Formulate a nice complicated message!
 	echo '
 			<h3 class="titlebg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				', $context['page_title'], '
 			</h3>
 			<div class="windowbg2">
@@ -511,7 +511,7 @@ function template_admin_register()
 	echo '
 	<div id="admincenter">
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['admin_browse_register_new'], '
 		</h3>
 		<form class="windowbg2" action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '" name="postForm" id="postForm">
@@ -609,7 +609,7 @@ function template_edit_agreement()
 	// Just a big box to edit the text file ;).
 	echo '
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['registration_agreement'], '
 		</h3>';
 
@@ -672,7 +672,7 @@ function template_edit_reserved_words()
 
 	echo '
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['admin_reserved_set'], '
 		</h3>
 		<form class="windowbg2" action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '">

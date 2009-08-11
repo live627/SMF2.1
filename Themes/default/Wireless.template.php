@@ -680,7 +680,7 @@ function template_imode_pm()
 			if ($context['can_send_pm'] && $message['number_recipients'] > 1)
 				echo '
 			<tr><td><a href="', $scripturl, '?action=pm;sa=send;pmsg=', $message['id'], ';u=all;reply;imode">', $txt['wireless_pm_reply_all'], '</a></tr></td>';
-		
+
 		echo '
 		</table>';
 	}

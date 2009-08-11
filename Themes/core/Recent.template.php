@@ -36,11 +36,11 @@ function template_main()
 			<div class="innerframe">
 				<h5 class="lower_padding flow_hidden">
 					<span class="align_left">', $txt['started_by'], ' ' . $post['first_poster']['link'] . ' - ' . $txt['last_post'] . ' ' . $txt['by'] . ' ' . $post['poster']['link'] . ' </span>
-					<span class="align_right">', $txt['on'], ': ', $post['time'], '</span>		
+					<span class="align_right">', $txt['on'], ': ', $post['time'], '</span>
 				</h5>
 				<p>', $post['message'], '</p>
 			</div>';
-		
+
 		if (!empty($button_set))
 		{
 			echo '

@@ -77,7 +77,7 @@ $row['signature'] = preg_replace(
 		'[color=#FFFF00]$1[/color]',
 		'[color=#FF9900]$1[/color]',
 		'[color=#FFC0FF]$1[/color]',
-		'[color=#A22ADA]$1[/color]',		
+		'[color=#A22ADA]$1[/color]',
 	),
 	trim($row['signature'])
 );
@@ -91,8 +91,8 @@ SELECT
 	SUBSTRING(user_name, 1, 255) AS real_name, user_email AS email_address,
 	SUBSTRING(user_password, 1, 64) AS passwd,
 	user_postcount AS posts, '' AS usertitle,
-	user_lastlog AS last_login, 
-	CASE user_maingrp 
+	user_lastlog AS last_login,
+	CASE user_maingrp
 		WHEN '5' THEN '1'
 		WHEN '6' THEN '2'
 		ELSE '0'
@@ -130,7 +130,7 @@ WHERE id_board != 0;
 
 ---* {$to_prefix}boards
 SELECT
-	b.fs_id AS id_board, SUBSTRING(b.fs_title, 1, 255) AS name, '-1,0,1,2' AS member_groups, 
+	b.fs_id AS id_board, SUBSTRING(b.fs_title, 1, 255) AS name, '-1,0,1,2' AS member_groups,
 	SUBSTRING(b.fs_desc, 1, 65534) AS description, b.fs_order AS board_order,
 	'' AS num_posts, '' AS num_topics, c.fn_id AS id_cat
 FROM {$from_prefix}forum_sections AS b
@@ -151,11 +151,11 @@ TRUNCATE {$to_prefix}log_polls;
 
 ---* {$to_prefix}topics
 SELECT
-	t.ft_id AS id_topic, t.ft_sectionid AS id_board, 
-	t.ft_sticky AS is_sticky, t.ft_viewcount AS num_views, 
-	t.ft_firstposterid AS id_member_started, 
-	t.ft_lastposterid AS id_member_updated, 
-	MIN(p.fp_id) AS id_first_msg, MAX(p.fp_id) AS id_last_msg, 
+	t.ft_id AS id_topic, t.ft_sectionid AS id_board,
+	t.ft_sticky AS is_sticky, t.ft_viewcount AS num_views,
+	t.ft_firstposterid AS id_member_started,
+	t.ft_lastposterid AS id_member_updated,
+	MIN(p.fp_id) AS id_first_msg, MAX(p.fp_id) AS id_last_msg,
 	t.ft_postcount AS num_replies, 	t.ft_state AS locked
 FROM {$from_prefix}forum_topics AS t
 LEFT JOIN {$from_prefix}forum_posts AS p ON (t.ft_id = p.fp_topicid)
@@ -229,7 +229,7 @@ $row['body'] = preg_replace(
 		'[color=#FFFF00]$1[/color]',
 		'[color=#FF9900]$1[/color]',
 		'[color=#FFC0FF]$1[/color]',
-		'[color=#A22ADA]$1[/color]',		
+		'[color=#A22ADA]$1[/color]',
 	),
 	trim($row['body'])
 );
@@ -240,12 +240,12 @@ $row['body'] = htmlspecialchars($row['body']);
 
 SELECT
 	p.fp_id AS id_msg, p.fp_topicid AS id_topic,
-	p.fp_sectionid  AS id_board, p.fp_creation AS poster_time, 
+	p.fp_sectionid  AS id_board, p.fp_creation AS poster_time,
 	p.fp_posterid AS id_member,	p.fp_updated AS id_msg_MODIFIED,
 	t.ft_title AS subject,
-	p.fp_postername AS poster_name, 
-	'' AS poster_email,	p.fp_posterip AS poster_ip, 
-	'1' AS smileys_enabled, p.fp_updated AS modified_time, 
+	p.fp_postername AS poster_name,
+	'' AS poster_email,	p.fp_posterip AS poster_ip,
+	'1' AS smileys_enabled, p.fp_updated AS modified_time,
 	'' AS modified_name, p.fp_text AS body, 'xx' AS icon
 FROM {$from_prefix}forum_posts AS p
 	INNER JOIN {$from_prefix}forum_topics AS t ON (p.fp_topicid = t.ft_id)
@@ -316,7 +316,7 @@ $row['body'] = preg_replace(
 		'[color=#FFFF00]$1[/color]',
 		'[color=#FF9900]$1[/color]',
 		'[color=#FFC0FF]$1[/color]',
-		'[color=#A22ADA]$1[/color]',		
+		'[color=#A22ADA]$1[/color]',
 	),
 	trim($row['body'])
 );
@@ -339,7 +339,7 @@ FROM {$from_prefix}pm;
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT 
+SELECT
 	pm_id AS id_pm, pm_touserid AS id_member, 1 AS is_read, '-1' AS labels
 FROM {$from_prefix}pm;
 ---*
@@ -366,7 +366,7 @@ if (!isset($smf_smileys_directory))
 	list ($smf_smileys_directory) = convert_fetch_row($request);
 	convert_free_result($request);
 }
-	
+
 /* enable custom smileys */
 $request = convert_query("
 	SELECT value
@@ -375,34 +375,34 @@ $request = convert_query("
 	LIMIT 1");
 
 list ($smiley_enable) = convert_fetch_row($request);
-convert_free_result($request);	
-	
+convert_free_result($request);
+
 if (isset($smiley_enable))
 	convert_query("
 		UPDATE {$to_prefix}settings
-		SET value = '1' 
+		SET value = '1'
 		WHERE variable='smiley_enable'");
-	
+
 else
 	convert_query("
 		INSERT IGNORE INTO {$to_prefix}settings
 			(variable, value)
 		VALUES ('smiley_enable','1')");
 
-$row['newfilename'] = substr(strrchr($row['filename'], '/'),1);		
-$row['description'] = htmlspecialchars($row['description'],ENT_QUOTES);			
+$row['newfilename'] = substr(strrchr($row['filename'], '/'),1);
+$row['description'] = htmlspecialchars($row['description'],ENT_QUOTES);
 
-if (is_file($_POST['path_from'] . '/'. $row['filename'])) 
+if (is_file($_POST['path_from'] . '/'. $row['filename']))
 {
  	copy($_POST['path_from'] . '/'. $row['filename'] , $smf_smileys_directory . '/default/'.$row['newfilename']);
-	
+
 	$request2 = convert_query("
 		INSERT IGNORE INTO {$to_prefix}smileys
 			(code, filename, description, hidden)
 		VALUES ('$row[code]','$row[newfilename]', '$row[description]','1')");
 }
 ---}
-SELECT 
+SELECT
 	smilie_image AS filename, smilie_code AS code, smilie_text AS description
 FROM {$from_prefix}smilies;
 ---*
@@ -420,13 +420,13 @@ $keys = array('id_attach', 'size', 'filename', 'id_member');
 $row['filename'] = substr(strrchr($row['user_avatar'], '/'),1);
 $newfilename = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
 
-if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/' . $row['user_avatar'] , $attachmentUploadDir . '/' . $newfilename)) 
+if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/' . $row['user_avatar'] , $attachmentUploadDir . '/' . $newfilename))
 	{
 		$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($newfilename) . "', $row[id_member]";
 		$id_attach++;
 	}
 ---}
-SELECT 
+SELECT
 	user_id AS id_member, user_avatar
 FROM {$from_prefix}users
 WHERE user_avatar LIKE 'datas%';

@@ -5,14 +5,14 @@
 function template_editsets()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
-	
+
 	echo '
 	<div id="admincenter">';
-	
+
 	template_show_list('smiley_set_list');
 
 	echo '<br />
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['smiley_sets_latest'], '
 		</h3>
 		<div class="windowbg">
@@ -73,7 +73,7 @@ function template_modifyset()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=smileys;sa=editsets" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $context['current_set']['is_new'] ? $txt['smiley_set_new'] : $txt['smiley_set_modify_existing'], '
 			</h3>';
 
@@ -97,7 +97,7 @@ function template_modifyset()
 						<dd>
 							<input type="text" name="smiley_sets_name" id="smiley_sets_name" value="', $context['current_set']['name'], '" class="input_text" />
 						</dd>
-						<dt>	
+						<dt>
 							<strong><label for="smiley_sets_path">', $txt['smiley_sets_url'], '</label>: </strong>
 						</dt>
 						<dd>
@@ -119,7 +119,7 @@ function template_modifyset()
 		}
 		echo '
 							/..
-						</dd>	
+						</dd>
 						<dt>
 							<strong><label for="smiley_sets_default">', $txt['smiley_set_select_default'], '</label>: </strong>
 						</dt>
@@ -137,7 +137,7 @@ function template_modifyset()
 							<input type="checkbox" name="smiley_sets_import" id="smiley_sets_import" value="1" class="input_check" />
 						</dd>';
 
-		echo '	
+		echo '
 					</dl>
 					<input type="submit" value="', $txt['smiley_sets_save'], '" class="button_submit" />
 				</div>
@@ -158,7 +158,7 @@ function template_modifysmiley()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=smileys;sa=editsmileys" method="post" accept-charset="', $context['character_set'], '" name="smileyForm" id="smileyForm">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['smiley_modify_existing'], '
 			</h3>
 			<div class="windowbg">
@@ -257,7 +257,7 @@ function template_addsmiley()
 			document.getElementById("ul_settings").style.display = document.getElementById("method-existing").checked ? "none" : "";
 			document.getElementById("ex_settings").style.display = document.getElementById("method-upload").checked ? "none" : "";
 		}
-		
+
 		function swapUploads()
 		{
 			document.getElementById("uploadMore").style.display = document.getElementById("uploadSmiley").disabled ? "none" : "";
@@ -272,7 +272,7 @@ function template_addsmiley()
 	// ]]></script>
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=smileys;sa=addsmiley" method="post" accept-charset="', $context['character_set'], '" name="smileyForm" id="smileyForm" enctype="multipart/form-data">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['smileys_add_method'], '
 			</h3>
 			<div class="windowbg">
@@ -294,7 +294,7 @@ function template_addsmiley()
 							</dt>
 							<dd>
 								', $txt['smiley_preview_using'], ': <select name="set" onchange="updatePreview();selectMethod(\'existing\');">
-							
+
 							';
 
 		foreach ($context['smiley_sets'] as $smiley_set)
@@ -343,7 +343,7 @@ function template_addsmiley()
 							</dd>
 						</dl>
 					</fieldset>
-			
+
 					<dl id="uploadMore" style="display: none;" class="settings">';
 	foreach ($context['smiley_sets'] as $smiley_set)
 		echo '
@@ -359,7 +359,7 @@ function template_addsmiley()
 			<span class="botslice"><span></span></span>
 			</div>
 		<br />
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['smiley_new'], '
 		</h3>
 		<div class="windowbg">
@@ -404,7 +404,7 @@ function template_addsmiley()
 	</div>
 	<br style="clear: both;" />
 	<script type="text/javascript"><!-- // --><![CDATA[
-			
+
 		function updatePreview()
 		{
 			var currentImage = document.getElementById("preview");
@@ -417,7 +417,7 @@ function template_addsmiley()
 function template_setorder()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
-	
+
 	echo '
 	<div id="admincenter">';
 
@@ -425,7 +425,7 @@ function template_setorder()
 	{
 		echo '
 		<form action="', $scripturl, '?action=admin;area=smileys;sa=editsmileys" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $location['title'], '
 			</h3>
 			<div class="information">
@@ -484,7 +484,7 @@ function template_editicon()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=smileys;sa=editicon;icon=', $context['new_icon'] ? '0' : $context['icon']['id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $context['new_icon'] ? $txt['icons_new_icon'] : $txt['icons_edit_icon'], '
 			</h3>
 			<div class="windowbg">
@@ -555,7 +555,7 @@ function template_editicon()
 					<input type="hidden" name="icon" value="', $context['icon']['id'], '" />';
 
 	echo '
-				
+
 					<input type="submit" value="', $txt['smileys_save'], '" class="button_submit" />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</div>

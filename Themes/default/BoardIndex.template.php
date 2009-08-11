@@ -240,7 +240,7 @@ function template_main()
 			<img src="' . $settings['images_url'] . '/' .$context['theme_variant'], '/new_some.png" alt=""  /> ', $txt['new_posts'], '
 			<img src="' . $settings['images_url'] . '/' .$context['theme_variant'], '/new_none.png" alt="" style="margin-left: 4ex;" /> ', $txt['old_posts'], '
 			<img src="' . $settings['images_url'] . '/' .$context['theme_variant'], '/new_redirect.png" alt="" style="margin-left: 4ex;" /> ', $txt['redirects'], '
-		</p>	
+		</p>
 	</div>';
 	}
 	else

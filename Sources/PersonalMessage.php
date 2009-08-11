@@ -2028,7 +2028,7 @@ function MessagePost2()
 	if (!empty($_POST['u']))
 		$_POST['recipient_to'] = explode(',', $_POST['u']);
 
-	// Construct the list of recipients.	
+	// Construct the list of recipients.
 	$recipientList = array();
 	$namedRecipientList = array();
 	$namesNotFound = array();
@@ -2116,7 +2116,7 @@ function MessagePost2()
 				foreach ($namesNotFound[$recipientType] as $name)
 					$context['send_log']['failed'][] = sprintf($txt['pm_error_user_not_found'], $name);
 			}
-		}		
+		}
 	}
 
 	// Did they make any mistakes?
@@ -2190,7 +2190,7 @@ function MessagePost2()
 			'failed' => array(sprintf($txt['pm_too_many_recipients'], $modSettings['max_pm_recipients'])),
 		);
 		return messagePostError($post_errors, $namedRecipientList, $recipientList);
-	}	
+	}
 
 	// Protect from message spamming.
 	spamProtection('pm');
@@ -3519,13 +3519,13 @@ function isAccessiblePM($pmID, $validFor = 'in_or_outbox')
 	global $user_info, $smcFunc;
 
 	$request = $smcFunc['db_query']('', '
-		SELECT 
+		SELECT
 			pm.id_member_from = {int:id_current_member} AND pm.deleted_by_sender = {int:not_deleted} AS valid_for_outbox,
 			pmr.id_pm IS NOT NULL AS valid_for_inbox
 		FROM {db_prefix}personal_messages AS pm
 			LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm AND pmr.id_member = {int:id_current_member} AND pmr.deleted = {int:not_deleted})
 		WHERE pm.id_pm = {int:id_pm}
-			AND ((pm.id_member_from = {int:id_current_member} AND pm.deleted_by_sender = {int:not_deleted}) OR pmr.id_pm IS NOT NULL)',	
+			AND ((pm.id_member_from = {int:id_current_member} AND pm.deleted_by_sender = {int:not_deleted}) OR pmr.id_pm IS NOT NULL)',
 		array(
 			'id_pm' => $pmID,
 			'id_current_member' => $user_info['id'],

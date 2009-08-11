@@ -2,10 +2,10 @@
 ------------------------------------------------------- */
 
 /* the hover effects */
-.dropmenu li:hover, .dropmenu li.hover 
-{  
-	position: static;  
-}  
+.dropmenu li:hover, .dropmenu li.hover
+{
+	position: static;
+}
 /* the tabled definition lists */
 dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
 {

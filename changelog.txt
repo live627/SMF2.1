@@ -29,7 +29,7 @@ August 2009
  ! Do not URL decode the entire query string. (QueryString.php) [Bug 3034]
  & "The selected username has already been taken" should refer to display name (Errors.english.php)
  ! Searching for a new language was case sensitive (ManageServer.php)
- * Converted readme files, ssi_examples.pp and install.php/upgrade.php to using Curve theme (several files in Other) 
+ * Converted readme files, ssi_examples.pp and install.php/upgrade.php to using Curve theme (several files in Other)
  * Changed frames around theme to use one image (css/index.css, index.template, BoardIndex.template, MessageIndex.template)
  * Newsfader lacked overflow: auto for longer news (index.css) [Bug 3595]
  * Minor adjustments to paddings and markup (ManageSettings.php, Admin.template, Profile.template, Memberlist.template, css/admin.css)
@@ -107,7 +107,7 @@ June 2009
  * Curve: rewrote the MoveTopic template to match Curve's look and feel. (MoveTopic.template.php, forum.css, MoveTopic.php)
  & Showing week numbers in the calendar is no longer optional, as they're needed for the linktree anyway. (Calendar.php, ManageCalendar.php, ManageCalendar language file) [Bug 3475]
  & Do a better job at handling the page titles in the calendar section. (Calendar.php, index language file) [Bug 3475]
- & Removed some hardcoded span tags from the ManageMembers langauge file. (ManageMembers.english.php) 
+ & Removed some hardcoded span tags from the ManageMembers langauge file. (ManageMembers.english.php)
  * Curve: rewrote the ManageBans template to match Curve's look and feel. (ManageBans.template.php, admin.css)
  * Curve: rewrote the ManageNews template to match Curve's look and feel. (ManageNews.template.php)
  * color: orange should use a hex value instead to css validate (style.css, index.css) [Bug 3483]
@@ -210,7 +210,7 @@ June 2009
  * Curve: some areas need a small padding for a better look and feel (Register template, admin.css) [Bug 3538]
  * Curve: removed the huge gap when toggle bar was enabled (Register template) [Bug 3540]
  * Curve: the currency boxes should only be visible if needed (Admin template, ManagePaid.php) [Bug 3537]
- * Curve: a CSS hack caused invalid css (style.css, admin.css, profile.css, stats.css, ie6.css, ie7.css) [Bug 3531] 
+ * Curve: a CSS hack caused invalid css (style.css, admin.css, profile.css, stats.css, ie6.css, ie7.css) [Bug 3531]
  * Curve: Javascript error was caused by smfAnnouncements (Admin template) [Bug 3530]
  * Curve: large gaps on profile activity and stats when left menu was enabled (Profile template) [Bug 3535]
  * Curve: rewrote the Poll template to match Curve's look and feel. (Poll.php, Poll.template.php, poll.css)
@@ -307,7 +307,7 @@ May 2009
  ! Strings passed to install.php weren't properly sanitized - reported by Alejandro Rusell. (install.php)
  ! Added more protection against IE's image XSS vulnerability  - reported by Jacques Copeau (Display.php)
  ! Try to prevent custom avatar settings from being empty, causing errors (ManageAttachments.php, Admin.template.php, Admin.english.php) [Bug 3414]
- ! Present a login form to guests trying to view profiles without sufficient permissions. (Profile.php) 
+ ! Present a login form to guests trying to view profiles without sufficient permissions. (Profile.php)
  * Curve: Toggle link not floated right (style.css) [Bug 3438]
  * Curve: Layout issues in IE6 (ie6.css) [Bug 3440]
  * Curve: prevent from a linebreak in GenericList table headers (style.css) [Bug 3441]
@@ -637,7 +637,7 @@ March 2009
  + Lighttpd supports path_info and can do queryless urls too (Subs.php, Querystring.php, News.php, Load.php, ManageSettings.english.php, Help.english.php) [Bug 3357]
  ! Profile linktree should use 'Profile of username', same for pagetitle.  Packages had some duplicate linktree items (Packages.php, PackageGet.php, Profile.php, Profile-View.php, Profile.english.php) [Bug 3116]
  ! Don't add the PM inbox folder to the linktree when viewing a label. (PersonalMessage.php)
- ! Add another chain to the linktree when changing PM settings. (PersonalMessage.php)  
+ ! Add another chain to the linktree when changing PM settings. (PersonalMessage.php)
  + Wireless modes didn't have a link back to full version (index.php, Wireless.template.php, Wireless.english.php) [Bug 1141]
  * Wap2/Imode up one level link in child boards wouldn't work as missing semi-colon (Wireless.template.php)
  ! Do a better job at creating the link tree in the calendar section. (Calendar.php)
@@ -770,7 +770,7 @@ January 2009
  ! Autocomplete was not turned off in Opera by the JavaScript auto suggest function. (suggest.js) [Bug 2888]
  ! The pruning options assignment was done incorrectly (ManageSettings.php) [Bug 2884]
  * Moved the 'remove poll' button from the moderation button strip to the poll buton strip. (Display template) [Bug 2873]
- * The lower button strip wasn't getting the proper amount of padding. (style.css) 
+ * The lower button strip wasn't getting the proper amount of padding. (style.css)
  ! The banned email check on registration did not work properly for bans that were set to never expire. (Security.php) [Bug 2883]
  * The signature was displayed with two lines above in both the profile summary and the Personal Messages index. (Profile template, PersonalMessage template) [Bug 2882]
  ! Fixed a typo in an AutoSuggest method name. (suggest.js) [Bug 2881]
@@ -782,7 +782,7 @@ January 2009
  ! Selecting a membergroup when registering someone from the admin area now requires the manage_membergroups permission. (ManageRegistration.php, Register template) [Bug 2816]
  ! Fixed approving posts on boards with 'Count Posts' disabled increased the posters post count. (Subs-Post.php) [Bug 2814]
  * Restructured the dropmenu styles to make the generic menus more flexible. (dropmenu.css, GenericMenu template) [Bug 1187], [Bug 2866]
- ! Notifications regarding the (un)locking of topics weren't always reporting the right status. (MessageIndex.php) [Bug 2891]  
+ ! Notifications regarding the (un)locking of topics weren't always reporting the right status. (MessageIndex.php) [Bug 2891]
  ! Made the 'delete item' text for autosuggest items translatable. (suggest.js, PersonalMessage.js, various template files)
  & Added a language new string to support this change. (index language file)
  ! Internet Explorer 7 doesn't require a javascript fix for the dropdown menu's, so don't override its mouseover events. (script.js, menu.js)
@@ -825,7 +825,7 @@ January 2009
  * The wireless boardindex could add too many spans in case both the board and its children contained new messages. (Wireless template) [Bug 2928]
  ! Fixed a few database errors that could occur in certain Personal Message screens when using PostgreSQL. (PersonalMessage.php, Subs-Db-Postgresql.php) [Bug 2921]
  ! The password salt should remain flexible in length, so that it doesn't interfere with converted forums. (upgrade_2-0_mysql.php, install_2-0_sqlite.sql, install_2-0_postgresql.sql, install_2-0_mysql.sql) [Bug 2943]
- * Added an extra stylesheet for special styles to support RTL-languages. (index template, rtl.css) 
+ * Added an extra stylesheet for special styles to support RTL-languages. (index template, rtl.css)
  ! Fixed recount totals and statistics resulting in a session timeout. (ManageMaintenance.php) [Bug 2962]
  & $txt['remove_message'] appeared twice in the index language file. (index language file) [Bug 2961]
  ! Updating message icons caused a database error for the SQLite database layer. (ManageSmileys.php) [Bug 2950]

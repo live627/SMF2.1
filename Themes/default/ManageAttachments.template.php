@@ -30,14 +30,14 @@ function template_browse()
 
 	echo '
 	<div id="manage_attachments">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['attachment_manager_browse_files'], '
 		</h3>
 		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
 			<div class="content">
-				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse">', $context['browse_type'] == 'attachments' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_attachments'], '</a> | 
-				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;avatars">', $context['browse_type'] == 'avatars' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_avatars'], '</a> | 
+				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse">', $context['browse_type'] == 'attachments' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_attachments'], '</a> |
+				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;avatars">', $context['browse_type'] == 'avatars' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_avatars'], '</a> |
 				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;thumbs">', $context['browse_type'] == 'thumbs' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_thumbs'], '</a>
 			</div>
 			<span class="botslice"><span></span></span>
@@ -46,7 +46,7 @@ function template_browse()
 	<br style="clear: both;" />';
 
 	template_show_list('file_list');
-	
+
 }
 
 function template_maintenance()
@@ -55,7 +55,7 @@ function template_maintenance()
 
 	echo '
 	<div id="manage_attachments">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['attachment_stats'], '
 		</h3>
 		<div class="windowbg">
@@ -66,12 +66,12 @@ function template_maintenance()
 					<dt><strong>', $txt['attachment_manager_total_avatars'], ':</strong></dt><dd>', $context['num_avatars'], '</dd>
 					<dt><strong>', $txt['attachmentdir_size' . ($context['attach_multiple_dirs'] ? '_current' : '')], ':</strong></dt><dd>', $context['attachment_total_size'], ' ', $txt['kilobyte'], ' <a href="', $scripturl, '?action=admin;area=manageattachments;sa=repair;', $context['session_var'], '=', $context['session_id'], '">[', $txt['attachment_manager_repair'], ']</a></dd>
 					<dt><strong>', $txt['attachment_space' . ($context['attach_multiple_dirs'] ? '_current' : '')], ':</strong></dt><dd>', isset($context['attachment_space']) ? $context['attachment_space'] . ' ' . $txt['kilobyte'] : $txt['attachmentdir_size_not_set'], '</dd>
-				</dl>			
+				</dl>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['attachment_options'], '
 		</h3>
 			<div class="windowbg">
@@ -96,7 +96,7 @@ function template_maintenance()
 						<input type="hidden" name="type" value="avatars" />
 						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 						<input type="hidden" name="sa" value="byAge" />
-					</form>	
+					</form>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
@@ -113,9 +113,9 @@ function template_attachment_repair()
 	{
 		echo '
 	<div id="manage_attachments">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			<img src="', $settings['images_url'], '/admin/post_moderation_allow.gif" alt="" /> ', $txt['repair_attachments_complete'], '
-		</h3>		
+		</h3>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
@@ -132,9 +132,9 @@ function template_attachment_repair()
 	{
 		echo '
 	<div id="manage_attachments">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			<img src="', $settings['images_url'], '/admin/post_moderation_allow.gif" alt="" /> ', $txt['repair_attachments_complete'], '
-		</h3>		
+		</h3>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
@@ -151,15 +151,15 @@ function template_attachment_repair()
 		echo '
 	<div id="manage_attachments">
 		<form action="', $scripturl, '?action=admin;area=manageattachments;sa=repair;fixErrors=1;step=0;substep=0;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				<img src="',$settings['images_url'], '/admin/post_moderation_deny.gif" alt="" /> ', $txt['repair_attachments'], '
-			</h3>	
+			</h3>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
 					<p>', $txt['repair_attachments_error_desc'], '</p>
 ';
-			
+
 
 		// Loop through each error reporting the status
 		foreach ($context['repair_errors'] as $error => $number)

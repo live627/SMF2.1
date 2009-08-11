@@ -24,11 +24,11 @@ CREATE TABLE IF NOT EXISTS {$to_prefix}tmp_messages (
 SELECT
 	uid AS id_member, SUBSTRING(name, 1, 255) AS member_name,
 	SUBSTRING(name, 1, 255) AS real_name, mail AS email_address,
-	pass AS passwd, '' AS lngfile, '' AS buddy_list, 
+	pass AS passwd, '' AS lngfile, '' AS buddy_list,
 	'' AS pm_ignore_list, '' AS message_labels, '' AS personal_text,
 	'' AS website_title, '' AS website_url, '' AS location, '' AS icq, '' AS aim,
-	'' AS msn, '' AS usertitle, '' AS member_ip, '' AS member_ip2, 
-	'' AS secret_question, '' AS additional_groups, access AS last_login, 	
+	'' AS msn, '' AS usertitle, '' AS member_ip, '' AS member_ip2,
+	'' AS secret_question, '' AS additional_groups, access AS last_login,
 	IF(uid = '1' , 1, 0) AS id_group, created AS date_registered, '' AS avatar,
 	SUBSTRING(signature, 1, 65534) AS signature
 FROM {$from_prefix}users WHERE uid > 0;
@@ -47,14 +47,14 @@ while (true)
 			INNER JOIN {$from_prefix}permission AS p ON (r.rid=p.rid)
 		WHERE  p.perm LIKE '%administer forums%'
 		LIMIT $_REQUEST[start], 250");
-	
+
 	while ($row = convert_fetch_assoc($result))
 		convert_query("
 			UPDATE {$to_prefix}members
 			SET id_group = 1
 			WHERE id_member = $row[id_member]
 			LIMIT 1");
-	
+
 	$_REQUEST['start'] += 250;
 	if (convert_num_rows($result) < 250)
 		break;
@@ -85,9 +85,9 @@ foreach ($cont as $categories)
 		FROM {$from_prefix}term_data
 		WHERE tid = $categories
 		LIMIT 1");
-		
+
 	list($name) = convert_fetch_row($request);
-	
+
 	convert_query("
 		INSERT IGNORE INTO {$to_prefix}categories
 			(id_cat, name, catorder)
@@ -103,13 +103,13 @@ $request = convert_query("
 	FROM {$to_prefix}categories AS c
 		INNER JOIN {$from_prefix}term_data AS t ON (c.id_cat = t.tid)
 	ORDER BY t.weight ASC, c.name ASC");
-	
+
 while ($row = convert_fetch_assoc($request))
 	convert_query("
 		UPDATE {$to_prefix}categories
 		SET cat_order = " . ++$neworder . "
 		WHERE id_cat = $row[id_cat]");
-	
+
 convert_free_result($request);
 ---}
 
@@ -121,8 +121,8 @@ DELETE FROM {$to_prefix}board_permissions
 WHERE id_board != 0;
 
 ---* {$to_prefix}boards
-SELECT t.tid AS id_board, SUBSTRING(t.name, 1, 255) AS name, SUBSTRING(t.description, 1, 255) AS description, 
-	IF(h.parent = c.id_cat, 0, h.parent) AS id_parent, 
+SELECT t.tid AS id_board, SUBSTRING(t.name, 1, 255) AS name, SUBSTRING(t.description, 1, 255) AS description,
+	IF(h.parent = c.id_cat, 0, h.parent) AS id_parent,
 	IF(c.id_cat IS NULL , 0, c.id_cat) AS id_cat
 FROM {$from_prefix}term_data AS t
 	LEFT JOIN {$from_prefix}term_hierarchy AS h ON (t.tid = h.tid)
@@ -150,7 +150,7 @@ foreach ($cont as $categories)
 		LIMIT 1");
 	list($name) = convert_fetch_row($request);
 
-/* now we delete them...*/	
+/* now we delete them...*/
 	if(isset($name))
 		convert_query("
 			DELETE FROM {$to_prefix}boards
@@ -163,7 +163,7 @@ $neworder = -1;
 
 $request = convert_query("
 	SELECT b.id_board AS id_board
-	FROM {$to_prefix}boards AS b 
+	FROM {$to_prefix}boards AS b
 		INNER JOIN {$from_prefix}term_data AS t ON (b.id_board = t.tid)
 	ORDER BY t.weight ASC, b.name ASC");
 
@@ -172,7 +172,7 @@ while ($row= convert_fetch_assoc($request))
 		UPDATE {$to_prefix}boards
 		SET board_order = " . ++$neworder . "
 		WHERE id_board = $row[id_board]");
-		
+
 convert_free_result($request);
 ---}
 
@@ -205,7 +205,7 @@ TRUNCATE {$to_prefix}log_boards;
 TRUNCATE {$to_prefix}log_mark_read;
 
 ALTER TABLE {$to_prefix}tmp_messages ORDER BY date;
-ALTER TABLE {$to_prefix}tmp_messages 
+ALTER TABLE {$to_prefix}tmp_messages
 	ADD id_msg INT( 12 ) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
 
 ---* {$to_prefix}topics
@@ -213,7 +213,7 @@ ALTER TABLE {$to_prefix}tmp_messages
 SELECT
 	t.nid AS id_topic, f.tid AS id_board, t.sticky AS is_sticky,
 	MIN(id.id_msg) AS id_first_msg, MAX(id.id_msg) AS id_last_msg,
-	t.uid AS id_member_started,	IF (MAX(c.uid)>0, MAX(c.uid), t.uid) AS id_member_updated 
+	t.uid AS id_member_started,	IF (MAX(c.uid)>0, MAX(c.uid), t.uid) AS id_member_updated
 FROM {$from_prefix}node AS t
 	INNER JOIN {$to_prefix}tmp_messages AS id ON (t.nid = id.old_id_topic)
 	INNER JOIN {$from_prefix}forum AS f ON (f.nid = t.nid)
@@ -310,8 +310,8 @@ GROUP BY id.id_msg;
 
 ---* {$to_prefix}messages 200
 SELECT
-	id.id_msg AS id_msg, p.nid AS id_topic, f.tid AS id_board, c.uid AS id_member, 
-	c.timestamp AS poster_time, c.subject AS subject, c.comment AS body, 
+	id.id_msg AS id_msg, p.nid AS id_topic, f.tid AS id_board, c.uid AS id_member,
+	c.timestamp AS poster_time, c.subject AS subject, c.comment AS body,
 	'' AS poster_ip, '' AS modified_name,	c.name AS poster_name, u.mail AS poster_email,
 	'xx' AS icon
 FROM {$to_prefix}tmp_messages AS id
@@ -378,8 +378,8 @@ if (file_exists($oldfile) && strlen($newfilename) <= 255 && copy($_POST['path_fr
 	$id_attach++;
 }
 ---}
-SELECT 
-	id.id_msg AS id_msg, f.filename, f.filepath 
+SELECT
+	id.id_msg AS id_msg, f.filename, f.filepath
 FROM {$from_prefix}files AS f
 	INNER JOIN {$to_prefix}tmp_messages AS id ON (f.nid = id.old_id_msg);
 ---*
@@ -405,8 +405,8 @@ if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/' . $filepath , 
 }
 ---}
 
-SELECT 
-	uid AS id_member, picture 
+SELECT
+	uid AS id_member, picture
 FROM {$from_prefix}users
 WHERE picture != '';
 

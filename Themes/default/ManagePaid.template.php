@@ -29,20 +29,20 @@ function template_modify_subscription()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=paidsubscribe;sa=modify;sid=', $context['sub_id'], '" method="post">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['paid_' . $context['action_type'] . '_subscription'], '
 			</h3>';
-			
+
 	if (!empty($context['disable_groups']))
 		echo '
 			<div class="information">
 				<span class="alert">', $txt['paid_mod_edit_note'], '</span>
 			</div>
 			';
-	echo '	
+	echo '
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
-				<div class="content">		
+				<div class="content">
 					<dl class="settings">
 						<dt>
 							', $txt['paid_mod_name'], ':
@@ -115,7 +115,7 @@ function template_modify_subscription()
 					<input type="radio" name="duration_type" id="duration_type_fixed" value="fixed" ', empty($context['sub']['duration']) || $context['sub']['duration'] == 'fixed' ? 'checked="checked"' : '', ' class="input_radio" onclick="toggleDuration(\'fixed\');" />
 					<strong>', $txt['paid_mod_fixed_price'], '</strong>
 					<br />
-					<div id="fixed_area" ', empty($context['sub']['duration']) || $context['sub']['duration'] == 'fixed' ? '' : 'style="display: none;"', '> 
+					<div id="fixed_area" ', empty($context['sub']['duration']) || $context['sub']['duration'] == 'fixed' ? '' : 'style="display: none;"', '>
 						<fieldset>
 							<dl class="settings">
 								<dt>
@@ -215,14 +215,14 @@ function template_delete_subscription()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=paidsubscribe;sa=modify;sid=', $context['sub_id'], ';delete" method="post">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['paid_delete_subscription'], '
 			</h3>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
 					<p>', $txt['paid_mod_delete_warning'], '</p>
-			
+
 					<input type="submit" name="delete_confirm" value="', $txt['paid_delete_subscription'], '" class="button_submit" />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</div>
@@ -270,7 +270,7 @@ function template_modify_user_subscription()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=paidsubscribe;sa=modifyuser;sid=', $context['sub_id'], ';lid=', $context['log_id'], '" method="post">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['paid_' . $context['action_type'] . '_subscription'], ' - ', $context['current_subscription']['name'], '
 				', empty($context['sub']['username']) ? '' : ' (' . $txt['user'] . ': ' . $context['sub']['username'] . ')', '
 			</h3>
@@ -282,7 +282,7 @@ function template_modify_user_subscription()
 	// Do we need a username?
 	if ($context['action_type'] == 'add')
 		echo '
-					
+
 						<dt>
 							<strong>', $txt['paid_username'], ':</strong><br />
 							<span class="smalltext">', $txt['one_username'], '</span>
@@ -303,7 +303,7 @@ function template_modify_user_subscription()
 						</dd>
 					</dl>
 					<fieldset>
-						<legend>', $txt['start_date_and_time'], '</legend>					
+						<legend>', $txt['start_date_and_time'], '</legend>
 						<select name="year" id="year" onchange="generateDays(\'\');">';
 
 	// Show a list of all the years we allow...
@@ -393,13 +393,13 @@ function template_modify_user_subscription()
 	if (!empty($context['pending_payments']))
 	{
 		echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['pending_payments'], '
 		</h3>
 		<div class="information">
 		', $txt['pending_payments_desc'], '
 		</div>
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['pending_payments_value'], '
 		</h3>
 		<div class="windowbg">
@@ -423,7 +423,7 @@ function template_modify_user_subscription()
 			<span class="botslice"><span></span></span>
 		</div>';
 	}
-	
+
 	echo '
 		</div>
 	<br style="clear: both;" />';
@@ -437,7 +437,7 @@ function template_user_subscription()
 	echo '
 	<div id="paid_subscription">
 		<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=subscriptions;confirm" method="post">
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span>
 				', $txt['subscriptions'], '
 			</h3>';
 
@@ -463,12 +463,12 @@ function template_user_subscription()
 				continue;
 
 			echo '
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $subscription['name'], '
 			</h3>
 			<div class="windowbg">
 			<span class="topslice"><span></span></span>
-				<div class="content">			
+				<div class="content">
 			<p><strong>', $subscription['name'], '</strong></p>
 			<p class="smalltext">', $subscription['desc'], '</p>';
 
@@ -518,7 +518,7 @@ function template_user_subscription()
 	}
 
 	echo '
-		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+		<h3 class="titlebg"><span class="left"></span>
 			', $txt['paid_current'], '
 		</h3>
 		<div class="information">
@@ -573,7 +573,7 @@ function template_choose_payment()
 
 	echo '
 	<div id="paid_subscription">
-		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+		<h3 class="titlebg"><span class="left"></span>
 			', $txt['paid_confirm_payment'], '
 		</h3>
 		<div class="information">
@@ -604,12 +604,12 @@ function template_choose_payment()
 	foreach ($context['gateways'] as $gateway)
 	{
 		echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $gateway['title'], '
 		</h3>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
-			<div class="content">	
+			<div class="content">
 				', $gateway['desc'], '<br />
 					<form action="', $gateway['form'], '" method="post">';
 
@@ -643,7 +643,7 @@ function template_paid_done()
 
 	echo '
 	<div id="paid_subscription">
-		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+		<h3 class="titlebg"><span class="left"></span>
 			', $txt['paid_done'], '
 		</h3>
 		<div class="windowbg2">

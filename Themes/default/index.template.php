@@ -170,7 +170,7 @@ function template_body_above()
 	echo '
 			<img id="upshrink" src="', $settings['images_url'], '/upshrink.png" alt="*" title="', $txt['upshrink_description'], '" style="display: none;" />';
 	echo '
-			', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<div id="siteslogan" class="align_right">' . $settings['site_slogan'] . '</div>', ' 
+			', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<div id="siteslogan" class="align_right">' . $settings['site_slogan'] . '</div>', '
 		</div>
 		<div id="upper_section" class="middletext"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>
 			<div class="user">';
@@ -194,11 +194,11 @@ function template_body_above()
 
 			// Are there any members waiting for approval?
 			if (!empty($context['unapproved_members']))
-				echo '				
+				echo '
 					<li>', $context['unapproved_members'] == 1 ? $txt['approve_thereis'] : $txt['approve_thereare'], ' <a href="', $scripturl, '?action=admin;area=viewmembers;sa=browse;type=approve">', $context['unapproved_members'] == 1 ? $txt['approve_member'] : $context['unapproved_members'] . ' ' . $txt['approve_members'], '</a> ', $txt['approve_members_waiting'], '</li>';
 
 			if (!empty($context['open_mod_reports']) && $context['show_open_reports'])
-				echo '				
+				echo '
 					<li><a href="', $scripturl, '?action=moderate;area=reports">', sprintf($txt['mod_reports_waiting'], $context['open_mod_reports']), '</a></li>';
 
 			echo '
@@ -424,7 +424,7 @@ function template_menu()
 							<a href="', $childbutton['href'], '"', isset($childbutton['target']) ? ' target="' . $childbutton['target'] . '"' : '', '>
 								<span', isset($childbutton['is_last']) ? ' class="last"' : '', '>', $childbutton['title'], !empty($childbutton['sub_buttons']) ? '...' : '', '</span>
 							</a>';
-				// 3rd level menus :)				
+				// 3rd level menus :)
 				if (!empty($childbutton['sub_buttons']))
 				{
 					echo '
@@ -444,7 +444,7 @@ function template_menu()
 
 				echo '
 						</li>';
-			}	
+			}
 			echo '
 					</ul>';
 			}

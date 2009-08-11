@@ -49,7 +49,7 @@ if (empty($preparsing))
 
 		foreach ($convert_data['settings'] AS $file)
 			require ($_POST['path_from'] . $file);
-				
+
 		$convert_data['from_prefix'] = "`$dbname`.{$prefix}_";
 		$from_prefix = "`$dbname`.{$prefix}_";
 	}
@@ -103,7 +103,7 @@ if (empty($preparsing))
 		$sets['max_id_msg'] = fetchConverterSettings('max_id_msg');
 		$sets['max_id_topic'] = fetchConverterSettings('max_id_topic');
 		$sets['max_id_board'] = fetchConverterSettings('max_id_board');
-		
+
 		if (empty($sets['max_id_msg']))
 		{
 			// Get the current max ids.

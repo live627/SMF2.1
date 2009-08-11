@@ -38,7 +38,7 @@ function template_edit_holiday()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=managecalendar;sa=editholiday" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $context['page_title'], '
 			</h3>
 			<div class="windowbg">
@@ -86,7 +86,7 @@ function template_edit_holiday()
 							</select>
 						</dd>
 					</dl>';
-					
+
 	if ($context['is_new'])
 		echo '
 				<input type="submit" value="', $txt['holidays_button_add'], '" class="button_submit" />';

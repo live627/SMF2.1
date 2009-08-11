@@ -8,12 +8,12 @@ function template_modify_weights()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=managesearch;sa=weights" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['search_weights'], '
 			</h3>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
-				<div class="content">		
+				<div class="content">
 					<dl class="settings">
 						<dt class="large_caption">
 							<a href="', $scripturl, '?action=helpadmin;help=search_weight_frequency" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a>
@@ -103,7 +103,7 @@ function template_select_search_method()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=managesearch;sa=method" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['search_method'], '
 			</h3>
 			<div class="information">
@@ -113,8 +113,8 @@ function template_select_search_method()
 				<span class="topslice"><span></span></span>
 				<div class="content">
 					<dl class="settings">
-		
-		
+
+
 			';
 	if (!empty($context['table_info']))
 		echo '
@@ -122,7 +122,7 @@ function template_select_search_method()
 							<strong>', $txt['search_method_messages_table_space'], ':</strong>
 						</dt>
 						<dd>
-							', $context['table_info']['data_length'], ' 
+							', $context['table_info']['data_length'], '
 						</dd>
 						<dt>
 							<strong>', $txt['search_method_messages_index_space'], ':</strong>
@@ -149,7 +149,7 @@ function template_select_search_method()
 								', $txt['search_method_fulltext_index'], '
 							</dt>
 							<dd>
-								
+
 								<span class="smalltext">';
 	if (empty($context['fulltext_index']) && empty($context['cannot_create_fulltext']))
 		echo '
@@ -167,7 +167,7 @@ function template_select_search_method()
 	}
 
 	echo '
-							<dt>	
+							<dt>
 								<input type="radio" name="search_index" value="custom"', !empty($modSettings['search_index']) && $modSettings['search_index'] == 'custom' ? ' checked="checked"' : '', $context['custom_index'] ? '' : ' onclick="alert(\'' . $txt['search_index_custom_warning'] . '\'); selectRadioByName(this.form.search_method, \'1\');"', ' class="input_radio" />
 								', $txt['search_index_custom'], '
 							</dt>
@@ -206,7 +206,7 @@ function template_select_search_method()
 							</dd>';
 	}
 
-	echo '			
+	echo '
 						</dl>
 					</fieldset>
 					<fieldset class="search_settings align_right">
@@ -232,7 +232,7 @@ function template_create_index()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=managesearch;sa=createmsgindex;step=1" method="post" accept-charset="', $context['character_set'], '" name="create_index">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['search_create_index'], '
 			</h3>
 			<div class="windowbg">
@@ -242,20 +242,20 @@ function template_create_index()
 						<dt>
 							<label for="predefine_select">', $txt['search_predefined'], ':</label>
 						</dt>
-						<dd>				
+						<dd>
 							<select name="bytes_per_word" id="predefine_select">
 								<option value="2">', $txt['search_predefined_small'], '</option>
 								<option value="4" selected="selected">', $txt['search_predefined_moderate'], '</option>
 								<option value="5">', $txt['search_predefined_large'], '</option>
 							</select>
 						</dd>
-					</dl>				
+					</dl>
 					<input type="submit" name="save" value="', $txt['search_create_index_start'], '" class="button_submit" />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</div>
 				<span class="botslice"><span></span></span>
-			</div>				
-		
+			</div>
+
 	</form>
 	</div>
 	<br style="clear: both;" />';
@@ -267,7 +267,7 @@ function template_create_index_progress()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=managesearch;sa=createmsgindex;step=1" name="autoSubmit" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['search_create_index'], '
 			</h3>
 			<div class="windowbg">
@@ -315,7 +315,7 @@ function template_create_index_done()
 	global $context, $settings, $options, $scripturl, $txt;
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['search_create_index'], '
 		</h3>
 		<div class="windowbg">
@@ -339,7 +339,7 @@ function template_spider_edit()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=sengines;sa=editspiders;sid=', $context['spider']['id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $context['page_title'], '
 			</h3>
 			<div class="information">
@@ -387,13 +387,13 @@ function template_show_spider_logs()
 
 	echo '
 	<div id="admincenter">';
-	
+
 	// Standard fields.
 	template_show_list('spider_logs');
 
 	echo '
 		<br />
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $txt['spider_logs_delete'], '
 		</h3>
 		<form action="', $scripturl, '?action=admin;area=sengines;sa=logs;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">

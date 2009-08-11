@@ -53,14 +53,14 @@ echo '
 function template_ut_test_results()
 {
 	global $context, $settings, $options, $le_settings;
-	
+
 	echo '<', '?xml version="1.0" encoding="', $context['character_set'], '"?', '>
 <smf>
 	<results>';
 	foreach ($context['test_results'] as $testResult)
 		echo '
 		<result test_id="', $testResult['test_id'], '" sub_test_id="', $testResult['sub_test_id'], '" passed="', $testResult['passed'] ? '1' : '0', '">', $testResult['error_msg'], '</result>';
-	echo '	
+	echo '
 	</results>
 </smf>';
 }

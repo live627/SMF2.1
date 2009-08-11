@@ -22,7 +22,7 @@ CHANGE COLUMN password_salt password_salt varchar(40) NOT NULL default '';
 ---{
 $request = convert_query("
 	SELECT groupID
-	FROM {$from_prefix}{$wcf_prefix}user_to_groups 
+	FROM {$from_prefix}{$wcf_prefix}user_to_groups
 	WHERE userID = $row[id_member]");
 
 while ($groups = convert_fetch_assoc($request))
@@ -61,7 +61,7 @@ $row['signature'] = preg_replace(
 		'~\[\*\]~is',
 		'~\[\/list\]~is',
 		),
-		
+
 	array(
 		'[size=$1pt]',
 		'[left]$1[/left]',
@@ -94,11 +94,11 @@ $row['signature'] = preg_replace(
 SELECT
 	u.userID AS id_member, SUBSTRING(u.username, 1, 80) AS member_name,
 	IF (p.Posts IS NULL, 0, p.Posts) AS posts, u.registrationDate AS date_registered,
-	u.lastActivityTime AS last_login,SUBSTRING(u.username, 1, 255) AS real_name, 
+	u.lastActivityTime AS last_login,SUBSTRING(u.username, 1, 255) AS real_name,
 	u.password AS passwd, SUBSTRING(u.email, 1, 64) AS email_address,
 	v.userOption17 AS website_title,	v.userOption17 AS website_url, '' AS icq, '' AS aim,
-	'' AS yim, '' AS msn, v.userOption12 AS gender, 	v.userOption11 AS birthdate, 
-	'' AS show_online, '' AS personal_text, '0' AS id_group, '' AS hide_email, 
+	'' AS yim, '' AS msn, v.userOption12 AS gender, 	v.userOption11 AS birthdate,
+	'' AS show_online, '' AS personal_text, '0' AS id_group, '' AS hide_email,
 	'' AS time_offset, SUBSTRING(u.signature, 1, 65534) AS signature, '' AS lngfile,
 	'' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
 	v.userOption13 AS location, '' AS time_format, '' AS avatar, '' AS member_ip,
@@ -117,7 +117,7 @@ FROM {$from_prefix}wcf1_user AS u
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT 
+SELECT
 	c.boardID AS id_cat, SUBSTRING(c.title, 1, 255) AS name,
 	o.position AS cat_order
 FROM {$from_prefix}{$wbb_prefix}board AS c
@@ -138,7 +138,7 @@ WHERE id_board != 0;
 ---* {$to_prefix}boards
 SELECT
 	b.boardID AS id_board, o.parentID AS id_parent, o.position AS board_order,
-	SUBSTRING(b.title, 1, 255) AS name, SUBSTRING(b.description, 1, 65534) AS description, 
+	SUBSTRING(b.title, 1, 255) AS name, SUBSTRING(b.description, 1, 65534) AS description,
 	b.threads AS num_topics,	b.countUserPosts AS num_posts, '1' AS member_groups
 FROM {$from_prefix}{$wbb_prefix}board AS b
 	LEFT JOIN {$from_prefix}{$wbb_prefix}board_structure AS o ON (o.boardID = b.boardID)
@@ -158,9 +158,9 @@ TRUNCATE {$to_prefix}log_mark_read;
 ---{
 // Find out assigned polls
 $request = convert_query("
-	SELECT 
+	SELECT
 		pollID
-	FROM {$from_prefix}{$wbb_prefix}post 
+	FROM {$from_prefix}{$wbb_prefix}post
 	WHERE threadID = $row[id_topic] AND pollID > 0
 	GROUP BY threadID");
 
@@ -216,7 +216,7 @@ $row['body'] = preg_replace(
 		'~\[\*\]~is',
 		'~\[\/list\]~is',
 		),
-		
+
 	array(
 		'[size=$1pt]',
 		'[left]$1[/left]',
@@ -246,7 +246,7 @@ $row['body'] = preg_replace(
 ---}
 SELECT
 	p.postID AS id_msg, p.threadID AS id_topic, t.boardID AS id_board,
-	p.time AS poster_time, p.userID AS id_member, 
+	p.time AS poster_time, p.userID AS id_member,
 	SUBSTRING(IF(p.subject = '',t.topic , p.subject), 1, 255) AS subject,
 	SUBSTRING(IFNULL(u.username, p.username), 1, 255) AS poster_name,
 	SUBSTRING(p.ipAddress, 1, 255) AS poster_ip,
@@ -274,8 +274,8 @@ SELECT
 	t.userID AS id_member, p.endTime  AS expire_time,
 	SUBSTRING(IFNULL(t.username, ''), 1, 255) AS poster_name,
 	choiceCount AS max_votes
-FROM {$from_prefix}{$wcf_prefix}poll AS p 
-	LEFT JOIN {$from_prefix}{$wbb_prefix}post AS m ON (p.pollID = m.pollID) 
+FROM {$from_prefix}{$wcf_prefix}poll AS p
+	LEFT JOIN {$from_prefix}{$wbb_prefix}post AS m ON (p.pollID = m.pollID)
 	LEFT JOIN {$from_prefix}{$wbb_prefix}thread AS t ON (m.threadID = t.threadID);
 ---*
 
@@ -292,8 +292,8 @@ if (!isset($_SESSION['convert_last_poll']) || $_SESSION['convert_last_poll'] != 
 }
 $row['id_choice'] = ++$_SESSION['convert_last_choice'];
 ---}
-SELECT 
-	pollID AS id_poll, 1 AS id_choice, SUBSTRING(pollOption, 1, 255) AS label, 
+SELECT
+	pollID AS id_poll, 1 AS id_choice, SUBSTRING(pollOption, 1, 255) AS label,
 	votes AS votes, pollOptionID AS old_choice
 FROM {$from_prefix}{$wcf_prefix}poll_option
 ORDER BY pollID;
@@ -304,7 +304,7 @@ ORDER BY pollID;
 /******************************************************************************/
 
 ---* {$to_prefix}log_polls
-SELECT 
+SELECT
 	v.pollID AS id_poll, v.userID AS id_member, c.id_choice AS id_choice
 FROM {$from_prefix}{$wcf_prefix}poll_option_vote AS v
 	LEFT JOIN {$to_prefix}poll_choices AS c ON (v.pollOptionID = c.old_choice)
@@ -319,7 +319,7 @@ GROUP BY id_poll, id_member;
 ---{
 $ignore = true;
 ---}
-SELECT 
+SELECT
 	pollID AS id_poll, userID AS id_member, 1 AS id_choice
 FROM {$from_prefix}{$wcf_prefix}poll_vote
 GROUP BY id_poll, id_member;
@@ -381,7 +381,7 @@ $row['body'] = preg_replace(
 		'~\[\*\]~is',
 		'~\[\/list\]~is',
 		),
-		
+
 	array(
 		'[size=$1pt]',
 		'[left]$1[/left]',
@@ -411,7 +411,7 @@ $row['body'] = preg_replace(
 ---}
 
 SELECT
-	pmID AS id_pm, userID AS id_member_from, '0' AS deleted_by_sender, 
+	pmID AS id_pm, userID AS id_member_from, '0' AS deleted_by_sender,
 	time AS msgtime, username from_name, SUBSTRING(subject, 1, 255) AS subject,
 	SUBSTRING(message, 1, 65534) AS body
 FROM {$from_prefix}{$wcf_prefix}pm;
@@ -457,7 +457,7 @@ FROM {$from_prefix}{$wcf_prefix}avatar;
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
-SELECT 
+SELECT
 	userID AS id_member, threadID AS id_topic
 FROM {$from_prefix}{$wbb_prefix}thread_subscription;
 ---*
@@ -468,7 +468,7 @@ FROM {$from_prefix}{$wbb_prefix}thread_subscription;
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
-SELECT 
+SELECT
 	userID AS id_member, boardID AS id_board
 FROM {$from_prefix}{$wbb_prefix}board_subscription;
 ---*
@@ -495,7 +495,7 @@ if (!isset($smf_smileys_directory))
 	list ($smf_smileys_directory) = convert_fetch_row($request);
 	convert_free_result($request);
 }
-	
+
 $request = convert_query("
 	SELECT value
 	FROM {$to_prefix}settings
@@ -503,31 +503,31 @@ $request = convert_query("
 	LIMIT 1");
 
 list ($smiley_enable) = convert_fetch_row($request);
-convert_free_result($request);	
+convert_free_result($request);
 
 if (isset($smiley_enable))
 	convert_query("
 		UPDATE {$to_prefix}settings
-		SET value = '1' 
+		SET value = '1'
 		WHERE variable='smiley_enable'");
-	
+
 else
 	convert_query("
 		INSERT IGNORE INTO {$to_prefix}settings
 			(variable, value)
 		VALUES ('smiley_enable','1')");
-	
-if (is_file($_POST['path_from'] . '/wcf/images/smilies/'. $row['filename'])) 
+
+if (is_file($_POST['path_from'] . '/wcf/images/smilies/'. $row['filename']))
 {
 	copy($_POST['path_from'] . '/wcf/images/smilies/'. $row['filename'] , $smf_smileys_directory . '/default/'.$row['filename']);
-	
+
 	$request2 = convert_query("
 		INSERT IGNORE INTO {$to_prefix}smileys
 			(code, filename, description, hidden)
 		VALUES ('$row[code]','$row[filename]', '$row[description]','1')");
-}		
+}
 ---}
-SELECT 
+SELECT
 	smileyPath AS filename, smileyCode AS code, smileyTitle AS description
 FROM {$from_prefix}{$wcf_prefix}smiley;
 ---*
@@ -556,7 +556,7 @@ while ($row = convert_fetch_assoc($request))
 	while ($row2 = convert_fetch_assoc($request2))
 	{
 		array_push($buddies, $row2['buddy_list']);
-		$buddylist = implode(',',$buddies);	
+		$buddylist = implode(',',$buddies);
 	}
 
 	convert_query("
@@ -564,5 +564,5 @@ while ($row = convert_fetch_assoc($request))
 		SET buddy_list = '$buddylist'
 		WHERE id_member = $row[tmp_member]");
 }
-convert_free_result($request);	
+convert_free_result($request);
 ---}

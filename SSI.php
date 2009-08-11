@@ -1372,7 +1372,7 @@ function ssi_pollVote()
 
 	// Check if they have already voted, or voting is locked.
 	$request = $smcFunc['db_query']('', '
-		SELECT 
+		SELECT
 			p.id_poll, p.voting_locked, p.expire_time, p.max_votes, p.guest_vote,
 			t.id_topic,
 			IFNULL(lp.id_choice, -1) AS selected

@@ -29,10 +29,10 @@ function template_main()
 	<div id="edit_poll">
 		<form action="' . $scripturl . '?action=editpoll2', $context['is_edit'] ? '' : ';add', ';topic=' . $context['current_topic'] . '.' . $context['start'] . '" method="post" accept-charset="', $context['character_set'], '" onsubmit="submitonce(this); smc_saveEntities(\'postmodify\', [\'question\'], \'options-\');" name="postmodify" id="postmodify">
 			<h3 class="catbg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				', $context['page_title'], '
 			</h3>';
-			
+
 	if (!empty($context['poll_error']['messages']))
 		echo '
 			<div class="errorbox">
@@ -45,7 +45,7 @@ function template_main()
 					</dt>
 				</dl>
 			</div>';
-			
+
 	echo '
 			<div class="windowbg">
 			<span class="topslice"><span></span></span>
@@ -65,7 +65,7 @@ function template_main()
 		// Does this option have a vote count yet, or is it new?
 		if ($choice['votes'] != -1)
 			echo ' (', $choice['votes'], ' ', $txt['votes'], ')';
-		
+
 		echo '
 						</li>';
 	}

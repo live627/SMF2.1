@@ -615,7 +615,7 @@ function PackageInstallTest()
 
 	// Have we got some things which we might want to do "multi-theme"?
 	if (!empty($themeFinds['candidates']))
-	{	
+	{
 		foreach ($themeFinds['candidates'] as $action_data)
 		{
 			// Get the part of the file we'll be dealing with.
@@ -630,7 +630,7 @@ function PackageInstallTest()
 
 			if (!empty($matches[3]))
 				$path .= $matches[3];
-			
+
 			if (!$context['uninstalling'])
 				$path .= '/' . basename($action_data['filename']);
 

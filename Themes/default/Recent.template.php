@@ -28,22 +28,22 @@ function template_main()
 
 		echo '
 		<div class="flow_hidden">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				<span class="align_left">', $post['counter'], ' - </span>
-				<span class="align_left">', $post['category']['link'], ' / ', $post['board']['link'], ' / <b>', $post['link'], '</b></span>	
+				<span class="align_left">', $post['category']['link'], ' / ', $post['board']['link'], ' / <b>', $post['link'], '</b></span>
 			</h3>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<div class="content">
 					<h5 class="lower_padding flow_hidden">
 						<span class="align_left">', $txt['started_by'], ' ' . $post['first_poster']['link'] . ' - ' . $txt['last_post'] . ' ' . $txt['by'] . ' ' . $post['poster']['link'] . ' </span>
-						<span class="align_right">', $txt['on'], ': ', $post['time'], '</span>		
+						<span class="align_right">', $txt['on'], ': ', $post['time'], '</span>
 					</h5>
 					<p>', $post['message'], '</p>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';
-		
+
 		if (!empty($button_set))
 			template_button_strip($button_set, 'right');
 

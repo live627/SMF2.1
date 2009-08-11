@@ -10,16 +10,16 @@ function template_ask()
 		<form action="', $scripturl, '?action=splittopics;sa=execute;topic=', $context['current_topic'], '.0" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="at" value="', $context['message']['id'], '" />
 			<h3 class="catbg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				', $txt['split'], '
 			</h3>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
 					<p class="split_topics">
-						<strong><label for="subname">', $txt['subject_new_topic'], '</label>:</strong> 						
+						<strong><label for="subname">', $txt['subject_new_topic'], '</label>:</strong>
 						<input type="text" name="subname" id="subname" value="', $context['message']['subject'], '" size="25" class="input_text" />
-					</p>	
+					</p>
 					<ul class="reset split_topics">
 						<li>
 							<input type="radio" id="onlythis" name="step2" value="onlythis" checked="checked" class="input_radio" /> <label for="onlythis">', $txt['split_this_post'], '</label>
@@ -48,7 +48,7 @@ function template_main()
 	echo '
 	<div id="split_topic">
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['split'], '
 		</h3>
 		<div class="windowbg">
@@ -81,7 +81,7 @@ function template_select()
 		<form action="', $scripturl, '?action=splittopics;sa=splitSelection;board=', $context['current_board'], '.0" method="post" accept-charset="', $context['character_set'], '"><input type="hidden" name="topic" value="', $context['current_topic'], '" />
 			<div id="not_selected" class="align_left">
 				<h3 class="catbg">
-					<span class="left"></span><span class="right"></span>
+					<span class="left"></span>
 					', $txt['split'], ' - ', $txt['select_split_posts'], '
 				</h3>
 				<div class="information">
@@ -108,7 +108,7 @@ function template_select()
 			</div>
 			<div id="selected" class="align_right">
 				<h3 class="catbg">
-					<span class="left"></span><span class="right"></span>
+					<span class="left"></span>
 					', $txt['split_selected_posts'], ' (<a href="', $scripturl, '?action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=reset;msg=0" onclick="return select(\'reset\', 0);">', $txt['split_reset_selection'], '</a>)
 				</h3>
 				<div class="information">
@@ -228,7 +228,7 @@ function template_merge_done()
 	echo '
 	<div id="split_topics">
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['merge'], '
 		</h3>
 		<div class="windowbg">
@@ -258,7 +258,7 @@ function template_merge()
 	echo '
 	<div id="merge_topics">
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['merge'], '
 		</h3>
 		<div class="information">
@@ -284,7 +284,7 @@ function template_merge()
 							<input type="submit" value="', $txt['merge'], '" class="button_submit" />
 						</form>
 					</dd>';
-					
+
 	if (!empty($context['boards']) && count($context['boards']) > 1)
 	{
 		echo '
@@ -303,14 +303,14 @@ function template_merge()
 						</form>
 					</dd>';
 	}
-	
+
 	echo '
 				</dl>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
 		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+			<span class="left"></span>
 			', $txt['target_topic'], '
 		</h3>
 		<div class="pagesection">
@@ -322,7 +322,7 @@ function template_merge()
 				<ul class="reset merge_topics">';
 
 	$merge_button = create_button('merge.gif', 'merge', '');
-	
+
 	foreach ($context['topics'] as $topic)
 		echo '
 
@@ -351,7 +351,7 @@ function template_merge_extra_options()
 	<div id="merge_topics">
 		<form action="', $scripturl, '?action=mergetopics;sa=execute;" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="titlebg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				', $txt['merge_topic_list'], '
 			</h3>
 			<table width="100%" class="bordercolor table_grid">
