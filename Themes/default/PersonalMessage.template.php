@@ -12,13 +12,12 @@ function template_pm_above()
 	// Show the capacity bar, if available.
 	if (!empty($context['limit_bar']))
 	{
-		// !!! Hardcoded colors = bad.
 		echo '
 		<h3 class="titlebg"><span class="left">
 			</span>
 			<span class="floatleft">', $txt['pm_capacity'], ':</span>
 			<span class="floatleft capacity_bar">
-				<span style="border: 0; display: block; background: ', $context['limit_bar']['percent'] > 85 ? '#A53D05' : ($context['limit_bar']['percent'] > 40 ? '#EEA800' : '#468008'), '; height: 7px; width: ', $context['limit_bar']['bar'], '%;"></span>
+				<span class="', $context['limit_bar']['percent'] > 85 ? 'full' : ($context['limit_bar']['percent'] > 40 ? 'filled' : 'empty'), '" style="width: ', $context['limit_bar']['percent'] / 10, 'em;"></span>
 			</span>
 			<span class="align_right', $context['limit_bar']['percent'] > 90 ? ' alert' : '', '">
 				', $context['limit_bar']['text'], '
@@ -35,7 +34,6 @@ function template_pm_below()
 	echo '
 	</div>
 	<br style="clear: both;" />';
-
 }
 
 function template_folder()
@@ -159,8 +157,7 @@ function template_folder()
 			echo '
 	<div class="', $window_class, '">
 		<span class="topslice"><span></span></span>
-		<div class="content">
-			<div class="poster">
+		<div class="poster">
 			<a id="msg', $message['id'], '"></a>
 			<h4>
 				', $message['member']['link'], '
@@ -210,7 +207,6 @@ function template_folder()
 				echo '
 						<li class="karma_allow">
 							<a href="', $scripturl, '?action=modifykarma;sa=applaud;uid=', $message['member']['id'], ';f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pm=', $message['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaApplaudLabel'], '</a> <a href="', $scripturl, '?action=modifykarma;sa=smite;uid=', $message['member']['id'], ';f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pm=', $message['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaSmiteLabel'], '</a>
-
 						</li>';
 
 			// Show the member's gender icon?
@@ -255,7 +251,6 @@ function template_folder()
 								', !isset($context['disabled_fields']['msn']) && !empty($message['member']['msn']['link']) ? '<li>' . $message['member']['msn']['link'] . '</li>' : '', '
 								', !isset($context['disabled_fields']['aim']) && !empty($message['member']['aim']['link']) ? '<li>' . $message['member']['aim']['link'] . '</li>' : '', '
 								', !isset($context['disabled_fields']['yim']) && !empty($message['member']['yim']['link']) ? '<li>' . $message['member']['yim']['link'] . '</li>' : '', '
-								<li></li>
 							</ul>
 						</li>';
 
@@ -413,7 +408,7 @@ function template_folder()
 		if ($context['folder'] != 'sent' && !empty($context['currently_using_labels']))
 		{
 			echo '
-						<div class="labels">';
+						<div class="labels righttext">';
 			// Add the label drop down box.
 			if (!empty($context['currently_using_labels']))
 			{
@@ -457,7 +452,6 @@ function template_folder()
 					</div>
 				<br style="clear: both;" />
 			</div>
-		</div>
 		<span class="botslice"><span></span></span>
 	</div>
 	';
@@ -466,15 +460,9 @@ function template_folder()
 
 	if (empty($context['display_mode']))
 		echo '
-	<div class="tborder" style="padding: 1px; margin-top: 1ex;">
-		<table cellpadding="3" cellspacing="0" border="0" width="100%">
-			<tr class="catbg" valign="middle">
-				<td height="25">
-					<div class="floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>
-					<div class="floatright"><input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['delete_selected_confirm'], '\')) return false;" class="button_submit" /></div>
-				</td>
-			</tr>
-		</table>
+	<div class="pagesection">
+		<div class="floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>
+		<div class="floatright"><input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['delete_selected_confirm'], '\')) return false;" class="button_submit" /></div>
 	</div>';
 
 		echo '
@@ -499,7 +487,7 @@ function template_subject_list()
 	global $context, $options, $settings, $modSettings, $txt, $scripturl;
 
 	echo '
-	<table width="100%" class="tablegrid">
+	<table width="100%" class="table_grid">
 	<thead>
 		<tr class="catbg">
 			<th class="smalltext" align="center" width="2%">

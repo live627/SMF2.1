@@ -461,7 +461,7 @@ table.table_grid thead tr.catbg th.smalltext
 }
 
 /* All the signatures used in the forum.  If your forum users use Mozilla, Opera, or Safari, you might add max-height here ;). */
-.signature
+.signature, .attachments
 {
 	clear: right;
 	padding: 1em 0 3px 0;
@@ -1413,7 +1413,6 @@ table.table_list tbody.content td.icon
 	width: 6%;
 }
 
-
 /* Styles for the board index.
 ------------------------------------------------- */
 
@@ -1857,25 +1856,19 @@ ul.quickbuttons li.inline_mod_check
 	margin: 0 1em 0 0;
 	border-top: solid 1px #99a;
 }
-#forumposts .modified, #forumposts .reportlinks
-{
-	width: 45%;
-	padding-bottom: 0.5em;
-}
 #forumposts .modified
 {
 	float: left;
 }
 #forumposts .reportlinks
 {
-	margin-right: 1em;
+	margin-right: 1.5em;
 	text-align: right;
 	clear: right;
-	float: right;
 }
-#forumposts .signature
+#forumposts .signature, .post .signature
 {
-	width: 98%;
+	margin: 1em 0 0 0;
 }
 #forumposts span.botslice
 {
@@ -2456,7 +2449,6 @@ dl
 }
 .signature, .custom_fields_above_signature
 {
-	width: 100%;
 	border-top: 1px #ccc solid;
 }
 .signature h5
@@ -2852,6 +2844,41 @@ dd.statsbar span.right
 .stats_bar span
 {
 	padding-left: 2px;
+}
+
+/* Styles for the personal messages section.
+------------------------------------------------- */
+
+#personal_messages .labels
+{
+	padding: 0 1em 0 0;
+}
+#personal_messages .capacity_bar
+{
+	background: #F0F4F7;
+	display: block;
+	margin: 0.5em 0 0 1em;
+	height: 1em;
+	border: 1px solid #adadad;
+	width: 10em;
+}
+#personal_messages .capacity_bar span
+{
+	border-right: 1px solid #adadad;
+	display: block;
+	height: 1em;
+}
+#personal_messages .capacity_bar span.empty
+{
+	background: #A6D69D;
+}
+#personal_messages .capacity_bar span.filled
+{
+	background: #EEA800;
+}
+#personal_messages .capacity_bar span.full
+{
+	background: #F10909;
 }
 
 /* Styles for the calendar section.
