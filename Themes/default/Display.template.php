@@ -479,7 +479,7 @@ function template_main()
 				<div class="moderatorbar">
 					<div class="smalltext modified" id="modified_', $message['id'], '">';
 
-		// Show "« Last Edit: Time by Person »" if this post was edited.
+		// Show "ï¿½ Last Edit: Time by Person ï¿½" if this post was edited.
 		if ($settings['show_modify'] && !empty($message['modified']['name']))
 			echo '
 							&#171; <em>', $txt['last_edit'], ': ', $message['modified']['time'], ' ', $txt['by'], ' ', $message['modified']['name'], '</em> &#187;';
@@ -608,11 +608,11 @@ function template_main()
 	<div id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
 		<span class="upperframe"><span></span></span>
 		<div class="roundframe">
-			<div id="quickReplyWarning" class="smalltext">
-				', $txt['quick_reply_desc'], $context['is_locked'] ? '<p><strong>' . $txt['quick_reply_warning'] . '</strong></p>' : '', $context['oldTopicError'] ? '<p><strong>' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</strong></p>' : '', '
-			</div>
+			<p class="smalltext">', $txt['quick_reply_desc'], '</p>
+			', $context['is_locked'] ? '<p class="alert smalltext">' . $txt['quick_reply_warning'] . '</p>' : '',
+			$context['oldTopicError'] ? '<p class="alert smalltext">' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</p>' : '', '
 			<div id="quickReplyContent">', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
-				', !$context['can_reply_approved'] && $context['require_verification'] ? '<br />' : '', '
+				', !$context['can_reply_approved'] && $context['verification_message'] ? '<br />' : '', '
 				<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
 					<input type="hidden" name="topic" value="', $context['current_topic'], '" />
 					<input type="hidden" name="subject" value="', $context['response_prefix'], $context['subject'], '" />

@@ -44,8 +44,8 @@ body, td, th, tr
 /* lets give all forms zero padding/margins */
 form
 {
-	padding: 0px;
-	margin: 0px;
+	padding: 0;
+	margin: 0;
 }
 
 /* We can style the different types of input buttons to be uniform thoughout different browsers and their colour themes.
@@ -64,6 +64,18 @@ input, button, select, textarea
 	background: #fff;
 	border: 1px solid #7f9db9;
 	padding: 2px;
+}
+
+/* Select elements look horrible with the extra padding, so leave them unpadded. */
+select
+{
+	padding: 0;
+}
+
+/* Add some padding to the options instead. */
+select option
+{
+	padding: 1px;
 }
 
 /* The font size of textareas should be just a little bit larger. */
@@ -118,7 +130,9 @@ h1, h2, h3, h4, h5, h6
 	margin: 0;
 	padding: 0;
 }
-.content fieldset
+
+/* Fieldsets are used to group elements. */
+fieldset
 {
 	border: groove #fff 2px;
 	padding: 1em;
@@ -870,17 +884,11 @@ table.table_list a.collapse
 	border-left: 1px solid #c5c5c5;
 	border-right: 1px solid #c5c5c5;
 }
-.roundframe div.innerframe
-{
-	padding: 0 0 0 0;
-	display: block;
-	background: none;
-}
-div.innerframe dl,div.innerframe dt,div.innerframe p
+.roundframe dl, .roundframe dt, .roundframe p
 {
 	margin: 0;
 }
-div.innerframe p
+.roundframe p
 {
 	padding: 0.5em;
 }
@@ -1322,7 +1330,7 @@ div#upper_section div.news form
 	display: block;
 	margin: 0;
 	font-size: 0.9em;
-	padding: 1em 0 1.5em 0;
+	padding: 1em 0 0.5em 0;
 	border-top: solid #ccc 1px;
 	z-index: 0.8;
 }
@@ -1886,26 +1894,23 @@ ul.quickbuttons li.inline_mod_check
 /* Styles for the quick reply area.
 ---------------------------------------------------- */
 
-#quickReplyWarning
+/* The quick-reply area. Horizontal alignments go a bit wonky in IE6 and IE7 but I'm not sure it's worth worrying about. */
+#quickReplyOptions .roundframe
 {
-	width: 20%;
-	float: left;
-	padding: 0.5em 1em;
+	text-align: center;
+	padding: 0 10%;
 }
 #quickReplyContent
 {
-	width: 75%;
-	float: right;
 	padding: 0.5em 0;
 }
-#quickReplyOptions .innerframe
+#quickReplyContent form textarea
 {
-	overflow: hidden;
+	width: 91%;
+	height: 100px;
+	margin: 0.25em 0 1em 0;
 }
-#verification_control, #verification_control .smalltext
-{
-	display: inline;
-}
+
 /* The jump to box */
 #display_jump_to
 {
