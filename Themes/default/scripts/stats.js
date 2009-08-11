@@ -9,7 +9,7 @@ function smfStats_year(uniqueId, initialState)
 		bCurrentlyCollapsed: initialState,
 		instanceRef: this,
 		funcOnBeforeCollapse: this.onBeforeCollapse,
-		aSwapableContainers: [
+		aSwappableContainers: [
 		],
 		aSwapImages: [
 			{
@@ -59,7 +59,7 @@ function smfStats_year(uniqueId, initialState)
 
 	function addMonthToYear(monthid, monthState)
 	{
-		this.yearToggle.opt.aSwapableContainers[this.yearToggle.opt.aSwapableContainers.length] = 'tr_month_' + monthid;
+		this.yearToggle.opt.aSwappableContainers[this.yearToggle.opt.aSwappableContainers.length] = 'tr_month_' + monthid;
 		this.monthElements[monthid] = new smfStats_month(monthid, monthState);
 	}
 
@@ -89,7 +89,7 @@ function smfStats_month(uniqueId, initialState)
 		bCurrentlyCollapsed: initialState,
 		instanceRef: this,
 		funcOnBeforeExpand: this.onBeforeExpand,
-		aSwapableContainers: [
+		aSwappableContainers: [
 		],
 		aSwapImages: [
 			{
@@ -178,7 +178,7 @@ function smfStats_month(uniqueId, initialState)
 		{
 			this.toggleElement.toggle();
 		}
-		this.toggleElement.opt.aSwapableContainers[this.toggleElement.opt.aSwapableContainers.length] = 'tr_day_' + id;
+		this.toggleElement.opt.aSwappableContainers[this.toggleElement.opt.aSwappableContainers.length] = 'tr_day_' + id;
 	}
 }
 

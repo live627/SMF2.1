@@ -320,7 +320,7 @@ function template_body_above()
 			var oMainHeaderToggle = new smc_Toggle({
 				bToggleEnabled: true,
 				bCurrentlyCollapsed: ', empty($options['collapse_header']) ? 'false' : 'true', ',
-				aSwapableContainers: [
+				aSwappableContainers: [
 					\'upshrinkHeader\',
 					\'upshrinkHeader2\'
 				],

@@ -172,7 +172,7 @@ function template_permission_index()
 		var oPermissionsPanelToggle = new smc_Toggle({
 			bToggleEnabled: true,
 			bCurrentlyCollapsed: ', empty($context['show_advanced_options']) ? 'true' : 'false', ',
-			aSwapableContainers: [
+			aSwappableContainers: [
 				\'permissions_panel_advanced\'
 			],
 			aSwapImages: [

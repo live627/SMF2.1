@@ -882,12 +882,12 @@ smc_Toggle.prototype.changeState = function(bCollapse)
 	}
 
 	// Now go through all the sections to be collapsed.
-	for (var i = 0, n = this.opt.aSwapableContainers.length; i < n; i++)
+	for (var i = 0, n = this.opt.aSwappableContainers.length; i < n; i++)
 	{
-		if (this.opt.aSwapableContainers[i] == null)
+		if (this.opt.aSwappableContainers[i] == null)
 			continue;
 
-		var oContainer = document.getElementById(this.opt.aSwapableContainers[i]);
+		var oContainer = document.getElementById(this.opt.aSwappableContainers[i]);
 		if (typeof(oContainer) == 'object' && oContainer != null)
 			oContainer.style.display = bCollapse ? 'none' : '';
 	}

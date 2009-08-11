@@ -58,7 +58,7 @@ function template_main()
 		var smfNewsFadeToggle = new smc_Toggle({
 			bToggleEnabled: true,
 			bCurrentlyCollapsed: ', empty($options['collapse_news_fader']) ? 'false' : 'true', ',
-			aSwapableContainers: [
+			aSwappableContainers: [
 				\'smfNewsFaderContainer\'
 			],
 			aSwapImages: [

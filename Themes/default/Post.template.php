@@ -713,7 +713,7 @@ function template_main()
 				funcOnBeforeExpand: function () {
 					document.getElementById(\'additional_options\').value = \'1\';
 				},
-				aSwapableContainers: [
+				aSwappableContainers: [
 					\'postMoreOptions\',
 					\'postAttachment\',
 					\'postAttachment2\'

@@ -775,7 +775,7 @@ function template_main()
 	aIgnoreToggles[', $msgid, '] = new smc_Toggle({
 		bToggleEnabled: true,
 		bCurrentlyCollapsed: true,
-		aSwapableContainers: [
+		aSwappableContainers: [
 			\'msg_', $msgid, '_extra_info\',
 			\'msg_', $msgid, '\',
 			\'msg_', $msgid, '_footer\',

@@ -45,7 +45,7 @@ function template_main()
 		var smfNewsFadeToggle = new smc_Toggle({
 			bToggleEnabled: true,
 			bCurrentlyCollapsed: ', empty($options['collapse_news_fader']) ? 'false' : 'true', ',
-			aSwapableContainers: [
+			aSwappableContainers: [
 				\'smfNewsFader\'
 			],
 			aSwapImages: [
@@ -475,7 +475,7 @@ function template_info_center()
 				var oInfoCenterToggle = new smc_Toggle({
 					bToggleEnabled: true,
 					bCurrentlyCollapsed: ', empty($options['collapse_header']) ? 'false' : 'true', ',
-					aSwapableContainers: [
+					aSwappableContainers: [
 						\'upshrinkHeaderIC\'
 					],
 					aSwapImages: [

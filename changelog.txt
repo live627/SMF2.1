@@ -42,6 +42,7 @@ August 2009
  * Attachments weren't displaying properly in Curve's Display template. (Display template)
  ! CREATE OR REPLACE FUNCTION doesn't allow you to change a function's return type (upgrade_2-0_postgresql.sql) [Bug 2657]
  * UTF-8 and Spellchecking non latin characters can cause the message body to be emptied (editor.js) [Bug 2267]
+ * Swappable typo (Several files) [Bug 2651]
 
 
 July 2009

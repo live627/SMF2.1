@@ -1661,7 +1661,7 @@ function template_download_language()
 			var oTogglePanel_', $theme, ' = new smc_Toggle({
 				bToggleEnabled: true,
 				bCurrentlyCollapsed: true,
-				aSwapableContainers: [';
+				aSwappableContainers: [';
 		foreach ($group as $file)
 			echo '
 					', JavaScriptEscape($theme . '-' . $count++), ',';

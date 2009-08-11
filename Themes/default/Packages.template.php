@@ -309,7 +309,7 @@ function template_view_package()
 		aOperationElements[', $key, '] = new smc_Toggle({
 			bToggleEnabled: true,
 			bCurrentlyCollapsed: ', $operation ? 'false' : 'true', ',
-			aSwapableContainers: [
+			aSwappableContainers: [
 				\'operation_', $key, '\'
 			],
 			aSwapImages: [
@@ -1211,7 +1211,7 @@ function template_package_list()
 				var oPackageServerToggle_', $section, ' = new smc_Toggle({
 					bToggleEnabled: true,
 					bCurrentlyCollapsed: ', count($ps['items']) == 1 || $section_count == 1 ? 'false' : 'true', ',
-					aSwapableContainers: [
+					aSwappableContainers: [
 						\'package_section_', $section, '\'
 					],
 					aSwapImages: [
@@ -1232,7 +1232,7 @@ function template_package_list()
 				var oPackageToggle_', $section, '_pkg_', $id, ' = new smc_Toggle({
 					bToggleEnabled: true,
 					bCurrentlyCollapsed: true,
-					aSwapableContainers: [
+					aSwappableContainers: [
 						\'package_section_', $section, '_pkg_', $id, '\'
 					],
 					aSwapImages: [
