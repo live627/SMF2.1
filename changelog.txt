@@ -38,6 +38,8 @@ August 2009
  ! Secure OpenID URLs were not handled quite right - thanks forum user bobjol. (Subs-OpenID.php, Subs-Package.php)
  ! The query string was still being decoded twice in some cases. (QueryString.php)
  ! Some OpenID providers gave link tags which SMF couldn't parse. (Subs-OpenID.php)
+ * Cleaned up the personal message template: moved the capacity bar's styles to the stylesheet and removed a redundant table. (PersonalMessage template)
+ * Attachments weren't displaying properly in Curve's Display template. (Display template)
 
 
 July 2009
