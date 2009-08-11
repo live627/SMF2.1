@@ -1301,7 +1301,7 @@ SmfEditor.prototype.spellCheckStart = function()
 	// If we're in HTML mode we need to get the non-HTML text.
 	if (this.bRichTextEnabled)
 	{
-		var sText = escape(this.getText(true, 1));
+		var sText = escape(this.getText(true, 1).php_to8bit());
 
 		this.tmpMethod = sendXMLDocument;
 		this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=0;' + this.opt.sSessionVar + '=' + this.opt.sSessionId + ';xml', 'message=' + sText, this.onSpellCheckDataReceived);
@@ -1333,7 +1333,7 @@ SmfEditor.prototype.spellCheckEnd = function()
 	// If HTML edit put the text back!
 	if (this.bRichTextEnabled)
 	{
-		var sText = escape(this.getText(true, 0));
+		var sText = escape(this.getText(true, 0).php_to8bit());
 
 		this.tmpMethod = sendXMLDocument;
 		this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=1;' + this.opt.sSessionVar + '=' + this.opt.sSessionId + ';xml', 'message=' + sText, smf_editorArray[this.iArrayPosition].onSpellCheckCompleteDataReceived);
