@@ -51,18 +51,18 @@ function getMembersOnlineStats($membersOnlineOptions)
 		'group_name',
 	);
 	// Default the sorting method to 'most recent online members first'.
-	if (!isset($memberOnlineOptions['sort']))
+	if (!isset($membersOnlineOptions['sort']))
 	{
-		$memberOnlineOptions['sort'] = 'log_time';
-		$memberOnlineOptions['reverse_sort'] = true;
+		$membersOnlineOptions['sort'] = 'log_time';
+		$membersOnlineOptions['reverse_sort'] = true;
 	}
 
 	// Not allowed sort method? Bang! Error!
-	elseif (!in_array($memberOnlineOptions['sort'], $allowed_sort_options))
+	elseif (!in_array($membersOnlineOptions['sort'], $allowed_sort_options))
 		trigger_error('Sort method for getMembersOnlineStats() function is not allowed', E_USER_NOTICE);
 
 	// Initialize the array that'll be returned later on.
-	$memberOnlineStats = array(
+	$membersOnlineStats = array(
 		'users_online' => array(),
 		'list_users_online' => array(),
 		'online_groups' => array(),
@@ -99,10 +99,10 @@ function getMembersOnlineStats($membersOnlineOptions)
 			if ($row['id_spider'] && isset($spiders[$row['id_spider']]))
 			{
 				$spider_finds[$row['id_spider']] = isset($spider_finds[$row['id_spider']]) ? $spider_finds[$row['id_spider']] + 1 : 1;
-				$memberOnlineStats['num_spiders']++;
+				$membersOnlineStats['num_spiders']++;
 			}
 			// Guests are only nice for statistics.
-			$memberOnlineStats['num_guests']++;
+			$membersOnlineStats['num_guests']++;
 
 			continue;
 		}
@@ -110,7 +110,7 @@ function getMembersOnlineStats($membersOnlineOptions)
 		elseif (empty($row['show_online']) && empty($membersOnlineOptions['show_hidden']))
 		{
 			// Just increase the stats and don't add this hidden user to any list.
-			$memberOnlineStats['num_users_hidden']++;
+			$membersOnlineStats['num_users_hidden']++;
 			continue;
 		}
 
@@ -124,12 +124,12 @@ function getMembersOnlineStats($membersOnlineOptions)
 		$is_buddy = in_array($row['id_member'], $user_info['buddies']);
 		if ($is_buddy)
 		{
-			$memberOnlineStats['num_buddies']++;
+			$membersOnlineStats['num_buddies']++;
 			$link = '<strong>' . $link . '</strong>';
 		}
 
 		// A lot of useful information for each member.
-		$memberOnlineStats['users_online'][$row[$memberOnlineOptions['sort']] . $row['member_name']] = array(
+		$membersOnlineStats['users_online'][$row[$membersOnlineOptions['sort']] . $row['member_name']] = array(
 			'id' => $row['id_member'],
 			'username' => $row['member_name'],
 			'name' => $row['real_name'],
@@ -142,11 +142,11 @@ function getMembersOnlineStats($membersOnlineOptions)
 		);
 
 		// This is the compact version, simply implode it to show.
-		$memberOnlineStats['list_users_online'][$row[$memberOnlineOptions['sort']] . $row['member_name']] = empty($row['show_online']) ? '<em>' . $link . '</em>' : $link;
+		$membersOnlineStats['list_users_online'][$row[$membersOnlineOptions['sort']] . $row['member_name']] = empty($row['show_online']) ? '<em>' . $link . '</em>' : $link;
 
 		// Store all distinct (primary) membergroups that are shown.
-		if (!isset($memberOnlineStats['online_groups'][$row['id_group']]))
-			$memberOnlineStats['online_groups'][$row['id_group']] = array(
+		if (!isset($membersOnlineStats['online_groups'][$row['id_group']]))
+			$membersOnlineStats['online_groups'][$row['id_group']] = array(
 				'id' => $row['id_group'],
 				'name' => $row['group_name'],
 				'color' => $row['online_color']
@@ -159,8 +159,8 @@ function getMembersOnlineStats($membersOnlineOptions)
 		foreach ($spider_finds as $id => $count)
 		{
 			$link = $spiders[$id] . ($count > 1 ? ' (' . $count . ')' : '');
-			$sort = $memberOnlineOptions['sort'] = 'log_time' && $memberOnlineOptions['reverse_sort'] ? 0 : 'zzz_';
-			$memberOnlineStats['users_online'][$sort . $spiders[$id]] = array(
+			$sort = $membersOnlineOptions['sort'] = 'log_time' && $membersOnlineOptions['reverse_sort'] ? 0 : 'zzz_';
+			$membersOnlineStats['users_online'][$sort . $spiders[$id]] = array(
 				'id' => 0,
 				'username' => $spiders[$id],
 				'name' => $link,
@@ -171,31 +171,31 @@ function getMembersOnlineStats($membersOnlineOptions)
 				'hidden' => false,
 				'is_last' => false,
 			);
-			$memberOnlineStats['list_users_online'][$sort . $spiders[$id]] = $link;
+			$membersOnlineStats['list_users_online'][$sort . $spiders[$id]] = $link;
 		}
 
 	// Time to sort the list a bit.
-	if (!empty($memberOnlineStats['users_online']))
+	if (!empty($membersOnlineStats['users_online']))
 	{
 		// Determine the sort direction.
-		$sortFunction = empty($memberOnlineOptions['reverse_sort']) ? 'ksort' : 'krsort';
+		$sortFunction = empty($membersOnlineOptions['reverse_sort']) ? 'ksort' : 'krsort';
 
 		// Sort the two lists.
-		$sortFunction($memberOnlineStats['users_online']);
-		$sortFunction($memberOnlineStats['list_users_online']);
+		$sortFunction($membersOnlineStats['users_online']);
+		$sortFunction($membersOnlineStats['list_users_online']);
 
 		// Mark the last list item as 'is_last'.
-		$userKeys = array_keys($memberOnlineStats['users_online']);
-		$memberOnlineStats['users_online'][end($userKeys)]['is_last'] = true;
+		$userKeys = array_keys($membersOnlineStats['users_online']);
+		$membersOnlineStats['users_online'][end($userKeys)]['is_last'] = true;
 	}
 
 	// Also sort the membergroups.
-	ksort($memberOnlineStats['online_groups']);
+	ksort($membersOnlineStats['online_groups']);
 
 	// Hidden and non-hidden members make up all online members.
-	$memberOnlineStats['num_users_online'] = count($memberOnlineStats['users_online']) + $memberOnlineStats['num_users_hidden'] - (isset($modSettings['show_spider_online']) && $modSettings['show_spider_online'] > 1 ? count($spider_finds) : 0);
+	$membersOnlineStats['num_users_online'] = count($membersOnlineStats['users_online']) + $membersOnlineStats['num_users_hidden'] - (isset($modSettings['show_spider_online']) && $modSettings['show_spider_online'] > 1 ? count($spider_finds) : 0);
 
-	return $memberOnlineStats;
+	return $membersOnlineStats;
 }
 
 // Check if the number of users online is a record and store it.
