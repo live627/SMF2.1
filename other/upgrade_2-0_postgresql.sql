@@ -880,6 +880,30 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 /*****************************************************************************/
 
 ---# Adding instr()
+---{
+if ($smcFunc['db_server_info'] < 8.2)
+{
+	$request = upgrade_query("
+			SELECT type_udt_name
+			FROM information_schema.routines
+			WHERE routine_name = 'inet_aton'");
+
+	// Assume there's only one such function called inet_aton()
+	$return_type = $smcFunc['db_fetch_assoc']($request);
+
+	// No point in dropping and recreating it if it's already what we want
+	if ($return_type['type_udt_name'] != 'int4')
+	{
+		upgrade_query("
+			DROP FUNCTION INSTR(text, text)");
+	}
+}
+else
+{
+	upgrade_query("
+		DROP FUNCTION IF EXISTS INSTR(text, text)");
+}
+---}
 CREATE OR REPLACE FUNCTION INSTR(text, text) RETURNS integer AS
   'SELECT POSITION($2 IN $1) AS result'
 LANGUAGE 'sql';

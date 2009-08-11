@@ -40,6 +40,7 @@ August 2009
  ! Some OpenID providers gave link tags which SMF couldn't parse. (Subs-OpenID.php)
  * Cleaned up the personal message template: moved the capacity bar's styles to the stylesheet and removed a redundant table. (PersonalMessage template)
  * Attachments weren't displaying properly in Curve's Display template. (Display template)
+ ! CREATE OR REPLACE FUNCTION doesn't allow you to change a function's return type (upgrade_2-0_postgresql.sql) [Bug 2657]
 
 
 July 2009
