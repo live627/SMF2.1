@@ -316,8 +316,6 @@ function list_getScheduledTasks($start, $items_per_page, $sort)
 			'regularity' => $offset . ', ' . $repeating,
 		);
 	}
-	// You see - Mike sucks - and can't work out how to do in C++ what PHP can do with it's eyes closed - pah! He no programmer ;)
-	// TWlrZSBTdWNrcyBCYWxscyBhbmQgSXMgTXkgQmlhdGNoISE=
 	$smcFunc['db_free_result']($request);
 
 	return $known_tasks;
