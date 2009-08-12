@@ -83,6 +83,10 @@ function ShowHelp()
 			'title' => $txt['manual_category_registering'],
 			'description' => '',
 			'areas' => array(
+				'when_how' => array(
+					'label' => $txt['manual_section_when_how_register'],
+					'template' => 'manual_when_how_register',
+				),
 				'registration_screen' => array(
 					'label' => $txt['manual_section_registration_screen'],
 					'template' => 'manual_registration_screen',
@@ -92,8 +96,8 @@ function ShowHelp()
 					'template' => 'manual_activating_account',
 				),
 				'logging_in' => array(
-					'label' => $txt['manual_section_logging_in'],
-					'template' => 'manual_logging_in',
+					'label' => $txt['manual_section_logging_in_out'],
+					'template' => 'manual_logging_in_out',
 				),
 				'password_reminders' => array(
 					'label' => $txt['manual_section_password_reminders'],
@@ -105,13 +109,35 @@ function ShowHelp()
 			'title' => $txt['manual_category_profile_features'],
 			'description' => '',
 			'areas' => array(
-				'profile_summary' => array(
-					'label' => $txt['manual_section_profile_summary'],
-					'template' => 'manual_profile_summary',
+				'profile_info' => array(
+					'label' => $txt['manual_section_profile_info'],
+					'template' => 'manual_profile_info',
+					'subsections' => array(
+						'summary' => array($txt['manual_entry_profile_info_summary'], 'manual_profile_info_summary'),
+						'posts' => array($txt['manual_entry_profile_info_posts'], 'manual_profile_info_posts'),
+						'stats' => array($txt['manual_entry_profile_info_stats'], 'manual_profile_info_stats'),
+					),
 				),
-				'modifying_profiles' => array(
-					'label' => $txt['manual_section_modifying_profiles'],
-					'template' => 'manual_modifying_profiles',
+				'modify_profile' => array(
+					'label' => $txt['manual_section_modify_profile'],
+					'template' => 'manual_modify_profile',
+					'subsections' => array(
+						'settings' => array($txt['manual_entry_modify_profile_settings'], 'manual_modify_profile_settings'),
+						'forum' => array($txt['manual_entry_modify_profile_forum'], 'manual_modify_profile_forum'),
+						'look' => array($txt['manual_entry_modify_profile_look'], 'manual_modify_profile_look'),
+						'notify' => array($txt['manual_entry_modify_profile_notify'], 'manual_modify_profile_notify'),
+						'pm' => array($txt['manual_entry_modify_profile_pm'], 'manual_modify_profile_pm'),
+						'buddies' => array($txt['manual_entry_modify_profile_buddies'], 'manual_modify_profile_buddies'),
+						'groups' => array($txt['manual_entry_modify_profile_groups'], 'manual_modify_profile_groups'),
+					),
+				),
+				'actions' => array(
+					'label' => $txt['manual_section_profile_actions'],
+					'template' => 'manual_profile_actions',
+					'subsections' => array(
+						'subscriptions' => array($txt['manual_entry_profile_actions_subscriptions'], 'manual_profile_actions_subscriptions'),
+						'delete' => array($txt['manual_entry_profile_actions_delete'], 'manual_profile_actions_delete'),
+					),
 				),
 			),
 		),
@@ -119,10 +145,18 @@ function ShowHelp()
 			'title' => $txt['manual_category_posting_basics'],
 			'description' => '',
 			'areas' => array(
+				'posting_screen' => array(
+					'label' => $txt['manual_section_posting_screen'],
+					'template' => 'manual_posting_screen',
+				),
 				'posting_topics' => array(
 					'label' => $txt['manual_section_posting_topics'],
 					'template' => 'manual_posting_topics',
 				),
+				'quoting_posts' => array(
+					'label' => $txt['manual_section_quoting_posts'],
+					'template' => 'manual_quoting_posts',
+ 				),
 				'modifying_posts' => array(
 					'label' => $txt['manual_section_modifying_posts'],
 					'template' => 'manual_modifying_posts',
@@ -135,19 +169,27 @@ function ShowHelp()
 					'label' => $txt['manual_section_bbcode'],
 					'template' => 'manual_bbcode',
 				),
+				'wysiwyg' => array(
+					'label' => $txt['manual_section_wysiwyg'],
+					'template' => 'manual_wysiwyg',
+ 				),
 			),
 		),
 		'personal_messages' => array(
 			'title' => $txt['manual_category_personal_messages'],
 			'description' => '',
 			'areas' => array(
-				'sending_pms' => array(
-					'label' => $txt['manual_section_sending_pms'],
-					'template' => 'manual_sending_pms',
+				'messages' => array(
+					'label' => $txt['manual_section_pm_messages'],
+					'template' => 'manual_pm_messages',
 				),
-				'pm_options' => array(
-					'label' => $txt['manual_section_pm_options'],
-					'template' => 'manual_pm_options',
+				'actions' => array(
+					'label' => $txt['manual_section_pm_actions'],
+					'template' => 'manual_pm_actions',
+ 				),
+				'preferences' => array(
+					'label' => $txt['manual_section_pm_preferences'],
+					'template' => 'manual_pm_preferences',
 				),
 			),
 		),
@@ -159,13 +201,31 @@ function ShowHelp()
 					'label' => $txt['manual_section_searching'],
 					'template' => 'manual_searching',
 				),
-				'member_list' => array(
-					'label' => $txt['manual_section_member_list'],
-					'template' => 'manual_member_list',
+				'memberlist' => array(
+					'label' => $txt['manual_section_memberlist'],
+					'template' => 'manual_memberlist',
 				),
 				'calendar' => array(
 					'label' => $txt['manual_section_calendar'],
 					'template' => 'manual_calendar',
+				),
+			),
+		),
+		'reference' => array(
+			'title' => $txt['manual_category_reference'],
+			'description' => '',
+			'areas' => array(
+				'bbc_ag' => array(
+					'label' => $txt['manual_section_bbc_ag'],
+					'template' => 'manual_bbc_ag',
+				),
+				'bbc_hq' => array(
+					'label' => $txt['manual_section_bbc_hq'],
+					'template' => 'manual_bbc_hq',
+				),
+				'bbc_rz' => array(
+					'label' => $txt['manual_section_bbc_rz'],
+					'template' => 'manual_bbc_rz',
 				),
 			),
 		),

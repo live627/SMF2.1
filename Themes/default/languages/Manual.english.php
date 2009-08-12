@@ -14,6 +14,7 @@ $txt['manual_category_profile_features'] = 'Profile Features';
 $txt['manual_category_posting_basics'] = 'Posting Basics';
 $txt['manual_category_personal_messages'] = 'Personal Messages';
 $txt['manual_category_forum_tools'] = 'Forum Tools';
+$txt['manual_category_reference'] = 'Reference';
 
 // Sections
 $txt['manual_section_intro'] = 'Introduction';
@@ -21,21 +22,45 @@ $txt['manual_section_main_menu'] = 'The Main Menu';
 $txt['manual_section_board_index'] = 'The Board Index';
 $txt['manual_section_message_view'] = 'The Message View';
 $txt['manual_section_topic_view'] = 'The Topic View';
+$txt['manual_section_when_how_register'] = 'When and How to Register';
 $txt['manual_section_registration_screen'] = 'The Registration Screen';
 $txt['manual_section_activating_account'] = 'Activating A New Account';
-$txt['manual_section_logging_in'] = 'Logging In';
+$txt['manual_section_logging_in_out'] = 'Logging In and Out';
 $txt['manual_section_password_reminders'] = 'Password Reminders';
-$txt['manual_section_profile_summary'] = 'The Profile Summary';
-$txt['manual_section_modifying_profiles'] = 'Modifying Profiles';
+$txt['manual_section_profile_info'] = 'Profile Info';
+$txt['manual_section_modify_profile'] = 'Modify Profile';
+$txt['manual_section_profile_actions'] = 'Actions';
+$txt['manual_section_posting_screen'] = 'The Posting Screen';
 $txt['manual_section_posting_topics'] = 'Posting Topics, Polls and Events';
+$txt['manual_section_quoting_posts'] = 'Quoting Posts';
 $txt['manual_section_modifying_posts'] = 'Modifying and Removing Posts';
-$txt['manual_section_smileys'] = 'Smiley Reference';
-$txt['manual_section_bbcode'] = 'Bulletin Board Code Reference';
-$txt['manual_section_sending_pms'] = 'Sending and Replying';
-$txt['manual_section_pm_options'] = 'Personal Messaging Options';
+$txt['manual_section_smileys'] = 'Smileys';
+$txt['manual_section_bbcode'] = 'Bulletin Board Code';
+$txt['manual_section_wysiwyg'] = 'The WYSIWYG Editor';
+$txt['manual_section_pm_messages'] = 'Messages';
+$txt['manual_section_pm_actions'] = 'Actions';
+$txt['manual_section_pm_preferences'] = 'Preferences';
 $txt['manual_section_searching'] = 'Searching';
-$txt['manual_section_member_list'] = 'Member List';
+$txt['manual_section_memberlist'] = 'Memberlist';
 $txt['manual_section_calendar'] = 'Calendar';
+$txt['manual_section_bbc_ag'] = 'BBC: A-G';
+$txt['manual_section_bbc_hq'] = 'BBC: H-Q';
+$txt['manual_section_bbc_rz'] = 'BBC: R-Z';
+ 
+// Entries
+$txt['manual_entry_profile_info_summary'] = 'Summary';
+$txt['manual_entry_profile_info_posts'] = 'Show Posts';
+$txt['manual_entry_profile_info_stats'] = 'Show Stats';
+$txt['manual_entry_modify_profile_settings'] = 'Account Settings';
+$txt['manual_entry_modify_profile_forum'] = 'Forum Profile';
+$txt['manual_entry_modify_profile_look'] = 'Look and Layout';
+$txt['manual_entry_modify_profile_notify'] = 'Notifications';
+$txt['manual_entry_modify_profile_pm'] = 'Personal Messaging';
+$txt['manual_entry_modify_profile_ignore_boards'] = 'Ignore Boards Options';
+$txt['manual_entry_modify_profile_buddies'] = 'Edit Buddies';
+$txt['manual_entry_modify_profile_groups'] = 'Group Membership';
+$txt['manual_entry_profile_actions_subscriptions'] = 'Paid Subscriptions';
+$txt['manual_entry_profile_actions_delete'] = 'Delete this account';
 
 // Entries for template: index.
 $txt['manual_index_visit_simple_machines'] = 'Visit Simple Machines!';
