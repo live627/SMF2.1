@@ -2473,20 +2473,6 @@ div#profile_success
 	margin-right: 1em;
 }
 
-.profile_bar
-{
-	background-image: url(../images/bar.png);
-	height: 16px;
-	display: block;
-	background-position: top right;
-	text-align: right;
-}
-
-.bar_border
-{
-	border: 1px solid black;
-}
-
 .topic .time
 {
 	float: right;
@@ -2677,21 +2663,6 @@ dl.stats dd
 	margin: 0 0 4px 0;
 	line-height: 16px;
 	padding: 0;
-}
-dd.statsbar span.left
-{
-	float: left;
-	background: url(../images/bar_stats.png) no-repeat;
-	display: block;
-	width: 6px;
-	height: 16px;
-}
-dd.statsbar span.right
-{
-	float: left;
-	background: url(../images/bar_stats.png) no-repeat 100%;
-	width: 6px;
-	height: 16px;
 }
 .stats_bar
 {

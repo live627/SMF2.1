@@ -889,13 +889,13 @@ function template_statPanel()
 	else
 	{
 		echo '
-						<dl>';
+						<dl class="stats">';
 
 		// The labels.
 		foreach ($context['posts_by_time'] as $time_of_day)
 			echo '
 							<dt>', date('g a', mktime($time_of_day['hour'])), '</dt>
-							<dd><div style="width: ', $time_of_day['posts_percent'], '%;" class="smalltext profile_bar', !empty($time_of_day['posts_percent']) ? ' bar_border">' . $time_of_day['posts_percent'] . '%&nbsp;' : '">', '</div></dd>';
+							<dd class="statsbar">', !empty($time_of_day['posts_percent']) ? '<span class="left"></span><div style="width: ' . $time_of_day['posts_percent'] . 'px;" class="stats_bar"></div><span class="right"></span><span class="righttext">' . $time_of_day['posts_percent'] . '%</span>' : '', '</dd>';
 		echo '
 						</dl>';
 	}

@@ -101,8 +101,8 @@ function template_main()
 		if (!isset($context['disabled_fields']['posts']))
 			echo '
 					<td class="windowbg2" width="15">', $member['posts'], '</td>
-					<td class="windowbg" width="100" align="', $context['right_to_left'] ? 'right' : 'left', '">
-						', $member['posts'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $member['post_percent'] . '" height="15" alt="" />' : '', '
+					<td class="windowbg statsbar" width="100" align="', $context['right_to_left'] ? 'right' : 'left', '">
+						', $member['posts'] > 0 ? '<span class="left"></span><div style="width: ' . $member['post_percent'] . 'px;" class="stats_bar"></div><span class="right"></span>' : '', '
 					</td>';
 
 		echo '
