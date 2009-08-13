@@ -217,18 +217,25 @@ function template_main()
 			if (!empty($settings['separate_sticky_lock']) && strpos($topic['class'], 'locked') !== false)
 				$topic['class'] = substr($topic['class'], 0, strrpos($topic['class'], '_locked'));
 
-			// Calculate the color class of the topic.
+			// Is this topic pending approval, or does it have any posts pending approval?
 			if ($context['can_approve_posts'] && $topic['unapproved_posts'])
-				$color_class = $topic['approved'] ? 'approvebg' : 'approvetbg';
+				$color_class = !$topic['approved'] ? 'approvebg' : 'approvebg';
+			// Sticky topics should get a different color, too.
+			elseif ($topic['is_sticky'] && !empty($settings['separate_sticky_lock']))
+				$color_class = 'windowbg3';
+			// Last, but not least: regular topics.
 			else
-				$color_class = !empty($settings['separate_sticky_lock']) && $topic['is_sticky'] ? 'windowbg3' : 'windowbg';
+				$color_class = 'windowbg';
+
+			// Some columns require a different shade of the color class.
+			$alternate_class = 'windowbg2';
 
 			echo '
 						<tr>
-							<td class="windowbg2 icon1">
+							<td class="', $alternate_class, ' icon1">
 								<img src="', $settings['images_url'], '/topic/', $topic['class'], '.gif" alt="" />
 							</td>
-							<td class="windowbg2 icon2">
+							<td class="', $alternate_class, ' icon2">
 								<img src="', $topic['first_post']['icon_url'], '" alt="" />
 							</td>
 							<td class="subject ', $color_class, '" ', (!empty($topic['quick_mod']['modify']) ? 'id="topic_' . $topic['first_post']['id'] . '" onmouseout="mouse_on_div = 0;" onmouseover="mouse_on_div = 1;" ondblclick="modify_topic(\'' . $topic['id'] . '\', \'' . $topic['first_post']['id'] . '\', \'' . $context['session_id'] . '\');"' : ''), '>';
@@ -249,16 +256,16 @@ function template_main()
 			echo '
 								<small id="pages' . $topic['first_post']['id'] . '">', $topic['pages'], '</small>
 							</td>
-							<td class="windowbg2 starter">
+							<td class="', $alternate_class, ' starter">
 								', $topic['first_post']['member']['link'], '
 							</td>
-							<td class="windowbg' , $topic['is_sticky'] ? '3' : '' , ' replies">
+							<td class="', $color_class, ' replies">
 								', $topic['replies'], '
 							</td>
-							<td class="windowbg' , $topic['is_sticky'] ? '3' : '' , ' views">
+							<td class="', $color_class, ' views">
 								', $topic['views'], '
 							</td>
-							<td class="windowbg2 lastpost">
+							<td class="', $alternate_class, ' lastpost">
 								<a href="', $topic['last_post']['href'], '"><img src="', $settings['images_url'], '/icons/last_post.gif" alt="', $txt['last_post'], '" title="', $txt['last_post'], '" /></a>
 								<span class="smalltext">
 									', $topic['last_post']['time'], '<br />
@@ -270,7 +277,7 @@ function template_main()
 			if (!empty($context['can_quick_mod']))
 			{
 				echo '
-							<td class="windowbg' , $topic['is_sticky'] ? '3' : '' , ' moderation">';
+							<td class="', $color_class, ' moderation">';
 				if ($options['display_quick_mod'] == 1)
 					echo '
 								<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check" />';

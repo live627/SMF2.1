@@ -45,6 +45,7 @@ August 2009
  * Swappable typo (Several files) [Bug 3651]
  * New looks for the quick reply section. (Display template)
  ! Typo, weird-sounding variables in getOnlineMemberStats (Subs-MembersOnline.php) [Bug 3644]
+ * Unapproved topics weren't always styled correctly on the message index. (MessageIndex template) [Bug 3665]
 
 
 July 2009

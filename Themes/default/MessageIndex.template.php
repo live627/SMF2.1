@@ -211,25 +211,31 @@ function template_main()
 
 		foreach ($context['topics'] as $topic)
 		{
-			// Calculate the color class of the topic.
-			$color_class = '';
+			// Is this topic pending approval, or does it have any posts pending approval?
 			if ($context['can_approve_posts'] && $topic['unapproved_posts'])
-				$color_class = !$topic['approved'] ? ' approvetbg' : ' approvebg';
+				$color_class = !$topic['approved'] ? 'approvetbg' : 'approvebg';
+			// Sticky topics should get a different color, too.
 			elseif ($topic['is_sticky'])
-				$color_class = ' stickybg';
+				$color_class = 'stickybg';
+			// Locked topics get special treatment as well.
 			elseif ($topic['is_locked'])
-					$color_class = ' lockedbg';
-			$color_class2 = !empty($color_class) ? $color_class . '2' : '';
+				$color_class = 'lockedbg';
+			// Last, but not least: regular topics.
+			else
+				$color_class = 'windowbg';
+
+			// Some columns require a different shade of the color class.
+			$alternate_class = $color_class . '2';
 
 			echo '
 						<tr>
-							<td class="icon1 windowbg', $color_class, '">
+							<td class="icon1 ', $color_class, '">
 								<img src="', $settings['images_url'], '/topic/', $topic['class'], '.gif" alt="" />
 							</td>
-							<td class="icon2 windowbg', $color_class, '">
+							<td class="icon2 ', $color_class, '">
 								<img src="', $topic['first_post']['icon_url'], '" alt="" />
 							</td>
-							<td class="subject windowbg2', $color_class2, '">
+							<td class="subject ', $alternate_class, '">
 								<div ', (!empty($topic['quick_mod']['modify']) ? 'id="topic_' . $topic['first_post']['id'] . '" onmouseout="mouse_on_div = 0;" onmouseover="mouse_on_div = 1;" ondblclick="modify_topic(\'' . $topic['id'] . '\', \'' . $topic['first_post']['id'] . '\', \'' . $context['session_id'] . '\', \'' . $context['session_var'] . '\');"' : ''), '>
 									', $topic['is_sticky'] ? '<strong>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], (!$context['can_approve_posts'] && !$topic['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), '</span>', $topic['is_sticky'] ? '</strong>' : '' ;
 
@@ -244,12 +250,12 @@ function template_main()
 									</p>
 								</div>
 							</td>
-							<td class="stats windowbg', $color_class, '">
+							<td class="stats ', $color_class, '">
 								', $topic['replies'], ' ', $txt['replies'], '
 								<br />
 								', $topic['views'], ' ', $txt['views'], '
 							</td>
-							<td class="lastpost windowbg2', $color_class2, '">
+							<td class="lastpost ', $alternate_class, '">
 								<a href="', $topic['last_post']['href'], '"><img src="', $settings['images_url'], '/icons/last_post.gif" alt="', $txt['last_post'], '" title="', $txt['last_post'], '" /></a>
 								', $topic['last_post']['time'], '<br />
 								', $txt['by'], ' ', $topic['last_post']['member']['link'], '
@@ -259,7 +265,7 @@ function template_main()
 			if (!empty($context['can_quick_mod']))
 			{
 				echo '
-							<td class="windowbg moderation ', $color_class, '">';
+							<td class="moderation ', $color_class, '">';
 				if ($options['display_quick_mod'] == 1)
 					echo '
 								<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check" />';

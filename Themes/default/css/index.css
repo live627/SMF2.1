@@ -433,19 +433,31 @@ table.table_grid thead tr.catbg th.smalltext
 	white-space: nowrap;
 }
 
-/* Color for background of posts requiring approval */
+/* Colors for background of posts requiring approval */
 .approvebg
 {
 	color: #000000;
 	background-color: #ffeaea;
 }
+.approvebg2
+{
+	color: #000000;
+	background-color: #fff2f2;
+}
+
 /* Color for background of *topics* requiring approval */
 .approvetbg
 {
 	color: #000000;
-	background-color: #E4A17C;
+	background-color: #e4a17c;
 }
-/* sticky posts have a different background */
+.approvetbg2
+{
+	color: #000000;
+	background-color: #f3bd9f;
+}
+
+/* Sticky topics get a different background */
 .stickybg
 {
 	background: #e8d8cf;
@@ -454,7 +466,8 @@ table.table_grid thead tr.catbg th.smalltext
 {
 	background: #f2e3d9;
 }
-/* locked posts too! */
+
+/* Locked posts get a different shade, too! */
 .lockedbg
 {
 	background: #d4dce2;
