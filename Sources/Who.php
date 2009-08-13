@@ -511,13 +511,13 @@ function Credits($in_admin = false)
 						'Cathy &quot;Amacythe&quot; Bailey',
 						'Justin &quot;metallica48423&quot; O\'Leary',
 						'Motoko-chan',
+						'Jeremy &quot;SleePy&quot; Darwood',
 					),
 				),
 				array(
 					'title' => $txt['credits_groups_site'],
 					'members' => array(
 						'Derek Schwab',
-						'Michael &quot;Oldiesmann&quot; Eshom',
 					),
 				),
 				array(
@@ -563,16 +563,14 @@ function Credits($in_admin = false)
 						'Tyrsson',
 						'MrPhil',
 						'LexArma',
-						'JBlaze',
 					),
 				),
 				array(
 					'title' => $txt['credits_groups_customize'],
 					'members' => array(
 						'Gary M. Gadsdon',
-						'Bryan &quot;RunicWarrior&quot; Deakin',
+						'Bryan &quot;Runic&quot; Deakin',
 						'Jonathan &quot;vbgamer45&quot; Valentin',
-						'Jeremy &quot;SleePy&quot; Darwood',
 						'Niko',
 						'Kirby',
 						'Daniel15',
@@ -589,6 +587,7 @@ function Credits($in_admin = false)
 						'Marcus &quot;Nas&quot; Forsberg',
 						'Brad &quot;IchBin&trade;&quot; Grow',
 						'Steven &quot;Fustrate&quot; Hoffman',
+						'Jason &quot;JBlaze&quot; Clemons',
 					),
 				),
 				array(
@@ -596,18 +595,19 @@ function Credits($in_admin = false)
 					'members' => array(
 						'Jack &quot;akabugeyes&quot; Thorsen',
 						'Daniel Diehl',
-						'Jade &quot;Alundra&quot; Elizabeth',
+						'Jade Elizabeth Trainor',
+						'Brannon &quot;B&quot; Hall',
+						'Graeme &quot;Trekkie101&quot; Spence',
 						'Peter Duggan',
 						'Dannii Willis',
-						'B',
 					),
 				),
 				array(
 					'title' => $txt['credits_groups_marketing'],
 					'members' => array(
 						'rickC',
-						'Graeme &quot;Trekkie101&quot; Spence',
 						'Tony Reid',
+						'Michael &quot;Oldiesmann&quot; Eshom',
 					),
 				),
 				array(
@@ -617,7 +617,6 @@ function Credits($in_admin = false)
 						'akyhne',
 					),
 				),
-
 			),
 		),
 	);
