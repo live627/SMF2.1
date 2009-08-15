@@ -47,6 +47,7 @@ August 2009
  ! Typo, weird-sounding variables in getOnlineMemberStats (Subs-MembersOnline.php) [Bug 3644]
  * Unapproved topics weren't always styled correctly on the message index. (MessageIndex template) [Bug 3665]
  * Stats should use the same bar (Stats template, profile template, index.css) [Bug 3668]
+ ! Regenerate OpenID Diffie-Hellman keys in the daily maintenance scheduled task. (ScheduledTasks.php, Subs-OpenID.php)
 
 
 July 2009

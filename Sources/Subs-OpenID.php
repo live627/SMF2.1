@@ -359,7 +359,7 @@ function smf_openid_member_exists($url)
 }
 
 // Prepare for a Diffie-Hellman key exchange.
-function smf_openID_setup_DH()
+function smf_openID_setup_DH($regenerate = false)
 {
 	global $p, $g;
 	
@@ -374,15 +374,15 @@ function smf_openID_setup_DH()
 	// Make sure the scale is set.
 	bcscale(0);
 	
-	return smf_openID_get_keys();
+	return smf_openID_get_keys($regenerate);
 }
 
-function smf_openID_get_keys()
+function smf_openID_get_keys($regenerate)
 {
 	global $modSettings, $p, $g;
 	
-	// Ok lets take the easy way out, are their any keys already defined for us? We really shouldn't keep the same keys forever, though.
-	if (!empty($modSettings['dh_keys']) && mt_rand(1, 250) != 1)
+	// Ok lets take the easy way out, are their any keys already defined for us? They are changed in the daily maintenance scheduled task.
+	if (!empty($modSettings['dh_keys']) && !$regenerate)
 	{
 		// Sweeeet!
 		list ($public, $private) = explode("\n", $modSettings['dh_keys']);
