@@ -803,11 +803,18 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 		$allThemes[] = $id_core_theme;
 		$newSettings[] = "('knownThemes', '" . implode(',', $allThemes) . "')";
 
+		// Since we want to do a replace, just delete the old settings and re-insert them
 		upgrade_query("
-			REPLACE INTO {$db_prefix}settings
+			DELETE FROM {$db_prefix}settings
+			WHERE variable IN ('theme_default', 'theme_guests', 'knownThemes');
+
+		foreach ($new_settings AS $a_new_setting)
+		{
+			upgrade_query("
+				INSERT INTO {$db_prefix}settings
 				(variable, value)
-			VALUES
-				" . implode(', ', $newSettings));
+				VALUES " . implode(', ', $a_new_setting));
+		}
 
 		// What about members?
 		upgrade_query("
