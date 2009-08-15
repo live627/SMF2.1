@@ -35,7 +35,7 @@ if (!defined('SMF'))
 
 */
 
-function smf_openID_validate($openid_uri, $return = false, $save_fields = array())
+function smf_openID_validate($openid_uri, $return = false, $save_fields = array(), $return_action = null)
 {
 	global $sourcedir, $scripturl, $boardurl, $modSettings;
 
@@ -49,7 +49,7 @@ function smf_openID_validate($openid_uri, $return = false, $save_fields = array(
 	// Before we go wherever it is we are going, store the GET and POST data, because it might be useful when we get back.
 	$request_time = time();
 	// Just in case they are doing something else at this time.
-	while(isset($_SESSION['openid']['saved_data'][$request_time]))
+	while (isset($_SESSION['openid']['saved_data'][$request_time]))
 		$request_time = md5($request_time);
 
 	$_SESSION['openid']['saved_data'][$request_time] = array(
@@ -64,7 +64,7 @@ function smf_openID_validate($openid_uri, $return = false, $save_fields = array(
 		'openid.trust_root=' . urlencode($scripturl),
 		'openid.identity=' .  urlencode(empty($response_data['delegate']) ? $openid_url : $response_data['delegate']),
 		'openid.assoc_handle=' . urlencode($assoc['handle']),
-		'openid.return_to=' . urlencode($scripturl . '?action=openidreturn&sa=' . $_REQUEST['action'] . '&t=' . $request_time . (!empty($save_fields) ? '&sf=' . base64_encode(serialize($save_fields)) : '')),
+		'openid.return_to=' . urlencode($scripturl . '?action=openidreturn&sa=' . (!empty($return_action) ? $return_action : $_REQUEST['action']) . '&t=' . $request_time . (!empty($save_fields) ? '&sf=' . base64_encode(serialize($save_fields)) : '')),
 	);
 
 	// If they are logging in but don't yet have an account or they are registering, lets request some additional information
@@ -82,6 +82,23 @@ function smf_openID_validate($openid_uri, $return = false, $save_fields = array(
 		return $redir_url;
 	else
 		redirectexit($redir_url);
+}
+
+// Revalidate a user using OpenID. Note that this function will not return when authentication is required.
+function smf_openID_revalidate()
+{
+	global $user_settings;
+	
+	if (isset($_SESSION['openid_revalidate_time']) && $_SESSION['openid_revalidate_time'] > time() - 60)
+	{
+		unset($_SESSION['openid_revalidate_time']);
+		return true;
+	}
+	else
+		smf_openID_validate($user_settings['openid_uri'], false, null, 'revalidate');
+	
+	// We shouldn't get here.
+	trigger_error('Hacking attempt...', E_USER_ERROR);
 }
 
 function smf_openID_getAssociation($server, $handle = null, $no_delete = false)
@@ -277,7 +294,23 @@ function smf_openID_return()
 		)
 	);
 
-	if ($smcFunc['db_num_rows']($result) == 0)
+	$member_found = $smcFunc['db_num_rows']($result);
+
+	if (!$member_found && isset($_GET['sa']) && $_GET['sa'] == 'change_uri' && !empty($_SESSION['new_openid_uri']) && $_SESSION['new_openid_uri'] == $openid_uri)
+	{
+		// Update the member.
+		updateMemberData($user_settings['id_member'], array('openid_uri' => $openid_uri));
+		
+		unset($_SESSION['new_openid_uri']);
+		$_SESSION['openid'] = array(
+			'verified' => true,
+			'openid_uri' => $openid_uri,
+		);
+		
+		// Send them back to profile.
+		redirectexit('action=profile;area=authentication;updated');
+	}
+	elseif (!$member_found)
 	{
 		// Store the received openid info for the user when returned to the registration page.
 		$_SESSION['openid'] = array(
@@ -301,6 +334,17 @@ function smf_openID_return()
 		}
 		else
 			redirectexit('action=register');
+	}
+	elseif (isset($_GET['sa']) && $_GET['sa'] == 'revalidate' && $user_settings['openid_uri'] == $openid_uri)
+	{
+		$_SESSION['openid_revalidate_time'] = time();
+		
+		// Restore the get data.
+		require_once($sourcedir . '/Subs-Auth.php');
+		$_SESSION['openid']['saved_data'][$_GET['t']]['get']['openid_restore_post'] = $_GET['t'];
+		$query_string = construct_query_string($_SESSION['openid']['saved_data'][$_GET['t']]['get']);
+		
+		redirectexit($query_string);
 	}
 	else
 	{

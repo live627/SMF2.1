@@ -157,7 +157,7 @@ function template_wap_login()
 		<p><strong>&mdash;', $txt['or'], '&mdash;</strong></p>
 
 		<p>', $txt['openid'], ':<br />
-		<input type="text" name="openid_url" class="input_text openid_login" size="17" /></p>';
+		<input type="text" name="openid_identifier" class="input_text openid_login" size="17" /></p>';
 
 	echo '
 		<p><do type="accept" label="', $txt['login'], '">
@@ -459,7 +459,7 @@ function template_imode_login()
 		echo '
 				<tr><td><strong>&mdash;', $txt['or'], '&mdash;</strong></td></tr>
 				<tr><td>', $txt['openid'], ':</td></tr>
-				<tr><td><input type="text" name="openid_url" class="input_text openid_login" size="17" /></td></tr>';
+				<tr><td><input type="text" name="openid_identifier" class="input_text openid_login" size="17" /></td></tr>';
 
 	echo '
 				<tr><td><input type="submit" value="', $txt['login'], '" class="button_submit" /><input type="hidden" name="cookieneverexp" value="1" /></td></tr>
@@ -1056,7 +1056,7 @@ function template_wap2_login()
 		echo '
 			<p class="windowbg"><strong>&mdash;', $txt['or'], '&mdash;</strong></p>
 			<p class="windowbg">', $txt['openid'], ':</p>
-			<p class="windowbg"><input type="text" name="openid_url" class="input_text openid_login" size="17" /></p>';
+			<p class="windowbg"><input type="text" name="openid_identifier" class="input_text openid_login" size="17" /></p>';
 
 	echo '
 			<p class="windowbg"><input type="submit" value="', $txt['login'], '" class="button_submit" /><input type="hidden" name="cookieneverexp" value="1" /></p>

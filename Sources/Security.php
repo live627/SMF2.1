@@ -114,7 +114,7 @@ if (!defined('SMF'))
 // Check if the user is who he/she says he is
 function validateSession()
 {
-	global $modSettings, $sourcedir, $user_info, $sc;
+	global $modSettings, $sourcedir, $user_info, $sc, $user_settings;
 
 	// We don't care if the option is off, because Guests should NEVER get past here.
 	is_not_guest();
@@ -160,6 +160,15 @@ function validateSession()
 			$_SESSION['admin_time'] = time();
 			return;
 		}
+	}
+	// OpenID?
+	if (!empty($user_settings['openid_uri']))
+	{
+		require_once($sourcedir . '/Subs-OpenID.php');
+		smf_openID_revalidate();
+		
+		$_SESSION['admin_time'] = time();
+		return;
 	}
 
 	// Need to type in a password for that, man.

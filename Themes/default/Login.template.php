@@ -41,7 +41,7 @@ function template_login()
 		echo '<p><strong>&mdash;', $txt['or'], '&mdash;</strong></p>
 				<dl>
 					<dt>', $txt['openid'], ':</dt>
-					<dd><input type="text" name="openid_url" class="input_text openid_login" size="17" />&nbsp;<em><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></em></dd>
+					<dd><input type="text" name="openid_identifier" class="input_text openid_login" size="17" />&nbsp;<em><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></em></dd>
 				</dl><hr />';
 
 	echo '
@@ -111,7 +111,7 @@ function template_kick_guest()
 				<p><strong>&mdash;', $txt['or'], '&mdash;</strong></p>
 				<dl>
 					<dt>', $txt['openid'], ':</dt>
-					<dd><input type="text" name="openid_url" class="input_text openid_login" size="17" /></dd>
+					<dd><input type="text" name="openid_identifier" class="input_text openid_login" size="17" /></dd>
 				</dl>
 				<hr />
 				<dl>';
@@ -286,20 +286,6 @@ function template_resend()
 			</div>
 			<span class="lowerframe"><span></span></span>
 		</form>';
-}
-
-// OpenID can't currently do admin stuff.
-function template_admin_openid_disabled()
-{
-	global $context, $settings, $options, $scripturl, $txt;
-
-	// Tell them they can't do this - really sorry!
-	echo '
-	<p class="align_center">
-		<img src="', $settings['images_url'], '/openid.gif" alt="" align="top" /> ', $txt['openid_admin_disabled'], '
-		', $txt['openid_admin_disallowed_desc'], '<br /><hr />
-		', sprintf($txt['openid_admin_disallowed_desc2'], $scripturl . '?action=profile;area=account;u=' . $context['user']['id']), '
-	</p>';
 }
 
 ?>

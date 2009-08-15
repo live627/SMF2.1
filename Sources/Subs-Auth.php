@@ -278,48 +278,6 @@ function adminLogin()
 	loadLanguage('Admin');
 	loadTemplate('Login');
 
-	// If this person is an OpenID person I'm afraid at the moment we require them to unhook their account.
-	//!!! Do we think we should allow this in the future?
-	if (!empty($user_settings['openid_uri']))
-	{
-		$context['sub_template'] = 'admin_openid_disabled';
-		$context['page_title'] = $txt['openid_admin_action'];
-
-		obExit();
-
-		// No pass, just in case!
-		trigger_error('Hacking attempt...', E_USER_ERROR);
-	}
-
-	// Start with nothing for get data and post data.
-	$context['get_data'] = '?';
-	$context['post_data'] = '';
-
-	// Awww, darn.  The $scripturl contains GET stuff!
-	$q = strpos($scripturl, '?');
-	if ($q !== false)
-	{
-		parse_str(preg_replace('/&(\w+)(?=&|$)/', '&$1=', strtr(substr($scripturl, $q + 1), ';', '&')), $temp);
-
-		foreach ($_GET as $k => $v)
-		{
-			// Only if it's not already in the $scripturl!
-			if (!isset($temp[$k]))
-				$context['get_data'] .= $k . '=' . $v . ';';
-			// If it changed, put it out there, but with an ampersand.
-			elseif ($temp[$k] != $_GET[$k])
-				$context['get_data'] .= $k . '=' . $v . '&amp;';
-		}
-	}
-	else
-	{
-		// Add up all the data from $_GET into get_data.
-		foreach ($_GET as $k => $v)
-			$context['get_data'] .= $k . '=' . $v . ';';
-	}
-
-	$context['get_data'] = substr($context['get_data'], 0, -1);
-
 	// They used a wrong password, log it and unset that.
 	if (isset($_POST['admin_hash_pass']) || isset($_POST['admin_pass']))
 	{
@@ -333,6 +291,10 @@ function adminLogin()
 
 		$context['incorrect_password'] = true;
 	}
+
+	// Figure out the get data and post data.
+	$context['get_data'] = '?' . construct_query_string($_GET);
+	$context['post_data'] = '';
 
 	// Now go through $_POST.  Make sure the session hash is sent.
 	$_POST[$context['session_var']] = $context['session_id'];
@@ -367,6 +329,39 @@ function adminLogin_outputPostVars($k, $v)
 
 		return $ret;
 	}
+}
+
+function construct_query_string($get)
+{
+	global $scripturl;
+	
+	$query_string = '';
+	
+	// Awww, darn.  The $scripturl contains GET stuff!
+	$q = strpos($scripturl, '?');
+	if ($q !== false)
+	{
+		parse_str(preg_replace('/&(\w+)(?=&|$)/', '&$1=', strtr(substr($scripturl, $q + 1), ';', '&')), $temp);
+
+		foreach ($get as $k => $v)
+		{
+			// Only if it's not already in the $scripturl!
+			if (!isset($temp[$k]))
+				$query_string .= urlencode($k) . '=' . urlencode($v) . ';';
+			// If it changed, put it out there, but with an ampersand.
+			elseif ($temp[$k] != $get[$k])
+				$query_string .= urlencode($k) . '=' . urlencode($v) . '&amp;';
+		}
+	}
+	else
+	{
+		// Add up all the data from $_GET into get_data.
+		foreach ($get as $k => $v)
+			$query_string .= urlencode($k) . '=' . urlencode($v) . ';';
+	}
+
+	$query_string = substr($query_string, 0, -1);
+	return $query_string;
 }
 
 // Show an error message for the connection problems.

@@ -189,10 +189,10 @@ function Login2()
 		'name' => $txt['login'],
 	);
 
-	if (!empty($_REQUEST['openid_url']) && !empty($modSettings['enableOpenID']))
+	if (!empty($_REQUEST['openid_identifier']) && !empty($modSettings['enableOpenID']))
 	{
 		require_once($sourcedir . '/Subs-OpenID.php');
-		return smf_openID_validate($_REQUEST['openid_url']);
+		return smf_openID_validate($_REQUEST['openid_identifier']);
 	}
 
 	// You forgot to type your username, dummy!

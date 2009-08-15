@@ -314,6 +314,7 @@ $txt['profile_error_password_short'] = 'Your password must be at least ' . (empt
 $txt['profile_error_password_restricted_words'] = 'Your password must not contain your username, email address or other commonly used words.';
 $txt['profile_error_password_chars'] = 'Your password must contain a mix of upper and lower case letters, as well as digits.';
 $txt['profile_error_already_requested_group'] = 'You already have an outstanding request for this group!';
+$txt['profile_error_openid_in_use'] = 'Another user is already using that OpenID authentication URL';
 
 $txt['mysql_error_space'] = ' - check database storage space or contact the server administrator.';
 

@@ -1685,9 +1685,25 @@ function authentication($memID, $saving = false)
 			return true;
 		}
 		// Not right yet!
-		elseif ($_POST['authenticate'] == 'openid')
+		elseif ($_POST['authenticate'] == 'openid' && !empty($_POST['openid_identifier']))
 		{
-			updateMemberData($memID, array('openid_uri' => $_POST['openid_url']));
+			require_once($sourcedir . '/Subs-OpenID.php');
+			$_POST['openid_identifier'] = smf_openID_canonize($_POST['openid_identifier']);
+			
+			if (smf_openid_member_exists($_POST['openid_identifier']))
+				$post_errors[] = 'openid_in_use';
+			elseif (empty($post_errors))
+			{
+				// Authenticate using the new OpenID URI first to make sure they didn't make a mistake.
+				if ($context['user']['is_owner'])
+				{
+					$_SESSION['new_openid_uri'] = $_POST['openid_identifier'];
+					
+					smf_openID_validate($_POST['openid_identifier'], false, null, 'change_uri');
+				}
+				else
+					updateMemberData($memID, array('openid_uri' => $_POST['openid_identifier']));
+			}
 		}
 	}
 

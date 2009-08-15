@@ -194,8 +194,7 @@ function template_registration_form()
 					<dl class="register_form" id="openid_group">
 						<dt><strong>', $txt['authenticate_openid_url'], ':</strong></dt>
 						<dd>
-							<input type="text" name="openid_url" id="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['openid']) ? $context['openid'] : '', '" class="input_text" />
-							<span><img src="', $settings['images_url'], '/openid.gif" alt="', $txt['openid'], '" /></span>
+							<input type="text" name="openid_identifier" id="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['openid']) ? $context['openid'] : '', '" class="input_text openid_login" />
 						</dd>
 					</dl>';
 

@@ -193,7 +193,7 @@ function Register($reg_errors = array())
 	else
 	{
 		$context += array(
-			'openid' => isset($_POST['openid_url']) ? $_POST['openid_url'] : '',
+			'openid' => isset($_POST['openid_identifier']) ? $_POST['openid_identifier'] : '',
 			'username' => isset($_POST['user']) ? $smcFunc['htmlspecialchars']($_POST['user']) : '',
 			'email' => isset($_POST['email']) ? $smcFunc['htmlspecialchars']($_POST['email']) : '',
 		);
@@ -348,7 +348,7 @@ function Register2($verifiedOpenID = false)
 		'email' => !empty($_POST['email']) ? $_POST['email'] : '',
 		'password' => !empty($_POST['passwrd1']) ? $_POST['passwrd1'] : '',
 		'password_check' => !empty($_POST['passwrd2']) ? $_POST['passwrd2'] : '',
-		'openid' => !empty($_POST['openid_url']) ? $_POST['openid_url'] : '',
+		'openid' => !empty($_POST['openid_identifier']) ? $_POST['openid_identifier'] : '',
 		'auth_method' => !empty($_POST['authenticate']) ? $_POST['authenticate'] : '',
 		'check_reserved_name' => true,
 		'check_password_strength' => true,
@@ -456,15 +456,15 @@ function Register2($verifiedOpenID = false)
 				$save_variables[$k] = $v;
 
 		require_once($sourcedir . '/Subs-OpenID.php');
-		smf_openID_validate($_POST['openid_url'], false, $save_variables);
+		smf_openID_validate($_POST['openid_identifier'], false, $save_variables);
 	}
 	// If we've come from OpenID set up some default stuff.
-	elseif ($verifiedOpenID || (!empty($_POST['openid_url']) && $_POST['authenticate'] == 'openid'))
+	elseif ($verifiedOpenID || (!empty($_POST['openid_identifier']) && $_POST['authenticate'] == 'openid'))
 	{
 		$regOptions['username'] = !empty($_POST['user']) && trim($_POST['user']) != '' ? $_POST['user'] : $_SESSION['openid']['nickname'];
 		$regOptions['email'] = !empty($_POST['email']) && trim($_POST['email']) != '' ? $_POST['email'] : $_SESSION['openid']['email'];
 		$regOptions['auth_method'] = 'openid';
-		$regOptions['openid'] = !empty($_POST['openid_url']) ? $_POST['openid_url'] : $_SESSION['openid']['openid_uri'];
+		$regOptions['openid'] = !empty($_POST['openid_identifier']) ? $_POST['openid_identifier'] : $_SESSION['openid']['openid_uri'];
 	}
 
 	$memberID = registerMember($regOptions, true);

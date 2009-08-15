@@ -152,6 +152,13 @@ if (WIRELESS)
 		header('Content-Type: text/vnd.wap.wml');
 }
 
+// Restore post data if we are revalidating OpenID.
+if (isset($_GET['openid_restore_post']) && !empty($_SESSION['openid']['saved_data'][$_GET['openid_restore_post']]['post']) && empty($_POST))
+{
+	$_POST = $_SESSION['openid']['saved_data'][$_GET['openid_restore_post']]['post'];
+	unset($_SESSION['openid']['saved_data'][$_GET['openid_restore_post']]);
+}
+
 // What function shall we execute? (done like this for memory's sake.)
 call_user_func(smf_main());
 

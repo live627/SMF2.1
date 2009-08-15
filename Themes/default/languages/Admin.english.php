@@ -605,9 +605,4 @@ $txt['spider_stats'] = 'Stats';
 $txt['paid_subscriptions'] = 'Paid Subscriptions';
 $txt['paid_subs_view'] = 'View Subscriptions';
 
-$txt['openid_admin_action'] = 'Permissions Restriction';
-$txt['openid_admin_disabled'] = 'Authentication Restriction';
-$txt['openid_admin_disallowed_desc'] = 'Your account at this forum currently uses <strong>OpenID</strong> for authentication.<br /><br />For security purposes the action you are attempting to perform is restricted only to users who have <em>password authentication</em> on their accounts.';
-$txt['openid_admin_disallowed_desc2'] = 'To proceed with this action you will need to switch authentication on your account to be by password.<br /><br />You can change your account into a password based account from the <a href="%1$s">Account Settings</a> page of your profile.';
-
 ?>

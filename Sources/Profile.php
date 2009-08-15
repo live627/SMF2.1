@@ -41,7 +41,7 @@ if (!defined('SMF'))
 function ModifyProfile($post_errors = array())
 {
 	global $txt, $scripturl, $user_info, $context, $sourcedir, $user_profile, $cur_profile;
-	global $modSettings, $memberContext, $profile_vars, $smcFunc, $post_errors, $options;
+	global $modSettings, $memberContext, $profile_vars, $smcFunc, $post_errors, $options, $user_settings;
 
 	// Don't reload this as we may have processed error strings.
 	if (empty($post_errors))
@@ -207,6 +207,7 @@ function ModifyProfile($post_errors = array())
 					'enabled' => !empty($modSettings['enableOpenID']) || !empty($cur_profile['openid_uri']),
 					'sc' => 'post',
 					'hidden' => empty($modSettings['enableOpenID']) && empty($cur_profile['openid_uri']),
+					'password' => true,
 					'permission' => array(
 						'own' => array('profile_identity_any', 'profile_identity_own'),
 						'any' => array('profile_identity_any'),
@@ -351,7 +352,7 @@ function ModifyProfile($post_errors = array())
 				$profile_areas[$section_id]['areas'][$area_id]['permission'] = $area['permission'][$context['user']['is_owner'] ? 'own' : 'any'];
 
 			// Password required - only if not on OpenID.
-			if (!empty($area['password']) && empty($cur_profile['openid_uri']))
+			if (!empty($area['password']))
 				$context['password_areas'][] = $area_id;
 		}
 	}
@@ -470,7 +471,8 @@ function ModifyProfile($post_errors = array())
 	$context['template_layers'][] = 'profile';
 
 	// All the subactions that require a user password in order to validate.
-	$context['require_password'] = in_array($profile_include_data['current_area'], $context['password_areas']);
+	$check_password = $context['user']['is_owner'] && in_array($profile_include_data['current_area'], $context['password_areas']);
+	$context['require_password'] = $check_password && empty($user_settings['openid_uri']);
 
 	// If we're in wireless then we have a cut down template...
 	if (WIRELESS && $context['sub_template'] == 'summary' && WIRELESS_PROTOCOL != 'wap')
@@ -491,28 +493,37 @@ function ModifyProfile($post_errors = array())
 		$_POST = htmltrim__recursive($_POST);
 		$_POST = htmlspecialchars__recursive($_POST);
 
-		if ($context['user']['is_owner'] && $context['require_password'])
+		if ($check_password)
 		{
-			// You didn't even enter a password!
-			if (trim($_POST['oldpasswrd']) == '')
-				$post_errors[] = 'no_password';
+			// If we're using OpenID try to revalidate.
+			if (!empty($user_settings['openid_uri']))
+			{
+				require_once($sourcedir . '/Subs-OpenID.php');
+				smf_openID_revalidate();
+			}
+			else
+			{
+				// You didn't even enter a password!
+				if (trim($_POST['oldpasswrd']) == '')
+					$post_errors[] = 'no_password';
+	
+				// Since the password got modified due to all the $_POST cleaning, lets undo it so we can get the correct password
+				$_POST['oldpasswrd'] = un_htmlspecialchars($_POST['oldpasswrd']);
+	
+				// Does the integration want to check passwords?
+				$good_password = false;
+				if (isset($modSettings['integrate_verify_password']) && function_exists($modSettings['integrate_verify_password']))
+					if (call_user_func($modSettings['integrate_verify_password'], $cur_profile['member_name'], $_POST['oldpasswrd'], false) === true)
+						$good_password = true;
 
-			// Since the password got modified due to all the $_POST cleaning, lets undo it so we can get the correct password
-			$_POST['oldpasswrd'] = un_htmlspecialchars($_POST['oldpasswrd']);
-
-			// Does the integration want to check passwords?
-			$good_password = false;
-			if (isset($modSettings['integrate_verify_password']) && function_exists($modSettings['integrate_verify_password']))
-				if (call_user_func($modSettings['integrate_verify_password'], $cur_profile['member_name'], $_POST['oldpasswrd'], false) === true)
-					$good_password = true;
-
-			// Bad password!!!
-			if (!$good_password && $user_info['passwd'] != sha1(strtolower($cur_profile['member_name']) . $_POST['oldpasswrd']))
-				$post_errors[] = 'bad_password';
-
-			// Warn other elements not to jump the gun and do custom changes!
-			if (in_array('bad_password', $post_errors))
-				$context['password_auth_failed'] = true;
+				// Bad password!!!
+				if (!$good_password && $user_info['passwd'] != sha1(strtolower($cur_profile['member_name']) . $_POST['oldpasswrd']))
+					$post_errors[] = 'bad_password';
+	
+				// Warn other elements not to jump the gun and do custom changes!
+				if (in_array('bad_password', $post_errors))
+					$context['password_auth_failed'] = true;
+			}
 		}
 
 		// Change the IP address in the database.

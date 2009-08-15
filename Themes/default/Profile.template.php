@@ -1108,7 +1108,7 @@ function template_edit_options()
 						<hr width="100%" size="1" class="hrcolor" />';
 
 	// Only show the password box if it's actually needed.
-	if ($context['user']['is_owner'] && $context['require_password'])
+	if ($context['require_password'])
 		echo '
 						<dl>
 							<dt>
@@ -1140,7 +1140,7 @@ function template_edit_options()
 			{';
 
 	// If this part requires a password, make sure to give a warning.
-	if ($context['user']['is_owner'] && $context['require_password'])
+	if ($context['require_password'])
 		echo '
 				// Did you forget to type your password?
 				if (document.forms.creator.oldpasswrd.value == "")
@@ -2145,7 +2145,7 @@ function template_profile_save()
 					<hr width="100%" size="1" class="hrcolor" />';
 
 	// Only show the password box if it's actually needed.
-	if ($context['user']['is_owner'] && $context['require_password'])
+	if ($context['require_password'])
 		echo '
 					<dl>
 						<dt>
@@ -2641,8 +2641,7 @@ function template_authentication_method()
 										<em>', $txt['authenticate_openid_url'], ':</em>
 									</dt>
 									<dd>
-										<input type="text" name="openid_url" id="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', $context['member']['openid_uri'], '" class="input_text" />
-										<span><img src="', $settings['images_url'], '/openid.gif" alt="', $txt['openid'], '" /></span>
+										<input type="text" name="openid_identifier" id="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', $context['member']['openid_uri'], '" class="input_text openid_login" />
 									</dd>
 								</dl>
 								<dl id="auth_pass_div">
@@ -2662,7 +2661,22 @@ function template_authentication_method()
 									</dd>
 								</dl>
 							</dd>
-						</dl>
+						</dl>';
+								
+	if ($context['require_password'])
+		echo '
+						<hr width="100%" size="1" class="hrcolor" />
+						<dl>
+							<dt>
+								<strong', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' class="error"' : '', '>', $txt['current_password'], ': </strong><br />
+								<span class="smalltext">', $txt['required_security_reasons'], '</span>
+							</dt>
+							<dd>
+								<input type="password" name="oldpasswrd" size="20" style="margin-right: 4ex;" class="input_password" />
+							</dd>
+						</dl>';
+	
+	echo '
 						<div class="righttext">
 							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 							<input type="hidden" name="u" value="', $context['id_member'], '" />

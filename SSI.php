@@ -1004,7 +1004,7 @@ function ssi_login($redirect_to = '', $output_method = 'echo')
 					<td colspan="2" align="center"><strong>&mdash;', $txt['or'], '&mdash;</strong></td>
 				</tr><tr>
 					<td align="right"><label for="openid_url">', $txt['openid'], ':</label>&nbsp;</td>
-					<td><input type="text" name="openid_url" class="input_text openid_login" size="17" /></td>
+					<td><input type="text" name="openid_identifier" id="openid_url" class="input_text openid_login" size="17" /></td>
 				</tr>';
 
 	echo '<tr>
