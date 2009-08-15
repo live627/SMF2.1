@@ -219,7 +219,7 @@ function template_main()
 
 			// Is this topic pending approval, or does it have any posts pending approval?
 			if ($context['can_approve_posts'] && $topic['unapproved_posts'])
-				$color_class = !$topic['approved'] ? 'approvebg' : 'approvebg';
+				$color_class = !$topic['approved'] ? 'approvetbg' : 'approvebg';
 			// Sticky topics should get a different color, too.
 			elseif ($topic['is_sticky'] && !empty($settings['separate_sticky_lock']))
 				$color_class = 'windowbg3';

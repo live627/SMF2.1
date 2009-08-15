@@ -29,11 +29,11 @@ function template_main()
 		echo '
 		<div class="flow_hidden">
 			<h3 class="catbg">
-				<div class="floatleft">&nbsp;', $post['counter'], '&nbsp;</div>
-				<div class="floatleft">&nbsp;', $post['category']['link'], ' / ', $post['board']['link'], ' / <strong>', $post['link'], '</strong></div>
-				<div class="righttext">&nbsp;', $txt['on'], ': ', $post['time'], '&nbsp;</div>
+				<span class="floatleft">&nbsp;', $post['counter'], '&nbsp;</span>
+				<span class="floatleft">&nbsp;', $post['category']['link'], ' / ', $post['board']['link'], ' / <strong>', $post['link'], '</strong></span>
+				<span class="righttext">&nbsp;', $txt['on'], ': ', $post['time'], '&nbsp;</span>
 			</h3>
-			<div class="innerframe">
+			<div class="roundframe">
 				<h5 class="lower_padding flow_hidden">
 					<span class="align_left">', $txt['started_by'], ' ' . $post['first_poster']['link'] . ' - ' . $txt['last_post'] . ' ' . $txt['by'] . ' ' . $post['poster']['link'] . ' </span>
 					<span class="align_right">', $txt['on'], ': ', $post['time'], '</span>
