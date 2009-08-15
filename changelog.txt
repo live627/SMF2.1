@@ -49,6 +49,7 @@ August 2009
  * Stats should use the same bar (Stats template, profile template, index.css) [Bug 3668]
  ! Regenerate OpenID Diffie-Hellman keys in the daily maintenance scheduled task. (ScheduledTasks.php, Subs-OpenID.php)
  ! Upgrades were failing for PostgreSQL boards due to a REPLACE query (upgrade_2-0_postgresql.sql)
+ ! Incorrect function declaration for instr() (install_postgresql.sql)
 
 
 July 2009

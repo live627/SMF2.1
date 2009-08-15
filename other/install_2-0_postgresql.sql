@@ -103,7 +103,7 @@ CREATE OR REPLACE FUNCTION CONCAT (text, text) RETURNS text AS
 LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION INSTR (text, text) RETURNS integer AS
-  'SELECT POSITION($2 in $1) != 0 AS result'
+  'SELECT POSITION($2 in $1) AS result'
 LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION bool_not_eq_int (boolean, integer) RETURNS boolean AS
