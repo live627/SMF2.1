@@ -107,15 +107,19 @@ function template_main()
 	{
 		echo '
 <div id="events" class="tborder marginbottom">
-	<h3 class="titlebg headerpadding">	', $txt['calendar_linked_events'], '</h3>
-	<ul class="reset windowbg largepadding">';
+	<h3 class="titlebg headerpadding"><span class="left"></span>', $txt['calendar_linked_events'], '</h3>
+	<div class="windowbg">
+		<span class="topslice"><span></span></span>
+		<ul class="reset windowbg largepadding">';
 		foreach ($context['linked_calendar_events'] as $event)
 			echo '
-		<li>
+			<li>
 			', ($event['can_edit'] ? '<a href="' . $event['modify_href'] . '" style="color: red;">*</a> ' : ''), '<strong>', $event['title'], '</strong>: ', $event['start_date'], ($event['start_date'] != $event['end_date'] ? ' - ' . $event['end_date'] : ''), '
-		</li>';
+			</li>';
 		echo '
-	</ul>
+		</ul>
+		<span class="botslice"><span></span></span>
+	</div>
 </div>';
 	}
 

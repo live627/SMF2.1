@@ -54,6 +54,7 @@ August 2009
  ! Admins can now use OpenID. (Security.php, Subs-Auth.php, Login template, Admin language file)
  ! Changed the name attribute of all OpenID forms to "openid_identifier" as per the OpenID spec. (several files)
  ! New OpenID URLs must be authenticated before switching an account to them. (Profile-Modify.php, Subs-OpenID.php, Errors language file)
+ * Added a missing curve to Linked events (Display template) [Bug 3675]
 
 
 July 2009
