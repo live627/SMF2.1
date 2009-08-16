@@ -56,6 +56,7 @@ August 2009
  ! New OpenID URLs must be authenticated before switching an account to them. (Profile-Modify.php, Subs-OpenID.php, Errors language file)
  * Added a missing curve to Linked events (Display template) [Bug 3675]
  * Removed a gap beside the left button lists (index.css) [Bug 3666]
+ ! Upgrade.php didn't have the necessary meta charset (Upgrade.php) [Bug 3677]
 
 
 July 2009

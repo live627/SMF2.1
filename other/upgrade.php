@@ -3727,6 +3727,7 @@ function template_upgrade_above()
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"', $upcontext['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=', isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1', '" />
 		<meta name="robots" content="noindex" />
 		<title>', $txt['upgrade_upgrade_utility'], '</title>
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
