@@ -58,6 +58,7 @@ August 2009
  * Removed a gap beside the left button lists (index.css) [Bug 3666]
  ! Upgrade.php didn't have the necessary meta charset (Upgrade.php) [Bug 3677]
  ! Slow query - counting users using each theme resolved with an extra index (Install/upgrade sql files) [Bug 3659]
+ ! Slow query - sort by member_name or poster_name (Mysql install/upgrade sql files) [Bug 3602]
 
 
 July 2009

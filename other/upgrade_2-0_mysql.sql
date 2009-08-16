@@ -2308,53 +2308,6 @@ ADD COLUMN id_previous_topic mediumint(8) NOT NULL default '0';
 ---#
 
 /******************************************************************************/
---- Adding general table indexes.
-/******************************************************************************/
-
----# Adding index for topics table...
-ALTER TABLE {$db_prefix}topics
-ADD INDEX member_started (id_member_started, id_board);
----#
-
----# Adding another index to the topics table...
-ALTER TABLE {$db_prefix}topics
-ADD INDEX last_message_sticky (id_board, is_sticky, id_last_msg);
----#
-
-/******************************************************************************/
---- Adding new indexes to members table.
-/******************************************************************************/
-
----# Adding index on total_time_logged_in...
-ALTER TABLE {$db_prefix}members
-ADD INDEX total_time_logged_in (total_time_logged_in);
----#
-
----# Adding index on id_theme...
-ALTER TABLE {$db_prefix}members
-ADD INDEX id_theme (id_theme);
----#
-
----# Adding index on real_name...
-ALTER TABLE {$db_prefix}members
-ADD INDEX real_name (real_name(30));
----#
-
-/******************************************************************************/
---- Adding new indexes to messages table.
-/******************************************************************************/
-
----# Adding index on member id and message id...
-ALTER TABLE {$db_prefix}messages
-ADD INDEX id_member_msg (id_member, approved, id_msg);
----#
-
----# Adding index on id_topic, id_msg, id_member, approved...
-ALTER TABLE {$db_prefix}messages
-ADD INDEX current_topic (id_topic, id_msg, id_member, approved);
----#
-
-/******************************************************************************/
 --- Providing more room for apf options.
 /******************************************************************************/
 
@@ -2809,6 +2762,98 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 }
 
 ---}
+---#
+
+/******************************************************************************/
+--- Adding general table indexes.
+/******************************************************************************/
+
+---# Adding index for topics table...
+ALTER TABLE {$db_prefix}topics
+ADD INDEX member_started (id_member_started, id_board);
+---#
+
+---# Adding another index to the topics table...
+ALTER TABLE {$db_prefix}topics
+ADD INDEX last_message_sticky (id_board, is_sticky, id_last_msg);
+---#
+
+/******************************************************************************/
+--- Adding new indexes to members table.
+/******************************************************************************/
+
+---# Adding index on total_time_logged_in...
+ALTER TABLE {$db_prefix}members
+ADD INDEX total_time_logged_in (total_time_logged_in);
+---#
+
+---# Adding index on id_theme...
+ALTER TABLE {$db_prefix}members
+ADD INDEX id_theme (id_theme);
+---#
+
+---# Drop index real_name(30) ...
+---{
+// Detect existing index with limited length
+$request = upgrade_query("
+	SHOW INDEXES
+	FROM {$db_prefix}members
+	WHERE Key_name = 'real_name'
+		AND Sub_part = 30
+");
+
+// Drop the existing index before we recreate it.
+if (mysql_num_rows($request) > 0)
+	upgrade_query("
+		ALTER TABLE {$db_prefix}members
+		DROP INDEX real_name
+	");
+
+mysql_free_result($request);
+---}
+---#
+
+---# Adding index on real_name...
+ALTER TABLE {$db_prefix}members
+ADD INDEX real_name (real_name);
+---#
+
+---# Drop index member_name(30)...
+---{
+// Detect existing index with limited length
+$request = upgrade_query("
+	SHOW INDEXES
+	FROM {$db_prefix}members
+	WHERE Key_name = 'member_name'
+		AND Sub_part = 30
+");
+
+// Drop the existing index before we recreate it.
+if (mysql_num_rows($request) > 0)
+	upgrade_query("
+		ALTER TABLE {$db_prefix}members
+		DROP INDEX member_name
+	");
+---}
+---#
+
+---# Adding index on member_name...
+ALTER TABLE {$db_prefix}members
+ADD INDEX member_name (member_name);
+---#
+
+/******************************************************************************/
+--- Adding new indexes to messages table.
+/******************************************************************************/
+
+---# Adding index on member id and message id...
+ALTER TABLE {$db_prefix}messages
+ADD INDEX id_member_msg (id_member, approved, id_msg);
+---#
+
+---# Adding index on id_topic, id_msg, id_member, approved...
+ALTER TABLE {$db_prefix}messages
+ADD INDEX current_topic (id_topic, id_msg, id_member, approved);
 ---#
 
 /******************************************************************************/
