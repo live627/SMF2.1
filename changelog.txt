@@ -55,6 +55,7 @@ August 2009
  ! Changed the name attribute of all OpenID forms to "openid_identifier" as per the OpenID spec. (several files)
  ! New OpenID URLs must be authenticated before switching an account to them. (Profile-Modify.php, Subs-OpenID.php, Errors language file)
  * Added a missing curve to Linked events (Display template) [Bug 3675]
+ * Removed a gap beside the left button lists (index.css) [Bug 3666]
 
 
 July 2009

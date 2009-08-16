@@ -1170,6 +1170,10 @@ span.lowerframe span
 {
 	color: #ddf;
 }
+.align_top ul li a, .align_bottom ul li a
+{
+	margin: 0 12px 0 0;
+}
 /* a smaller quick-button list */
 ul.quickbuttons li
 {
