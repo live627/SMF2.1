@@ -2322,7 +2322,7 @@ ADD INDEX last_message_sticky (id_board, is_sticky, id_last_msg);
 ---#
 
 /******************************************************************************/
---- Adding indexes to optimize stats.
+--- Adding new indexes to members table.
 /******************************************************************************/
 
 ---# Adding index on total_time_logged_in...
@@ -2330,9 +2330,10 @@ ALTER TABLE {$db_prefix}members
 ADD INDEX total_time_logged_in (total_time_logged_in);
 ---#
 
-/******************************************************************************/
---- Adding indexes on real_name.
-/******************************************************************************/
+---# Adding index on id_theme...
+ALTER TABLE {$db_prefix}members
+ADD INDEX id_theme (id_theme);
+---#
 
 ---# Adding index on real_name...
 ALTER TABLE {$db_prefix}members
@@ -2340,17 +2341,13 @@ ADD INDEX real_name (real_name(30));
 ---#
 
 /******************************************************************************/
---- Adding index on member id and message id.
+--- Adding new indexes to messages table.
 /******************************************************************************/
 
 ---# Adding index on member id and message id...
 ALTER TABLE {$db_prefix}messages
 ADD INDEX id_member_msg (id_member, approved, id_msg);
 ---#
-
-/******************************************************************************/
---- Adding index on id_topic, id_msg, id_member, approved.
-/******************************************************************************/
 
 ---# Adding index on id_topic, id_msg, id_member, approved...
 ALTER TABLE {$db_prefix}messages

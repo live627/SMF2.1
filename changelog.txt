@@ -57,6 +57,7 @@ August 2009
  * Added a missing curve to Linked events (Display template) [Bug 3675]
  * Removed a gap beside the left button lists (index.css) [Bug 3666]
  ! Upgrade.php didn't have the necessary meta charset (Upgrade.php) [Bug 3677]
+ ! Slow query - counting users using each theme resolved with an extra index (Install/upgrade sql files) [Bug 3659]
 
 
 July 2009
