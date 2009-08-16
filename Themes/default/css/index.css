@@ -1672,13 +1672,13 @@ h4#pollquestion
 /* Poll vote options */
 #poll_options ul.options
 {
-	border-top: 1px solid #696969;
+	border-top: 1px solid #9999AA;
 	padding: 1em 2.5em 0 2em;
 	margin: 0 0 1em 0;
 }
 #poll_options div.submitbutton
 {
-	border-bottom: 1px solid #696969;
+	border-bottom: 1px solid #9999AA;
 	clear: both;
 	padding: 0 0 1em 2em;
 	margin: 0 0 1em 0;
@@ -1687,7 +1687,7 @@ h4#pollquestion
 /* Poll results */
 #poll_options dl.options
 {
-	border: solid #696969;
+	border: solid #9999AA;
 	border-width: 1px 0;
 	padding: 1em 2.5em 0 2em;
 	margin: 0 0 1em 0;
@@ -1710,7 +1710,7 @@ h4#pollquestion
 
 div#pollmoderation
 {
-	margin: 0 0 0 1em;
+	margin: 0;
 	padding: 0;
 	overflow: auto;
 }
