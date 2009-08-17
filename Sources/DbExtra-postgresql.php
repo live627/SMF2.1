@@ -191,7 +191,7 @@ function smf_db_insert_sql($tableName)
 			// Try to figure out the type of each field. (NULL, number, or 'string'.)
 			if (!isset($row[$j]))
 				$field_list[] = 'NULL';
-			elseif (is_numeric($row[$j]))
+			elseif (is_numeric($row[$j]) && (int) $row[$j] == $row[$j])
 				$field_list[] = $row[$j];
 			else
 				$field_list[] = '\'' . $smcFunc['db_escape_string']($row[$j]) . '\'';
