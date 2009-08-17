@@ -1661,6 +1661,12 @@ div#pollmoderation
 .poster
 {
 	width: 15em;
+	float: left;
+}
+.postarea .post
+{
+	float: left;
+	clear: right;
 }
 .postarea
 {
@@ -1675,7 +1681,7 @@ div.postarea .keyinfo
 {
 	float: left;
 	clear: none;
-	width: 60%;
+	width: 50%;
 	min-height: 3em;
 }
 ul.postingbuttons
