@@ -1376,7 +1376,7 @@ function Download()
 		header('Content-Length: ' . filesize($filename));
 
 	// Try to buy some time...
-	@set_time_limit(0);
+	@set_time_limit(600);
 
 	// For text files.....
 	if (!isset($_REQUEST['image']) && in_array($file_ext, array('txt', 'css', 'htm', 'html', 'php', 'xml')))

@@ -29,7 +29,7 @@ $GLOBALS['required_mysql_version'] = '3.23.28';
 $GLOBALS['required_postgresql_version'] = '7.4.10';
 
 // Buy some time
-set_time_limit(0);
+@set_time_limit(600);
 
 // When in debug mode, we log our errors. Request hasn't been properly setup yet though.
 if (isset($_GET['debug']) || isset($_POST['debug']))
@@ -3030,7 +3030,7 @@ function cmdStep0()
 
 	@ob_end_clean();
 	ob_implicit_flush(true);
-	@set_time_limit(0);
+	@set_time_limit(600);
 
 	if (!isset($_SERVER['argv']))
 		$_SERVER['argv'] = array();

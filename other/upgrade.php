@@ -3284,7 +3284,7 @@ function cmdStep0()
 
 	ob_end_clean();
 	ob_implicit_flush(true);
-	@set_time_limit(0);
+	@set_time_limit(600);
 
 	if (!isset($_SERVER['argv']))
 		$_SERVER['argv'] = array();
