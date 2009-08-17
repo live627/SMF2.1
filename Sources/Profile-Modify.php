@@ -630,7 +630,7 @@ function loadProfileFields($force_reload = false)
 			'type' => 'int',
 			'label' => $txt['profile_posts'],
 			'log_change' => true,
-			'size' => 4,
+			'size' => 7,
 			'permission' => 'moderate_forum',
 			'input_validate' => create_function('&$value', '
 				$value = $value != \'\' ? strtr($value, array(\',\' => \'\', \'.\' => \'\', \' \' => \'\')) : 0;
