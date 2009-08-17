@@ -229,7 +229,7 @@ $smcFunc['db_alter_table']('mail_queue', array(
 			'name' => 'private',
 			'null' => false,
 			'default' => 0,
-			'type' => 'tinyint',
+			'type' => 'smallint',
 			'size' => 1,
 			'auto' => false,
 		),

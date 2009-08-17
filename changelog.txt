@@ -59,6 +59,7 @@ August 2009
  ! Upgrade.php didn't have the necessary meta charset (Upgrade.php) [Bug 3677]
  ! Slow query - counting users using each theme resolved with an extra index (Install/upgrade sql files) [Bug 3659]
  ! Slow query - sort by member_name or poster_name (Mysql install/upgrade sql files) [Bug 3602]
+ ! A tiny int breaks big things (Postgresql/Sqlite sql files) [Bug 3672]
 
 
 July 2009
