@@ -62,6 +62,7 @@ August 2009
  ! A tiny int breaks big things (Postgresql/Sqlite sql files) [Bug 3672]
  ! is_numeric can mistakenly think 9e45032019 is numeric (DbExtra-xxx.php) [Bug 3679]
  ! Infinite time limit is bad (convert.php, upgrade.php, Display.php) [Bug 3597]
+ ! Don't redirect for www. when using SSI. (Load.php) [Bug 3663]
 
 
 July 2009
