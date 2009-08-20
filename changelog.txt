@@ -66,6 +66,7 @@ August 2009
  ! Move translator credits to who file (Who.php, Who.english.php, Index.english.php) [Bug 3642]
  * The advanced PM search wasn't properly aligned (PersonalMessage template, index.css) [Bug 3685]
  * Revamped the Reattribute User Posts screen (ManageMaintenance template) [Bug 3687]
+ * The memberlist stats bar was pushed onto separate lines (Memberlist template) [Bug 3686]
 
 
 July 2009
