@@ -65,6 +65,7 @@ August 2009
  ! Don't redirect for www. when using SSI. (Load.php) [Bug 3663]
  ! Move translator credits to who file (Who.php, Who.english.php, Index.english.php) [Bug 3642]
  * The advanced PM search wasn't properly aligned (PersonalMessage template, index.css) [Bug 3685]
+ * Revamped the Reattribute User Posts screen (ManageMaintenance template) [Bug 3687]
 
 
 July 2009

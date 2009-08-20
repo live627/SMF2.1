@@ -262,20 +262,29 @@ function template_maintain_members()
 			<span class="topslice"><span></span></span>
 				<div class="content">
 					<form action="', $scripturl, '?action=admin;area=maintain;sa=members;activity=reattribute" method="post" accept-charset="', $context['character_set'], '">
-						<p>', $txt['reattribute_guest_posts'], '</p>
-
-						<p class="maintain_members">
-							<label for="type_email"><input type="radio" name="type" id="type_email" value="email" checked="checked" class="input_radio" />', $txt['reattribute_email'], '</label>
-							<input type="text" name="from_email" id="from_email" value="" onclick="document.getElementById(\'type_email\').checked = \'checked\'; document.getElementById(\'from_name\').value = \'\';" /><br/>
-							<label for="type_name"><input type="radio" name="type" id="type_name" value="name" class="input_radio" />', $txt['reattribute_username'], '</label>
-							<input type="text" name="from_name" id="from_name" value="" onclick="document.getElementById(\'type_name\').checked = \'checked\'; document.getElementById(\'from_email\').value = \'\';" class="input_text" />
-						</p>
-
-						<p class="maintain_members">
-							<label for="from_name">', $txt['reattribute_current_member'], ':</label>
-							<input type="text" name="to" id="to" value="" class="input_text" />
-						</p>
-
+						<p><strong>', $txt['reattribute_guest_posts'], '</strong></p>
+						<dl class="settings">
+							<dt>
+								<label for="type_email"><input type="radio" name="type" id="type_email" value="email" checked="checked" class="input_radio" />', $txt['reattribute_email'], '</label>
+							</dt>
+							<dd>
+								<input type="text" name="from_email" id="from_email" value="" onclick="document.getElementById(\'type_email\').checked = \'checked\'; document.getElementById(\'from_name\').value = \'\';" />
+							</dd>
+							<dt>
+								<label for="type_name"><input type="radio" name="type" id="type_name" value="name" class="input_radio" />', $txt['reattribute_username'], '</label>
+							</dt>
+							<dd>
+								<input type="text" name="from_name" id="from_name" value="" onclick="document.getElementById(\'type_name\').checked = \'checked\'; document.getElementById(\'from_email\').value = \'\';" class="input_text" />
+							</dd>
+						</dl>
+						<dl class="settings">
+							<dt>
+								<label for="from_name"><strong>', $txt['reattribute_current_member'], ':</strong></label>
+							</dt>
+							<dd>
+								<input type="text" name="to" id="to" value="" class="input_text" />
+							</dd>
+						</dl>
 						<p class="maintain_members">
 							<input type="checkbox" name="posts" id="posts" checked="checked" class="input_check" />
 							<label for="posts">', $txt['reattribute_increase_posts'], '</label>
