@@ -640,6 +640,7 @@ function template_search()
 	{
 		echo '
 				<input type="hidden" name="advanced" value="1" />
+				<div class="pm_search">
 				<fieldset class="search_options align_left">
 					<legend>', $txt['pm_search_text'], '</legend>
 					<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" class="input_text" />
@@ -661,7 +662,8 @@ function template_search()
 					<legend>', $txt['pm_search_user'], '</legend>
 					<input type="text" name="userspec" value="', empty($context['search_params']['userspec']) ? '*' : $context['search_params']['userspec'], '" size="40" class="input_text" />
 				</fieldset>
-				<br style="clear: both;" />
+				</div>
+				<div class="pm_search">
 				<fieldset class="search_options align_left">
 					<legend>', $txt['pm_search_options'], '</legend>
 					<label for="show_complete"><input type="checkbox" name="show_complete" id="show_complete" value="1"', !empty($context['search_params']['show_complete']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['pm_search_show_complete'], '</label><br />
@@ -676,7 +678,7 @@ function template_search()
 					<legend>', $txt['pm_search_post_age'], '</legend>
 					', $txt['pm_search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" class="input_text" />&nbsp;', $txt['pm_search_between_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" class="input_text" /> ', $txt['pm_search_between_days'], '
 				</fieldset>
-				<br style="clear: both;" />';
+				</div>';
 
 		// Do we have some labels setup? If so offer to search by them!
 		if ($context['currently_using_labels'])

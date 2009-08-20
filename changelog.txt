@@ -64,6 +64,7 @@ August 2009
  ! Infinite time limit is bad (convert.php, upgrade.php, Display.php) [Bug 3597]
  ! Don't redirect for www. when using SSI. (Load.php) [Bug 3663]
  ! Move translator credits to who file (Who.php, Who.english.php, Index.english.php) [Bug 3642]
+ * The advanced PM search wasn't properly aligned (PersonalMessage template, index.css) [Bug 3685]
 
 
 July 2009

@@ -2886,6 +2886,14 @@ dl.stats dd
 {
 	background: #F10909;
 }
+.pm_search
+{
+	overflow: hidden;
+}
+#personal_messages fieldset.search_options
+{
+	width: 45%;
+}
 
 /* Styles for the calendar section.
 ------------------------------------------------- */
