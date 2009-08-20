@@ -853,18 +853,17 @@ function template_browse()
 			<div class="information">', $txt['no_packages'], '</div>';
 
 	echo '
-
-			<div class="padding smalltext align_left">
-				', $txt['package_installed_key'], '
-				<img src="', $settings['images_url'], '/icons/package_installed.gif" alt="" align="middle" style="margin-left: 1ex;" /> ', $txt['package_installed_current'], '
-				<img src="', $settings['images_url'], '/icons/package_old.gif" alt="" align="middle" style="margin-left: 2ex;" /> ', $txt['package_installed_old'], '
+			<div class="flow_auto">
+				<div class="padding smalltext align_left">
+					', $txt['package_installed_key'], '
+					<img src="', $settings['images_url'], '/icons/package_installed.gif" alt="" align="middle" style="margin-left: 1ex;" /> ', $txt['package_installed_current'], '
+					<img src="', $settings['images_url'], '/icons/package_old.gif" alt="" align="middle" style="margin-left: 2ex;" /> ', $txt['package_installed_old'], '
+				</div>
+				<div class="padding smalltext align_right">
+					<a href="#" onclick="document.getElementById(\'advanced_box\').style.display = document.getElementById(\'advanced_box\').style.display == \'\' ? \'none\' : \'\'; return false;">', $txt['package_advanced_button'], '</a>
+				</div>
 			</div>
-			<div class="padding smalltext align_right">
-				<a href="#" onclick="document.getElementById(\'advanced_box\').style.display = document.getElementById(\'advanced_box\').style.display == \'\' ? \'none\' : \'\'; return false;">', $txt['package_advanced_button'], '</a>
-			</div>
-			<br style="clear: both;" />
-
-		<form action="', $scripturl, '?action=admin;area=packages;sa=browse" method="get">
+			<form action="', $scripturl, '?action=admin;area=packages;sa=browse" method="get">
 			<div id="advanced_box" style="display: none;">
 				<h3 class="catbg"><span class="left"></span>
 					', $txt['package_advanced_options'], '
