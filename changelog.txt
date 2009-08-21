@@ -68,6 +68,7 @@ August 2009
  * Revamped the Reattribute User Posts screen (ManageMaintenance template) [Bug 3687]
  * The memberlist stats bar was pushed onto separate lines (Memberlist template) [Bug 3686]
  * Removed a large gap before the packages advanced area (Packages template) [Bug 3688]
+ ! UTF-8 support was still a bit buggy in PostgreSQL (install.php) [Bug 3175]
 
 
 July 2009

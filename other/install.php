@@ -59,6 +59,9 @@ $databases = array(
 		'supported' => function_exists('pg_connect'),
 		'always_has_db' => true,
 		'utf8_default' => true,
+		'utf8_support' => true,
+		'utf8_version' => '7.4.10',
+		'utf8_version_check' => '$request = pg_query(\'SELECT version()\'); list ($version) = pg_fetch_row($request); return $version;',
 		'validate_prefix' => create_function('&$value', '
 			$value = preg_replace(\'~[^A-Za-z0-9_\$]~\', \'\', $value);
 
@@ -985,12 +988,13 @@ function DatabasePopulation()
 		}
 	}
 
-	// If doing UTF8, select it.
+	// If doing UTF8, select it. PostgreSQL requires passing it as a string...
 	if (!empty($db_character_set) && $db_character_set == 'utf8' && !empty($databases[$db_type]['utf8_support']))
 		$smcFunc['db_query']('', '
-			SET NAMES utf8',
+			SET NAMES {'. $db_type == 'postgresql' ? 'string' : 'raw' .':utf8}',
 			array(
 				'db_error_skip' => true,
+				'utf8' => 'utf8',
 			)
 		);
 
@@ -1017,7 +1021,7 @@ function DatabasePopulation()
 		$replaces[') ENGINE='] = ') TYPE=';
 	// If the UTF-8 setting was enabled, add it to the table definitions.
 	//!!! Very MySQL specific still
-	if (isset($_POST['utf8']) && !empty($databases[$db_type]['utf8_support']))
+	if ($db_type == 'mysql' && isset($_POST['utf8']) && !empty($databases[$db_type]['utf8_support']))
 		$replaces[') ENGINE=MyISAM;'] = ') ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;';
 
 	// Read in the SQL.  Turn this on and that off... internationalize... etc.
