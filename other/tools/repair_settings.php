@@ -665,6 +665,9 @@ function set_settings()
 			$settingsArray[$i] = '';
 			$settingsArray[$i++] = '';
 			$settingsArray[$i++] = '';
+			$settingsArray[$i++] = '';
+			$settingsArray[$i++] = '';
+			$settingsArray[$i++] = '';
 			continue;
 		}
 
