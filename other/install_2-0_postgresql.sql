@@ -201,6 +201,7 @@ CREATE TABLE {$db_prefix}attachments (
 
 CREATE UNIQUE INDEX {$db_prefix}attachments_id_member ON {$db_prefix}attachments (id_member, id_attach);
 CREATE INDEX {$db_prefix}attachments_id_msg ON {$db_prefix}attachments (id_msg);
+CREATE INDEX {$db_prefix}attachments_attachment_type ON {$db_prefix}attachments (attachment_type);
 
 #
 # Sequence for table `ban_groups`
@@ -2465,6 +2466,7 @@ CREATE INDEX {$db_prefix}topics_is_sticky ON {$db_prefix}topics (is_sticky);
 CREATE INDEX {$db_prefix}topics_approved ON {$db_prefix}topics (approved);
 CREATE INDEX {$db_prefix}topics_id_board ON {$db_prefix}topics (id_board);
 CREATE INDEX {$db_prefix}topics_member_started ON {$db_prefix}topics (id_member_started, id_board);
+CREATE INDEX {$db_prefix}topics_last_message_sticky ON {$db_prefix}topics (id_board, is_sticky, id_last_msg);
 
 #
 # Dumping data for table `topics`

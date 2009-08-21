@@ -485,11 +485,15 @@ WHERE url = 'http://mods.simplemachines.org';
 ---#
 
 /******************************************************************************/
---- Adding general table indexes.
+--- Adding new indexes to the topics table.
 /******************************************************************************/
 
----# Adding index for topics table...
+---# Adding index member_started...
 CREATE INDEX {$db_prefix}topics_member_started ON {$db_prefix}topics (id_member_started, id_board);
+---#
+
+---# Adding index last_message_sticky...
+CREATE INDEX {$db_prefix}topics_last_message_sticky ON {$db_prefix}topics (id_board, is_sticky, id_last_msg);
 ---#
 
 /******************************************************************************/
@@ -512,12 +516,20 @@ CREATE INDEX {$db_prefix}members_real_name ON {$db_prefix}members (real_name);
 --- Adding new indexes to messages table.
 /******************************************************************************/
 
----# Adding index on member id and message id...
+---# Adding index id_member_msg...
 CREATE INDEX {$db_prefix}messages_id_member_msg ON {$db_prefix}messages (id_member, approved, id_msg);
 ---#
 
----# Adding index on id_topic, id_msg, id_member, approved...
+---# Adding index current_topic...
 CREATE INDEX {$db_prefix}messages_current_topic ON {$db_prefix}messages (id_topic, id_msg, id_member, approved);
+---#
+
+/******************************************************************************/
+--- Adding new indexes to attachments table.
+/******************************************************************************/
+
+---# Adding index on attachment_type...
+CREATE INDEX {$db_prefix}attachments_attachment_type ON {$db_prefix}attachments (attachment_type);
 ---#
 
 /******************************************************************************/

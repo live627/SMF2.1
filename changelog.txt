@@ -71,6 +71,8 @@ August 2009
  ! UTF-8 support was still a bit buggy in PostgreSQL (install.php) [Bug 3175]
  * The "edit_options" screen had "profile" text in a couple of spots even though it's not always used in the profile area (PersonalMessage.php, Profile template) [Bug 3689] 
  ! repair_settings had missing logo and some error warnings (repair_settings.php)
+ ! 2 x Slow queries - attachment related. Kill two birds with one -stone- index (install/upgrade sql files) [Bug 3613] [Bug 3616]
+ ! Missing an index for postgresql and sqlite (install/upgrade sql files)
 
 
 July 2009

@@ -2765,15 +2765,15 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 ---#
 
 /******************************************************************************/
---- Adding general table indexes.
+--- Adding new indexes to the topics table.
 /******************************************************************************/
 
----# Adding index for topics table...
+---# Adding index member_started...
 ALTER TABLE {$db_prefix}topics
 ADD INDEX member_started (id_member_started, id_board);
 ---#
 
----# Adding another index to the topics table...
+---# Adding index last_message_sticky...
 ALTER TABLE {$db_prefix}topics
 ADD INDEX last_message_sticky (id_board, is_sticky, id_last_msg);
 ---#
@@ -2792,7 +2792,7 @@ ALTER TABLE {$db_prefix}members
 ADD INDEX id_theme (id_theme);
 ---#
 
----# Drop index real_name(30) ...
+---# Dropping index on real_name(30) ...
 ---{
 // Detect existing index with limited length
 $request = upgrade_query("
@@ -2818,7 +2818,7 @@ ALTER TABLE {$db_prefix}members
 ADD INDEX real_name (real_name);
 ---#
 
----# Drop index member_name(30)...
+---# Dropping index member_name(30)...
 ---{
 // Detect existing index with limited length
 $request = upgrade_query("
@@ -2839,21 +2839,30 @@ if (mysql_num_rows($request) > 0)
 
 ---# Adding index on member_name...
 ALTER TABLE {$db_prefix}members
-ADD INDEX member_name (member_name);
+ADD INDEX on member_name (member_name);
 ---#
 
 /******************************************************************************/
 --- Adding new indexes to messages table.
 /******************************************************************************/
 
----# Adding index on member id and message id...
+---# Adding index id_member_msg...
 ALTER TABLE {$db_prefix}messages
 ADD INDEX id_member_msg (id_member, approved, id_msg);
 ---#
 
----# Adding index on id_topic, id_msg, id_member, approved...
+---# Adding index current_topic...
 ALTER TABLE {$db_prefix}messages
 ADD INDEX current_topic (id_topic, id_msg, id_member, approved);
+---#
+
+/******************************************************************************/
+--- Adding new indexes to attachments table.
+/******************************************************************************/
+
+---# Adding index on attachment_type...
+ALTER TABLE {$db_prefix}attachments
+ADD INDEX attachment_type (attachment_type);
 ---#
 
 /******************************************************************************/
