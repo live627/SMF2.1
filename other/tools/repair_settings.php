@@ -202,7 +202,7 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 	</head>
 	<body>
 		<div id="header">
-			<a href="http://www.simplemachines.org/" target="_blank"><img src="Themes/default/images/smflogo.gif" style="width: 250px; float: right;" alt="Simple Machines" border="0" /></a>
+			<a href="http://www.simplemachines.org/" target="_blank"><img src="Themes/default/images/smflogo.png" style="width: 250px; float: right;" alt="Simple Machines" border="0" /></a>
 			<div>', $txt['smf_repair_settings'], '</div>
 		</div>
 		<div id="content">';
@@ -426,29 +426,32 @@ function show_settings()
 	}
 */
 
-	// Create the values for the themes.
-	foreach ($theme_settings as $id => $theme)
+	if (!empty($theme_settings))
 	{
-		$this_theme = ($pos = strpos($theme['theme_url'], '/Themes/')) !== false ? substr($theme['theme_url'], $pos+8) : '';
-		if (!empty($this_theme))
-			$exist = file_exists(dirname(__FILE__) . '/Themes/' . $this_theme);
-		else
-			$exist = false;
+		// Create the values for the themes.
+		foreach ($theme_settings as $id => $theme)
+		{
+			$this_theme = ($pos = strpos($theme['theme_url'], '/Themes/')) !== false ? substr($theme['theme_url'], $pos+8) : '';
+			if (!empty($this_theme))
+				$exist = file_exists(dirname(__FILE__) . '/Themes/' . $this_theme);
+			else
+				$exist = false;
 
-		$known_settings['theme_path_url_settings'] += array(
-			'theme_'. $id.'_theme_url'=>array('theme', 'string', $exist && !empty($this_theme) ? $url . '/Themes/' . $this_theme : null),
-			'theme_'. $id.'_images_url'=>array('theme', 'string', $exist && !empty($this_theme) ? $url . '/Themes/' . $this_theme . '/images' : null),
-			'theme_' . $id . '_theme_dir' => array('theme', 'string', $exist && !empty($this_theme) ? realpath(dirname(__FILE__) . '/Themes/' . $this_theme) : null),
-		);
-		$settings += array(
-			'theme_' . $id . '_theme_url' => $theme['theme_url'],
-			'theme_' . $id . '_images_url' => $theme['images_url'],
-			'theme_' . $id . '_theme_dir' => $theme['theme_dir'],
-		);
+			$known_settings['theme_path_url_settings'] += array(
+				'theme_'. $id.'_theme_url'=>array('theme', 'string', $exist && !empty($this_theme) ? $url . '/Themes/' . $this_theme : null),
+				'theme_'. $id.'_images_url'=>array('theme', 'string', $exist && !empty($this_theme) ? $url . '/Themes/' . $this_theme . '/images' : null),
+				'theme_' . $id . '_theme_dir' => array('theme', 'string', $exist && !empty($this_theme) ? realpath(dirname(__FILE__) . '/Themes/' . $this_theme) : null),
+			);
+			$settings += array(
+				'theme_' . $id . '_theme_url' => $theme['theme_url'],
+				'theme_' . $id . '_images_url' => $theme['images_url'],
+				'theme_' . $id . '_theme_dir' => $theme['theme_dir'],
+			);
 
-		$txt['theme_' . $id . '_theme_url'] = $theme['name'] . ' URL';
-		$txt['theme_' . $id . '_images_url'] = $theme['name'] . ' Images URL';
-		$txt['theme_' . $id . '_theme_dir'] = $theme['name'] . ' Directory';
+			$txt['theme_' . $id . '_theme_url'] = $theme['name'] . ' URL';
+			$txt['theme_' . $id . '_images_url'] = $theme['name'] . ' Images URL';
+			$txt['theme_' . $id . '_theme_dir'] = $theme['name'] . ' Directory';
+		}
 	}
 
 	if ($db_connection == true)
