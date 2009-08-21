@@ -2958,6 +2958,8 @@ function MessageSettings()
 	$context['id_member'] = $user_info['id'];
 	$context['require_password'] = false;
 	$context['menu_item_selected'] = 'settings';
+	$context['submit_button_text'] = $txt['pm_settings'];
+	$context['profile_header_text'] = $txt['personal_messages'];
 
 	// Add our position to the linktree.
 	$context['linktree'][] = array(

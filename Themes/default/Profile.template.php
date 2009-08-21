@@ -954,8 +954,17 @@ function template_edit_options()
 		<form action="', (!empty($context['profile_custom_submit_url']) ? $context['profile_custom_submit_url'] : $scripturl . '?action=profile;area=' . $context['menu_item_selected'] . ';save'), '" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data" onsubmit="return checkProfileSubmit();">
 			<h3 class="catbg">
 				<span class="left"></span>
-				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
-				', $txt['profile'], '
+				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />';
+
+	// Don't say "Profile" if this isn't the profile...
+	if (!empty($context['profile_header_text']))
+		echo '
+				', $context['profile_header_text'];
+	else
+		echo '
+				', $txt['profile'];
+	
+	echo '
 			</h3>';
 
 	// Have we some description?
@@ -1121,8 +1130,17 @@ function template_edit_options()
 						</dl>';
 
 	echo '
-						<div class="righttext">
-							<input type="submit" value="', $txt['change_profile'], '" class="button_submit" />
+						<div class="righttext">';
+
+	// The button shouldn't say "Change profile" unless we're changing the profile...
+	if (!empty($context['submit_button_text']))
+		echo '
+							<input type="submit" value="', $context['submit_button_text'], '" class="button_submit" />';
+	else
+		echo '
+							<input type="submit" value="', $txt['change_profile'], '" class="button_submit" />';
+
+	echo '		
 							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 							<input type="hidden" name="u" value="', $context['id_member'], '" />
 							<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
