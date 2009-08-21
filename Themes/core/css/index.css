@@ -312,14 +312,14 @@ code
 .titlebg, .titlebg2, tr.titlebg td, tr.titlebg2 td
 {
 	color: black;
-	font-family: arial, helvetica, sans-serif;
+	font-family: Verdana, Helvetica, sans-serif;
 	font-weight: bold;
 	background: url(../images/titlebg.jpg) #E9F0F6 repeat-x;
 }
 .catbg, .catbg2, tr.catbg td, tr.catbg2 td, tr.catbg th, tr.catbg2 th
 {
 	color: white;
-	font-family: arial, helvetica, sans-serif;
+	font-family: Verdana, Helvetica, sans-serif;
 	font-weight: bold;
 	background: url(../images/catbg.jpg) #88A6C0 repeat-x;
 }
