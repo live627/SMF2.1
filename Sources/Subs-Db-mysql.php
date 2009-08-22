@@ -275,6 +275,17 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		$db_callback = array();
 	}
 
+	// Use "ORDER BY null" to prevent Mysql doing filesorts for Group By clauses without an Order By
+	if (strpos($db_string, 'GROUP BY') !== false && strpos($db_string, 'ORDER BY') === false)
+	{
+		// Add before LIMIT
+		if ($pos = strpos($db_string, 'LIMIT '))
+			$db_string = substr($db_string, 0, $pos) . "\t\t\tORDER BY null\n" . substr($db_string, $pos, strlen($db_string));
+		else
+			// Append it.
+			$db_string .= "\n\t\t\tORDER BY null";
+	}
+
 	// Debugging.
 	if (isset($db_show_debug) && $db_show_debug === true)
 	{
