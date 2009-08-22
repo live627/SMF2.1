@@ -125,6 +125,11 @@ function RepairBoards()
 			'calendar_updated' => time(),
 		));
 
+		if (!empty($salvageBoardID))
+		{
+			$context['redirect_to_recount'] = true;
+		}
+
 		$_SESSION['repairboards_to_fix'] = null;
 		$_SESSION['repairboards_to_fix2'] = null;
 	}
@@ -348,6 +353,105 @@ function loadForumTests()
 				'),
 			),
 			'messages' => array('repair_missing_messages', 'id_topic'),
+		),
+		'polls_missing_topics' => array(
+			'substeps' => array(
+				'step_size' => 500,
+				'step_max' => '
+					SELECT MAX(id_poll)
+					FROM {db_prefix}polls'
+			),
+			'check_query' => '
+				SELECT p.id_poll, p.id_member, p.poster_name
+				FROM {db_prefix}polls AS p
+					LEFT JOIN {db_prefix}topics AS t ON (t.id_poll = p.id_poll)
+				WHERE p.id_poll BETWEEN {STEP_LOW} AND {STEP_HIGH}
+					AND t.id_poll IS NULL',
+			'fix_processing' => create_function('$row', '
+				global $smcFunc, $salvageBoardID, $txt;
+
+				// Only if we don\'t have a reasonable idea of where to put it.
+				if ($row[\'id_board\'] == 0)
+				{
+					createSalvageArea();
+					$row[\'id_board\'] = (int) $salvageBoardID;
+				}
+
+				$row[\'poster_name\'] = !empty($row[\'poster_name\']) ? $row[\'poster_name\'] : $txt[\'guest\'];
+
+				$smcFunc[\'db_insert\'](\'\',
+					\'{db_prefix}messages\',
+					array(
+						\'id_board\' => \'int\',
+						\'id_topic\' => \'int\',
+						\'poster_time\' => \'int\',
+						\'id_member\' => \'int\',
+						\'subject\' => \'string-255\',
+						\'poster_name\' => \'string-255\',
+						\'poster_email\' => \'string-255\',
+						\'poster_ip\' => \'string-16\',
+						\'smileys_enabled\' => \'int\',
+						\'body\' => \'string-65534\',
+						\'icon\' => \'string-16\',
+						\'approved\' => \'int\',
+					),
+					array(
+						$row[\'id_board\'],
+						0,
+						time(),
+						$row[\'id_member\'],
+						$txt[\'salvaged_poll_topic_name\'],
+						$row[\'poster_name\'],
+						\'\',
+						\'127.0.0.1\',
+						1,
+						$txt[\'salvaged_poll_message_body\'],
+						\'xx\',
+						1,
+					),
+					array(\'id_topic\')
+				);
+
+				$newMessageID = $smcFunc[\'db_insert_id\']("{db_prefix}messages", \'id_msg\');
+
+				$smcFunc[\'db_insert\'](\'\',
+					\'{db_prefix}topics\',
+					array(
+						\'id_board\' => \'int\',
+						\'id_poll\' => \'int\',
+						\'id_member_started\' => \'int\',
+						\'id_member_updated\' => \'int\',
+						\'id_first_msg\' => \'int\',
+						\'id_last_msg\' => \'int\',
+						\'num_replies\' => \'int\',
+					),
+					array(
+						$row[\'id_board\'],
+						$row[\'id_poll\'],
+						$row[\'id_member\'],
+						$row[\'id_member\'],
+						$newMessageID,
+						$newMessageID,
+						0,
+					),
+					array(\'id_topic\')
+				);
+
+				$newTopicID = $smcFunc[\'db_insert_id\']("{db_prefix}topics", \'id_topic\');
+
+				$smcFunc[\'db_query\'](\'\', "
+					UPDATE {db_prefix}messages
+					SET id_topic = $newTopicID, id_board = $row[id_board]
+					WHERE id_msg = $newMessageID",
+					array(
+					)
+				);
+
+				updateStats(\'subject\', $newTopicID, $txt[\'salvaged_poll_topic_name\']);
+
+				'),
+			'force_fix' => array('stats_topics'),
+			'messages' => array('repair_polls_missing_topics', 'id_poll', 'id_topic'),
 		),
 		'stats_topics' => array(
 			'substeps' => array(

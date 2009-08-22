@@ -16,6 +16,7 @@ $txt['repair_missing_categories'] = 'Board #%1$d is in category #%2$d, which is 
 $txt['repair_missing_posters'] = 'Message #%1$d was posted by member #%2$d, who is now missing.';
 $txt['repair_missing_parents'] = 'Board #%1$d is a child of board #%2$d, which is missing.';
 $txt['repair_missing_polls'] = 'Topic #%1$d is tied to non-existent poll #%2$d.';
+$txt['repair_polls_missing_topics'] = 'Poll #%1$d is tied to non-existent topic #%2$d.';
 $txt['repair_missing_calendar_topics'] = 'Event #%1$d is tied to topic #%2$d, which is missing.';
 $txt['repair_missing_log_topics'] = 'Topic #%1$d is marked as read for one or more people, but does not exist.';
 $txt['repair_missing_log_topics_members'] = 'Member #%1$d has marked one or more topics as read, but does not exist.';
@@ -76,6 +77,8 @@ $txt['salvaged_category_error'] = 'Unable to create Salvage Area category!';
 $txt['salvaged_board_name'] = 'Salvaged Topics';
 $txt['salvaged_board_description'] = 'Topics created for messages with non-existent topics';
 $txt['salvaged_board_error'] = 'Unable to create Salvaged Topics board!';
+$txt['salvaged_poll_topic_name'] = 'Salvage Poll';
+$txt['salvaged_poll_message_body'] = 'This poll was found without a topic.';
 
 $txt['database_optimize'] = 'Optimize Database';
 $txt['database_numb_tables'] = 'Your database contains %1$d tables.';

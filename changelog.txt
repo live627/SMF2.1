@@ -74,6 +74,8 @@ August 2009
  ! 2 x Slow queries - attachment related. Kill two birds with one -stone- index (install/upgrade sql files) [Bug 3613] [Bug 3616]
  ! Missing an index for postgresql and sqlite (install/upgrade sql files)
  ! Slow query - related ips (install/sql files) [Bug 3617]
+ ! After a repair if we've created a Salvage board suggest they recount the statistics, and redirect them. (RepairBoards.php, Admin template, Admin language file)
+ ! If there are polls without topics, create a topic in the Salvage board (RepairBoards.php, ManageMaintenance language file)
 
 
 July 2009

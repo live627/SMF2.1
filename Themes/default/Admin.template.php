@@ -2000,12 +2000,25 @@ function template_repair_boards()
 	}
 	else
 	{
-		echo '
+		if (!empty($context['redirect_to_recount']))
+		{
+			echo '
+				<p>
+					', $txt['errors_do_recount'], '
+				</p>
+				<form action="', $scripturl, '?action=admin;area=maintain;sa=routine;activity=recount" id="recount_form" method="post">
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					<input type="submit" name="recount" id="recount_now" value="', $txt['errors_recount_now'], '" />
+				</form>';
+		}
+		else
+		{
+			echo '
 				<p>' , $txt['errors_fixed'], '</p>
 				<p class="padding">
 					<a href="', $scripturl, '?action=admin;area=maintain;sa=routine">', $txt['maintain_return'], '</a>
 				</p>';
-
+		}
 	}
 
 	echo '
@@ -2014,6 +2027,28 @@ function template_repair_boards()
 		</div>
 	</div>
 	<br style="clear: both;" />';
+
+	if (!empty($context['redirect_to_recount']))
+	{
+		echo '
+	<script type="text/javascript"><!-- // --><![CDATA[
+		var countdown = 5;
+		doAutoSubmit();
+
+		function doAutoSubmit()
+		{
+			if (countdown == 0)
+				document.forms.recount_form.submit();
+			else if (countdown == -1)
+				return;
+
+			document.forms.recount_form.recount_now.value = "', $txt['errors_recount_now'], ' (" + countdown + ")";
+			countdown--;
+
+			setTimeout("doAutoSubmit();", 1000);
+		}
+	// ]]></script>';
+	}
 }
 
 ?>
