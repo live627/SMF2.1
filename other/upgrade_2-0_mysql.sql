@@ -2839,7 +2839,7 @@ if (mysql_num_rows($request) > 0)
 
 ---# Adding index on member_name...
 ALTER TABLE {$db_prefix}members
-ADD INDEX on member_name (member_name);
+ADD INDEX member_name (member_name);
 ---#
 
 /******************************************************************************/
