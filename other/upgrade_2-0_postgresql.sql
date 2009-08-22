@@ -524,6 +524,10 @@ CREATE INDEX {$db_prefix}messages_id_member_msg ON {$db_prefix}messages (id_memb
 CREATE INDEX {$db_prefix}messages_current_topic ON {$db_prefix}messages (id_topic, id_msg, id_member, approved);
 ---#
 
+---# Adding index related_ip...
+CREATE INDEX {$db_prefix}messages_related_ip ON {$db_prefix}messages (id_member, poster_ip, id_msg);
+---#
+
 /******************************************************************************/
 --- Adding new indexes to attachments table.
 /******************************************************************************/

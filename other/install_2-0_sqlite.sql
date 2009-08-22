@@ -1469,6 +1469,7 @@ CREATE INDEX {$db_prefix}messages_show_posts ON {$db_prefix}messages (id_member,
 CREATE INDEX {$db_prefix}messages_id_topic ON {$db_prefix}messages (id_topic);
 CREATE INDEX {$db_prefix}messages_id_member_msg ON {$db_prefix}messages (id_member, approved, id_msg);
 CREATE INDEX {$db_prefix}messages_current_topic ON {$db_prefix}messages (id_topic, id_msg, id_member, approved);
+CREATE INDEX {$db_prefix}messages_related_ip ON {$db_prefix}messages (id_member, poster_ip, id_msg);
 #
 # Dumping data for table `messages`
 #

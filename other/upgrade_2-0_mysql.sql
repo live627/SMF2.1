@@ -2856,6 +2856,11 @@ ALTER TABLE {$db_prefix}messages
 ADD INDEX current_topic (id_topic, id_msg, id_member, approved);
 ---#
 
+---# Adding index related_ip...
+ALTER TABLE {$db_prefix}messages
+ADD INDEX related_ip (id_member, poster_ip, id_msg);
+---#
+
 /******************************************************************************/
 --- Adding new indexes to attachments table.
 /******************************************************************************/

@@ -1347,7 +1347,8 @@ CREATE TABLE {$db_prefix}messages (
   KEY show_posts (id_member, id_board),
   KEY id_topic (id_topic),
   KEY id_member_msg (id_member, approved, id_msg),
-  KEY current_topic (id_topic, id_msg, id_member, approved)
+  KEY current_topic (id_topic, id_msg, id_member, approved),
+  KEY related_ip (id_member, poster_ip, id_msg)
 ) ENGINE=MyISAM;
 
 #
