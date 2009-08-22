@@ -4012,7 +4012,7 @@ function setupMenuContext()
 		$current_action = isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'pick' ? 'profile' : 'admin';
 	elseif ($context['current_action'] == 'register2')
 		$current_action = 'register';
-	elseif (in_array($context['current_action'], array('login2', 'reminder')))
+	elseif ($context['current_action'] == 'login2')
 		$current_action = 'login';
 
 	$context['menu_buttons'][$current_action]['active_button'] = true;
