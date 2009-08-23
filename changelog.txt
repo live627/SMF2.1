@@ -78,6 +78,7 @@ August 2009
  ! If there are polls without topics, create a topic in the Salvage board (RepairBoards.php, ManageMaintenance language file)
  ! Reminder causes undefined indexes (Subs.php) [Bug 3690]
  ! Group By without order by causes filesorts (Subs-Db-Mysql.php) [Bug 3691]
+ & Viewing the administration center (Who.english.php) [Bug 3694]
 
 
 July 2009
