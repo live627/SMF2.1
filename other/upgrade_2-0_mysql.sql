@@ -2778,6 +2778,11 @@ ALTER TABLE {$db_prefix}topics
 ADD INDEX last_message_sticky (id_board, is_sticky, id_last_msg);
 ---#
 
+---# Adding index board_news...
+ALTER TABLE {$db_prefix}topics
+ADD INDEX board_news (id_board, id_first_msg);
+---#
+
 /******************************************************************************/
 --- Adding new indexes to members table.
 /******************************************************************************/

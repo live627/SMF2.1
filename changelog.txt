@@ -79,6 +79,7 @@ August 2009
  ! Reminder causes undefined indexes (Subs.php) [Bug 3690]
  ! Group By without order by causes filesorts (Subs-Db-Mysql.php) [Bug 3691]
  & Viewing the administration center (Who.english.php) [Bug 3694]
+ ! Slow query - SSI board news (Install/upgrade sql files) [Bug 3615]
 
 
 July 2009

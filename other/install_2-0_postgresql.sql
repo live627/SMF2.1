@@ -2468,6 +2468,7 @@ CREATE INDEX {$db_prefix}topics_approved ON {$db_prefix}topics (approved);
 CREATE INDEX {$db_prefix}topics_id_board ON {$db_prefix}topics (id_board);
 CREATE INDEX {$db_prefix}topics_member_started ON {$db_prefix}topics (id_member_started, id_board);
 CREATE INDEX {$db_prefix}topics_last_message_sticky ON {$db_prefix}topics (id_board, is_sticky, id_last_msg);
+CREATE INDEX {$db_prefix}topics_board_news ON {$db_prefix}topics (id_board, id_first_msg);
 
 #
 # Dumping data for table `topics`

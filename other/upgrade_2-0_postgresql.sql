@@ -496,6 +496,10 @@ CREATE INDEX {$db_prefix}topics_member_started ON {$db_prefix}topics (id_member_
 CREATE INDEX {$db_prefix}topics_last_message_sticky ON {$db_prefix}topics (id_board, is_sticky, id_last_msg);
 ---#
 
+---# Adding index board_news...
+CREATE INDEX {$db_prefix}topics_board_news ON {$db_prefix}topics (id_board, id_first_msg);
+---#
+
 /******************************************************************************/
 --- Adding new indexes to members table.
 /******************************************************************************/
