@@ -80,6 +80,7 @@ August 2009
  ! Group By without order by causes filesorts (Subs-Db-Mysql.php) [Bug 3691]
  & Viewing the administration center (Who.english.php) [Bug 3694]
  ! Slow query - SSI board news (Install/upgrade sql files) [Bug 3615]
+ ! Optimizing one sqlite table optimizes them all (ManageMaintenance.php, ScheduledTasks.php) [Bug 3141]
 
 
 July 2009

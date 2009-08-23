@@ -508,7 +508,7 @@ function scheduled_daily_maintenance()
 // Auto optimize the database?
 function scheduled_auto_optimize()
 {
-	global $modSettings, $smcFunc, $db_prefix;
+	global $modSettings, $smcFunc, $db_prefix, $db_type;
 
 	// By default do it now!
 	$delay = false;
@@ -543,8 +543,11 @@ function scheduled_auto_optimize()
 	$tables = $smcFunc['db_list_tables'](false, $db_prefix . '%');
 
 	// Actually do the optimisation.
-	foreach ($tables as $table)
-		$smcFunc['db_optimize_table']($table);
+	if ($db_type == 'sqlite')
+		$smcFunc['db_optimize_table']($table[0]);
+	else
+		foreach ($tables as $table)
+			$smcFunc['db_optimize_table']($table);
 
 	// Return for the log...
 	return true;
