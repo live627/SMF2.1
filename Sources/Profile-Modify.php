@@ -410,14 +410,14 @@ function loadProfileFields($force_reload = false)
 		'lngfile' => array(
 			'type' => 'select',
 			'options' => 'return $context[\'profile_languages\'];',
-			'label' => $txt['prefered_language'],
+			'label' => $txt['preferred_language'],
 			'permission' => 'profile_identity',
 			'preload' => 'profileLoadLanguages',
 			'enabled' => !empty($modSettings['userLanguage']),
 			'input_validate' => create_function('&$value', '
 				global $context, $cur_profile;
 
-				// Load the langauges.
+				// Load the languages.
 				profileLoadLanguages();
 
 				if (isset($context[\'profile_languages\'][$value]))
