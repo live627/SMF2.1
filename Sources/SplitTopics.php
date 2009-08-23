@@ -534,8 +534,7 @@ function SplitSelectionExecute()
 // Split a topic in two topics.
 function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 {
-	global $user_info, $topic, $board, $modSettings;
-	global $smcFunc;
+	global $user_info, $topic, $board, $modSettings, $smcFunc, $txt;
 
 	// Nothing to split?
 	if (empty($splitMessages))
@@ -694,12 +693,14 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 			UPDATE {db_prefix}messages
 			SET
 				id_topic = {int:id_topic},
-				subject = {string:new_subject}
+				subject = CASE WHEN id_msg = {int:split_first_msg} THEN {string:new_subject} ELSE {string:new_subject_replies} END
 			WHERE id_msg IN ({array_int:split_msgs})',
 			array(
 				'split_msgs' => $splitMessages,
 				'id_topic' => $split2_ID_TOPIC,
 				'new_subject' => $new_subject,
+				'split_first_msg' => $split2_first_msg,
+				'new_subject_replies' => $txt['response_prefix'] . $new_subject,
 			)
 		);
 
