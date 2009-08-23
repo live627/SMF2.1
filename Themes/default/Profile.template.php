@@ -2353,7 +2353,7 @@ function template_profile_signature_modify()
 										setInnerHTML(document.getElementById("signatureLeft"), maxLength - currentSignature.length);
 									}
 
-									setTimeout("tick()", 800);
+									addLoadEvent(tick);
 								// ]]></script>
 							</dd>';
 }

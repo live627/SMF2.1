@@ -81,6 +81,7 @@ August 2009
  & Viewing the administration center (Who.english.php) [Bug 3694]
  ! Slow query - SSI board news (Install/upgrade sql files) [Bug 3615]
  ! Optimizing one sqlite table optimizes them all (ManageMaintenance.php, ScheduledTasks.php) [Bug 3141]
+ * Don't tick before your content is ready for it (Profile.template.php) [Bug 3604]
 
 
 July 2009
