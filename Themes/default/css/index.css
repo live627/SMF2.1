@@ -2326,6 +2326,12 @@ tr.windowbg td, tr.windowbg2 td
 	background-repeat: no-repeat;
 	background-position: 98% 4px;
 }
+.topic_table td.locked_sticky2
+{
+	background-image: url(../images/icons/quick_sticky_lock.gif);
+	background-repeat: no-repeat;
+	background-position: 98% 4px;
+}
 .topic_table td.lastpost
 {
 	background-image: none;

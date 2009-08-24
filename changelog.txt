@@ -84,6 +84,7 @@ August 2009
  * Don't tick before your content is ready for it (Profile.template.php) [Bug 3604]
  ! Re: not added to titles when splitting topics (SplitTopics.php) [Bug 3601]
  & Salvaged poll typo (ManageMaintenance.english.php) [Bug 3697]
+ * Show a proper indication for sticky/locked topics (MessageIndex template, index.css) [Bug 3695]
 
 
 July 2009
