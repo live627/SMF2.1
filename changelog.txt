@@ -83,6 +83,7 @@ August 2009
  ! Optimizing one sqlite table optimizes them all (ManageMaintenance.php, ScheduledTasks.php) [Bug 3141]
  * Don't tick before your content is ready for it (Profile.template.php) [Bug 3604]
  ! Re: not added to titles when splitting topics (SplitTopics.php) [Bug 3601]
+ & Salvaged poll typo (ManageMaintenance.english.php) [Bug 3697]
 
 
 July 2009

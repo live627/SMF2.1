@@ -77,7 +77,7 @@ $txt['salvaged_category_error'] = 'Unable to create Salvage Area category!';
 $txt['salvaged_board_name'] = 'Salvaged Topics';
 $txt['salvaged_board_description'] = 'Topics created for messages with non-existent topics';
 $txt['salvaged_board_error'] = 'Unable to create Salvaged Topics board!';
-$txt['salvaged_poll_topic_name'] = 'Salvage Poll';
+$txt['salvaged_poll_topic_name'] = 'Salvaged Poll';
 $txt['salvaged_poll_message_body'] = 'This poll was found without a topic.';
 
 $txt['database_optimize'] = 'Optimize Database';
