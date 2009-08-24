@@ -2073,14 +2073,12 @@ function doStep3()
 	global $boardurl, $convert_data, $command_line, $current_step;
 
 	// Replace the conversion information.
-	convert_insert('settings',
-		array('variable' => 'string', 'value' => 'string',
+	convert_insert('settings', 
+		array('variable', 'value'),	
 		array(
-			array(
-				'conversion_time', time(),
-				'conversion_from', $_SESSION['convert_script'],
-		)),
-		'replace');
+			array('conversion_time', time()),
+			array('conversion_from', $_SESSION['convert_script'])
+		),'replace');
 
 	$current_step = 3;
 	if ($command_line)
