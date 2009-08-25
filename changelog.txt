@@ -87,6 +87,7 @@ August 2009
  * Show a proper indication for sticky/locked topics (MessageIndex template, index.css) [Bug 3695]
  * Moved and merged install.css and update.css to Themes/default/css. (install.css)
  ! No specifying a package to upload should result in better error message (PackageGet.php, Errors.english.php)
+ ! Reverse routine and database in ManageMaintenance options (Admin.php, ManageMaintenance.php) [Bug 3701]
 
 
 July 2009

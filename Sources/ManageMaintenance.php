@@ -138,8 +138,8 @@ function ManageMaintenance()
 		'title' => $txt['maintain_title'],
 		'description' => $txt['maintain_info'],
 		'tabs' => array(
-			'database' => array(),
 			'routine' => array(),
+			'database' => array(),
 			'members' => array(),
 			'topics' => array(),
 		),
@@ -147,16 +147,6 @@ function ManageMaintenance()
 
 	// So many things you can do - but frankly I won't let you - just these!
 	$subActions = array(
-		'database' => array(
-			'function' => 'MaintainDatabase',
-			'template' => 'maintain_database',
-			'activities' => array(
-				'optimize' => 'OptimizeTables',
-				'backup' => 'MaintainDownloadBackup',
-				'convertentities' => 'ConvertEntities',
-				'convertutf8' => 'ConvertUtf8',
-			),
-		),
 		'routine' => array(
 			'function' => 'MaintainRoutine',
 			'template' => 'maintain_routine',
@@ -166,6 +156,16 @@ function ManageMaintenance()
 				'recount' => 'AdminBoardRecount',
 				'logs' => 'MaintainEmptyUnimportantLogs',
 				'cleancache' => 'MaintainCleanCache',
+			),
+		),
+	'database' => array(
+			'function' => 'MaintainDatabase',
+			'template' => 'maintain_database',
+			'activities' => array(
+				'optimize' => 'OptimizeTables',
+				'backup' => 'MaintainDownloadBackup',
+				'convertentities' => 'ConvertEntities',
+				'convertutf8' => 'ConvertUtf8',
 			),
 		),
 		'members' => array(
@@ -194,7 +194,7 @@ function ManageMaintenance()
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]))
 		$subAction = $_REQUEST['sa'];
 	else
-		$subAction = 'database';
+		$subAction = 'routine';
 
 	// Doing something special?
 	if (isset($_REQUEST['activity']) && isset($subActions[$subAction]['activities'][$_REQUEST['activity']]))

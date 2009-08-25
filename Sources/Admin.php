@@ -410,8 +410,8 @@ function AdminMain()
 					'icon' => 'maintain.gif',
 					'function' => 'ManageMaintenance',
 					'subsections' => array(
-						'database' => array($txt['maintain_sub_database'], 'admin_forum'),
 						'routine' => array($txt['maintain_sub_routine'], 'admin_forum'),
+						'database' => array($txt['maintain_sub_database'], 'admin_forum'),
 						'members' => array($txt['maintain_sub_members'], 'admin_forum'),
 						'topics' => array($txt['maintain_sub_topics'], 'admin_forum'),
 					),
