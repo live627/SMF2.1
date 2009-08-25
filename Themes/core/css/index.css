@@ -2246,7 +2246,7 @@ dl
 }
 #basicinfo h4
 {
-	font-size: 180%;
+	font-size: 150%;
 	font-weight: 100;
 	line-height: 105%;
 	white-space: normal;
@@ -2335,6 +2335,14 @@ dl
 #main_admsection #basicinfo, #main_admsection #detailedinfo
 {
 	width: 100%;
+}
+#main_admsection #detailedinfo .content
+{
+	border: none !important;
+}
+#main_admsection #basicinfo
+{
+	border-bottom: 1px #ccc solid;
 }
 #main_admsection #basicinfo h4
 {

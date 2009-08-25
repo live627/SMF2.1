@@ -66,7 +66,7 @@ function template_generic_menu_sidebar_above()
 	echo '
 			</table>
 		</td>
-		<td valign="top">';
+		<td valign="top" id="main_admsection">';
 
 	// If there are any "tabs" setup, this is the place to shown them.
 	//!!! Clean this up!
