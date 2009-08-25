@@ -86,6 +86,7 @@ August 2009
  & Salvaged poll typo (ManageMaintenance.english.php) [Bug 3697]
  * Show a proper indication for sticky/locked topics (MessageIndex template, index.css) [Bug 3695]
  * Moved and merged install.css and update.css to Themes/default/css. (install.css)
+ ! No specifying a package to upload should result in better error message (PackageGet.php, Errors.english.php)
 
 
 July 2009

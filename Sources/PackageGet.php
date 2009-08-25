@@ -652,8 +652,10 @@ function PackageUpload()
 	// !!! TODO: Use FTP if the Packages directory is not writable.
 
 	// Check the file was even sent!
-	if (!isset($_FILES['package']['name']) || $_FILES['package']['name'] == '' || !is_uploaded_file($_FILES['package']['tmp_name']) || (@ini_get('open_basedir') == '' && !file_exists($_FILES['package']['tmp_name'])))
-		fatal_lang_error('package_upload_error');
+	if (!isset($_FILES['package']['name']) || $_FILES['package']['name'] == '')
+		fatal_lang_error('package_upload_error_nofile');
+	elseif(!is_uploaded_file($_FILES['package']['tmp_name']) || (@ini_get('open_basedir') == '' && !file_exists($_FILES['package']['tmp_name'])))
+		fatal_lang_error('package_upload_error_failure');
 
 	// Make sure it has a sane filename.
 	$_FILES['package']['name'] = preg_replace(array('/\s/', '/\.[\.]+/', '/[^\w_\.\-]/'), array('_', '.', ''), $_FILES['package']['name']);
