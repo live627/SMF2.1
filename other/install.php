@@ -2011,7 +2011,7 @@ function template_install_above()
 		<title>', $txt['smf_installer'], '</title>
 		<script type="text/javascript" src="Themes/default/scripts/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="Themes/default/css/index.css?rc2" />
-		<link rel="stylesheet" type="text/css" href="install.css?rc2" />
+		<link rel="stylesheet" type="text/css" href="Themes/default/css/install.css?rc2" />
 	</head>
 	<body>
 	<div id="header"><div class="frame">

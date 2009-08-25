@@ -85,6 +85,7 @@ August 2009
  ! Re: not added to titles when splitting topics (SplitTopics.php) [Bug 3601]
  & Salvaged poll typo (ManageMaintenance.english.php) [Bug 3697]
  * Show a proper indication for sticky/locked topics (MessageIndex template, index.css) [Bug 3695]
+ * Moved and merged install.css and update.css to Themes/default/css. (install.css)
 
 
 July 2009

@@ -3732,7 +3732,7 @@ function template_upgrade_above()
 		<title>', $txt['upgrade_upgrade_utility'], '</title>
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css?rc2" />
-		<link rel="stylesheet" type="text/css" href="upgrade.css?rc2" />
+		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/install.css?rc2" />
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var smf_scripturl = \'', $upgradeurl, '\';
 			var smf_charset = \'', (empty($modSettings['global_character_set']) ? (empty($txt['lang_character_set']) ? 'ISO-8859-1' : $txt['lang_character_set']) : $modSettings['global_character_set']), '\';
