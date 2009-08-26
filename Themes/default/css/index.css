@@ -273,7 +273,7 @@ code
 	border-bottom: solid 1px #000;
 	line-height: 1.3em;
 	padding: 3px 1em;
-	overflow: scroll;
+	overflow: auto;
 	white-space: nowrap;
 	/* Stop after about 24 lines, and just show a scrollbar. */
 	max-height: 24em;

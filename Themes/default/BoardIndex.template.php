@@ -407,7 +407,7 @@ function template_info_center()
 	if (!empty($context['users_online']))
 	{
 		echo '
-				<span class="smalltext">', sprintf($txt['users_active'], $modSettings['lastActive']), ':</span><br />', implode(', ', $context['list_users_online']);
+				', sprintf($txt['users_active'], $modSettings['lastActive']), ':<br />', implode(', ', $context['list_users_online']);
 
 		// Showing membergroups?
 		if (!empty($settings['show_group_key']) && !empty($context['membergroups']))

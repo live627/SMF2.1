@@ -621,6 +621,18 @@ function Credits($in_admin = false)
 		),
 	);
 
+	// Give the translators some credit for their hard work.
+	if (!empty($txt['translation_credits']))
+		$context['credits'][] = array(
+			'title' => $txt['credits_groups_translation'],
+			'groups' => array(
+				array(
+					'title' => $txt['credits_groups_translation'],
+					'members' => $txt['translation_credits'],
+				),
+			),
+		);
+
 	$context['credits'][] = array(
 		'title' => $txt['credits_special'],
 		'posttext' => $txt['credits_anyone'],
@@ -654,18 +666,6 @@ function Credits($in_admin = false)
 		),
 	);
 
-		// Give the translators some credit for their hard work.
-	if (!empty($txt['translation_credits']))
-		$context['credits'][] = array(
-			'title' => $txt['credits_groups_translation'],
-			'groups' => array(
-				array(
-					'title' => $txt['credits_groups_translation'],
-					'members' => $txt['translation_credits'],
-				),
-			),
-		);
-	
 	if (!empty($modSettings['copy_settings']) || !empty($modSettings['copyright_key']))
 	{
 		if (empty($modSettings['copy_settings']))
