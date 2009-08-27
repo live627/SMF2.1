@@ -90,6 +90,7 @@ August 2009
  ! Reverse routine and database in ManageMaintenance options (Admin.php, ManageMaintenance.php) [Bug 3701]
  ! Changed the theme settings page to be more user friendly by reordening and separating its settings. (Themes.php, Themes template, Themes language file, Settings template)
  * Invalid xhtml (ManagePaid template) [Bug 3709]
+ * Re-organized the Issue warning screen (Profile template) [Bug 3703]
 
 
 July 2009

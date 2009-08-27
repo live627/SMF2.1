@@ -1876,7 +1876,7 @@ function template_issueWarning()
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
-					<dl>';
+					<dl class="settings">';
 
 	if (!$context['user']['is_owner'])
 		echo '
@@ -1889,7 +1889,13 @@ function template_issueWarning()
 
 	echo '
 						<dt>
-							<strong>', $txt['profile_warning_level'], ':</strong>';
+							<strong>', $txt['profile_warning_level'], ':</strong>
+							<span style="padding: 0 1em;">
+								<strong>
+									<a href="#" onclick="changeWarnLevel(-5); return false;">&#171;</a>
+									<a href="#" onclick="changeWarnLevel(5); return false;">&#187;</a>
+								</strong>
+							</span>';
 
 	// Is there only so much they can apply?
 	if ($context['warning_limit'])
@@ -1901,16 +1907,13 @@ function template_issueWarning()
 						<dd>
 							<div id="warndiv1" style="display: none;">
 								<div>
-									<span style="float: left">
-										<a href="#" onclick="changeWarnLevel(-5); return false;">&#171;</a>
-										<a href="#" onclick="changeWarnLevel(5); return false;">&#187;</a>
-									</span>
 									<div id="warning_contain" style="font-size: 8pt; height: 12pt; width: ', $context['warningBarWidth'], 'px; border: 1px solid black; background-color: white; padding: 1px; position: relative;" onmousedown="setWarningBarPos(event, true);" onmousemove="setWarningBarPos(event, true);" onclick="setWarningBarPos(event);">
 										<div id="warning_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['member']['warning'], '%</div>
 										<div id="warning_progress" style="width: ', $context['member']['warning'], '%; height: 12pt; z-index: 1; background-color: ', $context['current_color'], ';">&nbsp;</div>
 									</div>
+									</span>
+									<div class="smalltext">', $txt['profile_warning_impact'], ': <span id="cur_level_div">', $context['level_effects'][$context['current_level']], '</span></div>
 								</div>
-								<div class="smalltext">', $txt['profile_warning_impact'], ': <span id="cur_level_div">', $context['level_effects'][$context['current_level']], '</span></div>
 								<input type="hidden" name="warning_level" id="warning_level" value="SAME" />
 							</div>
 							<div id="warndiv2">
