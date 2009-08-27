@@ -152,7 +152,7 @@ function template_html_above()
 
 	echo '
 </head>
-<body>';
+<body', !empty($settings['forum_width']) ? ' style="width: ' . $settings['forum_width'] . '; padding: 0 auto"' : '', '>';
 }
 
 function template_body_above()

@@ -511,19 +511,28 @@ function template_set_settings()
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
-					<dl class="settings">';
+					<dl class="settings flow_auto">';
 
 	foreach ($context['settings'] as $setting)
 	{
-		if ($setting['type'] == 'checkbox')
+		// Is this a separator?
+		if (empty($setting))
+		{
+			echo '
+					</dl>
+					<hr class="hrcolor" />
+					<dl class="settings flow_auto">';
+		}
+		// A checkbox?
+		elseif ($setting['type'] == 'checkbox')
 		{
 			echo '
 						<dt>
-							<label for="', $setting['id'], '"><strong>', $setting['label'], '</strong></label>:';
+							<label for="', $setting['id'], '">', $setting['label'], '</label>:';
 
 			if (isset($setting['description']))
 				echo '
-							<br /><span class="smalltext">', $setting['description'], '</span>';
+							<div class="smalltext">', $setting['description'], '</div>';
 
 			echo '
 						</dt>
@@ -532,15 +541,16 @@ function template_set_settings()
 							<input type="checkbox" name="', !empty($setting['default']) ? 'default_' : '', 'options[', $setting['id'], ']" id="', $setting['id'], '"', !empty($setting['value']) ? ' checked="checked"' : '', ' value="1" class="input_check" />
 						</dd>';
 		}
+		// A list with options?
 		elseif ($setting['type'] == 'list')
 		{
 			echo '
 						<dt>
-							<label for="', $setting['id'], '"><strong>', $setting['label'], '</strong></label>:';
+							<label for="', $setting['id'], '">', $setting['label'], '</label>:';
 
 			if (isset($setting['description']))
 				echo '
-							<br /><span class="smalltext">', $setting['description'], '</span>';
+							<div class="smalltext">', $setting['description'], '</div>';
 
 			echo '
 						</dt>
@@ -548,20 +558,19 @@ function template_set_settings()
 							<select name="', !empty($setting['default']) ? 'default_' : '', 'options[', $setting['id'], ']" id="', $setting['id'], '">';
 
 			foreach ($setting['options'] as $value => $label)
-			{
 				echo '
 							<option value="', $value, '"', $value == $setting['value'] ? ' selected="selected"' : '', '>', $label, '</option>';
-			}
 
 			echo '
 							</select>
 						</dd>';
 		}
+		// A regular input box, then?
 		else
 		{
 			echo '
 						<dt>
-							<label for="', $setting['id'], '"><strong>', $setting['label'], '</strong></label>';
+							<label for="', $setting['id'], '">', $setting['label'], '</label>:';
 
 			if (isset($setting['description']))
 				echo '
@@ -570,21 +579,20 @@ function template_set_settings()
 			echo '
 						</dt>
 						<dd>
-							<input type="text" name="', !empty($setting['default']) ? 'default_' : '', 'options[', $setting['id'], ']" id="', $setting['id'], '" value="', $setting['value'], '"', $setting['type'] == 'number' ? ' size="5"' : ' size="40"', ' class="input_text" />
+							<input type="text" name="', !empty($setting['default']) ? 'default_' : '', 'options[', $setting['id'], ']" id="', $setting['id'], '" value="', $setting['value'], '"', $setting['type'] == 'number' ? ' size="5"' : (empty($setting['size']) ? ' size="40"' : ' size="' . $setting['size'] . '"'), ' class="input_text" />
 						</dd>';
 		}
 	}
 
 	echo '
 					</dl>
-				<input type="submit" name="submit" value="', $txt['save'], '" class="button_submit" />
+					<input type="submit" name="submit" value="', $txt['save'], '" class="button_submit" />
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
-	</div>
-	<br style="clear: both;" />';
+	</div>';
 
 	if (!empty($context['theme_variants']))
 	{

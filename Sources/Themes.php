@@ -852,6 +852,10 @@ function SetThemeSettings()
 
 	foreach ($context['settings'] as $i => $setting)
 	{
+		// Separators are dummies, so leave them alone.
+		if (!is_array($setting))
+			continue;
+
 		if (!isset($setting['type']) || $setting['type'] == 'bool')
 			$context['settings'][$i]['type'] = 'checkbox';
 		elseif ($setting['type'] == 'int' || $setting['type'] == 'integer')
@@ -871,7 +875,7 @@ function SetThemeSettings()
 		$context['theme_variants'] = array();
 		foreach ($settings['theme_variants'] as $variant)
 		{
-			// Have any text old chap?
+			// Have any text, old chap?
 			$context['theme_variants'][$variant] = array(
 				'label' => isset($txt['variant_' . $variant]) ? $txt['variant_' . $variant] : $variant,
 				'thumbnail' => !file_exists($settings['theme_dir'] . '/images/thumbnail.gif') || file_exists($settings['theme_dir'] . '/images/thumbnail_' . $variant . '.gif') ? $settings['images_url'] . '/thumbnail_' . $variant . '.gif' : ($settings['images_url'] . '/thumbnail.gif'),
