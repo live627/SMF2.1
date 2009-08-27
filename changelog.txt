@@ -92,6 +92,7 @@ August 2009
  * Invalid xhtml (ManagePaid template) [Bug 3709]
  * Re-organized the Issue warning screen (Profile template) [Bug 3703]
  * The popup link was missing with only popup smileys enabled (Post template, GenericControls template, PersonalMessage template) [Bug 3706]
+ * Core: fixed a JS error when expanding a months log stats (Stats template) [Bug 3708] 
 
 
 July 2009
