@@ -874,7 +874,7 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 			// If this attachments has a thumb, remove it as well.
 			if (!empty($row['id_thumb']) && $autoThumbRemoval)
 			{
-				$thumb_filename = getAttachmentFilename($row['thumb_filename'], $row['id_thumb'], $row['thumb_folder'], false, $row['file_hash']);
+				$thumb_filename = getAttachmentFilename($row['thumb_filename'], $row['id_thumb'], $row['thumb_folder'], false, $row['thumb_file_hash']);
 				@unlink($thumb_filename);
 				$attach[] = $row['id_thumb'];
 			}
