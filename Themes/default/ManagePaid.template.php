@@ -190,7 +190,7 @@ function template_modify_subscription()
 								<dt>
 									', $txt['paid_per_year'], ':
 								</dt>
-								<dd
+								<dd>
 									<input type="text" name="cost_year" value="', empty($context['sub']['cost']['year']) ? '0' : $context['sub']['cost']['year'], '" size="5" class="input_text" />
 								</dd>
 							</dl>
