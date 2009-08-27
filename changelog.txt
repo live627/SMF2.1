@@ -91,6 +91,7 @@ August 2009
  ! Changed the theme settings page to be more user friendly by reordening and separating its settings. (Themes.php, Themes template, Themes language file, Settings template)
  * Invalid xhtml (ManagePaid template) [Bug 3709]
  * Re-organized the Issue warning screen (Profile template) [Bug 3703]
+ * The popup link was missing with only popup smileys enabled (Post template, GenericControls template, PersonalMessage template) [Bug 3706]
 
 
 July 2009

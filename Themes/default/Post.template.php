@@ -394,7 +394,7 @@ function template_main()
 	}
 
 	// What about smileys?
-	if (!empty($context['smileys']['postform']))
+	if (!empty($context['smileys']['postform']) || !empty($context['smileys']['popup']))
 		echo '
 							<tr>
 								<td align="right"></td>

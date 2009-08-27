@@ -117,7 +117,7 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 	}
 
 	// Now start printing all of the smileys.
-	if (!empty($context['smileys']['postform']) && !$editor_context['disable_smiley_box'] && ($display_controls == 'all' || in_array('smileys', $display_controls)))
+	if ((!empty($context['smileys']['postform']) || !empty($context['smileys']['popup'])) && !$editor_context['disable_smiley_box'] && ($display_controls == 'all' || in_array('smileys', $display_controls)))
 	{
 		// Show each row of smileys ;).
 		foreach ($context['smileys']['postform'] as $smiley_row)
@@ -134,7 +134,7 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 		// If the smileys popup is to be shown... show it!
 		if (!empty($context['smileys']['popup']))
 			echo '
-					<a onclick="editorHandle', $editor_id, '.showMoreSmileys(\'', $editor_id, '\', \'', $txt['more_smileys_title'], '\', \'', $txt['more_smileys_pick'], '\', \'', $txt['more_smileys_close_window'], '\', \'', $settings['theme_url'], '\'); return false;" href="#">[', $txt['more_smileys'], ']</a>';
+					<a onclick="editorHandle', $editor_id, '.showMoreSmileys(\'', $editor_id, '\', \'', $txt['more_smileys_title'], '\', \'', $txt['more_smileys_pick'], '\', \'', $txt['more_smileys_close_window'], '\', \'', $settings['theme_url'], '\'); return false;" href="#">[' . (!empty($context['smileys']['postform']) ? $txt['more_smileys'] : $txt['more_smileys_pick']), ']</a>';
 	}
 
 	// Finally the most important bit - the actual text box to write in!
