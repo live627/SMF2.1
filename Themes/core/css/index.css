@@ -1972,7 +1972,7 @@ fieldset.merge_options legend
 dl.register_form
 {
 	margin: 0;
-	clear: both;
+	clear: right;
 	overflow: auto;
 }
 
@@ -2006,7 +2006,6 @@ dl.register_form dd
 {
 	text-align: center;
 	padding: 1em 0;
-	clear: both;
 }
 
 .coppa_contact
