@@ -94,6 +94,7 @@ August 2009
  * The popup link was missing with only popup smileys enabled (Post template, GenericControls template, PersonalMessage template) [Bug 3706]
  * Core: fixed a JS error when expanding a months log stats (Stats template) [Bug 3708]
  * Register new member via acp had a large gap with sidebar enabled (index.css) [Bug 3710]
+ * Long usernames got cropped (index.css) [Bug 3282]
 
 
 July 2009

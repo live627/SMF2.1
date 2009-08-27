@@ -2403,15 +2403,18 @@ dl
 }
 #basicinfo h4
 {
-	font-size: 180%;
+	font-size: 135%;
 	font-weight: 100;
 	line-height: 105%;
-	white-space: normal;
+	white-space: pre-wrap; /* css-2.1 */
+	white-space: -moz-pre-wrap; /* Mozilla */
+	white-space: -o-pre-wrap; /* Opera 7 */
+	word-wrap: break-word; /* Internet Explorer 5.5+ */
 	overflow: hidden;
 }
 #basicinfo h4 span.position
 {
-	font-size: 65%;
+	font-size: 80%;
 	font-weight: 100;
 	display: block;
 }
