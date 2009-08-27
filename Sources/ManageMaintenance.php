@@ -427,6 +427,8 @@ function ConvertUtf8()
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$db_charsets[] = $row['Charset'];
 
+	$smcFunc['db_free_result']($request);
+
 	// Character sets supported by both MySQL and SMF's language files.
 	$charsets = array_intersect($charsets, $db_charsets);
 
