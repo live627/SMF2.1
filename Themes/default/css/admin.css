@@ -558,11 +558,9 @@ h3.grid_header
 	font: 1.1em bold arial, helvetica, sans-serif;
 }
 
-#error_log .filter_url
+#error_log div.filter_link
 {
-	overflow: hidden;
-	width: 100%;
-	white-space: nowrap;
+	clear: left;
 }
 
 #error_log td div.marginleft

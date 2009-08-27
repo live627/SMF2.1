@@ -224,16 +224,16 @@ blockquote
 /* A code block - maybe even PHP ;). */
 code
 {
-	color: #000000;
 	display: block;
-	font: x-small "courier new", "times new roman", monospace;
+	color: #000000;
+	font-family: "courier new", "times new roman", monospace;
+	font-size: x-small;
 	background: #dddddd;
 	border: 1px solid #000000;
 	line-height: 1.3em;
-	margin: 1px auto 1px auto;
 	padding: 1px;
 	overflow: auto;
-	white-space: pre;
+	white-space: nowrap;
 	/* Stop after about 24 lines, and just show a scrollbar. */
 	max-height: 24em;
 }

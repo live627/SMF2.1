@@ -564,7 +564,7 @@ a.moderation_link, a.moderation_link:visited
 }
 
 /* a descriptive style */
-.description
+.description, .plainbox
 {
 	padding: 0.5em 1em 1em 1em;
 	font-size: 0.9em;

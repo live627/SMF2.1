@@ -1250,14 +1250,15 @@ function template_admin_search_results()
 
 	echo '
 	<h3 class="titlebg"><span class="left"></span>
-		<div class="align_right">
+		<div id="quick_search" class="align_right">
 			<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" style="font-weight: normal; display: inline;">
 				<input type="text" name="search_term" value="', $context['search_term'], '" class="input_text" />
 				<input type="hidden" name="search_type" value="', $context['search_type'], '" />
 				<input type="submit" name="search_go" value="', $txt['admin_search_results_again'], '" class="button_submit" />
 			</form>
 		</div>
-	', $txt['admin_search_results'], '</h3>
+		', $txt['admin_search_results'], '
+	</h3>
 	<div class="windowbg nopadding">
 		<span class="topslice"><span></span></span>
 		<div class="content">
