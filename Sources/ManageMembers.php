@@ -392,7 +392,7 @@ function ViewMemberlist()
 			else
 			{
 				// Replace the wildcard characters ('*' and '?') into MySQL ones.
-				$_POST[$param_name] = strtolower(strtr($_POST[$param_name], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_')));
+				$_POST[$param_name] = strtolower(strtr($smcFunc['htmlspecialchars']($_POST[$param_name], ENT_QUOTES), array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_')));
 
 				$query_parts[] = '(' . implode( ' LIKE {string:' . $param_name . '_normal} OR ', $param_info['db_fields']) . ' LIKE {string:' . $param_name . '_normal})';
 				$where_params[$param_name . '_normal'] = '%' . $_POST[$param_name] . '%';

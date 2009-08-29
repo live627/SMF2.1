@@ -456,7 +456,7 @@ function MLSearch()
 			'regular_id_group' => 0,
 			'is_activated' => 1,
 			'blank_string' => '',
-			'search' => '%' . strtr($_POST['search'], array('_' => '\\_', '%' => '\\%', '*' => '%')) . '%',
+			'search' => '%' . strtr($smcFunc['htmlspecialchars']($_POST['search'], ENT_QUOTES), array('_' => '\\_', '%' => '\\%', '*' => '%')) . '%',
 		);
 
 		// Search for a name?

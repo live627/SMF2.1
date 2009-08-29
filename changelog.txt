@@ -98,6 +98,7 @@ August 2009
  ! Missing a free result when converting to utf8. (ManageMaintenance.php) [Bug 3700]
  ! Thumbnails not removed on removing attachment (ManageAttachments.php) [Bug 3653]
  ! BBcode inside code, nobbc, php blocks would convert when switching to switching (SubsEditor.php) [Bug 3333]
+ ! Searching for members would fail as we weren't searching with htmlspecialchar'd value (Memberlist.php, ManageMembers.php) [Bug 3714]
 
 
 July 2009
