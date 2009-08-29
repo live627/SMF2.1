@@ -99,6 +99,7 @@ August 2009
  ! Thumbnails not removed on removing attachment (ManageAttachments.php) [Bug 3653]
  ! BBcode inside code, nobbc, php blocks would convert when switching to switching (SubsEditor.php) [Bug 3333]
  ! Searching for members would fail as we weren't searching with htmlspecialchar'd value (Memberlist.php, ManageMembers.php) [Bug 3714]
+ ! Google + verification was listing a bunch of 4.0.x errors in WebmasterTools, so send a transparent pixel instead (Register.php) [Bug 2626]
 
 
 July 2009
