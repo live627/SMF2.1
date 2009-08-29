@@ -97,6 +97,7 @@ August 2009
  * Long usernames got cropped (index.css) [Bug 3282]
  ! Missing a free result when converting to utf8. (ManageMaintenance.php) [Bug 3700]
  ! Thumbnails not removed on removing attachment (ManageAttachments.php) [Bug 3653]
+ ! BBcode inside code, nobbc, php blocks would convert when switching to switching (SubsEditor.php) [Bug 3333]
 
 
 July 2009

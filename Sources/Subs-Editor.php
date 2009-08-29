@@ -104,6 +104,26 @@ function bbc_to_html($text)
 	// Turn line breaks back into br's.
 	$text = strtr($text, array("\r" => '', "\n" => '<br />'));
 
+	// Prevent conversion of all bbcode inside these bbcodes.
+	// !!! Tie in with bbc permissions ?
+	foreach(array('code', 'php', 'nobbc') as $code)
+	{
+		if (strpos($text, '['. $code) !== false)
+		{
+			$parts = preg_split('~(\[/'. $code .'\]|\['. $code .'(?:=[^\]]+)?\])~i', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+			// Only mess with stuff inside tags.
+			for ($i = 0, $n = count($parts); $i < $n; $i++)
+			{
+				// Value of 2 means we're inside the tag.
+				if ($i % 4 == 2)
+					$parts[$i] = strtr($parts[$i], array('[' => '&#91;', ']' => '&#93;', "'" => "'"));
+			}
+			// Put our humpty dumpty message back together again.
+			$text = implode('', $parts);
+		}
+	}
+
 	// What tags do we allow?
 	$allowed_tags = array('b', 'u', 'i', 's', 'hr', 'list', 'li', 'font', 'size', 'color', 'img', 'left', 'center', 'right', 'url', 'email', 'ftp', 'sub', 'sup');
 
