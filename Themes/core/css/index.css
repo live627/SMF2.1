@@ -435,7 +435,7 @@ table.table_grid thead tr.catbg th.smalltext
 	clear: right;
 	padding: 1em 0 3px 0;
 	width: 98%;
-	border-top: solid 1px #aaa;
+	border-top: solid 1px #666;
 	line-height: 1.4em;
 	font-size: 0.85em;
 }
@@ -444,7 +444,7 @@ table.table_grid thead tr.catbg th.smalltext
 	clear: right;
 	padding: 1em 0 3px 0;
 	width: 98%;
-	border-top: solid 1px #aaa;
+	border-top: solid 1px #666;
 	line-height: 1.4em;
 	font-size: 0.85em;
 }
@@ -2240,7 +2240,7 @@ dl
 }
 #detailedinfo
 {
-	width: 79%;
+	width: 78%;
 	float: right;
 }
 #basicinfo h4
@@ -2321,7 +2321,7 @@ dl
 .signature, .custom_fields_above_signature
 {
 	width: 100%;
-	border-top: 1px #ccc solid;
+	border-top: 1px #666 solid;
 }
 .signature h5
 {

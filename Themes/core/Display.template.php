@@ -418,7 +418,8 @@ function template_main()
 			echo '<div class="ignored" id="msg_', $message['id'], '_ignored_prompt">', $txt['ignoring_user'], ' <a href="#" id="msg_', $message['id'], '_ignored_link" style="display: none;">', $txt['show_ignore_user_post'], '</a></div>';
 
 		echo '
-					<div class="post">';
+					<div class="post">
+						<hr class="hrcolor" width="100%" size="1"/>';
 
 		if (!$message['approved'] && $message['member']['id'] != 0 && $message['member']['id'] == $context['user']['id'])
 			echo '

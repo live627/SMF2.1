@@ -254,6 +254,10 @@ ul.packages li
 {
 	padding: 0 13px 0 0;
 }
+.modify_boards
+{
+	padding: 0 0.5em;
+}
 /* ManageMembers */
 .msearch_details
 {
