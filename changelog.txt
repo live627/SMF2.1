@@ -104,6 +104,7 @@ August 2009
  * Inclusion of script.js used the wrong path for new themes based on curve (Index template) [Bug 3698] 
  * Core: Fading part of the fader didn't work (index.css) [Bug 03529]
  ! Google Adsense bot filling up logs with no_access errors (Several files) [Bug 1894]
+ * Remove linktree inline option from Core, but make sure to provide it for Classic (Settings.template.php)
 
 
 July 2009
