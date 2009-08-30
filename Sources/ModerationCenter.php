@@ -1336,8 +1336,7 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})') . '
 			WHERE m.id_member IN ({array_int:member_list})' . (!$modSettings['postmod_active'] || allowedTo('approve_posts') ? '' : '
 				AND m.approved = {int:is_approved}') . '
-			GROUP BY m.id_member
-			ORDER BY last_post DESC',
+			GROUP BY m.id_member',
 			array(
 				'member_list' => $members,
 				'is_approved' => 1,
