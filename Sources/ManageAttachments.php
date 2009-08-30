@@ -542,9 +542,12 @@ function list_getNumFiles($browse_type)
 	else
 		$request = $smcFunc['db_query']('', '
 			SELECT COUNT(*) AS num_attach
-			FROM {db_prefix}attachments
-			WHERE attachment_type = {int:attachment_type}
-				AND id_member = {int:guest_id_member}',
+			FROM {db_prefix}attachments AS a
+				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
+				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+				INNER JOIN {db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
+			WHERE a.attachment_type = {int:attachment_type}
+				AND a.id_member = {int:guest_id_member}',
 			array(
 				'attachment_type' => $browse_type === 'thumbs' ? '3' : '0',
 				'guest_id_member' => 0,
