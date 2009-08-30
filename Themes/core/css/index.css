@@ -1347,7 +1347,7 @@ h3#newsfader
 {
 	font-weight: bold;
 	line-height: 1.4em;
-	padding: 2em;
+	padding: 1em;
 	font-size: 1em;
 	text-align: center;
 }
@@ -1415,6 +1415,15 @@ table.boardsframe td.lastpost
 {
 	margin-right: 1em;
 	float: right;
+}
+
+/* the newsfader */
+#smfFadeScroller
+{
+	text-align: center;
+	overflow: auto;
+	height: 5em;
+	overflow: auto;
 }
 
 /* Styles for the info centre on the board index.

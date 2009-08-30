@@ -102,6 +102,7 @@ August 2009
  ! Google + verification was listing a bunch of 4.0.x errors in WebmasterTools, so send a transparent pixel instead (Register.php) [Bug 2626]
  * Core: fixed various layout bugs (Recent template, index.css) [Bug 3707]
  * Inclusion of script.js used the wrong path for new themes based on curve (Index template) [Bug 3698] 
+ * Core: Fading part of the fader didn't work (index.css) [Bug 03529]
 
 
 July 2009
