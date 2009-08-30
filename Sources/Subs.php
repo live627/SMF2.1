@@ -1014,8 +1014,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'tag' => 'anchor',
 				'type' => 'unparsed_equals',
 				'test' => '[#]?([A-Za-z][A-Za-z0-9_\-]*)\]',
-				'before' => '<span id="post_$1" />',
-				'after' => '',
+				'before' => '<span id="post_$1">',
+				'after' => '</span>',
 			),
 			array(
 				'tag' => 'b',
