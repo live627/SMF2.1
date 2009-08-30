@@ -1543,6 +1543,7 @@ form#infocenter_login ul.horizlist label
 	padding: 0.5em 0.5em 0.1em 0.5em;
 	margin: 0;
 	border-bottom: none;
+	font-weight: normal !important;
 }
 #message_index_jump_to
 {
