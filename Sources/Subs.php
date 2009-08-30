@@ -2859,7 +2859,7 @@ function trackStats($stats = array())
 	$setStringUpdate = '';
 	$insert_keys = array();
 	$date = strftime('%Y-%m-%d', forum_time(false));
-	$update_paramaters = array(
+	$update_parameters = array(
 		'current_date' => $date,
 	);
 	foreach ($cache_stats as $field => $change)
@@ -2870,7 +2870,7 @@ function trackStats($stats = array())
 		if ($change === '+')
 			$cache_stats[$field] = 1;
 		else
-			$update_paramaters[$field] = $change;
+			$update_parameters[$field] = $change;
 		$insert_keys[$field] = 'int';
 	}
 
@@ -2878,7 +2878,7 @@ function trackStats($stats = array())
 		UPDATE {db_prefix}log_activity
 		SET' . substr($setStringUpdate, 0, -1) . '
 		WHERE date = {date:current_date}',
-		$update_paramaters
+		$update_parameters
 	);
 	if ($smcFunc['db_affected_rows']() == 0)
 	{
