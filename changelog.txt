@@ -101,6 +101,7 @@ August 2009
  ! Searching for members would fail as we weren't searching with htmlspecialchar'd value (Memberlist.php, ManageMembers.php) [Bug 3714]
  ! Google + verification was listing a bunch of 4.0.x errors in WebmasterTools, so send a transparent pixel instead (Register.php) [Bug 2626]
  * Core: fixed various layout bugs (Recent template, index.css) [Bug 3707]
+ * Inclusion of script.js used the wrong path for new themes based on curve (Index template) [Bug 3698] 
 
 
 July 2009

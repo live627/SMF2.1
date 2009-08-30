@@ -76,7 +76,7 @@ function template_html_above()
 	<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 	<meta name="description" content="', $context['page_title_html_safe'], '" />
 	<meta name="keywords" content="', $context['meta_keywords'], '" />
-	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/script.js?rc2"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2"></script>
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc2"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
