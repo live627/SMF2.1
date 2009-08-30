@@ -101,7 +101,7 @@ function ScheduledTasks()
 	$context['page_title'] = $txt['maintain_tasks'];
 
 	// Saving changes?
-	if (isset($_REQUEST['save']) && isset($_POST['task']))
+	if (isset($_REQUEST['save']) && isset($_POST['enable_task']))
 	{
 		checkSession();
 
@@ -110,7 +110,7 @@ function ScheduledTasks()
 
 		// Enable and disable as required.
 		$enablers = array(0);
-		foreach ($_POST['task'] as $id => $enabled)
+		foreach ($_POST['enable_task'] as $id => $enabled)
 			if ($enabled)
 				$enablers[] = (int) $id;
 
@@ -231,7 +231,7 @@ function ScheduledTasks()
 				'data' => array(
 					'sprintf' => array(
 						'format' =>
-							'<input type="hidden" name="task[%1$d]" id="task_%1$d" value="0" /><input type="checkbox" name="task[%1$d]" id="task_check_%1$d" %2$s class="input_check" />',
+							'<input type="hidden" name="enable_task[%1$d]" id="task_%1$d" value="0" /><input type="checkbox" name="enable_task[%1$d]" id="task_check_%1$d" %2$s class="input_check" />',
 						'params' => array(
 							'id' => false,
 							'checked_state' => false,

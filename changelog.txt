@@ -107,6 +107,7 @@ August 2009
  * Remove linktree inline option from Core, but make sure to provide it for Classic (Settings.template.php)
  ! Browse screen can have invalid (inflated) page count (ManageAttachments.php) [Bug 3671]
  ! Slow query - watched users caused by unneeded ORDER BY (ModerationCenter.php) [Bug 2174]
+ ! 'Task' for $_GET, $_POST or $_REQUEST will cause conflict with integrations (ManageScheduledTasks.php) [Bug 3635]
 
 July 2009
 --------------------------------------------------------------------------------
