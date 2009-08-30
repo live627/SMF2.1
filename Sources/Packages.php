@@ -1526,7 +1526,7 @@ function PackagePermissions()
 	if (isset($_GET['restore']))
 	{
 		create_chmod_control(array(), array(), true);
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 	}
 
 	// This is a memory eat.
@@ -1830,7 +1830,7 @@ function fetchPerms__recursive($path, &$data, $level)
 
 	//!!! Shouldn't happen - but better error message?
 	if (!is_dir($path))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// This is where we put stuff we've found for sorting.
 	$foundData = array(
@@ -2041,7 +2041,7 @@ function PackagePermissionsAction()
 		}
 		// Should never get here,
 		else
-			fatal_lang_error('no_access');
+			fatal_lang_error('no_access', false);
 
 		// Setup the custom value.
 		$custom_value = octdec('0' . $context['custom_value']);

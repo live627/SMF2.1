@@ -223,7 +223,7 @@ function CustomEmail()
 	// Can they actually do this?
 	$context['show_email_address'] = showEmailAddress(!empty($row['hide_email']), $row['id_member']);
 	if ($context['show_email_address'] === 'no')
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Setup the context!
 	$context['recipient'] = array(

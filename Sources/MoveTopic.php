@@ -59,7 +59,7 @@ function MoveTopic()
 	global $txt, $board, $topic, $user_info, $context, $language, $scripturl, $settings, $smcFunc, $modSettings;
 
 	if (empty($topic))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT t.id_member_started, ms.subject, t.approved
@@ -165,7 +165,7 @@ function MoveTopic2()
 	global $board, $language, $user_info, $smcFunc;
 
 	if (empty($topic))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// You can't choose to have a redirection topic and use an empty reason.
 	if (isset($_POST['postRedirect']) && (!isset($_POST['reason']) || trim($_POST['reason']) == ''))

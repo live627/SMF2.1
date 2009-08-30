@@ -634,7 +634,7 @@ function ViewSubscribedUsers()
 	);
 	// Something wrong?
 	if ($smcFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 	// Do the subscription context.
 	$row = $smcFunc['db_fetch_assoc']($request);
 	$context['subscription'] = array(
@@ -898,13 +898,13 @@ function ModifyUserSubscription()
 			)
 		);
 		if ($smcFunc['db_num_rows']($request) == 0)
-			fatal_lang_error('no_access');
+			fatal_lang_error('no_access', false);
 		list ($context['sub_id']) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 	}
 
 	if (!isset($context['subscriptions'][$context['sub_id']]))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 	$context['current_subscription'] = $context['subscriptions'][$context['sub_id']];
 
 	// Searching?
@@ -987,7 +987,7 @@ function ModifyUserSubscription()
 				)
 			);
 			if ($smcFunc['db_num_rows']($request) == 0)
-				fatal_lang_error('no_access');
+				fatal_lang_error('no_access', false);
 
 			list ($id_member, $old_status) = $smcFunc['db_fetch_row']($request);
 			$smcFunc['db_free_result']($request);
@@ -1101,7 +1101,7 @@ function ModifyUserSubscription()
 			)
 		);
 		if ($smcFunc['db_num_rows']($request) == 0)
-			fatal_lang_error('no_access');
+			fatal_lang_error('no_access', false);
 		$row = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
 

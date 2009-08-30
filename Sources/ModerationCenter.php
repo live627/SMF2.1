@@ -166,7 +166,7 @@ function ModerationMain($dont_call = false)
 
 	// We got something - didn't we? DIDN'T WE!
 	if ($mod_include_data == false)
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Retain the ID information in case required by a subaction.
 	$context['moderation_menu_id'] = $context['max_menu_id'];
@@ -1023,7 +1023,7 @@ function ShowNotice()
 		)
 	);
 	if ($smcFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 	list ($context['notice_body'], $context['notice_subject']) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 

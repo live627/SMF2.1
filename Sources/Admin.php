@@ -477,7 +477,7 @@ function AdminMain()
 
 	// Nothing valid?
 	if ($admin_include_data == false)
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Build the link tree.
 	$context['linktree'][] = array(
@@ -731,7 +731,7 @@ function DisplayAdminFile()
 	@ini_set('memory_limit', '32M');
 
 	if (empty($_REQUEST['filename']) || !is_string($_REQUEST['filename']))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT data, filetype

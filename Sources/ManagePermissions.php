@@ -368,7 +368,7 @@ function PermissionIndex()
 		$_REQUEST['pid'] = (int) $_REQUEST['pid'];
 
 		if (!isset($context['profiles'][$_REQUEST['pid']]))
-			fatal_lang_error('no_access');
+			fatal_lang_error('no_access', false);
 
 		// Change the selected tab to better reflect that this really is a board profile.
 		$context[$context['admin_menu_name']]['current_subsection'] = 'profiles';
@@ -501,7 +501,7 @@ function SetQuickGroups()
 
 	// No modifying the predefined profiles.
 	if ($_REQUEST['pid'] > 1 && $_REQUEST['pid'] < 5)
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Clear out any cached authority.
 	updateSettings(array('settings_updated' => time()));
@@ -732,7 +732,7 @@ function ModifyMembergroup()
 	global $context, $txt, $modSettings, $smcFunc, $sourcedir;
 
 	if (!isset($_GET['group']))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	$context['group']['id'] = (int) $_GET['group'];
 
@@ -888,7 +888,7 @@ function ModifyMembergroup2()
 
 	// Cannot modify predefined profiles.
 	if ($_GET['pid'] > 1 && $_GET['pid'] < 5)
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Verify this isn't inherited.
 	if ($_GET['group'] == -1 || $_GET['group'] == 0)
@@ -1992,7 +1992,7 @@ function EditPermissionProfiles()
 			)
 		);
 		if ($smcFunc['db_num_rows']($request) != 0)
-			fatal_lang_error('no_access');
+			fatal_lang_error('no_access', false);
 		$smcFunc['db_free_result']($request);
 
 		// Oh well, delete.

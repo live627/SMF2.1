@@ -291,7 +291,7 @@ function CalendarPost()
 		$context['event'] = getEventProperties($_REQUEST['eventid']);
 
 		if ($context['event'] === false)
-			fatal_lang_error('no_access');
+			fatal_lang_error('no_access', false);
 
 		// If it has a board, then they should be editing it within the topic.
 		if (!empty($context['event']['topic']['id']) && !empty($context['event']['topic']['first_msg']))
@@ -324,7 +324,7 @@ function iCalDownload()
 
 	// Goes without saying that this is required.
 	if (!isset($_REQUEST['eventid']))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// This is kinda wanted.
 	require_once($sourcedir . '/Subs-Calendar.php');
@@ -333,7 +333,7 @@ function iCalDownload()
 	$event = getEventProperties($_REQUEST['eventid']);
 
 	if ($event === false)
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Check the title isn't too long - iCal requires some formatting if so.
 	$title = str_split($event['title'], 30);

@@ -135,7 +135,7 @@ function CollapseCategory()
 	$context['robot_no_index'] = true;
 
 	if (!isset($_GET['sa']))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Check if the input values are correct.
 	if (in_array($_REQUEST['sa'], array('expand', 'collapse', 'toggle')) && isset($_REQUEST['c']))

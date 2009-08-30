@@ -73,7 +73,7 @@ function EditorMain()
 	checkSession('get');
 
 	if (!isset($_REQUEST['view']) || !isset($_REQUEST['message']))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	$context['sub_template'] = 'sendbody';
 
@@ -1525,10 +1525,10 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 	{
 		// This cannot happen!
 		if (!isset($_SESSION[$verificationOptions['id'] . '_vv']['count']))
-			fatal_lang_error('no_access');
+			fatal_lang_error('no_access', false);
 		// ... nor this!
 		if ($thisVerification['number_questions'] && (!isset($_SESSION[$verificationOptions['id'] . '_vv']['q']) || !isset($_REQUEST[$verificationOptions['id'] . '_vv']['q'])))
-			fatal_lang_error('no_access');
+			fatal_lang_error('no_access', false);
 
 		if ($thisVerification['show_visual'] && (empty($_REQUEST[$verificationOptions['id'] . '_vv']['code']) || empty($_SESSION[$verificationOptions['id'] . '_vv']['code']) || strtoupper($_REQUEST[$verificationOptions['id'] . '_vv']['code']) !== $_SESSION[$verificationOptions['id'] . '_vv']['code']))
 			$verification_errors[] = 'wrong_verification_code';

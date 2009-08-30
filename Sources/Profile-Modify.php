@@ -1128,7 +1128,7 @@ function makeThemeChanges($memID, $id_theme)
 
 	// Can't change reserved vars.
 	if ((isset($_POST['options']) && array_intersect($_POST['options'], $reservedVars) != array()) || (isset($_POST['default_options']) && array_intersect($_POST['default_options'], $reservedVars) != array()))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Don't allow any overriding of custom fields with default or non-default options.
 	$request = $smcFunc['db_query']('', '
@@ -2991,7 +2991,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 	if (!$context['user']['is_owner'] || empty($modSettings['show_group_membership']))
 		isAllowedTo('manage_membergroups');
 	if (!isset($_REQUEST['gid']) && !isset($_POST['primary']))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	checkSession(isset($_GET['gid']) ? 'get' : 'post');
 
@@ -3032,12 +3032,12 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 
 			// Does the group type match what we're doing - are we trying to request a non-requestable group?
 			if ($changeType == 'request' && $row['group_type'] != 1)
-				fatal_lang_error('no_access');
+				fatal_lang_error('no_access', false);
 			// What about leaving a requestable group we are not a member of?
 			elseif ($changeType == 'free' && $row['group_type'] == 1 && $old_profile['id_group'] != $row['id_group'] && !isset($addGroups[$row['id_group']]))
-				fatal_lang_error('no_access');
+				fatal_lang_error('no_access', false);
 			elseif ($changeType == 'free' && $row['group_type'] != 2 && $row['group_type'] != 1)
-				fatal_lang_error('no_access');
+				fatal_lang_error('no_access', false);
 
 			// We can't change the primary group if this is hidden!
 			if ($row['hidden'] == 2)
@@ -3060,7 +3060,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 
 	// Didn't find the target?
 	if (!$foundTarget)
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Final security check, don't allow users to promote themselves to admin.
 	if ($context['can_manage_membergroups'] && !allowedTo('admin_forum'))

@@ -456,7 +456,7 @@ function DownloadLanguage()
 
 	// Clearly we need to know what to request.
 	if (!isset($_GET['did']))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Some lovely context.
 	$context['download_id'] = $_GET['did'];

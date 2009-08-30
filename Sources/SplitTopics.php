@@ -830,7 +830,7 @@ function MergeIndex()
 	global $scripturl, $topic, $user_info, $modSettings;
 
 	if (!isset($_GET['from']))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 	$_GET['from'] = (int) $_GET['from'];
 
 	$_REQUEST['targetboard'] = isset($_REQUEST['targetboard']) ? (int) $_REQUEST['targetboard'] : $board;

@@ -673,7 +673,7 @@ function validatePasswordFlood($id_member, $password_flood_value = false, $was_c
 
 	// We need a member!
 	if (!$id_member)
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Right, have we got a flood value?
 	if ($password_flood_value !== false)

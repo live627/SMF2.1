@@ -103,6 +103,7 @@ August 2009
  * Core: fixed various layout bugs (Recent template, index.css) [Bug 3707]
  * Inclusion of script.js used the wrong path for new themes based on curve (Index template) [Bug 3698] 
  * Core: Fading part of the fader didn't work (index.css) [Bug 03529]
+ ! Google Adsense bot filling up logs with no_access errors (Several files) [Bug 1894]
 
 
 July 2009

@@ -196,7 +196,7 @@ function setPassword()
 
 	// You need a code!
 	if (!isset($_REQUEST['code']))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Fill the context array.
 	$context += array(

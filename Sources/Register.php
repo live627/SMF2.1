@@ -523,7 +523,7 @@ function Activate()
 	if (empty($_REQUEST['u']) && empty($_POST['user']))
 	{
 		if (empty($modSettings['registration_method']) || $modSettings['registration_method'] == 3)
-			fatal_lang_error('no_access');
+			fatal_lang_error('no_access', false);
 
 		$context['member_id'] = 0;
 		$context['sub_template'] = 'resend';
@@ -564,7 +564,7 @@ function Activate()
 	if (isset($_POST['new_email'], $_REQUEST['passwd']) && sha1(strtolower($row['member_name']) . $_REQUEST['passwd']) == $row['passwd'])
 	{
 		if (empty($modSettings['registration_method']) || $modSettings['registration_method'] == 3)
-			fatal_lang_error('no_access');
+			fatal_lang_error('no_access', false);
 
 		// !!! Separate the sprintf?
 		if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $_POST['new_email']) == 0)
@@ -673,7 +673,7 @@ function CoppaForm()
 
 	// No User ID??
 	if (!isset($_GET['member']))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Get the user details...
 	$request = $smcFunc['db_query']('', '
@@ -687,7 +687,7 @@ function CoppaForm()
 		)
 	);
 	if ($smcFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 	list ($username) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 

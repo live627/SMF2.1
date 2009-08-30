@@ -909,7 +909,7 @@ function RemovePoll()
 			)
 		);
 		if ($smcFunc['db_num_rows']($request) == 0)
-			fatal_lang_error('no_access');
+			fatal_lang_error('no_access', false);
 		list ($topicStarter, $pollStarter) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 

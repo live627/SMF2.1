@@ -424,7 +424,7 @@ function ModifyProfile($post_errors = array())
 
 	// Oh dear, some serious security lapse is going on here... we'll put a stop to that!
 	if (!$found_area)
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Release this now.
 	unset($profile_areas);
@@ -445,7 +445,7 @@ function ModifyProfile($post_errors = array())
 	if (!isset($profile_include_data['function']) || !function_exists($profile_include_data['function']))
 	{
 		destroyMenu();
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 	}
 
 	// Build the link tree.

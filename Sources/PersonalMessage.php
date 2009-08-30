@@ -550,7 +550,7 @@ function MessageFolder()
 
 		// Make sure you have access to this PM.
 		if (!isAccessiblePM($pmID, $context['folder'] == 'sent' ? 'outbox' : 'inbox'))
-			fatal_lang_error('no_access');
+			fatal_lang_error('no_access', false);
 
 		$context['current_pm'] = $pmID;
 
@@ -602,7 +602,7 @@ function MessageFolder()
 		$pmsg = (int) $_GET['pmsg'];
 
 		if (!isAccessiblePM($pmsg, $context['folder'] == 'sent' ? 'outbox' : 'inbox'))
-			fatal_lang_error('no_access');
+			fatal_lang_error('no_access', false);
 	}
 
 	// Set up the page index.
@@ -1583,7 +1583,7 @@ function MessagePost()
 
 		// Make sure this is yours.
 		if (!isAccessiblePM($pmsg))
-			fatal_lang_error('no_access');
+			fatal_lang_error('no_access', false);
 
 		// Work out whether this is one you've received?
 		$request = $smcFunc['db_query']('', '
@@ -3000,7 +3000,7 @@ function ReportMessage()
 	$pmsg = (int) $_REQUEST['pmsg'];
 
 	if (!isAccessiblePM($pmsg, 'inbox'))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	$context['pm_id'] = $pmsg;
 	$context['page_title'] = $txt['pm_report_title'];
