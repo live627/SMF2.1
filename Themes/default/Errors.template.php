@@ -64,7 +64,7 @@ function template_error_log()
 		echo '
 				<tr>
 					<td colspan="3" class="windowbg">
-						<b>', $txt['applying_filter'], ':</b> ', $context['filter']['entity'], ' ', $context['filter']['value']['html'], ' (<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', '">', $txt['clear_filter'], '</a>)
+						<strong>', $txt['applying_filter'], ':</strong> ', $context['filter']['entity'], ' ', $context['filter']['value']['html'], ' (<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', '">', $txt['clear_filter'], '</a>)
 					</td>
 				</tr>';
 
@@ -73,7 +73,7 @@ function template_error_log()
 				<tr>
 					<td colspan="3" align="left" class="windowbg font">
 						<div class="floatright"><input type="submit" value="', $txt['remove_selection'], '" onclick="lastClicked = \'remove_selection\';" class="button_submit" /> <input type="submit" name="delall" value="', $context['has_filter'] ? $txt['remove_filtered_results'] : $txt['remove_all'], '" onclick="lastClicked = \'remove_all\';" class="button_submit" /></div>
-						&nbsp;<label for="check_all1"><input type="checkbox" id="check_all1" onclick="invertAll(this, this.form, \'delete[]\'); this.form.check_all2.checked = this.checked;" class="input_check" /><b>', $txt['check_all'], '</b></label>
+						&nbsp;<label for="check_all1"><input type="checkbox" id="check_all1" onclick="invertAll(this, this.form, \'delete[]\'); this.form.check_all2.checked = this.checked;" class="input_check" /><strong>', $txt['check_all'], '</strong></label>
 					</td>
 				</tr>';
 
@@ -132,7 +132,7 @@ function template_error_log()
 				<tr>
 					<td colspan="3" class="titlebg">
 						<div class="floatright"><input type="submit" value="', $txt['remove_selection'], '" onclick="lastClicked = \'remove_selection\';" class="button_submit" /> <input type="submit" name="delall" value="', $context['has_filter'] ? $txt['remove_filtered_results'] : $txt['remove_all'], '" onclick="lastClicked = \'remove_all\';" class="button_submit" /></div>
-						&nbsp;<label for="check_all2"><input type="checkbox" id="check_all2" onclick="invertAll(this, this.form, \'delete[]\'); this.form.check_all1.checked = this.checked;" class="input_check" /><b>', $txt['check_all'], '</b></label>
+						&nbsp;<label for="check_all2"><input type="checkbox" id="check_all2" onclick="invertAll(this, this.form, \'delete[]\'); this.form.check_all1.checked = this.checked;" class="input_check" /><strong>', $txt['check_all'], '</strong></label>
 					</td>
 				</tr>';
 	else

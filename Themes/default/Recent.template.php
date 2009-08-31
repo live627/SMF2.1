@@ -30,7 +30,7 @@ function template_main()
 		<div class="flow_hidden">
 			<h3 class="catbg"><span class="left"></span>
 				<span class="align_left">', $post['counter'], ' - </span>
-				<span class="align_left">', $post['category']['link'], ' / ', $post['board']['link'], ' / <b>', $post['link'], '</b></span>
+				<span class="align_left">', $post['category']['link'], ' / ', $post['board']['link'], ' / <strong>', $post['link'], '</strong></span>
 			</h3>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
