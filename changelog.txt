@@ -3,6 +3,11 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC2                                                                  ???
 ================================================================================
+July 2009
+--------------------------------------------------------------------------------
+ * Tabs were broken with large logo (index.css) [Bug 3719]
+
+
 August 2009
 --------------------------------------------------------------------------------
  ! Hashing admin passwords didn't accept unicode characters (script.js) [Bug 3628]

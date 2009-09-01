@@ -1329,6 +1329,8 @@ div#upper_section div.news form
 #top_section
 {
 	min-height: 65px;
+	overflow: hidden;
+	margin-bottom: 3px;
 }
 #upper_section
 {
