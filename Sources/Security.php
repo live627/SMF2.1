@@ -166,7 +166,7 @@ function validateSession()
 	{
 		require_once($sourcedir . '/Subs-OpenID.php');
 		smf_openID_revalidate();
-		
+
 		$_SESSION['admin_time'] = time();
 		return;
 	}

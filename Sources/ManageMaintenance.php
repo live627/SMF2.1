@@ -964,7 +964,7 @@ function OptimizeTables()
 		// Optimizing one sqlite table optimizes them all.
 		if ($db_type == 'sqlite')
 			break;
-		
+
 		if ($data_freed > 0)
 			$context['optimized_tables'][] = array(
 				'name' => $table['table_name'],

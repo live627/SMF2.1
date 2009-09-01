@@ -506,10 +506,10 @@ function ModifyProfile($post_errors = array())
 				// You didn't even enter a password!
 				if (trim($_POST['oldpasswrd']) == '')
 					$post_errors[] = 'no_password';
-	
+
 				// Since the password got modified due to all the $_POST cleaning, lets undo it so we can get the correct password
 				$_POST['oldpasswrd'] = un_htmlspecialchars($_POST['oldpasswrd']);
-	
+
 				// Does the integration want to check passwords?
 				$good_password = false;
 				if (isset($modSettings['integrate_verify_password']) && function_exists($modSettings['integrate_verify_password']))
@@ -519,7 +519,7 @@ function ModifyProfile($post_errors = array())
 				// Bad password!!!
 				if (!$good_password && $user_info['passwd'] != sha1(strtolower($cur_profile['member_name']) . $_POST['oldpasswrd']))
 					$post_errors[] = 'bad_password';
-	
+
 				// Warn other elements not to jump the gun and do custom changes!
 				if (in_array('bad_password', $post_errors))
 					$context['password_auth_failed'] = true;

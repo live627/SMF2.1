@@ -1689,7 +1689,7 @@ function authentication($memID, $saving = false)
 		{
 			require_once($sourcedir . '/Subs-OpenID.php');
 			$_POST['openid_identifier'] = smf_openID_canonize($_POST['openid_identifier']);
-			
+
 			if (smf_openid_member_exists($_POST['openid_identifier']))
 				$post_errors[] = 'openid_in_use';
 			elseif (empty($post_errors))
@@ -1698,7 +1698,7 @@ function authentication($memID, $saving = false)
 				if ($context['user']['is_owner'])
 				{
 					$_SESSION['new_openid_uri'] = $_POST['openid_identifier'];
-					
+
 					smf_openID_validate($_POST['openid_identifier'], false, null, 'change_uri');
 				}
 				else

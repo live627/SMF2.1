@@ -88,7 +88,7 @@ function smf_openID_validate($openid_uri, $return = false, $save_fields = array(
 function smf_openID_revalidate()
 {
 	global $user_settings;
-	
+
 	if (isset($_SESSION['openid_revalidate_time']) && $_SESSION['openid_revalidate_time'] > time() - 60)
 	{
 		unset($_SESSION['openid_revalidate_time']);
@@ -96,7 +96,7 @@ function smf_openID_revalidate()
 	}
 	else
 		smf_openID_validate($user_settings['openid_uri'], false, null, 'revalidate');
-	
+
 	// We shouldn't get here.
 	trigger_error('Hacking attempt...', E_USER_ERROR);
 }
@@ -149,7 +149,7 @@ function smf_openID_makeAssociation($server)
 
 	// We'll need to get our keys for the Diffie-Hellman key exchange.
 	$dh_keys = smf_openID_setup_DH();
-	
+
 	// If we don't support DH we'll have to see if the provider will accept no encryption.
 	if ($dh_keys === false)
 		$parameters[] = 'openid.session_type=';
@@ -300,13 +300,13 @@ function smf_openID_return()
 	{
 		// Update the member.
 		updateMemberData($user_settings['id_member'], array('openid_uri' => $openid_uri));
-		
+
 		unset($_SESSION['new_openid_uri']);
 		$_SESSION['openid'] = array(
 			'verified' => true,
 			'openid_uri' => $openid_uri,
 		);
-		
+
 		// Send them back to profile.
 		redirectexit('action=profile;area=authentication;updated');
 	}
@@ -338,12 +338,12 @@ function smf_openID_return()
 	elseif (isset($_GET['sa']) && $_GET['sa'] == 'revalidate' && $user_settings['openid_uri'] == $openid_uri)
 	{
 		$_SESSION['openid_revalidate_time'] = time();
-		
+
 		// Restore the get data.
 		require_once($sourcedir . '/Subs-Auth.php');
 		$_SESSION['openid']['saved_data'][$_GET['t']]['get']['openid_restore_post'] = $_GET['t'];
 		$query_string = construct_query_string($_SESSION['openid']['saved_data'][$_GET['t']]['get']);
-		
+
 		redirectexit($query_string);
 	}
 	else
@@ -406,25 +406,25 @@ function smf_openid_member_exists($url)
 function smf_openID_setup_DH($regenerate = false)
 {
 	global $p, $g;
-	
+
 	// First off, do we have BC Math available?
 	if (!function_exists('bcpow'))
 		return false;
-	
+
 	// Defined in OpenID spec.
 	$p = '155172898181473697471232257763715539915724801966915404479707795314057629378541917580651227423698188993727816152646631438561595825688188889951272158842675419950341258706556549803580104870537681476726513255747040765857479291291572334510643245094715007229621094194349783925984760375594985848253359305585439638443';
 	$g = '2';
-	
+
 	// Make sure the scale is set.
 	bcscale(0);
-	
+
 	return smf_openID_get_keys($regenerate);
 }
 
 function smf_openID_get_keys($regenerate)
 {
 	global $modSettings, $p, $g;
-	
+
 	// Ok lets take the easy way out, are their any keys already defined for us? They are changed in the daily maintenance scheduled task.
 	if (!empty($modSettings['dh_keys']) && !$regenerate)
 	{
@@ -503,13 +503,13 @@ function smf_openID_getServerInfo($openid_url)
 	{
 		if (preg_match('~rel="([\s\S]*?)"~i', $link_match, $rel_match) == 0 || preg_match('~href="([\s\S]*?)"~i', $link_match, $href_match) == 0)
 			continue;
-		
+
 		$rels = preg_split('~\s+~', $rel_match[1]);
 		foreach ($rels as $rel)
 			if (preg_match('~openid2?\.(server|delegate|provider)~i', $rel, $match) != 0)
 				$response_data[$match[1]] = $href_match[1];
-	}	
-	
+	}
+
 	if (empty($response_data['server']))
 		if (empty($response_data['provider']))
 			fatal_lang_error('openid_server_bad_response');
@@ -596,10 +596,10 @@ function long_to_binary($value)
 function binary_xor($num1, $num2)
 {
 	$return = '';
-	
+
 	for ($i = 0; $i < strlen($num2); $i++)
 		$return .= $num1[$i] ^ $num2[$i];
-		
+
 	return $return;
 }
 

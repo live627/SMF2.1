@@ -46,7 +46,7 @@ $txt['manual_section_calendar'] = 'Calendar';
 $txt['manual_section_bbc_ag'] = 'BBC: A-G';
 $txt['manual_section_bbc_hq'] = 'BBC: H-Q';
 $txt['manual_section_bbc_rz'] = 'BBC: R-Z';
- 
+
 // Entries
 $txt['manual_entry_profile_info_summary'] = 'Summary';
 $txt['manual_entry_profile_info_posts'] = 'Show Posts';

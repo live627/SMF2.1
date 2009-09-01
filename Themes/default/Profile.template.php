@@ -963,7 +963,7 @@ function template_edit_options()
 	else
 		echo '
 				', $txt['profile'];
-	
+
 	echo '
 			</h3>';
 
@@ -1140,7 +1140,7 @@ function template_edit_options()
 		echo '
 							<input type="submit" value="', $txt['change_profile'], '" class="button_submit" />';
 
-	echo '		
+	echo '
 							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 							<input type="hidden" name="u" value="', $context['id_member'], '" />
 							<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
@@ -2683,7 +2683,7 @@ function template_authentication_method()
 								</dl>
 							</dd>
 						</dl>';
-								
+
 	if ($context['require_password'])
 		echo '
 						<hr width="100%" size="1" class="hrcolor" />
@@ -2696,7 +2696,7 @@ function template_authentication_method()
 								<input type="password" name="oldpasswrd" size="20" style="margin-right: 4ex;" class="input_password" />
 							</dd>
 						</dl>';
-	
+
 	echo '
 						<div class="righttext">
 							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />

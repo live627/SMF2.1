@@ -334,9 +334,9 @@ function adminLogin_outputPostVars($k, $v)
 function construct_query_string($get)
 {
 	global $scripturl;
-	
+
 	$query_string = '';
-	
+
 	// Awww, darn.  The $scripturl contains GET stuff!
 	$q = strpos($scripturl, '?');
 	if ($q !== false)
