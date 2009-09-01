@@ -401,7 +401,7 @@ function showPosts($memID)
 		if ($context['is_topics'])
 			$margin *= 5;
 
-		$range_limit = $reverse ? 'id_msg < ' . ($min_msg_member + $margin) : 'id_msg > ' . ($max_msg_member - $margin);
+		$range_limit = $reverse ? 'm.id_msg < ' . ($min_msg_member + $margin) : 'm.id_msg > ' . ($max_msg_member - $margin);
 	}
 
 	// Find this user's posts.  The left join on categories somehow makes this faster, weird as it looks.
