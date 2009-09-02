@@ -274,7 +274,7 @@ code
 	line-height: 1.3em;
 	padding: 3px 1em;
 	overflow: auto;
-	white-space: nowrap;
+	white-space: pre;
 	/* Stop after about 24 lines, and just show a scrollbar. */
 	max-height: 24em;
 }

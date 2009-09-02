@@ -3,11 +3,6 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC2                                                                  ???
 ================================================================================
-July 2009
---------------------------------------------------------------------------------
- * Tabs were broken with large logo (index.css) [Bug 3719]
-
-
 August 2009
 --------------------------------------------------------------------------------
  ! Hashing admin passwords didn't accept unicode characters (script.js) [Bug 3628]
@@ -113,6 +108,10 @@ August 2009
  ! Browse screen can have invalid (inflated) page count (ManageAttachments.php) [Bug 3671]
  ! Slow query - watched users caused by unneeded ORDER BY (ModerationCenter.php) [Bug 2174]
  ! 'Task' for $_GET, $_POST or $_REQUEST will cause conflict with integrations (ManageScheduledTasks.php) [Bug 3635]
+ * Tabs were broken with large logo (index.css) [Bug 3719]
+ ! Set 'nohtml' as the default input mask of custom profile fields, as we run them through htmlspecialchars() anyway. (Profile-Modify.php)
+ & Cleaned up the edit profile field page by splitting off a few descriptions into help popups. (Admin template, Help language file, ManageSettings language file)
+
 
 July 2009
 --------------------------------------------------------------------------------
