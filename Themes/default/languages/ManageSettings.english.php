@@ -243,7 +243,7 @@ $txt['custom_edit_mask_number'] = 'Numeric';
 $txt['custom_edit_mask_nohtml'] = 'No HTML';
 $txt['custom_edit_mask_regex'] = 'Regex (Advanced)';
 $txt['custom_edit_enclose'] = 'Show Enclosed Within Text (Optional)';
-$txt['custom_edit_enclose_desc'] = 'We <strong>strongly</strong> recommend to use an input mask to validate the input supplied by the user.</p>';
+$txt['custom_edit_enclose_desc'] = 'We <strong>strongly</strong> recommend to use an input mask to validate the input supplied by the user.';
 
 $txt['custom_edit_placement'] = 'Choose Placement';
 $txt['custom_edit_placement_standard'] = 'Standard (with title)';
