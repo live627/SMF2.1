@@ -188,6 +188,10 @@ function EditHoliday()
 	$context['page_title'] = $context['is_new'] ? $txt['holidays_add'] : $txt['holidays_edit'];
 	$context['sub_template'] = 'edit_holiday';
 
+	// Cast this for safety...
+	if (isset($_REQUEST['holiday']))
+		$_REQUEST['holiday'] = (int) $_REQUEST['holiday'];
+
 	// Submitting?
 	if (isset($_POST[$context['session_var']]) && (isset($_REQUEST['delete']) || $_REQUEST['title'] != ''))
 	{
