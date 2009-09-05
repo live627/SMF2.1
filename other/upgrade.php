@@ -4096,7 +4096,7 @@ function template_welcome_message()
 				if (currentVersion < window.smfVersion)
 					document.getElementById(\'version_warning\').style.display = \'\';
 			}
-			add_load_event(smfCurrentVersion);
+			addLoadEvent(smfCurrentVersion);
 
 			// This checks that the script file even exists!
 			if (typeof(smfSelectText) == \'undefined\')
