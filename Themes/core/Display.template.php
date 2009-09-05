@@ -395,7 +395,7 @@ function template_main()
 						<li><a href="', $scripturl, '?action=deletemsg;topic=', $context['current_topic'], '.', $context['start'], ';msg=', $message['id'], ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', $remove_button, '</a></li>';
 
 		// What about splitting it off the rest of the topic?
-		if ($context['can_split'])
+		if ($context['can_split'] && !empty($context['num_replies']))
 			echo '
 						<li><a href="', $scripturl, '?action=splittopics;topic=', $context['current_topic'], '.0;at=', $message['id'], '">', $split_button, '</a></li>';
 

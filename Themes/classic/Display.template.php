@@ -432,7 +432,7 @@ function template_main()
 									<a href="', $scripturl, '?action=deletemsg;topic=', $context['current_topic'], '.', $context['start'], ';msg=', $message['id'], ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/delete.gif" alt="' . $txt['remove_message'] . '" border="0" />' : $txt['remove']), '</a>';
 
 		// What about splitting it off the rest of the topic?
-		if ($context['can_split'])
+		if ($context['can_split'] !empty($context['num_replies']))
 			echo '
 									<a href="', $scripturl, '?action=splittopics;topic=', $context['current_topic'], '.0;at=', $message['id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/split.gif" alt="' . $txt['split'] . '" border="0" />' : $txt['split']), '</a>';
 
