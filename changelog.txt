@@ -9,6 +9,9 @@ September 2009
  * If a topic only contains one post it shouldn't show the split topic button (Display template) [Bug 3725]
  ! renamed functions caused a JS error (Install.php, Upgrade.php) [Bug 3683]
  ! Slow query - members topics (Profile-View.php) [Bug 3392]
+ ! Some files didn't have latest copyright (install.php, upgrade.php, ssi_examples.php, ssi_examples.shtml) [Bug 3723]
+ ! Shtml version had php function call (ssi_examples.shtml)
+
 
 August 2009
 --------------------------------------------------------------------------------

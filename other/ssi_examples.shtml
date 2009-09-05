@@ -1,11 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
-		<title> &lt;&lt; :: SMF SSI.php 2.0 RC1 :: &gt;&gt; </title>
+		<title> &lt;&lt; :: SMF SSI.php 2.0 RC2 :: &gt;&gt; </title>
 	</head>
 	<body style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt;">
 			<h1>SMF SSI.php Functions</h1>
-			Current Version 2.0 RC1<br />
+			Current Version 2.0 RC2<br />
 			<br />
 			This file is used to demonstrate the capabilities of SSI.php using SHTML include functions.<br />
 			The examples the include tag, then the results of it. Examples are separated by horizontal rules.<br />
@@ -142,11 +142,16 @@
 
 		<hr />
 
-			<h3>Recent Attachments Function &lt;?php ssi_recentAttachments(); ?&gt;</h3>
-			<?php ssi_recentAttachments(); flush(); ?>
+			<h3>Recent Attachments Function &lt;!--#include virtual="./SSI.php?ssi_function=recentAttachments" --&gt;</h3>
+			<!--#include virtual="./SSI.php?ssi_function=recentAttachments" -->
 
 		<hr />
 
+		<br />
+		<br />
+		<span style="font-size: smaller;">
+			<a href="http://www.simplemachines.org/" title="Free Forum Software" target="_blank">SMF &copy; 2006&ndash;2009, Simple Machines LLC</a>
+		</span>
 		<br />
 		<br />
 		<span style="font-size: smaller; color: #CCCCCC;">
