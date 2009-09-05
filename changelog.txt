@@ -8,7 +8,7 @@ September 2009
  ! Holidays need to be checked (ManageCalendar.php)
  * If a topic only contains one post it shouldn't show the split topic button (Display template) [Bug 3725]
  ! renamed functions caused a JS error (Install.php, Upgrade.php) [Bug 3683]
-
+ ! Slow query - members topics (Profile-View.php) [Bug 3392]
 
 August 2009
 --------------------------------------------------------------------------------

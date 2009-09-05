@@ -399,37 +399,67 @@ function showPosts($memID)
 		$margin = floor(($max_msg_member - $min_msg_member) * (($start + $modSettings['defaultMaxMessages']) / $msgCount) + .1 * ($max_msg_member - $min_msg_member));
 		// Make a bigger margin for topics only.
 		if ($context['is_topics'])
+		{
 			$margin *= 5;
-
-		$range_limit = $reverse ? 'm.id_msg < ' . ($min_msg_member + $margin) : 'm.id_msg > ' . ($max_msg_member - $margin);
+			$range_limit = $reverse ? 't.id_first_msg < ' . ($min_msg_member + $margin) : 't.id_first_msg > ' . ($max_msg_member - $margin);
+		}
+		else
+			$range_limit = $reverse ? 'm.id_msg < ' . ($min_msg_member + $margin) : 'm.id_msg > ' . ($max_msg_member - $margin);
 	}
 
 	// Find this user's posts.  The left join on categories somehow makes this faster, weird as it looks.
 	$looped = false;
 	while (true)
 	{
-		$request = $smcFunc['db_query']('', '
-			SELECT
-				b.id_board, b.name AS bname, c.id_cat, c.name AS cname, m.id_topic, m.id_msg,
-				t.id_member_started, t.id_first_msg, t.id_last_msg, m.body, m.smileys_enabled,
-				m.subject, m.poster_time
-			FROM {db_prefix}messages AS m
-				INNER JOIN {db_prefix}topics AS t ON (' . ($context['is_topics'] ? 't.id_first_msg = m.id_msg' : 't.id_topic = m.id_topic') . ')
-				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
-				LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-			WHERE m.id_member = {int:current_member}' . (!empty($board) ? '
-				AND m.id_board = {int:board}' : '') . (empty($range_limit) ? '' : '
-				AND ' . $range_limit) . '
-				AND {query_see_board}' . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
-				AND m.approved = {int:is_approved} AND t.approved = {int:is_approved}') . '
-			ORDER BY m.id_msg ' . ($reverse ? 'ASC' : 'DESC') . '
-			LIMIT ' . $start . ', ' . $maxIndex,
-			array(
-				'current_member' => $memID,
-				'is_approved' => 1,
-				'board' => $board,
-			)
-		);
+		if ($context['is_topics'])
+		{
+			$request = $smcFunc['db_query']('', '
+				SELECT
+					b.id_board, b.name AS bname, c.id_cat, c.name AS cname, t.id_member_started, t.id_first_msg, t.id_last_msg,
+					m.body, m.smileys_enabled, m.subject, m.poster_time, m.id_topic, m.id_msg
+				FROM {db_prefix}topics AS t
+					INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+					LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
+					INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+				WHERE t.id_member_started = {int:current_member}' . (!empty($board) ? '
+					AND t.id_board = {int:board}' : '') . (empty($range_limit) ? '' : '
+					AND ' . $range_limit) . '
+					AND {query_see_board}' . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
+					AND t.approved = {int:is_approved} AND m.approved = {int:is_approved}') . '
+				ORDER BY t.id_first_msg ' . ($reverse ? 'ASC' : 'DESC') . '
+				LIMIT ' . $start . ', ' . $maxIndex,
+				array(
+					'current_member' => $memID,
+					'is_approved' => 1,
+					'board' => $board,
+				)
+			);
+		}
+		else
+		{
+			$request = $smcFunc['db_query']('', '
+				SELECT
+					b.id_board, b.name AS bname, c.id_cat, c.name AS cname, m.id_topic, m.id_msg,
+					t.id_member_started, t.id_first_msg, t.id_last_msg, m.body, m.smileys_enabled,
+					m.subject, m.poster_time
+				FROM {db_prefix}messages AS m
+					INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+					INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+					LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
+				WHERE m.id_member = {int:current_member}' . (!empty($board) ? '
+					AND b.id_board = {int:board}' : '') . (empty($range_limit) ? '' : '
+					AND ' . $range_limit) . '
+					AND {query_see_board}' . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
+					AND t.approved = {int:is_approved} AND m.approved = {int:is_approved}') . '
+				ORDER BY m.id_msg ' . ($reverse ? 'ASC' : 'DESC') . '
+				LIMIT ' . $start . ', ' . $maxIndex,
+				array(
+					'current_member' => $memID,
+					'is_approved' => 1,
+					'board' => $board,
+				)
+			);
+		}
 
 		// Make sure we quit this loop.
 		if ($smcFunc['db_num_rows']($request) === $maxIndex || $looped)
