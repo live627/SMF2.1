@@ -35,7 +35,7 @@ if (!defined('SMF'))
 class sphinx_search
 {
 	// This is the last version of SMF that this was tested on, to protect against API changes.
-	public $version_compatible = 'SMF 2.0 RC1';
+	public $version_compatible = 'SMF 2.0 RC2';
 	// This won't work with versions of SMF less than this.
 	public $min_smf_version = 'SMF 2.0 Beta 2';
 	// Is it supported?

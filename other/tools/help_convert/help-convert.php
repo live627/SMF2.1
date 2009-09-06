@@ -4,7 +4,7 @@ $dirname = dirname(__FILE__);
 require_once($dirname . '/help-list.php');
 
 // For generating the file.
-$current_version = '2.0 RC1';
+$current_version = '2.0 RC2';
 
 // Start with an index validation.
 echo '<strong>Starting Verification of help index</strong><br />';

@@ -28,7 +28,7 @@ if (!empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($modified_since) >= 
 
 // Do as little PHP as poss.
 if (isset($_GET['version']) && strpos($_GET['version'], '2.0') !== false)
-	$version = 'SMF 2.0 RC1';
+	$version = 'SMF 2.0 RC2';
 else
 	$version = 'SMF 1.1.4';
 
