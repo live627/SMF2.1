@@ -97,7 +97,7 @@ function DumpDatabase2()
 			ob_clean();
 
 		// Tell the client to save this file, even though it's text.
-		header('Content-Type: application/octet-stream');
+		header('Content-Type: ' . ($context['browser']['is_ie'] || $context['browser']['is_opera'] ? 'application/octetstream' : 'application/octet-stream'));
 		header('Content-Encoding: none');
 
 		// This time the extension should just be .sql.

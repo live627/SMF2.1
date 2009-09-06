@@ -324,7 +324,7 @@ function step_999()
 		header('Content-Transfer-Encoding: binary');
 	header('Connection: close');
 	header('Content-Disposition: attachment; filename="sphinx.conf"');
-	header('Content-Type: application/octet-stream');
+	header('Content-Type: ' . ($context['browser']['is_ie'] || $context['browser']['is_opera'] ? 'application/octetstream' : 'application/octet-stream'));
 
 	$weight_factors = array(
 		'age',

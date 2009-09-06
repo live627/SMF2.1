@@ -719,7 +719,7 @@ function CoppaForm()
 			// Send the headers.
 			header('Connection: close');
 			header('Content-Disposition: attachment; filename="approval.txt"');
-			header('Content-Type: application/octet-stream');
+			header('Content-Type: ' . ($context['browser']['is_ie'] || $context['browser']['is_opera'] ? 'application/octetstream' : 'application/octet-stream'));
 			header('Content-Length: ' . count($data));
 
 			echo $data;
