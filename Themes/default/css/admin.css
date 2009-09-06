@@ -226,6 +226,11 @@ ul.packages li
 	border: none !important;
 	list-style-type: none;
 }
+/*BBC permissions*/
+.list_bbc
+{
+	width: 32%;
+}
 
 /*ManageBoards*/
 #manage_boards ul

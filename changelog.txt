@@ -12,6 +12,7 @@ September 2009
  ! Some files didn't have latest copyright (install.php, upgrade.php, ssi_examples.php, ssi_examples.shtml) [Bug 3723]
  ! Shtml version had php function call (ssi_examples.shtml)
  * invalid CSS (index.css) [Bug 3727]
+ * BBCode list was drawn in one line instead of multi-lines (Admin template, admin.css) [Bug 3731]
 
 
 August 2009
