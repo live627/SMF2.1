@@ -44,7 +44,7 @@ function template_init()
 
 	/* The version this template/theme is for.
 		This should probably be the version of SMF it was created for. */
-	$settings['theme_version'] = '2.0 RC2';
+	$settings['theme_version'] = '2.0 RC1';
 
 	/* Set a setting that tells the theme that it can render the tabs. */
 	$settings['use_tabs'] = false;
