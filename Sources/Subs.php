@@ -3246,7 +3246,7 @@ function template_header()
 		if (in_array($layer, array('body', 'main')) && allowedTo('admin_forum') && !$user_info['is_guest'] && !$checked_securityFiles)
 		{
 			$checked_securityFiles = true;
-			$securityFiles = array('install.php', 'webinstall.php', 'upgrade.php', 'convert.php', 'repair_paths.php', 'repair_settings.php', 'Settings.php~', 'Settings.php~', 'Settings_bak.php~');
+			$securityFiles = array('install.php', 'webinstall.php', 'upgrade.php', 'convert.php', 'repair_paths.php', 'repair_settings.php', 'Settings.php~', 'Settings_bak.php~');
 			foreach ($securityFiles as $i => $securityFile)
 			{
 				if (!file_exists($boarddir . '/' . $securityFile))
@@ -3267,7 +3267,7 @@ function template_header()
 				', $txt['not_removed'], '<strong>', $securityFile, '</strong>!<br />';
 
 					if ($securityFile == 'Settings.php~' || $securityFile == 'Settings_bak.php~')
-					echo '
+						echo '
 				', sprintf($txt['not_removed_extra'], $securityFile, substr($securityFile, 0, -1)), '<br />';
 				}
 
