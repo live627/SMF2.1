@@ -283,7 +283,7 @@ function smf_db_insert_sql($tableName)
 	$num_rows = $smcFunc['db_num_rows']($result);
 	$current_row = 0;
 
-	if ($num_rows == 0 || $tableName != 'smf_settings')
+	if ($num_rows == 0)
 		return '';
 
 	$fields = array_keys($smcFunc['db_fetch_assoc']($result));
