@@ -15,6 +15,7 @@ September 2009
  * BBCode list was drawn in one line instead of multi-lines (Admin template, admin.css) [Bug 3731]
  ! Octet-stream bug, use octetstream for ie and opera otherwise they don't offer the file to download (Few files)
  ! Tables with a no. of rows divisible exactly by 250 would backup with bad sql (DbExtra-Xxx.php)
+ ! IE8 bug with bouncy textareas.  Set max-width and min-width instead of width for fullreply, quick reply, quickedit etc (Few files) [Bug 3354]
 
 
 August 2009

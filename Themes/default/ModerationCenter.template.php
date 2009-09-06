@@ -795,7 +795,7 @@ function template_warn_template()
 							<span class="smalltext">', $txt['mc_warning_template_body_desc'], '</span>
 						</dt>
 						<dd>
-							<textarea id="template_body" name="template_body" style="width: 96%" rows="8" cols="40" class="smalltext">', $context['template_data']['body'], '</textarea>
+							<textarea id="template_body" name="template_body" style="', $context['browser']['is_ie8'] ? 'max-width: 96%; min-width: 96%' : 'width: 96%', '" rows="8" cols="40" class="smalltext">', $context['template_data']['body'], '</textarea>
 						</dd>
 					</dl>';
 

@@ -642,7 +642,7 @@ function template_main()
 				<strong>', $txt['verification'], ':</strong>', template_control_verification($context['visual_verification_id'], 'quick_reply'), '<br />';
 
 		echo '
-				<textarea cols="75" rows="7" style="width: 95%; height: 100px;" name="message" tabindex="1"></textarea><br />
+				<textarea cols="75" rows="7" style="', $context['browser']['is_ie8'] ? 'max-width: 95%; min-width: 95%' : 'width: 95%', '; height: 100px;" name="message" tabindex="1"></textarea><br />
 				<input type="submit" name="post" value="', $txt['post'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="2" class="button_submit" />
 				<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="4" class="button_submit" />';
 		if ($context['show_spellchecking'])
@@ -714,7 +714,7 @@ function template_main()
 			sTemplateBodyEdit: ', JavaScriptEscape('
 				<div id="quick_edit_body_container">
 					<div id="error_box" class="error" style="padding: 4px;"></div>
-					<textarea class="editor" name="message" rows="12" style="width: 94%; margin-bottom: 10px;" tabindex="7">%body%</textarea><br />
+					<textarea class="editor" name="message" rows="12" style="', $context['browser']['is_ie8'] ? 'max-width: 94%; min-width: 94%' : 'width: 94%', '; margin-bottom: 10px;" tabindex="7">%body%</textarea><br />
 					<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 					<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />
 					<input type="hidden" name="msg" value="%msg_id%" />

@@ -136,14 +136,11 @@ function template_html_above()
 	// Output any remaining HTML headers. (from mods, maybe?)
 	echo $context['html_headers'];
 
-	// IE7 needs some fixes for styles.
-	if ($context['browser']['is_ie7'])
-		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ie7.css" />';
-	// ..and IE6!
-	elseif ($context['browser']['is_ie6'])
-		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ie6.css" />';
+	// Some browsers need an extra stylesheet due to bugs/compatibility issues.
+	foreach(array('ie7', 'ie6', 'ie8', 'firefox', 'webkit') as $cssfix)
+		if ($context['browser']['is_' . $cssfix])
+			echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/', $cssfix, '.css" />';
 
 	// RTL languages require an additional stylesheet.
 	if ($context['right_to_left'])
