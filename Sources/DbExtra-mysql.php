@@ -283,7 +283,7 @@ function smf_db_insert_sql($tableName)
 	$num_rows = $smcFunc['db_num_rows']($result);
 	$current_row = 0;
 
-	if ($num_rows == 0)
+	if ($num_rows == 0 || $tableName != 'smf_settings')
 		return '';
 
 	$fields = array_keys($smcFunc['db_fetch_assoc']($result));
@@ -313,12 +313,12 @@ function smf_db_insert_sql($tableName)
 		// 'Insert' the data.
 		$data .= '(' . implode(', ', $field_list) . ')';
 
-		// Start a new INSERT statement after every 250....
-		if ($current_row > 249 && $current_row % 250 == 0)
-			$data .= ';' . $crlf . 'INSERT INTO `' . $tableName . '`' . $crlf . "\t" . '(`' . implode('`, `', $fields) . '`)' . $crlf . 'VALUES ';
 		// All done!
-		elseif ($current_row == $num_rows)
+		if ($current_row == $num_rows)
 			$data .= ';' . $crlf;
+		// Start a new INSERT statement after every 250....
+		elseif ($current_row > 249 && $current_row % 250 == 0)
+			$data .= ';' . $crlf . 'INSERT INTO `' . $tableName . '`' . $crlf . "\t" . '(`' . implode('`, `', $fields) . '`)' . $crlf . 'VALUES ';
 		// Otherwise, go to the next line.
 		else
 			$data .= ',' . $crlf . "\t";

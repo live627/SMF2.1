@@ -167,7 +167,6 @@ function smf_db_insert_sql($tableName)
 
 	// The number of rows, just for record keeping and breaking INSERTs up.
 	$num_rows = $smcFunc['db_num_rows']($result);
-	$current_row = 0;
 
 	if ($num_rows == 0)
 		return '';
@@ -182,8 +181,6 @@ function smf_db_insert_sql($tableName)
 	// Loop through each row.
 	while ($row = $smcFunc['db_fetch_row']($result))
 	{
-		$current_row++;
-
 		// Get the fields in this row...
 		$field_list = array();
 		for ($j = 0; $j < $smcFunc['db_num_fields']($result); $j++)

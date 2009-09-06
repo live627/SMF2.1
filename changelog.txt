@@ -14,6 +14,7 @@ September 2009
  * invalid CSS (index.css) [Bug 3727]
  * BBCode list was drawn in one line instead of multi-lines (Admin template, admin.css) [Bug 3731]
  ! Octet-stream bug, use octetstream for ie and opera otherwise they don't offer the file to download (Few files)
+ ! Tables with a no. of rows divisible exactly by 250 would backup with bad sql (DbExtra-Xxx.php)
 
 
 August 2009
