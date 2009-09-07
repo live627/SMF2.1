@@ -194,7 +194,9 @@ function is_not_guest($message = '')
 	if (isset($_REQUEST['xml']))
 		obExit(false);
 
-	$_SESSION['login_url'] = $_SERVER['REQUEST_URL'];
+	// Never redirect to an attachment
+	if (strpos($_SESSION['old_url'], 'dlattach') === false)
+		$_SESSION['login_url'] = $_SERVER['REQUEST_URL'];
 
 	// Load the Login template and language file.
 	loadLanguage('Login');

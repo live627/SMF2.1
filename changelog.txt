@@ -17,6 +17,7 @@ September 2009
  ! Tables with a no. of rows divisible exactly by 250 would backup with bad sql (DbExtra-Xxx.php)
  ! IE8 bug with bouncy textareas.  Set max-width and min-width instead of width for fullreply, quick reply, quickedit etc (Few files) [Bug 3354]
  ! Warn admin to delete some files if they exist (Subs.php, index.english.php) [Bug 3728]
+ ! Never redirect on login to an attachment (Few files)
 
 
 August 2009
