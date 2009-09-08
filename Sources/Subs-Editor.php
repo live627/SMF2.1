@@ -1587,7 +1587,7 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 			$character_range = !empty($verificationOptions['override_range']) ? $verificationOptions['override_range'] : $context['standard_captcha_range'];
 
 			$_SESSION[$verificationOptions['id'] . '_vv']['code'] = '';
-			for ($i = 0; $i < 5; $i++)
+			for ($i = 0; $i < 6; $i++)
 				$_SESSION[$verificationOptions['id'] . '_vv']['code'] .= $character_range[array_rand($character_range)];
 		}
 

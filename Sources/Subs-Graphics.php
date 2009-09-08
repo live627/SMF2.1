@@ -303,7 +303,7 @@ function createThumbnail($source, $max_width, $max_height)
 	$destName = $source . '_thumb.tmp';
 
 	// Ask for more memory: we need it for this, and it'll only happen once!
-	@ini_set('memory_limit', '64M');
+	@ini_set('memory_limit', '90M');
 
 	$success = false;
 	$sizes = getimagesize($source);
@@ -654,27 +654,27 @@ function showCodeImage($code)
 
 	// Some quick references for what we do.
 	// Do we show no, low or high noise?
-	$noiseType = $imageType == 3 ? 'low' : ($imageType == 4 ? 'high' : 'none');
+	$noiseType = $imageType == 3 ? 'low' : ($imageType == 4 ? 'high' : ($imageType == 5 ? 'extreme' : 'none'));
 	// Can we have more than one font in use?
-	$varyFonts = $imageType == 4 ? true : false;
+	$varyFonts = $imageType > 3 ? true : false;
 	// Just a plain white background?
-	$simpleBGColor = $imageType != 4 ? true : false;
+	$simpleBGColor = $imageType < 3 ? true : false;
 	// Plain black foreground?
 	$simpleFGColor = $imageType == 0 ? true : false;
 	// High much to rotate each character.
-	$rotationType = $imageType == 1 ? 'none' : ($imageType != 4 ? 'high' : 'low');
+	$rotationType = $imageType == 1 ? 'none' : ($imageType > 3 ? 'low' : 'high');
 	// Do we show some characters inversed?
-	$showReverseChars = $imageType == 4 ? true : false;
+	$showReverseChars = $imageType > 3 ? true : false;
 	// Special case for not showing any characters.
 	$disableChars = $imageType == 0 ? true : false;
 	// What do we do with the font colors. Are they one color, close to one color or random?
-	$fontColorType = $imageType == 1 ? 'plain' : ($imageType == 4 ? 'random' : 'cyclic');
+	$fontColorType = $imageType == 1 ? 'plain' : ($imageType > 3 ? 'random' : 'cyclic');
 	// Are the fonts random sizes?
-	$fontSizeRandom = $imageType == 4 ? true : false;
+	$fontSizeRandom = $imageType > 3 ? true : false;
 	// How much space between characters?
-	$fontHorSpace = $imageType == 4 ? 'high' : ($imageType == 1 ? 'medium' : 'minus');
+	$fontHorSpace = $imageType > 3 ? 'high' : ($imageType == 1 ? 'medium' : 'minus');
 	// Where do characters sit on the image? (Fixed position or random/very random)
-	$fontVerPos = $imageType == 1 ? 'fixed' : ($imageType == 4 ? 'vrandom' : 'random');
+	$fontVerPos = $imageType == 1 ? 'fixed' : ($imageType > 3 ? 'vrandom' : 'random');
 	// Make font semi-transparent?
 	$fontTrans = $imageType == 2 || $imageType == 3 ? true : false;
 	// Give the image a border?
@@ -781,6 +781,19 @@ function showCodeImage($code)
 	for ($i = 0; $i < 3; $i++)
 		$dotbgcolor[$i] = $background_color[$i] < $foreground_color[$i] ? mt_rand(0, max($foreground_color[$i] - 20, 0)) : mt_rand(min($foreground_color[$i] + 20, 255), 255);
 	$randomness_color = imagecolorallocate($code_image, $dotbgcolor[0], $dotbgcolor[1], $dotbgcolor[2]);
+
+	// Some squares/rectanges for new extreme level
+	if ($noiseType == 'extreme')
+	{
+		for ($i = 0; $i < rand(1, 5); $i++)
+		{
+			$x1 = rand(0, $total_width / 4);
+			$x2  = $x1 + round(rand($total_width / 4, $total_width));
+			$y1 = rand(0, $max_height);
+			$y2  = $y1 + round(rand(0, $max_height / 3));
+			imagefilledrectangle($code_image, $x1, $y1, $x2, $y2, mt_rand(0, 1) ? $fg_color : $randomness_color);
+		}
+	}
 
 	// Fill in the characters.
 	if (!$disableChars)
@@ -895,13 +908,13 @@ function showCodeImage($code)
 	if ($noiseType != 'none')
 	{
 		for ($i = mt_rand(0, 2); $i < $max_height; $i += mt_rand(1, 2))
-			for ($j = mt_rand(0, 10); $j < $total_width; $j += mt_rand(1, 15))
+			for ($j = mt_rand(0, 10); $j < $total_width; $j += mt_rand(1, 10))
 				imagesetpixel($code_image, $j, $i, mt_rand(0, 1) ? $fg_color : $randomness_color);
 
 		// Put in some lines too?
-		if ($noiseType == 'high')
+		if ($noiseType != 'extreme')
 		{
-			$num_lines = 2;
+			$num_lines = $noiseType == 'high' ? mt_rand(3, 7) : mt_rand(2, 5);
 			for ($i = 0; $i < $num_lines; $i++)
 			{
 				if (mt_rand(0, 1))
@@ -916,8 +929,21 @@ function showCodeImage($code)
 					$y2 = mt_rand(0, $max_height);
 					$x1 = 0; $x2 = $total_width;
 				}
-
+				imagesetthickness($code_image, mt_rand(1, 2));
 				imageline($code_image, $x1, $y1, $x2, $y2, mt_rand(0, 1) ? $fg_color : $randomness_color);
+			}
+		}
+		else
+		{
+			// Put in some ellipse
+			$num_ellipse = $noiseType == 'extreme' ? mt_rand(6, 12) : mt_rand(2, 6);
+			for ($i = 0; $i < $num_ellipse; $i++)
+			{
+				$x1 = round(rand(($total_width / 4) * -1, $total_width + ($total_width / 4)));
+				$x2 = round(rand($total_width / 2, 2 * $total_width));
+				$y1 = round(rand(($max_height / 4) * -1, $max_height + ($max_height / 4)));
+				$y2 = round(rand($max_height / 2, 2 * $max_height));
+				imageellipse($code_image, $x1, $y1, $x2, $y2, mt_rand(0, 1) ? $fg_color : $randomness_color);
 			}
 		}
 	}
