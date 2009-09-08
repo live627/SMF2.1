@@ -188,18 +188,6 @@ function AdminMain()
 						'cache' => array($txt['caching_settings']),
 					),
 				),
-				'modsettings' => array(
-					'label' => $txt['admin_modifications'],
-					'file' => 'ManageSettings.php',
-					'function' => 'ModifyModSettings',
-					'icon' => 'modifications.gif',
-					'subsections' => array(
-						'general' => array($txt['mods_cat_modifications_misc']),
-						// Mod Authors for a "ADD AFTER" on this line. Ensure you end your change with a comma. For example:
-						// 'shout' => array($txt['shout']),
-						// Note the comma!! The setting with automatically appear with the first mod to be added.
-					),
-				),
 				'current_theme' => array(
 					'label' => $txt['theme_current_settings'],
 					'file' => 'Themes.php',
@@ -218,6 +206,18 @@ function AdminMain()
 						'list' => array($txt['themeadmin_list_title']),
 						'reset' => array($txt['themeadmin_reset_title']),
 						'edit' => array($txt['themeadmin_edit_title']),
+					),
+				),
+				'modsettings' => array(
+					'label' => $txt['admin_modifications'],
+					'file' => 'ManageSettings.php',
+					'function' => 'ModifyModSettings',
+					'icon' => 'modifications.gif',
+					'subsections' => array(
+						'general' => array($txt['mods_cat_modifications_misc']),
+						// Mod Authors for a "ADD AFTER" on this line. Ensure you end your change with a comma. For example:
+						// 'shout' => array($txt['shout']),
+						// Note the comma!! The setting with automatically appear with the first mod to be added.
 					),
 				),
 			),

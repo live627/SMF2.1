@@ -793,8 +793,8 @@ function template_show_settings()
 	$is_open = false;
 	foreach ($context['config_vars'] as $config_var)
 	{
-		// Is it a title?
-		if (is_array($config_var) && $config_var['type'] == 'title')
+		// Is it a title or a description?
+		if (is_array($config_var) && ($config_var['type'] == 'title' || $config_var['type'] == 'desc'))
 		{
 			// Not a list yet?
 			if ($is_open)
@@ -807,12 +807,24 @@ function template_show_settings()
 			</div>';
 			}
 
-			echo '
+			// A title?
+			if ($config_var['type'] == 'title')
+			{
+				echo '
 					<h3 class="', !empty($config_var['class']) ? $config_var['class'] : 'catbg', '"', !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>
 						<span class="left"></span>
 						', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), '
 						', $config_var['label'], '
 					</h3>';
+			}
+			// A description?
+			else
+			{
+				echo '
+					<p class="description">
+						', $config_var['label'], '
+					</p>';
+			}
 
 			continue;
 		}
@@ -942,7 +954,7 @@ function template_show_settings()
 			if ($config_var == '')
 				echo '
 						</dl>
-						<hr size="1" width="100%" class="hrcolor" />
+						<hr class="hrcolor" />
 						<dl class="settings">';
 			else
 				echo '
