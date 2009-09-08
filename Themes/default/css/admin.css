@@ -21,12 +21,13 @@ ol.search_results li
 /* new features settings screen */
 .features
 {
-	overflow: hidden;
+	padding: 0 1em !important;
+	overflow: auto;
 }
 .features_image
 {
 	float: left;
-	margin: 0.5em 2em 0.5em 1em;
+	margin: 0 2em 0.5em 1em;
 }
 .features_switch
 {
@@ -35,13 +36,13 @@ ol.search_results li
 }
 .features h4
 {
-	padding: 2em 0 0.5em 0.5em;
+	padding: 1em 0 0.5em 0.5em;
 	margin: 0;
 	font-size: 1.1em;
 }
 .features p
 {
-	padding: 0 1em 1em 1em;
+	padding: 0 1em;
 	margin: 0;
 }
 /* admin home */

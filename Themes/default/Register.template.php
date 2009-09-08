@@ -691,9 +691,11 @@ function template_edit_reserved_words()
 					<input type="submit" value="', $txt['save'], '" name="save_reserved_names" tabindex="', $context['tabindex']++, '" style="margin: 1ex;" class="button_submit" />
 				</p>
 			</div>
+			<span class="botslice"><span></span></span>
 			<input type="hidden" name="sa" value="reservednames" />
-			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-		</form>';
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />	
+		</form>
+		<br style="clear: both;" />';
 }
 
 ?>

@@ -424,6 +424,11 @@ tr.titlebg th.smalltext, thead tr.titlebg th a:link, thead tr.titlebg th a:visit
 }
 
 /* GenericList */
+.additional_row
+{
+	float: right;
+	padding: 0.5em 0 0.5em 2em;
+}
 .additional_row input
 {
 	margin-left: 1em;
@@ -1397,10 +1402,6 @@ select.qaction, input.qaction
 #mlist table tbody td.windowbg2
 {
 	text-align: center;
-}
-#mlist_search
-{
-	width: 430px;
 }
 
 /* Styles for a typical table.
@@ -2902,6 +2903,10 @@ dl.stats dd
 {
 	width: 45%;
 }
+#personal_messages .reportlinks
+{
+	padding: 0 1em;
+}
 
 /* Styles for the calendar section.
 ------------------------------------------------- */
@@ -3015,7 +3020,7 @@ span.hidelink
 #mlist_search
 {
 	margin: auto;
-	width: 400px;
+	width: 500px;
 }
 
 /* Styles for the basic search section.

@@ -12,6 +12,10 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
 	float: none;
 	width: auto;
 }
+.table_grid thead th
+{
+	padding: 0 !important;
+}
 
 /* Overrides for the messageindex template
 ------------------------------------------------------- */
@@ -23,7 +27,7 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
 {
 	border-bottom: solid 1px white;
 }
-.description
+#topic_icons .description
 {
 	padding: 2em 1em 1em 1em;
 	overflow: auto;

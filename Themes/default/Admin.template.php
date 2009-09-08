@@ -1316,7 +1316,8 @@ function template_admin_search_results()
 	echo '
 		</div>
 		<span class="botslice"><span></span></span>
-	</div>';
+	</div>
+	<br style="clear: both;" />';
 }
 
 // Turn on and off certain key features.

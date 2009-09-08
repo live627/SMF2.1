@@ -41,6 +41,11 @@ function template_show_list($list_id = null)
 			</div>';
 	}
 
+	// Show the page index (if this list doesn't intend to show all items).
+	if (!empty($cur_list['items_per_page']))
+		echo '
+		<div class="floatleft pagesection">', $txt['pages'], ': ', $cur_list['page_index'], '</div>';
+
 	if (isset($cur_list['additional_rows']['above_column_headers']))
 	{
 		echo '
@@ -50,38 +55,33 @@ function template_show_list($list_id = null)
 			</div>';
 	}
 
-	// Show the page index (if this list doesn't intend to show all items).
-	if (!empty($cur_list['items_per_page']))
-		echo '
-		<div class="pagesection">', $txt['pages'], ': ', $cur_list['page_index'], '</div>';
-
-
 	echo '
-		<table class="table_grid" cellspacing="0" width="', !empty($cur_list['width']) ? $cur_list['width'] : '100%', '">';
-
+			<table class="table_grid" cellspacing="0" width="', !empty($cur_list['width']) ? $cur_list['width'] : '100%', '">';
 
 	// Show the column headers.
 	if(!(count($cur_list['headers']) < 2 && empty($cur_list['headers'][0]['label'])))
 	{
-		echo '	<thead>
-					<tr class="catbg">';
+		echo '
+			<thead>
+				<tr class="catbg">';
 
 		// Loop through each column and add a table header.
 		foreach ($cur_list['headers'] as $col_header)
 			echo '
-						<th scope="col" class="smalltext"', empty($col_header['class']) ? '' : ' class="' . $col_header['class'] . '"', empty($col_header['style']) ? '' : ' style="' . $col_header['style'] . '"', empty($col_header['colspan']) ? '' : ' colspan="' . $col_header['colspan'] . '"', '>', empty($col_header['href']) ? '' : '<a href="' . $col_header['href'] . '" rel="nofollow">', empty($col_header['label']) ? '&nbsp;' : $col_header['label'], empty($col_header['href']) ? '' : '</a>', empty($col_header['sort_image']) ? '' : ' <img src="' . $settings['images_url'] . '/sort_' . $col_header['sort_image'] . '.gif" alt="" />', '</th>';
+					<th scope="col" class="smalltext"', empty($col_header['class']) ? '' : ' class="' . $col_header['class'] . '"', empty($col_header['style']) ? '' : ' style="' . $col_header['style'] . '"', empty($col_header['colspan']) ? '' : ' colspan="' . $col_header['colspan'] . '"', '>', empty($col_header['href']) ? '' : '<a href="' . $col_header['href'] . '" rel="nofollow">', empty($col_header['label']) ? '&nbsp;' : $col_header['label'], empty($col_header['href']) ? '' : '</a>', empty($col_header['sort_image']) ? '' : ' <img src="' . $settings['images_url'] . '/sort_' . $col_header['sort_image'] . '.gif" alt="" />', '</th>';
 
 		echo '
-					</tr>
-				</thead>';
+				</tr>
+			</thead>
+			<tbody>';
 	}
 
 	// Show a nice message informing there are no items in this list.
 	if (empty($cur_list['rows']) && !empty($cur_list['no_items_label']))
 		echo '
-			<tr>
-				<td class="windowbg" colspan="', $cur_list['num_columns'], '" align="', !empty($cur_list['no_items_align']) ? $cur_list['no_items_align'] : 'center', '">', $cur_list['no_items_label'], '</td>
-			</tr>';
+				<tr>
+					<td class="windowbg" colspan="', $cur_list['num_columns'], '" align="', !empty($cur_list['no_items_align']) ? $cur_list['no_items_align'] : 'center', '">', $cur_list['no_items_label'], '</td>
+				</tr>';
 
 	// Show the list rows.
 	elseif (!empty($cur_list['rows']))
@@ -89,20 +89,21 @@ function template_show_list($list_id = null)
 		foreach ($cur_list['rows'] as $id => $row)
 		{
 			echo '
-			<tr class="windowbg2" id="list_' . $list_id . '_' . $id. '">';
+				<tr class="windowbg2" id="list_' . $list_id . '_' . $id. '">';
 			foreach ($row as $row_data)
 				echo '
-				<td', empty($row_data['class']) ? '' : ' class="' . $row_data['class'] . '"', empty($row_data['style']) ? '' : ' style="' . $row_data['style'] . '"', '>', $row_data['value'], '</td>';
+					<td', empty($row_data['class']) ? '' : ' class="' . $row_data['class'] . '"', empty($row_data['style']) ? '' : ' style="' . $row_data['style'] . '"', '>', $row_data['value'], '</td>';
 			echo '
-			</tr>';
+				</tr>';
 		}
 	}
 
 	echo '
-		</table>';
+			</tbody>
+			</table>';
 
 	echo '
-		<div class="flow_auto">';
+			<div class="flow_auto">';
 
 	// Show the page index (if this list doesn't intend to show all items).
 	if (!empty($cur_list['items_per_page']))
