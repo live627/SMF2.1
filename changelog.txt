@@ -20,6 +20,7 @@ September 2009
  ! Never redirect on login to an attachment (Few files)
  + Extreme level captcha (Subs-Graphics.php, ManageSettings.php, ManageSettings.english.php)
  ! Give creation of thumbnails more welly for large images (Subs-Graphics.php)
+ * fixed 12 minor layout issues (Few files) [Bug 3729]
 
 
 August 2009

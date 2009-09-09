@@ -662,7 +662,8 @@ function template_edit_agreement()
 				</form>
 			</div>
 			<span class="botslice"><span></span></span>
-		</div>';
+		</div>
+		<br style="clear: both;" />';
 }
 
 function template_edit_reserved_words()

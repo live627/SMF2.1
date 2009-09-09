@@ -1605,7 +1605,10 @@ table.table_list a.collapse
 {
 	margin: 10px 5px 0 1em;
 }
-
+img.new_posts
+{
+	padding: 0 0.1em;
+}
 /* Styles for the message (topic) index.
 ---------------------------------------------------- */
 
