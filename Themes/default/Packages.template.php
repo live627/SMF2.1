@@ -970,7 +970,7 @@ function template_servers()
 					<ul class="package_servers">';
 	foreach ($context['servers'] as $server)
 		echo '
-						<li>
+						<li class="flow_auto">
 							<span class="align_left">' . $server['name'] . '</span>
 							<span class="package_server align_right"><a href="' . $scripturl . '?action=admin;area=packages;get;sa=remove;server=' . $server['id'] . '">[ ' . $txt['delete'] . ' ]</a></span>
 							<span class="package_server align_right"><a href="' . $scripturl . '?action=admin;area=packages;get;sa=browse;server=' . $server['id'] . '">[ ' . $txt['package_browse'] . ' ]</a></span>
@@ -1528,22 +1528,22 @@ function template_view_operations()
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc2"></script>
 	</head>
 	<body>
-	<div class="content">
-		<h3 class="catbg operation">
-			', $txt['operation_find'], '
-			<a href="javascript:void(0);" onclick="return smfSelectText(\'find_code\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
-		</h3>
-		<div class="tborder windowbg description">
-			<code id="find_code" style="overflow: auto; max-height: 200px; white-space: pre;">', $context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search'], '</code>
+		<div class="padding windowbg">
+			<h3 class="catbg"><span class="left"></span>
+				', $txt['operation_find'], '
+				<a href="javascript:void(0);" onclick="return smfSelectText(\'find_code\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
+			</h3>
+			<div class="padding">
+				<code id="find_code" style="overflow: auto; max-height: 200px; white-space: pre;">', $context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search'], '</code>
+			</div>
+			<h3 class="catbg topmargin"><span class="left"></span>
+				', $txt[$operation_text], '
+				<a href="javascript:void(0);" onclick="return smfSelectText(\'replace_code\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
+			</h3>
+			<div class="padding">
+				<code id="replace_code" style="overflow: auto; max-height: 200px; white-space: pre;">', $context['operations']['replace'], '</code>
+			</div>
 		</div>
-		<h3 class="catbg operation">
-			', $txt[$operation_text], '
-			<a href="javascript:void(0);" onclick="return smfSelectText(\'replace_code\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
-		</h3>
-		<div class="tborder windowbg description">
-			<code id="replace_code" style="overflow: auto; max-height: 200px; white-space: pre;">', $context['operations']['replace'], '</code>
-		</div>
-	</div>
 	</body>
 </html>';
 
