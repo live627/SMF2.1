@@ -41,8 +41,15 @@ body#help_popup
 	text-decoration: underline;
 }
 
-/* Common classes to easy styling.
+/* Common classes for easy styling.
 ------------------------------------------------------- */
+
+h1, h2, h3, h4, h5, h6
+{
+	font-size: 1em;
+	margin: 0;
+	padding: 0;
+}
 
 .floatright, .align_right
 {
@@ -425,6 +432,10 @@ h3.titlebg span.left
 	width: 0.6em;
 	height: 2em;
 	float: left;
+}
+h3.catbg
+{
+	padding: 0 0 0 1em;
 }
 h3.catbg img.icon, div.titlebg img.icon, h3.catbg img
 {

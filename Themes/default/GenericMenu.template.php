@@ -257,13 +257,14 @@ function template_generic_menu_tabs(&$menu_context)
 			<a href="', $scripturl, '?action=helpadmin;help=', !empty($selected_tab['help']) ? $selected_tab['help'] : $tab_context['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" class="icon" /></a> ';
 	echo '
 			', $tab_context['title'], '
-	</h3>
-	<p class="windowbg description">';
+	</h3>';
 
 	// Shall we use the tabs?
 	if (!empty($settings['use_tabs']))
 	{
-		echo !empty($selected_tab['description']) ? $selected_tab['description'] : $tab_context['description'], '
+		echo '
+	<p class="windowbg description">
+		', !empty($selected_tab['description']) ? $selected_tab['description'] : $tab_context['description'], '
 	</p>';
 
 		// The admin tabs.
