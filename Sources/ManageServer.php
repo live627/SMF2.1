@@ -399,7 +399,6 @@ function ModifyCacheSettings($return_config = false)
 	prepareDBSettingContext($config_vars);
 }
 
-<<<<<<< .mine
 function ModifyLoadBalancingSettings($return_config = false)
 {
 	global $txt, $scripturl, $context, $settings, $modSettings;
