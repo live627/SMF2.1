@@ -186,6 +186,7 @@ function AdminMain()
 						'database' => array($txt['database_paths_settings']),
 						'cookie' => array($txt['cookies_sessions_settings']),
 						'cache' => array($txt['caching_settings']),
+						'loads' => array($txt['load_balancing_settings']),
 					),
 				),
 				'current_theme' => array(

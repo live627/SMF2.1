@@ -54,6 +54,9 @@ if (!defined('SMF'))
 	void ModifyCacheSettings()
 		// !!!
 
+	void ModifyLoadBalancingSettings()
+		// !!!
+
 	void AddLanguage()
 		// !!!
 
@@ -173,6 +176,7 @@ function ModifySettings()
 		'database' => 'ModifyDatabaseSettings',
 		'cookie' => 'ModifyCookieSettings',
 		'cache' => 'ModifyCacheSettings',
+		'loads' => 'ModifyLoadBalancingSettings',
 	);
 
 	// By default we're editing the core settings
@@ -392,6 +396,65 @@ function ModifyCacheSettings($return_config = false)
 	$context['settings_message'] = sprintf($context['settings_message'], $txt['detected_' . $detected]);
 
 	// Prepare the template.
+	prepareDBSettingContext($config_vars);
+}
+
+function ModifyLoadBalancingSettings($return_config = false)
+{
+	global $txt, $scripturl, $context, $settings, $modSettings;
+
+	// Setup a warning message.
+	$context['settings_message'] = $txt['loadavg_warning'];
+
+	// Start with a simple checkbox.
+	$config_vars = array(
+		array('check', 'loadavg_enable'),
+	);
+
+	// Set the default values for each option.
+	$default_values = array(
+		'loadavg_auto_opt' => '1.0',
+		'loadavg_search' => '2.5',
+		'loadavg_allunread' => '2.0',
+		'loadavg_unreadreplies' => '3.5',
+		'loadavg_show_posts' => '2.0',
+		'loadavg_forum' => '40.0',
+	);
+
+	// Loop through the settings. 
+	foreach ($default_values as $name => $value)
+	{
+		// Use the default value if the setting isn't set yet.
+		$value = !isset($modSettings[$name]) ? $value : $modSettings[$name];
+		$config_vars[] = array('text', $name, 'value' => $value);
+	}
+
+	if ($return_config)
+		return $config_vars;
+
+	$context['post_url'] = $scripturl . '?action=admin;area=serversettings;sa=loads;save';
+	$context['settings_title'] = $txt['load_balancing_settings'];
+
+	// Saving?
+	if (isset($_GET['save']))
+	{
+		// Stupidity is not allowed.
+		foreach ($_POST as $key => $value)
+		{
+			if (substr($key, 0, 7) != 'loadavg')
+				continue;
+			elseif ($key == 'loadavg_auto_opt' && $value < 1)
+				$_POST['loadavg_auto_opt'] = '1.0';
+			elseif ($key == 'loadavg_forum' && $value < 10)
+				$_POST['loadavg_forum'] = '10.0';
+			elseif ($value < 2)
+				$_POST[$key] = '2.0';
+		}
+
+		saveDBSettings($config_vars);
+		redirectexit('action=admin;area=serversettings;sa=loads;' . $context['session_var'] . '=' . $context['session_id']);
+	}
+
 	prepareDBSettingContext($config_vars);
 }
 

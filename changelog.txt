@@ -22,6 +22,7 @@ September 2009
  ! Give creation of thumbnails more welly for large images (Subs-Graphics.php)
  * fixed 12 minor layout issues (Few files) [Bug 3729]
  * The post and pm keyinfo wasn't properly aligned (Display template, PersonalMessage template, index.css)
+ + Added an interface to allow editing of load average thresholds. (Admin.php, ManageServer.php, Admin language file, ManageSettings language file)
 
 
 August 2009
