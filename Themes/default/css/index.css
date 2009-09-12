@@ -1801,10 +1801,7 @@ p#whoisviewing
 	margin: 0 0.5em 0 0;
 	padding: 3px;
 }
-.summary
-{
-	overflow: hidden;
-}
+
 .postarea .keyinfo
 {
 	float: left;
