@@ -127,11 +127,17 @@ $txt['cache_level3'] = 'Level 3 Caching (Not Recommended)';
 $txt['cache_memcached'] = 'Memcache settings';
 
 $txt['loadavg_warning'] = '<span class="error">Please note: the settings below are to be edited with care. Setting any of them too low may render your forum <strong>unusable</strong>!</span>';
+
 $txt['loadavg_enable'] = 'Enable load balancing by load averages';
+
 $txt['loadavg_auto_opt'] = 'Threshold to disabling automatic database optimization';
+
 $txt['loadavg_search'] = 'Threshold to disabling search';
+
 $txt['loadavg_allunread'] = 'Threshold to disabling all unread topics';
+
 $txt['loadavg_unreadreplies'] = 'Threshold to disabling unread replies';
+
 $txt['loadavg_show_posts'] = 'Threshold to disabling showing user posts';
 $txt['loadavg_forum'] = 'Threshold to disabling the forum <strong>completely</strong>';
 

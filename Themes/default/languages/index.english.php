@@ -753,4 +753,5 @@ $txt['debug_query_in_line'] = 'in <em>%1$s</em> line <em>%2$s</em>, ';
 $txt['debug_query_which_took'] = 'which took %1$s seconds.';
 $txt['debug_show_queries'] = '[Show Queries]';
 $txt['debug_hide_queries'] = '[Hide Queries]';
+
 ?>

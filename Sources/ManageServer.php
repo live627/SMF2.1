@@ -399,16 +399,10 @@ function ModifyCacheSettings($return_config = false)
 	prepareDBSettingContext($config_vars);
 }
 
+<<<<<<< .mine
 function ModifyLoadBalancingSettings($return_config = false)
 {
 	global $txt, $scripturl, $context, $settings, $modSettings;
-
-	// Windows is just not cool enough for this one, sorry.
-	if ($context['server']['is_windows'])
-	{
-		loadLanguage('Errors');
-		fatal_error($txt['error_functionality_not_windows'], false);
-	}
 
 	// Setup a warning message.
 	$context['settings_message'] = $txt['loadavg_warning'];
