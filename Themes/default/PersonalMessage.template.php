@@ -308,14 +308,15 @@ function template_folder()
 					</ul>
 				</div>
 				<div class="postarea">
-					<div class="keyinfo">
-						<h5 id="subject_', $message['id'], '">
-							', $message['subject'], '
-						</h5>';
+					<div class="flow_hidden">
+						<div class="keyinfo">
+							<h5 id="subject_', $message['id'], '">
+								', $message['subject'], '
+							</h5>';
 
 			// Show who the message was sent to.
 			echo '
-						<span class="smalltext">&#171; <strong> ', $txt['sent_to'], ':</strong> ';
+							<span class="smalltext">&#171; <strong> ', $txt['sent_to'], ':</strong> ';
 
 			// People it was sent directly to....
 			if (!empty($message['recipients']['to']))
@@ -324,20 +325,22 @@ function template_folder()
 			elseif ($context['folder'] != 'sent')
 				echo '(', $txt['pm_undisclosed_recipients'], ')';
 
-			echo ' <strong> ', $txt['on'], ':</strong> ', $message['time'], ' &#187;</span>';
+			echo '
+								<strong> ', $txt['on'], ':</strong> ', $message['time'], ' &#187;
+							</span>';
 
 			// If we're in the sent items, show who it was sent to besides the "To:" people.
 			if (!empty($message['recipients']['bcc']))
 				echo '
-						<br /><span class="smalltext">&#171; <strong> ', $txt['pm_bcc'], ':</strong> ', implode(', ', $message['recipients']['bcc']), ' &#187;</span>';
+							<br /><span class="smalltext">&#171; <strong> ', $txt['pm_bcc'], ':</strong> ', implode(', ', $message['recipients']['bcc']), ' &#187;</span>';
 
 			if (!empty($message['is_replied_to']))
 				echo '
-						<br /><span class="smalltext">&#171; ', $txt['pm_is_replied_to'], ' &#187;</span>';
+							<br /><span class="smalltext">&#171; ', $txt['pm_is_replied_to'], ' &#187;</span>';
 
 			echo '
-					</div>
-					<ul class="reset smalltext quickbuttons">';
+						</div>
+						<ul class="reset smalltext quickbuttons">';
 			// Show reply buttons if you have the permission to send PMs.
 			if ($context['can_send_pm'])
 			{
@@ -347,26 +350,27 @@ function template_folder()
 					// Were than more than one recipient you can reply to? (Only in the "button style", or text)
 					if ($message['number_recipients'] > 1 && (!empty($settings['use_buttons']) || !$settings['use_image_buttons']))
 						echo '
-						<li class="reply_all_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote;u=all">', $txt['reply_to_all'], '</a></li>';
+							<li class="reply_all_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote;u=all">', $txt['reply_to_all'], '</a></li>';
 
 					echo '
-						<li class="quote_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $txt['quote'], '</a></li>
-						<li class="reply_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $txt['reply'], '</a></li>';
+							<li class="quote_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $txt['quote'], '</a></li>
+							<li class="reply_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $txt['reply'], '</a></li>';
 				}
 				// This is for "forwarding" - even if the member is gone.
 				else
 					echo '
-						<li class="forward_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote">', $txt['reply_quote'], '</a></li>';
+							<li class="forward_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote">', $txt['reply_quote'], '</a></li>';
 			}
 			echo '
-						<li class="remove_button"><a href="', $scripturl, '?action=pm;sa=pmactions;pm_actions[', $message['id'], ']=delete;f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', addslashes($txt['remove_message']), '?\');">', $txt['delete'], '</a></li>';
+							<li class="remove_button"><a href="', $scripturl, '?action=pm;sa=pmactions;pm_actions[', $message['id'], ']=delete;f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', addslashes($txt['remove_message']), '?\');">', $txt['delete'], '</a></li>';
 
 			if (empty($context['display_mode']))
 				echo '
-						<li class="inline_mod_check"><input type="checkbox" name="pms[]" id="deletedisplay', $message['id'], '" value="', $message['id'], '" onclick="document.getElementById(\'deletelisting', $message['id'], '\').checked = this.checked;" class="input_check" /></li>';
+							<li class="inline_mod_check"><input type="checkbox" name="pms[]" id="deletedisplay', $message['id'], '" value="', $message['id'], '" onclick="document.getElementById(\'deletelisting', $message['id'], '\').checked = this.checked;" class="input_check" /></li>';
 
 			echo '
-					</ul>
+						</ul>
+					</div>
 					<div class="post">
 						<div class="inner" id="msg_', $message['id'], '"', '>', $message['body'], '</div>
 							<div class="smalltext reportlinks">

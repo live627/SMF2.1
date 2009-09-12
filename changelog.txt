@@ -21,6 +21,7 @@ September 2009
  + Extreme level captcha (Subs-Graphics.php, ManageSettings.php, ManageSettings.english.php)
  ! Give creation of thumbnails more welly for large images (Subs-Graphics.php)
  * fixed 12 minor layout issues (Few files) [Bug 3729]
+ * The post and pm keyinfo wasn't properly aligned (Display template, PersonalMessage template, index.css)
 
 
 August 2009

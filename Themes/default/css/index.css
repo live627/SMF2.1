@@ -1799,8 +1799,12 @@ p#whoisviewing
 {
 	float: left;
 	margin: 0 0.5em 0 0;
+	padding: 3px;
 }
-
+.summary
+{
+	overflow: hidden;
+}
 .postarea .keyinfo
 {
 	float: left;
@@ -2732,13 +2736,11 @@ div#profile_success
 	float: left;
 	width: 60%;
 	margin: 0 0 10px 0;
-	height: 0.1%;
 }
 
 #ignoreboards
 {
 	overflow: auto;
-	height: 0.1%;
 }
 
 #ignoreboards li
@@ -2753,7 +2755,6 @@ div#profile_success
 #theme_settings
 {
 	overflow: auto;
-	height: 0.1%;
 	margin: 0;
 	padding: 0;
 }
