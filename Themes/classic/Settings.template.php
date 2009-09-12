@@ -150,10 +150,64 @@ function template_settings()
 			'type' => 'text',
 		),
 		array(
+			'id' => 'smiley_sets_default',
+			'label' => $txt['smileys_default_set_for_theme'],
+			'options' => $context['smiley_sets'],
+			'type' => 'text',
+		),
+	'',
+		array(
+			'id' => 'linktree_inline',
+			'label' => $txt['enable_inline_links'],
+			'description' => $txt['inline_desc'],
+		),
+		array(
+			'id' => 'show_mark_read',
+			'label' => $txt['enable_mark_as_read'],
+		),
+		array(
+			'id' => 'allow_no_censored',
+			'label' => $txt['allow_no_censored'],
+		),
+		array(
+			'id' => 'enable_news',
+			'label' => $txt['enable_random_news'],
+		),
+		array(
+			'id' => 'use_image_buttons',
+			'label' => $txt['admin_image_text'],
+		),
+	'',
+		array(
+			'id' => 'show_newsfader',
+			'label' => $txt['news_fader'],
+		),
+		array(
+			'id' => 'newsfader_time',
+			'label' => $txt['admin_fader_delay'],
+			'type' => 'number',
+		),
+		array(
 			'id' => 'number_recent_posts',
 			'label' => $txt['number_recent_posts'],
 			'description' => $txt['number_recent_posts_desc'],
 			'type' => 'number',
+		),
+		array(
+			'id' => 'show_stats_index',
+			'label' => $txt['show_stats_index'],
+		),
+		array(
+			'id' => 'show_latest_member',
+			'label' => $txt['latest_members'],
+		),
+		array(
+			'id' => 'show_member_bar',
+			'label' => $txt['member_list_bar'],
+		),
+		array(
+			'id' => 'show_group_key',
+			'label' => $txt['show_group_key'],
 		),
 		array(
 			'id' => 'display_who_viewing',
@@ -165,61 +219,14 @@ function template_settings()
 			),
 			'type' => 'number',
 		),
-		array(
-			'id' => 'smiley_sets_default',
-			'label' => $txt['smileys_default_set_for_theme'],
-			'options' => $context['smiley_sets'],
-			'type' => 'text',
-		),
+	'',
 		array(
 			'id' => 'show_modify',
 			'label' => $txt['last_modification'],
 		),
 		array(
-			'id' => 'show_member_bar',
-			'label' => $txt['member_list_bar'],
-		),
-		array(
 			'id' => 'show_profile_buttons',
 			'label' => $txt['show_view_profile_button'],
-		),
-		array(
-			'id' => 'show_mark_read',
-			'label' => $txt['enable_mark_as_read'],
-		),
-		array(
-			'id' => 'linktree_inline',
-			'label' => $txt['enable_inline_links'],
-			'description' => $txt['inline_desc'],
-		),
-		array(
-			'id' => 'show_stats_index',
-			'label' => $txt['show_stats_index'],
-		),
-		array(
-			'id' => 'allow_no_censored',
-			'label' => $txt['allow_no_censored'],
-		),
-		array(
-			'id' => 'show_bbc',
-			'label' => $txt['admin_bbc'],
-		),
-		array(
-			'id' => 'additional_options_collapsable',
-			'label' => $txt['additional_options_collapsable'],
-		),
-		array(
-			'id' => 'enable_news',
-			'label' => $txt['admin_news'],
-		),
-		array(
-			'id' => 'show_newsfader',
-			'label' => $txt['news_fader'],
-		),
-		array(
-			'id' => 'newsfader_time',
-			'label' => $txt['admin_fader_delay'],
-			'type' => 'number',
 		),
 		array(
 			'id' => 'show_user_images',
@@ -230,25 +237,22 @@ function template_settings()
 			'label' => $txt['user_text'],
 		),
 		array(
-			'id' => 'show_latest_member',
-			'label' => $txt['latest_members'],
-		),
-		array(
-			'id' => 'use_image_buttons',
-			'label' => $txt['admin_image_text'],
-		),
-		array(
 			'id' => 'show_gender',
 			'label' => $txt['gender_images'],
-		),
-		array(
-			'id' => 'show_group_key',
-			'label' => $txt['show_group_key'],
 		),
 		array(
 			'id' => 'hide_post_group',
 			'label' => $txt['hide_post_group'],
 			'description' => $txt['hide_post_group_desc'],
+		),
+	'',
+		array(
+			'id' => 'show_bbc',
+			'label' => $txt['admin_bbc'],
+		),
+		array(
+			'id' => 'additional_options_collapsable',
+			'label' => $txt['additional_options_collapsable'],
 		),
 	);
 }
