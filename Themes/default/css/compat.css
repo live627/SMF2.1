@@ -239,26 +239,20 @@ dl.settings img
 
 /* Styles for a very basic dropdown menu implementation.
 ------------------------------------------------------- */
-#adm_container
+div#admin_menu
 {
-	display: table;
-	margin-left: 15px;
-	padding: 0 5px 0 5px;
+	margin: 1em 0 0 0;
 }
 
 ul.dropmenu, ul.dropmenu li ul
 {
+	margin: 0;
 	padding: 0;
 	list-style: none;
 }
 ul.dropmenu
 {
-	display: table-cell;
-}
-* html #adm_container, * html ul.dropmenu
-{
-	height: 1%;
-	width: auto;
+	margin: 0 0 0 15px;
 }
 ul.dropmenu li
 {
@@ -267,25 +261,25 @@ ul.dropmenu li
 	padding-right: 4px;
 	text-transform: uppercase;
 }
-ul.dropmenu li h4
+ul.dropmenu li a.firstlevel
 {
 	margin: 0;
-	padding: 7px 5px 3px 5px;
+	padding: 5px;
 	cursor: default;
 	font-size: x-small;
 	color: #000000;
-	background: #FFFFFF;
-	border: solid 1px #C0C0C0;
+	background: #F0F0F0;
+	border: solid 1px #818181;
+	text-decoration: none;
 }
-ul.dropmenu li.chosen
+ul.dropmenu li a.active
 {
-	padding-left: 6px;
+	padding-left: 3px;
 }
-ul.dropmenu li.chosen h4
+ul.dropmenu li a.active.firstlevel
 {
-	background: #E0E3EF;
-	padding-right: 10px;
-	border: solid 1px #C0C0C0;
+	background: #819DB5;
+	color: #fff;
 }
 ul.dropmenu li ul li
 {
@@ -297,7 +291,7 @@ ul.dropmenu li ul li
 }
 ul.dropmenu li ul
 {
-	margin: 0 0 0 8px;
+	margin: 5px 0 0 0;
 	z-index: 90;
 	display: none;
 	position: absolute;
@@ -317,25 +311,20 @@ ul.dropmenu li ul li ul, ul.dropmenu li ul li.over ul
 ul.dropmenu li ul li a
 {
 	display: block;
-	padding: 3px 6px 3px 6px;
+	padding: 5px;
 	font-size: x-small;
 	text-decoration: none;
 	background: none;
 	text-transform: none;
 	color: black;
 }
-ul.dropmenu li ul li a.chosen
+ul.dropmenu li ul li a.active
 {
 	font-weight: bold;
 }
-ul.dropmenu li ul li a:hover, #admin_menu ul li ul li:hover
+ul.dropmenu li ul li a:hover, #dropmenu ul li ul li:hover
 {
 	background: #C8E2FB;
-}
-ul.dropmenu li > ul
-{
-	top: auto;
-	left: auto;
 }
 ul.dropmenu li:hover ul, ul.dropmenu li.over ul
 {
@@ -345,6 +334,19 @@ ul.dropmenu li ul li:hover ul, ul.dropmenu li ul li.over ul
 {
 	display: block;
 	left: 13em;
+}
+
+/* The dropdown menu toggle image */
+#menu_toggle
+{
+	float: right;
+	margin-right: 10px;
+	padding-top: 3px;
+}
+#menu_toggle span
+{
+	position: relative;
+	right: 5000px;
 }
 
 /* The linktree.
@@ -421,7 +423,7 @@ h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg, h4.catbg, div.titlebg, .table_list 
 	line-height: 2em;
 	font-weight: bold;
 }
-h3.titlebg, h4.titlebg
+h3.titlebg, h4.titlebg, h3.catbg
 {
 	border-left: 1px solid #adadad;
 	border-right: 1px solid #adadad;
