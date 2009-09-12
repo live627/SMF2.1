@@ -441,9 +441,9 @@ function ModifyLoadBalancingSettings($return_config = false)
 		// Stupidity is not allowed.
 		foreach ($_POST as $key => $value)
 		{
-			if (substr($key, 0, 7) != 'loadavg')
+			if (substr($key, 0, 7) != 'loadavg' || $key == 'loadavg_enable')
 				continue;
-			elseif ($key == 'loadavg_auto_opt' && $value < 1)
+			elseif ($key == 'loadavg_auto_opt' && $value <= 1)
 				$_POST['loadavg_auto_opt'] = '1.0';
 			elseif ($key == 'loadavg_forum' && $value < 10)
 				$_POST['loadavg_forum'] = '10.0';

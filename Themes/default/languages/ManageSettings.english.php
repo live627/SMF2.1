@@ -126,7 +126,7 @@ $txt['cache_level2'] = 'Level 2 Caching';
 $txt['cache_level3'] = 'Level 3 Caching (Not Recommended)';
 $txt['cache_memcached'] = 'Memcache settings';
 
-$txt['loadavg_warning'] = '<span class="error">Please note: these settings below are to be edited with care. Setting any of them too low may render your forum <strong>unusable</strong>!</span>';
+$txt['loadavg_warning'] = '<span class="error">Please note: the settings below are to be edited with care. Setting any of them too low may render your forum <strong>unusable</strong>!</span>';
 $txt['loadavg_enable'] = 'Enable load balancing by load averages';
 $txt['loadavg_auto_opt'] = 'Threshold to disabling automatic database optimization';
 $txt['loadavg_search'] = 'Threshold to disabling search';
