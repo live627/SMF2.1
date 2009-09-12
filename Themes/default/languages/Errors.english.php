@@ -288,6 +288,8 @@ $txt['membergroup_does_not_exist'] = 'The membergroup doesn\'t exist or is inval
 
 $txt['at_least_one_admin'] = 'There must be at least one administrator on a forum!';
 
+$txt['error_functionality_not_windows'] = 'Sorry, this functionality is currently not available for servers running Windows.';
+
 // Don't use entities in the below string.
 $txt['attachment_not_found'] = 'Attachment Not Found';
 
