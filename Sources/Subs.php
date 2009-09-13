@@ -3271,7 +3271,7 @@ function template_header()
 				', sprintf($txt['not_removed_extra'], $securityFile, substr($securityFile, 0, -1)), '<br />';
 				}
 
-				if (!empty($modSettings['cache_enable']) && !is_writable($cachedir)))
+				if (!empty($modSettings['cache_enable']) && !is_writable($cachedir))
 					echo '
 				<strong>', $txt['cache_writable'], '</strong><br />';
 
