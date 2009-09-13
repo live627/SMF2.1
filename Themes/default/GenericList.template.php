@@ -35,7 +35,7 @@ function template_show_list($list_id = null)
 	if (isset($cur_list['additional_rows']['after_title']))
 	{
 		echo '
-			<div class="information">';
+			<div class="information flow_hidden">';
 		template_additional_rows('after_title', $cur_list);
 		echo '
 			</div>';
