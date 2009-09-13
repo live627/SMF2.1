@@ -25,6 +25,8 @@ September 2009
  + Added an interface to allow editing of load average thresholds. (Admin.php, ManageServer.php, Admin language file, ManageSettings language file)
  * Broken quick edit (Display.template.php) [Bug 3745]
  * Replaced the post-moderation icons with a proper version [Bug 3625]
+ ! Split browser detection from theme loading; (index.php, Load.php) [Bug 3169]
+ * Opera 10 uses 9.8 for user agent (Load.php, Script.js) [Bug 3750]
 
 
 August 2009

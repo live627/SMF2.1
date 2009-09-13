@@ -187,7 +187,11 @@ function smf_main()
 	loadPermissions();
 
 	// Load the current theme.  (note that ?theme=1 will also work, may be used for guest theming.)
-	loadTheme();
+	if (!isset($_REQUEST['action']) || $_REQUEST['action'] != 'dlattach')
+		loadTheme();
+	// Attachments don't require the entire theme to be loaded.
+	else
+		detectBrowser();
 
 	// Check if the user should be disallowed access.
 	is_not_banned();
