@@ -1203,8 +1203,11 @@ function prepareDisplayContext($reset = false)
 // Download an attachment.
 function Download()
 {
-	global $txt, $modSettings, $user_info, $scripturl, $context, $sourcedir, $smcFunc;
+	global $txt, $modSettings, $user_info, $scripturl, $context, $sourcedir, $smcFunc, $txt;
 
+	// Some defaults that we need.
+	$context['character_set'] = empty($modSettings['global_character_set']) ? (empty($txt['lang_character_set']) ? 'ISO-8859-1' : $txt['lang_character_set']) : $modSettings['global_character_set'];
+	$context['utf8'] = $context['character_set'] === 'UTF-8' && (strpos(strtolower(PHP_OS), 'win') === false || @version_compare(PHP_VERSION, '4.2.3') != -1);
 	$context['no_last_modified'] = true;
 
 	// Make sure some attachment was requested!

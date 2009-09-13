@@ -30,6 +30,8 @@ September 2009
  * Invalid css (index.css) [Bug 3752]
  ! Only warn cache not writable if cache is enabled (Subs.php) [Bug 3747]
  ! Warn/prevent converting to utf8 with fulltext index. (ManageMaintenance.php, ManageMaintenance.template.php, ManageMaintenance.english.php) [Bug 3517]
+ ! The recent download attachment handling changes caused a few errors (Load.php, Display.php) [Bug 3753]
+
 
 August 2009
 --------------------------------------------------------------------------------
