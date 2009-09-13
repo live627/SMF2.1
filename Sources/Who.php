@@ -532,6 +532,7 @@ function Credits($in_admin = false)
 						'Theodore &quot;Orstio&quot; Hildebrandt',
 						'winrules',
 						'Karl &quot;RegularExpression&quot; Benson',
+						'Thorsten &quot;TE&quot; Eurich',
 					),
 				),
 				array(
@@ -563,6 +564,9 @@ function Credits($in_admin = false)
 						'Tyrsson',
 						'MrPhil',
 						'LexArma',
+						'Mashby',
+						'Arantor',
+						'Norv',
 					),
 				),
 				array(
@@ -580,7 +584,6 @@ function Credits($in_admin = false)
 						'Killer Possum',
 						'Matt &quot;SlammedDime&quot; Zuba',
 						'&#12487;&#12451;&#12531;1031',
-						'Thorsten &quot;TE&quot; Eurich',
 						'Colin &quot;Shadow82x&quot; Blaber',
 						'Sinan &quot;Blue Dream&quot; &Ccedil;evik',
 						'Bulakbol',
