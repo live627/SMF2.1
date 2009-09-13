@@ -1434,11 +1434,6 @@ function loadTheme($id_theme = 0, $initialize = true)
 	if ($settings['theme_dir'] != $settings['default_theme_dir'])
 		$settings['template_dirs'][] = $settings['default_theme_dir'];
 
-	// Set the character set from the template.
-	$context['character_set'] = empty($modSettings['global_character_set']) ? $txt['lang_character_set'] : $modSettings['global_character_set'];
-	$context['utf8'] = $context['character_set'] === 'UTF-8' && (strpos(strtolower(PHP_OS), 'win') === false || @version_compare(PHP_VERSION, '4.2.3') != -1);
-	$context['right_to_left'] = !empty($txt['lang_rtl']);
-
 	if (!$initialize)
 		return;
 
@@ -1698,6 +1693,11 @@ function loadTheme($id_theme = 0, $initialize = true)
 	}
 	// Make a special URL for the language.
 	$settings['lang_images_url'] = $settings['images_url'] . '/' . (!empty($txt['image_lang']) ? $txt['image_lang'] : $user_info['language']);
+
+	// Set the character set from the template.
+	$context['character_set'] = empty($modSettings['global_character_set']) ? $txt['lang_character_set'] : $modSettings['global_character_set'];
+	$context['utf8'] = $context['character_set'] === 'UTF-8' && (strpos(strtolower(PHP_OS), 'win') === false || @version_compare(PHP_VERSION, '4.2.3') != -1);
+	$context['right_to_left'] = !empty($txt['lang_rtl']);
 
 	$context['tabindex'] = 1;
 
