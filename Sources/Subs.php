@@ -3253,7 +3253,7 @@ function template_header()
 					unset($securityFiles[$i]);
 			}
 
-			if (!empty($securityFiles) || !is_writable($cachedir))
+			if (!empty($securityFiles) || (!empty($modSettings['cache_enable']) && !is_writable($cachedir)))
 			{
 				echo '
 		<div class="errorbox">
@@ -3271,7 +3271,7 @@ function template_header()
 				', sprintf($txt['not_removed_extra'], $securityFile, substr($securityFile, 0, -1)), '<br />';
 				}
 
-				if (!is_writable($cachedir))
+				if (!empty($modSettings['cache_enable']) && !is_writable($cachedir)))
 					echo '
 				<strong>', $txt['cache_writable'], '</strong><br />';
 

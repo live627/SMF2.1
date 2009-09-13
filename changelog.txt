@@ -28,7 +28,7 @@ September 2009
  ! Split browser detection from theme loading; (index.php, Load.php) [Bug 3169]
  * Opera 10 uses 9.8 for user agent (Load.php, Script.js) [Bug 3750]
  * Invalid css (index.css) [Bug 3752]
-
+ ! Only warn cache not writable if cache is enabled (Subs.php) [Bug 3747]
 
 August 2009
 --------------------------------------------------------------------------------
