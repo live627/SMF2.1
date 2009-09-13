@@ -29,6 +29,7 @@ September 2009
  * Opera 10 uses 9.8 for user agent (Load.php, Script.js) [Bug 3750]
  * Invalid css (index.css) [Bug 3752]
  ! Only warn cache not writable if cache is enabled (Subs.php) [Bug 3747]
+ ! Warn/prevent converting to utf8 with fulltext index. (ManageMaintenance.php, ManageMaintenance.template.php, ManageMaintenance.english.php) [Bug 3517]
 
 August 2009
 --------------------------------------------------------------------------------

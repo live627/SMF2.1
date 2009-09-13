@@ -4,7 +4,7 @@
 // Template for the database maintenance tasks.
 function template_maintain_database()
 {
-	global $context, $settings, $options, $txt, $scripturl, $db_type;
+	global $context, $settings, $options, $txt, $scripturl, $db_type, $modSettings;
 
 	// If maintenance has finished tell the user.
 	if (!empty($context['maintenance_finished']))
@@ -69,7 +69,8 @@ function template_maintain_database()
 				<div class="content">
 					<form action="', $scripturl, '?action=admin;area=maintain;sa=database;activity=convertutf8" method="post" accept-charset="', $context['character_set'], '">
 						<p>', $txt['utf8_introduction'], '</p>
-						<span><input type="submit" value="', $txt['maintain_run_now'], '" class="button_submit" /></span>
+						', !empty($modSettings['search_index']) && $modSettings['search_index'] == 'fulltext' ? '<p class="error">' . $txt['utf8_cannot_convert_fulltext'] . '</p>' : '', '
+						<span><input type="submit" value="', $txt['maintain_run_now'], '" class="button_submit" ', !empty($modSettings['search_index']) && $modSettings['search_index'] == 'fulltext' ? 'disabled="disabled"' : '', '/></span>
 						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					</form>
 				</div>
