@@ -1356,7 +1356,6 @@ div#upper_section div.news form
 	font-size: 0.9em;
 	padding: 1em 0 0.5em 0;
 	border-top: solid #ccc 1px;
-	z-index: 0.8;
 }
 #navigate_section_upper ul li, #navigate_section_lower ul li
 {
