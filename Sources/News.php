@@ -526,8 +526,9 @@ function getXmlMembers($xml_format)
 		SELECT id_member, member_name, real_name, date_registered, last_login
 		FROM {db_prefix}members
 		ORDER BY id_member DESC
-		LIMIT ' . $_GET['limit'],
+		LIMIT {int:limit}',
 		array(
+			'limit' => $_GET['limit'],
 		)
 	);
 	$data = array();
@@ -595,10 +596,11 @@ function getXmlNews($xml_format)
 			AND t.id_board = {int:current_board}') . ($modSettings['postmod_active'] ? '
 			AND t.approved = {int:is_approved}' : '') . '
 		ORDER BY t.id_first_msg DESC
-		LIMIT ' . $_GET['limit'],
+		LIMIT {int:limit}',
 		array(
 			'current_board' => $board,
 			'is_approved' => 1,
+			'limit' => $_GET['limit'],
 		)
 	);
 	$data = array();
@@ -686,8 +688,9 @@ function getXmlRecent($xml_format)
 			AND m.id_board = {int:current_board}') . ($modSettings['postmod_active'] ? '
 			AND m.approved = {int:is_approved}' : '') . '
 		ORDER BY m.id_msg DESC
-		LIMIT ' . $_GET['limit'],
+		LIMIT {int:limit}',
 		array(
+			'limit' => $_GET['limit'],
 			'current_board' => $board,
 			'is_approved' => 1,
 		)
@@ -717,8 +720,9 @@ function getXmlRecent($xml_format)
 		WHERE m.id_msg IN ({array_int:message_list})
 			' . (empty($board) ? '' : 'AND t.id_board = {int:current_board}') . '
 		ORDER BY m.id_msg DESC
-		LIMIT ' . $_GET['limit'],
+		LIMIT {int:limit}',
 		array(
+			'limit' => $_GET['limit'],
 			'current_board' => $board,
 			'message_list' => $messages,
 		)
