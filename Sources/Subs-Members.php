@@ -811,9 +811,9 @@ function registerMember(&$regOptions, $return_errors = false)
 	if ($regOptions['interface'] == 'admin')
 	{
 		if ($regOptions['require'] == 'activation')
-			$email_message = 'register_activate';
+			$email_message = 'admin_register_activate';
 		elseif (!empty($regOptions['send_welcome_email']))
-			$email_message = 'register_immediate';
+			$email_message = 'admin_register_immediate';
 
 		if (isset($email_message))
 		{
@@ -821,7 +821,9 @@ function registerMember(&$regOptions, $return_errors = false)
 				'REALNAME' => $regOptions['register_vars']['real_name'],
 				'USERNAME' => $regOptions['username'],
 				'PASSWORD' => $regOptions['password'],
+				'FORGOTPASSWORDLINK' => $scripturl . '?action=reminder',
 				'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $memberID . ';code=' . $validation_code,
+				'ACTIVATIONLINKWITHOUTCODE' => $scripturl . '?action=activate;u=' . $memberID,
 				'ACTIVATIONCODE' => $validation_code,
 			);
 
@@ -843,6 +845,7 @@ function registerMember(&$regOptions, $return_errors = false)
 				'REALNAME' => $regOptions['register_vars']['real_name'],
 				'USERNAME' => $regOptions['username'],
 				'PASSWORD' => $regOptions['password'],
+				'FORGOTPASSWORDLINK' => $scripturl . '?action=reminder',
 				'OPENID' => !empty($regOptions['openid']) ? $regOptions['openid'] : '',
 			);
 			$emaildata = loadEmailTemplate('register_' . ($regOptions['auth_method'] == 'openid' ? 'openid_' : '') . 'immediate', $replacements);
@@ -859,12 +862,14 @@ function registerMember(&$regOptions, $return_errors = false)
 			'REALNAME' => $regOptions['register_vars']['real_name'],
 			'USERNAME' => $regOptions['username'],
 			'PASSWORD' => $regOptions['password'],
+			'FORGOTPASSWORDLINK' => $scripturl . '?action=reminder',
 			'OPENID' => !empty($regOptions['openid']) ? $regOptions['openid'] : '',
 		);
 
 		if ($regOptions['require'] == 'activation')
 			$replacements += array(
 				'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $memberID . ';code=' . $validation_code,
+				'ACTIVATIONLINKWITHOUTCODE' => $scripturl . '?action=activate;u=' . $memberID,
 				'ACTIVATIONCODE' => $validation_code,
 			);
 		else
@@ -883,6 +888,7 @@ function registerMember(&$regOptions, $return_errors = false)
 			'REALNAME' => $regOptions['register_vars']['real_name'],
 			'USERNAME' => $regOptions['username'],
 			'PASSWORD' => $regOptions['password'],
+			'FORGOTPASSWORDLINK' => $scripturl . '?action=reminder',
 			'OPENID' => !empty($regOptions['openid']) ? $regOptions['openid'] : '',
 		);
 

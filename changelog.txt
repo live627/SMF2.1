@@ -33,7 +33,8 @@ September 2009
  ! The recent download attachment handling changes caused a few errors (Load.php, Display.php) [Bug 3753]
  ! UTF-8 was not handled properly in parse_bbc (Subs.php) [Bug 3474]
  ! Removed an extra global variable that was done twice due to fix for bug 3753 (Display.php)
-
+ & Don't send passwords in registration emails unless the admin registered the account, for security reasons (EmailTemplates language file)
+ & Make registration emails a bit more user-friendly (EmailTemplates language file, Profile-Modify.php, Subs-Members.php)
 
 August 2009
 --------------------------------------------------------------------------------

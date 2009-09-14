@@ -26,18 +26,18 @@ $txt['emails'] = array(
 				USERNAME:  The user name for the member receiving the email.
 				ACTIVATIONLINK:  The url link to activate the member's account.
 				ACTIVATIONCODE:  The code needed to activate the member's account.
+				ACTIVATIONLINKWITHOUTCODE: The url to the page where the activation code can be entered.
+				FORGOTPASSWORDLINK: The url to the "forgot password" page.
 			@description:
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',
-		'body' => 'You are now registered with an account at {FORUMNAME}, {REALNAME}!
+		'body' => 'Thank you for registering at {FORUMNAME}. Your username is {USERNAME}. If you forget your password, you can reset it by visiting {FORGOTPASSWORDLINK}.
 
-Your username is "{USERNAME}".
-
-Before you can login, you first need to activate your account. To do so, please follow this link:
+Before you can login, you must first activate your account by selecting the following link:
 
 {ACTIVATIONLINK}
 
-Should you have any problems with activation, please use the code "{ACTIVATIONCODE}".
+Should you have any problems with the activation, please visit {ACTIVATIONLINKWITHOUTCODE} and enter the code "{ACTIVATIONCODE}".
 
 {REGARDS}',
 	),
@@ -109,15 +109,13 @@ This is due to the following reason: {REASON}
 				NAME: The display name of the member.
 				USERNAME: The user name for the member receiving the email.
 				PROFILELINK: The URL of the profile page.
+				FORGOTPASSWORDLINK: The URL of the "forgot password" page.
 			@description:
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',
 		'body' => 'Welcome, {NAME}!
 
-Your account has been activated manually by the admin and you can now login and post. Your username is: {USERNAME}
-
-You may change it after you login by going to the profile page, or by visiting this page after you login:
-{PROFILELINK}
+Your account has been activated manually by the admin and you can now login and post. Your username is: {USERNAME}. If you forget your password, you can change it at {FORGOTPASSWORDLINK}.
 
 {REGARDS}',
 	),
@@ -126,13 +124,18 @@ You may change it after you login by going to the profile page, or by visiting t
 			@additional_params: admin_approve_activation
 				USERNAME: The user name for the member receiving the email.
 				ACTIVATIONLINK:  The url link to activate the member's account.
+				ACTIVATIONLINKWITHOUTCODE: The url to the page where the activation code can be entered.
+				ACTIVATIONCODE: The activation code.
 			@description:
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',
 		'body' => 'Welcome, {USERNAME}!
 
-Your account on {FORUMNAME} has been approved by the forum administrator, and must now be activated before you can begin posting.  Please use the link below to activate your account:
+Your account on {FORUMNAME} has been approved by the forum administrator. Before you can login, you must first activate your account by selecting the following link:
+
 {ACTIVATIONLINK}
+
+Should you have any problems with the activation, please visit {ACTIVATIONLINKWITHOUTCODE} and enter the code "{ACTIVATIONCODE}".
 
 {REGARDS}',
 	),
@@ -167,6 +170,8 @@ Your account on {FORUMNAME} has been deleted.  This may be because you never act
 			@additional_params: admin_approve_remind
 				USERNAME: The user name for the member receiving the email.
 				ACTIVATIONLINK:  The url link to activate the member's account.
+				ACTIVATIONLINKWITHOUTCODE: The url to the page where the activation code can be entered.
+				ACTIVATIONCODE: The activation code.
 			@description:
 		*/
 		'subject' => 'Registration Reminder',
@@ -175,6 +180,34 @@ You still have not activated your account at {FORUMNAME}.
 
 Please use the link below to activate your account:
 {ACTIVATIONLINK}
+
+Should you have any problems with the activation, please visit {ACTIVATIONLINKWITHOUTCODE} and enter the code "{ACTIVATIONCODE}".
+
+{REGARDS}',
+	),
+	'admin_register_activate' => array(
+		/*
+			@additional_params:
+				USERNAME: The user name for the member receiving the email.
+				ACTIVATIONLINK:  The url link to activate the member's account.
+				ACTIVATIONLINKWITHOUTCODE: The url to the page where the activation code can be entered.
+				ACTIVATIONCODE: The activation code.
+			@description:
+		*/
+		'subject' => 'Welcome to {FORUMNAME}',
+		'body' => 'Thank you for registering at {FORUMNAME}. Your username is {USERNAME} and your password is {PASSWORD}.
+
+Before you can login, you must first activate your account by selecting the following link:
+
+{ACTIVATIONLINK}
+
+Should you have any problems with the activation, please visit {ACTIVATIONLINKWITHOUTCODE} and enter the code "{ACTIVATIONCODE}".
+
+{REGARDS}',
+	),
+	'admin_register_immediate' => array(
+		'subject' => 'Welcome to {FORUMNAME}',
+		'body' => 'Thank you for registering at {FORUMNAME}. Your username is {USERNAME} and your password is {PASSWORD}.
 
 {REGARDS}',
 	),
@@ -335,13 +368,14 @@ To edit your subscriptions visit the following URL:
 			@additional_params: activate_reactivate
 				ACTIVATIONLINK:  The url link to reactivate the member's account.
 				ACTIVATIONCODE:  The code needed to reactivate the member's account.
+				ACTIVATIONLINKWITHOUTCODE: The url to the page where the activation code can be entered.
 			@description:
 		*/
 		'subject' => 'Welcome back to {FORUMNAME}',
 		'body' => 'In order to re-validate your email address, your account has been deactivated.  Click the following link to activate it again:
 {ACTIVATIONLINK}
 
-Should you have any problems with activation, please use the code "{ACTIVATIONCODE}".
+Should you have any problems with activation, please visit {ACTIVATIONLINKWITHOUTCODE) and use the code "{ACTIVATIONCODE}".
 
 {REGARDS}',
 	),
@@ -503,19 +537,19 @@ You may change it after you login by going to the profile page, or by visiting t
 				USERNAME: The user name for the member receiving the email.
 				PASSWORD: The password for the member.
 				ACTIVATIONLINK:  The url link to reactivate the member's account.
+				ACTIVATIONLINKWITHOUTCODE: The url to the page where the activation code can be entered.
 				ACTIVATIONCODE:  The code needed to reactivate the member's account.
+				FORGOTPASSWORDLINK: The url to the "forgot password" page.
 			@description:
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',
-		'body' => 'You are now registered with an account at {FORUMNAME}, {REALNAME}!
-
-Your account\'s username is {USERNAME} and its password is {PASSWORD} (which can be changed later.)
+		'body' => 'Thank you for registering at {FORUMNAME}. Your username is {USERNAME}. If you forget your password, you can reset it by visiting {FORGOTPASSWORDLINK}.
 
 Before you can login, you first need to activate your account. To do so, please follow this link:
 
 {ACTIVATIONLINK}
 
-Should you have any problems with activation, please use the code "{ACTIVATIONCODE}".
+Should you have any problems with activation, please visit {ACTIVATIONLINKWITHOUTCODE} use the code "{ACTIVATIONCODE}".
 
 {REGARDS}',
 	),
@@ -526,20 +560,19 @@ Should you have any problems with activation, please use the code "{ACTIVATIONCO
 				USERNAME: The user name for the member receiving the email.
 				OPENID: The openID identity for the member.
 				ACTIVATIONLINK:  The url link to reactivate the member's account.
+				ACTIVATIONLINKWITHOUTCODE: The url to the page where the activation code can be entered.
 				ACTIVATIONCODE:  The code needed to reactivate the member's account.
 			@description:
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',
-		'body' => 'You are now registered with an account at {FORUMNAME}, {REALNAME}!
-
-Your account\'s username is {USERNAME}. You have chosen to authenticate using the following OpenID identity:
+		'body' => 'Thank you for registering at {FORUMNAME}. Your username is {USERNAME}. You have chosen to authenticate using the following OpenID identity:
 {OPENID}
 
 Before you can login, you first need to activate your account. To do so, please follow this link:
 
 {ACTIVATIONLINK}
 
-Should you have any problems with activation, please use the code "{ACTIVATIONCODE}".
+Should you have any problems with activation, please visit {ACTIVATIONLINKWITHOUTCODE} and use the code "{ACTIVATIONCODE}".
 
 {REGARDS}',
 	),
@@ -550,12 +583,11 @@ Should you have any problems with activation, please use the code "{ACTIVATIONCO
 				USERNAME: The user name for the member receiving the email.
 				PASSWORD: The password for the member.
 				COPPALINK:  The url link to the coppa form.
+				FORGOTPASSWORDLINK: The url to the "forgot password" page.
 			@description:
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',
-		'body' => 'You are now registered with an account at {FORUMNAME}, {REALNAME}!
-
-Your account\'s username is {USERNAME} and its password is {PASSWORD} (which can be changed later.)
+		'body' => 'Thank you for registering at {FORUMNAME}. Your username is {USERNAME}. If you forget your password, you can change it at {FORGOTPASSWORDLINK}
 
 Before you can login, the admin requires consent from your parent/guardian for you to join the community. You can obtain more information at the link below:
 
@@ -573,9 +605,7 @@ Before you can login, the admin requires consent from your parent/guardian for y
 			@description:
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',
-		'body' => 'You are now registered with an account at {FORUMNAME}, {REALNAME}!
-
-Your account\'s username is {USERNAME}.
+		'body' => 'Thank you for registering at {FORUMNAME}. Your username is {USERNAME}.
 
 You have chosen to authenticate using the following OpenID identity:
 {OPENID}
@@ -592,16 +622,11 @@ Before you can login, the admin requires consent from your parent/guardian for y
 				REALNAME: The display name for the member receiving the email.
 				USERNAME: The user name for the member receiving the email.
 				PASSWORD: The password for the member.
+				FORGOTPASSWORDLINK: The url to the "forgot password" page.
 			@description:
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',
-		'body' => 'You are now registered with an account at {FORUMNAME}, {REALNAME}!
-
-Your account\'s username is {USERNAME} and its password is {PASSWORD}.
-
-You may change your password after you login by going to your profile, or by visiting this page after you login:
-
-{SCRIPTURL}?action=profile
+		'body' => 'Thank you for registering at {FORUMNAME}. Your username is {USERNAME}. If you forget your password, you may change it at {FORGOTPASSWORDLINK}.
 
 {REGARDS}',
 	),
@@ -614,9 +639,7 @@ You may change your password after you login by going to your profile, or by vis
 			@description:
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',
-		'body' => 'You are now registered with an account at {FORUMNAME}, {REALNAME}!
-
-Your account\'s username is {USERNAME}.
+		'body' => 'Thank you for registering at {FORUMNAME}. Your username is {USERNAME}.
 
 You have chosen to authenticate using the following OpenID identity:
 {OPENID}
@@ -633,12 +656,13 @@ You may update your profile by visiting this page after you login:
 				REALNAME: The display name for the member receiving the email.
 				USERNAME: The user name for the member receiving the email.
 				PASSWORD: The password for the member.
+				FORGOTPASSWORDLINK: The url to the "forgot password" page.
 			@description:
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',
 		'body' => 'Your registration request at {FORUMNAME} has been received, {REALNAME}.
 
-The username you registered with was {USERNAME} and the password was {PASSWORD}.
+The username you registered with was {USERNAME}. If you forget your password, you can change it at {FORGOTPASSWORDLINK}.
 
 Before you can login and start using the forum, your request will be reviewed and approved.  When this happens, you will receive another email from this address.
 
