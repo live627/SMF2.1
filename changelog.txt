@@ -35,6 +35,7 @@ September 2009
  ! Removed an extra global variable that was done twice due to fix for bug 3753 (Display.php)
  & Don't send passwords in registration emails unless the admin registered the account, for security reasons (EmailTemplates language file)
  & Make registration emails a bit more user-friendly (EmailTemplates language file, Profile-Modify.php, Subs-Members.php)
+ ! Attempt to calculate table sizes in PostgreSQL as well (ManageSearch.php) [Bug 949]
 
 August 2009
 --------------------------------------------------------------------------------
