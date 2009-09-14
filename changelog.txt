@@ -32,6 +32,7 @@ September 2009
  ! Warn/prevent converting to utf8 with fulltext index. (ManageMaintenance.php, ManageMaintenance.template.php, ManageMaintenance.english.php) [Bug 3517]
  ! The recent download attachment handling changes caused a few errors (Load.php, Display.php) [Bug 3753]
  ! UTF-8 was not handled properly in parse_bbc (Subs.php) [Bug 3474]
+ ! Removed an extra global variable that was done twice due to fix for bug 3753 (Display.php)
 
 
 August 2009
@@ -100,7 +101,7 @@ August 2009
  * The memberlist stats bar was pushed onto separate lines (Memberlist template) [Bug 3686]
  * Removed a large gap before the packages advanced area (Packages template) [Bug 3688]
  ! UTF-8 support was still a bit buggy in PostgreSQL (install.php) [Bug 3175]
- * The "edit_options" screen had "profile" text in a couple of spots even though it's not always used in the profile area (PersonalMessage.php, Profile template) [Bug 3689] 
+ * The "edit_options" screen had "profile" text in a couple of spots even though it's not always used in the profile area (PersonalMessage.php, Profile template) [Bug 3689]
  ! repair_settings had missing logo and some error warnings (repair_settings.php)
  ! 2 x Slow queries - attachment related. Kill two birds with one -stone- index (install/upgrade sql files) [Bug 3613] [Bug 3616]
  ! Missing an index for postgresql and sqlite (install/upgrade sql files)
@@ -132,7 +133,7 @@ August 2009
  ! Searching for members would fail as we weren't searching with htmlspecialchar'd value (Memberlist.php, ManageMembers.php) [Bug 3714]
  ! Google + verification was listing a bunch of 4.0.x errors in WebmasterTools, so send a transparent pixel instead (Register.php) [Bug 2626]
  * Core: fixed various layout bugs (Recent template, index.css) [Bug 3707]
- * Inclusion of script.js used the wrong path for new themes based on curve (Index template) [Bug 3698] 
+ * Inclusion of script.js used the wrong path for new themes based on curve (Index template) [Bug 3698]
  * Core: Fading part of the fader didn't work (index.css) [Bug 03529]
  ! Google Adsense bot filling up logs with no_access errors (Several files) [Bug 1894]
  * Remove linktree inline option from Core, but make sure to provide it for Classic (Settings.template.php)
