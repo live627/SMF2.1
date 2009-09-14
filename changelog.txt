@@ -38,6 +38,7 @@ September 2009
  ! Attempt to calculate table sizes in PostgreSQL as well (ManageSearch.php) [Bug 949]
  ! Let users choose which stylesheet they wish to edit (Themes.template.php) [Bug 2716]
  & Minor language tweak to reflect above change (Themes language file)
+ * Core: minor layout issues (index.css, compat.css) [Bug 3755]
 
 August 2009
 --------------------------------------------------------------------------------
