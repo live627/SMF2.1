@@ -38,7 +38,7 @@ $txt['theme_users'] = 'people are using this theme.';
 $txt['theme_pick_variant'] = 'Select Variant';
 
 $txt['theme_edit'] = 'Edit Theme';
-$txt['theme_edit_style'] = 'Modify the index.css file. (colors, fonts, etc.)';
+$txt['theme_edit_style'] = 'Modify the stylesheets. (colors, fonts, etc.)';
 $txt['theme_edit_index'] = 'Modify the index template. (the main template)';
 $txt['theme_edit_no_save'] = 'This file cannot be saved because it is not writable!  Please make sure the following file is 777 or has the proper permissions';
 $txt['theme_edit_save'] = 'Save Changes';
@@ -128,7 +128,7 @@ $txt['themeadmin_reset_options_none'] = 'Don\'t change';
 $txt['themeadmin_reset_options_remove'] = 'Remove';
 
 $txt['themeadmin_edit_browse'] = 'Browse the templates and files in this theme.';
-$txt['themeadmin_edit_style'] = 'Edit this theme\'s stylesheet.';
+$txt['themeadmin_edit_style'] = 'Edit this theme\'s stylesheets.';
 $txt['themeadmin_edit_copy_template'] = 'Copy a template from the theme this is based on.';
 $txt['themeadmin_edit_exists'] = 'already exists';
 $txt['themeadmin_edit_do_copy'] = 'copy';
