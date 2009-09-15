@@ -41,6 +41,7 @@ September 2009
  * Core: minor layout issues (index.css, compat.css) [Bug 3755]
  ! When installing some mods, they could throw a database error if they have already been installed once (Packages.php, DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 2963]
  * Removed a large gap on ManageAttachments (ManageAttachments template) 
+ * Show an ellipsis character for the active menu item if it contains subitems, too. (GenericMenu template)
 
 
 August 2009
