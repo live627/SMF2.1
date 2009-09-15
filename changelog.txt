@@ -39,6 +39,8 @@ September 2009
  ! Let users choose which stylesheet they wish to edit (Themes.template.php) [Bug 2716]
  & Minor language tweak to reflect above change (Themes language file)
  * Core: minor layout issues (index.css, compat.css) [Bug 3755]
+ ! When installing some mods, they could throw a database error if they have already been installed once (Packages.php, DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 2963]
+
 
 August 2009
 --------------------------------------------------------------------------------
