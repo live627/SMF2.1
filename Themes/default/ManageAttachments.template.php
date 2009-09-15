@@ -42,10 +42,11 @@ function template_browse()
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
-	</div>
-	<br style="clear: both;" />';
+	</div>';
 
 	template_show_list('file_list');
+	echo '
+	<br style="clear: both;" />';
 
 }
 

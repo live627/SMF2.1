@@ -40,6 +40,7 @@ September 2009
  & Minor language tweak to reflect above change (Themes language file)
  * Core: minor layout issues (index.css, compat.css) [Bug 3755]
  ! When installing some mods, they could throw a database error if they have already been installed once (Packages.php, DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 2963]
+ * Removed a large gap on ManageAttachments (ManageAttachments template) 
 
 
 August 2009
