@@ -1261,8 +1261,8 @@ function doStep1()
 							$temp = array();
 
 							// Simply loop each row, clean it and put it in a temp array.
-							foreach ($row as $dirty_string)
-								$temp[] = addslashes_recursive($dirty_string);
+							foreach ($row as $key => $dirty_string)
+								$temp[$key] = addslashes_recursive($dirty_string);
 
 							// Now that mess is over. Save it.
 							$rows[] = $temp;
@@ -2903,7 +2903,7 @@ function alterTable($tableName, $knownKeys = '', $knownColumns = '', $alterColum
 	global $smcFunc, $to_prefix;
 
 	// Ok, you old scripts. Get off it!
-	print_error('alrterTable is deprecated in convert.php. Please consider using proper \$smcFuncs.' . var_dump(function_exists('debug_backtrace') ? debug_backtrace() : 'Unable to backtrace'));
+	print_error('alterTable is deprecated in convert.php. Please consider using proper \$smcFuncs.' . var_dump(function_exists('debug_backtrace') ? debug_backtrace() : 'Unable to backtrace'));
 
 	// Shorten this up
 	$to_table = $to_prefix . $tableName;
@@ -2919,7 +2919,7 @@ function alterTable($tableName, $knownKeys = '', $knownColumns = '', $alterColum
 
 	// Are we dealing with columns also?
 	if (!empty($knownColumns))
-		$availableColumns = array_flip($smcFunc['db_list_columns']());
+		$availableColumns = array_flip($smcFunc['db_list_columns']("$tableName", true));
 	else
 		$knownColumns = array();
 

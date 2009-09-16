@@ -134,16 +134,9 @@ elseif ($row['user_avatar_type'] == 1 && strlen($row['avatar']) > 0)
 	$smf_avatar_filename = 'avatar_' . $row['id_member'] . strrchr($row['avatar'], '.');
 	@copy($phpbb_avatar_upload_path . '/' . $row['avatar'], $avatar_dir . '/' . $smf_avatar_filename);
 
-	convert_query("
-		INSERT INTO {$to_prefix}attachments
-			(id_msg, id_member, filename, attachment_type)
-		VALUES (0, $row[id_member], SUBSTRING('" . addslashes($smf_avatar_filename) . "', 1, 255), " . $attachment_type . ")");
-
 	convert_insert('attachments', array('id_msg', 'id_member', 'filename', 'attachment_type'),
 		array(0, $row['id_member'], substr(addslashes($smf_avatar_filename), 0, 255), $attachment_type)
 	);
-
-
 
 	$row['avatar'] = '';
 }
@@ -185,6 +178,7 @@ $row['signature'] = preg_replace(
 		'~\[\*(:.+?)?\]~is',
 		'~\[/\*(:.+?)?\]~is',
 		'~<!-- (.+?) -->~is',
+		'~<img src="{SMILIES_PATH}/(.+?)/(.+?)" alt="(.+?)" title="(.+?)" />~is',
 	),
 	array(
 		'[quote author="$1"]',
@@ -216,6 +210,7 @@ $row['signature'] = preg_replace(
 		'[li]',
 		'[/li]',
 		'',
+		'$3',
 	), $row['signature']);
 
 $row['signature'] = preg_replace('~\[size=(.+?)px\]~is', "[size=" . ('\1' > '99' ? 99 : '"\1"') . "px]", $row['signature']);
@@ -388,6 +383,8 @@ WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 ---{
+if (empty($row['id_cat']))
+	$row['id_cat'] = 1;
 $row['name'] = str_replace('\n', '<br />', $row['name']);
 ---}
 SELECT
@@ -464,35 +461,35 @@ TRUNCATE {$to_prefix}messages;
 // This does the major work first
 $row['body'] = preg_replace(
 	array(
-		'~\[quote=&quot;(.+?)&quot;(:.+?)?\]~is',
-		'~\[quote(:.+?)?\]~is',
-		'~\[/quote(:.+?)?\]~is',
-		'~\[b(:.+?)?\]~is',
-		'~\[/b(:.+?)?\]~is',
-		'~\[i(:.+?)?\]~is',
-		'~\[/i(:.+?)?\]~is',
-		'~\[u(:.+?)?\]~is',
-		'~\[/u(:.+?)?\]~is',
-		'~\[url:(.+?)\]~is',
-		'~\[/url:(.+?)?\]~is',
-		'~\[url=(.+?):(.+?)\]~is',
-		'~\[/url:(.+?)?\]~is',
+		'~\[quote=&quot;(.+?)&quot;\:(.+?)\]~is',
+		'~\[quote\:(.+?)\]~is',
+		'~\[/quote\:(.+?)\]~is',
+		'~\[b\:(.+?)\]~is',
+		'~\[/b\:(.+?)\]~is',
+		'~\[i\:(.+?)\]~is',
+		'~\[/i\:(.+?)\]~is',
+		'~\[u\:(.+?)\]~is',
+		'~\[/u\:(.+?)\]~is',
+		'~\[url\:(.+?)\]~is',
+		'~\[/url\:(.+?)\]~is',
+		'~\[url=(.+?)\:(.+?)\]~is',
+		'~\[/url\:(.+?)\]~is',
 		'~\<a(.+?) href="(.+?)">(.+?)</a>~is',
-		'~\[img:(.+?)?\]~is',
-		'~\[/img:(.+?)?\]~is',
-		'~\[size=(.+?):(.+?)\]~is',
-		'~\[/size(:.+?)?\]~is',
-		'~\[color=(.+?):(.+?)\]~is',
-		'~\[/color(:.+?)?\]~is',
-		'~\[code=(.+?):(.+?)?\]~is',
-		'~\[code(:.+?)?\]~is',
-		'~\[/code(:.+?)?\]~is',
-		'~\[list=(.+?):(.+?)?\]~is',
-		'~\[list(:.+?)?\]~is',
-		'~\[/list(:.+?)?\]~is',
-		'~\[\*(:.+?)?\]~is',
-		'~\[/\*(:.+?)?\]~is',
-		'~<!-- (.+?) -->~is',
+		'~\[img\:(.+?)\]~is',
+		'~\[/img\:(.+?)\]~is',
+		'~\[size=(.+?)\:(.+?)\]~is',
+		'~\[/size\:(.+?)?\]~is',
+		'~\[color=(.+?)\:(.+?)\]~is',
+		'~\[/color\:(.+?)\]~is',
+		'~\[code=(.+?)\:(.+?)\]~is',
+		'~\[code\:(.+?)\]~is',
+		'~\[/code\:(.+?)\]~is',
+		'~\[list=(.+?)\:(.+?)\]~is',
+		'~\[list\:(.+?)\]~is',
+		'~\[/list\:(.+?)\]~is',
+		'~\[\*\:(.+?)\]~is',
+		'~\[/\*\:(.+?)\]~is',
+		'~\<img src=\"{SMILIES_PATH}/(.+?)\" alt=\"(.+?)\" title=\"(.+?)\" /\>~is',
 	),
 	array(
 		'[quote author="$1"]',
@@ -523,7 +520,7 @@ $row['body'] = preg_replace(
 		'[/list]',
 		'[li]',
 		'[/li]',
-		'',
+		'$2',
 	), $row['body']);
 
 $row['body'] = preg_replace('~\[size=(.+?)px\]~is', "[size=" . ('\1' > '99' ? 99 : '"\1"') . "px]", $row['body']);
@@ -533,6 +530,7 @@ $row['body'] = strtr($row['body'], array(
 	'[list type=1]' => '[list type=decimal]',
 	'[list type=a]' => '[list type=lower-alpha]',
 	));
+$row['body'] = stripslashes($row['body']);
 ---}
 SELECT
 	p.post_id AS id_msg, p.topic_id AS id_topic, p.forum_id AS id_board,
@@ -625,7 +623,6 @@ FROM {$from_prefix}privmsgs_to AS pm;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads', 'width', 'height');
 
 if (!isset($oldAttachmentDir))
 {
@@ -669,7 +666,15 @@ if (in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png', 'bmp')))
 $newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $row['physical_filename'], $attachmentUploadDir . '/' . $newfilename))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads], '$width', '$height'";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize($attachmentUploadDir . '/' . $newfilename),
+		'filename' => $row['filename'],
+		'id_msg' => $row['id_msg'],
+		'downloads' => $row['downloads'],
+		'width' => $width,
+		'height' => $height,
+	);
 	$id_attach++;
 }
 ---}
