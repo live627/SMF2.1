@@ -355,11 +355,26 @@ function Login2()
 
 			// BurningBoard3 style of hashing.
 			$other_passwords[] = sha1($user_settings['password_salt'] . sha1($user_settings['password_salt'] . sha1($_REQUEST['passwrd'])));
+
+			// Perhaps we converted to UTF-8 and have a valid password being hashed differently.
+			if ($context['character_set'] == 'utf8' && !empty($modSettings['previousCharacterSet']) && $modSettings['previousCharacterSet'] != 'utf8')
+			{
+				// Try iconv first, for no particular reason.
+				if (function_exists('iconv'))	
+					$other_passwords['iconv'] = sha1(strtolower(iconv('UTF-8', $modSettings['previousCharacterSet'], $user_settings['member_name'])) . un_htmlspecialchars(iconv('UTF-8', $modSettings['previousCharacterSet'], $_POST['passwrd'])));
+
+				// Say it aint so, iconv failed!
+				if (empty($other_passwords['iconv']) && function_exists('mb_convert_encoding'))
+					$other_passwords[] = sha1(strtolower(mb_convert_encoding($user_settings['member_name'], 'UTF-8', $modSettings['previousCharacterSet'])) . un_htmlspecialchars(mb_convert_encoding($_POST['passwrd'], 'UTF-8', $modSettings['previousCharacterSet'])));
+			}
 		}
 
 		// SMF's sha1 function can give a funny result on Linux (Not our fault!). If we've now got the real one let the old one be valid!
-		require_once($sourcedir . '/Subs-Compat.php');
-		$other_passwords[] = sha1_smf(strtolower($user_settings['member_name']) . un_htmlspecialchars($_POST['passwrd']));
+		if (strpos(strtolower(PHP_OS), 'win') !== 0)
+		{
+			require_once($sourcedir . '/Subs-Compat.php');
+			$other_passwords[] = sha1_smf(strtolower($user_settings['member_name']) . un_htmlspecialchars($_POST['passwrd']));
+		}
 
 		// Whichever encryption it was using, let's make it use SMF's now ;).
 		if (in_array($user_settings['passwd'], $other_passwords))

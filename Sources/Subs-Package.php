@@ -243,7 +243,8 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 	$crc = unpack('Vcrc32/Visize', substr($data, strlen($data) - 8, 8));
 	$data = @gzinflate(substr($data, $offset, strlen($data) - 8 - $offset));
 
-	if ($crc['crc32'] != smf_crc32($data))
+	// smf_crc32 and crc32 may not return the same results, so we accept either.
+	if ($crc['crc32'] != smf_crc32($data) && $crc['crc32'] != crc32($data))
 		return false;
 
 	$blocks = strlen($data) / 512 - 1;
