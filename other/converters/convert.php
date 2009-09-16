@@ -3020,6 +3020,12 @@ function copy_dir($source, $dest)
 	closedir($dir);
 }
 
+// Convert a percent toa pixel. Thanks Elberet.
+function convert_percent_to_px($percent)
+{
+	return intval(11*(intval($percent)/100.0));
+}
+
 // CLI
 function cmdStep0()
 {

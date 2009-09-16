@@ -121,6 +121,14 @@ if (!isset($board_timezone))
 		LIMIT 1");
 	$phpbb_avatar_upload_path = $_POST['path_from'] . '/' . convert_result($request2, 0, 'config_value');
 	convert_free_result($request2);
+
+	$request2 = convert_query("
+		SELECT config_value
+		FROM {$from_prefix}config
+		WHERE config_name = 'avatar_salt'
+		LIMIT 1");
+	$phpbb_avatar_salt = convert_result($request2, 0, 'config_value');
+	convert_free_result($request2);
 }
 
 // time_offset = phpBB user TZ - phpBB board TZ.
@@ -131,8 +139,13 @@ if ($row['user_avatar_type'] == 0)
 // If the avatar type is uploaded (type = 1) copy avatar with the correct name.
 elseif ($row['user_avatar_type'] == 1 && strlen($row['avatar']) > 0)
 {
+	$phpbb_avatar_ext = substr(strchr($row['avatar'], '.'), 1);
 	$smf_avatar_filename = 'avatar_' . $row['id_member'] . strrchr($row['avatar'], '.');
-	@copy($phpbb_avatar_upload_path . '/' . $row['avatar'], $avatar_dir . '/' . $smf_avatar_filename);
+
+	if (file_exists($phpbb_avatar_upload_path . '/' . $phpbb_avatar_salt . '_' . $row['id_member'] . '.' . $phpbb_avatar_ext))
+		@copy($phpbb_avatar_upload_path . '/' . $phpbb_avatar_salt . '_' . $row['id_member'] . '.' . $phpbb_avatar_ext);
+	else
+		@copy($phpbb_avatar_upload_path . '/' . $row['avatar'], $avatar_dir . '/' . $smf_avatar_filename);
 
 	convert_insert('attachments', array('id_msg', 'id_member', 'filename', 'attachment_type'),
 		array(0, $row['id_member'], substr(addslashes($smf_avatar_filename), 0, 255), $attachment_type)
@@ -197,7 +210,7 @@ $row['signature'] = preg_replace(
 		'[url=$2]$3[/url]',
 		'[img]',
 		'[/img]',
-		'[size=$1px]',
+		'[size=' . convert_percent_to_px("\1") . 'px]',
 		'[/size]',
 		'[color=$1]',
 		'[/color]',
@@ -508,7 +521,7 @@ $row['body'] = preg_replace(
 		'[url=$2]$3[/url]',
 		'[img]',
 		'[/img]',
-		'[size=$1px]',
+		'[size=' . convert_percent_to_px("\1") . 'px]',
 		'[/size]',
 		'[color=$1]',
 		'[/color]',
