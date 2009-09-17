@@ -69,22 +69,20 @@ function template_control_richedit($editor_id, $smileyContainer = null, $bbcCont
 						<html>
 							<head>
 								<title>' . $txt['more_smileys_title'] . '</title>
-								<link rel="stylesheet" type="text/css" href="' . $settings['theme_url'] . '/css/index' . $context['theme_variant'] . '.css?rc1" />
+								<link rel="stylesheet" type="text/css" href="' . $settings['theme_url'] . '/css/index' . $context['theme_variant'] . '.css?rc2" />
 							</head>
-							<body style="margin: 1ex;">
-								<table width="100%" cellpadding="5" cellspacing="0" border="0" class="tborder">
-									<tr class="titlebg">
-										<td align="left">' . $txt['more_smileys_pick'] . '</td>
-									</tr>
-									<tr class="windowbg">
-										<td align="left">%smileyRows%</td>
-									</tr>
-									<tr>
-										<td align="center" class="windowbg">
-											<a href="#" id="%moreSmileysCloseLinkId%">' . $txt['more_smileys_close_window'] . '</a>
-										</td>
-									</tr>
-								</table>
+							<body id="help_popup">
+								<div class="padding windowbg">
+									<h3 class="catbg"><span class="left"></span>
+										' . $txt['more_smileys_pick'] . '
+									</h3>
+									<div class="padding">
+										%smileyRows%
+									</div>
+									<div class="smalltext centertext">
+										<a href="#" id="%moreSmileysCloseLinkId%">' . $txt['more_smileys_close_window'] . '</a>
+									</div>
+								</div>
 							</body>
 						</html>'), '
 				});';
@@ -232,9 +230,6 @@ function template_control_richedit($editor_id, $smileyContainer = null, $bbcCont
 
 		echo '
 			// ]]></script>';
-/*
-
-*/
 }
 
 function template_control_richedit_buttons($editor_id)
