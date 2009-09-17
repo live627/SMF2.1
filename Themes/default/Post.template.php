@@ -387,8 +387,7 @@ function template_main()
 		echo '
 							<tr>
 								<td align="right"></td>
-								<td valign="middle">
-									', template_control_richedit($context['post_box_name'], 'bbc'), '
+								<td valign="middle" id="bbcBox_message">
 								</td>
 							</tr>';
 	}
@@ -398,8 +397,7 @@ function template_main()
 		echo '
 							<tr>
 								<td align="right"></td>
-								<td valign="middle">
-									', template_control_richedit($context['post_box_name'], 'smileys'), '
+								<td valign="middle" id="smileyBox_message">
 								</td>
 							</tr>';
 
@@ -407,7 +405,7 @@ function template_main()
 							<tr>
 								<td valign="top" align="right"></td>
 								<td>
-									', template_control_richedit($context['post_box_name'], 'message'), '
+									', template_control_richedit($context['post_box_name'], 'smileyBox_message', 'bbcBox_message'), '
 								</td>
 							</tr>';
 
@@ -537,7 +535,7 @@ function template_main()
 							<tr>
 								<td align="center" colspan="2">
 									<span class="smalltext"><br />', $context['browser']['is_firefox'] ? $txt['shortcuts_firefox'] : $txt['shortcuts'], '</span><br />
-									', template_control_richedit($context['post_box_name'], 'buttons');
+									', template_control_richedit_buttons($context['post_box_name']);
 
 	// Option to delete an event if user is editing one.
 	if ($context['make_event'] && !$context['event']['new'])
@@ -609,8 +607,8 @@ function template_main()
 						if (document.forms.postmodify.elements[textFields[i]])
 						{
 							// Handle the WYSIWYG editor.
-							if (textFields[i] == "', $context['post_box_name'], '" && editorHandle', $context['post_box_name'], ' && editorHandle', $context['post_box_name'], '.bRichTextEnabled)
-								x[x.length] = "message_mode=1&" + textFields[i] + "=" + editorHandle', $context['post_box_name'], '.getText(false).replace(/&#/g, "&#38;#").php_to8bit().php_urlencode();
+							if (textFields[i] == "', $context['post_box_name'], '" && ', JavaScriptEscape('oEditorHandle_' . $context['post_box_name']), ' in window && oEditorHandle_', $context['post_box_name'], '.bRichTextEnabled)
+								x[x.length] = "message_mode=1&" + textFields[i] + "=" + oEditorHandle_', $context['post_box_name'], '.getText(false).replace(/&#/g, "&#38;#").php_to8bit().php_urlencode();
 							else
 								x[x.length] = textFields[i] + "=" + document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#").php_to8bit().php_urlencode();
 						}
@@ -750,9 +748,9 @@ function template_main()
 			function insertQuoteFast(messageid)
 			{
 				if (window.XMLHttpRequest)
-					getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=quotefast;quote=" + messageid + ";', $context['session_var'], '=', $context['session_id'], ';xml;pb=', $context['post_box_name'], ';mode=" + (editorHandle', $context['post_box_name'], '.bRichTextEnabled ? 1 : 0), onDocReceived);
+					getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=quotefast;quote=" + messageid + ";', $context['session_var'], '=', $context['session_id'], ';xml;pb=', $context['post_box_name'], ';mode=" + (oEditorHandle_', $context['post_box_name'], '.bRichTextEnabled ? 1 : 0), onDocReceived);
 				else
-					reqWin(smf_prepareScriptUrl(smf_scripturl) + "action=quotefast;quote=" + messageid + ";', $context['session_var'], '=', $context['session_id'], ';pb=', $context['post_box_name'], ';mode=" + (editorHandle', $context['post_box_name'], '.bRichTextEnabled ? 1 : 0), 240, 90);
+					reqWin(smf_prepareScriptUrl(smf_scripturl) + "action=quotefast;quote=" + messageid + ";', $context['session_var'], '=', $context['session_id'], ';pb=', $context['post_box_name'], ';mode=" + (oEditorHandle_', $context['post_box_name'], '.bRichTextEnabled ? 1 : 0), 240, 90);
 				return true;
 			}
 			function onDocReceived(XMLDoc)
@@ -760,7 +758,7 @@ function template_main()
 				var text = "";
 				for (var i = 0; i < XMLDoc.getElementsByTagName("quote")[0].childNodes.length; i++)
 					text += XMLDoc.getElementsByTagName("quote")[0].childNodes[i].nodeValue;
-				editorHandle', $context['post_box_name'], '.insertText(text, false, true);
+				oEditorHandle_', $context['post_box_name'], '.insertText(text, false, true);
 			}
 		// ]]></script>
 
@@ -910,7 +908,7 @@ function template_quotefast()
 			if (\'opera\' in window)
 				quote = quote.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, \'"\').replace(/&amp;/g, "&");
 
-			window.opener.editorHandle', $context['post_box_name'], '.InsertText(quote);
+			window.opener.oEditorHandle_', $context['post_box_name'], '.InsertText(quote);
 
 			window.focus();
 			setTimeout("window.close();", 400);';

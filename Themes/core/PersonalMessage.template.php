@@ -1017,7 +1017,7 @@ function template_send()
 							<tr>
 								<td align="center" colspan="2">
 									<span class="smalltext"><br />', $context['browser']['is_firefox'] ? $txt['shortcuts_firefox'] : $txt['shortcuts'], '</span><br />
-									', template_control_richedit($context['post_box_name'], 'buttons'), '
+									', template_control_richedit_buttons($context['post_box_name']), '
 								</td>
 							</tr>
 						</table>
@@ -1500,13 +1500,12 @@ function template_add_rule()
 						curNum = document.forms.addrule.elements[i].id.match(/\d+/);
 						curVal = document.forms.addrule.elements[i].value;
 						if (curVal == "gid")
-							curDef = document.getElementById("ruledefgroup" + curNum).value;
+							curDef = document.getElementById("ruledefgroup" + curNum).value.php_htmlspecialchars();
 						else if (curVal != "bud")
-							curDef = document.getElementById("ruledef" + curNum).value;
+							curDef = document.getElementById("ruledef" + curNum).value.php_htmlspecialchars();
 						else
 							curDef = "";
 
-						curDef = smf_htmlspecialchars(curDef);
 						// What type of test is this?
 						if (curVal == "mid" && curDef)
 							text += joinText + ', JavaScriptEscape($txt['pm_readable_member']), '.replace("{MEMBER}", curDef);
@@ -1533,7 +1532,7 @@ function template_add_rule()
 						curNum = document.forms.addrule.elements[i].id.match(/\d+/);
 						curVal = document.forms.addrule.elements[i].value;
 						if (curVal == "lab")
-							curDef = document.getElementById("labdef" + curNum).value;
+							curDef = document.getElementById("labdef" + curNum).value.php_htmlspecialchars();
 						else
 							curDef = "";
 

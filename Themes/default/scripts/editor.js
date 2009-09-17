@@ -1,5 +1,5 @@
-// Make an editor!!
-function SmfEditor(oOptions)
+// *** smc_Editor class.
+function smc_Editor(oOptions)
 {
 	this.opt = oOptions
 
@@ -24,13 +24,8 @@ function SmfEditor(oOptions)
 	this.oBreadHandle = null;
 	this.oResizerElement = null;
 
-	this.oSmileyPopupWindow = null;
-
 	// Kinda holds all the useful stuff.
-	this.aButtonControls = new Array();
-	this.aSelectControls = new Array();
 	this.aKeyboardShortcuts = new Array();
-	this.oSmfSmileys = new Object;
 
 	// This tracks the cursor position on IE to avoid refocus problems.
 	this.cursorX = 0;
@@ -146,16 +141,16 @@ function SmfEditor(oOptions)
 		limegreen: '#32cd32'
 	}
 
-	this.sFormId = 'postmodify';
+	this.sFormId = 'sFormId' in this.opt ? this.opt.sFormId : 'postmodify';
 	this.iArrayPosition = smf_editorArray.length;
 
 	// Current resize state.
-	this.oSmfEditorCurrentResize = {};
+	this.osmc_EditorCurrentResize = {};
 
 	this.init();
 }
 
-SmfEditor.prototype.init = function()
+smc_Editor.prototype.init = function()
 {
 	// Define the event wrapper functions.
 	var oCaller = this;
@@ -175,7 +170,7 @@ SmfEditor.prototype.init = function()
 
 	// Ensure the currentText is set correctly depending on the mode.
 	if (this.sCurrentText == '' && !this.bRichTextEnabled)
-		this.sCurrentText = smf_unhtmlspecialchars(getInnerHTML(this.oTextHandle));
+		this.sCurrentText = getInnerHTML(this.oTextHandle).php_unhtmlspecialchars();
 
 	// Only try to do this if rich text is supported.
 	if (this.bRichTextPossible)
@@ -191,8 +186,8 @@ SmfEditor.prototype.init = function()
 
 
 		// Create some handy shortcuts.
-		this.oFrameDocument = this.oFrameHandle.contentDocument ? this.oFrameHandle.contentDocument : (typeof(this.oFrameHandle.contentWindow) == 'undefined' ? this.oFrameHandle.document : this.oFrameHandle.contentWindow.document);
-		this.oFrameWindow = typeof(this.oFrameHandle.contentWindow) == 'undefined' ? this.oFrameHandle.document.parentWindow : this.oFrameHandle.contentWindow;
+		this.oFrameDocument = this.oFrameHandle.contentDocument ? this.oFrameHandle.contentDocument : ('contentWindow' in this.oFrameHandle ? this.oFrameHandle.contentWindow.document : this.oFrameHandle.document);
+		this.oFrameWindow = 'contentWindow' in this.oFrameHandle ? this.oFrameHandle.contentWindow : this.oFrameHandle.document.parentWindow;
 
 
 		// Create the debug window... and stick this under the main frame - make it invisible by default.
@@ -374,16 +369,12 @@ SmfEditor.prototype.init = function()
 		this.setFocus();
 	}
 
-	// And add the select controls.
-	for (i in this.aSelectControls)
-		this.addSelect(this.aSelectControls[i]);
-
 	// Finally, register shortcuts.
 	this.registerDefaultShortcuts();
 }
 
 // Return the current text.
-SmfEditor.prototype.getText = function(bPrepareEntities, bModeOverride)
+smc_Editor.prototype.getText = function(bPrepareEntities, bModeOverride)
 {
 	var bCurMode = typeof(bModeOverride) != 'undefined' ? bModeOverride : this.bRichTextEnabled;
 
@@ -409,7 +400,7 @@ SmfEditor.prototype.getText = function(bPrepareEntities, bModeOverride)
 }
 
 // Return the current text.
-SmfEditor.prototype.unprotectText = function(sText)
+smc_Editor.prototype.unprotectText = function(sText)
 {
 	var bCurMode = typeof(bModeOverride) != 'undefined' ? bModeOverride : this.bRichTextEnabled;
 
@@ -420,13 +411,13 @@ SmfEditor.prototype.unprotectText = function(sText)
 	return sText;
 }
 
-SmfEditor.prototype.editorKeyUp = function()
+smc_Editor.prototype.editorKeyUp = function()
 {
 	// Rebuild the breadcrumb.
 	this.updateEditorControls();
 }
 
-SmfEditor.prototype.editorBlur = function()
+smc_Editor.prototype.editorBlur = function()
 {
 	if (!is_ie)
 		return;
@@ -434,7 +425,7 @@ SmfEditor.prototype.editorBlur = function()
 	// Need to do something here.
 }
 
-SmfEditor.prototype.editorFocus = function()
+smc_Editor.prototype.editorFocus = function()
 {
 	if (!is_ie)
 		return;
@@ -443,19 +434,15 @@ SmfEditor.prototype.editorFocus = function()
 }
 
 // Rebuild the breadcrumb etc - and set things to the correct context.
-SmfEditor.prototype.updateEditorControls = function()
+smc_Editor.prototype.updateEditorControls = function()
 {
-	// Assume nothing.
-	if (typeof(this.aSelectControls.face) != 'undefined')
-		this.aSelectControls.face.value = '';
-	if (typeof(this.aSelectControls.size) != 'undefined')
-		this.aSelectControls.size.value = '';
-	if (typeof(this.aSelectControls.color) != 'undefined')
-		this.aSelectControls.color.value = '';
-
 	// Everything else is specific to HTML mode.
 	if (!this.bRichTextEnabled)
+	{
+		// Set none of the buttons active.
+		this.opt.oBBCBox.setActive([]);
 		return;
+	}
 
 	var aCrumb = new Array();
 	var aAllCrumbs = new Array();
@@ -481,7 +468,7 @@ SmfEditor.prototype.updateEditorControls = function()
 		var sCrumbName = aCrumb[i].nodeName.toLowerCase();
 
 		// Does it have an alternative name?
-		if (typeof(this.breadCrumbNameTags[sCrumbName]) != 'undefined')
+		if (sCrumbName in this.breadCrumbNameTags)
 			sCrumbName = this.breadCrumbNameTags[sCrumbName];
 		// Don't bother with this...
 		else if (sCrumbName == 'p')
@@ -566,37 +553,29 @@ SmfEditor.prototype.updateEditorControls = function()
 		aAllCrumbs[aAllCrumbs.length] = sCrumbName;
 	}
 
-	for (i in this.aButtonControls)
-	{
-		var bNewState = in_array(this.aButtonControls[i].sCode, aAllCrumbs);
-		if (bNewState != this.aButtonControls[i].bIsActive)
-		{
-			this.aButtonControls[i].bIsActive = bNewState;
-			this.aButtonControls[i].oCodeHandle.style.backgroundImage = 'url(' + smf_images_url + (bNewState ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ')';
-		}
-	}
+	// Since we're in WYSIWYG state, show the toggle button as active.
+	aAllCrumbs[aAllCrumbs.length] = 'toggle';
+
+	this.opt.oBBCBox.setActive(aAllCrumbs);
 
 	// Try set the font boxes correct.
-	if (typeof(this.aSelectControls.face) == 'object')
-		this.aSelectControls.face.value = sCurFontName ;
-	if (typeof(this.aSelectControls.size) == 'object')
-		this.aSelectControls.size.value = sCurFontSize ;
-	if (typeof(this.aSelectControls.color) == 'object')
-		this.aSelectControls.color.value = sCurFontColor ;
+	this.opt.oBBCBox.setSelect('sel_face', sCurFontName);
+	this.opt.oBBCBox.setSelect('sel_size', sCurFontSize);
+	this.opt.oBBCBox.setSelect('sel_color', sCurFontColor);
 
 	if (this.showDebug)
 		setInnerHTML(this.oBreadHandle, sTree);
 }
 
 // Set the HTML content to be that of the text box - if we are in wysiwyg mode.
-SmfEditor.prototype.doSubmit = function()
+smc_Editor.prototype.doSubmit = function()
 {
 	if (this.bRichTextEnabled)
 		this.oTextHandle.value = this.oFrameDocument.body.innerHTML;
 }
 
 // Populate the box with text.
-SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse, iMoveCursorBack)
+smc_Editor.prototype.insertText = function(sText, bClear, bForceEntityReverse, iMoveCursorBack)
 {
 	if (bForceEntityReverse)
 		sText = this.unprotectText(sText);
@@ -628,7 +607,7 @@ SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse, iM
 		if (this.bRichTextEnabled)
 		{
 			// IE croaks if you have an image selected and try to insert!
-			if (typeof(this.oFrameDocument.selection) != 'undefined' && this.oFrameDocument.selection.type != 'Text' && this.oFrameDocument.selection.type != 'None' && this.oFrameDocument.selection.clear)
+			if ('selection' in this.oFrameDocument && this.oFrameDocument.selection.type != 'Text' && this.oFrameDocument.selection.type != 'None' && this.oFrameDocument.selection.clear)
 				this.oFrameDocument.selection.clear();
 
 			var oRange = this.getRange();
@@ -709,223 +688,85 @@ SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse, iM
 	}
 }
 
-// Add all the smileys into the "knowledge base" ;)
-SmfEditor.prototype.addSmiley = function(sCode, sSmileyName, sDesc)
-{
-	if (this.oSmfSmileys[sCode])
-		return;
-
-	this.oSmfSmileys[sCode] = {
-		sCode: sCode,
-		sName: sSmileyName,
-		sDescription: sDesc
-	}
-
-	var oSmileyHandle = document.getElementById('sml_' + sSmileyName);
-
-	if (oSmileyHandle)
-	{
-		// Setup the event callback.
-		oSmileyHandle.instanceRef = this;
-		oSmileyHandle.onclick = function()
-		{
-			this.instanceRef.smileyEventHandler(this);
-		};
-
-		oSmileyHandle.code = sCode;
-		oSmileyHandle.smileyname = sSmileyName;
-		oSmileyHandle.desc = sDesc;
-	}
-}
-
-SmfEditor.prototype.addButton = function(sCode, sBefore, sAfter)
-{
-	var oCodeHandle = document.getElementById('cmd_' + sCode);
-
-	// If it don't exist we cannot create it!
-	if (!oCodeHandle)
-		return false;
-
-	this.aButtonControls[sCode] = {
-		oCodeHandle: oCodeHandle,
-		sCode: sCode,
-		sBefore: sBefore,
-		sAfter: sAfter,
-		bIsActive: false
-	};
-
-/*
-	Array(4);
-	this.aButtonControls[sCode][0] = oCodeHandle;
-	this.aButtonControls[sCode][1] = sCode;
-	this.aButtonControls[sCode][2] = sBefore;
-	this.aButtonControls[sCode][3] = sAfter;
-	// This holds whether or not it's active.
-	this.aButtonControls[sCode][4] = false;
-*/
-
-	// Tie all the relevant actions to the event handler.
-	oCodeHandle.instanceRef = this;
-	oCodeHandle.onclick = function()
-	{
-		this.instanceRef.buttonEventHandler(this, 'click');
-	}
-	oCodeHandle.onmouseover = function()
-	{
-		this.instanceRef.buttonEventHandler(this, 'mouseover');
-	}
-	oCodeHandle.onmouseout = function()
-	{
-		this.instanceRef.buttonEventHandler(this, 'mouseout');
-	}
-
-	oCodeHandle.code = sCode;
-
-	return true;
-}
-
-// Populate/handle the select boxes.
-SmfEditor.prototype.addSelect = function(sSelectType)
-{
-	var oSelectHandle = document.getElementById('sel_' + sSelectType);
-	if (typeof(oSelectHandle) != 'object' || !oSelectHandle)
-		return;
-
-	oSelectHandle.code = sSelectType;
-
-	this.aSelectControls[sSelectType] = oSelectHandle;
-
-	// Font face box!
-	if (sSelectType == 'face')
-	{
-		// Add in the other options.
-		for (var i = 0; i < this.aFontFaces.length; i++)
-			oSelectHandle.options[oSelectHandle.options.length] = new Option(this.aFontFaces[i], this.aFontFaces[i].toLowerCase());
-	}
-
-	oSelectHandle.instanceRef = this;
-	oSelectHandle.onchange = function()
-	{
-		this.instanceRef.selectEventHandler(this)
-	}
-}
-
-SmfEditor.prototype.smileyEventHandler = function(oSrcElement)
-{
-	// Assume it does exist?!
-	if (typeof(oSrcElement.code) == 'undefined')
-		return false;
-
-	this.insertSmiley(oSrcElement.smileyname, oSrcElement.code, oSrcElement.desc);
-	return true;
-}
 
 // Special handler for WYSIWYG.
-SmfEditor.prototype.smf_execCommand = function(sCommand, bUi, sValue)
+smc_Editor.prototype.smf_execCommand = function(sCommand, bUi, sValue)
 {
 	return this.oFrameDocument.execCommand(sCommand, bUi, sValue);
 }
 
-SmfEditor.prototype.insertSmiley = function(sName, sCode, sDesc)
+smc_Editor.prototype.insertSmiley = function(oSmileyProperties)
 {
 	// In text mode we just add it in as we always did.
 	if (!this.bRichTextEnabled)
-		this.insertText(' ' + sCode);
+		this.insertText(' ' + oSmileyProperties.sCode);
 
 	// Otherwise we need to do a whole image...
 	else
 	{
 		var iUniqueSmileyId = 1000 + Math.floor(Math.random() * 100000);
-		this.insertText('<img src="' + smf_smileys_url + '/' + sName + '" id="smiley_' + iUniqueSmileyId + '_' + sName + '" onresizestart="return false;" align="bottom" alt="" title="' + smf_htmlspecialchars(sDesc) + '" style="padding: 0 3px 0 3px;" />');
+		this.insertText('<img src="' + oSmileyProperties.sSrc + '" id="smiley_' + iUniqueSmileyId + '_' + oSmileyProperties.sSrc.replace(/^.*\//, '') + '" onresizestart="return false;" align="bottom" alt="" title="' + oSmileyProperties.sDescription.php_htmlspecialchars() + '" style="padding: 0 3px 0 3px;" />');
 	}
 }
 
-SmfEditor.prototype.buttonEventHandler = function(oSrcElement, sEventType)
+smc_Editor.prototype.handleButtonClick = function (oButtonProperties)
 {
-	if (typeof(oSrcElement.code) == 'undefined' || typeof(this.aButtonControls[oSrcElement.code]) == 'undefined')
-		return false;
+	this.setFocus();
 
-	// Are handling a hover?
-	if (sEventType == 'mouseover' || sEventType == 'mouseout')
+	// A special SMF function?
+	if (oButtonProperties.sCode in this.oSmfExec)
+		this[this.oSmfExec[oButtonProperties.sCode]]();
+
+	else
 	{
-		// Work out whether we should highlight it or not. On non-WYSWIYG we highlight on mouseover, on WYSIWYG we toggle current state.
-		var bIsHighlight = sEventType == 'mouseover';
-		if (this.bRichTextEnabled && this.aButtonControls[oSrcElement.code].bIsActive)
-			bIsHighlight = !bIsHighlight;
+		// In text this is easy...
+		if (!this.bRichTextEnabled)
+		{
+			// Replace?
+			if (!('sAfter' in oButtonProperties) || oButtonProperties.sAfter == null)
+				replaceText(oButtonProperties.sBefore, this.oTextHandle)
 
-		oSrcElement.style.backgroundImage = "url(" + smf_images_url + (bIsHighlight ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
-	}
-	else if (sEventType == 'click')
-	{
-		this.setFocus();
-
-		// A special SMF function?
-		if (this.oSmfExec[oSrcElement.code])
-			this[this.oSmfExec[oSrcElement.code]]();
-
+			// Surround!
+			else
+				surroundText(oButtonProperties.sBefore, oButtonProperties.sAfter, this.oTextHandle)
+		}
 		else
 		{
-			// In text this is easy...
-			if (!this.bRichTextEnabled)
-			{
-				// Replace?
-				if (this.aButtonControls[oSrcElement.code].sAfter == '')
-					replaceText(this.aButtonControls[oSrcElement.code].sBefore, this.oTextHandle)
+			// Is it easy?
+			if (oButtonProperties.sCode in this.oSimpleExec)
+				this.smf_execCommand(this.oSimpleExec[oButtonProperties.sCode], false, null);
 
-				// Surround!
-				else
-					surroundText(this.aButtonControls[oSrcElement.code].sBefore, this.aButtonControls[oSrcElement.code].sAfter, this.oTextHandle)
-			}
-			else
-			{
-				// Is it easy?
-				if (this.oSimpleExec[oSrcElement.code])
-					this.smf_execCommand(this.oSimpleExec[oSrcElement.code], false, null);
+			// A link?
+			else if (oButtonProperties.sCode == 'url' || oButtonProperties.sCode == 'email' || oButtonProperties.sCode == 'ftp')
+				this.insertLink(oButtonProperties.sCode);
 
-				// A link?
-				else if (oSrcElement.code == 'url' || oSrcElement.code == 'email' || oSrcElement.code == 'ftp')
-					this.insertLink(oSrcElement.code);
+			// Maybe an image?
+			else if (oButtonProperties.sCode == 'img')
+				this.insertImage();
 
-				// Maybe an image?
-				else if (oSrcElement.code == 'img')
-					this.insertImage();
+			// Everything else means doing something ourselves.
+			else if ('sBefore' in oButtonProperties)
+				this.insertCustomHTML(oButtonProperties.sBefore, oButtonProperties.sAfter);
 
-				// Everything else means doing something ourselves.
-				else if (this.aButtonControls[oSrcElement.code].sBefore)
-					this.insertCustomHTML(oSrcElement.code);
-
-			}
 		}
-
-		// If this is WYSWIYG toggle this button state.
-		if (this.bRichTextEnabled)
-		{
-			this.aButtonControls[oSrcElement.code].bIsActive = !this.aButtonControls[oSrcElement.code].bIsActive;
-			oSrcElement.style.backgroundImage = "url(" + smf_images_url + (this.aButtonControls[oSrcElement.code].bIsActive ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
-		}
-
-		this.updateEditorControls();
-
-		// Finally set the focus.
-		this.setFocus();
 	}
 
-	return true;
+	this.updateEditorControls();
+
+	// Finally set the focus.
+	this.setFocus();
+	
 }
 
 // Changing a select box?
-SmfEditor.prototype.selectEventHandler = function(oSrcElement)
+smc_Editor.prototype.handleSelectChange = function (oSelectProperties)
 {
-	// Make sure it exists.
-	if (!oSrcElement || !this.aSelectControls[oSrcElement.code])
-		return false;
-
 	this.setFocus();
 
-	var sValue = document.getElementById('sel_' + oSrcElement.code).value;
+	var sValue = oSelectProperties.oSelect.value;
 
 	// Changing font face?
-	if (oSrcElement.code == 'face')
+	if (oSelectProperties.sName == 'sel_face')
 	{
 		// Not in HTML mode?
 		if (!this.bRichTextEnabled)
@@ -938,7 +779,7 @@ SmfEditor.prototype.selectEventHandler = function(oSrcElement)
 	}
 
 	// Font size?
-	else if (oSrcElement.code == 'size')
+	else if (oSelectProperties.sName == 'sel_size')
 	{
 		// Are we in boring mode?
 		if (!this.bRichTextEnabled)
@@ -948,7 +789,7 @@ SmfEditor.prototype.selectEventHandler = function(oSrcElement)
 			this.smf_execCommand('fontsize', false, sValue);
 	}
 	// Or color even?
-	else if (oSrcElement.code == 'color')
+	else if (oSelectProperties.sName == 'sel_color')
 	{
 		// Are we in boring mode?
 		if (!this.bRichTextEnabled)
@@ -964,17 +805,11 @@ SmfEditor.prototype.selectEventHandler = function(oSrcElement)
 }
 
 // Put in some custom HTML.
-SmfEditor.prototype.insertCustomHTML = function(sCode)
+smc_Editor.prototype.insertCustomHTML = function(sLeftTag, sRightTag)
 {
-	if (!this.aButtonControls[sCode])
-		return;
-
 	var sSelection = this.getSelect(true, true);
 	if (sSelection.length == 0)
 		sSelection = '';
-
-	var sLeftTag = this.aButtonControls[sCode].sBefore;
-	var sRightTag = this.aButtonControls[sCode].sAfter;
 
 	// Are we overwriting?
 	if (sRightTag == '')
@@ -989,7 +824,7 @@ SmfEditor.prototype.insertCustomHTML = function(sCode)
 }
 
 // Insert a URL link.
-SmfEditor.prototype.insertLink = function(sType)
+smc_Editor.prototype.insertLink = function(sType)
 {
 	if (sType == 'email')
 		var sPromptText = oEditorStrings['prompt_text_email'];
@@ -1025,7 +860,7 @@ SmfEditor.prototype.insertLink = function(sType)
 	}
 }
 
-SmfEditor.prototype.insertImage = function(sSrc)
+smc_Editor.prototype.insertImage = function(sSrc)
 {
 	if (!sSrc)
 	{
@@ -1036,9 +871,9 @@ SmfEditor.prototype.insertImage = function(sSrc)
 	this.smf_execCommand('insertimage', false, sSrc);
 }
 
-SmfEditor.prototype.getSelect = function(bWantText, bWantHTMLText)
+smc_Editor.prototype.getSelect = function(bWantText, bWantHTMLText)
 {
-	if (is_ie && this.oFrameDocument.selection)
+	if (is_ie && 'selection' in this.oFrameDocument)
 	{
 		// Just want plain text?
 		if (bWantText && !bWantHTMLText)
@@ -1051,11 +886,12 @@ SmfEditor.prototype.getSelect = function(bWantText, bWantHTMLText)
 	}
 
 	// This is mainly Firefox.
-	if (this.oFrameWindow.getSelection)
+	if ('getSelection' in this.oFrameWindow)
 	{
 		// Plain text?
 		if (bWantText && !bWantHTMLText)
 			return this.oFrameWindow.getSelection().toString();
+
 		// HTML is harder - currently using: http://www.faqts.com/knowledge_base/view.phtml/aid/32427
 		else if (bWantHTMLText)
 		{
@@ -1080,7 +916,7 @@ SmfEditor.prototype.getSelect = function(bWantText, bWantHTMLText)
 	return this.oFrameDocument.getSelection();
 }
 
-SmfEditor.prototype.getRange = function()
+smc_Editor.prototype.getRange = function()
 {
 	// Get the current selection.
 	var oSelection = this.getSelect();
@@ -1095,7 +931,7 @@ SmfEditor.prototype.getRange = function()
 }
 
 // Get the current element.
-SmfEditor.prototype.getCurElement = function()
+smc_Editor.prototype.getCurElement = function()
 {
 	var oRange = this.getRange();
 
@@ -1116,7 +952,7 @@ SmfEditor.prototype.getCurElement = function()
 	}
 }
 
-SmfEditor.prototype.getParentElement = function(oNode)
+smc_Editor.prototype.getParentElement = function(oNode)
 {
 	if (oNode.nodeType == 1)
 		return oNode;
@@ -1134,7 +970,7 @@ SmfEditor.prototype.getParentElement = function(oNode)
 }
 
 // Remove formatting for the selected text.
-SmfEditor.prototype.removeFormatting = function()
+smc_Editor.prototype.removeFormatting = function()
 {
 	// Do both at once.
 	if (this.bRichTextEnabled)
@@ -1147,13 +983,11 @@ SmfEditor.prototype.removeFormatting = function()
 	{
 		// Get the current selection first.
 		if (this.oTextHandle.caretPos)
-		{
 			var sCurrentText = this.oTextHandle.caretPos.text;
-		}
-		else if (typeof(this.oTextHandle.selectionStart) != "undefined")
-		{
+
+		else if ('selectionStart' in this.oTextHandle)
 			var sCurrentText = this.oTextHandle.value.substr(this.oTextHandle.selectionStart, (this.oTextHandle.selectionEnd - this.oTextHandle.selectionStart));
-		}
+
 		else
 			return;
 
@@ -1167,7 +1001,7 @@ SmfEditor.prototype.removeFormatting = function()
 }
 
 // Toggle wysiwyg/normal mode.
-SmfEditor.prototype.toggleView = function(bView)
+smc_Editor.prototype.toggleView = function(bView)
 {
 	if (!this.bRichTextPossible)
 	{
@@ -1185,7 +1019,7 @@ SmfEditor.prototype.toggleView = function(bView)
 }
 
 // Request the message in a different form.
-SmfEditor.prototype.requestParsedMessage = function(bView)
+smc_Editor.prototype.requestParsedMessage = function(bView)
 {
 	// Replace with a force reload.
 	if (!window.XMLHttpRequest)
@@ -1202,7 +1036,7 @@ SmfEditor.prototype.requestParsedMessage = function(bView)
 	delete tmpMethod;
 }
 
-SmfEditor.prototype.onToggleDataReceived = function(oXMLDoc)
+smc_Editor.prototype.onToggleDataReceived = function(oXMLDoc)
 {
 	var sText = '';
 	for (var i = 0; i < oXMLDoc.getElementsByTagName('message')[0].childNodes.length; i++)
@@ -1224,13 +1058,6 @@ SmfEditor.prototype.onToggleDataReceived = function(oXMLDoc)
 		this.oFrameHandle.style.display = 'none';
 		this.oBreadHandle.style.display = 'none';
 		this.oTextHandle.style.display = '';
-
-		// If we're leaving WYSIWYG all buttons need to be off.
-		for (i in this.aButtonControls)
-		{
-			this.aButtonControls[i].bIsActive = false;
-			this.aButtonControls[i].oCodeHandle.style.backgroundImage = "url(" + smf_images_url + '/bbc/bbc_bg.gif' + ")";
-		}
 	}
 
 	// First we focus.
@@ -1239,52 +1066,14 @@ SmfEditor.prototype.onToggleDataReceived = function(oXMLDoc)
 	this.insertText(sText, true);
 
 	// Record the new status.
-	document.getElementById(this.opt.sUniqueId + '_mode').value = this.bRichTextEnabled ? 1 : 0;
+	document.getElementById(this.opt.sUniqueId + '_mode').value = this.bRichTextEnabled ? '1' : '0';
 
 	// Rebuild the bread crumb!
 	this.updateEditorControls();
 }
 
-// Show the "More Smileys" popup box.
-SmfEditor.prototype.showMoreSmileys = function(postbox, sTitleText, sPickText, sCloseText, smf_theme_url)
-{
-	if (this.oSmileyPopupWindow)
-		this.oSmileyPopupWindow.close();
-
-	this.oSmileyPopupWindow = window.open('', 'add_smileys', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,width=480,height=220,resizable=yes');
-	this.oSmileyPopupWindow.document.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n<html>');
-	this.oSmileyPopupWindow.document.write('\n\t<head>\n\t\t<title>' + sTitleText + '</title>\n\t\t<link rel="stylesheet" type="text/css" href="' + smf_theme_url + '/css/index.css" />\n\t</head>');
-	this.oSmileyPopupWindow.document.write('\n\t<body style="margin: 1ex;">\n\t\t<table width="100%" cellpadding="5" cellspacing="0" border="0" class="tborder">\n\t\t\t<tr class="titlebg"><td align="left">' + sPickText + '</td></tr>\n\t\t\t<tr class="windowbg"><td align="left">');
-
-	// Variable smileys is set in the template...for now.
-	for (var iRow = 0; iRow < smileys.length; iRow++)
-	{
-		for (i = 0; i < smileys[iRow].length; i++)
-		{
-			smileys[iRow][i][2] = smileys[iRow][i][2].replace(/"/g, '&quot;');
-			smileys[iRow][i][0] = smileys[iRow][i][0].replace(/"/g, '&quot;');
-			this.oSmileyPopupWindow.document.write('<a href="javascript:void(0);" onclick="window.opener.editorHandle' + postbox + '.insertSmiley(\'' + smf_addslashes(smileys[iRow][i][1]) + '\', \'' + smf_addslashes(smileys[iRow][i][0]) + '\', \'' + smf_addslashes(smileys[iRow][i][2]) + '\'); window.focus(); return false;"><img src="' + smf_smileys_url + '/' + smileys[iRow][i][1] + '" id="sml_' + smileys[iRow][i][1] + '" alt="' + smileys[iRow][i][2] + '" title="' + smileys[iRow][i][2] + '" style="padding: 4px;" border="0" /></a> ');
-		}
-		this.oSmileyPopupWindow.document.write('<br />');
-	}
-
-	this.oSmileyPopupWindow.document.write('</td></tr>\n\t\t\t<tr><td align="center" class="windowbg"><a href="javascript:window.close();">' + sCloseText + '</a></td></tr>\n\t\t</table>');
-	// Do the javascript required.
-	this.oSmileyPopupWindow.document.write('<script type="text/javascript">\n');
-	for (var iRow = 0; iRow < smileys.length; iRow++)
-	{
-		for (var i = 0; i < smileys[iRow].length; i++)
-		{
-			this.oSmileyPopupWindow.document.write('\n\twindow.opener.editorHandle' + postbox + '.addSmiley(\'' + smf_addslashes(smileys[iRow][i][0]) + '\', \'' + smf_addslashes(smileys[iRow][i][1]) + '\', \'' + smf_addslashes(smileys[iRow][i][2]) + '\');');
-		}
-	}
-	this.oSmileyPopupWindow.document.write('\n</script>');
-	this.oSmileyPopupWindow.document.write('\n\t</body>\n</html>');
-	this.oSmileyPopupWindow.document.close();
-}
-
 // Set the focus for the editing window.
-SmfEditor.prototype.setFocus = function(force_both)
+smc_Editor.prototype.setFocus = function(force_both)
 {
 	if (!this.bRichTextEnabled)
 		this.oTextHandle.focus();
@@ -1293,7 +1082,7 @@ SmfEditor.prototype.setFocus = function(force_both)
 }
 
 // Start up the spellchecker!
-SmfEditor.prototype.spellCheckStart = function()
+smc_Editor.prototype.spellCheckStart = function()
 {
 	if (!spellCheck)
 		return false;
@@ -1315,7 +1104,7 @@ SmfEditor.prototype.spellCheckStart = function()
 }
 
 // This contains the spellcheckable text.
-SmfEditor.prototype.onSpellCheckDataReceived = function(oXMLDoc)
+smc_Editor.prototype.onSpellCheckDataReceived = function(oXMLDoc)
 {
 	var sText = '';
 	for (var i = 0; i < oXMLDoc.getElementsByTagName('message')[0].childNodes.length; i++)
@@ -1328,7 +1117,7 @@ SmfEditor.prototype.onSpellCheckDataReceived = function(oXMLDoc)
 }
 
 // Function called when the Spellchecker is finished and ready to pass back.
-SmfEditor.prototype.spellCheckEnd = function()
+smc_Editor.prototype.spellCheckEnd = function()
 {
 	// If HTML edit put the text back!
 	if (this.bRichTextEnabled)
@@ -1344,7 +1133,7 @@ SmfEditor.prototype.spellCheckEnd = function()
 }
 
 // The corrected text.
-SmfEditor.prototype.onSpellCheckCompleteDataReceived = function(oXMLDoc)
+smc_Editor.prototype.onSpellCheckCompleteDataReceived = function(oXMLDoc)
 {
 	var sText = '';
 	for (var i = 0; i < oXMLDoc.getElementsByTagName('message')[0].childNodes.length; i++)
@@ -1354,7 +1143,7 @@ SmfEditor.prototype.onSpellCheckCompleteDataReceived = function(oXMLDoc)
 	this.setFocus();
 }
 
-SmfEditor.prototype.resizeTextArea = function(newHeight, newWidth, is_change)
+smc_Editor.prototype.resizeTextArea = function(newHeight, newWidth, is_change)
 {
 	// Work out what the new height is.
 	if (is_change)
@@ -1379,7 +1168,7 @@ SmfEditor.prototype.resizeTextArea = function(newHeight, newWidth, is_change)
 }
 
 // A utility instruction to save repetition when trying to work out what to change on a height/width.
-SmfEditor.prototype._calculateNewDimension = function(old_size, change_size)
+smc_Editor.prototype._calculateNewDimension = function(old_size, change_size)
 {
 	// We'll assume pixels but may not be.
 	changeReg = change_size.toString().match(/(-)?(\d+)(\D*)/);
@@ -1410,7 +1199,7 @@ SmfEditor.prototype._calculateNewDimension = function(old_size, change_size)
 }
 
 // Register default keyboard shortcuts.
-SmfEditor.prototype.registerDefaultShortcuts = function()
+smc_Editor.prototype.registerDefaultShortcuts = function()
 {
 	if (is_ff)
 	{
@@ -1423,7 +1212,7 @@ SmfEditor.prototype.registerDefaultShortcuts = function()
 }
 
 // Register a keyboard shortcut.
-SmfEditor.prototype.registerShortcut = function(sLetter, sModifiers, sCodeName)
+smc_Editor.prototype.registerShortcut = function(sLetter, sModifiers, sCodeName)
 {
 	if (!sCodeName)
 		return;
@@ -1437,14 +1226,14 @@ SmfEditor.prototype.registerShortcut = function(sLetter, sModifiers, sCodeName)
 
 	var aSplitModifiers = sModifiers.split(',');
 	for(var i = 0, n = aSplitModifiers.length; i < n; i++)
-		if (typeof(oNewShortcut[aSplitModifiers[i]]) != 'undefined')
+		if (aSplitModifiers[i] in oNewShortcut)
 			oNewShortcut[aSplitModifiers[i]] = true;
 
 	this.aKeyboardShortcuts[this.aKeyboardShortcuts.length] = oNewShortcut;
 }
 
 // Check whether the key has triggered a shortcut?
-SmfEditor.prototype.checkShortcut = function(oEvent)
+smc_Editor.prototype.checkShortcut = function(oEvent)
 {
 	// To be a shortcut it needs to be one of these, duh!
 	if (!oEvent.altKey && !oEvent.ctrlKey)
@@ -1464,12 +1253,12 @@ SmfEditor.prototype.checkShortcut = function(oEvent)
 }
 
 // The actual event check for the above!
-SmfEditor.prototype.shortcutCheck = function(oEvent)
+smc_Editor.prototype.shortcutCheck = function(oEvent)
 {
 	var sFoundCode = this.checkShortcut(oEvent);
 
 	// Run it and exit.
-	if (typeof(sFoundCode) == 'string' && sReturnCode != '')
+	if (typeof(sFoundCode) == 'string' && sFoundCode != '')
 	{
 		var bCancelEvent = false;
 		if (sFoundCode == 'submit')
@@ -1492,8 +1281,7 @@ SmfEditor.prototype.shortcutCheck = function(oEvent)
 
 		if (document.getElementById('cmd_' + sFoundCode))
 		{
-			oEmulateObject = document.getElementById('cmd_' + sFoundCode);
-			this.buttonEventHandler(oEmulateObject, 'click');
+			this.oBBCBox.emulateClick(sFoundCode);
 			bCancelEvent = true;
 		}
 
@@ -1516,9 +1304,9 @@ SmfEditor.prototype.shortcutCheck = function(oEvent)
 }
 
 // This is the method called after clicking the resize bar.
-SmfEditor.prototype.startResize = function(oEvent)
+smc_Editor.prototype.startResize = function(oEvent)
 {
-	if (window.event)
+	if ('event' in window)
 		oEvent = window.event;
 
 	if (!oEvent || window.smf_oCurrentResizeEditor != null)
@@ -1527,9 +1315,9 @@ SmfEditor.prototype.startResize = function(oEvent)
 	window.smf_oCurrentResizeEditor = this.iArrayPosition;
 
 	var aCurCoordinates = smf_mousePose(oEvent);
-	this.oSmfEditorCurrentResize.old_y = aCurCoordinates[1];
-	this.oSmfEditorCurrentResize.old_rel_y = null;
-	this.oSmfEditorCurrentResize.cur_height = parseInt(this.oTextHandle.style.height);
+	this.osmc_EditorCurrentResize.old_y = aCurCoordinates[1];
+	this.osmc_EditorCurrentResize.old_rel_y = null;
+	this.osmc_EditorCurrentResize.cur_height = parseInt(this.oTextHandle.style.height);
 
 	// Set the necessary events for resizing.
 	var oResizeEntity = is_ie ? document : window;
@@ -1547,21 +1335,21 @@ SmfEditor.prototype.startResize = function(oEvent)
 }
 
 // This is kind of a cheat, as it only works over the IFRAME.
-SmfEditor.prototype.resizeOverIframe = function(oEvent)
+smc_Editor.prototype.resizeOverIframe = function(oEvent)
 {
-	if (window.event)
+	if ('event' in window)
 		oEvent = window.event;
 
 	if (!oEvent || window.smf_oCurrentResizeEditor == null)
 		return true;
 
-	newCords = smf_mousePose(oEvent);
+	var newCords = smf_mousePose(oEvent);
 
-	if (this.oSmfEditorCurrentResize.old_rel_y == null)
-		this.oSmfEditorCurrentResize.old_rel_y = newCords[1];
+	if (this.osmc_EditorCurrentResize.old_rel_y == null)
+		this.osmc_EditorCurrentResize.old_rel_y = newCords[1];
 	else
 	{
-		var iNewHeight = newCords[1] - this.oSmfEditorCurrentResize.old_rel_y + this.oSmfEditorCurrentResize.cur_height;
+		var iNewHeight = newCords[1] - this.osmc_EditorCurrentResize.old_rel_y + this.osmc_EditorCurrentResize.cur_height;
 		if (iNewHeight < 0)
 			this.endResize();
 		else
@@ -1572,17 +1360,17 @@ SmfEditor.prototype.resizeOverIframe = function(oEvent)
 }
 
 // This resizes an editor.
-SmfEditor.prototype.resizeOverDocument = function (oEvent)
+smc_Editor.prototype.resizeOverDocument = function (oEvent)
 {
-	if (window.event)
+	if ('event' in window)
 		oEvent = window.event;
 
 	if (!oEvent || window.smf_oCurrentResizeEditor == null)
 		return true;
 
-	newCords = smf_mousePose(oEvent);
+	var newCords = smf_mousePose(oEvent);
 
-	var iNewHeight = newCords[1] - this.oSmfEditorCurrentResize.old_y + this.oSmfEditorCurrentResize.cur_height;
+	var iNewHeight = newCords[1] - this.osmc_EditorCurrentResize.old_y + this.osmc_EditorCurrentResize.cur_height;
 	if (iNewHeight < 0)
 		this.endResize();
 	else
@@ -1591,9 +1379,9 @@ SmfEditor.prototype.resizeOverDocument = function (oEvent)
 	return false;
 }
 
-SmfEditor.prototype.endResize = function (oEvent)
+smc_Editor.prototype.endResize = function (oEvent)
 {
-	if (window.event)
+	if ('event' in window)
 		oEvent = window.event;
 
 	if (window.smf_oCurrentResizeEditor == null)
@@ -1615,3 +1403,343 @@ SmfEditor.prototype.endResize = function (oEvent)
 
 	return false;
 }
+
+
+
+// *** smc_SmileyBox class.
+function smc_SmileyBox(oOptions)
+{
+	this.opt = oOptions;
+	this.oSmileyRowsContent = {};
+	this.oSmileyPopupWindow = null;
+	this.init();
+}
+
+smc_SmileyBox.prototype.init = function ()
+{
+	// Get the HTML content of the smileys visible on the post screen.
+	this.getSmileyRowsContent('postform');
+
+	// Inject the HTML.
+	setInnerHTML(document.getElementById(this.opt.sContainerDiv), this.opt.sSmileyBoxTemplate.easyReplace({
+		smileyRows: this.oSmileyRowsContent.postform,
+		moreSmileys: this.opt.oSmileyLocations.popup.length == 0 ? '' : this.opt.sMoreSmileysTemplate.easyReplace({
+			moreSmileysId: this.opt.sUniqueId + '_addMoreSmileys'
+		})
+	}));
+
+	// Initialize the smileys.
+	this.initSmileys('postform', document);
+
+	// Initialize the [more] button.
+	if (this.opt.oSmileyLocations.popup.length > 0)
+	{
+		var oMoreLink = document.getElementById(this.opt.sUniqueId + '_addMoreSmileys');
+		oMoreLink.instanceRef = this;
+		oMoreLink.onclick = function () {
+			this.instanceRef.handleShowMoreSmileys();
+			return false;
+		}
+	}
+}
+
+// Loop through the smileys to setup the HTML.
+smc_SmileyBox.prototype.getSmileyRowsContent = function (sLocation)
+{
+	// If it's already defined, don't bother.
+	if (sLocation in this.oSmileyRowsContent)
+		return;
+
+	this.oSmileyRowsContent[sLocation] = '';
+
+	for (var iSmileyRowIndex = 0, iSmileyRowCount = this.opt.oSmileyLocations[sLocation].length; iSmileyRowIndex < iSmileyRowCount; iSmileyRowIndex++)
+	{
+		var sSmileyRowContent = '';
+		for (var iSmileyIndex = 0, iSmileyCount = this.opt.oSmileyLocations[sLocation][iSmileyRowIndex].length; iSmileyIndex < iSmileyCount; iSmileyIndex++)
+			sSmileyRowContent += this.opt.sSmileyTemplate.easyReplace({
+				smileySource: this.opt.oSmileyLocations[sLocation][iSmileyRowIndex][iSmileyIndex].sSrc.php_htmlspecialchars(),
+				smileyDescription: this.opt.oSmileyLocations[sLocation][iSmileyRowIndex][iSmileyIndex].sDescription.php_htmlspecialchars(),
+				smileyCode: this.opt.oSmileyLocations[sLocation][iSmileyRowIndex][iSmileyIndex].sCode.php_htmlspecialchars(),
+				smileyId: this.opt.sUniqueId + '_' + sLocation + '_' + iSmileyRowIndex.toString() + '_' + iSmileyIndex.toString()
+			});
+
+		this.oSmileyRowsContent[sLocation] += this.opt.sSmileyRowTemplate.easyReplace({
+			smileyRow: sSmileyRowContent
+		});
+	}
+}
+
+smc_SmileyBox.prototype.initSmileys = function (sLocation, oDocument)
+{
+	for (var iSmileyRowIndex = 0, iSmileyRowCount = this.opt.oSmileyLocations[sLocation].length; iSmileyRowIndex < iSmileyRowCount; iSmileyRowIndex++)
+	{
+		for (var iSmileyIndex = 0, iSmileyCount = this.opt.oSmileyLocations[sLocation][iSmileyRowIndex].length; iSmileyIndex < iSmileyCount; iSmileyIndex++)
+		{
+			var oSmiley = oDocument.getElementById(this.opt.sUniqueId + '_' + sLocation + '_' + iSmileyRowIndex.toString() + '_' + iSmileyIndex.toString());
+			oSmiley.instanceRef = this;
+			oSmiley.style.cursor = 'pointer';
+			oSmiley.onclick = function () {
+				this.instanceRef.clickHandler(this);
+				return false;
+			}
+		}
+	}
+}
+
+smc_SmileyBox.prototype.clickHandler = function (oSmileyImg)
+{
+	// Dissect the id...
+	var aMatches = oSmileyImg.id.match(/([^_]+)_(\d+)_(\d+)$/);
+	if (aMatches.length != 4)
+		return false;
+
+	// ...to determine its exact smiley properties.
+	var sLocation = aMatches[1];
+	var iSmileyRowIndex = aMatches[2];
+	var iSmileyIndex = aMatches[3];
+	var oProperties = this.opt.oSmileyLocations[sLocation][iSmileyRowIndex][iSmileyIndex];
+
+	if ('sClickHandler' in this.opt)
+		eval(this.opt.sClickHandler + '(oProperties)');
+
+	return false;
+}
+
+smc_SmileyBox.prototype.handleShowMoreSmileys = function ()
+{
+	// Focus the window if it's already opened.
+	if (this.oSmileyPopupWindow != null && 'closed' in this.oSmileyPopupWindow && !this.oSmileyPopupWindow.closed)
+	{
+		this.oSmileyPopupWindow.focus();
+		return;
+	}
+
+	// Get the smiley HTML.
+	this.getSmileyRowsContent('popup');
+
+	// Open the popup.
+	this.oSmileyPopupWindow = window.open('about:blank', this.opt.sUniqueId + '_addMoreSmileysPopup', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,width=480,height=220,resizable=yes');
+
+	// Paste the template in the popup.
+	this.oSmileyPopupWindow.document.open('text/html', 'replace');
+	this.oSmileyPopupWindow.document.write(this.opt.sMoreSmileysPopupTemplate.easyReplace({
+		smileyRows: this.oSmileyRowsContent.popup,
+		moreSmileysCloseLinkId: this.opt.sUniqueId + '_closeMoreSmileys'
+	}));
+	this.oSmileyPopupWindow.document.close();
+
+	// Initialize the smileys that are in the popup window.
+	this.initSmileys('popup', this.oSmileyPopupWindow.document);
+
+	// Add a function to the close window button.
+	var aCloseLink = this.oSmileyPopupWindow.document.getElementById(this.opt.sUniqueId + '_closeMoreSmileys');
+	aCloseLink.instanceRef = this;
+	aCloseLink.onclick = function () {
+		this.instanceRef.oSmileyPopupWindow.close();
+		return false;
+	}
+}
+
+
+// *** smc_BBCButtonBox class.
+function smc_BBCButtonBox(oOptions)
+{
+	this.opt = oOptions;
+	this.init();
+}
+
+smc_BBCButtonBox.prototype.init = function ()
+{
+	var sBbcContent = '';
+	for (var iButtonRowIndex = 0, iRowCount = this.opt.aButtonRows.length; iButtonRowIndex < iRowCount; iButtonRowIndex++)
+	{
+		var sRowContent = '';
+		for (var iButtonIndex = 0, iButtonCount = this.opt.aButtonRows[iButtonRowIndex].length; iButtonIndex < iButtonCount; iButtonIndex++)
+		{
+			var oCurButton = this.opt.aButtonRows[iButtonRowIndex][iButtonIndex];
+			switch (oCurButton.sType)
+			{
+				case 'button':
+					sRowContent += this.opt.sButtonTemplate.easyReplace({
+						buttonId: this.opt.sUniqueId.php_htmlspecialchars() + '_button_' + iButtonRowIndex.toString() + '_' + iButtonIndex.toString(),
+						buttonSrc: oCurButton.sImage.php_htmlspecialchars(),
+						buttonDescription: oCurButton.sDescription.php_htmlspecialchars()
+					});
+				break;
+
+				case 'divider':
+					sRowContent += this.opt.sDividerTemplate;
+				break;
+
+				case 'select':
+					var sOptions = '';
+					for (var sSelectValue in oCurButton.oOptions)
+						sOptions += '<option value="' + sSelectValue.php_htmlspecialchars() + '">' + oCurButton.oOptions[sSelectValue].php_htmlspecialchars() + '</option>';
+					sRowContent += this.opt.sSelectTemplate.easyReplace({
+						selectName: oCurButton.sName,
+						selectId: this.opt.sUniqueId.php_htmlspecialchars() + '_select_' + iButtonRowIndex.toString() + '_' + iButtonIndex.toString(),
+						selectOptions: sOptions
+					});
+				break;
+			}
+		}
+		sBbcContent += this.opt.sButtonRowTemplate.easyReplace({
+			buttonRow: sRowContent
+		});
+	}
+
+	var oBbcContainer = document.getElementById(this.opt.sContainerDiv);
+	setInnerHTML(oBbcContainer, sBbcContent);
+
+	for (var iButtonRowIndex = 0, iRowCount = this.opt.aButtonRows.length; iButtonRowIndex < iRowCount; iButtonRowIndex++)
+	{
+		for (var iButtonIndex = 0, iButtonCount = this.opt.aButtonRows[iButtonRowIndex].length; iButtonIndex < iButtonCount; iButtonIndex++)
+		{
+			var oCurControl = this.opt.aButtonRows[iButtonRowIndex][iButtonIndex];
+			switch (oCurControl.sType)
+			{
+				case 'button':
+					oCurControl.oImg = document.getElementById(this.opt.sUniqueId.php_htmlspecialchars() + '_button_' + iButtonRowIndex.toString() + '_' + iButtonIndex.toString());
+					oCurControl.oImg.style.cursor = 'pointer';
+					if ('sButtonBackgroundImage' in this.opt)
+						oCurControl.oImg.style.backgroundImage = 'url(' + this.opt.sButtonBackgroundImage + ')';
+
+					oCurControl.oImg.instanceRef = this;
+					oCurControl.oImg.onmouseover = function () {
+						this.instanceRef.handleButtonMouseOver(this);
+					};
+					oCurControl.oImg.onmouseout = function () {
+						this.instanceRef.handleButtonMouseOut(this);
+					};
+					oCurControl.oImg.onclick = function () {
+						this.instanceRef.handleButtonClick(this)
+					};
+
+					oCurControl.oImg.bIsActive = false;
+					oCurControl.oImg.bHover = false;
+				break;
+
+				case 'select':
+					oCurControl.oSelect = document.getElementById(this.opt.sUniqueId.php_htmlspecialchars() + '_select_' + iButtonRowIndex.toString() + '_' + iButtonIndex.toString());
+
+					oCurControl.oSelect.instanceRef = this;
+					oCurControl.oSelect.onchange = oCurControl.onchange = function () {
+						this.instanceRef.handleSelectChange(this);
+					}
+				break;
+			}
+		}
+	}
+}
+
+smc_BBCButtonBox.prototype.handleButtonMouseOver = function (oButtonImg)
+{
+	oButtonImg.bHover = true;
+	this.updateButtonStatus(oButtonImg);
+}
+
+smc_BBCButtonBox.prototype.handleButtonMouseOut = function (oButtonImg)
+{
+	oButtonImg.bHover = false;
+	this.updateButtonStatus(oButtonImg);
+}
+
+smc_BBCButtonBox.prototype.updateButtonStatus = function (oButtonImg)
+{
+	var sNewURL = '';
+	if (oButtonImg.bHover && oButtonImg.bIsActive && 'sActiveButtonBackgroundImageHover' in this.opt)
+		sNewURL = 'url(' + this.opt.sActiveButtonBackgroundImageHover + ')';
+	else if (!oButtonImg.bHover && oButtonImg.bIsActive && 'sActiveButtonBackgroundImage' in this.opt)
+		sNewURL = 'url(' + this.opt.sActiveButtonBackgroundImage + ')';
+	else if (oButtonImg.bHover && 'sButtonBackgroundImageHover' in this.opt)
+		sNewURL = 'url(' + this.opt.sButtonBackgroundImageHover + ')';
+	else if ('sButtonBackgroundImage' in this.opt)
+		sNewURL = 'url(' + this.opt.sButtonBackgroundImage + ')';
+
+	if (oButtonImg.style.backgroundImage != sNewURL)
+		oButtonImg.style.backgroundImage = sNewURL;
+}
+
+smc_BBCButtonBox.prototype.handleButtonClick = function (oButtonImg)
+{
+	// Dissect the id attribute...
+	var aMatches = oButtonImg.id.match(/(\d+)_(\d+)$/);
+	if (aMatches.length != 3)
+		return false;
+
+	// ...so that we can point to the exact button.
+	var iButtonRowIndex = aMatches[1];
+	var iButtonIndex = aMatches[2];
+	var oProperties = this.opt.aButtonRows[iButtonRowIndex][iButtonIndex];
+	oProperties.bIsActive = oButtonImg.bIsActive;
+
+	if ('sButtonClickHandler' in this.opt)
+		eval(this.opt.sButtonClickHandler + '(oProperties)');
+
+	return false;
+}
+
+smc_BBCButtonBox.prototype.handleSelectChange = function (oSelectControl)
+{
+	// Dissect the id attribute...
+	var aMatches = oSelectControl.id.match(/(\d+)_(\d+)$/);
+	if (aMatches.length != 3)
+		return false;
+
+	// ...so that we can point to the exact button.
+	var iButtonRowIndex = aMatches[1];
+	var iButtonIndex = aMatches[2];
+	var oProperties = this.opt.aButtonRows[iButtonRowIndex][iButtonIndex];
+
+	if ('sSelectChangeHandler' in this.opt)
+		eval(this.opt.sSelectChangeHandler + '(oProperties)');
+
+	return true;
+}
+
+smc_BBCButtonBox.prototype.setActive = function (aButtons)
+{
+	for (var iButtonRowIndex = 0, iRowCount = this.opt.aButtonRows.length; iButtonRowIndex < iRowCount; iButtonRowIndex++)
+	{
+		for (var iButtonIndex = 0, iButtonCount = this.opt.aButtonRows[iButtonRowIndex].length; iButtonIndex < iButtonCount; iButtonIndex++)
+		{
+			var oCurControl = this.opt.aButtonRows[iButtonRowIndex][iButtonIndex];
+			if (oCurControl.sType == 'button')
+			{
+				oCurControl.oImg.bIsActive = in_array(oCurControl.sCode, aButtons);
+				this.updateButtonStatus(oCurControl.oImg);
+			}
+		}
+	}
+}
+
+smc_BBCButtonBox.prototype.emulateClick = function (sCode)
+{
+	alert('emulate');
+	for (var iButtonRowIndex = 0, iRowCount = this.opt.aButtonRows.length; iButtonRowIndex < iRowCount; iButtonRowIndex++)
+	{
+		for (var iButtonIndex = 0, iButtonCount = this.opt.aButtonRows[iButtonRowIndex].length; iButtonIndex < iButtonCount; iButtonIndex++)
+		{
+			var oCurControl = this.opt.aButtonRows[iButtonRowIndex][iButtonIndex];
+			if (oCurControl.sType == 'button' && oCurControl.sCode == sCode)
+				eval(this.opt.sButtonClickHandler + '(oCurControl)');
+		}
+	}
+}
+
+smc_BBCButtonBox.prototype.setSelect = function (sSelectName, sValue)
+{
+	if (!('sButtonClickHandler' in this.opt))
+		return;
+
+	for (var iButtonRowIndex = 0, iRowCount = this.opt.aButtonRows.length; iButtonRowIndex < iRowCount; iButtonRowIndex++)
+	{
+		for (var iButtonIndex = 0, iButtonCount = this.opt.aButtonRows[iButtonRowIndex].length; iButtonIndex < iButtonCount; iButtonIndex++)
+		{
+			var oCurControl = this.opt.aButtonRows[iButtonRowIndex][iButtonIndex];
+			if (oCurControl.sType == 'select' && oCurControl.sName == sSelectName)
+				oCurControl.oSelect.value = sValue;
+		}
+	}
+}
+

@@ -1282,47 +1282,209 @@ function create_control_richedit($editorOptions)
 		// The below array makes it dead easy to add images to this control. Add it to the array and everything else is done for you!
 		$context['bbc_tags'] = array();
 		$context['bbc_tags'][] = array(
-			'bold' => array('code' => 'b', 'before' => '[b]', 'after' => '[/b]', 'description' => $txt['bold']),
-			'italicize' => array('code' => 'i', 'before' => '[i]', 'after' => '[/i]', 'description' => $txt['italic']),
-			'underline' => array('code' => 'u', 'before' => '[u]', 'after' => '[/u]', 'description' => $txt['underline']),
-			'strike' => array('code' => 's', 'before' => '[s]', 'after' => '[/s]', 'description' => $txt['strike']),
+			array(
+				'image' => 'bold',
+				'code' => 'b',
+				'before' => '[b]',
+				'after' => '[/b]',
+				'description' => $txt['bold'],
+			),
+			array(
+				'image' => 'italicize',
+				'code' => 'i',
+				'before' => '[i]',
+				'after' => '[/i]',
+				'description' => $txt['italic'],
+			),
+			array(
+				'image' => 'underline',
+				'code' => 'u',
+				'before' => '[u]',
+				'after' => '[/u]',
+				'description' => $txt['underline']
+			),
+			array(
+				'image' => 'strike',
+				'code' => 's',
+				'before' => '[s]',
+				'after' => '[/s]',
+				'description' => $txt['strike']
+			),
 			array(),
-			'pre' => array('code' => 'pre', 'before' => '[pre]', 'after' => '[/pre]', 'description' => $txt['preformatted']),
-			'left' => array('code' => 'left', 'before' => '[left]', 'after' => '[/left]', 'description' => $txt['left_align']),
-			'center' => array('code' => 'center', 'before' => '[center]', 'after' => '[/center]', 'description' => $txt['center']),
-			'right' => array('code' => 'right', 'before' => '[right]', 'after' => '[/right]', 'description' => $txt['right_align']),
+			array(
+				'image' => 'pre',
+				'code' => 'pre',
+				'before' => '[pre]',
+				'after' => '[/pre]',
+				'description' => $txt['preformatted']
+			),
+			array(
+				'image' => 'left',
+				'code' => 'left',
+				'before' => '[left]',
+				'after' => '[/left]',
+				'description' => $txt['left_align']
+			),
+			array(
+				'image' => 'center',
+				'code' => 'center',
+				'before' => '[center]',
+				'after' => '[/center]',
+				'description' => $txt['center']
+			),
+			array(
+				'image' => 'right',
+				'code' => 'right',
+				'before' => '[right]',
+				'after' => '[/right]',
+				'description' => $txt['right_align']
+			),
 		);
 		$context['bbc_tags'][] = array(
-			'flash' => array('code' => 'flash', 'before' => '[flash=200,200]', 'after' => '[/flash]', 'description' => $txt['flash']),
-			'img' => array('code' => 'img', 'before' => '[img]', 'after' => '[/img]', 'description' => $txt['image']),
-			'url' => array('code' => 'url', 'before' => '[url]', 'after' => '[/url]', 'description' => $txt['hyperlink']),
-			'email' => array('code' => 'email', 'before' => '[email]', 'after' => '[/email]', 'description' => $txt['insert_email']),
-			'ftp' => array('code' => 'ftp', 'before' => '[ftp]', 'after' => '[/ftp]', 'description' => $txt['ftp']),
+			array(
+				'image' => 'flash',
+				'code' => 'flash',
+				'before' => '[flash=200,200]',
+				'after' => '[/flash]',
+				'description' => $txt['flash']
+			),
+			array(
+				'image' => 'img',
+				'code' => 'img',
+				'before' => '[img]',
+				'after' => '[/img]',
+				'description' => $txt['image']
+			),
+			array(
+				'image' => 'url',
+				'code' => 'url',
+				'before' => '[url]',
+				'after' => '[/url]',
+				'description' => $txt['hyperlink']
+			),
+			array(
+				'image' => 'email',
+				'code' => 'email',
+				'before' => '[email]',
+				'after' => '[/email]',
+				'description' => $txt['insert_email']
+			),
+			array(
+				'image' => 'ftp',
+				'code' => 'ftp',
+				'before' => '[ftp]',
+				'after' => '[/ftp]',
+				'description' => $txt['ftp']
+			),
 			array(),
-			'glow' => array('code' => 'glow', 'before' => '[glow=red,2,300]', 'after' => '[/glow]', 'description' => $txt['glow']),
-			'shadow' => array('code' => 'shadow', 'before' => '[shadow=red,left]', 'after' => '[/shadow]', 'description' => $txt['shadow']),
-			'move' => array('code' => 'move', 'before' => '[move]', 'after' => '[/move]', 'description' => $txt['marquee']),
+			array(
+				'image' => 'glow',
+				'code' => 'glow',
+				'before' => '[glow=red,2,300]',
+				'after' => '[/glow]',
+				'description' => $txt['glow']
+			),
+			array(
+				'image' => 'shadow',
+				'code' => 'shadow',
+				'before' => '[shadow=red,left]',
+				'after' => '[/shadow]',
+				'description' => $txt['shadow']
+			),
+			array(
+				'image' => 'move',
+				'code' => 'move',
+				'before' => '[move]',
+				'after' => '[/move]',
+				'description' => $txt['marquee']
+			),
 			array(),
-			'sup' => array('code' => 'sup', 'before' => '[sup]', 'after' => '[/sup]', 'description' => $txt['superscript']),
-			'sub' => array('code' => 'sub', 'before' => '[sub]', 'after' => '[/sub]', 'description' => $txt['subscript']),
-			'tele' => array('code' => 'tt', 'before' => '[tt]', 'after' => '[/tt]', 'description' => $txt['teletype']),
+			array(
+				'image' => 'sup',
+				'code' => 'sup',
+				'before' => '[sup]',
+				'after' => '[/sup]',
+				'description' => $txt['superscript']
+			),
+			array(
+				'image' => 'sub',
+				'code' => 'sub',
+				'before' => '[sub]',
+				'after' => '[/sub]',
+				'description' => $txt['subscript']
+			),
+			array(
+				'image' => 'tele',
+				'code' => 'tt',
+				'before' => '[tt]',
+				'after' => '[/tt]',
+				'description' => $txt['teletype']
+			),
 			array(),
-			'table' => array('code' => 'table', 'before' => '[table]\n[tr]\n[td]', 'after' => '[/td]\n[/tr]\n[/table]', 'description' => $txt['table']),
-			'code' => array('code' => 'code', 'before' => '[code]', 'after' => '[/code]', 'description' => $txt['bbc_code']),
-			'quote' => array('code' => 'quote', 'before' => '[quote]', 'after' => '[/quote]', 'description' => $txt['bbc_quote']),
+			array(
+				'image' => 'table',
+				'code' => 'table',
+				'before' => '[table]\n[tr]\n[td]',
+				'after' => '[/td]\n[/tr]\n[/table]',
+				'description' => $txt['table']
+			),
+			array(
+				'image' => 'code',
+				'code' => 'code',
+				'before' => '[code]',
+				'after' => '[/code]',
+				'description' => $txt['bbc_code']
+			),
+			array(
+				'image' => 'quote',
+				'code' => 'quote',
+				'before' => '[quote]',
+				'after' => '[/quote]',
+				'description' => $txt['bbc_quote']
+			),
 			array(),
-			'list' => array('code' => 'list', 'before' => '[list]\n[li]', 'after' => '[/li]\n[li][/li]\n[/list]', 'description' => $txt['list']),
-			'orderlist' => array('code' => 'orderlist', 'before' => '[list type=decimal]\n[li]', 'after' => '[/li]\n[li][/li]\n[/list]', 'description' => $txt['list']),
-			'hr' => array('code' => 'hr', 'before' => '[hr]', 'description' => $txt['horizontal_rule']),
+			array(
+				'image' => 'list',
+				'code' => 'list',
+				'before' => '[list]\n[li]',
+				'after' => '[/li]\n[li][/li]\n[/list]',
+				'description' => $txt['list']
+			),
+			array(
+				'image' => 'orderlist',
+				'code' => 'orderlist',
+				'before' => '[list type=decimal]\n[li]',
+				'after' => '[/li]\n[li][/li]\n[/list]',
+				'description' => $txt['list']
+			),
+			array(
+				'image' => 'hr',
+				'code' => 'hr',
+				'before' => '[hr]',
+				'description' => $txt['horizontal_rule']
+			),
 		);
 
 		// Show the toggle?
 		if (empty($modSettings['disable_wysiwyg']))
 		{
 			$context['bbc_tags'][count($context['bbc_tags']) - 1][] = array();
-			$context['bbc_tags'][count($context['bbc_tags']) - 1]['unformat'] = array('code' => 'unformat', 'before' => '', 'description' => $txt['unformat_text']);
-			$context['bbc_tags'][count($context['bbc_tags']) - 1]['toggle'] = array('code' => 'toggle', 'before' => '', 'description' => $txt['toggle_view']);
+			$context['bbc_tags'][count($context['bbc_tags']) - 1][] = array(
+				'image' => 'unformat',
+				'code' => 'unformat',
+				'before' => '',
+				'description' => $txt['unformat_text'],
+			);
+			$context['bbc_tags'][count($context['bbc_tags']) - 1][] = array(
+				'image' => 'toggle',
+				'code' => 'toggle',
+				'before' => '',
+				'description' => $txt['toggle_view'],
+			);
 		}
+
+		foreach ($context['bbc_tags'] as $row => $tagRow)
+			$context['bbc_tags'][$row][count($tagRow) - 1]['isLast'] = true;
 	}
 
 	// Initialize smiley array... if not loaded before.
@@ -1337,24 +1499,89 @@ function create_control_richedit($editorOptions)
 		if (empty($modSettings['smiley_enable']) && $user_info['smiley_set'] != 'none')
 			$context['smileys']['postform'][] = array(
 				'smileys' => array(
-					array('code' => ':)', 'filename' => 'smiley.gif', 'description' => $txt['icon_smiley']),
-					array('code' => ';)', 'filename' => 'wink.gif', 'description' => $txt['icon_wink']),
-					array('code' => ':D', 'filename' => 'cheesy.gif', 'description' => $txt['icon_cheesy']),
-					array('code' => ';D', 'filename' => 'grin.gif', 'description' => $txt['icon_grin']),
-					array('code' => '>:(', 'filename' => 'angry.gif', 'description' => $txt['icon_angry']),
-					array('code' => ':(', 'filename' => 'sad.gif', 'description' => $txt['icon_sad']),
-					array('code' => ':o', 'filename' => 'shocked.gif', 'description' => $txt['icon_shocked']),
-					array('code' => '8)', 'filename' => 'cool.gif', 'description' => $txt['icon_cool']),
-					array('code' => '???', 'filename' => 'huh.gif', 'description' => $txt['icon_huh']),
-					array('code' => '::)', 'filename' => 'rolleyes.gif', 'description' => $txt['icon_rolleyes']),
-					array('code' => ':P', 'filename' => 'tongue.gif', 'description' => $txt['icon_tongue']),
-					array('code' => ':-[', 'filename' => 'embarrassed.gif', 'description' => $txt['icon_embarrassed']),
-					array('code' => ':-X', 'filename' => 'lipsrsealed.gif', 'description' => $txt['icon_lips']),
-					array('code' => ':-\\', 'filename' => 'undecided.gif', 'description' => $txt['icon_undecided']),
-					array('code' => ':-*', 'filename' => 'kiss.gif', 'description' => $txt['icon_kiss']),
-					array('code' => ':\'(', 'filename' => 'cry.gif', 'description' => $txt['icon_cry'])
+					array(
+						'code' => ':)',
+						'filename' => 'smiley.gif',
+						'description' => $txt['icon_smiley'],
+					),
+					array(
+						'code' => ';)',
+						'filename' => 'wink.gif',
+						'description' => $txt['icon_wink'],
+					),
+					array(
+						'code' => ':D',
+						'filename' => 'cheesy.gif',
+						'description' => $txt['icon_cheesy'],
+					),
+					array(
+						'code' => ';D',
+						'filename' => 'grin.gif',
+						'description' => $txt['icon_grin']
+					),
+					array(
+						'code' => '>:(',
+						'filename' => 'angry.gif',
+						'description' => $txt['icon_angry'],
+					),
+					array(
+						'code' => ':(',
+						'filename' => 'sad.gif',
+						'description' => $txt['icon_sad'],
+					),
+					array(
+						'code' => ':o',
+						'filename' => 'shocked.gif',
+						'description' => $txt['icon_shocked'],
+					),
+					array(
+						'code' => '8)',
+						'filename' => 'cool.gif',
+						'description' => $txt['icon_cool'],
+					),
+					array(
+						'code' => '???',
+						'filename' => 'huh.gif',
+						'description' => $txt['icon_huh'],
+					),
+					array(
+						'code' => '::)',
+						'filename' => 'rolleyes.gif',
+						'description' => $txt['icon_rolleyes'],
+					),
+					array(
+						'code' => ':P',
+						'filename' => 'tongue.gif',
+						'description' => $txt['icon_tongue'],
+					),
+					array(
+						'code' => ':-[',
+						'filename' => 'embarrassed.gif',
+						'description' => $txt['icon_embarrassed'],
+					),
+					array(
+						'code' => ':-X',
+						'filename' => 'lipsrsealed.gif',
+						'description' => $txt['icon_lips'],
+					),
+					array(
+						'code' => ':-\\',
+						'filename' => 'undecided.gif',
+						'description' => $txt['icon_undecided'],
+					),
+					array(
+						'code' => ':-*',
+						'filename' => 'kiss.gif',
+						'description' => $txt['icon_kiss'],
+					),
+					array(
+						'code' => ':\'(',
+						'filename' => 'cry.gif',
+						'description' => $txt['icon_cry'],
+						'isLast' => true,
+					),
 				),
-				'last' => true,
+				'isLast' => true,
 			);
 		elseif ($user_info['smiley_set'] != 'none')
 		{
@@ -1377,28 +1604,18 @@ function create_control_richedit($editorOptions)
 				}
 				$smcFunc['db_free_result']($request);
 
+				foreach ($context['smileys'] as $section => $smileyRows)
+				{
+					foreach ($smileyRows as $rowIndex => $smileys)
+						$context['smileys'][$section][$rowIndex]['smileys'][count($smileys['smileys']) - 1]['isLast'] = true;
+
+					$context['smileys'][$section][count($smileyRows) - 1]['isLast'] = true;
+				}
+
 				cache_put_data('posting_smileys', $context['smileys'], 480);
 			}
 			else
 				$context['smileys'] = $temp;
-		}
-
-		// Clean house... add slashes to the code for javascript.
-		foreach (array_keys($context['smileys']) as $location)
-		{
-			foreach ($context['smileys'][$location] as $j => $row)
-			{
-				$n = count($context['smileys'][$location][$j]['smileys']);
-				for ($i = 0; $i < $n; $i++)
-				{
-					$context['smileys'][$location][$j]['smileys'][$i]['code'] = addslashes($context['smileys'][$location][$j]['smileys'][$i]['code']);
-					$context['smileys'][$location][$j]['smileys'][$i]['js_description'] = addslashes($context['smileys'][$location][$j]['smileys'][$i]['description']);
-				}
-
-				$context['smileys'][$location][$j]['smileys'][$n - 1]['last'] = true;
-			}
-			if (!empty($context['smileys'][$location]))
-				$context['smileys'][$location][count($context['smileys'][$location]) - 1]['last'] = true;
 		}
 	}
 
