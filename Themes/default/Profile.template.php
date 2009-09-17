@@ -810,49 +810,50 @@ function template_statPanel()
 	// First, show a few text statistics such as post/topic count.
 	echo '
 	<div id="profileview">
-		<div id="generalstats">
-			<h3 class="catbg"><span class="left"></span>
-				<img src="', $settings['images_url'], '/stats_info.gif" alt="" />
-				', $txt['statPanel_generalStats'], ' - ', $context['member']['name'], '
-			</h3>
-			<div class="windowbg2">
-				<span class="topslice"><span></span></span>
-				<div class="content">
-					<dl>
-						<dt>', $txt['statPanel_total_time_online'], ':</dt>
-						<dd>', $context['time_logged_in'], '</dd>
-						<dt>', $txt['statPanel_total_posts'], ':</dt>
-						<dd>', $context['num_posts'], ' ', $txt['statPanel_posts'], '</dd>
-						<dt>', $txt['statPanel_total_topics'], ':</dt>
-						<dd>', $context['num_topics'], ' ', $txt['statPanel_topics'], '</dd>
-						<dt>', $txt['statPanel_users_polls'], ':</dt>
-						<dd>', $context['num_polls'], ' ', $txt['statPanel_polls'], '</dd>
-						<dt>', $txt['statPanel_users_votes'], ':</dt>
-						<dd>', $context['num_votes'], ' ', $txt['statPanel_votes'], '</dd>
-					</dl>
+		<div class="flow_hidden">
+			<div id="generalstats">
+				<h3 class="catbg"><span class="left"></span>
+					<img src="', $settings['images_url'], '/stats_info.gif" alt="" />
+					', $txt['statPanel_generalStats'], ' - ', $context['member']['name'], '
+				</h3>
+				<div class="windowbg2">
+					<span class="topslice"><span></span></span>
+					<div class="content">
+						<dl>
+							<dt>', $txt['statPanel_total_time_online'], ':</dt>
+							<dd>', $context['time_logged_in'], '</dd>
+							<dt>', $txt['statPanel_total_posts'], ':</dt>
+							<dd>', $context['num_posts'], ' ', $txt['statPanel_posts'], '</dd>
+							<dt>', $txt['statPanel_total_topics'], ':</dt>
+							<dd>', $context['num_topics'], ' ', $txt['statPanel_topics'], '</dd>
+							<dt>', $txt['statPanel_users_polls'], ':</dt>
+							<dd>', $context['num_polls'], ' ', $txt['statPanel_polls'], '</dd>
+							<dt>', $txt['statPanel_users_votes'], ':</dt>
+							<dd>', $context['num_votes'], ' ', $txt['statPanel_votes'], '</dd>
+						</dl>
+					</div>
+					<span class="botslice"><span></span></span>
 				</div>
-				<span class="botslice"><span></span></span>
-			</div>
-		</div>';
+			</div>';
 
 	// Two columns with the most popular boards by posts and activity (activity = users posts / total posts).
 	echo '
-		<div id="popularposts">
-			<h3 class="catbg"><span class="left"></span>
-				<img src="', $settings['images_url'], '/stats_replies.gif" alt="" />
-				', $txt['statPanel_topBoards'], '
-			</h3>
-			<div class="windowbg2">
-				<span class="topslice"><span></span></span>
-				<div class="content">';
+			<div id="popularposts">
+				<h3 class="catbg"><span class="left"></span>
+					<img src="', $settings['images_url'], '/stats_replies.gif" alt="" />
+					', $txt['statPanel_topBoards'], '
+				</h3>
+				<div class="windowbg2">
+					<span class="topslice"><span></span></span>
+					<div class="content">';
 	if (empty($context['popular_boards']))
 		echo '
-						<span>', $txt['statPanel_noPosts'], '</span>';
+							<span>', $txt['statPanel_noPosts'], '</span>';
 
 	else
 	{
 		echo '
-					<dl>';
+						<dl>';
 		// Draw a bar for every board.
 		foreach ($context['popular_boards'] as $board)
 		{
@@ -861,25 +862,27 @@ function template_statPanel()
 							<dd>', $board['posts'] > 0 ? '<div class="profile_pie" style="background-position: -' . ((int) ($board['posts_percent']/5)-1) * 20 . 'px 0;"></div>' : '&nbsp;', '<span>',  empty($context['hide_num_posts']) ? $board['posts'] : '', '</span></dd>';
 		}
 		echo '
-					</dl>';
+						</dl>';
 	}
 	echo '
+					</div>
+					<span class="botslice"><span></span></span>
 				</div>
-				<span class="botslice"><span></span></span>
 			</div>
 		</div>';
 
 	// This next section draws a graph showing what times of day they post the most.
 	echo '
-		<div id="activitytime">
-			<h3 class="titlebg">
-				<span class="left"></span>
-				<img src="', $settings['images_url'], '/stats_views.gif" alt="" />
-				', $txt['statPanel_activityTime'], '
-			</h3>
-			<div class="windowbg2">
-				<span class="topslice"><span></span></span>
-				<div class="content">';
+		<div class="flow_hidden">
+			<div id="activitytime">
+				<h3 class="titlebg">
+					<span class="left"></span>
+					<img src="', $settings['images_url'], '/stats_views.gif" alt="" />
+					', $txt['statPanel_activityTime'], '
+				</h3>
+				<div class="windowbg2">
+					<span class="topslice"><span></span></span>
+					<div class="content">';
 
 	// If they haven't post at all, don't draw the graph.
 	if (empty($context['posts_by_time']))
@@ -900,28 +903,28 @@ function template_statPanel()
 						</dl>';
 	}
 	echo '
+					</div>
+					<span class="botslice"><span></span></span>
 				</div>
-				<span class="botslice"><span></span></span>
-			</div>
-		</div>';
+			</div>';
 
 	echo '
-		<div id="popularactivity">
-			<h3 class="titlebg">
-				<span class="left"></span>
-				<img src="', $settings['images_url'], '/stats_replies.gif" alt="" class="icon" />
-				', $txt['statPanel_topBoardsActivity'], '
-			</h3>
-			<div class="windowbg2">
-				<span class="topslice"><span></span></span>
-				<div class="content">';
+			<div id="popularactivity">
+				<h3 class="titlebg">
+					<span class="left"></span>
+					<img src="', $settings['images_url'], '/stats_replies.gif" alt="" class="icon" />
+					', $txt['statPanel_topBoardsActivity'], '
+				</h3>
+				<div class="windowbg2">
+					<span class="topslice"><span></span></span>
+					<div class="content">';
 	if (empty($context['board_activity']))
 		echo '
 						<span>', $txt['statPanel_noPosts'], '</span>';
 	else
 	{
 		echo '
-					<dl>';
+						<dl>';
 		// Draw a bar for every board.
 		foreach ($context['board_activity'] as $activity)
 		{
@@ -930,16 +933,16 @@ function template_statPanel()
 							<dd>', $activity['percent'] > 0 ? '<div class="profile_pie" style="background-position: -' . ((int)($activity['relative_percent']/5)-1)*20 . 'px 0;"></div>' : '&nbsp;', '<span>', $activity['percent'], '%</span></dd>';
 		}
 		echo '
-					</dl>';
+						</dl>';
 	}
 	echo '
+					</div>
+					<span class="botslice"><span></span></span>
 				</div>
-				<span class="botslice"><span></span></span>
 			</div>
 		</div>';
 
 	echo '
-		<div style="clear: both;"></div>
 	</div>
 	<br style="clear: both;" />';
 }

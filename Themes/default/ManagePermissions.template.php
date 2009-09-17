@@ -474,7 +474,8 @@ function template_modify_group()
 					', ($context['view_type'] == 'classic' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="*" />' : ''), '<a href="', $scripturl, '?action=admin;area=permissions;sa=modify;group=', $context['group']['id'], ($context['permission_type'] == 'board' ? ';pid=' . $context['profile']['id'] : ''), ';view=classic">', $txt['permissions_view_classic'], '</a>
 				</div>
 				<span class="botslice"><span></span></span>
-			</div>';
+			</div>
+			<div class="flow_hidden">';
 
 	// Draw out the main bits.
 	if ($context['view_type'] == 'simple')
@@ -486,6 +487,7 @@ function template_modify_group()
 	if ($context['permission_type'] == 'membergroup')
 	{
 		echo '
+			</div>
 			<br />
 			<h3 class="catbg"><span class="left"></span>
 				', $txt['permissions_board'], '
@@ -493,7 +495,8 @@ function template_modify_group()
 
 			<div class="information">
 				', $txt['permissions_board_desc'], '
-			</div>';
+			</div>
+			<div class="flow_hidden">';
 
 		if ($context['view_type'] == 'simple')
 			template_modify_group_simple('board');
@@ -507,6 +510,7 @@ function template_modify_group()
 
 	echo '
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+			</div>
 		</form>
 	</div>
 	<br style="clear: both;" />';
@@ -808,13 +812,13 @@ function template_modify_group_classic($type)
 	echo '
 				<div class="windowbg2">
 					<span class="topslice"><span></span></span>
-					<div class="content">
-			';
+					<div class="content">';
+					
 	foreach ($permission_type['columns'] as $column)
 	{
 		echo '
-					<table width="49%" class="table_grid perm_classic align_left">
-					';
+					<table width="49%" class="table_grid perm_classic align_left">';
+					
 		foreach ($column as $permissionGroup)
 		{
 			if (empty($permissionGroup['permissions']))
@@ -843,8 +847,7 @@ function template_modify_group_classic($type)
 								<th align="center"><div>', $txt['permissions_option_off'], '</div></th>
 								<th align="center"><div>', $txt['permissions_option_deny'], '</div></th>';
 					echo '
-							</tr>
-						';
+							</tr>';
 				}
 			}
 
@@ -953,7 +956,6 @@ function template_modify_group_classic($type)
 							</tr>';
 		}
 	echo '
-
 						</table>';
 	}
 	echo '
