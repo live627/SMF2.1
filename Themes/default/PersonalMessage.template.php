@@ -979,8 +979,7 @@ function template_send()
 		echo '
 							<tr>
 								<td align="right"></td>
-								<td valign="middle">
-									', template_control_richedit($context['post_box_name'], 'bbc'), '
+								<td valign="middle" id="bbcBox_message">
 								</td>
 							</tr>';
 	}
@@ -990,8 +989,7 @@ function template_send()
 		echo '
 							<tr>
 								<td align="right"></td>
-								<td valign="middle">
-									', template_control_richedit($context['post_box_name'], 'smileys'), '
+								<td valign="middle" id="smileyBox_message">
 								</td>
 							</tr>';
 
@@ -1000,7 +998,7 @@ function template_send()
 							<tr>
 								<td valign="top" align="right"></td>
 								<td>
-									', template_control_richedit($context['post_box_name'], 'message'), '
+									', template_control_richedit($context['post_box_name'], 'smileyBox_message', 'bbcBox_message'), '
 								</td>
 							</tr>';
 
