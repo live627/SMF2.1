@@ -984,7 +984,7 @@ span.lowerframe span
 .dropmenu, .dropmenu ul
 {
 	list-style: none;
-	line-height: 1;
+	line-height: 1em;
 	padding: 0;
 	margin: 0;
 }
@@ -1067,14 +1067,14 @@ span.lowerframe span
 	background: url(../images/theme/menu_gfx.png) no-repeat 0 0;
 }
 /* the hover effects */
-.dropmenu li a.firstlevel:hover, .dropmenu li.over a.firstlevel
+.dropmenu li a.firstlevel:hover
 {
 	background: url(../images/theme/menu_gfx.png) no-repeat 100% -31px;
 	color: #ffffff;
 	cursor: pointer;
 	text-decoration: none;
 }
-.dropmenu li a.firstlevel:hover span.firstlevel, .dropmenu li.over a.firstlevel span.firstlevel
+.dropmenu li a.firstlevel:hover span.firstlevel
 {
 	background: url(../images/theme/menu_gfx.png) no-repeat 0 -31px;
 }
@@ -1085,12 +1085,12 @@ span.lowerframe span
 	color: #000;
 	text-decoration: none;
 }
-.dropmenu li:hover ul ul, .dropmenu li:hover ul ul ul, .dropmenu li.over ul ul, .dropmenu li.over ul ul ul
+.dropmenu li:hover ul ul, .dropmenu li:hover ul ul ul
 {
 	top: -999em;
 }
 
-.dropmenu li:hover ul, .dropmenu li li:hover ul, .dropmenu li li li:hover ul, .dropmenu li.over ul, .dropmenu li li.over ul, .dropmenu li li li.over ul
+.dropmenu li:hover ul, .dropmenu li li:hover ul
 {
 	top: auto;
 }

@@ -1,9 +1,8 @@
 /* The dropdown menus
 ------------------------------------------------------- */
-
-.dropmenu
+#main_menu
 {
-	height: 1%;
+	overflow: auto;
 }
 .dropmenu li
 {

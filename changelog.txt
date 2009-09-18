@@ -44,6 +44,8 @@ September 2009
  * Show an ellipsis character for the active menu item if it contains subitems, too. (GenericMenu template)
  ! Accept both smf_crc32 and crc32 as a valid result (Subs-Package.php) [Bug 1220]
  + Converting to UTF-8 could break logins, attempt to store the previous charset to compat this during logins (ManageMaintenance.php, LogInOut.php) [Bug 2659]
+ * The dropmenu used some outdated CSS (index.css) [Bug 3600]
+ * The dropmenu didn't support IE6 yet (ie6.css)
 
 
 August 2009
