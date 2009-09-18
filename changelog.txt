@@ -46,6 +46,7 @@ September 2009
  + Converting to UTF-8 could break logins, attempt to store the previous charset to compat this during logins (ManageMaintenance.php, LogInOut.php) [Bug 2659]
  * The dropmenu used some outdated CSS (index.css) [Bug 3600]
  * The dropmenu didn't support IE6 yet (ie6.css)
+ ! Theres only one file_hash (ManageAttachments.php) [Bug 3762]
 
 
 August 2009

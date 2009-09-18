@@ -1258,7 +1258,7 @@ function RepairAttachments()
 			$to_remove = array();
 
 			$result = $smcFunc['db_query']('', '
-				SELECT a.id_attach, a.id_folder, a.filename, a.file_hash, a.file_hash, a.attachment_type
+				SELECT a.id_attach, a.id_folder, a.filename, a.file_hash, a.attachment_type
 				FROM {db_prefix}attachments AS a
 					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = a.id_member)
 				WHERE a.id_attach BETWEEN {int:substep} AND {int:substep} + 499
