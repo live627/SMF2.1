@@ -246,12 +246,15 @@ function ModifyProfile($post_errors = array())
 						'any' => array('profile_extra_any'),
 					),
 				),
-				'buddies' => array(
-					'label' => $txt['editBuddies'],
+				'lists' => array(
+					'label' => $txt['editBuddyIgnoreLists'],
 					'file' => 'Profile-Modify.php',
-					'function' => 'editBuddies',
+					'function' => 'editBuddyIgnoreLists',
 					'enabled' => !empty($modSettings['enable_buddylist']) && $context['user']['is_owner'],
-					'sc' => 'post',
+					'subsections' => array(
+						'buddies' => array($txt['editBuddies'], 'moderate_forum'),
+						'ignore' => array($txt['editIgnoreList'], 'moderate_forum'),
+					),
 					'permission' => array(
 						'own' => array('profile_extra_any', 'profile_extra_own'),
 						'any' => array(),

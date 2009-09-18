@@ -183,7 +183,8 @@ function template_main()
 		echo '
 		<div class="bordercolor">';
 
-		if (in_array($message['member']['id'], $context['user']['ignoreusers']))
+		// Are we ignoring this message?
+		if (!empty($options['posts_apply_ignore_list']) && in_array($message['member']['id'], $context['user']['ignoreusers']))
 		{
 			$ignoring = true;
 			$ignoredMsgs[] = $message['id'];

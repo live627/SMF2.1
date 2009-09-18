@@ -150,7 +150,9 @@ $txt['showMessages'] = 'Messages';
 $txt['showTopics'] = 'Topics';
 $txt['showAttachments'] = 'Attachments';
 $txt['statPanel'] = 'Show Stats';
+$txt['editBuddyIgnoreLists'] = 'Buddies/Ignore List';
 $txt['editBuddies'] = 'Edit Buddies';
+$txt['editIgnoreList'] = 'Edit Ignore List';
 $txt['trackUser'] = 'Track User';
 $txt['trackActivity'] = 'Activity';
 $txt['trackIP'] = 'IP Address';
@@ -250,6 +252,7 @@ $txt['show_online'] = 'Show others my online status';
 
 $txt['return_to_post'] = 'Return to topics after posting by default.';
 $txt['no_new_reply_warning'] = 'Don\'t warn on new replies made while posting.';
+$txt['posts_apply_ignore_list'] = 'Hide messages posted by members on my ignore list.';
 $txt['recent_posts_at_top'] = 'Show most recent posts at the top.';
 $txt['recent_pms_at_top'] = 'Show most recent personal messages at top.';
 $txt['wysiwyg_default'] = 'Show WYSIWYG editor on post page by default.';
@@ -319,10 +322,17 @@ $txt['showPermissions_restricted_boards_desc'] = 'The following boards are not a
 $txt['local_time'] = 'Local Time';
 $txt['posts_per_day'] = 'per day';
 
+$txt['buddy_ignore_desc'] = 'This area allows you to maintain your buddy and ignore lists for this forum. Adding members to these lists will, amongst other things, help control mail and PM traffic, depending on your preferences.';
+
 $txt['buddy_add'] = 'Add To Buddy List';
 $txt['buddy_remove'] = 'Remove From Buddy List';
 $txt['buddy_add_button'] = 'Add';
 $txt['no_buddies'] = 'Your buddy list is currently empty';
+
+$txt['ignore_add'] = 'Add To Ignore List';
+$txt['ignore_remove'] = 'Remove From Ignore List';
+$txt['ignore_add_button'] = 'Add';
+$txt['no_ignore'] = 'Your ignore list is currently empty';
 
 $txt['regular_members'] = 'Registered Members';
 $txt['regular_members_desc'] = 'Every member of the forum is a member of this group.';
@@ -411,15 +421,19 @@ $txt['profile_viewwarning_impact'] = 'Warning Impact';
 
 $txt['subscriptions'] = 'Paid Subscriptions';
 
-$txt['pm_settings_desc'] = 'From this page you can change a variety of personal messaging options - including how messages are displayed. You can also create a list of people to reject incoming messages from.';
-$txt['ignorelist'] = 'Ignorelist';
-$txt['username_line'] = 'Add one Username on each line.<br />Or enter * to ignore all messages.';
+$txt['pm_settings_desc'] = 'From this page you can change a variety of personal messaging options, including how messages are displayed and who may send them to you.';
 $txt['email_notify'] = 'Notify by email every time you receive a personal message:';
 $txt['email_notify_never'] = 'Never';
 $txt['email_notify_buddies'] = 'From Buddies Only';
 $txt['email_notify_always'] = 'Always';
 
-$txt['copy_to_outbox'] = 'Save a copy of each Personal Message in my outbox by default.';
+$txt['pm_receive_from'] = 'Receive personal messages from:';
+$txt['pm_receive_from_everyone'] = 'All members';
+$txt['pm_receive_from_ignore'] = 'All members, except those on my ignore list';
+$txt['pm_receive_from_admins'] = 'Administrators only';
+$txt['pm_receive_from_buddies'] = 'Buddies and Administrators only';
+
+$txt['copy_to_outbox'] = 'Save a copy of each personal message in my outbox by default.';
 $txt['popup_messages'] = 'Show a popup when I receive new messages.';
 $txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';
 $txt['pm_display_mode'] = 'Display personal messages';

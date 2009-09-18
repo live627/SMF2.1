@@ -437,7 +437,7 @@ function template_user_subscription()
 	echo '
 	<div id="paid_subscription">
 		<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=subscriptions;confirm" method="post">
-			<h3 class="titlebg"><span class="left"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['subscriptions'], '
 			</h3>';
 

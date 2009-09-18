@@ -2592,6 +2592,15 @@ unset($_GET['ren_col']);
 ---#
 
 /******************************************************************************/
+--- Adding new personal message setting.
+/******************************************************************************/
+
+---# Adding column that stores the PM receiving setting...
+ALTER TABLE {$db_prefix}members
+ADD COLUMN pm_receive_from tinyint(4) unsigned NOT NULL default '0';
+---#
+
+/******************************************************************************/
 --- Installing new default theme...
 /******************************************************************************/
 

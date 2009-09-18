@@ -493,6 +493,26 @@ CREATE INDEX {$db_prefix}attachments_attachment_type ON {$db_prefix}attachments 
 ---#
 
 /******************************************************************************/
+--- Adding new personal message setting.
+/******************************************************************************/
+
+---# Adding column that stores the PM receiving setting...
+---{
+$smcFunc['db_alter_table']('members', array(
+	'add' => array(
+		'pm_receive_from' => array(
+			'name' => 'pm_receive_from',
+			'null' => false,
+			'type' => 'tinyint',
+			'size' => 4,
+			'default' => '0'
+		)
+	)
+));
+---}
+---#
+
+/******************************************************************************/
 --- Installing new default theme...
 /******************************************************************************/
 

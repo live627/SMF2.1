@@ -47,6 +47,10 @@ September 2009
  * The dropmenu used some outdated CSS (index.css) [Bug 3600]
  * The dropmenu didn't support IE6 yet (ie6.css)
  ! Theres only one file_hash (ManageAttachments.php) [Bug 3762]
+ * Added a new area to the profile section that allows easy editing of the buddy and ignore lists. (Profile.php, Profile-Modify.php, Profile template)
+ & Added a few language strings to accommodate the above; removed a few now-obsolete strings. (Profile language file)
+ + Allow members to specify whose PM's they want to receive. (Load.php, Subs.php, Subs-Post.php, Profile template, Profile language file, install scripts, upgrade scripts)
+ & Ignoring posts posted by those on a member's ignore list is now optional. (Display template, Settings template, Profile template, Profile language file)
 
 
 August 2009

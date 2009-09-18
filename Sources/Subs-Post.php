@@ -986,7 +986,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$criteria = unserialize($row['criteria']);
-		// Note we don't check the buddy status cause deletion from buddy = madness!
+		// Note we don't check the buddy status, cause deletion from buddy = madness!
 		$delete = false;
 		foreach ($criteria as $criterium)
 		{
@@ -1050,16 +1050,21 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		SELECT
 			member_name, real_name, id_member, email_address, lngfile,
 			pm_email_notify, instant_messages,' . (allowedTo('moderate_forum') ? ' 0' : '
-			(pm_ignore_list = {string:wildcard} OR FIND_IN_SET({string:from_id}, pm_ignore_list))') . ' AS ignored,
+			(pm_receive_from = {int:admins_only}' . (empty($modSettings['buddies_enable']) ? '' : ' OR
+			(pm_receive_from = {int:buddies_only} AND NOT FIND_IN_SET({string:from_id}, buddy_list) OR
+			(pm_receive_from = {int:not_on_ignore_list} AND FIND_IN_SET({string:from_id}, pm_ignore_list)') . ')') . ' AS ignored,
 			FIND_IN_SET({string:from_id}, buddy_list) AS is_buddy, is_activated,
 			additional_groups, id_group, id_post_group
 		FROM {db_prefix}members
 		WHERE id_member IN ({array_int:recipients})
 		ORDER BY lngfile
-		LIMIT ' . count($all_to),
+		LIMIT {int:count_recipients}',
 		array(
-			'wildcard' => '*',
+			'not_on_ignore_list' => 1,
+			'buddies_only' => 2,
+			'admins_only' => 3,
 			'recipients' => $all_to,
+			'count_recipients' => count($all_to),
 			'from_id' => $from['id'],
 		)
 	);
@@ -1182,8 +1187,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	foreach ($notifications as $lang => $notification_list)
 	{
 		// Make sure to use the right language.
-		if (loadLanguage('PersonalMessage', $lang, false) === false)
-			loadLanguage('InstantMessage', $lang, false);
+		loadLanguage('PersonalMessage', $lang, false);
 
 		// Replace the right things in the message strings.
 		$mailsubject = str_replace(array('SUBJECT', 'SENDER'), array($subject, un_htmlspecialchars($from['name'])), $txt['new_pm_subject']);
@@ -1195,8 +1199,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	}
 
 	// Back to what we were on before!
-	if (loadLanguage('PersonalMessage') === false)
-		loadLanguage('InstantMessage');
+	loadLanguage('PersonalMessage');
 
 	// Add one to their unread and read message counts.
 	foreach ($all_to as $k => $id)

@@ -445,7 +445,7 @@ function template_editBuddies()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
-		<h3 class="catbg">
+		<h3 class="titlebg">
 			<span class="left"></span>
 			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
 			', $txt['editBuddies'], '
@@ -482,7 +482,7 @@ function template_editBuddies()
 				<td align="center">', $buddy['aim']['link'], '</td>
 				<td align="center">', $buddy['yim']['link'], '</td>
 				<td align="center">', $buddy['msn']['link'], '</td>
-				<td align="center"><a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=buddies;remove=', $buddy['id'], '"><img src="', $settings['images_url'], '/icons/delete.gif" alt="', $txt['buddy_remove'], '" title="', $txt['buddy_remove'], '" /></a></td>
+				<td align="center"><a href="', $scripturl, '?action=profile;area=lists;sa=buddies;u=', $context['id_member'], ';remove=', $buddy['id'], '"><img src="', $settings['images_url'], '/icons/delete.gif" alt="', $txt['buddy_remove'], '" title="', $txt['buddy_remove'], '" /></a></td>
 			</tr>';
 
 		$alternate = !$alternate;
@@ -494,14 +494,14 @@ function template_editBuddies()
 	// Add a new buddy?
 	echo '
 	<br />
-	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=buddies" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=lists;sa=buddies" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder add_buddy">
 			<h3 class="titlebg">
 				<span class="left"></span>
 				', $txt['buddy_add'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe content">
+			<div class="roundframe">
 					<label for="new_buddy">
 						<strong>', $txt['who_member'], ':</strong>
 					</label>
@@ -519,6 +519,93 @@ function template_editBuddies()
 			sSessionVar: \'', $context['session_var'], '\',
 			sSuggestId: \'new_buddy\',
 			sControlId: \'new_buddy\',
+			sSearchType: \'member\',
+			sTextDeleteItem: \'', $txt['autosuggest_delete_item'], '\',
+			bItemList: false
+		});
+	// ]]></script>';
+}
+
+// Template for showing the ignore list of the current user.
+function template_editIgnoreList()
+{
+	global $context, $settings, $options, $scripturl, $modSettings, $txt;
+
+	echo '
+		<h3 class="titlebg">
+			<span class="left"></span>
+			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
+			', $txt['editIgnoreList'], '
+		</h3>
+		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
+			<tr class="titlebg">
+				<th width="20%">', $txt['name'], '</th>
+				<th>', $txt['status'], '</th>
+				<th>', $txt['email'], '</th>
+				<th align="center">', $txt['icq'], '</th>
+				<th align="center">', $txt['aim'], '</th>
+				<th align="center">', $txt['yim'], '</th>
+				<th align="center">', $txt['msn'], '</th>
+				<th></th>
+			</tr>';
+
+	// If they don't have anyone on their ignore list, don't list it!
+	if (empty($context['ignore_list']))
+		echo '
+			<tr class="windowbg2">
+				<td colspan="8" align="center"><strong>', $txt['no_ignore'], '</strong></td>
+			</tr>';
+
+	// Now loop through each buddy showing info on each.
+	$alternate = false;
+	foreach ($context['ignore_list'] as $member)
+	{
+		echo '
+			<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
+				<td>', $member['link'], '</td>
+				<td align="center"><a href="', $member['online']['href'], '"><img src="', $member['online']['image_href'], '" alt="', $member['online']['label'], '" title="', $member['online']['label'], '" /></a></td>
+				<td align="center">', ($member['show_email'] == 'no' ? '' : '<a href="' . $scripturl . '?action=emailuser;sa=email;uid=' . $member['id'] . '" rel="nofollow"><img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . ' ' . $member['name'] . '" /></a>'), '</td>
+				<td align="center">', $member['icq']['link'], '</td>
+				<td align="center">', $member['aim']['link'], '</td>
+				<td align="center">', $member['yim']['link'], '</td>
+				<td align="center">', $member['msn']['link'], '</td>
+				<td align="center"><a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=lists;sa=ignore;remove=', $member['id'], '"><img src="', $settings['images_url'], '/icons/delete.gif" alt="', $txt['ignore_remove'], '" title="', $txt['ignore_remove'], '" /></a></td>
+			</tr>';
+
+		$alternate = !$alternate;
+	}
+
+	echo '
+		</table>';
+
+	// Add a new buddy?
+	echo '
+	<br />
+	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=lists;sa=ignore" method="post" accept-charset="', $context['character_set'], '">
+		<div class="tborder add_buddy">
+			<h3 class="titlebg">
+				<span class="left"></span>
+				', $txt['ignore_add'], '
+			</h3>
+			<span class="upperframe"><span></span></span>
+			<div class="roundframe">
+					<label for="new_buddy">
+						<strong>', $txt['who_member'], ':</strong>
+					</label>
+					<input type="text" name="new_ignore" id="new_ignore" size="25" class="input_text" />
+					<input type="submit" value="', $txt['ignore_add_button'], '" class="button_submit" />
+			</div>
+			<span class="lowerframe"><span></span></span>
+		</div>
+	</form>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
+	<script type="text/javascript"><!-- // --><![CDATA[
+		var oAddIgnoreSuggest = new smc_AutoSuggest({
+			sSelf: \'oAddIgnoreSuggest\',
+			sSessionId: \'', $context['session_id'], '\',
+			sSessionVar: \'', $context['session_var'], '\',
+			sSuggestId: \'new_ignore\',
+			sControlId: \'new_ignore\',
 			sSearchType: \'member\',
 			sTextDeleteItem: \'', $txt['autosuggest_delete_item'], '\',
 			bItemList: false
@@ -667,7 +754,7 @@ function template_showPermissions()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-		<h3 class="titlebg">
+		<h3 class="catbg">
 			<span class="left"></span>
 			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
 			', $txt['showPermissions'], '
@@ -1198,49 +1285,82 @@ function template_profile_pm_settings()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
-							<dd></dd>
+								<dt>
+										<label for="pm_prefs">', $txt['pm_display_mode'], ':</label>
+								</dt>
+								<dd>
+										<select name="pm_prefs" id="pm_prefs" onchange="if (this.value == 2 &amp;&amp; !document.getElementById(\'copy_to_outbox\').checked) alert(\'', $txt['pm_recommend_enable_outbox'], '\');">
+											<option value="0"', $context['display_mode'] == 0 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_all'], '</option>
+											<option value="1"', $context['display_mode'] == 1 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_one'], '</option>
+											<option value="2"', $context['display_mode'] == 2 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_linked'], '</option>
+										</select>
+								</dd>
+								<dt>
+										<label for="view_newest_pm_first">', $txt['recent_pms_at_top'], '</label>
+								</dt>
+								<dd>
+										<input type="checkbox" name="default_options[view_newest_pm_first]" id="view_newest_pm_first" value="1"', !empty($context['member']['options']['view_newest_pm_first']) ? ' checked="checked"' : '', ' class="input_check" />
+										<input type="hidden" name="default_options[view_newest_pm_first]" value="0" />
+								</dd>
 						</dl>
-						<ul class="reset">
-							<li>
-								<label for="pm_prefs">', $txt['pm_display_mode'], ':</label>
-								<select name="pm_prefs" id="pm_prefs" onchange="if (this.value == 2 &amp;&amp; !document.getElementById(\'copy_to_outbox\').checked) alert(\'', $txt['pm_recommend_enable_outbox'], '\');">
-									<option value="0"', $context['display_mode'] == 0 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_all'], '</option>
-									<option value="1"', $context['display_mode'] == 1 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_one'], '</option>
-									<option value="2"', $context['display_mode'] == 2 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_linked'], '</option>
-								</select>
-							</li>
-							<li>
-								<label for="pm_email_notify">', $txt['email_notify'], '</label>
-								<select name="pm_email_notify" id="pm_email_notify">
-									<option value="0"', empty($context['send_email']) ? ' selected="selected"' : '', '>', $txt['email_notify_never'], '</option>
-									<option value="1"', !empty($context['send_email']) && ($context['send_email'] == 1 || (empty($modSettings['enable_buddylist']) && $context['send_email'] > 1)) ? ' selected="selected"' : '', '>', $txt['email_notify_always'], '</option>';
+						<hr />
+						<dl>
+								<dt>
+										<label for="pm_receive_from">', $txt['pm_receive_from'], '</label>
+								</dt>
+								<dd>
+										<select name="pm_receive_from" id="pm_receive_from">
+												<option value="0"', empty($context['receive_from']) ? ' selected="selected"' : '', '>', $txt['pm_receive_from_everyone'], '</option>';
 
 	if (!empty($modSettings['enable_buddylist']))
 		echo '
-									<option value="2"', !empty($context['send_email']) && $context['send_email'] > 1 ? ' selected="selected"' : '', '>', $txt['email_notify_buddies'], '</option>';
+												<option value="1"', !empty($context['receive_from']) && $context['receive_from'] == 1 ? ' selected="selected"' : '', '>', $txt['pm_receive_from_ignore'], '</option>
+												<option value="2"', !empty($context['receive_from']) && $context['receive_from'] == 2 ? ' selected="selected"' : '', '>', $txt['pm_receive_from_buddies'], '</option>';
 
 	echo '
-								</select>
-							</li>
-							<li>
-								<input type="hidden" name="default_options[copy_to_outbox]" value="0" />
-								<label for="copy_to_outbox"><input type="checkbox" name="default_options[copy_to_outbox]" id="copy_to_outbox" value="1"', !empty($context['member']['options']['copy_to_outbox']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['copy_to_outbox'], '</label><br />
-							</li>
-							<li>
-								<input type="hidden" name="default_options[popup_messages]" value="0" />
-								<label for="popup_messages"><input type="checkbox" name="default_options[popup_messages]" id="popup_messages" value="1"', !empty($context['member']['options']['popup_messages']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['popup_messages'], '</label><br />
-							</li>
-							<li>
-								<input type="hidden" name="default_options[pm_remove_inbox_label]" value="0" />
-								<label for="pm_remove_inbox_label"><input type="checkbox" name="default_options[pm_remove_inbox_label]" id="pm_remove_inbox_label" value="1"', !empty($context['member']['options']['pm_remove_inbox_label']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['pm_remove_inbox_label'], '</label><br />
-							</li>
-							<li>
-								<input type="hidden" name="default_options[view_newest_pm_first]" value="0" />
-								<label for="view_newest_pm_first"><input type="checkbox" name="default_options[view_newest_pm_first]" id="view_newest_pm_first" value="1"', !empty($context['member']['options']['view_newest_pm_first']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['recent_pms_at_top'], '</label>
-							</li>
-						</ul>
+												<option value="3"', ((!empty($context['receive_from']) && $context['receive_from'] > 2) || (empty($modSettings['enable_buddylist']) && !empty($context['receive_from']))) ? ' selected="selected"' : '', '>', $txt['pm_receive_from_admins'], '</option>
+										</select>
+								</dd>
+								<dt>
+										<label for="pm_email_notify">', $txt['email_notify'], '</label>
+								</dt>
+								<dd>
+										<select name="pm_email_notify" id="pm_email_notify">
+												<option value="0"', empty($context['send_email']) ? ' selected="selected"' : '', '>', $txt['email_notify_never'], '</option>
+												<option value="1"', !empty($context['send_email']) && ($context['send_email'] == 1 || (empty($modSettings['enable_buddylist']) && $context['send_email'] > 1)) ? ' selected="selected"' : '', '>', $txt['email_notify_always'], '</option>';
+
+	if (!empty($modSettings['enable_buddylist']))
+		echo '
+												<option value="2"', !empty($context['send_email']) && $context['send_email'] > 1 ? ' selected="selected"' : '', '>', $txt['email_notify_buddies'], '</option>';
+
+	echo '
+										</select>
+								</dd>
+								<dt>
+										<label for="popup_messages">', $txt['popup_messages'], '</label>
+								</dt>
+								<dd>
+										<input type="hidden" name="default_options[popup_messages]" value="0" />
+										<input type="checkbox" name="default_options[popup_messages]" id="popup_messages" value="1"', !empty($context['member']['options']['popup_messages']) ? ' checked="checked"' : '', ' class="input_check" />
+								</dd>
+						</dl>
+						<hr />
 						<dl>
-							<dd></dd>';
+								<dt>
+										<label for="copy_to_outbox"> ', $txt['copy_to_outbox'], '</label>
+								</dt>
+								<dd>
+										<input type="checkbox" name="default_options[copy_to_outbox]" id="copy_to_outbox" value="1"', !empty($context['member']['options']['copy_to_outbox']) ? ' checked="checked"' : '', ' class="input_check" />
+										<input type="hidden" name="default_options[copy_to_outbox]" value="0" />
+								</dd>
+								<dt>	
+										<label for="pm_remove_inbox_label">', $txt['pm_remove_inbox_label'], '</label>
+								</dt>
+								<dd>
+										<input type="checkbox" name="default_options[pm_remove_inbox_label]" id="pm_remove_inbox_label" value="1"', !empty($context['member']['options']['pm_remove_inbox_label']) ? ' checked="checked"' : '', ' class="input_check" />
+										<input type="hidden" name="default_options[pm_remove_inbox_label]" value="0" />
+								</dd>
+						</dl>';
 
 }
 
@@ -1289,7 +1409,16 @@ function template_profile_theme_settings()
 							<li>
 								<input type="hidden" name="default_options[no_new_reply_warning]" value="0" />
 								<label for="no_new_reply_warning"><input type="checkbox" name="default_options[no_new_reply_warning]" id="no_new_reply_warning" value="1"', !empty($context['member']['options']['no_new_reply_warning']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['no_new_reply_warning'], '</label>
-							</li>
+							</li>';
+
+	if (!empty($modSettings['enable_buddylist']))
+		echo '
+							<li>
+								<input type="hidden" name="default_options[posts_apply_ignore_list]" value="0" />
+								<label for="posts_apply_ignore_list"><input type="checkbox" name="default_options[posts_apply_ignore_list]" id="posts_apply_ignore_list" value="1"', !empty($context['member']['options']['posts_apply_ignore_list']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['posts_apply_ignore_list'], '</label>
+							</li>';
+
+	echo '
 							<li>
 								<input type="hidden" name="default_options[view_newest_first]" value="0" />
 								<label for="view_newest_first"><input type="checkbox" name="default_options[view_newest_first]" id="view_newest_first" value="1"', !empty($context['member']['options']['view_newest_first']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['recent_posts_at_top'], '</label>
@@ -2645,7 +2774,7 @@ function template_authentication_method()
 	echo '
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/register.js"></script>
 		<form action="', $scripturl, '?action=profile;area=authentication;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data">
-			<h3 class="titlebg">
+			<h3 class="catbg">
 				<span class="left"></span>
 				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
 				', $txt['authentication'], '

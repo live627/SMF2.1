@@ -1372,7 +1372,8 @@ CREATE TABLE {$db_prefix}members (
   password_salt varchar(255) NOT NULL default '',
   ignore_boards text NOT NULL,
   warning smallint NOT NULL default '0',
-  passwd_flood varchar(12) NOT NULL default ''
+  passwd_flood varchar(12) NOT NULL default '',
+  pm_receive_from tinyint(4) unsigned NOT NULL default '0'
 );
 
 #

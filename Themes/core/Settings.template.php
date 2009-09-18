@@ -57,6 +57,11 @@ function template_options()
 			'default' => true,
 		),
 		array(
+			'id' => 'posts_apply_ignore_list',
+			'label' => $txt['posts_apply_ignore_list'],
+			'default' => false,
+		),
+		array(
 			'id' => 'wysiwyg_default',
 			'label' => $txt['wysiwyg_default'],
 			'default' => false,

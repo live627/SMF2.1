@@ -181,7 +181,8 @@ function template_main()
 		if ($message['can_remove'])
 			$removableMessageIDs[] = $message['id'];
 
-		if (in_array($message['member']['id'], $context['user']['ignoreusers']))
+		// Are we ignoring this message?
+		if (!empty($options['posts_apply_ignore_list']) && in_array($message['member']['id'], $context['user']['ignoreusers']))
 		{
 			$ignoring = true;
 			$ignoredMsgs[] = $message['id'];
@@ -355,7 +356,6 @@ function template_main()
 								<li class="email"><a href="', $scripturl, '?action=emailuser;sa=email;msg=', $message['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a></li>';
 
 		// Done with the information about the poster... on to the post itself.
-		// !!! Clean this up, big time.
 		echo '
 							</ul>
 						</div>
@@ -421,16 +421,19 @@ function template_main()
 			echo '
 								</ul>';
 
-		// Show the post itself, finally!
+		echo '
+							</div>';
+
+		// Ignoring this user? Hide the post.
 		if ($ignoring)
 			echo '
-								<div id="msg_', $message['id'], '_ignored_prompt">
-									', $txt['ignoring_user'], '
-									<a href="#" id="msg_', $message['id'], '_ignored_link" style="display: none;">', $txt['show_ignore_user_post'], '</a>
-								</div>';
+							<div id="msg_', $message['id'], '_ignored_prompt">
+								', $txt['ignoring_user'], '
+								<a href="#" id="msg_', $message['id'], '_ignored_link" style="display: none;">', $txt['show_ignore_user_post'], '</a>
+							</div>';
 
+		// Show the post itself, finally!
 		echo '
-							</div>
 							<div class="post">';
 
 		if (!$message['approved'] && $message['member']['id'] != 0 && $message['member']['id'] == $context['user']['id'])
@@ -589,10 +592,6 @@ function template_main()
 				<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#top"><strong>' . $txt['go_up'] . '</strong></a>' : '', '</div>
 				<div class="nextlinks_bottom">', $context['previous_next'], '</div>
 			</div>';
-
-	// Show the jumpto box, or actually...let Javascript do it.
-///	echo '
-//	<div style="text-align: ', !$context['right_to_left'] ? 'right' : 'left', ';" id="display_jump_to">&nbsp;</div>';
 
 	// Show the lower breadcrumbs.
 	theme_linktree();

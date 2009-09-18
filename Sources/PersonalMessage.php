@@ -1972,8 +1972,7 @@ function MessagePost2()
 	isAllowedTo('pm_send');
 	require_once($sourcedir . '/Subs-Auth.php');
 
-	if (loadLanguage('PersonalMessage', '', false) === false)
-		loadLanguage('InstantMessage');
+	loadLanguage('PersonalMessage', '', false);
 
 	// Extract out the spam settings - it saves database space!
 	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification'], $modSettings['pm_posts_per_hour']) = explode(',', $modSettings['pm_spam_settings']);
@@ -2034,7 +2033,6 @@ function MessagePost2()
 	$namesNotFound = array();
 	foreach (array('to', 'bcc') as $recipientType)
 	{
-
 		// First, let's see if there's user ID's given.
 		$recipientList[$recipientType] = array();
 		if (!empty($_POST['recipient_' . $recipientType]) && is_array($_POST['recipient_' . $recipientType]))
@@ -3113,8 +3111,7 @@ function ReportMessage()
 
 			if (!isset($messagesToSend[$cur_language]))
 			{
-				if (loadLanguage('PersonalMessage', $cur_language, false) === false)
-					loadLanguage('InstantMessage', $cur_language);
+				loadLanguage('PersonalMessage', $cur_language, false);
 
 				// Make the body.
 				$report_body = str_replace(array('{REPORTER}', '{SENDER}'), array(un_htmlspecialchars($user_info['name']), $memberFromName), $txt['pm_report_pm_user_sent']);
@@ -3145,10 +3142,7 @@ function ReportMessage()
 
 		// Give the user their own language back!
 		if (!empty($modSettings['userLanguage']))
-		{
-			if (loadLanguage('PersonalMessage', '', false) === false)
-				loadLanguage('InstantMessage');
-		}
+			loadLanguage('PersonalMessage', '', false);
 
 		// Leave them with a template.
 		$context['sub_template'] = 'report_message_complete';

@@ -53,6 +53,9 @@ if (!defined('SMF'))
 	void editBuddies(int id_member)
 		// !!!
 
+	void editIgnoreList(int id_member)
+		// !!!
+
 	void account(int id_member)
 		// !!!
 
@@ -541,68 +544,6 @@ function loadProfileFields($force_reload = false)
 			'size' => 50,
 			'permission' => 'profile_extra',
 		),
-		'pm_ignore_list' => array(
-			'type' => 'callback',
-			'callback_func' => 'ignore_list_modify',
-			'preload' => create_function('', '
-				global $context, $cur_profile, $smcFunc;
-
-				if ($cur_profile[\'pm_ignore_list\'] != \'*\')
-				{
-					$result = $smcFunc[\'db_query\'](\'\', \'
-						SELECT real_name
-						FROM {db_prefix}members
-						WHERE FIND_IN_SET(id_member, {string:pm_ignore_list})
-						LIMIT \' . (substr_count($cur_profile[\'pm_ignore_list\'], \',\') + 1),
-						array(
-							\'pm_ignore_list\' => $cur_profile[\'pm_ignore_list\'],
-						)
-					);
-					$pm_ignore_list = \'\';
-					while ($row = $smcFunc[\'db_fetch_assoc\']($result))
-						$pm_ignore_list .= "\n" . $row[\'real_name\'];
-					$smcFunc[\'db_free_result\']($result);
-
-					$context[\'ignore_list\'] = substr($pm_ignore_list, 1);
-				}
-				else
-					$context[\'ignore_list\'] = \'*\';
-
-				return true;
-			'),
-			'permission' => 'pm_read',
-			'input_validate' => create_function('&$value', '
-				global $smcFunc;
-
-				// Validate and set the ignorelist...
-				$value = preg_replace(\'~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~\', \'&#$1;\', $value);
-				$value = strtr(trim($value), array(\'\\\'\' => \'&#039;\', "\n" => "\', \'", "\r" => \'\', \'&quot;\' => \'\'));
-
-				if (preg_match(\'~(\A|,)\*(\Z|,)~s\', $value) == 0)
-				{
-					$result = $smcFunc[\'db_query\'](\'\', \'
-						SELECT id_member
-						FROM {db_prefix}members
-						WHERE member_name IN ({raw:name}) OR real_name IN ({raw:name})
-						LIMIT \' . (substr_count($value, \'\\\', \\\'\') + 1),
-						array(
-							\'name\' => \'\\\'\' . $value . \'\\\'\',
-						)
-					);
-					$value = \'\';
-					while ($row = $smcFunc[\'db_fetch_assoc\']($result))
-						$value .= $row[\'id_member\'] . \',\';
-					$smcFunc[\'db_free_result\']($result);
-
-					// !!! Did we find all the members?
-					$value = substr($value, 0, -1);
-				}
-				else
-					$value = \'*\';
-
-				return true;
-			'),
-		),
 		// This does ALL the pm settings
 		'pm_prefs' => array(
 			'type' => 'callback',
@@ -610,8 +551,11 @@ function loadProfileFields($force_reload = false)
 			'permission' => 'pm_read',
 			'preload' => create_function('', '
 				global $context, $cur_profile;
+
 				$context[\'display_mode\'] = $cur_profile[\'pm_prefs\'] & 3;
 				$context[\'send_email\'] = $cur_profile[\'pm_email_notify\'];
+				$context[\'receive_from\'] = $cur_profile[\'pm_receive_from\'];
+
 				return true;
 			'),
 			'input_validate' => create_function('&$value', '
@@ -620,8 +564,8 @@ function loadProfileFields($force_reload = false)
 				// Simple validate and apply the two "sub settings"
 				$value = max(min($value, 2), 0);
 
-				$cur_profile[\'pm_email_notify\'] = max(min((int) $_POST[\'pm_email_notify\'], 2), 0);
-				$profile_vars[\'pm_email_notify\'] = $cur_profile[\'pm_email_notify\'];
+				$cur_profile[\'pm_email_notify\'] = $profile_vars[\'pm_email_notify\'] = max(min((int) $_POST[\'pm_email_notify\'], 2), 0);
+				$cur_profile[\'pm_receive_from\'] = $profile_vars[\'pm_receive_from\'] = max(min((int) $_POST[\'pm_receive_from\'], 4), 0);
 
 				return true;
 			'),
@@ -636,7 +580,6 @@ function loadProfileFields($force_reload = false)
 				$value = $value != \'\' ? strtr($value, array(\',\' => \'\', \'.\' => \'\', \' \' => \'\')) : 0;
 				return true;
 			'),
-
 		),
 		'real_name' => array(
 			'type' => !empty($modSettings['allow_editDisplayName']) || allowedTo('moderate_forum') ? 'text' : 'label',
@@ -1363,10 +1306,9 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 }
 
 // Show all the users buddies, as well as a add/delete interface.
-function editBuddies($memID)
+function editBuddyIgnoreLists($memID)
 {
-	global $txt, $scripturl, $modSettings;
-	global $context, $user_profile, $memberContext, $smcFunc;
+	global $sourcedir, $context, $txt, $scripturl, $modSettings, $user_profile;
 
 	// Do a quick check to ensure people aren't getting here illegally!
 	if (!$context['user']['is_owner'] || empty($modSettings['enable_buddylist']))
@@ -1374,6 +1316,34 @@ function editBuddies($memID)
 
 	// Can we email the user direct?
 	$context['can_moderate_forum'] = allowedTo('moderate_forum');
+
+	$subActions = array(
+		'buddies' => array('editBuddies', $txt['editBuddies']),
+		'ignore' => array('editIgnoreList', $txt['editIgnoreList']),
+	);
+
+	$context['list_area'] = isset($_GET['sa']) && isset($subActions[$_GET['sa']]) ? $_GET['sa'] : 'buddies';
+
+	// Create the tabs for the template.
+	$context[$context['profile_menu_name']]['tab_data'] = array(
+		'title' => $txt['editBuddyIgnoreLists'],
+		'description' => $txt['buddy_ignore_desc'],
+		'tabs' => array(
+			'buddies' => array(),
+			'ignore' => array(),
+		),
+	);
+
+	// Pass on to the actual function.
+	$context['sub_template'] = $subActions[$context['list_area']][0];
+	$subActions[$context['list_area']][0]($memID);
+}
+
+// Show all the users buddies, as well as a add/delete interface.
+function editBuddies($memID)
+{
+	global $txt, $scripturl, $modSettings;
+	global $context, $user_profile, $memberContext, $smcFunc;
 
 	// For making changes!
 	$buddiesArray = explode(',', $user_profile[$memID]['buddy_list']);
@@ -1394,7 +1364,7 @@ function editBuddies($memID)
 		updateMemberData($memID, array('buddy_list' => $user_profile[$memID]['buddy_list']));
 
 		// Redirect off the page because we don't like all this ugly query stuff to stick in the history.
-		redirectexit('action=profile;u=' . $memID . ';area=buddies');
+		redirectexit('action=profile;area=lists;sa=buddies;u=' . $memID);
 	}
 	elseif (isset($_POST['new_buddy']))
 	{
@@ -1418,9 +1388,10 @@ function editBuddies($memID)
 				SELECT id_member
 				FROM {db_prefix}members
 				WHERE member_name IN ({array_string:new_buddies}) OR real_name IN ({array_string:new_buddies})
-				LIMIT ' . count($new_buddies),
+				LIMIT {int:count_new_buddies}',
 				array(
 					'new_buddies' => $new_buddies,
+					'count_new_buddies' => count($new_buddies),
 				)
 			);
 
@@ -1435,7 +1406,7 @@ function editBuddies($memID)
 		}
 
 		// Back to the buddy list!
-		redirectexit('action=profile;u=' . $memID . ';area=buddies');
+		redirectexit('action=profile;area=lists;sa=buddies;u=' . $memID);
 	}
 
 	// Get all the users "buddies"...
@@ -1448,9 +1419,10 @@ function editBuddies($memID)
 			FROM {db_prefix}members
 			WHERE id_member IN ({array_int:buddy_list})
 			ORDER BY real_name
-			LIMIT ' . (substr_count($user_profile[$memID]['buddy_list'], ',') + 1),
+			LIMIT {int:buddy_list_count}',
 			array(
 				'buddy_list' => $buddiesArray,
+				'buddy_list_count' => substr_count($user_profile[$memID]['buddy_list'], ',') + 1,
 			)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($result))
@@ -1469,6 +1441,111 @@ function editBuddies($memID)
 	{
 		loadMemberContext($buddy);
 		$context['buddies'][$buddy] = $memberContext[$buddy];
+	}
+}
+
+// Allows the user to view their ignore list, as well as the option to manage members on it.
+function editIgnoreList($memID)
+{
+	global $txt, $scripturl, $modSettings;
+	global $context, $user_profile, $memberContext, $smcFunc;
+
+	// For making changes!
+	$ignoreArray = explode(',', $user_profile[$memID]['pm_ignore_list']);
+	foreach ($ignoreArray as $k => $dummy)
+		if ($dummy == '')
+			unset($ignoreArray[$k]);
+
+	// Removing a member from the ignore list?
+	if (isset($_GET['remove']))
+	{
+		// Heh, I'm lazy, do it the easy way...
+		foreach ($ignoreArray as $key => $id_remove)
+			if ($id_remove == (int) $_GET['remove'])
+				unset($ignoreArray[$key]);
+
+		// Make the changes.
+		$user_profile[$memID]['pm_ignore_list'] = implode(',', $ignoreArray);
+		updateMemberData($memID, array('pm_ignore_list' => $user_profile[$memID]['pm_ignore_list']));
+
+		// Redirect off the page because we don't like all this ugly query stuff to stick in the history.
+		redirectexit('action=profile;area=lists;sa=ignore;u=' . $memID);
+	}
+	elseif (isset($_POST['new_ignore']))
+	{
+		// Prepare the string for extraction...
+		$_POST['new_ignore'] = strtr($smcFunc['htmlspecialchars']($_POST['new_ignore'], ENT_QUOTES), array('&quot;' => '"'));
+		preg_match_all('~"([^"]+)"~', $_POST['new_ignore'], $matches);
+		$new_entries = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_POST['new_ignore']))));
+
+		foreach ($new_entries as $k => $dummy)
+		{
+			$new_entries[$k] = strtr(trim($new_entries[$k]), array('\'' => '&#039;'));
+
+			if (strlen($new_entries[$k]) == 0)
+				unset($new_entries[$k]);
+		}
+
+		if (!empty($new_entries))
+		{
+			// Now find out the id_member for the members in question.
+			$request = $smcFunc['db_query']('', '
+				SELECT id_member
+				FROM {db_prefix}members
+				WHERE member_name IN ({array_string:new_entries}) OR real_name IN ({array_string:new_entries})
+				LIMIT {int:count_new_entries}',
+				array(
+					'new_entries' => $new_entries,
+					'count_new_entries' => count($new_entries),
+				)
+			);
+
+			// Add the new member to the buddies array.
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+				$ignoreArray[] = (int) $row['id_member'];
+			$smcFunc['db_free_result']($request);
+
+			// Now update the current users buddy list.
+			$user_profile[$memID]['pm_ignore_list'] = implode(',', $ignoreArray);
+			updateMemberData($memID, array('pm_ignore_list' => $user_profile[$memID]['pm_ignore_list']));
+		}
+
+		// Back to the list of pityful people!
+		redirectexit('action=profile;area=lists;sa=ignore;u=' . $memID);
+	}
+
+	// Initialise the list of members we're ignoring.
+	$ignored = array();
+
+	if (!empty($ignoreArray))
+	{
+		$result = $smcFunc['db_query']('', '
+			SELECT id_member
+			FROM {db_prefix}members
+			WHERE id_member IN ({array_int:ignore_list})
+			ORDER BY real_name
+			LIMIT {int:ignore_list_count}',
+			array(
+				'ignore_list' => $ignoreArray,
+				'ignore_list_count' => substr_count($user_profile[$memID]['pm_ignore_list'], ',') + 1,
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($result))
+			$ignored[] = $row['id_member'];
+		$smcFunc['db_free_result']($result);
+	}
+
+	$context['ignore_count'] = count($ignored);
+
+	// Load all the members up.
+	loadMemberData($ignored, false, 'profile');
+
+	// Setup the context for each buddy.
+	$context['ignore_list'] = array();
+	foreach ($ignored as $ignore_member)
+	{
+		loadMemberContext($ignore_member);
+		$context['ignore_list'][$ignore_member] = $memberContext[$ignore_member];
 	}
 }
 
@@ -1530,7 +1607,6 @@ function pmprefs($memID)
 
 	setupProfileContext(
 		array(
-			'pm_ignore_list', 'hr',
 			'pm_prefs',
 		)
 	);

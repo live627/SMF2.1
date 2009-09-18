@@ -1266,6 +1266,7 @@ CREATE TABLE {$db_prefix}members (
   ignore_boards text NOT NULL,
   warning tinyint(4) NOT NULL default '0',
   passwd_flood varchar(12) NOT NULL default '',
+  pm_receive_from tinyint(4) unsigned NOT NULL default '0',
   PRIMARY KEY (id_member),
   KEY member_name (member_name),
   KEY real_name (real_name),
