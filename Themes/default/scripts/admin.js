@@ -1,3 +1,23 @@
+/*
+	smf_AdminIndex(oOptions)
+	{
+		public init()
+		public loadAdminIndex()
+		public setAnnouncements()
+		public showCurrentVersion()
+		public checkUpdateAvailable()
+	}
+
+	smf_ViewVersions(oOptions)
+	{
+		public init()
+		public loadViewVersions
+		public swapOption(oSendingElement, sName)
+		public determineVersions()
+	}
+*/
+
+
 
 // Handle the JavaScript surrounding the admin and moderation center.
 function smf_AdminIndex(oOptions)

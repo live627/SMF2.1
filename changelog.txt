@@ -52,6 +52,7 @@ September 2009
  + Allow members to specify whose PM's they want to receive. (Load.php, Subs.php, Subs-Post.php, Profile template, Profile language file, install scripts, upgrade scripts)
  & Ignoring posts posted by those on a member's ignore list is now optional. (Display template, Settings template, Profile template, Profile language file)
  ! Fixed syntax error in upgrade for older versions of MySQL. (upgrade_2-0_mysql.sql)
+ ! Merged xml_topic.js and xml_board.js into topic.js (xml_topic.js, xml_board.js, topic.js, Display template, MessageIndex template)
 
 
 August 2009
