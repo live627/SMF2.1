@@ -54,6 +54,7 @@ September 2009
  ! Fixed syntax error in upgrade for older versions of MySQL. (upgrade_2-0_mysql.sql)
  ! Merged xml_topic.js and xml_board.js into topic.js (xml_topic.js, xml_board.js, topic.js, Display template, MessageIndex template)
  * Made the PM search template in sync with the global search template. (PersonalMessage template, PersonalMessage language file)
+ ! Postgresql and sqlite don't do tinyint or unsigned (install/upgrade sql files) [Bug 3772]
 
 
 August 2009

@@ -725,7 +725,7 @@ ALTER COLUMN ip TYPE int8;
 
 ---# Adding column that stores the PM receiving setting...
 ALTER TABLE {$db_prefix}members
-ADD COLUMN pm_receive_from tinyint(4) unsigned NOT NULL default '0';
+ADD COLUMN pm_receive_from smallint NOT NULL default '0';
 ---#
 
 /******************************************************************************/
