@@ -102,7 +102,12 @@ function PlushSearch1()
 	// If you got back from search2 by using the linktree, you get your original search parameters back.
 	if (isset($_REQUEST['params']))
 	{
-		$temp_params = explode('|"|', base64_decode(strtr($_REQUEST['params'], array(' ' => '+'))));
+		// Due to IE's 2083 character limit, we have to compress long search strings
+		if ($temp_params = @gzuncompress(base64_decode(strtr($_REQUEST['params'], array(' ' => '+')))))
+			$temp_params = explode('|"|', $temp_params);
+		else
+			$temp_params = explode('|"|', base64_decode(strtr($_REQUEST['params'], array(' ' => '+'))));
+
 		$context['search_params'] = array();
 		foreach ($temp_params as $i => $data)
 		{
@@ -902,7 +907,15 @@ function PlushSearch2()
 	$context['params'] = array();
 	foreach ($temp_params as $k => $v)
 		$context['params'][] = $k . '|\'|' . $v;
-	$context['params'] = base64_encode(implode('|"|', $context['params']));
+
+	if (!empty($context['params']))
+	{
+		// Due to IE's 2083 character limit, we have to compress long search strings
+		if ($params = @gzcompress(implode('|"|', $context['params'])))
+			$context['params'] = base64_encode($params);
+		else
+			$context['params'] = base64_encode(implode('|"|', $context['params']));
+	}
 
 	// ... and add the links to the link tree.
 	$context['linktree'][] = array(
