@@ -468,13 +468,12 @@ function template_info_center()
 			</div>';
 	}
 
-
 	// Info center collapse object.
 	echo '
 			<script type="text/javascript"><!-- // --><![CDATA[
 				var oInfoCenterToggle = new smc_Toggle({
 					bToggleEnabled: true,
-					bCurrentlyCollapsed: ', empty($options['collapse_header']) ? 'false' : 'true', ',
+					bCurrentlyCollapsed: ', empty($options['collapse_header_ic']) ? 'false' : 'true', ',
 					aSwappableContainers: [
 						\'upshrinkHeaderIC\'
 					],
@@ -489,7 +488,7 @@ function template_info_center()
 					],
 					oThemeOptions: {
 						bUseThemeSettings: ', $context['user']['is_guest'] ? 'false' : 'true', ',
-						sOptionName: \'collapse_header\',
+						sOptionName: \'collapse_header_ic\',
 						sSessionVar: ', JavaScriptEscape($context['session_var']), ',
 						sSessionId: ', JavaScriptEscape($context['session_id']), '
 					},
