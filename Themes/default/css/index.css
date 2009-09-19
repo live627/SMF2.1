@@ -1471,17 +1471,11 @@ p.moderators
 	padding: 0 1em 0.5em 2em;
 	margin: 0;
 	line-height: 1em;
-	margin-bottom: 2em;
+	margin-bottom: 1em;
 }
 #posting_icons img
 {
 	vertical-align: middle;
-}
-#posting_icons .buttonlist
-{
-	margin: 0;
-	padding: 0;
-	float: right;
 }
 #postbuttons_upper ul li a span
 {

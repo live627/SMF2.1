@@ -137,7 +137,7 @@ table.table_list a.collapse
 ------------------------------------------------------- */
 .buttonlist ul li
 {
-	float: right;
+
 }
 .buttonlist ul li a
 {
@@ -355,17 +355,60 @@ h4#pollquestion
 	text-align: left;
 }
 /* the icons for the quickbuttons */
+ul.quickbuttons
+{
+	margin: 0 !important;
+}
+
 ul.quickbuttons li
 {
-	padding: 0 5px 0 25px;
+	padding: 0;
 	float: right;
+	margin: 0;
 }
 ul.quickbuttons li a
 {
 	display: block;
 	height: 20px;
+	padding-right: 32px;
 	line-height: 18px;
 	float: right;
+}
+ul.quickbuttons li.approve_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 100% -90px;
+}
+ul.quickbuttons li.quote_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 100% 0;
+}
+ul.quickbuttons li.reply_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 100% -180px;
+}
+ul.quickbuttons li.reply_all_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 100% -180px;
+}
+ul.quickbuttons li.modify_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 100% -60px;
+}
+ul.quickbuttons li.remove_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 100% -30px;
+}
+ul.quickbuttons li.split_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 100% -150px;
+}
+ul.quickbuttons li.restore_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 100% -120px;
+}
+ul.quickbuttons li.inline_mod_check
+{
+	padding: 0 1em 0 0;
 }
 .postarea .post
 {

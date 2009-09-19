@@ -224,7 +224,7 @@ function template_main()
 	if ($context['user']['is_logged'])
 	{
 		echo '
-	<div id="posting_icons">';
+	<div id="posting_icons" class="flow_hidden">';
 
 		// Mark read button.
 		$mark_read_button = array(
@@ -236,7 +236,7 @@ function template_main()
 			template_button_strip($mark_read_button, 'right');
 
 		echo '
-		<p>
+		<p class="align_left">
 			<img src="' . $settings['images_url'] . '/' .$context['theme_variant'], '/new_some.png" alt=""  /> ', $txt['new_posts'], '
 			<img src="' . $settings['images_url'] . '/' .$context['theme_variant'], '/new_none.png" alt="" style="margin-left: 4ex;" /> ', $txt['old_posts'], '
 			<img src="' . $settings['images_url'] . '/' .$context['theme_variant'], '/new_redirect.png" alt="" style="margin-left: 4ex;" /> ', $txt['redirects'], '
