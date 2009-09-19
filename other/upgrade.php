@@ -3760,7 +3760,7 @@ function template_upgrade_above()
 	<body>
 	<div id="header"><div class="frame">
 		<div id="top_section">
-			<h1 class="forumtitle">', $txt['smf_installer'], '</h1>
+			<h1 class="forumtitle">', $txt['upgrade_upgrade_utility'], '</h1>
 			<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />
 		</div>
 		<div id="upper_section" class="middletext" style="overflow: hidden;">
