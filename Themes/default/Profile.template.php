@@ -1299,8 +1299,8 @@ function template_profile_pm_settings()
 										<label for="view_newest_pm_first">', $txt['recent_pms_at_top'], '</label>
 								</dt>
 								<dd>
-										<input type="checkbox" name="default_options[view_newest_pm_first]" id="view_newest_pm_first" value="1"', !empty($context['member']['options']['view_newest_pm_first']) ? ' checked="checked"' : '', ' class="input_check" />
 										<input type="hidden" name="default_options[view_newest_pm_first]" value="0" />
+										<input type="checkbox" name="default_options[view_newest_pm_first]" id="view_newest_pm_first" value="1"', !empty($context['member']['options']['view_newest_pm_first']) ? ' checked="checked"' : '', ' class="input_check" />
 								</dd>
 						</dl>
 						<hr />
@@ -1350,15 +1350,15 @@ function template_profile_pm_settings()
 										<label for="copy_to_outbox"> ', $txt['copy_to_outbox'], '</label>
 								</dt>
 								<dd>
-										<input type="checkbox" name="default_options[copy_to_outbox]" id="copy_to_outbox" value="1"', !empty($context['member']['options']['copy_to_outbox']) ? ' checked="checked"' : '', ' class="input_check" />
 										<input type="hidden" name="default_options[copy_to_outbox]" value="0" />
+										<input type="checkbox" name="default_options[copy_to_outbox]" id="copy_to_outbox" value="1"', !empty($context['member']['options']['copy_to_outbox']) ? ' checked="checked"' : '', ' class="input_check" />
 								</dd>
-								<dt>	
+								<dt>
 										<label for="pm_remove_inbox_label">', $txt['pm_remove_inbox_label'], '</label>
 								</dt>
 								<dd>
-										<input type="checkbox" name="default_options[pm_remove_inbox_label]" id="pm_remove_inbox_label" value="1"', !empty($context['member']['options']['pm_remove_inbox_label']) ? ' checked="checked"' : '', ' class="input_check" />
 										<input type="hidden" name="default_options[pm_remove_inbox_label]" value="0" />
+										<input type="checkbox" name="default_options[pm_remove_inbox_label]" id="pm_remove_inbox_label" value="1"', !empty($context['member']['options']['pm_remove_inbox_label']) ? ' checked="checked"' : '', ' class="input_check" />
 								</dd>
 						</dl>';
 
