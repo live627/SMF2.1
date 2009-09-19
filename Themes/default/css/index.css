@@ -2620,7 +2620,7 @@ div#profile_success
 	width: 49%;
 	margin: 0 0 3px 2px;
 	padding: 0;
-	float: left; 
+	float: left;
 }
 
 .profile_pie
@@ -2887,14 +2887,6 @@ dl.stats dd
 #personal_messages .capacity_bar span.full
 {
 	background: #F10909;
-}
-.pm_search
-{
-	overflow: hidden;
-}
-#personal_messages fieldset.search_options
-{
-	width: 45%;
 }
 #personal_messages .reportlinks
 {

@@ -40,7 +40,7 @@ September 2009
  & Minor language tweak to reflect above change (Themes language file)
  * Core: minor layout issues (index.css, compat.css) [Bug 3755]
  ! When installing some mods, they could throw a database error if they have already been installed once (Packages.php, DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 2963]
- * Removed a large gap on ManageAttachments (ManageAttachments template) 
+ * Removed a large gap on ManageAttachments (ManageAttachments template)
  * Show an ellipsis character for the active menu item if it contains subitems, too. (GenericMenu template)
  ! Accept both smf_crc32 and crc32 as a valid result (Subs-Package.php) [Bug 1220]
  + Converting to UTF-8 could break logins, attempt to store the previous charset to compat this during logins (ManageMaintenance.php, LogInOut.php) [Bug 2659]
@@ -53,6 +53,7 @@ September 2009
  & Ignoring posts posted by those on a member's ignore list is now optional. (Display template, Settings template, Profile template, Profile language file)
  ! Fixed syntax error in upgrade for older versions of MySQL. (upgrade_2-0_mysql.sql)
  ! Merged xml_topic.js and xml_board.js into topic.js (xml_topic.js, xml_board.js, topic.js, Display template, MessageIndex template)
+ * Made the PM search template in sync with the global search template. (PersonalMessage template, PersonalMessage language file)
 
 
 August 2009
