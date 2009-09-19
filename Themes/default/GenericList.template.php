@@ -73,7 +73,7 @@ function template_show_list($list_id = null)
 			<table class="table_grid" cellspacing="0" width="', !empty($cur_list['width']) ? $cur_list['width'] : '100%', '">';
 
 	// Show the column headers.
-	if(!(count($cur_list['headers']) < 2 && empty($cur_list['headers'][0]['label'])))
+	if (!(count($cur_list['headers']) < 2 && empty($cur_list['headers'][0]['label'])))
 	{
 		echo '
 			<thead>
@@ -116,7 +116,7 @@ function template_show_list($list_id = null)
 			</tbody>
 			</table>';
 
-	if (!empty($cur_list['items_per_page']) || isset($cur_list['additional_rows']['bottom_of_list']))
+	if (!empty($cur_list['items_per_page']) || isset($cur_list['additional_rows']['below_table_data']) || isset($cur_list['additional_rows']['bottom_of_list']))
 	{
 		echo '
 			<div class="flow_auto">';
