@@ -55,6 +55,7 @@ September 2009
  ! Merged xml_topic.js and xml_board.js into topic.js (xml_topic.js, xml_board.js, topic.js, Display template, MessageIndex template)
  * Made the PM search template in sync with the global search template. (PersonalMessage template, PersonalMessage language file)
  ! Postgresql and sqlite don't do tinyint or unsigned (install/upgrade sql files) [Bug 3772]
+ ! Editing a poll caused the poll to extend (Poll.php) [Bug 3645]
 
 
 August 2009

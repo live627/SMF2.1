@@ -620,7 +620,7 @@ function EditPoll2()
 
 	// Get the starter and the poll's ID - if it's an edit.
 	$request = $smcFunc['db_query']('', '
-		SELECT t.id_member_started, t.id_poll, p.id_member AS poll_starter
+		SELECT t.id_member_started, t.id_poll, p.id_member AS poll_starter, p.expire_time
 		FROM {db_prefix}topics AS t
 			LEFT JOIN {db_prefix}polls AS p ON (p.id_poll = t.id_poll)
 		WHERE t.id_topic = {int:current_topic}
@@ -705,8 +705,10 @@ function EditPoll2()
 	{
 		if (empty($_POST['poll_expire']) && $_POST['poll_hide'] == 2)
 			$_POST['poll_hide'] = 1;
-		else
+		elseif (!$isEdit || $_POST['poll_expire'] != ceil($bcinfo['expire_time'] <= time() ? -1 : ($bcinfo['expire_time'] - time()) / (3600 * 24)))
 			$_POST['poll_expire'] = empty($_POST['poll_expire']) ? '0' : time() + $_POST['poll_expire'] * 3600 * 24;
+		else
+			$_POST['poll_expire'] = $bcinfo['expire_time'];
 
 		if (empty($_POST['poll_max_votes']) || $_POST['poll_max_votes'] <= 0)
 			$_POST['poll_max_votes'] = 1;
