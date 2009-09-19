@@ -2811,17 +2811,21 @@ ADD INDEX id_theme (id_theme);
 // Detect existing index with limited length
 $request = upgrade_query("
 	SHOW INDEXES
-	FROM {$db_prefix}members
-	WHERE Key_name = 'real_name'
-		AND Sub_part = 30
-");
+	FROM {$db_prefix}members"
+);
 
 // Drop the existing index before we recreate it.
-if (mysql_num_rows($request) > 0)
-	upgrade_query("
-		ALTER TABLE {$db_prefix}members
-		DROP INDEX real_name
-	");
+while ($row = mysql_fetch_assoc($request))
+{
+	if ($row['Key_name'] === 'real_name' && $row['Sub_part'] == 30)
+	{
+		upgrade_query("
+			ALTER TABLE {$db_prefix}members
+			DROP INDEX real_name"
+		);
+		break;
+	}
+}
 
 mysql_free_result($request);
 ---}
@@ -2837,17 +2841,24 @@ ADD INDEX real_name (real_name);
 // Detect existing index with limited length
 $request = upgrade_query("
 	SHOW INDEXES
-	FROM {$db_prefix}members
-	WHERE Key_name = 'member_name'
-		AND Sub_part = 30
-");
+	FROM {$db_prefix}members"
+);
 
 // Drop the existing index before we recreate it.
-if (mysql_num_rows($request) > 0)
-	upgrade_query("
-		ALTER TABLE {$db_prefix}members
-		DROP INDEX member_name
-	");
+while ($row = mysql_fetch_assoc($request))
+{
+	if ($row['Key_name'] === 'member_name' && $row['Sub_part'] == 30)
+	{
+		upgrade_query("
+			ALTER TABLE {$db_prefix}members
+			DROP INDEX member_name"
+		);
+		break;
+	}
+}
+
+mysql_free_result($request);
+
 ---}
 ---#
 

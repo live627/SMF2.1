@@ -51,6 +51,7 @@ September 2009
  & Added a few language strings to accommodate the above; removed a few now-obsolete strings. (Profile language file)
  + Allow members to specify whose PM's they want to receive. (Load.php, Subs.php, Subs-Post.php, Profile template, Profile language file, install scripts, upgrade scripts)
  & Ignoring posts posted by those on a member's ignore list is now optional. (Display template, Settings template, Profile template, Profile language file)
+ ! Fixed syntax error in upgrade for older versions of MySQL. (upgrade_2-0_mysql.sql)
 
 
 August 2009
