@@ -424,7 +424,7 @@ function EditSearchMethod()
 		foreach ($temp_tables as $table)
 			if($table == $db_prefix. 'messages' || $table == $db_prefix. 'log_search_words')
 				$smcFunc['db_optimize_table']($table);
-		
+
 		// PostGreSql has some hidden sizes.
 		$request = $smcFunc['db_query']('', '
 			SELECT relname, relpages * 8 *1024 AS "KB" FROM pg_class
@@ -435,7 +435,7 @@ function EditSearchMethod()
 				'log_search_words' => $db_prefix. 'log_search_words',
 			)
 		);
-		
+
 		if ($request !== false && $smcFunc['db_num_rows']($request) > 0)
 		{
 			while($row = $smcFunc['db_fetch_assoc']($request))
@@ -446,7 +446,6 @@ function EditSearchMethod()
 					$context['table_info']['index_length'] = (int) $row['KB'];
 					// Doesn't support fulltext
 					$context['table_info']['fulltext_length'] = $txt['not_applicable'];
-				
 				}
 				elseif($row['relname'] == $db_prefix. 'log_search_words')
 				{

@@ -694,7 +694,7 @@ function template_edit_reserved_words()
 			</div>
 			<span class="botslice"><span></span></span>
 			<input type="hidden" name="sa" value="reservednames" />
-			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />	
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 		<br style="clear: both;" />';
 }

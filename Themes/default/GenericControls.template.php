@@ -43,7 +43,7 @@ function template_control_richedit($editor_id, $smileyContainer = null, $bbcCont
 									sSrc: ', JavaScriptEscape($settings['smileys_url'] . '/' . $smiley['filename']), ',
 									sDescription: ', JavaScriptEscape($smiley['description']), '
 								}', empty($smiley['isLast']) ? ',' : '';
-								
+
 				echo '
 							]', empty($smileyRow['isLast']) ? ',' : '';
 				}

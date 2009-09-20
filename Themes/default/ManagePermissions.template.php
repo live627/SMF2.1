@@ -813,12 +813,12 @@ function template_modify_group_classic($type)
 				<div class="windowbg2">
 					<span class="topslice"><span></span></span>
 					<div class="content">';
-					
+
 	foreach ($permission_type['columns'] as $column)
 	{
 		echo '
 					<table width="49%" class="table_grid perm_classic align_left">';
-					
+
 		foreach ($column as $permissionGroup)
 		{
 			if (empty($permissionGroup['permissions']))

@@ -360,7 +360,7 @@ function Login2()
 			if ($context['character_set'] == 'utf8' && !empty($modSettings['previousCharacterSet']) && $modSettings['previousCharacterSet'] != 'utf8')
 			{
 				// Try iconv first, for no particular reason.
-				if (function_exists('iconv'))	
+				if (function_exists('iconv'))
 					$other_passwords['iconv'] = sha1(strtolower(iconv('UTF-8', $modSettings['previousCharacterSet'], $user_settings['member_name'])) . un_htmlspecialchars(iconv('UTF-8', $modSettings['previousCharacterSet'], $_POST['passwrd'])));
 
 				// Say it aint so, iconv failed!
