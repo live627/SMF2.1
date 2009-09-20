@@ -2405,8 +2405,7 @@ dl
 	font-size: 135%;
 	font-weight: 100;
 	line-height: 105%;
-	white-space: pre-wrap; /* css-2.1 */
-	word-wrap: break-word; /* Internet Explorer 5.5+ */
+	white-space: pre-wrap;
 	overflow: hidden;
 }
 #basicinfo h4 span.position

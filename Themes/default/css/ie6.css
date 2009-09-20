@@ -102,3 +102,9 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
 {
 	width: 99%;
 }
+/* Overrides for the profile template
+------------------------------------------------------- */
+#basicinfo h4
+{
+	word-wrap: break-word;
+}

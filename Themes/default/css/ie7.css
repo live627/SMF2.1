@@ -53,3 +53,9 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
 {
 	padding: 0 0 0.8em 0;
 }
+/* Overrides for the profile template
+------------------------------------------------------- */
+#basicinfo h4
+{
+	word-wrap: break-word;
+}
