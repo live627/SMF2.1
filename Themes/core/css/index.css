@@ -832,15 +832,15 @@ div#menu_toggle a
 {
 	float: left;
 	display: block;
-	color: white;
+	color: #fff;
 	font-size: 0.8em;
 	font-family: tahoma, sans-serif;
 	text-transform: uppercase;
+	text-decoration: none;
 }
-.buttonlist ul li a:hover .buttonlist_bottom ul li a:hover
+.buttonlist ul li a:hover, .buttonlist_bottom ul li a:hover
 {
 	color: #e0e0ff;
-	text-decoration: none !important;
 }
 .buttonlist ul li a span
 {
@@ -880,7 +880,7 @@ div#menu_toggle a
 .buttonlist_submit
 {
 	background: transparent;
-	color: white;
+	color: #fff;
 	text-transform: uppercase;
 	vertical-align: top;
 	text-decoration: none;

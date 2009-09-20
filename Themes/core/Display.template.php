@@ -356,68 +356,77 @@ function template_main()
 					</ul>
 				</div>
 				<div class="postarea">
-					<div class="keyinfo">
-						<div class="messageicon"><img src="', $message['icon_url'] . '" alt="" border="0"', $message['can_modify'] ? ' id="msg_icon_' . $message['id'] . '"' : '', ' /></div>
-						<h5 id="subject_', $message['id'], '">
-							<a href="', $message['href'], '" rel="nofollow">', $message['subject'], '</a>
-						</h5>
-						<div class="smalltext">&#171; <strong>', !empty($message['counter']) ? $txt['reply_noun'] . ' #' . $message['counter'] : '', ' ', $txt['on'], ':</strong> ', $message['time'], ' &#187;</div>
-						<div id="msg_', $message['id'], '_quick_mod"></div>
-					</div>';
+					<div class="flow_hidden">
+						<div class="keyinfo">
+							<div class="messageicon"><img src="', $message['icon_url'] . '" alt="" border="0"', $message['can_modify'] ? ' id="msg_icon_' . $message['id'] . '"' : '', ' /></div>
+							<h5 id="subject_', $message['id'], '">
+								<a href="', $message['href'], '" rel="nofollow">', $message['subject'], '</a>
+							</h5>
+							<div class="smalltext">&#171; <strong>', !empty($message['counter']) ? $txt['reply_noun'] . ' #' . $message['counter'] : '', ' ', $txt['on'], ':</strong> ', $message['time'], ' &#187;</div>
+							<div id="msg_', $message['id'], '_quick_mod"></div>
+						</div>';
 
 		// If this is the first post, (#0) just say when it was posted - otherwise give the reply #.
 		if ($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'])
 			echo '
-					<ul class="reset smalltext postingbuttons">';
+						<ul class="reset smalltext postingbuttons">';
 
 		// Maybe we can approve it, maybe we should?
 		if ($message['can_approve'])
 			echo '
-						<li><a href="', $scripturl, '?action=moderate;area=postmod;sa=approve;topic=', $context['current_topic'], '.', $context['start'], ';msg=', $message['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $approve_button, '</a></li>';
+							<li><a href="', $scripturl, '?action=moderate;area=postmod;sa=approve;topic=', $context['current_topic'], '.', $context['start'], ';msg=', $message['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $approve_button, '</a></li>';
 
 		// Can they reply? Have they turned on quick reply?
 		if ($context['can_reply'] && !empty($options['display_quick_reply']))
 			echo '
-						<li><a href="', $scripturl, '?action=post;quote=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';num_replies=', $context['num_replies'], ';', $context['session_var'], '=', $context['session_id'], '" onclick="return oQuickReply.quote(', $message['id'], ', \'', $context['session_id'], '\', \'', $context['session_var'], '\', true);">', $reply_button, '</a></li>';
+							<li><a href="', $scripturl, '?action=post;quote=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';num_replies=', $context['num_replies'], ';', $context['session_var'], '=', $context['session_id'], '" onclick="return oQuickReply.quote(', $message['id'], ', \'', $context['session_id'], '\', \'', $context['session_var'], '\', true);">', $reply_button, '</a></li>';
 
 		// So... quick reply is off, but they *can* reply?
 		elseif ($context['can_reply'])
 			echo '
-						<li><a href="', $scripturl, '?action=post;quote=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';num_replies=', $context['num_replies'], ';', $context['session_var'], '=', $context['session_id'], '">', $reply_button, '</a></li>';
+							<li><a href="', $scripturl, '?action=post;quote=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';num_replies=', $context['num_replies'], ';', $context['session_var'], '=', $context['session_id'], '">', $reply_button, '</a></li>';
 
 		// Can the user modify the contents of this post?
 		if ($message['can_modify'])
 			echo '
-						<li><a href="', $scripturl, '?action=post;msg=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';', $context['session_var'], '=', $context['session_id'], '">', $modify_button, '</a></li>';
+							<li><a href="', $scripturl, '?action=post;msg=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';', $context['session_var'], '=', $context['session_id'], '">', $modify_button, '</a></li>';
 
 		// How about... even... remove it entirely?!
 		if ($message['can_remove'])
 			echo '
-						<li><a href="', $scripturl, '?action=deletemsg;topic=', $context['current_topic'], '.', $context['start'], ';msg=', $message['id'], ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', $remove_button, '</a></li>';
+							<li><a href="', $scripturl, '?action=deletemsg;topic=', $context['current_topic'], '.', $context['start'], ';msg=', $message['id'], ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', $remove_button, '</a></li>';
 
 		// What about splitting it off the rest of the topic?
 		if ($context['can_split'] && !empty($context['num_replies']))
 			echo '
-						<li><a href="', $scripturl, '?action=splittopics;topic=', $context['current_topic'], '.0;at=', $message['id'], '">', $split_button, '</a></li>';
+							<li><a href="', $scripturl, '?action=splittopics;topic=', $context['current_topic'], '.0;at=', $message['id'], '">', $split_button, '</a></li>';
 
 		// Can we restore topics?
 		if ($context['can_restore_msg'])
 			echo '
-						<li><a href="', $scripturl, '?action=restoretopic;msgs=', $message['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $restore_message_button, '</a></li>';
+							<li><a href="', $scripturl, '?action=restoretopic;msgs=', $message['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $restore_message_button, '</a></li>';
 
 		// Show a checkbox for quick moderation?
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $message['can_remove'])
 			echo '
-						<li style="display: none;" id="in_topic_mod_check_', $message['id'], '"></li>';
+							<li style="display: none;" id="in_topic_mod_check_', $message['id'], '"></li>';
 
 		if ($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'])
 			echo '
-					</ul>';
+						</ul>';
+
+		echo '
+					</div>';
+
+		// Ignoring this user? Hide the post.
+		if ($ignoring)
+			echo '
+					<div class="ignored" id="msg_', $message['id'], '_ignored_prompt">
+						', $txt['ignoring_user'], '
+						<a href="#" id="msg_', $message['id'], '_ignored_link" style="display: none;">', $txt['show_ignore_user_post'], '</a>
+					</div>';
 
 		// Show the post itself, finally!
-		if ($ignoring)
-			echo '<div class="ignored" id="msg_', $message['id'], '_ignored_prompt">', $txt['ignoring_user'], ' <a href="#" id="msg_', $message['id'], '_ignored_link" style="display: none;">', $txt['show_ignore_user_post'], '</a></div>';
-
 		echo '
 					<div class="post">
 						<hr class="hrcolor" width="100%" size="1"/>';
@@ -488,7 +497,7 @@ function template_main()
 				<div class="moderatorbar">
 					<div class="smalltext floatleft" id="modified_', $message['id'], '">';
 
-		// Show "« Last Edit: Time by Person »" if this post was edited.
+		// Show "ï¿½ Last Edit: Time by Person ï¿½" if this post was edited.
 		if ($settings['show_modify'] && !empty($message['modified']['name']))
 			echo '
 						&#171; <em>', $txt['last_edit'], ': ', $message['modified']['time'], ' ', $txt['by'], ' ', $message['modified']['name'], '</em> &#187;';
