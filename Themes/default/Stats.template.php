@@ -10,7 +10,6 @@ function template_main()
 		<h4 class="titlebg"><span class="left"></span>
 			<span>', $context['page_title'], '</span>
 		</h4>
-
 		<div class="flow_hidden">
 			<h3 class="catbg"><span class="left"></span>
 				<img src="', $settings['images_url'], '/stats_info.gif" class="icon" alt="" /> ', $txt['general_stats'], '
@@ -47,8 +46,6 @@ function template_main()
 					<span class="botslice"><span></span></span>
 				</div>
 			</div>
-
-
 			<div id="stats_right">
 				<div class="windowbg2">
 					<span class="topslice"><span></span></span>
@@ -82,7 +79,6 @@ function template_main()
 				</div>
 			</div>
 		</div>
-
 		<div class="flow_hidden">
 			<div id="top_posters">
 				<h3 class="catbg"><span class="left"></span>
@@ -301,8 +297,7 @@ function template_main()
 		<div class="flow_hidden">
 			<h3 class="catbg"><span class="left"></span>
 				<img src="', $settings['images_url'], '/stats_history.gif" class="icon" alt="" /> ', $txt['forum_history'], '
-			</h3>
-		';
+			</h3>';
 
 	if (!empty($context['yearly']))
 	{
