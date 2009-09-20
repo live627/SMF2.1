@@ -619,7 +619,7 @@ function template_main()
 						if (checkboxFields[i] in document.forms.postmodify.elements && checked in document.forms.postmodify.elements[checkboxFields[i]])
 							x[x.length] = checkboxFields[i] + "=" + document.forms.postmodify.elements[checkboxFields[i]].value;
 
-					sendXMLDocument(smf_scripturl + "?action=post2" + (current_board ? ";board=" + current_board : "") + (make_poll ? ";poll" : "") + ";preview;xml", x.join("&"), onDocSent);
+					sendXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "?action=post2" + (current_board ? ";board=" + current_board : "") + (make_poll ? ";poll" : "") + ";preview;xml", x.join("&"), onDocSent);
 
 					document.getElementById("preview_section").style.display = "";
 					setInnerHTML(document.getElementById("preview_subject"), txt_preview_title);
