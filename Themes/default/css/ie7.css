@@ -7,7 +7,7 @@
 	position: static;
 }
 /* the tabled definition lists */
-dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
+dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.options dd
 {
 	float: none;
 	width: auto;

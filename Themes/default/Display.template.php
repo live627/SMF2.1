@@ -35,7 +35,7 @@ function template_main()
 			foreach ($context['poll']['options'] as $option)
 				echo '
 							<dt class="middletext', $option['voted_this'] ? ' voted' : '', '">', $option['option'], '</dt>
-							<dd class="middletext">', $context['allow_poll_view'] ? $option['bar'] . ' ' . $option['votes'] . ' (' . $option['percent'] . '%)' : '', '</dd>';
+							<dd class="middletext">', $context['allow_poll_view'] ? $option['bar_ndt'] . '&nbsp;' . $option['votes'] . ' (' . $option['percent'] . '%)' : '', '</dd>';
 
 			echo '
 						</dl>';

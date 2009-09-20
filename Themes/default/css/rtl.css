@@ -284,7 +284,17 @@ h4#pollquestion
 #poll_options dl.options
 {
 	padding: 1em 2em 0 2.5em;
+	clear: left;
 }
+#poll_options dl.options dt
+{
+	float: right;
+}
+#poll_options dl.options dd
+{
+	float: right;
+}
+
 /* author and topic informaton */
 #forumposts h3 span#author, #forumposts h3 span#top_subject
 {
