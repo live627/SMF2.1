@@ -1711,7 +1711,7 @@ h4#pollquestion
 }
 #poll_options dl.options dd
 {
-	margin: 0.5em 4px 1em 0;
+	margin: 0 4px 1em 0;
 	vertical-align: middle;
 	line-height: 1.6em;
 	width: 48%;
