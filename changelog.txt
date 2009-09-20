@@ -59,6 +59,7 @@ September 2009
  * Additional rows at the bottom of generic lists were not always displaying correctly. (GenericList template)
  ! IE<8 have max 2083 character url length causing issues with long search strings (Search.php) [Bug 3676]
  * smf_scripturl should use smf_prepareScriptUrl for previewPost (Post.template.php)
+ * Load css before js for faster theme loading (index.template.php, Themes.php) [Bug 3741]
 
 
 August 2009

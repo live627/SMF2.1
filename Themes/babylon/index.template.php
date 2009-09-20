@@ -76,22 +76,6 @@ function template_html_above()
 	<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 	<meta name="description" content="', $context['page_title_html_safe'], '" />
 	<meta name="keywords" content="', $context['meta_keywords'], '" />
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2"></script>
-	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/theme.js?rc2"></script>
-	<script type="text/javascript"><!-- // --><![CDATA[
-		var smf_theme_url = "', $settings['theme_url'], '";
-		var smf_default_theme_url = "', $settings['default_theme_url'], '";
-		var smf_images_url = "', $settings['images_url'], '";
-		var smf_scripturl = "', $scripturl, '";
-		var smf_iso_case_folding = ', $context['server']['iso_case_folding'] ? 'true' : 'false', ';
-		var smf_charset = "', $context['character_set'], '";', $context['show_pm_popup'] ? '
-		var fPmPopup = function ()
-		{
-			if (confirm("' . $txt['show_personal_messages'] . '"))
-				window.open(smf_prepareScriptUrl(smf_scripturl) + "action=pm");
-		}
-		addLoadEvent(fPmPopup);' : '', '
-	// ]]></script>
 	<title>', $context['page_title_html_safe'], '</title>';
 
 	// Please don't index these Mr Robot.
@@ -118,7 +102,7 @@ function template_html_above()
 	// If RSS feeds are enabled, advertise the presence of one.
 	if (!empty($modSettings['xmlnews_enable']))
 		echo '
-	<link rel="alternate" type="application/rss+xml" title="', $context['forum_name_html_safe'], ' - RSS" href="', $scripturl, '?type=rss;action=.xml" />';
+	<link rel="alternate" type="application/rss+xml" title="', $context['forum_name_html_safe'], ' - ', $txt['rss'], '" href="', $scripturl, '?type=rss;action=.xml" />';
 
 	// If we're viewing a topic, these should be the previous and next topics, respectively.
 	if (!empty($context['current_topic']))
@@ -134,6 +118,24 @@ function template_html_above()
 	// We'll have to use the cookie to remember the header...
 	if ($context['user']['is_guest'])
 		$options['collapse_header'] = !empty($_COOKIE['upshrink']);
+
+	echo '
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2"></script>
+	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/theme.js?rc2"></script>
+	<script type="text/javascript"><!-- // --><![CDATA[
+		var smf_theme_url = "', $settings['theme_url'], '";
+		var smf_default_theme_url = "', $settings['default_theme_url'], '";
+		var smf_images_url = "', $settings['images_url'], '";
+		var smf_scripturl = "', $scripturl, '";
+		var smf_iso_case_folding = ', $context['server']['iso_case_folding'] ? 'true' : 'false', ';
+		var smf_charset = "', $context['character_set'], '";', $context['show_pm_popup'] ? '
+		var fPmPopup = function ()
+		{
+			if (confirm("' . $txt['show_personal_messages'] . '"))
+				window.open(smf_prepareScriptUrl(smf_scripturl) + "action=pm");
+		}
+		addLoadEvent(fPmPopup);' : '', '
+	// ]]></script>';
 
 	// Output any remaining HTML headers. (from mods, maybe?)
 	echo $context['html_headers'];

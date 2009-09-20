@@ -76,24 +76,6 @@ function template_html_above()
 	<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 	<meta name="description" content="', $context['page_title_html_safe'], '" />
 	<meta name="keywords" content="', $context['meta_keywords'], '" />
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2"></script>
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc2"></script>
-	<script type="text/javascript"><!-- // --><![CDATA[
-		var smf_theme_url = "', $settings['theme_url'], '";
-		var smf_default_theme_url = "', $settings['default_theme_url'], '";
-		var smf_images_url = "', $settings['images_url'], '";
-		var smf_scripturl = "', $scripturl, '";
-		var smf_iso_case_folding = ', $context['server']['iso_case_folding'] ? 'true' : 'false', ';
-		var smf_charset = "', $context['character_set'], '";', $context['show_pm_popup'] ? '
-		var fPmPopup = function ()
-		{
-			if (confirm("' . $txt['show_personal_messages'] . '"))
-				window.open(smf_prepareScriptUrl(smf_scripturl) + "action=pm");
-		}
-		addLoadEvent(fPmPopup);' : '', '
-		var ajax_notification_text = "', $txt['ajax_in_progress'], '";
-		var ajax_notification_cancel_text = "', $txt['modify_cancel'], '";
-	// ]]></script>
 	<title>', $context['page_title_html_safe'], '</title>';
 
 	// Please don't index these Mr Robot.
@@ -108,9 +90,7 @@ function template_html_above()
 
 	// The ?rc2 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index', $context['theme_variant'], '.css?rc2" />';
-
-	echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index', $context['theme_variant'], '.css?rc2" />
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc2" media="print" />';
 
 	// Show all the relative links, such as help, search, contents, and the like.
@@ -142,11 +122,8 @@ function template_html_above()
 		$options['collapse_header_ic'] = !empty($_COOKIE['upshrinkIC']);
 	}
 
-	// Output any remaining HTML headers. (from mods, maybe?)
-	echo $context['html_headers'];
-
 	// Some browsers need an extra stylesheet due to bugs/compatibility issues.
-	foreach(array('ie7', 'ie6', 'ie8', 'firefox', 'webkit') as $cssfix)
+	foreach(array('ie7', 'ie6', 'firefox', 'webkit') as $cssfix)
 		if ($context['browser']['is_' . $cssfix])
 			echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/', $cssfix, '.css" />';
@@ -155,6 +132,27 @@ function template_html_above()
 	if ($context['right_to_left'])
 		echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/rtl.css" />';
+
+	echo '
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2"></script>
+	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/theme.js?rc2"></script>
+	<script type="text/javascript"><!-- // --><![CDATA[
+		var smf_theme_url = "', $settings['theme_url'], '";
+		var smf_default_theme_url = "', $settings['default_theme_url'], '";
+		var smf_images_url = "', $settings['images_url'], '";
+		var smf_scripturl = "', $scripturl, '";
+		var smf_iso_case_folding = ', $context['server']['iso_case_folding'] ? 'true' : 'false', ';
+		var smf_charset = "', $context['character_set'], '";', $context['show_pm_popup'] ? '
+		var fPmPopup = function ()
+		{
+			if (confirm("' . $txt['show_personal_messages'] . '"))
+				window.open(smf_prepareScriptUrl(smf_scripturl) + "action=pm");
+		}
+		addLoadEvent(fPmPopup);' : '', '
+	// ]]></script>';
+
+	// Output any remaining HTML headers. (from mods, maybe?)
+	echo $context['html_headers'];
 
 	echo '
 </head>
