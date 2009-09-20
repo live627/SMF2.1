@@ -120,7 +120,7 @@ function doStep1()
 	script_modify_column('members', 'id_group', array('type' => 'bigint'));
 	script_modify_column('members', 'id_post_group', array('type' => 'bigint'));
 
-	foreach ($tables AS $table => $column)
+	foreach ($tables as $table => $column)
 		if (empty($special_tables[$table]))
 			script_modify_column($table, $column, array('type' => 'bigint'));
 		else
@@ -327,7 +327,7 @@ function doStep4()
 	}
 
 	// Change our columns.
-	foreach ($tables AS $table => $column)
+	foreach ($tables as $table => $column)
 		script_modify_column($table, $column, $column_default[$column]);
 
 	// Some manual changes.

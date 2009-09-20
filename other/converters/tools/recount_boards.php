@@ -82,7 +82,7 @@ function doStep1()
 	{
 		script_modify_column('boards', 'id_board', array('auto' => false));
 
-		foreach ($tables AS $table)
+		foreach ($tables as $table)
 			script_modify_column($table, 'id_board', array('type' => 'bigint'));
 
 		script_modify_column('boards', 'id_parent', array('type' => 'bigint'));
@@ -153,10 +153,10 @@ function doStep3()
 		$boards[$row['board_id']] = $row['b_order'];
 
 	// Now we actually update it.
-	foreach ($boards AS $old_id => $new_id)
+	foreach ($boards as $old_id => $new_id)
 	{
 		// Go through all the tables quickly.
-		foreach ($tables AS $table)
+		foreach ($tables as $table)
 			script_query("
 				UPDATE {$db_prefix}{$table}
 				SET id_board = {$new_id}
@@ -207,7 +207,7 @@ function doStep4()
 	}
 
 	// Fix our column names.
-	foreach ($tables AS $table)
+	foreach ($tables as $table)
 		script_modify_column($table, 'id_board', array('type' => 'smallint'));
 
 	// Some manual changes.

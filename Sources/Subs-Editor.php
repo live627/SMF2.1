@@ -106,7 +106,7 @@ function bbc_to_html($text)
 
 	// Prevent conversion of all bbcode inside these bbcodes.
 	// !!! Tie in with bbc permissions ?
-	foreach(array('code', 'php', 'nobbc') as $code)
+	foreach (array('code', 'php', 'nobbc') as $code)
 	{
 		if (strpos($text, '['. $code) !== false)
 		{

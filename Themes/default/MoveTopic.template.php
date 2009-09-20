@@ -23,7 +23,7 @@ function template_main()
 							<dd>
 								<select name="toboard">';
 
-	foreach ($context['categories'] AS $category)
+	foreach ($context['categories'] as $category)
 	{
 		echo '
 									<optgroup label="', $category['name'], '">';

@@ -133,7 +133,7 @@ function template_main()
 				</h4>
 				<ul class="reset" id="searchBoardsExpand"', $context['boards_check_all'] ? ' style="display: none;"' : '', '>';
 
-			foreach($context['categories'] as $category)
+			foreach ($context['categories'] as $category)
 			{
 				echo '
 					<li class="category">

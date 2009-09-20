@@ -422,7 +422,7 @@ function EditSearchMethod()
 		db_extend();
 		$temp_tables = $smcFunc['db_list_tables']();
 		foreach ($temp_tables as $table)
-			if($table == $db_prefix. 'messages' || $table == $db_prefix. 'log_search_words')
+			if ($table == $db_prefix. 'messages' || $table == $db_prefix. 'log_search_words')
 				$smcFunc['db_optimize_table']($table);
 
 		// PostGreSql has some hidden sizes.
@@ -440,14 +440,14 @@ function EditSearchMethod()
 		{
 			while($row = $smcFunc['db_fetch_assoc']($request))
 			{
-				if($row['relname'] == $db_prefix. 'messages')
+				if ($row['relname'] == $db_prefix . 'messages')
 				{
 					$context['table_info']['data_length'] = (int) $row['KB'];
 					$context['table_info']['index_length'] = (int) $row['KB'];
 					// Doesn't support fulltext
 					$context['table_info']['fulltext_length'] = $txt['not_applicable'];
 				}
-				elseif($row['relname'] == $db_prefix. 'log_search_words')
+				elseif ($row['relname'] == $db_prefix. 'log_search_words')
 				{
 					$context['table_info']['index_length'] = (int) $row['KB'];
 					$context['table_info']['custom_index_length'] = (int) $row['KB'];

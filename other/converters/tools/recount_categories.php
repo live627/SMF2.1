@@ -72,7 +72,7 @@ function doStep1()
 
 	script_modify_column('categories', 'id_cat', array('auto' => false));
 
-	foreach ($tables AS $table)
+	foreach ($tables as $table)
 		script_modify_column($table, 'id_cat', array('type' => 'bigint'));
 
 	echo '
@@ -138,11 +138,11 @@ function doStep3()
 		$cats[$row['cat_id']] = $row['c_order'];
 
 	// Now we actually update it.
-	foreach ($cats AS $old_id => $new_id)
+	foreach ($cats as $old_id => $new_id)
 	{
 		++$new_id;
 		// Go through all the tables quickly.
-		foreach ($tables AS $table)
+		foreach ($tables as $table)
 		{
 			script_query("
 				UPDATE {$db_prefix}{$table}
@@ -190,7 +190,7 @@ function doStep4()
 	}
 
 	// Change our columns back.
-	foreach ($tables AS $table)
+	foreach ($tables as $table)
 		script_modify_column($table, 'id_cat', array('type' => 'tinyint'));
 
 	// Some manual changes.

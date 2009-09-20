@@ -123,7 +123,7 @@ function template_html_above()
 	}
 
 	// Some browsers need an extra stylesheet due to bugs/compatibility issues.
-	foreach(array('ie7', 'ie6', 'firefox', 'webkit') as $cssfix)
+	foreach (array('ie7', 'ie6', 'firefox', 'webkit') as $cssfix)
 		if ($context['browser']['is_' . $cssfix])
 			echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/', $cssfix, '.css" />';

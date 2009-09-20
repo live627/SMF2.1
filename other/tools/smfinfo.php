@@ -674,7 +674,7 @@ function show_detailed_db()
 								</tr>';
 
 		$table_color = 1;
-		foreach($context['database_tables'] as $table)
+		foreach ($context['database_tables'] as $table)
 		{
 			echo '
 								<tr class="row', $table_color = !$table_color, '">
@@ -761,7 +761,7 @@ function show_mods()
 						<td width="150px"><strong>', $txt['package_version'], '</strong></td>
 					</tr>';
 
-	foreach(loadInstalledPackages() as $package)
+	foreach (loadInstalledPackages() as $package)
 	{
 		echo '
 					<tr>
@@ -2331,7 +2331,7 @@ function get_database_info()
 
 	$context['database_size'] = convert_memory($context['database_size']);
 
-	foreach($context['database_tables'] as $table => $info)
+	foreach ($context['database_tables'] as $table => $info)
 	{
 		// Get the columns of the table, and thier stuff...
 		$result = mysql_query('SHOW FULL COLUMNS FROM ' . $table . ' FROM ' . $db_name);

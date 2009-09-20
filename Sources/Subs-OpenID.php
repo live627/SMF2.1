@@ -180,7 +180,7 @@ function smf_openID_makeAssociation($server)
 	$assoc_type = isset($assoc_data['assoc_type']) ? $assoc_data['assoc_type'] : '';
 
 	// !!! Is this really needed?
-	foreach (array('dh_server_public', 'enc_mac_key') AS $key)
+	foreach (array('dh_server_public', 'enc_mac_key') as $key)
 		if (isset($assoc_data[$key]))
 			$assoc_data[$key] = str_replace(' ', '+', $assoc_data[$key]);
 
@@ -240,7 +240,7 @@ function smf_openID_return()
 		fatal_lang_error('openid_not_resolved');
 
 	// SMF has this annoying habit of removing the + from the base64 encoding.  So lets put them back.
-	foreach (array('openid_assoc_handle', 'openid_invalidate_handle', 'openid_sig', 'sf') AS $key)
+	foreach (array('openid_assoc_handle', 'openid_invalidate_handle', 'openid_sig', 'sf') as $key)
 		if (isset($_GET[$key]))
 			$_GET[$key] = str_replace(' ', '+', $_GET[$key]);
 
@@ -259,7 +259,7 @@ function smf_openID_return()
 
 	$signed = explode(',', $_GET['openid_signed']);
 	$verify_str = '';
-	foreach ($signed AS $sign)
+	foreach ($signed as $sign)
 	{
 		$verify_str .= $sign . ':' . strtr($_GET['openid_' . str_replace('.', '_', $sign)], array('&amp;' => '&')) . "\n";
 	}

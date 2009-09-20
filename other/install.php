@@ -2009,15 +2009,15 @@ function template_install_above()
 		<meta http-equiv="Content-Type" content="text/html; charset=', isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1', '" />
 		<meta name="robots" content="noindex" />
 		<title>', $txt['smf_installer'], '</title>
-		<script type="text/javascript" src="Themes/default/scripts/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="Themes/default/css/index.css?rc2" />
 		<link rel="stylesheet" type="text/css" href="Themes/default/css/install.css?rc2" />
+		<script type="text/javascript" src="Themes/default/scripts/script.js"></script>
 	</head>
 	<body>
 	<div id="header"><div class="frame">
 		<div id="top_section">
 			<h1 class="forumtitle">', $txt['smf_installer'], '</h1>
-			<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" /> 
+			<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />
 		</div>
 		<div id="upper_section" class="middletext" style="overflow: hidden;">
 			<div class="user"></div>

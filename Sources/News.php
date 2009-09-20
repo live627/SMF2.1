@@ -233,7 +233,7 @@ function ShowXmlFeed()
 
 	// We only want some information, not all of it.
 	$cachekey = array($xml_format, $_GET['action'], $_GET['limit'], $_GET['sa']);
-	foreach(array('board', 'boards', 'c') AS $var)
+	foreach (array('board', 'boards', 'c') as $var)
 		if (isset($_REQUEST[$var]))
 			$cachekey[] = $_REQUEST[$var];
 	$cachekey = md5(serialize($cachekey) . (!empty($query_this_board) ? $query_this_board : ''));

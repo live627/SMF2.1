@@ -1213,7 +1213,7 @@ function loadMemberContext($user, $display_custom_fields = false)
 
 	// First do a quick run through to make sure there is something to be shown.
 	$memberContext[$user]['has_messenger'] = false;
-	foreach(array('icq', 'msn', 'aim', 'yim') as $messenger)
+	foreach (array('icq', 'msn', 'aim', 'yim') as $messenger)
 	{
 		if (!isset($context['disabled_fields'][$messenger]) && !empty($memberContext[$user][$messenger]['link']))
 		{

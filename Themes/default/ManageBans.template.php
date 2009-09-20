@@ -12,7 +12,7 @@ function template_ban_edit()
 				', $context['ban']['is_new'] ? $txt['ban_add_new'] : $txt['ban_edit'] . ' \'' . $context['ban']['name'] . '\'', '
 		</h3>';
 
-	if($context['ban']['is_new'])
+	if ($context['ban']['is_new'])
 		echo '
 		<div class="information">', $txt['ban_add_notes'], '</div>';
 

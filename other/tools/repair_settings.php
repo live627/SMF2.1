@@ -93,8 +93,8 @@ $txt['theme_path_url_settings_info'] = 'These are the paths and URLs to your SMF
 
 
 // Fix Database title to use $db_type if available
-if(!empty($db_type) && isset($txt['db_'.$db_type]))
-	$txt['database_settings'] = $txt['db_'.$db_type].' '. $txt['database_settings'];
+if (!empty($db_type) && isset($txt['db_' . $db_type]))
+	$txt['database_settings'] = $txt['db_' . $db_type] . ' ' . $txt['database_settings'];
 
 if (isset($_POST['submit']))
 	set_settings();

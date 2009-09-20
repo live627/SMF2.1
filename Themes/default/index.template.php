@@ -117,7 +117,7 @@ function template_html_above()
 	<link rel="index" href="', $scripturl, '?board=', $context['current_board'], '.0" />';
 
 	// Some browsers need an extra stylesheet due to bugs/compatibility issues.
-	foreach(array('ie7', 'ie6', 'firefox', 'webkit') as $cssfix)
+	foreach (array('ie7', 'ie6', 'firefox', 'webkit') as $cssfix)
 		if ($context['browser']['is_' . $cssfix])
 			echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/', $cssfix, '.css" />';
@@ -415,7 +415,7 @@ function template_menu()
 			echo '
 					<ul>';
 
-			foreach($button['sub_buttons'] as $childbutton)
+			foreach ($button['sub_buttons'] as $childbutton)
 			{
 				echo '
 						<li>
@@ -428,7 +428,7 @@ function template_menu()
 					echo '
 							<ul>';
 
-					foreach($childbutton['sub_buttons'] as $grandchildbutton)
+					foreach ($childbutton['sub_buttons'] as $grandchildbutton)
 						echo '
 								<li>
 									<a', $grandchildbutton['active_button'] ? ' class="active"' : '', ' href="', $grandchildbutton['href'], '"', isset($grandchildbutton['target']) ? ' target="' . $grandchildbutton['target'] . '"' : '', '>

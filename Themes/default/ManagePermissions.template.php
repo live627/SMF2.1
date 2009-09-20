@@ -257,7 +257,7 @@ function template_by_board()
 							<strong>', $category['name'], '</strong>
 			</h3>';
 
-		if(!empty($category['boards']))
+		if (!empty($category['boards']))
 			echo '
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
@@ -298,7 +298,7 @@ function template_by_board()
 					</li>';
 		}
 
-		if(!empty($category['boards']))
+		if (!empty($category['boards']))
 			echo '
 				</ul>
 				</div>

@@ -75,7 +75,7 @@ function ModifyHolidays()
 	{
 		checkSession();
 
-		foreach ($_REQUEST['holiday'] AS $id => $value)
+		foreach ($_REQUEST['holiday'] as $id => $value)
 			$_REQUEST['holiday'][$id] = (int) $id;
 
 		// Now the IDs are "safe" do the delete...

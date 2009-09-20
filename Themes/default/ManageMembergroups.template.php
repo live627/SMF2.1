@@ -376,7 +376,7 @@ function template_group_members()
 							<span ', $context['group']['online_color'] ? 'style="color: ' . $context['group']['online_color'] . ';"' : '', '>', $context['group']['name'], '</span> ', $context['group']['stars'], '
 						</dd>';
 	//Any description to show?
-	if(!empty($context['group']['description']))
+	if (!empty($context['group']['description']))
 		echo '
 						<dt>
 							<strong>' . $txt['membergroups_members_description'] . ':</strong>

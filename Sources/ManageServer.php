@@ -421,7 +421,7 @@ function ModifyLoadBalancingSettings($return_config = false)
 		'loadavg_forum' => '40.0',
 	);
 
-	// Loop through the settings. 
+	// Loop through the settings.
 	foreach ($default_values as $name => $value)
 	{
 		// Use the default value if the setting isn't set yet.

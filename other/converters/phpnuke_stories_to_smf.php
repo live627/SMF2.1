@@ -47,7 +47,7 @@ if (empty($preparsing))
 		if (!isset($_POST['path_from']) || (!file_exists($_POST['path_from'] . '/Paths.pl') && !file_exists($_POST['path_from'] . '/Variables/Paths.pl')))
 			return;
 
-		foreach ($convert_data['settings'] AS $file)
+		foreach ($convert_data['settings'] as $file)
 			require ($_POST['path_from'] . $file);
 
 		$convert_data['from_prefix'] = "`$dbname`.{$prefix}_";
