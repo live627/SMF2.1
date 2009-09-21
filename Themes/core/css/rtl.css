@@ -42,6 +42,17 @@ dl.settings img
 {
 	margin: 0 0 0 10px;
 }
+
+/* All the signatures used in the forum.  If your forum users use Mozilla, Opera, or Safari, you might add max-height here ;). */
+.signature
+{
+	clear: left;
+}
+.custom_fields_above_signature
+{
+	clear: left;
+}
+
 /* Styles for the standard dropdown menus.
 ------------------------------------------------------- */
 /* Container for the new admin menu */
@@ -65,6 +76,12 @@ ul.admin_menu li ul li a
 {
 	padding: 0.5em 0.5em 0.5em 2em;
 }
+/* Second layer of menu items */
+ul.admin_menu li ul
+{
+	border-left: solid 1px #808080;
+	border-right: solid 2px #6888A7;
+}
 /* Third layer of menu items */
 ul.admin_menu li ul li:hover ul, ul.admin_menu li ul li.over ul
 {
@@ -75,10 +92,12 @@ ul.admin_menu li ul li:hover ul, ul.admin_menu li ul li.over ul
 	left: -19.2em;
 	top: auto;
 	margin: -2em 0 0 0;
+	border-left: solid 1px #808080;
+	border-right: solid 2px #6888A7;
 }
 ul.admin_menu li ul li a.subsection
 {
-	background: url(../images/admin/subsection.gif) no-repeat 2% 50%;
+	background: url(../images/admin/subsection2.gif) no-repeat 2% 50%;
 }
 /* The dropdown menu toggle image */
 div#menu_toggle
@@ -821,6 +840,10 @@ ul.horizlist li
 .features h4
 {
 	padding: 1em 0.5em 0.5em 0 !important;
+}
+h3.titlebg
+{
+	padding-right: 0.5em !important;
 }
 /* admin home */
 #live_news div.content dl

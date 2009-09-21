@@ -52,7 +52,7 @@ function template_main()
 	echo '
 							<tr>
 								<td align="right" ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '><strong>' . $txt['poll_question'] . ':</strong></td>
-								<td align="left"><input type="text" name="question" size="40" value="' . $context['poll']['question'] . '" class="input_text" /></td>
+								<td align="',$context['right_to_left'] ? 'right' : 'left' ,'"><input type="text" name="question" size="40" value="' . $context['poll']['question'] . '" class="input_text" /></td>
 							</tr><tr>
 								<td></td>
 								<td>';
