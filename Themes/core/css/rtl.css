@@ -118,6 +118,8 @@ div#menu_toggle
 #user_section #myavatar
 {
 	margin: 0 0 0 0.5em;
+	border-right: none;
+	border-left: solid 1px #ADADAD;
 	float: right;
 }
 /* page created in.. */
