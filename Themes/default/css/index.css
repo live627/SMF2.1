@@ -712,7 +712,7 @@ h3.titlebg a:hover, h4.titlebg a:hover
 	color: #FFA500;
 	text-decoration: none;
 }
-h3.catbg img.icon
+h3.catbg img.icon, h4.titlebg img.icon
 {
 	float: left;
 	margin: 5px 8px 0 0;
@@ -1611,7 +1611,7 @@ img.new_posts
 /* the page navigation area */
 #childboards h3
 {
-	padding: 0;
+	padding-bottom: 0;
 }
 #childboards .table_list thead
 {

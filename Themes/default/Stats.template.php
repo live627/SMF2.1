@@ -149,7 +149,6 @@ function template_main()
 					</div>
 			</div>
 		</div>
-
 		<div class="flow_hidden">
 			<div id="top_topics_replies">
 				<h3 class="catbg"><span class="left"></span>
@@ -219,7 +218,6 @@ function template_main()
 				</div>
 			</div>
 		</div>
-
 		<div class="flow_hidden">
 			<div id="top_topics_starter">
 				<h3 class="catbg"><span class="left"></span>
@@ -293,7 +291,6 @@ function template_main()
 			</div>
 		</div>
 		<div style="clear: both;"></div>
-
 		<div class="flow_hidden">
 			<h3 class="catbg"><span class="left"></span>
 				<img src="', $settings['images_url'], '/stats_history.gif" class="icon" alt="" /> ', $txt['forum_history'], '
@@ -321,7 +318,7 @@ function template_main()
 		{
 			echo '
 			<tr class="windowbg2" valign="middle" id="year_', $id, '">
-				<th align="left" width="25%">
+				<th class="lefttext" width="25%">
 					<img id="year_img_', $id, '" src="', $settings['images_url'], '/collapse.gif" alt="*" /> <a href="#year_', $id, '" id="year_link_', $id, '">', $year['year'], '</a>
 				</th>
 				<th align="center" width="15%">', $year['new_topics'], '</th>
@@ -340,7 +337,7 @@ function template_main()
 			{
 				echo '
 			<tr class="windowbg2" valign="middle" id="tr_month_', $month['id'], '">
-				<th align="left" width="25%" style="padding-left: 3ex;">
+				<th class="lefttext" width="25%" style="padding-', ($context['right_to_left'] ? 'right' : 'left'), ': 3ex;">
 					<img src="', $settings['images_url'], '/', $month['expanded'] ? 'collapse.gif' : 'expand.gif', '" alt="" id="img_', $month['id'], '" /> <a id="m', $month['id'], '" href="', $month['href'], '" onclick="return doingExpandCollapse;">', $month['month'], ' ', $month['year'], '</a>
 				</th>
 				<th align="center" width="15%">', $month['new_topics'], '</th>
@@ -361,7 +358,7 @@ function template_main()
 					{
 						echo '
 			<tr class="windowbg2" valign="middle" align="left" id="tr_day_', $day['year'], '-', $day['month'], '-', $day['day'], '">
-				<td align="left" style="padding-left: 6ex;">', $day['year'], '-', $day['month'], '-', $day['day'], '</td>
+				<td class="lefttext" style="padding-', ($context['right_to_left'] ? 'right' : 'left'), ': 6ex;">', $day['year'], '-', $day['month'], '-', $day['day'], '</td>
 				<td align="center">', $day['new_topics'], '</td>
 				<td align="center">', $day['new_posts'], '</td>
 				<td align="center">', $day['new_members'], '</td>

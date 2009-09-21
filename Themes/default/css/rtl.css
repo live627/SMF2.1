@@ -75,11 +75,19 @@ dl.settings img
 	margin: 0 0 0 10px;
 }
 
+/* Styles for rounded headers.
+------------------------------------------------------- */
 
-h3.catbg img.icon
+h3.catbg img.icon, h4.titlebg img.icon
 {
 	float: right;
 	margin: 5px 0 0 8px;
+}
+
+h4.titlebg, h3.titlebg
+{
+	padding-right: 9px;
+	padding-left: 0;
 }
 
 img#upshrink_ic, img#newsupshrink
@@ -142,7 +150,6 @@ table.table_list a.collapse
 }
 .buttonlist ul li a span
 {
-	padding: 0 8px 0 8px;
 	left: 8px;
 }
 .align_top ul li a, .align_bottom ul li a
@@ -866,7 +873,7 @@ span.search_weight
 {
 	padding-right: 18px;
 	background: url(../images/admin/boards.gif) no-repeat;
-	background-position: 100% 0; 
+	background-position: 100% 0;
  }
  /* Styles for the moderation centre.
 ------------------------------------------------- */
