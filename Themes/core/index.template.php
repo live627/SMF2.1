@@ -126,16 +126,16 @@ function template_html_above()
 	foreach (array('ie7', 'ie6', 'firefox', 'webkit') as $cssfix)
 		if ($context['browser']['is_' . $cssfix])
 			echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/', $cssfix, '.css" />';
+	<link rel="stylesheet" type="text/css" href="',  $settings['theme_url'], '/css/', $cssfix, '.css" />';
 
 	// RTL languages require an additional stylesheet.
 	if ($context['right_to_left'])
 		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/rtl.css" />';
+	<link rel="stylesheet" type="text/css" href="',  $settings['theme_url'], '/css/rtl.css" />';
 
 	echo '
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2"></script>
-	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/theme.js?rc2"></script>
+	<script type="text/javascript" src="',  $settings['default_theme_url'], '/scripts/theme.js?rc2"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_default_theme_url = "', $settings['default_theme_url'], '";

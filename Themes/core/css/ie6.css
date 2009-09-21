@@ -4,6 +4,12 @@
 	margin: 0;
 	padding: 0;
 }
+/* the tabled definition lists */
+dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.options dd
+{
+	float: none;
+	width: auto;
+}
 
 .modbuttons .buttonlist_bottom ul, .modbuttons .buttonlist ul, .floatright .buttonlist ul, .floatright .buttonlist_bottom ul, .readbuttons .buttonlist ul, .readbuttons .buttonlist_bottom ul
 {

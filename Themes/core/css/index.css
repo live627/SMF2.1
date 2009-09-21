@@ -717,12 +717,12 @@ ul.admin_menu li.chosen h4
 }
 
 /* Second layer of menu items */
+
 ul.admin_menu li ul
 {
 	z-index: 90;
 	display: none;
 	position: absolute;
-	top: 100%;
 	/* IE6 needs a fixed width to prevent the menu from going haywire */
 	width: 19em;
 	border: solid 1px #808080;
@@ -778,8 +778,7 @@ ul.admin_menu li ul li ul, ul.admin_menu li ul li.over ul
 {
 	display: none;
 	position: absolute;
-	left: -999em;
-	top: 0;
+	top: -999em;
 	border: solid 1px #A0A0A0;
 	border-left: solid 2px #6888A7;
 	background: #FFF;
@@ -789,7 +788,8 @@ ul.admin_menu li ul li:hover ul, ul.admin_menu li ul li.over ul
 {
 	display: block;
 	left: 18em;
-	margin: 0 0 0 1em;
+	top: auto;
+	margin: -2em 0 0 1em;
 }
 #adm_submenus
 {
@@ -806,13 +806,13 @@ div#menu_toggle
 {
 	float: right;
 	margin: 0 10px 0 0;
-	background: url('../images/mirrortab_first.gif') top left no-repeat;
+	background: url(../images/mirrortab_first.gif) top left no-repeat;
 	padding: 0 0 0 7px;
 }
 div#menu_toggle a
 {
 	display: block;
-	background: #E5E5E8 url('../images/mirrortab_last.gif') top right no-repeat;
+	background: #E5E5E8 url(../images/mirrortab_last.gif) top right no-repeat;
 	padding: 8px 12px 3px 6px;
 }
 
@@ -1554,6 +1554,14 @@ form#infocenter_login ul.horizlist label
 	border-bottom: none;
 	font-weight: normal !important;
 }
+#topic_icons ul
+{
+	display: block;
+	padding: 0.5em 1em 0.1em 1em;
+	margin: 0;
+	border-bottom: none;
+	font-weight: normal !important;
+}
 #message_index_jump_to
 {
 	margin: 2em 4em 0 2em;
@@ -1562,6 +1570,7 @@ form#infocenter_login ul.horizlist label
 {
 	float: right;
 }
+
 
 /* Styles for the display template (topic view).
 ---------------------------------------------------- */
