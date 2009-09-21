@@ -61,6 +61,7 @@ September 2009
  * smf_scripturl should use smf_prepareScriptUrl for previewPost (Post.template.php)
  * Load css before js for faster theme loading (index.template.php, Themes.php) [Bug 3741]
  ! Updated the poll bars to match Curve's look and feel (Display.php, Display template, index.css, i6.css, ie7.css, rtl.css)
+ ! Reverted bug fix 3474 (Subs.php) [Bug 3783]
 
 
 August 2009
