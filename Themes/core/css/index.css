@@ -1743,12 +1743,6 @@ ul.postingbuttons li
 /* Styles for the quick reply area.
 ---------------------------------------------------- */
 
-#quickReplyOptions div
-{
-	text-align: center;
-	border-left: solid 1px #aaa;
-}
-
 #quickReplyOptions #quickReplyWarning
 {
 	border: none;
@@ -1759,8 +1753,10 @@ ul.postingbuttons li
 }
 #quickReplyOptions #quickReplyContent
 {
+	text-align: center;
 	float: left;
 	width: 72%;
+	border-left: solid 1px #aaa;
 }
 
 #quickReplyOptions #quickReplyContent textarea, #quickReplyOptions #quickReplyContent input

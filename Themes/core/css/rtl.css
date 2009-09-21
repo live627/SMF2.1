@@ -309,6 +309,8 @@ ul.postingbuttons
 #quickReplyOptions #quickReplyContent
 {
 	float: right;
+	border-left: none;
+	border-right: solid 1px #aaa;
 }
 #quickReplyWarning
 {
@@ -757,7 +759,6 @@ ul.admin_menu li.chosen h4
 .maintab_last
 {
 	background: url(../images/maintab_first_prev.gif) left bottom no-repeat;
-	
 	width: 10px;
 }
 .maintab_active_first
@@ -877,7 +878,7 @@ span.search_weight
 .is_directory
 {
 	padding-right: 18px !important;
-	background-position: 100% 0 !important; 
+	background-position: 100% 0 !important;
  }
  /* Styles for the moderation centre.
 ------------------------------------------------- */
