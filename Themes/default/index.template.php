@@ -150,14 +150,15 @@ function template_html_above()
 
 	echo '
 </head>
-<body', !empty($settings['forum_width']) ? ' style="width: ' . $settings['forum_width'] . '; padding: 0 auto"' : '', '>';
+<body>';
 }
 
 function template_body_above()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	echo '
+	echo !empty($settings['forum_width']) ? '
+<div id="wrapper" style="width: ' . $settings['forum_width'] . '">' : '', '
 	<div id="header"><div class="frame">
 		<div id="top_section">
 			<h1 class="forumtitle">
@@ -337,7 +338,8 @@ function template_html_below()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	echo '
+	echo !empty($settings['forum_width']) ? '
+</div>' : '', '
 </body></html>';
 }
 

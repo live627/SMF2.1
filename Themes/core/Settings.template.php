@@ -160,6 +160,13 @@ function template_settings()
 			'options' => $context['smiley_sets'],
 			'type' => 'text',
 		),
+		array(
+			'id' => 'forum_width',
+			'label' => $txt['forum_width'],
+			'description' => $txt['forum_width_desc'],
+			'type' => 'text',
+			'size' => 8,
+		),
 	'',
 		array(
 			'id' => 'show_mark_read',
