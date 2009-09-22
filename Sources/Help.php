@@ -248,6 +248,13 @@ function ShowHelp()
 	$context['manual_area_data'] = $manual_area_data;
 	$context['menu_item_selected'] = $manual_area_data['current_area'];
 
+	// Set a title and description for the tab strip if subsections are present.
+	if (isset($context['manual_area_data']['subsections']))
+		$context[$context['manual_menu_name']]['tab_data'] = array(
+			'title' => $manual_area_data['label'],
+			'description' => isset($manual_area_data['description']) ? $manual_area_data['description'] : '',
+		);
+
 	// Bring it on!
 	$context['sub_template'] = $manual_area_data['template'];
 	$context['page_title'] = $manual_area_data['label'] . ' - ' . $txt['manual_smf_user_help'];
