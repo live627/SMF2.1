@@ -344,17 +344,17 @@ h4#pollquestion
 {
 	margin: 0.3em 0 0 1em;
 }
-.postarea .keyinfo .messageicon
+.messageicon
 {
 	float: right;
 	margin: 0 0 0 0.5em;
 }
 
-.postarea .keyinfo
+.keyinfo
 {
 	float: right;
 }
-.postarea .modifybutton
+.modifybutton
 {
 	clear: left;
 	float: left;
@@ -423,11 +423,11 @@ ul.quickbuttons li.inline_mod_check
 {
 	padding: 0 1em 0 0;
 }
-.postarea .post
+.post
 {
 	clear: left;
 }
-.postarea .post .inner
+.inner
 {
 	padding: 1em 0 0 1em;
 	margin: 0 0 0 1em;

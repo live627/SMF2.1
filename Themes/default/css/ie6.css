@@ -65,22 +65,14 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 #forumposts .postarea
 {
 	margin-left: 0px;
+	margin-right: 0px;
 	float: right;
 }
-#forumposts .postarea .post
-{
-	float: none;
-	margin-top: 10px;
-}
+
 .buttonlist ul li
 {
 	width: 1%;
 	white-space: nowrap;
-}
-#forumposts .buttonlist ul
-{
-	clear: right;
-	height: 1%;
 }
 #forumposts h3.catbg
 {

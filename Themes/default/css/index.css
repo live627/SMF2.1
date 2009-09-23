@@ -422,7 +422,7 @@ tr.titlebg th.smalltext, thead tr.titlebg th a:link, thead tr.titlebg th a:visit
 	padding: 0.5em;
 	overflow: hidden;
 }
-.pagesection .pagelinks
+.pagelinks
 {
 	padding: 0.5em 0;
 }
@@ -1490,11 +1490,11 @@ p.moderators
 {
 	font-size: 0.8em;
 }
-.pagesection .nextlinks
+.nextlinks
 {
 	text-align: right;
 }
-.pagesection .nextlinks_bottom
+.nextlinks_bottom
 {
 	clear: right;
 	text-align: right;
@@ -1776,8 +1776,9 @@ p#whoisviewing
 }
 .postarea, .moderatorbar
 {
-	margin: 0 0 0 16em;
+	margin: 0 0 0 1em;
 }
+
 .moderatorbar
 {
 	clear: right;
@@ -1810,19 +1811,19 @@ p#whoisviewing
 {
 	margin-top: 0.5em;
 }
-.postarea .keyinfo .messageicon
+.messageicon
 {
 	float: left;
 	margin: 0 0.5em 0 0;
 	padding: 3px;
 }
 
-.postarea .keyinfo
+.keyinfo
 {
 	float: left;
 	width: 50%;
 }
-.postarea .modifybutton
+.modifybutton
 {
 	clear: right;
 	float: right;
@@ -1892,11 +1893,12 @@ ul.quickbuttons li.inline_mod_check
 	padding: 0 1em 0 0;
 }
 
-.postarea .post
+.post
 {
+	margin-top: 0.5em;
 	clear: right;
 }
-.postarea .post .inner
+.inner
 {
 	padding: 1em 1em 0 0;
 	margin: 0 1em 0 0;

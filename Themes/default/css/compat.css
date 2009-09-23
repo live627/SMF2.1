@@ -130,7 +130,7 @@ ul.reset, ul.reset li
 	padding: 0.5em;
 	overflow: hidden;
 }
-.pagesection .pagelinks
+.pagelinks
 {
 	padding: 0.5em 0;
 }
@@ -785,9 +785,8 @@ div#pollmoderation
 	width: 15em;
 	float: left;
 }
-.postarea .post
+.post
 {
-	float: left;
 	clear: right;
 }
 .postarea
@@ -799,7 +798,7 @@ div#pollmoderation
 	float: left;
 	margin: 0 0.5em 0.5em 0;
 }
-div.postarea .keyinfo
+.keyinfo
 {
 	float: left;
 	clear: none;
@@ -957,7 +956,7 @@ ul.postingbuttons li
 	clear: both;
 	width: 100%;
 }
-.readbuttons .buttonlist, .readbuttons .buttonlist_bottom
+.buttonlist, .buttonlist_bottom
 {
 	margin-right: 1em;
 	float: right;
@@ -1457,42 +1456,42 @@ dl
 	float: left;
 }
 
-#main_admsection #basicinfo, #main_admsection #detailedinfo
+#basicinfo, #detailedinfo
 {
 	width: 100%;
 }
-#main_admsection #detailedinfo .content
+#detailedinfo .content
 {
 	border: none !important;
 }
-#main_admsection #basicinfo
+#basicinfo
 {
 	border-bottom: 1px #ccc solid;
 }
-#main_admsection #basicinfo h4
+#basicinfo h4
 {
 	float: left;
 }
-#main_admsection #basicinfo img.avatar
+#basicinfo img.avatar
 {
 	float: right;
 	vertical-align: top;
 }
-#main_admsection #basicinfo ul
+#basicinfo ul
 {
 	clear: left;
 	padding-top: 10px;
 }
-#main_admsection #basicinfo span#userstatus
+#basicinfo span#userstatus
 {
 	clear: left;
 }
-#main_admsection #basicinfo p#infolinks
+#basicinfo p#infolinks
 {
 	display: none;
 	clear: both;
 }
-#main_admsection #basicinfo .botslice
+#basicinfo .botslice
 {
 	clear: both;
 }
@@ -1612,11 +1611,11 @@ div#profile_success
 	margin-right: 1em;
 }
 
-.topic .time
+.time
 {
 	float: right;
 }
-.topic .counter
+.counter
 {
 	margin-right: 1em;
 }
@@ -1624,16 +1623,7 @@ div#profile_success
 {
 	margin: 3px 0;
 }
-
-.topic .post
-{
-	margin: 0 1em;
-	min-height: 80px;
-	height: auto !important;
-	height: 80px;
-}
-
-.topic .mod_icons
+.mod_icons
 {
 	text-align: right;
 	margin-right: 1em;

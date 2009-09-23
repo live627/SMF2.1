@@ -209,7 +209,7 @@ dl#infocenter_recentposts dd
 
 /* Styles for the message (topic) index.
 ---------------------------------------------------- */
-.modbuttons .buttonlist, .modbuttons .buttonlist_bottom
+.buttonlist, .buttonlist_bottom
 {
 	margin-left: 0;
 	margin-right: 1em;
@@ -280,10 +280,9 @@ div#pollmoderation
 {
 	float: right;
 }
-.postarea .post
+.post
 {
 	float: right;
-	clear: left;
 }
 .postarea
 {
@@ -294,7 +293,7 @@ div#pollmoderation
 {
 	float: right;
 }
-div.postarea .keyinfo
+.keyinfo
 {
 	float: right;
 }
@@ -570,16 +569,16 @@ tr.titlebg td
 	margin-right: 0;
 	margin-left: 1em;
 }
-.topic .time
+.time
 {
 	float: left;
 }
-.topic .counter
+.counter
 {
 	margin-right: 0;
 	margin-left: 1em;
 }
-.topic .mod_icons
+.mod_icons
 {
 	text-align: left;
 	margin-right: 0;

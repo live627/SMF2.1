@@ -25,34 +25,12 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 {
 	height: 30px;
 }
-/* IE6 doesn't support multiple class selectors */
-#main_menu li.last.active
-{
-	padding: 0 0 0 0;
-}
-#main_menu li.lastactive
-{
-	padding: 0 8px 0 0;
-}
+
 #forumposts .postarea
 {
 	margin-left: 0px;
+	margin-right: 0px;
 	float: right;
-}
-#forumposts .postarea .post
-{
-	margin-top: 10px;
-}
-#profileview #basicinfo .content
-{
-	padding: 0.7em 0 0 0.7em;
-	height: 100%;
-}
-/* IE6 does't support multiple class selectors */
-ul.admin_menu li.last_chosen h4
-{
-	background: url(../images/admintab_active_last.gif) top right no-repeat;
-	padding-right: 17px;
 }
 .signature
 {

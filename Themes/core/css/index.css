@@ -709,6 +709,12 @@ ul.admin_menu li.last.chosen h4
 	background: url(../images/admintab_active_last.gif) top right no-repeat;
 	padding-right: 17px;
 }
+/* IE6 does't support multiple class selectors */
+ul.admin_menu li.last_chosen h4
+{
+	background: url(../images/admintab_active_last.gif) top right no-repeat;
+	padding-right: 17px;
+}
 
 ul.admin_menu li.chosen h4
 {
@@ -1111,6 +1117,13 @@ h1#forum_name
 	background: url(../images/maintab_last.gif) no-repeat bottom right;
 	padding: 0 8px 0 0;
 }
+/* IE6 doesn't support multiple class selectors */
+#main_menu li.lastactive
+{
+	float: left;
+	padding: 0 8px 0 0;
+	background: url(../images/maintab_last.gif) no-repeat bottom right;
+}
 #main_menu li.active a
 {
 	background: url(../images/maintab_active_last.gif) no-repeat bottom right;
@@ -1502,7 +1515,7 @@ form#infocenter_login ul.horizlist label
 	clear: both;
 	width: 100%;
 }
-.modbuttons .buttonlist, .modbuttons .buttonlist_bottom
+.buttonlist, .buttonlist_bottom
 {
 	margin-right: 1em;
 	float: right;
@@ -1682,9 +1695,8 @@ div#pollmoderation
 	width: 15em;
 	float: left;
 }
-.postarea .post
+.post
 {
-	float: left;
 	clear: right;
 }
 .postarea
@@ -1696,7 +1708,7 @@ div#pollmoderation
 	float: left;
 	margin: 0 0.5em 0.5em 0;
 }
-div.postarea .keyinfo
+.keyinfo
 {
 	float: left;
 	clear: none;
@@ -1850,7 +1862,7 @@ ul.postingbuttons li
 	clear: both;
 	width: 100%;
 }
-.readbuttons .buttonlist, .readbuttons .buttonlist_bottom
+.buttonlist, .buttonlist_bottom
 {
 	margin-right: 1em;
 	float: right;
@@ -2237,11 +2249,11 @@ dl
 {
 	border: none;
 }
-#profileview #basicinfo .content
+#basicinfo .content
 {
 	padding: 0.7em 0 0.7em 0.7em;
 }
-#profileview #detailedinfo .content
+#detailedinfo .content
 {
 	padding: 0.7em 1.2em;
 	border-left: 1px solid #aaa;
@@ -2502,11 +2514,11 @@ div#profile_success
 	margin-right: 1em;
 }
 
-.topic .time
+.time
 {
 	float: right;
 }
-.topic .counter
+.counter
 {
 	margin-right: 1em;
 }
@@ -2515,15 +2527,7 @@ div#profile_success
 	margin: 3px 0;
 }
 
-.topic .post
-{
-	margin: 0 1em;
-	min-height: 80px;
-	height: auto !important;
-	height: 80px;
-}
-
-.topic .mod_icons
+.mod_icons
 {
 	text-align: right;
 	margin-right: 1em;

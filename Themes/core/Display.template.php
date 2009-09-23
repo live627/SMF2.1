@@ -80,7 +80,7 @@ function template_main()
 		echo '
 	</div>
 </div>
-<div id="pollmoderation">';
+<div id="pollmoderation" class="clearfix">';
 
 		// Build the poll moderation button array.
 		$poll_buttons = array(
@@ -603,7 +603,7 @@ function template_main()
 		$mod_buttons[] = array('text' => 'restore_topic', 'image' => '', 'lang' => true, 'url' => $scripturl . '?action=restoretopic;topics=' . $context['current_topic'] . ';' . $context['session_var'] . '=' . $context['session_id']);
 
 	echo '
-<div id="moderationbuttons">', template_button_strip($mod_buttons, 'bottom', array('id' => 'moderationbuttons_strip')), '</div>';
+<div id="moderationbuttons" class="clearfix">', template_button_strip($mod_buttons, 'bottom', array('id' => 'moderationbuttons_strip')), '</div>';
 
 	// Show the jumpto box, or actually...let Javascript do it.
 	echo '
