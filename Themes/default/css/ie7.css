@@ -1,6 +1,10 @@
 /* The dropdown menus
 ------------------------------------------------------- */
-
+/*the dropmenu - RTL tweak */
+.dropmenu li ul
+{
+	margin: 0 -40px 0 0;
+}
 /* the hover effects */
 .dropmenu li:hover, .dropmenu li.hover
 {

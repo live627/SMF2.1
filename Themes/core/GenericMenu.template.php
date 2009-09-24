@@ -117,12 +117,12 @@ function template_generic_menu_dropdown_above()
 		if ($section['id'] == $menu_context['current_section'])
 		{
 			echo '
-			<li class="chosen', $is_last ? ' last last_chosen' : '', '"><h4>', $section['title'] , '</h4>
+			<li class="', $s == 1 ? 'first ': '', 'chosen', $is_last ? ' last last_chosen' : '', '"><h4>', $section['title'] , '</h4>
 				<ul>';
 		}
 		else
 			echo '
-			<li', $is_last ? ' class="last"' : '', '><h4>', $section['title'] , '</h4>
+			<li' , $s == 1 ? ' class="first"': '', $is_last ? ' class="last"' : '', '><h4>', $section['title'] , '</h4>
 				<ul>';
 
 		// For every area of this section show a link to that area (bold if it's currently selected.)

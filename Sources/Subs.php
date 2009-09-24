@@ -3960,10 +3960,11 @@ function setupMenuContext()
 			),
 		);
 
+		/* deprecated and no longer needed, reverse is done via CSS
 		// Right to left menu should be in reverse order.
 		if ($context['right_to_left'])
 			$buttons = array_reverse($buttons, true);
-
+		 */
 		$load_menu_js = false;
 		// Now we put the buttons in the context so the theme can use them.
 		$menu_buttons = array();

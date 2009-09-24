@@ -259,7 +259,8 @@ function template_body_above()
 
 		echo '
 			</div>
-		</div>';
+		</div>
+		<br style="clear: both;" />';
 
 	// Define the upper_section toggle in JavaScript.
 	echo '
@@ -294,6 +295,9 @@ function template_body_above()
 
 		// Show the menu here, according to the menu sub template.
 		template_menu();
+	
+	echo '
+			<br style="clear: both;" />';
 
 		// Show the navigation tree.
 		theme_linktree();

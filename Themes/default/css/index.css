@@ -979,10 +979,10 @@ span.lowerframe span
 ------------------------------------------------------- */
 #main_menu
 {
-	text-align: left;
 	padding: 0 0 0 0.5em;
+	float: left;
 	margin: 0;
-	overflow: hidden;
+	width: 98%;
 }
 
 .dropmenu, .dropmenu ul
@@ -994,7 +994,7 @@ span.lowerframe span
 }
 .dropmenu
 {
-	padding: 0 0 0 1%;
+	padding: 0;
 }
 .dropmenu a
 {
@@ -1027,19 +1027,19 @@ span.lowerframe span
 	float: left;
 	padding: 0;
 	margin: 0;
+	position: relative;
 }
 
 .dropmenu li ul
 {
+	z-index: 90;
+	display: none;
 	position: absolute;
-	top: -999em;
-	height: auto;
 	width: 19.2em;
 	font-weight: normal;
 	border-bottom: solid 1px #999;
 	background: url(../images/theme/menu_gfx.png) 0 -100px no-repeat;
 	padding: 7px 0 0 0;
-	z-index: 90;
 }
 
 .dropmenu li li
@@ -1094,10 +1094,16 @@ span.lowerframe span
 	top: -999em;
 }
 
-.dropmenu li:hover ul, .dropmenu li li:hover ul
+.dropmenu li li:hover ul
 {
 	top: auto;
 }
+
+.dropmenu li:hover ul
+{
+	display: block;
+}
+
 
 /* The dropdown menu toggle image */
 #menu_toggle

@@ -62,10 +62,15 @@ dl.settings img
 	margin-left: 0px;
 	margin-right: 10px;
 }
+#main_menu li
+{
+	float: right;
+}
+
 /* First layer of menu items */
 ul.admin_menu li
 {
-	float: right;
+	float: right !important;
 	padding-left: 4px;
 }
 ul.admin_menu li ul
@@ -726,19 +731,28 @@ dl.stats dd
 /* Depreciated stuff from the old days.
 ------------------------------------------------- */
 /* First layer of menu items */
+/* Container for the new admin menu */
+
 ul.admin_menu li
 {
 	position: relative;
-	float: left;
+	float: right;
 	background: url(../images/admintab_back.gif) top right repeat-x;
 	padding-right: 4px;
 }
-
 ul.admin_menu li.last
+{
+	background: url(../images/admintab_back.gif) top right repeat-x;
+}
+ul.admin_menu li.first
 {
 	background: url(../images/admintab_right.gif) top right repeat-x;
 }
-
+ul.admin_menu li.first.chosen h4
+{
+	background: url(../images/admintab_active_last.gif) top right repeat-x;
+	padding-right: 16px;
+}
 ul.admin_menu li.chosen
 {
 	background: url(../images/admintab_active_left.gif) no-repeat;
@@ -747,7 +761,7 @@ ul.admin_menu li.chosen
 
 ul.admin_menu li.last.chosen h4
 {
-	background: url(../images/admintab_active_last.gif) top right no-repeat;
+	background: url(../images/admintab_active_right.gif) top right no-repeat;
 	padding-right: 17px;
 }
 
@@ -812,6 +826,20 @@ ul.admin_menu li.chosen h4
 	background: url(../images/mirrortab_active_last.gif) no-repeat;
 	width: 8px;
 }
+#main_menu li.last.active
+{
+	float: right;
+	background: url(../images/maintab_last.gif) no-repeat bottom right;
+	padding: 0 8px 0 0;
+}
+/* IE6 doesn't support multiple class selectors */
+#main_menu li.lastactive
+{
+	float: right;
+	padding: 0 8px 0 0;
+	background: url(../images/maintab_last.gif) no-repeat bottom right;
+}
+
 
 /* float a list horizontally */
 ul.horizlist li
