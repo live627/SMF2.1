@@ -46,7 +46,7 @@ function template_browse()
 
 	template_show_list('file_list');
 	echo '
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 }
 
@@ -102,7 +102,7 @@ function template_maintenance()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_attachment_repair()
@@ -125,7 +125,7 @@ function template_attachment_repair()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 	}
 
 	// What about if no errors were even found?
@@ -144,7 +144,7 @@ function template_attachment_repair()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 	}
 	// Otherwise, I'm sad to say, we have a problem!
 	else
@@ -179,7 +179,7 @@ function template_attachment_repair()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 	}
 }
 

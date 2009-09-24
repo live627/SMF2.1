@@ -597,7 +597,7 @@ function template_admin_register()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Form for editing the agreement shown for people registering to the forum.
@@ -663,7 +663,7 @@ function template_edit_agreement()
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<br style="clear: both;" />';
+		<br class="clear" />';
 }
 
 function template_edit_reserved_words()
@@ -696,7 +696,7 @@ function template_edit_reserved_words()
 			<input type="hidden" name="sa" value="reservednames" />
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
-		<br style="clear: both;" />';
+		<br class="clear" />';
 }
 
 ?>

@@ -135,7 +135,7 @@ function template_new_group()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_edit_group()
@@ -303,7 +303,7 @@ function template_edit_group()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />
+	<br class="clear" />
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var oModeratorSuggest = new smc_AutoSuggest({
@@ -515,7 +515,7 @@ function template_group_members()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 	if (!empty($context['group']['assignable']))
 		echo '
@@ -574,7 +574,7 @@ function template_group_request_reason()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 ?>

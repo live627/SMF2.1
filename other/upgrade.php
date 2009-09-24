@@ -3814,7 +3814,7 @@ function template_upgrade_above()
 								</div>';
 	echo '
 			</div>
-			<div id="main_screen" style="clear: both;">
+			<div id="main_screen" class="clear">
 				<h2>', $upcontext['page_title'], '</h2>
 				<div class="panel">
 					<div style="max-height: 360px; overflow: auto;">';

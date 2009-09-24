@@ -46,7 +46,7 @@ function template_report_type()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // This is the standard template for showing reports in.
@@ -142,7 +142,7 @@ function template_main()
 	}
 	echo '
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Header of the print page!

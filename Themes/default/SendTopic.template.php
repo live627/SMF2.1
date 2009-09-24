@@ -181,7 +181,7 @@ function template_custom_email()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_report()
@@ -208,7 +208,7 @@ function template_report()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 ?>

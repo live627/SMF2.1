@@ -204,7 +204,7 @@ function template_modify_subscription()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 }
 
@@ -230,7 +230,7 @@ function template_delete_subscription()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 }
 
@@ -426,7 +426,7 @@ function template_modify_user_subscription()
 
 	echo '
 		</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Template for a user to edit/pick their subscriptions.
@@ -563,7 +563,7 @@ function template_user_subscription()
 		</tbody>
 		</table>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // The "choose payment" dialog.
@@ -633,7 +633,7 @@ function template_choose_payment()
 
 	echo '
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // The "thank you" bit...
@@ -656,7 +656,7 @@ function template_paid_done()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 ?>

@@ -135,7 +135,7 @@ function template_main()
 			<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 ?>

@@ -82,7 +82,7 @@ function template_generic_menu_sidebar_below()
 
 	echo '
 		</div>
-	</div><br style="clear: both;" />';
+	</div><br class="clear" />';
 }
 
 // This contains the html for the side bar of the admin center, which is used for all admin pages.

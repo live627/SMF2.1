@@ -100,7 +100,7 @@ function template_maintain_database()
 
 	echo '
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Template for the routine maintenance tasks.
@@ -189,7 +189,7 @@ function template_maintain_routine()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Template for the member maintenance tasks.
@@ -326,7 +326,7 @@ function template_maintain_members()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />
+	<br class="clear" />
 
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
@@ -495,7 +495,7 @@ function template_maintain_topics()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Simple template for showing results of our optimization...
@@ -531,7 +531,7 @@ function template_optimize()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_convert_utf8()
@@ -571,7 +571,7 @@ function template_convert_utf8()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_convert_entities()
@@ -593,7 +593,7 @@ function template_convert_entities()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 ?>

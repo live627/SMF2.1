@@ -134,7 +134,7 @@ function template_select()
 	echo '
 				</table>
 			</div>
-			<br style="clear: both;" />
+			<br class="clear" />
 			<p>
 				<input type="hidden" name="subname" value="', $context['new_subject'], '" />
 				<input type="submit" value="', $txt['split'], '" class="button_submit" />
@@ -142,7 +142,7 @@ function template_select()
 			</p>
 		</form>
 	</div>
-	<br style="clear: both;" />
+	<br class="clear" />
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var start = new Array();
 			start[0] = ', $context['not_selected']['start'], ';
@@ -248,7 +248,7 @@ function template_merge_done()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_merge()
@@ -340,7 +340,7 @@ function template_merge()
 			<strong>' . $txt['pages'] . ':</strong> ' . $context['page_index'] . '
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_merge_extra_options()
@@ -450,7 +450,7 @@ function template_merge_extra_options()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 ?>

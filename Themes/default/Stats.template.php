@@ -41,7 +41,7 @@ function template_main()
 
 	echo '
 						</dl>
-						<div style="clear: both;"></div>
+						<div class="clear"></div>
 					</div>
 					<span class="botslice"><span></span></span>
 				</div>
@@ -73,7 +73,7 @@ function template_main()
 
 	echo '
 						</dl>
-						<div style="clear: both;"></div>
+						<div class="clear"></div>
 					</div>
 				<span class="botslice"><span></span></span>
 				</div>
@@ -109,7 +109,7 @@ function template_main()
 
 	echo '
 							</dl>
-							<div style="clear: both;"></div>
+							<div class="clear"></div>
 						</div>
 					<span class="botslice"><span></span></span>
 					</div>
@@ -143,7 +143,7 @@ function template_main()
 
 	echo '
 							</dl>
-							<div style="clear: both;"></div>
+							<div class="clear"></div>
 						</div>
 						<span class="botslice"><span></span></span>
 					</div>
@@ -178,7 +178,7 @@ function template_main()
 	}
 	echo '
 							</dl>
-							<div style="clear: both;"></div>
+							<div class="clear"></div>
 						</div>
 						<span class="botslice"><span></span></span>
 					</div>
@@ -212,7 +212,7 @@ function template_main()
 
 	echo '
 						</dl>
-						<div style="clear: both;"></div>
+						<div class="clear"></div>
 					</div>
 					<span class="botslice"><span></span></span>
 				</div>
@@ -249,7 +249,7 @@ function template_main()
 
 	echo '
 						</dl>
-						<div style="clear: both;"></div>
+						<div class="clear"></div>
 					</div>
 					<span class="botslice"><span></span></span>
 				</div>
@@ -284,13 +284,13 @@ function template_main()
 
 	echo '
 						</dl>
-						<div style="clear: both;"></div>
+						<div class="clear"></div>
 					</div>
 					<span class="botslice"><span></span></span>
 				</div>
 			</div>
 		</div>
-		<div style="clear: both;"></div>
+		<div class="clear"></div>
 		<div class="flow_hidden">
 			<h3 class="catbg"><span class="left"></span>
 				<img src="', $settings['images_url'], '/stats_history.gif" class="icon" alt="" /> ', $txt['forum_history'], '

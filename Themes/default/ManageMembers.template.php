@@ -125,7 +125,7 @@ function template_search_members()
 							</dd>
 						</dl>
 					</div>
-					<br style="clear: both;" />
+					<br class="clear" />
 					<div class="msearch_details align_left">
 						<fieldset>
 							<legend>', $txt['gender'], '</legend>
@@ -141,7 +141,7 @@ function template_search_members()
 							<label for="activated-1"><input type="checkbox" name="activated[]" value="0" id="activated-1" checked="checked" class="input_check" /> ', $txt['not_activated'], '</label>
 						</fieldset>
 					</div>
-					<br style="clear: both;" />
+					<br class="clear" />
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
@@ -304,7 +304,7 @@ function template_admin_browse()
 
 	echo '
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 ?>

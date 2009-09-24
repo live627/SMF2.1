@@ -102,7 +102,7 @@ function template_edit_holiday()
 		</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 ?>

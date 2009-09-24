@@ -229,7 +229,7 @@ function template_permission_index()
 	echo '
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_by_board()
@@ -318,7 +318,7 @@ function template_by_board()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Edit permission profiles (predefined).
@@ -416,7 +416,7 @@ function template_edit_profiles()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_modify_group()
@@ -513,7 +513,7 @@ function template_modify_group()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 }
 
@@ -959,7 +959,7 @@ function template_modify_group_classic($type)
 						</table>';
 	}
 	echo '
-				<br style="clear: both;" />
+				<br class="clear" />
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';
@@ -1143,7 +1143,7 @@ function template_postmod_permissions()
 			<img src="', $settings['default_images_url'], '/admin/post_moderation_deny.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /> - ', $txt['permissions_post_moderation_disallow'], '
 		</p>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 ?>

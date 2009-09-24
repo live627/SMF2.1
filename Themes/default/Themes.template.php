@@ -153,7 +153,7 @@ function template_main()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />
+	<br class="clear" />
 
 		<script type="text/javascript"><!-- // --><![CDATA[
 			window.smfForum_scripturl = "', $scripturl, '";
@@ -264,7 +264,7 @@ function template_list_themes()
 
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_reset_list()
@@ -316,7 +316,7 @@ function template_reset_list()
 
 	echo '
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_set_options()
@@ -394,7 +394,7 @@ function template_set_options()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_set_settings()
@@ -711,7 +711,7 @@ function template_pick()
 	echo '
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Okay, that theme was installed successfully!
@@ -738,7 +738,7 @@ function template_installed()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_edit_list()
@@ -780,7 +780,7 @@ function template_edit_list()
 
 	echo '
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_copy_template()
@@ -827,7 +827,7 @@ function template_copy_template()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_edit_browse()
@@ -876,7 +876,7 @@ function template_edit_browse()
 		</tbody>
 		</table>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Wanna edit the stylesheet?
@@ -1035,7 +1035,7 @@ function template_edit_style()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // This edits the template...
@@ -1126,7 +1126,7 @@ function template_edit_file()
 
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 ?>

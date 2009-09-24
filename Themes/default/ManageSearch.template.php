@@ -78,7 +78,7 @@ function template_modify_weights()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />
+	<br class="clear" />
 	<script type="text/javascript"><!-- // --><![CDATA[
 		function calculateNewValues()
 		{
@@ -214,7 +214,7 @@ function template_select_search_method()
 						<input type="checkbox" name="search_force_index" id="search_force_index_check" value="1"', empty($modSettings['search_force_index']) ? '' : ' checked="checked"', ' class="input_check" /><label for="search_force_index_check">', $txt['search_force_index'], '</label><br />
 						<input type="checkbox" name="search_match_words" id="search_match_words_check" value="1"', empty($modSettings['search_match_words']) ? '' : ' checked="checked"', ' class="input_check" /><label for="search_match_words_check">', $txt['search_match_words'], '</label>
 					</fieldset>
-					<br style="clear: both;" />
+					<br class="clear" />
 					<input type="submit" name="save" value="', $txt['search_method_save'], '" class="button_submit" />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</div>
@@ -222,7 +222,7 @@ function template_select_search_method()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_create_index()
@@ -258,7 +258,7 @@ function template_create_index()
 
 	</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_create_index_progress()
@@ -289,7 +289,7 @@ function template_create_index_progress()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />
+	<br class="clear" />
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var countdown = 10;
 		doAutoSubmit();
@@ -329,7 +329,7 @@ function template_create_index_done()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Add or edit a search engine spider.
@@ -412,7 +412,7 @@ function template_show_spider_logs()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 ?>

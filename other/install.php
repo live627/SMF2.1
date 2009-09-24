@@ -2063,7 +2063,7 @@ function template_install_above()
 				<div id="overall_text" style="padding-top: 8pt;  z-index: 2; color: black; margin-left: -4em; position: absolute; text-align: center; font-weight: bold;">', $incontext['overall_percent'], '%</div>
 				<div id="overall_progress" style="width: ', $incontext['overall_percent'], '%; height: 25pt; z-index: 1; background-color: lime;">&nbsp;</div>
 			</div>
-			<div id="main_screen" style="clear: both;">
+			<div id="main_screen" class="clear">
 				<h2>', $incontext['page_title'], '</h2>
 				<div class="panel">
 					<div style="max-height: 560px; overflow: auto;">';

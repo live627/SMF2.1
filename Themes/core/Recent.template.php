@@ -51,7 +51,7 @@ function template_main()
 		}
 
 		echo '
-			<br style="clear: both;" />
+			<br class="clear" />
 		</div>';
 	}
 

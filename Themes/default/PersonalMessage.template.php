@@ -33,7 +33,7 @@ function template_pm_below()
 
 	echo '
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_folder()
@@ -454,7 +454,7 @@ function template_folder()
 
 		echo '
 					</div>
-				<br style="clear: both;" />
+				<br class="clear" />
 			</div>
 		<span class="botslice"><span></span></span>
 	</div>

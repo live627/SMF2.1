@@ -93,7 +93,7 @@ function template_main()
 	}
 	echo '
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Template for editing/adding a category on the forum.
@@ -169,7 +169,7 @@ function template_modify_category()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // A template to confirm if a user wishes to delete a category - and whether they want to save the boards.
@@ -228,7 +228,7 @@ function template_confirm_category_delete()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Below is the template for adding/editing an board on the forum.
@@ -486,7 +486,7 @@ function template_modify_board()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />
+	<br class="clear" />
 <script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
 <script type="text/javascript"><!-- // --><![CDATA[
 	var oModeratorSuggest = new smc_AutoSuggest({
@@ -605,7 +605,7 @@ function template_confirm_board_delete()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 ?>

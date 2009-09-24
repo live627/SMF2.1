@@ -128,7 +128,7 @@ function template_admin()
 				<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 	// The below functions include all the scripts needed from the simplemachines.org site. The language and format are passed for internationalization.
 	if (empty($modSettings['disable_smf_js']))
@@ -221,7 +221,7 @@ function template_manage_copyright()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Show some support information and credits to those who helped make this.
@@ -313,7 +313,7 @@ function template_credits()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 	// This makes all the support information available to the support script...
 	echo '
@@ -573,7 +573,7 @@ function template_view_versions()
 
 	echo '
 		</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 	/* Below is the hefty javascript for this. Upon opening the page it checks the current file versions with ones
 	   held at simplemachines.org and works out if they are up to date.  If they aren't it colors that files number
@@ -720,7 +720,7 @@ function template_not_done()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />
+	<br class="clear" />
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var countdown = ', $context['continue_countdown'], ';
 		doAutoSubmit();
@@ -978,7 +978,7 @@ function template_show_settings()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 	if (!empty($context['settings_post_javascript']))
 		echo '
@@ -1250,7 +1250,7 @@ function template_edit_profile_field()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 	// Get the java bits right!
 	echo '
@@ -1329,7 +1329,7 @@ function template_admin_search_results()
 		</div>
 		<span class="botslice"><span></span></span>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Turn on and off certain key features.
@@ -1405,7 +1405,7 @@ function template_core_features()
 			</p>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 	// Turn on the pretty javascript if we can!
 	echo '
@@ -1491,7 +1491,7 @@ function template_add_language()
 	echo '
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Download a new language file?
@@ -1515,7 +1515,7 @@ function template_download_language()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 		return;
 	}
 
@@ -1665,7 +1665,7 @@ function template_download_language()
 			<input type="submit" name="do_install" value="', $txt['add_language_smf_install'], '" class="button_submit" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 	// The javascript for expand and collapse of sections.
 	echo '
@@ -1870,7 +1870,7 @@ function template_modify_language_entries()
 	echo '
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // This little beauty shows questions and answer from the captcha type feature.
@@ -2044,7 +2044,7 @@ function template_repair_boards()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 	if (!empty($context['redirect_to_recount']))
 	{

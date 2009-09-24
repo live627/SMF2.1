@@ -583,7 +583,7 @@ function template_main()
 <div class="clearfix marginbottom" id="postbuttons_lower">
 	<div class="nav floatright">', template_button_strip($normal_buttons, 'top'), '</div>
 	<div class="middletext floatleft">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#top"><strong>' . $txt['go_up'] . '</strong></a>' : '', '</div>
-	<div style="clear: both;">', $context['previous_next'], '</div>
+	<div class="clear">', $context['previous_next'], '</div>
 </div>';
 
 	// Show the lower breadcrumbs.
@@ -663,7 +663,7 @@ function template_main()
 				<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 			</form>
 		</div>
-		<div style="clear: both;"></div>
+		<div class="clear"></div>
 	</div>
 </div>';
 	}

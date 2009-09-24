@@ -31,14 +31,14 @@ function template_moderation_center()
 
 		if (!$alternate)
 			echo '
-		<br style="clear: both;" />';
+		<br class="clear" />';
 
 		$alternate = !$alternate;
 	}
 
 	echo '
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_latest_news()
@@ -231,7 +231,7 @@ function template_notes()
 				<div class="floatright">
 					<input type="submit" name="makenote" value="', $txt['mc_add_note'], '" class="button_submit" />
 				</div>
-				<br style="clear: both;" />
+				<br class="clear" />
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
@@ -383,7 +383,7 @@ function template_unapproved_posts()
 
 			echo '
 					</span>
-					<br style="clear: both;" />
+					<br class="clear" />
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>';
@@ -403,7 +403,7 @@ function template_unapproved_posts()
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // List all attachments awaiting approval.
@@ -491,7 +491,7 @@ function template_unapproved_attachments()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_viewmodreport()
@@ -623,7 +623,7 @@ function template_viewmodreport()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Callback function for showing a watched users post in the table.
@@ -724,7 +724,7 @@ function template_moderation_settings()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Show a notice sent to a user.
@@ -817,7 +817,7 @@ function template_warn_template()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 ?>

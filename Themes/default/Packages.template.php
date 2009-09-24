@@ -295,7 +295,7 @@ function template_view_package()
 			<input type="hidden" name="seqnum" value="' . $context['form_sequence_number'] . '" />' : '', '
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 	// Toggle options.
 	echo '
@@ -440,7 +440,7 @@ function template_extract_package()
 
 	echo '
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_list()
@@ -472,7 +472,7 @@ function template_list()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_examine()
@@ -496,7 +496,7 @@ function template_examine()
 		<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_view_installed()
@@ -552,7 +552,7 @@ function template_view_installed()
 
 	echo '
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_browse()
@@ -895,7 +895,7 @@ function template_browse()
 			<input type="hidden" name="sa" value="browse" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_servers()
@@ -1046,7 +1046,7 @@ function template_servers()
 				<span class="botslice"><span></span></span>
 			</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_package_confirm()
@@ -1067,7 +1067,7 @@ function template_package_confirm()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_package_list()
@@ -1195,7 +1195,7 @@ function template_package_list()
 			<img src="', $settings['images_url'], '/icons/package_old.gif" alt="" align="middle" style="margin-left: 2ex;" /> ', $txt['package_installed_old'], '
 		</div>
 	</div>
-	<br style="clear: both;" />
+	<br class="clear" />
 
 		';
 		// Now go through and turn off all the sections.
@@ -1270,13 +1270,13 @@ function template_downloaded()
 								<span class="package_server align_right">' . $context['package']['install']['link'] . '</span>
 							</li>
 					</ul>
-				<br style="clear: both;" /><br />
+				<br class="clear" /><br />
 				<p><a href="' . $scripturl . '?action=admin;area=packages;get' . (isset($context['package_server']) ? ';sa=browse;server=' . $context['package_server'] : '') . '">[ ' . $txt['back'] . ' ]</a></p>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_install_options()
@@ -1324,7 +1324,7 @@ function template_install_options()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_control_chmod()
@@ -2117,7 +2117,7 @@ function template_action_permissions()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 	// Just the countdown stuff
 	echo '

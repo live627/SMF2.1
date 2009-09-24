@@ -61,7 +61,7 @@ function template_ban_edit()
 						<input type="checkbox" name="cannot_register" id="cannot_register" value="1"', $context['ban']['cannot']['register'] ? ' checked="checked"' : '', ' class="ban_restriction input_radio" /> <label for="cannot_register">', $txt['ban_cannot_register'], '</label><br />
 						<input type="checkbox" name="cannot_login" id="cannot_login" value="1"', $context['ban']['cannot']['login'] ? ' checked="checked"' : '', ' class="ban_restriction input_radio" /> <label for="cannot_login">', $txt['ban_cannot_login'], '</label><br />
 					</fieldset>
-					<br style="clear: both;" />';
+					<br class="clear" />';
 
 	if (!empty($context['ban_suggestions']))
 	{
@@ -223,7 +223,7 @@ function template_ban_edit()
 
 	echo '
 	</div>
-	<br style="clear: both;" />
+	<br class="clear" />
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var fUpdateStatus = function ()
@@ -319,7 +319,7 @@ function template_ban_edit_trigger()
 			<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 		</form>
 	</div>
-	<br style="clear: both;" />
+	<br class="clear" />
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var oAddMemberSuggest = new smc_AutoSuggest({

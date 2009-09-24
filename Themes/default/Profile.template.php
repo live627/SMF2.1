@@ -301,7 +301,7 @@ function template_summary()
 		</div>
 		<span class="botslice"><span></span></span>
 	</div></div>
-<div style="clear: both;"></div>
+<div class="clear"></div>
 </div>';
 }
 
@@ -1031,7 +1031,7 @@ function template_statPanel()
 
 	echo '
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Template for editing profile options.

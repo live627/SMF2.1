@@ -48,7 +48,7 @@ function template_main()
 			template_button_strip($button_set, 'right');
 
 		echo '
-			<br style="clear: both;" />
+			<br class="clear" />
 		</div>';
 	}
 

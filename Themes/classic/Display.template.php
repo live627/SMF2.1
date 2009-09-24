@@ -506,7 +506,7 @@ function template_main()
 							</tr><tr>
 								<td align="left" valign="bottom" class="smalltext" id="modified_', $message['id'], '">';
 
-		// Show "« Last Edit: Time by Person »" if this post was edited.
+		// Show "ï¿½ Last Edit: Time by Person ï¿½" if this post was edited.
 		if ($settings['show_modify'] && !empty($message['modified']['name']))
 			echo '
 									&#171; <em>', $txt['last_edit'], ': ', $message['modified']['time'], ' ', $txt['by'], ' ', $message['modified']['name'], '</em> &#187;';
@@ -632,7 +632,7 @@ function template_main()
 	{
 		echo '
 <a id="quickreply"></a>
-<table border="0" cellspacing="1" cellpadding="3" class="bordercolor" width="100%" style="clear: both;">
+<table border="0" cellspacing="1" cellpadding="3" class="clear bordercolor" width="100%">
 	<tr>
 		<td colspan="2" class="catbg"><a href="javascript:oQuickReply.swap();"><img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" border="0" id="quickReplyExpand" /></a> <a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a></td>
 	</tr>

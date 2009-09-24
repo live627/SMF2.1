@@ -139,7 +139,7 @@ function template_main()
 		// If Quick Moderation is enabled start the form.
 		if (!empty($context['can_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
 			echo '
-	<form action="', $scripturl, '?action=quickmod;board=', $context['current_board'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" style="clear: both;" name="quickModForm" id="quickModForm">';
+	<form action="', $scripturl, '?action=quickmod;board=', $context['current_board'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" class="clear" name="quickModForm" id="quickModForm">';
 
 		echo '
 			<div class="tborder topic_table" id="messageindex">
@@ -398,7 +398,7 @@ function template_main()
 						sGoButtonLabel: "', $txt['quick_mod_go'], '"
 					});
 			// ]]></script>
-			<br style="clear: both;" />
+			<br class="clear" />
 		</div>
 	</div>';
 

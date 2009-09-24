@@ -27,7 +27,7 @@ function template_browse()
 
 	echo'
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 ?>

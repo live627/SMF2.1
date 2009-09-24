@@ -66,7 +66,7 @@ function template_edit_news()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_email_members()
@@ -190,7 +190,7 @@ function template_email_members()
 			</p>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 
 	// Make the javascript stuff visible.
 	echo '
@@ -273,7 +273,7 @@ function template_email_members_compose()
 	echo '
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 function template_email_members_send()
@@ -314,7 +314,7 @@ function template_email_members_send()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />
+	<br class="clear" />
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var countdown = 2;
 		doAutoSubmit();

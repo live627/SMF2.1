@@ -23,7 +23,7 @@ function template_editsets()
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br style="clear: both;" />
+	<br class="clear" />
 	<script type="text/javascript"><!-- // --><![CDATA[
 		window.smfForum_scripturl = "', $scripturl, '";
 		window.smfForum_sessionid = "', $context['session_id'], '";
@@ -147,7 +147,7 @@ function template_modifyset()
 			<input type="hidden" name="set" value="', $context['current_set']['id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Editing an individual smiley
@@ -235,7 +235,7 @@ function template_modifysmiley()
 			<input type="hidden" name="smiley" value="', $context['current_smiley']['id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />
+	<br class="clear" />
 	<script type="text/javascript"><!-- // --><![CDATA[
 		function updatePreview()
 		{
@@ -402,7 +402,7 @@ function template_addsmiley()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear: both;" />
+	<br class="clear" />
 	<script type="text/javascript"><!-- // --><![CDATA[
 
 		function updatePreview()
@@ -465,7 +465,7 @@ function template_setorder()
 	}
 	echo '
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Editing Message Icons
@@ -563,7 +563,7 @@ function template_editicon()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both;" />';
+	<br class="clear" />';
 }
 
 ?>
