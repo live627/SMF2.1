@@ -998,7 +998,7 @@ span.lowerframe span
 }
 .dropmenu
 {
-	padding: 0;
+	padding: 0 0.5em;
 }
 .dropmenu a
 {
