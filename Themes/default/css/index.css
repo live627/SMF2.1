@@ -248,7 +248,11 @@ ul.reset, ul.reset li
 ------------------------------------------------------- */
 
 /* A quote, perhaps from another post. */
-.codeheader, .quoteheader a
+.quoteheader
+{
+	color: #7a899c;
+}
+.codeheader, .quoteheader
 {
 	font-size: 0.9em;
 	font-weight: bold;
@@ -1193,6 +1197,10 @@ span.lowerframe span
 	margin: 0 12px 0 0;
 }
 /* a smaller quick-button list */
+ul.quickbuttons
+{
+	margin-top: 0.9em;
+}
 ul.quickbuttons li
 {
 	display: inline;
@@ -1913,6 +1921,10 @@ ul.quickbuttons li.inline_mod_check
 	padding: 1em 1em 0 0;
 	margin: 0 1em 0 0;
 	border-top: solid 1px #99a;
+}
+.inner img
+{
+	vertical-align: bottom;
 }
 #forumposts .modified
 {
