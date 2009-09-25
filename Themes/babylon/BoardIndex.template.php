@@ -219,8 +219,8 @@ function template_main()
 <div class="tborder" style="padding: 3px;"><table border="0" width="100%" cellspacing="0" cellpadding="5">
 	<tr class="titlebg">
 		<td align="', !$context['right_to_left'] ? 'left' : 'right', '" class="smalltext">
-			<img src="' . $settings['images_url'] . '/new_some.gif" alt="" border="0" align="middle" /> ', $txt['new_posts'], '
-			<img src="' . $settings['images_url'] . '/new_none.gif" alt="" border="0" align="middle" style="margin-left: 4ex;" /> ', $txt['old_posts'], '
+			<img src="', $settings['images_url'], '/new_some.gif" alt="" border="0" align="middle" /> ', $txt['new_posts'], '
+			<img src="', $settings['images_url'], '/new_none.gif" alt="" border="0" align="middle" style="margin-left: 4ex;" /> ', $txt['old_posts'], '
 		</td>
 		<td align="', !$context['right_to_left'] ? 'right' : 'left', '" class="smalltext">';
 		// Show the mark all as read button?

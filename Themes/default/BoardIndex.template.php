@@ -236,21 +236,21 @@ function template_main()
 			template_button_strip($mark_read_button, 'right');
 
 		echo '
-		<p class="align_left">
-			<img src="' . $settings['images_url'] . '/' .$context['theme_variant'], '/new_some.png" alt=""  /> ', $txt['new_posts'], '
-			<img src="' . $settings['images_url'] . '/' .$context['theme_variant'], '/new_none.png" alt="" style="margin-left: 4ex;" /> ', $txt['old_posts'], '
-			<img src="' . $settings['images_url'] . '/' .$context['theme_variant'], '/new_redirect.png" alt="" style="margin-left: 4ex;" /> ', $txt['redirects'], '
-		</p>
+		<ul class="reset">
+			<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant'], '/new_some.png" alt="" /> ', $txt['new_posts'], '</li>
+			<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant'], '/new_none.png" alt="" /> ', $txt['old_posts'], '</li>
+			<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant'], '/new_redirect.png" alt="" /> ', $txt['redirect_board'], '</li>
+		</ul>
 	</div>';
 	}
 	else
 	{
 		echo '
 	<div id="posting_icons">
-		<p>
-			<img src="' . $settings['images_url'] . '/new_none.png" alt="" style="margin-left: 4ex;" /> ', $txt['old_posts'], '
-			<img src="' . $settings['images_url'] . '/new_redirect.png" alt="" style="margin-left: 4ex;" /> ', $txt['redirects'], '
-		</p>
+		<ul class="reset">
+			<li class="align_left"><img src="', $settings['images_url'], '/new_none.png" alt="" /> ', $txt['old_posts'], '</li>
+			<li class="align_left"><img src="', $settings['images_url'], '/new_redirect.png" alt="" /> ', $txt['redirect_board'], '</li>
+		</ul>
 	</div>';
 	}
 
@@ -263,7 +263,7 @@ function template_info_center()
 
 	// Here's where the "Info Center" starts...
 	echo '
-	<span class="upperframe"><span></span></span>
+	<span class="clear upperframe"><span></span></span>
 	<div class="roundframe"><div class="innerframe">
 		<h3 class="catbg"><span class="left"></span>
 			<img class="icon" id="upshrink_ic" src="', $settings['images_url'], '/collapse.gif" alt="*" title="', $txt['upshrink_description'], '" style="display: none;" />
@@ -440,7 +440,8 @@ function template_info_center()
 
 	echo '
 		</div>
-	</div></div>';
+	</div></div>
+	<span class="lowerframe"><span></span></span>';
 
 	// Info center collapse object.
 	echo '
@@ -472,8 +473,5 @@ function template_info_center()
 			}
 		});
 	// ]]></script>';
-
-	echo '
-	<span class="lowerframe"><span></span></span>';
 }
 ?>

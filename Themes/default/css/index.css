@@ -1490,23 +1490,23 @@ p.moderators
 /* the posting icons */
 #posting_icons
 {
-	padding: 0 1em 0.5em 2em;
-	margin: 0;
+	padding: 0 1em 0.5em 1em;
+	margin: 0 0 1em 0;
 	line-height: 1em;
-	margin-bottom: 1em;
+}
+#posting_icons ul
+{
+	font-size: 0.8em;
 }
 #posting_icons img
 {
 	vertical-align: middle;
+	margin: 0 0 0 4ex;
 }
 #postbuttons_upper ul li a span
 {
 	line-height: 19px;
 	padding: 0 0 0 6px;
-}
-#posting_icons p
-{
-	font-size: 0.8em;
 }
 .nextlinks
 {
@@ -1528,7 +1528,7 @@ p.moderators
 	margin: 1em 0;
 }
 
-/* Styles for the info centre on the  board index.
+/* Styles for the info centre on the board index.
 ---------------------------------------------------- */
 
 #upshrinkHeaderIC

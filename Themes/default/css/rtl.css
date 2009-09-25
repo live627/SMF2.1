@@ -209,9 +209,12 @@ div#upper_section div.user ul
 /* the posting icons */
 #posting_icons
 {
-	padding: 0 2em 0.5em 1em;
+	padding: 0 1em 0.5em 1em;
 }
-
+#posting_icons img
+{
+	margin: 0 4ex 0 0;
+}
 #posting_icons .buttonlist
 {
 	float: left;
@@ -254,6 +257,7 @@ table.table_list a.collapse
 {
 	margin: 10px 1em 0 5px;
 }
+
 /* Styles for the message (topic) index.
 ---------------------------------------------------- */
 .lastpost img

@@ -204,7 +204,7 @@ function template_main()
 		echo '
 	<tr class="titlebg">
 		<td colspan="2" align="left">
-			<img src="' . $settings['lang_images_url'] . '/new_some.gif" alt="' . $txt['new_posts'] . '" border="0" />&nbsp;&nbsp;<img src="' . $settings['lang_images_url'] . '/new_none.gif" alt="' . $txt['old_posts'] . '" border="0" />
+			<img src="', $settings['lang_images_url'], '/new_some.gif" alt="', $txt['new_posts'], '" border="0" />&nbsp;&nbsp;<img src="' . $settings['lang_images_url'] . '/new_none.gif" alt="', $txt['old_posts'], '" border="0" />
 		</td>
 		<td colspan="3" align="right" class="smalltext">';
 		// Show the mark all as read button?
