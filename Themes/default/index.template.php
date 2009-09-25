@@ -97,7 +97,7 @@ function template_html_above()
 	// Show all the relative links, such as help, search, contents, and the like.
 	echo '
 	<link rel="help" href="', $scripturl, '?action=help" />
-	<link rel="search" href="' . $scripturl . '?action=search" />
+	<link rel="search" href="', $scripturl, '?action=search" />
 	<link rel="contents" href="', $scripturl, '" />';
 
 	// If RSS feeds are enabled, advertise the presence of one.
@@ -295,7 +295,7 @@ function template_body_above()
 
 		// Show the menu here, according to the menu sub template.
 		template_menu();
-	
+
 	echo '
 			<br class="clear" />';
 
@@ -325,7 +325,7 @@ function template_body_below()
 		<ul class="reset">
 			<li class="copyright">', theme_copyright(), '</li>
 			<li><a id="button_xhtml" href="http://validator.w3.org/check/referer" target="_blank" class="new_win" title="', $txt['valid_xhtml'], '"><span>', $txt['xhtml'], '</span></a></li>
-			', !empty($modSettings['xmlnews_enable']) && (!empty($modSettings['allow_guestAccess']) || $context['user']['is_logged']) ? '<li><a id="button_rss" href="' . $scripturl . '?action=.xml" class="new_win"><span>' . $txt['rss'] . '</span></a></li>' : '', '
+			', !empty($modSettings['xmlnews_enable']) && (!empty($modSettings['allow_guestAccess']) || $context['user']['is_logged']) ? '<li><a id="button_rss" href="' . $scripturl . '?action=.xml;type=rss" class="new_win"><span>' . $txt['rss'] . '</span></a></li>' : '', '
 			<li class="last"><a id="button_wap2" href="', $scripturl , '?wap2" class="new_win"><span>', $txt['wap2'], '</span></a></li>
 		</ul>';
 
