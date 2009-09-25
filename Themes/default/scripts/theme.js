@@ -2,7 +2,7 @@
 if ((is_ie && !is_ie4) || is_webkit || is_ff)
 	addLoadEvent(smf_codeBoxFix);
 
-// The purpose of this code is to fix the height of overflow: auto div blocks, because IE can't figure it out for itself.
+// The purpose of this code is to fix the height of overflow: auto blocks, because some browsers can't figure it out for themselves.
 function smf_codeBoxFix()
 {
 	var codeFix = document.getElementsByTagName('code');
@@ -17,27 +17,9 @@ function smf_codeBoxFix()
 		else if ('currentStyle' in codeFix[i] && codeFix[i].currentStyle.overflow == 'auto' && (codeFix[i].currentStyle.height == '' || codeFix[i].currentStyle.height == 'auto') && (codeFix[i].scrollWidth > codeFix[i].clientWidth || codeFix[i].clientWidth == 0) && (codeFix[i].offsetHeight != 0))
 			codeFix[i].style.height = (codeFix[i].offsetHeight + 24) + 'px';
 	}
-
-	// !!! Is this still needed?
-	if (!is_ff)
-	{
-		var divFix = document.getElementsByTagName('div');
-		for (var i = divFix.length - 1; i > 0; i--)
-		{
-			if (is_webkit)
-			{
-				if ((divFix[i].className == 'post' || divFix[i].className == 'signature') && divFix[i].offsetHeight < 20)
-					divFix[i].style.height = (divFix[i].offsetHeight + 20) + 'px';
-			}
-			else
-			{
-				if (divFix[i].currentStyle.overflow == 'auto' && (divFix[i].currentStyle.height == '' || divFix[i].currentStyle.height == 'auto') && (divFix[i].scrollWidth > divFix[i].clientWidth || divFix[i].clientWidth == 0) && (divFix[i].offsetHeight != 0 || divFix[i].className == 'code'))
-					divFix[i].style.height = (divFix[i].offsetHeight + 24) + 'px';
-			}
-		}
-	}
 }
 
+// Adds a button to a certain button strip.
 function smf_addButton(sButtonStripId, bUseImage, oOptions)
 {
 	var oButtonStrip = document.getElementById(sButtonStripId);
@@ -58,66 +40,37 @@ function smf_addButton(sButtonStripId, bUseImage, oOptions)
 	oButtonStripList.appendChild(oNewButton);
 }
 
-
-var main_menu = function()
+// Adds hover events to list items. Used for a versions of IE that don't support this by default.
+var smf_addListItemHoverEvents = function()
 {
-	var cssRule;
-	var newSelector;
-	for (var i = 0; i < document.styleSheets.length; i++)
-		for (var x = 0; x < document.styleSheets[i].rules.length ; x++)
+	var cssRule, newSelector;
+
+	// Add a rule for the list item hover event to every stylesheet.
+	for (var iStyleSheet = 0; iStyleSheet <  document.styleSheets.length; iStyleSheet ++)
+		for (var iRule = 0; iRule < document.styleSheets[iStyleSheet].rules.length; iRule ++)
 		{
-			cssRule = document.styleSheets[i].rules[x];
-			if (cssRule.selectorText.indexOf('LI:hover') != -1)
+			oCssRule = document.styleSheets[iStyleSheet].rules[iRule];
+			if (oCssRule.selectorText.indexOf('LI:hover') != -1)
 			{
-				newSelector = cssRule.selectorText.replace(/LI:hover/gi, 'LI.iehover');
-				document.styleSheets[i].addRule(newSelector , cssRule.style.cssText);
+				sNewSelector = oCssRule.selectorText.replace(/LI:hover/gi, 'LI.iehover');
+				document.styleSheets[iStyleSheet].addRule(sNewSelector, oCssRule.style.cssText);
 			}
 		}
-	var getElm = document.getElementById('main_menu').getElementsByTagName('LI');
-	for (var i = 0; i < getElm.length; i++)
+
+	// Now add handling for these hover events.
+	var oListItems = document.getElementsByTagName('LI');
+	for (oListItem in oListItems)
 	{
-		getElm[i].onmouseover = function() {
+		oListItems[oListItem].onmouseover = function() {
 			this.className += ' iehover';
-		}
-		getElm[i].onmouseout = function () {
-			this.className = this.className.replace(/ iehover\b/, '');
-		}
-	}
-}
-var adm_menu = function()
-{
-	var cssRule;
-	var newSelector;
-	for (var i = 0; i < document.styleSheets.length; i++)
-	for (var x = 0; x < document.styleSheets[i].rules.length ; x++)
-	{
-		cssRule = document.styleSheets[i].rules[x];
-		if (cssRule.selectorText.indexOf('LI:hover') != -1)
-		{
-			newSelector = cssRule.selectorText.replace(/LI:hover/gi, 'LI.iehover');
-			document.styleSheets[i].addRule(newSelector , cssRule.style.cssText);
-		}
-	}
-	//check the parent element fist!
-	var possibleAdminMenu = document.getElementById('admin_menu');
-	if (possibleAdminMenu)
-	{
-		var getElm = document.getElementById('admin_menu').getElementsByTagName('LI');
-		for (var i = 0; i < getElm.length; i++)
-		{
-			getElm[i].onmouseover = function() {
-				this.className+=' iehover';
-			};
+		};
 
-			getElm[i].onmouseout = function() {
-				this.className=this.className.replace(new RegExp(' iehover\\b'), '');
-			};
-		}
+		oListItems[oListItem].onmouseout = function() {
+			this.className = this.className.replace(new RegExp(' iehover\\b'), '');
+		};
 	}
 }
 
-if ('attachEvent' in window && is_ie6)
-{
-	window.attachEvent('onload', main_menu);
-	window.attachEvent('onload', adm_menu);
-}
+// Add hover events to list items if the browser requires it.
+if (is_ie6down && 'attachEvent' in window)
+	window.attachEvent('onload', smf_addListItemHoverEvents);

@@ -3960,12 +3960,6 @@ function setupMenuContext()
 			),
 		);
 
-		/* deprecated and no longer needed, reverse is done via CSS
-		// Right to left menu should be in reverse order.
-		if ($context['right_to_left'])
-			$buttons = array_reverse($buttons, true);
-		 */
-		$load_menu_js = false;
 		// Now we put the buttons in the context so the theme can use them.
 		$menu_buttons = array();
 		foreach ($buttons as $act => $button)
@@ -3989,19 +3983,14 @@ function setupMenuContext()
 							unset($button['sub_buttons'][$key]);
 					}
 
-				// If this still has some sub buttons then we need to tell the template to load the menu javascript file.
-				if (!empty($button['sub_buttons']))
-					$load_menu_js = true;
-
 				$menu_buttons[$act] = $button;
 			}
-		$buttonData = array($menu_buttons, $load_menu_js);
 
 		if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
-			cache_put_data('menu_buttons-' . implode('_', $user_info['groups']) . '-' . $user_info['language'], $buttonData, $cacheTime);
+			cache_put_data('menu_buttons-' . implode('_', $user_info['groups']) . '-' . $user_info['language'], $menu_buttons, $cacheTime);
 	}
 
-	list($context['menu_buttons'], $context['load_menu_js']) = $buttonData;
+	$context['menu_buttons'] = $menu_buttons;
 
 	// Logging out requires the session id in the url.
 	if (isset($context['menu_buttons']['logout']))
@@ -4023,9 +4012,6 @@ function setupMenuContext()
 		$current_action = 'login';
 
 	$context['menu_buttons'][$current_action]['active_button'] = true;
-
-	// Only load the menu javascript stuff when we have to.
-	$context['load_menu_js'] = false;
 
 	if (!$user_info['is_guest'] && $context['user']['unread_messages'] > 0 && isset($context['menu_buttons']['pm']))
 	{

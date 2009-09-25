@@ -41,6 +41,7 @@ function template_generic_menu_sidebar_above()
 
 			echo '
 					<li>';
+
 			// Is this the current area, or just some area?
 			if ($i == $menu_context['current_area'])
 			{
@@ -53,6 +54,7 @@ function template_generic_menu_sidebar_above()
 			else
 				echo '
 						<a href="', (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i), $menu_context['extra_parameters'], '">', $area['label'], '</a>';
+
 			echo '
 					</li>';
 		}
@@ -93,9 +95,6 @@ function template_generic_menu_dropdown_above()
 	// Which menu are we rendering?
 	$context['cur_menu_id'] = isset($context['cur_menu_id']) ? $context['cur_menu_id'] + 1 : 1;
 	$menu_context = &$context['menu_data_' . $context['cur_menu_id']];
-
-	echo '
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/menu.js"></script>';
 
 	if (!empty($menu_context['can_toggle_drop_down']))
 		echo '
@@ -153,15 +152,11 @@ function template_generic_menu_dropdown_above()
 					if (!empty($sub['disabled']))
 						continue;
 
-					echo '
-							<li>';
-
 					$url = isset($sub['url']) ? $sub['url'] : (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i) . ';sa=' . $sa;
 
 					echo '
-								<a ', !empty($sub['selected']) ? 'class="active" ' : '', 'href="', $url, $menu_context['extra_parameters'], '"><span>' , $sub['label'], '</span></a>';
-
-					echo '
+							<li>
+								<a ', !empty($sub['selected']) ? 'class="active" ' : '', 'href="', $url, $menu_context['extra_parameters'], '"><span>' , $sub['label'], '</span></a>
 							</li>';
 				}
 

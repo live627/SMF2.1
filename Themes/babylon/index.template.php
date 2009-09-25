@@ -135,6 +135,8 @@ function template_html_above()
 				window.open(smf_prepareScriptUrl(smf_scripturl) + "action=pm");
 		}
 		addLoadEvent(fPmPopup);' : '', '
+		var ajax_notification_text = "', $txt['ajax_in_progress'], '";
+		var ajax_notification_cancel_text = "', $txt['modify_cancel'], '";
 	// ]]></script>';
 
 	// Output any remaining HTML headers. (from mods, maybe?)
