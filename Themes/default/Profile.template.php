@@ -34,7 +34,7 @@ function template_summary()
 
 	// Display the basic information about the user
 	echo '
-<div id="profileview">
+<div id="profileview" class="flow_auto">
 	<h3 class="catbg"><span class="left"></span>
 		<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
 		', $txt['summary'], '
