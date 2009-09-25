@@ -109,6 +109,7 @@ ul.admin_menu li ul li a.subsection
 div#menu_toggle
 {
 	float: left;
+	margin: 0 0 0 10px;
 }
 /* Styles for the standard button lists.
 ------------------------------------------------------- */
