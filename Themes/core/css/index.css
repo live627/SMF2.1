@@ -141,6 +141,10 @@ em
 {
 	overflow: hidden;
 }
+.clear
+{
+	clear: both;
+}
 
 /* Default font sizes: small (8pt), normal (10pt), and large (14pt). */
 .smalltext, tr.smalltext th
