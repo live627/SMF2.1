@@ -257,6 +257,20 @@ function template_credits()
 		</div>
 	';
 
+	// Point the admin to common support resources.
+	echo '
+		<h3 class="catbg"><span class="left"></span>
+			', $txt['support_resources'], '
+		</h3>
+		<div class="windowbg2">
+			<span class="topslice"><span></span></span>
+				<div class="content">
+					<p>', $txt['support_resources_p1'], '</p>
+					<p>', $txt['support_resources_p2'], '</p>
+				</div>
+			<span class="botslice"><span></span></span>
+		</div>';
+
 	// Display latest support questions from simplemachines.org.
 	echo '
 		<h3 class="catbg"><span class="left"></span>
