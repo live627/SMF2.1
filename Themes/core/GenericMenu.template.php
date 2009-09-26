@@ -185,7 +185,7 @@ function template_generic_menu_dropdown_above()
 
 	// This is the main table - we need it so we can keep the content to the right of it.
 	echo '
-		<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 0; clear: both;"><tr>
+		<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 0;" class="clear"><tr>
 			<td valign="top">';
 
 	// It's possible that some pages have their own tabs they wanna force...

@@ -217,7 +217,7 @@ function template_search_members()
 			</p>
 		</form>
 	</div>
-	<br style="clear: both" />';
+	<br class="clear" />';
 }
 
 function template_admin_browse()

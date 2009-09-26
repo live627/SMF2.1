@@ -214,7 +214,7 @@ function template_ban_edit()
 				<div class="align_right">
 					<input type="submit" name="remove_selection" value="', $txt['ban_remove_selected_triggers'], '" class="button_submit" />
 				</div>
-				<br class="clear: both;" />
+				<br class="clear" />
 				<input type="hidden" name="bg" value="', $context['ban']['id'], '" />
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			</form>';

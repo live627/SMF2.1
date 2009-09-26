@@ -377,7 +377,7 @@ function template_spider_edit()
 			</div>
 		</form>
 	</div>
-	<br style="clear: both" />';
+	<br class="clear" />';
 }
 
 // Show... spider... logs...

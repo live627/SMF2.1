@@ -688,7 +688,7 @@ function template_edit_censored()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br style="clear:both;" />';
+	<br class="clear" />';
 }
 
 // Maintenance is a lovely thing, isn't it?

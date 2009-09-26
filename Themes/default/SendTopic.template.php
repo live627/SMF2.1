@@ -87,7 +87,7 @@ function template_main()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
-	<br class="clear: both;" />';
+	<br class="clear" />';
 }
 
 // Send an email to a user!
