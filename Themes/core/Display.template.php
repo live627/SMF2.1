@@ -429,7 +429,7 @@ function template_main()
 		// Show the post itself, finally!
 		echo '
 					<div class="post">
-						<hr class="hrcolor" width="100%" size="1"/>';
+						<hr class="hrcolor" width="100%" size="1" />';
 
 		if (!$message['approved'] && $message['member']['id'] != 0 && $message['member']['id'] == $context['user']['id'])
 			echo '
