@@ -1547,6 +1547,10 @@ function EditMessageIcons()
 						$context['icons'][$id]['true_order']--;
 			}
 
+			// If there are no existing icons and this is a new one, set the id to 1 (mainly for non-mysql)
+			if (empty($_GET['icon']) && empty($context['icons']))
+				$_GET['icon'] = 1;
+
 			// Get the new order.
 			$newOrder = $_POST['icon_location'] == 0 ? 0 : $context['icons'][$_POST['icon_location']]['true_order'] + 1;
 			// Do the same, but with the one that used to be after this icon, done to avoid conflict.
@@ -1565,13 +1569,7 @@ function EditMessageIcons()
 			// Do a huge replace ;)
 			$iconInsert = array();
 			foreach ($context['icons'] as $id => $icon)
-			{
-				// If there are no existing icons and this is a new one, set id as 1 (mainly for non-mysql)
-				if (empty($_GET['icon']) && empty($id))
-					$id = !empty($last_icon) ? $last_icon + 1 : 1 ;
-
-					$iconInsert[] = array($id, $icon['board_id'], $icon['title'], $icon['filename'], $icon['true_order']);
-			}
+				$iconInsert[] = array($id, $icon['board_id'], $icon['title'], $icon['filename'], $icon['true_order']);
 
 			$smcFunc['db_insert']('replace',
 				'{db_prefix}message_icons',
