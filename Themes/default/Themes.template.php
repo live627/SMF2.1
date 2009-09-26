@@ -592,7 +592,8 @@ function template_set_settings()
 			</div>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
-	</div>';
+	</div>
+	<br class="clear" />';
 
 	if (!empty($context['theme_variants']))
 	{
