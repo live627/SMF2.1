@@ -164,7 +164,7 @@ function template_body_above()
 	<div id="header"><div class="frame">
 		<div id="top_section">
 			<h1 class="forumtitle">
-				<a href="', $scripturl, '">', empty($settings['header_logo_url']) ? $context['forum_name'] : '<img src="' . $settings['header_logo_url'] . '" alt="' . $context['forum_name'] . '" />' , '</a>
+				<a href="', $scripturl, '">', empty($settings['header_logo_url']) ? $context['forum_name'] : '<img src="' . $settings['header_logo_url'] . '" alt="' . $context['forum_name'] . '" />', '</a>
 			</h1>';
 
 	// the upshrink image, right-floated
@@ -203,7 +203,7 @@ function template_body_above()
 					<li><a href="', $scripturl, '?action=moderate;area=reports">', sprintf($txt['mod_reports_waiting'], $context['open_mod_reports']), '</a></li>';
 
 			echo '
-					<li>' , $context['current_time'], '</li>
+					<li>', $context['current_time'], '</li>
 				</ul>';
 		}
 		// Otherwise they're a guest - this time ask them to either register or login - lazy bums...
@@ -212,7 +212,7 @@ function template_body_above()
 			echo '
 				<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 				<form id="guest_form" action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" ', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
-					<div class="info">' , $txt['login_or_register'], '</div>
+					<div class="info">', $txt['login_or_register'], '</div>
 					<input type="text" name="user" size="10" class="input_text" />
 					<input type="password" name="passwrd" size="10" class="input_password" />
 					<select name="cookielength">
@@ -486,7 +486,7 @@ function template_button_strip($button_strip, $direction = 'top', $strip_options
 	}
 
 	echo '
-		<div class="buttonlist', !empty($direction) ? ' align_' . $direction : '' , '"', (empty($buttons) ? ' style="display: none;"' : ''), (!empty($strip_options['id']) ? ' id="' . $strip_options['id'] . '"': ''), '>
+		<div class="buttonlist', !empty($direction) ? ' align_' . $direction : '', '"', (empty($buttons) ? ' style="display: none;"' : ''), (!empty($strip_options['id']) ? ' id="' . $strip_options['id'] . '"': ''), '>
 			<ul>
 				<li>', implode('</li><li>', $buttons), '</li>
 			</ul>

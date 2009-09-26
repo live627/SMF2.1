@@ -402,7 +402,7 @@ function template_info_center()
 						<hr class="hrcolor" />
 						<div class="smalltext">
 							', $txt['most_online_today'], ': <strong>', comma_format($modSettings['mostOnlineToday']), '</strong>.
-							', $txt['most_online_ever'], ': ', comma_format($modSettings['mostOnline']), ' (' , timeformat($modSettings['mostDate']), ')
+							', $txt['most_online_ever'], ': ', comma_format($modSettings['mostOnline']), ' (', timeformat($modSettings['mostDate']), ')
 						</div>
 					</div>
 				</div>

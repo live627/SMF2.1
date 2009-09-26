@@ -15,7 +15,7 @@ function template_admin()
 		echo '
 			<div id="quick_search" class="align_right">
 				<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '">
-					<img src="' , $settings['images_url'] , '/filter.gif" alt="" />
+					<img src="', $settings['images_url'] , '/filter.gif" alt="" />
 					<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" class="input_text" />
 					<select name="search_type">
 						<option value="internal"', (empty($context['admin_preferences']['sb']) || $context['admin_preferences']['sb'] == 'internal' ? ' selected="selected"' : ''), '>', $txt['admin_search_type_internal'], '</option>
@@ -894,7 +894,7 @@ function template_show_settings()
 							</dt>';
 
 				echo '
-							<dd' , (!empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '_dd"' : ''), '>',
+							<dd', (!empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '_dd"' : ''), '>',
 								$config_var['preinput'];
 
 				// Show a check box.
@@ -2046,7 +2046,7 @@ function template_repair_boards()
 		else
 		{
 			echo '
-				<p>' , $txt['errors_fixed'], '</p>
+				<p>', $txt['errors_fixed'], '</p>
 				<p class="padding">
 					<a href="', $scripturl, '?action=admin;area=maintain;sa=routine">', $txt['maintain_return'], '</a>
 				</p>';

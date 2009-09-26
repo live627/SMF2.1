@@ -125,7 +125,7 @@ function template_main()
 			{
 				echo '
 				<tr class="windowbg2">
-					<td class="icon windowbg"', !empty($board['children']) ? ' rowspan="2"' : '' , '>
+					<td class="icon windowbg"', !empty($board['children']) ? ' rowspan="2"' : '', '>
 						<a href="', ($board['is_redirect'] || $context['user']['is_guest'] ? $board['href'] : $scripturl . '?action=unread;board=' . $board['id'] . '.0;children'), '">';
 
 				// If the board or children is new, show an indicator.
@@ -419,7 +419,7 @@ function template_info_center()
 			</p>
 			<p class="last smalltext">
 				', $txt['most_online_today'], ': <strong>', comma_format($modSettings['mostOnlineToday']), '</strong>.
-				', $txt['most_online_ever'], ': ', comma_format($modSettings['mostOnline']), ' (' , timeformat($modSettings['mostDate']), ')
+				', $txt['most_online_ever'], ': ', comma_format($modSettings['mostOnline']), ' (', timeformat($modSettings['mostDate']), ')
 			</p>';
 
 	// If they are logged in, but statistical information is off... show a personal message bar.

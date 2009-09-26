@@ -169,7 +169,7 @@ function template_body_above()
 <div id="mainframe"', !empty($settings['forum_width']) ? ' style="width: ' . $settings['forum_width'] . '"' : '', '>
 	<div class="tborder">
 		<div class="catbg">
-			<img class="floatright" id="smflogo" src="' , $settings['images_url'] , '/smflogo.gif" alt="Simple Machines Forum" />
+			<img class="floatright" id="smflogo" src="', $settings['images_url'], '/smflogo.gif" alt="Simple Machines Forum" />
 			<h1 id="forum_name">';
 
 	if (empty($settings['header_logo_url']))
@@ -186,7 +186,7 @@ function template_body_above()
 	echo '
 		<ul id="greeting_section" class="reset titlebg2">
 			<li id="time" class="smalltext floatright">
-				' , $context['current_time'], '
+				', $context['current_time'], '
 				<img id="upshrink" src="', $settings['images_url'], '/upshrink.gif" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="display: none;" />
 			</li>';
 
@@ -258,7 +258,7 @@ function template_body_above()
 		echo '
 				<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 				<form class="windowbg" id="guest_form" action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" ', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
-					' , $txt['login_or_register'], '<br />
+					', $txt['login_or_register'], '<br />
 					<input type="text" name="user" size="10" class="input_text" />
 					<input type="password" name="passwrd" size="10" class="input_password" />
 					<select name="cookielength">

@@ -21,7 +21,7 @@ function template_main()
 		{
 			echo '
 			<tr class="windowbg2">
-				<td class="icon windowbg"', !empty($board['children']) ? ' rowspan="2"' : '' , '>
+				<td class="icon windowbg"', !empty($board['children']) ? ' rowspan="2"' : '', '>
 					<a href="', ($board['is_redirect'] || $context['user']['is_guest'] ? $board['href'] : $scripturl . '?action=unread;board=' . $board['id'] . '.0;children'), '">';
 
 			// If the board or children is new, show an indicator.
@@ -188,7 +188,7 @@ function template_main()
 		{
 			echo '
 						<tr class="windowbg2 whos_viewing">
-							<td colspan="' , !empty($context['can_quick_mod']) ? '6' : '5' , '" class="smalltext">';
+							<td colspan="', !empty($context['can_quick_mod']) ? '6' : '5', '" class="smalltext">';
 			if ($settings['display_who_viewing'] == 1)
 				echo count($context['view_members']), ' ', count($context['view_members']) == 1 ? $txt['who_member'] : $txt['members'];
 			else
@@ -203,7 +203,7 @@ function template_main()
 		{
 			echo '
 						<tr class="windowbg2">
-							<td colspan="' , !empty($context['can_quick_mod']) ? '6' : '5' , '">
+							<td colspan="', !empty($context['can_quick_mod']) ? '6' : '5', '">
 								<span class="alert">!</span> ', $context['unapproved_posts_message'], '
 							</td>
 						</tr>';
@@ -240,7 +240,7 @@ function template_main()
 							</td>
 							<td class="subject ', $alternate_class, '">
 								<div ', (!empty($topic['quick_mod']['modify']) ? 'id="topic_' . $topic['first_post']['id'] . '" onmouseout="mouse_on_div = 0;" onmouseover="mouse_on_div = 1;" ondblclick="modify_topic(\'' . $topic['id'] . '\', \'' . $topic['first_post']['id'] . '\', \'' . $context['session_id'] . '\', \'' . $context['session_var'] . '\');"' : ''), '>
-									', $topic['is_sticky'] ? '<strong>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], (!$context['can_approve_posts'] && !$topic['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), '</span>', $topic['is_sticky'] ? '</strong>' : '' ;
+									', $topic['is_sticky'] ? '<strong>' : '', '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], (!$context['can_approve_posts'] && !$topic['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), '</span>', $topic['is_sticky'] ? '</strong>' : '' ;
 
 			// Is this topic new? (assuming they are logged in!)
 			if ($topic['new'] && $context['user']['is_logged'])

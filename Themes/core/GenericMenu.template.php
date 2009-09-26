@@ -27,7 +27,7 @@ function template_generic_menu_sidebar_above()
 
 		if ($firstSection && !empty($menu_context['can_toggle_drop_down']))
 			echo '
-						<a href="', $menu_context['toggle_url'], '"><img style="margin: 0 0 0 5px;" src="' , $context['menu_image_path'], '/change_menu', $context['right_to_left'] ? '' : '2', '.png" alt="!" /></a>';
+						<a href="', $menu_context['toggle_url'], '"><img style="margin: 0 0 0 5px;" src="', $context['menu_image_path'], '/change_menu', $context['right_to_left'] ? '' : '2', '.png" alt="!" /></a>';
 		echo '
 						</td>
 					</tr>
@@ -97,7 +97,7 @@ function template_generic_menu_dropdown_above()
 	if (!empty($menu_context['can_toggle_drop_down']))
 		echo '
 		<div id="menu_toggle">
-			<a href="', $menu_context['toggle_url'], '"><img style="margin: 0 2px 0 2px;" src="' , $context['menu_image_path'], '/change_menu', $context['right_to_left'] ? '2' : '', '.png" alt="*" /></a>
+			<a href="', $menu_context['toggle_url'], '"><img style="margin: 0 2px 0 2px;" src="', $context['menu_image_path'], '/change_menu', $context['right_to_left'] ? '2' : '', '.png" alt="*" /></a>
 		</div>';
 
 	echo '
@@ -119,7 +119,7 @@ function template_generic_menu_dropdown_above()
 		}
 		else
 			echo '
-			<li' , $s == 1 ? ' class="first"': '', $is_last ? ' class="last"' : '', '><h4>', $section['title'] , '</h4>
+			<li', $s == 1 ? ' class="first"': '', $is_last ? ' class="last"' : '', '><h4>', $section['title'] , '</h4>
 				<ul>';
 
 		// For every area of this section show a link to that area (bold if it's currently selected.)
@@ -136,14 +136,14 @@ function template_generic_menu_dropdown_above()
 			if ($i == $menu_context['current_area'])
 			{
 				echo '
-						<a class="chosen', !empty($area['subsections']) ? ' subsection' : '' , '" href="', (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i), $menu_context['extra_parameters'], '">' , $area['icon'] , $area['label'], '</a>';
+						<a class="chosen', !empty($area['subsections']) ? ' subsection' : '', '" href="', isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i, $menu_context['extra_parameters'], '">', $area['icon'] , $area['label'], '</a>';
 
 				if (empty($context['tabs']))
 					$context['tabs'] = isset($area['subsections']) ? $area['subsections'] : array();
 			}
 			else
 				echo '
-						<a href="', (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i), $menu_context['extra_parameters'], '"', !empty($area['subsections']) ? ' class="subsection"' : '' , '>' , $area['icon'] , $area['label'] , '</a>';
+						<a href="', isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i, $menu_context['extra_parameters'], '"', !empty($area['subsections']) ? ' class="subsection"' : '', '>', $area['icon'], $area['label'] , '</a>';
 
 			// Is there any subsections?
 			if (!empty($area['subsections']))
@@ -162,7 +162,7 @@ function template_generic_menu_dropdown_above()
 					$url = isset($sub['url']) ? $sub['url'] : (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i) . ';sa=' . $sa;
 
 					echo '
-								<a ', !empty($sub['selected']) ? 'class="chosen" ' : '', 'href="', $url, $menu_context['extra_parameters'], '">' , $sub['label'], '</a>';
+								<a ', !empty($sub['selected']) ? 'class="chosen" ' : '', 'href="', $url, $menu_context['extra_parameters'], '">', $sub['label'], '</a>';
 
 					echo '
 							</li>';
@@ -213,7 +213,7 @@ function template_generic_menu_tabs(&$menu_context)
 	$tab_context = &$menu_context['tab_data'];
 
 	echo '
-				<table border="0" cellspacing="0" cellpadding="4" align="center" width="100%" class="tborder" ' , (isset($settings['use_tabs']) && $settings['use_tabs']) ? '' : 'style="margin-bottom: 2ex;"' , '>
+				<table border="0" cellspacing="0" cellpadding="4" align="center" width="100%" class="tborder" ', isset($settings['use_tabs']) && $settings['use_tabs'] ? '' : 'style="margin-bottom: 2ex;"', '>
 					<tr class="titlebg">
 						<td>';
 
@@ -293,14 +293,14 @@ function template_generic_menu_tabs(&$menu_context)
 				echo '
 						<td class="maintab_active_first">&nbsp;</td>
 						<td valign="top" class="maintab_active_back">
-							<a href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], isset($tab['add_params']) ? $tab['add_params'] : '', '">' , $tab['label'], '</a>
+							<a href="', isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa, $menu_context['extra_parameters'], isset($tab['add_params']) ? $tab['add_params'] : '', '">', $tab['label'], '</a>
 						</td>
 						<td class="maintab_active_last">&nbsp;</td>';
 			}
 			else
 				echo '
 						<td valign="top" class="maintab_back">
-							<a href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], isset($tab['add_params']) ? $tab['add_params'] : '', '">' , $tab['label'], '</a>
+							<a href="', isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa, $menu_context['extra_parameters'], isset($tab['add_params']) ? $tab['add_params'] : '', '">', $tab['label'], '</a>
 						</td>';
 		}
 
@@ -325,11 +325,11 @@ function template_generic_menu_tabs(&$menu_context)
 			if (!empty($tab['is_selected']))
 			{
 				echo '
-							<img src="', $settings['images_url'], '/selected.gif" alt="*" /> <strong><a href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], '">' , $tab['label'], '</a></strong>';
+							<img src="', $settings['images_url'], '/selected.gif" alt="*" /> <strong><a href="', isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa, $menu_context['extra_parameters'], '">', $tab['label'], '</a></strong>';
 			}
 			else
 				echo '
-							<a href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], '">' , $tab['label'], '</a>';
+							<a href="', isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa, $menu_context['extra_parameters'], '">', $tab['label'], '</a>';
 
 			if (empty($tab['is_last']))
 				echo ' | ';

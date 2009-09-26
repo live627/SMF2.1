@@ -45,7 +45,7 @@ function template_main()
 			<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
-					<ul id="category_' , $category['id'] , '">';
+					<ul id="category_', $category['id'], '">';
 
 		if (!empty($category['move_link']))
 			echo '
@@ -74,7 +74,7 @@ function template_main()
 
 				foreach ($board['move_links'] as $link)
 					echo '
-							<a href="', $link['href'], '" class="move_links" title="', $link['label'], '"><img src="', $settings['images_url'], '/board_select_spot' , $link['child_level']>0 ? '_child' : '' , '.gif" alt="', $link['label'], '" border="0" style="padding: 0px; margin: 0px;" /></a>';
+							<a href="', $link['href'], '" class="move_links" title="', $link['label'], '"><img src="', $settings['images_url'], '/board_select_spot', $link['child_level'] > 0 ? '_child' : '', '.gif" alt="', $link['label'], '" border="0" style="padding: 0px; margin: 0px;" /></a>';
 
 				echo '
 						</li>';
@@ -479,7 +479,7 @@ function template_modify_board()
 
 	if (!isset($context['board']['is_new']) && empty($context['board']['is_recycle']))
 		echo '
-					<span', $context['board']['is_recycle'] ? ' style="visibility:hidden">' : '>' , '<input type="submit" name="delete" value="'. $txt['mboards_delete_board'], '" onclick="return confirm(\'', $txt['boardConfirm'], '\');"', ' /></span>';
+					<span', $context['board']['is_recycle'] ? ' style="visibility:hidden">' : '>', '<input type="submit" name="delete" value="', $txt['mboards_delete_board'], '" onclick="return confirm(\'', $txt['boardConfirm'], '\');"', ' /></span>';
 	echo '
 				</div>
 			<span class="botslice"><span></span></span>

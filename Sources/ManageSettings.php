@@ -811,7 +811,7 @@ function ModifySpamSettings($return_config = false)
 		if (!empty($questionInserts))
 			$smcFunc['db_insert']('',
 				'{db_prefix}log_comments',
-				array('comment_type' => 'string', 'body' => 'string-65535',  'recipient_name' => 'string-80'),
+				array('comment_type' => 'string', 'body' => 'string-65535', 'recipient_name' => 'string-80'),
 				$questionInserts,
 				array('id_comment')
 			);

@@ -155,7 +155,7 @@ function template_unread()
 						</td>
 						<td class="subject ', $color_class2, ' windowbg2">
 							<div>
-							', $topic['is_sticky'] ? '<strong>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '' ,'
+							', $topic['is_sticky'] ? '<strong>' : '', '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '' ,'
 								<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>
 								<p>', $txt['started_by'], ' ', $topic['first_post']['member']['link'], '
 									<small id="pages' . $topic['first_post']['id'] . '">', $topic['pages'], '</small>
@@ -184,7 +184,7 @@ function template_unread()
 	}
 
 	if (!empty($context['topics']) && !$context['showing_all_topics'])
-		$mark_read['readall'] = array('text' => 'unread_topics_all' , 'image' => 'markreadall.gif', 'lang' => true, 'url' => $scripturl . '?action=unread;all' . $context['querystring_board_limits'], 'active' => true);
+		$mark_read['readall'] = array('text' => 'unread_topics_all', 'image' => 'markreadall.gif', 'lang' => true, 'url' => $scripturl . '?action=unread;all' . $context['querystring_board_limits'], 'active' => true);
 
 	if (empty($settings['use_tabs']) && !empty($mark_read))
 		echo '
@@ -326,7 +326,7 @@ function template_replies()
 						</td>
 						<td class="subject ', $color_class2, ' windowbg2">
 							<div>
-								', $topic['is_sticky'] ? '<strong>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '', '
+								', $topic['is_sticky'] ? '<strong>' : '', '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '', '
 								<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>
 								<p>', $txt['started_by'], ' ', $topic['first_post']['member']['link'], '
 									<small id="pages' . $topic['first_post']['id'] . '">', $topic['pages'], '</small>

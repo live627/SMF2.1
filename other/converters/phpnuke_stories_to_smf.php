@@ -89,7 +89,7 @@ if (empty($preparsing))
 		global $to_prefix, $sets;
 		echo 'Creating the new category...';
 
-		convert_insert('categories', array('cat_order', 'name', 'can_collapse'), array('100', 'PHP-Nuke Stories' , '1'), 'insert');
+		convert_insert('categories', array('cat_order', 'name', 'can_collapse'), array('100', 'PHP-Nuke Stories', '1'), 'insert');
 		$sets['cat_id'] = convert_insert_id();
 
 		saveConverterSettings('cat_id', $sets['cat_id']);
@@ -145,7 +145,7 @@ if (empty($preparsing))
 
 		if (empty($sets['board_default_id']))
 		{
-			convert_insert('boards', array('id_cat', 'board_order', 'name', 'description'), array($sets['cat_id'], '0', 'General Stories' , ''), 'insert');
+			convert_insert('boards', array('id_cat', 'board_order', 'name', 'description'), array($sets['cat_id'], '0', 'General Stories', ''), 'insert');
 			$sets['board_default_id'] = convert_insert_id();
 
 			saveConverterSettings('board_default_id', $sets['board_default_id']);

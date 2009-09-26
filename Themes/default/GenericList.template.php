@@ -294,9 +294,9 @@ function template_create_list_menu($list_menu, $direction = 'top')
 				<td align="', $list_menu['position'], '">
 					<table cellspacing="0" cellpadding="0">
 						<tr>
-							<td class="', $direction == 'top' ? 'mirror' : 'main', 'tab_' , $first , '">&nbsp;</td>
-							<td class="', $direction == 'top' ? 'mirror' : 'main', 'tab_back">', implode(' &nbsp;|&nbsp; ', $links) , '</td>
-							<td class="', $direction == 'top' ? 'mirror' : 'main', 'tab_' , $last , '">&nbsp;</td>
+							<td class="', $direction == 'top' ? 'mirror' : 'main', 'tab_', $first, '">&nbsp;</td>
+							<td class="', $direction == 'top' ? 'mirror' : 'main', 'tab_back">', implode(' &nbsp;|&nbsp; ', $links), '</td>
+							<td class="', $direction == 'top' ? 'mirror' : 'main', 'tab_', $last, '">&nbsp;</td>
 						</tr>
 					</table>
 				</td>', $list_menu['position'] == 'left' ? '

@@ -466,7 +466,7 @@ function show_settings()
 		if ($request == true)
 		{
 			if ($smcFunc['db_num_rows']($request) == 1)
-				list ($known_settings['database_settings']['db_prefix'][2]) = preg_replace('~log_topics$~', '',  $smcFunc['db_fetch_row']($request));
+				list ($known_settings['database_settings']['db_prefix'][2]) = preg_replace('~log_topics$~', '', $smcFunc['db_fetch_row']($request));
 			$smcFunc['db_free_result']($request);
 		}
 	}

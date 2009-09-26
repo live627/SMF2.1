@@ -1358,7 +1358,7 @@ function get_database_version()
 	if (empty($db_type) || (!empty($db_type) && $db_type == 'mysql'))
 	{
 		// I learned some of this from phpMyAdmin...
-		$match = explode('.',  mysql_get_server_info());
+		$match = explode('.', mysql_get_server_info());
 		$mysql_int_version = (int) sprintf('%d%02d%02d', $match[0], $match[1], intval($match[2]));
 
 		if ( $mysql_int_version >= 50006 )

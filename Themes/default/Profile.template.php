@@ -946,7 +946,7 @@ function template_statPanel()
 		{
 			echo '
 							<dt>', $board['link'], '</dt>
-							<dd>', $board['posts'] > 0 ? '<div class="profile_pie" style="background-position: -' . ((int) ($board['posts_percent']/5)-1) * 20 . 'px 0;"></div>' : '&nbsp;', '<span>',  empty($context['hide_num_posts']) ? $board['posts'] : '', '</span></dd>';
+							<dd>', $board['posts'] > 0 ? '<div class="profile_pie" style="background-position: -' . ((int) ($board['posts_percent']/5)-1) * 20 . 'px 0;"></div>' : '&nbsp;', '<span>', empty($context['hide_num_posts']) ? $board['posts'] : '', '</span></dd>';
 		}
 		echo '
 						</dl>';

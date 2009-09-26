@@ -181,7 +181,7 @@ function template_main()
 		{
 			echo '
 						<tr class="windowbg2">
-							<td colspan="' , !empty($context['can_quick_mod']) ? '8' : '7' , '" class="headerpadding smalltext">';
+							<td colspan="', !empty($context['can_quick_mod']) ? '8' : '7', '" class="headerpadding smalltext">';
 			if ($settings['display_who_viewing'] == 1)
 				echo count($context['view_members']), ' ', count($context['view_members']) == 1 ? $txt['who_member'] : $txt['members'];
 			else
@@ -196,7 +196,7 @@ function template_main()
 		{
 			echo '
 						<tr class="windowbg2">
-							<td colspan="' , !empty($context['can_quick_mod']) ? '8' : '7' , '" class="smalltext headerpadding">
+							<td colspan="', !empty($context['can_quick_mod']) ? '8' : '7', '" class="smalltext headerpadding">
 									<span class="alert">!</span> ', $context['unapproved_posts_message'], '
 							</td>
 						</tr>';
@@ -206,7 +206,7 @@ function template_main()
 		if (empty($context['topics']))
 			echo '
 						<tr class="windowbg2">
-							<td class="catbg3" colspan="' , !empty($context['can_quick_mod']) ? '8' : '7' , '"><strong>', $txt['msg_alert_none'], '</strong></td>
+							<td class="catbg3" colspan="', !empty($context['can_quick_mod']) ? '8' : '7', '"><strong>', $txt['msg_alert_none'], '</strong></td>
 						</tr>';
 
 		foreach ($context['topics'] as $topic)
@@ -242,11 +242,11 @@ function template_main()
 
 			if (!empty($settings['separate_sticky_lock']))
 				echo '
-								' , $topic['is_locked'] ? '<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" class="align_right" alt="" id="lockicon' . $topic['first_post']['id'] . '" style="margin: 0;" />' : '' , '
-								' , $topic['is_sticky'] ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" class="align_right" alt="" id="stickyicon' . $topic['first_post']['id'] . '" style="margin: 0;" />' : '';
+								', $topic['is_locked'] ? '<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" class="align_right" alt="" id="lockicon' . $topic['first_post']['id'] . '" style="margin: 0;" />' : '', '
+								', $topic['is_sticky'] ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" class="align_right" alt="" id="stickyicon' . $topic['first_post']['id'] . '" style="margin: 0;" />' : '';
 
 			echo '
-								', $topic['is_sticky'] ? '<strong>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], (!$context['can_approve_posts'] && !$topic['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), '</span>', $topic['is_sticky'] ? '</strong>' : '';
+								', $topic['is_sticky'] ? '<strong>' : '', '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], (!$context['can_approve_posts'] && !$topic['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), '</span>', $topic['is_sticky'] ? '</strong>' : '';
 
 			// Is this topic new? (assuming they are logged in!)
 			if ($topic['new'] && $context['user']['is_logged'])

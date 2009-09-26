@@ -845,13 +845,13 @@ function template_manual_sending_pms()
 					<td width="125" valign="top">
 						<table border="0" cellpadding="4" cellspacing="1" class="bordercolor" width="100">
 							<tr>
-								<td class="catbg">' , $txt['manual_pm_messages'] , '</td>
+								<td class="catbg">', $txt['manual_pm_messages'], '</td>
 							</tr>
 							<tr class="windowbg">
 								<td class="smalltext" style="padding-bottom: 2ex;">
-								' , $txt['manual_pm_new_msg'] , '<br /><br />
-								<strong>' , $txt['manual_pm_inbox'] , '</strong><br />
-								' , $txt['manual_pm_outbox'] , '<br />
+								', $txt['manual_pm_new_msg'], '<br /><br />
+								<strong>', $txt['manual_pm_inbox'], '</strong><br />
+								', $txt['manual_pm_outbox'], '<br />
 							</td>
 						</tr>
 					</table>

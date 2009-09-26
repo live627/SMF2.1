@@ -447,7 +447,7 @@ function template_main()
 							</tr></table>
 							<hr width="100%" size="1" class="hrcolor" />
 							<div class="post"', $message['can_modify'] ? ' id="msg_' . $message['id'] . '"' : '', '>', $message['body'], '</div>', $message['can_modify'] ? '
-							<img src="' . $settings['images_url'] . '/icons/modify_inline.gif" alt="" title="' . $txt['modify_msg'] . '" align="right" id="modify_button_' . $message['id'] . '" style="cursor: pointer;" onclick="oQuickModify.modifyMsg(\'' . $message['id'] . '\', \'' . $context['session_id'] . '\', \'' . $context['session_var'] . '\')" />' : '' , '
+							<img src="' . $settings['images_url'] . '/icons/modify_inline.gif" alt="" title="' . $txt['modify_msg'] . '" align="right" id="modify_button_' . $message['id'] . '" style="cursor: pointer;" onclick="oQuickModify.modifyMsg(\'' . $message['id'] . '\', \'' . $context['session_id'] . '\', \'' . $context['session_var'] . '\')" />' : '', '
 						</td>
 					</tr>';
 

@@ -455,7 +455,7 @@ function template_unapproved_attachments()
 	foreach ($context['unapproved_items'] as $item)
 	{
 		echo '
-				<tr class="', $alternate ? 'windowbg' : 'windowbg2' , '">
+				<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
 					<td>
 						', $item['filename'], '
 					</td>

@@ -157,7 +157,7 @@ function template_main()
 		{
 			echo '
 	<tr class="windowbg2">
-		<td colspan="' , !empty($context['can_quick_mod']) ? '8' : '7' , '">
+		<td colspan="', !empty($context['can_quick_mod']) ? '8' : '7', '">
 			<small>
 				<span class="alert">!</span> ', $context['unapproved_posts_message'], '
 			</small>
