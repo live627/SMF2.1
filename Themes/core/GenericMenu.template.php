@@ -181,10 +181,7 @@ function template_generic_menu_dropdown_above()
 	}
 
 	echo '
-		</ul></div>
-		<script type="text/javascript"><!-- // --><![CDATA[
-			var menuHandle = new smfMenu("dropdown_menu_', $context['cur_menu_id'], '");
-		// ]]></script>';
+		</ul></div>';
 
 	// This is the main table - we need it so we can keep the content to the right of it.
 	echo '

@@ -827,8 +827,8 @@ div#menu_toggle a
 
 .buttonlist ul
 {
-	background:transparent url(../images/maintab_first.gif) no-repeat scroll left bottom;
-	padding:0 0 0 10px;
+	background: url(../images/maintab_first.gif) no-repeat scroll left bottom;
+	padding: 0 0 0 10px;
 }
 .buttonlist ul li, .buttonlist_bottom ul li
 {
@@ -901,8 +901,8 @@ div#menu_toggle a
 /* ..for the "bottom" menu */
 .buttonlist_bottom ul
 {
-	background:transparent url(../images/mirrortab_first.gif) no-repeat scroll left top;
-	padding:0 0 0 10px;
+	background: url(../images/mirrortab_first.gif) no-repeat scroll left top;
+	padding: 0 0 0 10px;
 }
 .buttonlist_bottom ul li a span
 {
@@ -1434,8 +1434,6 @@ table.boardsframe td.lastpost
 #smfFadeScroller
 {
 	text-align: center;
-	overflow: auto;
-	height: 5em;
 	overflow: auto;
 }
 
