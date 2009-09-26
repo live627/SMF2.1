@@ -376,7 +376,6 @@ function template_folder()
 							<div class="smalltext reportlinks">
 								', (!empty($modSettings['enableReportPM']) && $context['folder'] != 'sent' ? '<div class="righttext"><a href="' . $scripturl . '?action=pm;sa=report;l=' . $context['current_label_id'] . ';pmsg=' . $message['id'] . '">' . $txt['pm_report_to_admin'] . '</a></div>' : '');
 
-											
 			echo '
 							</div>';
 			// Are there any custom profile fields for above the signature?
@@ -402,7 +401,7 @@ function template_folder()
 								</ul>
 							</div>';
 			}
-						
+
 			// Show the member's signature?
 			if (!empty($message['member']['signature']) && empty($options['show_no_signatures']) && $context['signature_enabled'])
 				echo '

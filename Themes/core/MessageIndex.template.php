@@ -381,7 +381,6 @@ function template_main()
 			echo '
 			<div class="floatleft smalltext">
 			<ul class="reset">
-			
 				', !empty($modSettings['enableParticipation']) && $context['user']['is_logged'] ? '
 				<li><img src="' . $settings['images_url'] . '/topic/my_normal_post.gif" alt="" align="middle" /> ' . $txt['participation_caption'] . '</li>' : '', '
 				<li><img src="' . $settings['images_url'] . '/topic/normal_post.gif" alt="" align="middle" /> ' . $txt['normal_topic'] . '</li>
