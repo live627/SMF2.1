@@ -374,8 +374,11 @@ function template_folder()
 					<div class="post">
 						<div class="inner" id="msg_', $message['id'], '"', '>', $message['body'], '</div>
 							<div class="smalltext reportlinks">
-								', (!empty($modSettings['enableReportPM']) && $context['folder'] != 'sent' ? '<div style="margin: 0 auto; margin-bottom: 10px; text-align: ' . ($context['right_to_left'] ? 'left' : 'right') . ';"><a href="' . $scripturl . '?action=pm;sa=report;l=' . $context['current_label_id'] . ';pmsg=' . $message['id'] . '">' . $txt['pm_report_to_admin'] . '</a></div>' : '');
+								', (!empty($modSettings['enableReportPM']) && $context['folder'] != 'sent' ? '<div class="righttext"><a href="' . $scripturl . '?action=pm;sa=report;l=' . $context['current_label_id'] . ';pmsg=' . $message['id'] . '">' . $txt['pm_report_to_admin'] . '</a></div>' : '');
 
+											
+			echo '
+							</div>';
 			// Are there any custom profile fields for above the signature?
 			if (!empty($message['member']['custom_fields']))
 			{
@@ -388,31 +391,28 @@ function template_folder()
 					{
 						$shown = true;
 						echo '
-								<div class="custom_fields_above_signature">
-									<ul class="reset nolist>';
+							<div class="custom_fields_above_signature">
+								<ul class="reset nolist>';
 					}
 					echo '
-										<li>', $custom['value'], '</li>';
+									<li>', $custom['value'], '</li>';
 				}
 				if ($shown)
 					echo '
-									</ul>
-								</div>';
+								</ul>
+							</div>';
 			}
-
+						
 			// Show the member's signature?
 			if (!empty($message['member']['signature']) && empty($options['show_no_signatures']) && $context['signature_enabled'])
 				echo '
-								<div class="signature">', $message['member']['signature'], '</div>';
-
-			echo '
-						</div>';
+							<div class="signature">', $message['member']['signature'], '</div>';
 
 		// Add an extra line at the bottom if we have labels enabled.
 		if ($context['folder'] != 'sent' && !empty($context['currently_using_labels']))
 		{
 			echo '
-						<div class="labels righttext">';
+							<div class="labels righttext">';
 			// Add the label drop down box.
 			if (!empty($context['currently_using_labels']))
 			{

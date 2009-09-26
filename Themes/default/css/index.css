@@ -2297,7 +2297,7 @@ tr.titlebg td
 }
 .left_admmenu
 {
-	margin-bottom: 1.1em;
+	margin-bottom: 0.5em;
 }
 #main_admsection
 {
@@ -2524,7 +2524,7 @@ dl
 }
 .signature h5
 {
-	font-size: 100%;
+	font-size: 0.85em;
 	margin-bottom: 10px;
 }
 
@@ -2935,7 +2935,7 @@ dl.stats dd
 }
 #personal_messages .reportlinks
 {
-	padding: 0 1em;
+	padding: 0.5em 1.3em;
 }
 
 /* Styles for the calendar section.
