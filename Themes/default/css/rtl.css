@@ -377,24 +377,20 @@ h4#pollquestion
 	float: left;
 	text-align: left;
 }
-/* the icons for the quickbuttons */
+
+/* The quick buttons */
 ul.quickbuttons
 {
-	margin: 0 !important;
+	margin: 0.9em 0 0 11px;
 }
-
 ul.quickbuttons li
 {
-	padding: 0;
 	float: right;
-	margin: 0;
+	margin: 0 11px 0 0;
 }
 ul.quickbuttons li a
 {
-	display: block;
-	height: 20px;
-	padding-right: 32px;
-	line-height: 18px;
+	padding: 0 20px 0 0;
 	float: right;
 }
 ul.quickbuttons li.approve_button
@@ -431,7 +427,7 @@ ul.quickbuttons li.restore_button
 }
 ul.quickbuttons li.inline_mod_check
 {
-	padding: 0 1em 0 0;
+	margin: 0 5px 0 0;
 }
 .post
 {
@@ -461,6 +457,27 @@ ul.quickbuttons li.inline_mod_check
 {
 	float: right;
 }
+
+/* Styles for the personal messages section.
+------------------------------------------------- */
+
+#personal_messages h3 span#author, #personal_messages h3 span#topic_title
+{
+	float: right;
+}
+#personal_messages h3 span#author
+{
+	margin: 0 0.5em 0 0;
+}
+#personal_messages h3 span#topic_title
+{
+	margin: 0 9em 0 0;
+}
+#personal_messages .labels
+{
+	padding: 0 0 0 1em;
+}
+
 /* Styles for the move topic section.
 ---------------------------------------------------- */
 .move_topic

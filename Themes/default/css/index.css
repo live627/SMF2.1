@@ -1196,20 +1196,7 @@ span.lowerframe span
 {
 	margin: 0 12px 0 0;
 }
-/* a smaller quick-button list */
-ul.quickbuttons
-{
-	margin-top: 0.9em;
-}
-ul.quickbuttons li
-{
-	display: inline;
-}
-ul.quickbuttons li a:hover img
-{
-	text-decoration: none;
-	color: #FFA500;
-}
+
 /* the navigation list */
 ul#navigation
 {
@@ -1860,14 +1847,21 @@ p#whoisviewing
 {
 	color: #a70;
 }
-/* the icons for the quickbuttons */
+
+/* The quick buttons */
+ul.quickbuttons
+{
+	margin: 0.9em 11px 0 0;
+}
 ul.quickbuttons li
 {
-	padding: 0 5px 0 25px;
 	float: left;
+	display: inline;
+	margin: 0 0 0 11px;
 }
 ul.quickbuttons li a
 {
+	padding: 0 0 0 20px;
 	display: block;
 	height: 20px;
 	line-height: 18px;
@@ -1875,39 +1869,39 @@ ul.quickbuttons li a
 }
 ul.quickbuttons li.approve_button
 {
-	background: url(../images/theme/quickbuttons.png) no-repeat 5px -90px;
+	background: url(../images/theme/quickbuttons.png) no-repeat 0 -90px;
 }
 ul.quickbuttons li.quote_button
 {
-	background: url(../images/theme/quickbuttons.png) no-repeat 5px 0;
+	background: url(../images/theme/quickbuttons.png) no-repeat 0 0;
 }
 ul.quickbuttons li.reply_button
 {
-	background: url(../images/theme/quickbuttons.png) no-repeat 5px -180px;
+	background: url(../images/theme/quickbuttons.png) no-repeat 0 -180px;
 }
 ul.quickbuttons li.reply_all_button
 {
-	background: url(../images/theme/quickbuttons.png) no-repeat 5px -180px;
+	background: url(../images/theme/quickbuttons.png) no-repeat 0 -180px;
 }
 ul.quickbuttons li.modify_button
 {
-	background: url(../images/theme/quickbuttons.png) no-repeat 5px -60px;
+	background: url(../images/theme/quickbuttons.png) no-repeat 0 -60px;
 }
 ul.quickbuttons li.remove_button
 {
-	background: url(../images/theme/quickbuttons.png) no-repeat 5px -30px;
+	background: url(../images/theme/quickbuttons.png) no-repeat 0 -30px;
 }
 ul.quickbuttons li.split_button
 {
-	background: url(../images/theme/quickbuttons.png) no-repeat 5px -150px;
+	background: url(../images/theme/quickbuttons.png) no-repeat 0 -150px;
 }
 ul.quickbuttons li.restore_button
 {
-	background: url(../images/theme/quickbuttons.png) no-repeat 5px -120px;
+	background: url(../images/theme/quickbuttons.png) no-repeat 0 -120px;
 }
 ul.quickbuttons li.inline_mod_check
 {
-	padding: 0 1em 0 0;
+	margin: 0 0 0 5px;
 }
 
 .post
@@ -2902,6 +2896,18 @@ dl.stats dd
 /* Styles for the personal messages section.
 ------------------------------------------------- */
 
+#personal_messages h3 span#author, #personal_messages h3 span#topic_title
+{
+	float: left;
+}
+#personal_messages h3 span#author
+{
+	margin: 0 0 0 0.5em;
+}
+#personal_messages h3 span#topic_title
+{
+	margin: 0 0 0 9em;
+}
 #personal_messages .labels
 {
 	padding: 0 1em 0 0;

@@ -138,8 +138,8 @@ function template_folder()
 			echo '
 	<h3 class="catbg">
 		<span class="left"></span>
-		<span class="author">', $txt['author'], '</span>
-		<span class="topic_title">', $txt['topic'], '</span>
+		<span id="author">', $txt['author'], '</span>
+		<span id="topic_title">', $txt['topic'], '</span>
 	</h3>';
 
 	/*	// Cache some handy buttons.
@@ -159,7 +159,14 @@ function template_folder()
 		<span class="topslice"><span></span></span>
 		<div class="poster">
 			<a id="msg', $message['id'], '"></a>
-			<h4>
+			<h4>';
+
+		// Show online and offline buttons?
+		if (!empty($modSettings['onlineEnable']) && !$message['member']['is_guest'])
+			echo '
+				<img src="', $message['member']['online']['image_href'], '" alt="', $message['member']['online']['text'], '" />';
+
+		echo '
 				', $message['member']['link'], '
 			</h4>
 			<ul class="reset smalltext" id="msg_', $message['id'], '_extra_info">';
