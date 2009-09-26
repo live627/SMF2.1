@@ -639,7 +639,7 @@ function template_pick()
 		<div class="', $theme['selected'] ? 'windowbg' : 'windowbg2', '">
 			<span class="topslice"><span></span></span>
 			<div class="flow_hidden content">
-				<div class="floatright"><img src="', $theme['thumbnail_href'], '" id="theme_thumb_', $theme['id'], '" alt="" class="padding" /></div>
+				<div class="floatright"><a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';theme=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '" id="theme_thumb_preview_', $theme['id'], '" title="', $txt['theme_preview'], '"><img src="', $theme['thumbnail_href'], '" id="theme_thumb_', $theme['id'], '" alt="" class="padding" /></a></div>
 					<p>', $theme['description'], '</p>';
 
 		if (!empty($theme['variants']))
@@ -702,6 +702,7 @@ function template_pick()
 		{
 			document.getElementById(\'theme_thumb_', $theme['id'], '\').src = oThumbnails', $theme['id'], '[sVariant];
 			document.getElementById(\'theme_use_', $theme['id'], '\').href = sBaseUseUrl + \';vrt=\' + sVariant;
+			document.getElementById(\'theme_thumb_preview', $theme['id'], '\').href = sBasePreviewUrl + \';vrt=\' + sVariant + \';variant=\' + sVariant;
 			document.getElementById(\'theme_preview_', $theme['id'], '\').href = sBasePreviewUrl + \';vrt=\' + sVariant + \';variant=\' + sVariant;
 		}
 		// ]]></script>';
