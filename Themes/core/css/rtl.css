@@ -289,6 +289,7 @@ div#pollmoderation
 }
 .post
 {
+	clear: left;
 	float: right;
 }
 .postarea
@@ -307,9 +308,12 @@ div#pollmoderation
 ul.postingbuttons
 {
 	float: left;
-	padding-right: 0;
-	padding-left: 1em;
-	text-align: left;
+	padding: 0 0 0 0.5em;
+}
+ul.postingbuttons li
+{
+	float: right;
+	margin: 0 0 0 0.5em;
 }
 .modifybutton
 {

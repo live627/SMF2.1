@@ -1720,12 +1720,12 @@ div#pollmoderation
 ul.postingbuttons
 {
 	float: right;
-	padding-right: 1em;
-	text-align: right;
+	padding: 0 0.5em 0 0;
 }
 ul.postingbuttons li
 {
-	display: inline;
+	float: left;
+	margin: 0 0.5em 0 0;
 }
 .modifybutton
 {
@@ -3194,7 +3194,7 @@ span.hidelink
 /* On the top too. */
 .margintop
 {
-	margin-top: 1em;
+	margin-top: 1em !important;
 }
 /* remove bold/italic styles */
 span.plainstyle
