@@ -1819,7 +1819,6 @@ p#whoisviewing
 {
 	float: left;
 	margin: 0 0.5em 0 0;
-	padding: 3px;
 }
 
 .keyinfo
@@ -1966,7 +1965,10 @@ ul.quickbuttons li.inline_mod_check
 	height: 100px;
 	margin: 0.25em 0 1em 0;
 }
-
+#quickReplyExpand
+{
+	margin-top: 8px;
+}
 /* The jump to box */
 #display_jump_to
 {
