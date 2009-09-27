@@ -21,7 +21,7 @@ $txt['allow_editDisplayName'] = 'Allow users to edit their displayed name';
 $txt['allow_hideOnline'] = 'Allow non-administrators to hide their online status';
 $txt['guest_hideContacts'] = 'Do not reveal contact details of members to guests';
 $txt['titlesEnable'] = 'Enable custom titles';
-$txt['enable_buddylist'] = 'Enable buddy lists';
+$txt['enable_buddylist'] = 'Enable buddy/ignore lists';
 $txt['default_personal_text'] = 'Default personal text<div class="smalltext">Personal text to assign to newly registered members.</div>';
 $txt['number_format'] = 'Default number format';
 $txt['time_format'] = 'Default time format';
