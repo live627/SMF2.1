@@ -538,8 +538,6 @@ table.boardsframe td.lastpost
 {
 	text-align: center;
 	overflow: auto;
-	height: 5em;
-	overflow: auto;
 }
 
 /* Styles for the info centre on the board index.

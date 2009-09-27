@@ -1730,6 +1730,7 @@ ul.postingbuttons li
 .modifybutton
 {
 	float: right;
+	margin: 0 0.5em 0.5em 0;
 }
 .attachments hr
 {
@@ -2345,10 +2346,11 @@ dl
 {
 	width: 100%;
 }
-.signature, .custom_fields_above_signature
+.signature, .custom_fields_above_signature, .attachments
 {
+	clear: right;
 	width: 100%;
-	border-top: 1px #666 solid;
+	border-top: 1px solid #666;
 }
 .signature h5
 {

@@ -318,6 +318,7 @@ ul.postingbuttons li
 .modifybutton
 {
 	float: left;
+	margin: 0 0 0.5em 0.5em;
 }
 .postfooter
 {
@@ -394,7 +395,6 @@ ul.postingbuttons li
 }
 /* Styles for the registration section.
 ------------------------------------------------------- */
-/* Additional profile fields */
 dl.register_form
 {
 	clear: left;
@@ -511,6 +511,10 @@ tr.titlebg td
 #detailedinfo div.content dd, #tracking div.content dd
 {
 	float: right;
+}
+.signature, .custom_fields_above_signature, .attachments
+{
+	clear: left;
 }
 #avatar_server_stored div
 {

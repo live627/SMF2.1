@@ -15,6 +15,7 @@ $txt['delete_user'] = 'Delete user';
 $txt['current_status'] = 'Current Status:';
 $txt['personal_text'] = 'Personal Text';
 $txt['personal_picture'] = 'Personalized Picture';
+$txt['choose_avatar_gallery'] = 'Choose avatar from gallery';
 $txt['picture_text'] = 'Picture/Text';
 $txt['reset_form'] = 'Reset Form';
 $txt['preferred_language'] = 'Preferred Language';
@@ -23,7 +24,7 @@ $txt['no_pic'] = '(no pic)';
 $txt['latest_posts'] = 'Latest posts of: ';
 $txt['additional_info'] = 'Additional Information';
 $txt['avatar_by_url'] = 'Specify your own avatar by URL. (e.g.: <em>http://www.mypage.com/mypic.gif</em>)';
-$txt['my_own_pic'] = 'I have my own pic';
+$txt['my_own_pic'] = 'Specify avatar by URL';
 $txt['date_format'] = 'The format here will be used to show dates throughout this forum.';
 $txt['time_format'] = 'Time Format';
 $txt['display_name_desc'] = 'This is the displayed name that people will see.';
@@ -203,7 +204,7 @@ $txt['none'] = 'None';
 $txt['own_profile_confirm'] = 'Are you sure you want to delete your account?';
 $txt['view_ips_by'] = 'View IPs used by';
 
-$txt['avatar_will_upload'] = 'I will upload my own picture';
+$txt['avatar_will_upload'] = 'Upload an avatar';
 
 // Use numeric entities in the below three strings.
 $txt['activate_changed_email'] = 'You\'ve changed your email address. In order to validate this address you will receive an email. Click the link in that email to reactivate your account.';

@@ -1584,7 +1584,7 @@ function forumProfile($memID)
 
 	setupProfileContext(
 		array(
-			'avatar_choice', 'personal_text', 'hr',
+			'avatar_choice', 'hr', 'personal_text', 'hr',
 			'bday1', 'location', 'gender', 'hr',
 			'icq', 'aim', 'msn', 'yim', 'hr',
 			'usertitle', 'signature', 'hr',
