@@ -66,3 +66,7 @@
  {
 	font-weight: normal;
  }
+a:link, a:hover, a:visited
+{
+	text-decoration: underline;
+}

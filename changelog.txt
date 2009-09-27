@@ -71,6 +71,7 @@ September 2009
  ! PostgreSQL 8.4 doesn't like '0000-01-01' so use '0001-01-01bc' instead (install_2-0_postgresql.sql)
  ! UTF8 compatibility check wasn't always working for PostgreSQL (install.php)
  ! "Show new replies to your posts" caused a DB error in some versions of PostgreSQL (Recent.php, Subs-Db-Postgresql.php) [Bug 3764]
+ * Underline links in the installer and upgrader to make them more noticeable (install.css) [Bug 3801] 
 
 August 2009
 --------------------------------------------------------------------------------
