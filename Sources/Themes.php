@@ -799,6 +799,10 @@ function SetThemeSettings()
 		// Make sure items are cast correctly.
 		foreach ($context['theme_settings'] as $item)
 		{
+			// Make sure $item is an array
+			if (!is_array($item))
+				$item = array();
+
 			foreach (array('options', 'default_options') as $option)
 			{
 				if (!isset($_POST[$option][$item['id']]))
