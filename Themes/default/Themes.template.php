@@ -669,10 +669,10 @@ function template_pick()
 					<br />
 					<ul class="reset">
 						<li>
-							<a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '" id="theme_use_', $theme['id'], '">', $txt['theme_set'], '</a>
+							<a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '" id="theme_use_', $theme['id'], '">[', $txt['theme_set'], ']</a>
 						</li>
 						<li>
-							<a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';theme=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '" id="theme_preview_', $theme['id'], '">', $txt['theme_preview'], '</a>
+							<a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';theme=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '" id="theme_preview_', $theme['id'], '">[', $txt['theme_preview'], ']</a>
 						</li>
 					</ul>
 				</div>

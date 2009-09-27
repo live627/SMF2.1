@@ -31,8 +31,8 @@ $txt['theme_latest'] = 'Latest and Greatest Themes';
 $txt['theme_latest_fetch'] = 'Fetching latest themes from www.simplemachines.org...';
 
 $txt['theme_pick'] = 'Choose a theme...';
-$txt['theme_preview'] = 'preview &raquo;';
-$txt['theme_set'] = 'use this theme';
+$txt['theme_preview'] = 'Preview theme';
+$txt['theme_set'] = 'Use this theme';
 $txt['theme_user'] = 'person is using this theme.';
 $txt['theme_users'] = 'people are using this theme.';
 $txt['theme_pick_variant'] = 'Select Variant';
