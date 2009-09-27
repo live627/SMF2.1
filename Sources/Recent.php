@@ -1051,7 +1051,7 @@ function UnreadTopics()
 				))
 			);
 		else
-			$request = $smcFunc['db_query']('', '
+			$request = $smcFunc['db_query']('unread_replies', '
 				SELECT DISTINCT t.id_topic
 				FROM {db_prefix}topics AS t
 					INNER JOIN {db_prefix}messages AS m ON (m.id_topic = t.id_topic AND m.id_member = {int:current_member})' . (strpos($_REQUEST['sort'], 'ms.') === false ? '' : '

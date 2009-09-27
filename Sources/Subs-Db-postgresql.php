@@ -299,6 +299,9 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		'spider_check' => array(
 			'~(.)$~' => '$1 ORDER BY LENGTH(user_agent) DESC',
 		),
+		'unread_replies' => array(
+			'~t.id_topic~' => '$1, {raw:sort}',
+		),
 	);
 
 	if (isset($replacements[$identifier]))
