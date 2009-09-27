@@ -473,7 +473,7 @@ function smf_openid_generate_private_key()
 	do
 	{
 		$str = '';
-		for($i = 0; $i < $num_bytes; $i += 4)
+		for ($i = 0; $i < $num_bytes; $i += 4)
 			$str .= pack('L', mt_rand());
 
 		$bytes = "\x00" . $str;

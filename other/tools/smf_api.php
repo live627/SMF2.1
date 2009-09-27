@@ -1058,7 +1058,7 @@ if (!function_exists('array_combine'))
 		$keys = array_values($keys);
 		$values = array_values($values);
 
-		for($i=0; $i < $count; $i++)
+		for ($i=0; $i < $count; $i++)
 			$ret[$keys[$i]] = $values[$i];
 
 		return $ret;

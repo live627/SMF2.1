@@ -2553,7 +2553,7 @@ function cache_put_data($key, $value, $ttl = 120)
 			{
 				// Write the header.
 				@flock($fp, LOCK_EX);
-				fwrite($fp, '<' . '?' . 'php if(!defined(\'SMF\')) die; if (' . (time() + $ttl) . ' < time()) $expired = true; else{$expired = false; $value = \'' . addcslashes($value, '\\\'') . '\';}' . '?' . '>');
+				fwrite($fp, '<' . '?' . 'php if (!defined(\'SMF\')) die; if (' . (time() + $ttl) . ' < time()) $expired = true; else{$expired = false; $value = \'' . addcslashes($value, '\\\'') . '\';}' . '?' . '>');
 				@flock($fp, LOCK_UN);
 				fclose($fp);
 			}

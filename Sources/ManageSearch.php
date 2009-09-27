@@ -438,7 +438,7 @@ function EditSearchMethod()
 
 		if ($request !== false && $smcFunc['db_num_rows']($request) > 0)
 		{
-			while($row = $smcFunc['db_fetch_assoc']($request))
+			while ($row = $smcFunc['db_fetch_assoc']($request))
 			{
 				if ($row['relname'] == $db_prefix . 'messages')
 				{

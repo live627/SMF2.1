@@ -1320,7 +1320,7 @@ function initialize()
 	if (file_exists(dirname($_SERVER['SCRIPT_FILENAME']) . '/SSI.php') && !defined('SMF'))
 		require_once(dirname($_SERVER['SCRIPT_FILENAME']) . '/SSI.php');
 	// Hmm... no SSI.php and no SMF?
-	elseif(!defined('SMF'))
+	elseif (!defined('SMF'))
 		die('<strong>Error:</strong> Cannot start - please verify you put this in the same place as SMF\'s SSI.php.');
 
 	$forum_version = get_file_versions(true);
@@ -2356,7 +2356,7 @@ function get_error_log()
 	$context['errors'] = array();
 
 	// 1.0 queries first... (regular ol' mysql calls)
-	if(empty($smcFunc))
+	if (empty($smcFunc))
 	{
 		// Just how many errors are there?
 		$result = mysql_query("

@@ -563,7 +563,7 @@ function show_settings()
 
 		foreach ($section as $setting => $info)
 		{
-			if($info[0] == 'hidden')
+			if ($info[0] == 'hidden')
 				continue;
 
 			if ($info[0] != 'flat' && empty($show_db_settings))
