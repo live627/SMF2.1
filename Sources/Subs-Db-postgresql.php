@@ -300,7 +300,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 			'~(.)$~' => '$1 ORDER BY LENGTH(user_agent) DESC',
 		),
 		'unread_replies' => array(
-			'~t.id_topic~' => '$1, {raw:sort}',
+			'~t.id_topic~' => 't.id_topic, {raw:sort}',
 		),
 	);
 
