@@ -8,12 +8,12 @@ function template_main()
 	echo '
 	<div id="statistics" class="main_section">
 		<h4 class="titlebg"><span class="left"></span>
-			<span>', $context['page_title'], '</span>
+			', $context['page_title'], '
 		</h4>
+		<h3 class="catbg"><span class="left"></span>
+			<img src="', $settings['images_url'], '/stats_info.gif" class="icon" alt="" /> ', $txt['general_stats'], '
+		</h3>
 		<div class="flow_hidden">
-			<h3 class="catbg"><span class="left"></span>
-				<img src="', $settings['images_url'], '/stats_info.gif" class="icon" alt="" /> ', $txt['general_stats'], '
-			</h3>
 			<div id="stats_left">
 				<div class="windowbg">
 					<span class="topslice"><span></span></span>
