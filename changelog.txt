@@ -73,6 +73,8 @@ September 2009
  ! "Show new replies to your posts" caused a DB error in some versions of PostgreSQL (Recent.php, Subs-Db-Postgresql.php) [Bug 3764]
  * Underline links in the installer and upgrader to make them more noticeable (install.css) [Bug 3801]
  ! Changing theme settings was causing an "uninitialized string offset" error (Themes.php) [Bug 3800]
+ ! Don't parse message bodies for the unread topics or unread replies screens to conserve CPU cycles, unless the theme settings say otherwise. (Recent.php)
+
 
 August 2009
 --------------------------------------------------------------------------------
@@ -8169,7 +8171,6 @@ January 2004:
  ! Fixed some more upgrade issues with instant messages.
  ! Defined the actual_ URLs and paths in a different place so they'd get loaded earlier.
  + repair_ID_IM.php added. Use it to repair the instant message tables.
- ! Don't parse message bodies for the unread topics or unread replies screens to conserve CPU cycles, unless the theme settings say otherwise. (Recent.php)
 
 
 Legend:
