@@ -224,16 +224,12 @@ function template_main()
 	if ($context['user']['is_logged'])
 	{
 		echo '
-	<div id="posting_icons" class="flow_hidden">';
+	<div id="posting_icons" class="align_left">';
 
 		// Mark read button.
 		$mark_read_button = array(
 			'markread' => array('text' => 'mark_as_read', 'image' => 'markread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=all;' . $context['session_var'] . '=' . $context['session_id']),
 		);
-
-		// Show the mark all as read button?
-		if ($settings['show_mark_read'] && !empty($context['categories']))
-			template_button_strip($mark_read_button, 'right');
 
 		echo '
 		<ul class="reset">
@@ -242,6 +238,10 @@ function template_main()
 			<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant'], '/new_redirect.png" alt="" /> ', $txt['redirect_board'], '</li>
 		</ul>
 	</div>';
+	
+		// Show the mark all as read button?
+		if ($settings['show_mark_read'] && !empty($context['categories']))
+			echo '<div class="mark_read">', template_button_strip($mark_read_button, 'right'), '</div>';
 	}
 	else
 	{

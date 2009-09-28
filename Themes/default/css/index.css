@@ -1504,6 +1504,10 @@ p.moderators
 	clear: right;
 	text-align: right;
 }
+.mark_read
+{
+	padding: 0 0.5em;
+}
 
 /* the newsfader */
 #smfFadeScroller
