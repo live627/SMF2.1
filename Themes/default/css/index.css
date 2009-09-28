@@ -1668,7 +1668,12 @@ img.new_posts
 {
 	overflow: hidden;
 }
-
+/* Events */
+#edit_event
+{
+	margin: 0 1em;
+	vertical-align: middle;
+}
 /* Poll question */
 #poll
 {
