@@ -76,6 +76,7 @@ September 2009
  ! Don't parse message bodies for the unread topics or unread replies screens to conserve CPU cycles, unless the theme settings say otherwise. (Recent.php)
  * Improved the linked events layout (Display template, index.css) [Bug 3806]
  * the forum history should be separate from the upper stats (Stats template) [Bug 3786]
+ ! Regex could reach php stack limit and cause seg fault when generating custom index. So be less aggressive with backreferences(Search.php, Subs.php) [Bug 3805]
 
 
 August 2009
