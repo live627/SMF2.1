@@ -202,7 +202,6 @@ FROM {$from_prefix}thread_notify;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads', 'width', 'height');
 
 // Hopefully we have the path to php-fusion.
 if (!file_exists($_POST['path_from']))
@@ -213,13 +212,22 @@ $yAttachmentDir = $_POST['path_from'] . '/forum/attachments';
 if (!file_exists($yAttachmentDir))
 	return;
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $row['id_attach']);
-if (strlen($newfilename) > 255)
+$file_hash = getAttachmentFilename($row['filename'], $row['id_attach'], null, true);
+if (strlen($file_hash) > 255)
 	return;
 
-copy($yAttachmentDir . '/' . $row['filename'], $attachmentUploadDir . '/' . $newfilename);
+copy($yAttachmentDir . '/' . $row['filename'], $attachmentUploadDir . '/' . $file_hash);
 
-$rows[] = "{$row['id_attach']}, {$row['size']}, '{$row['filename']}', {$row['id_msg']}, {$row['downloads']}, {$row['width']}, {$row['height']}";
+$rows[] = array(
+	'id_attach' => $id_attach,
+	'size' => $row['size'],
+	'filename' => $row['filename'],
+	'file_hash' => $file_hash,
+	'id_msg' => $row['id_msg'],
+	'downloads' => $row['downloads'],
+	'width' => $row['width'],
+	'height' => $row['height'],
+);
 ---}
 SELECT
 	attach_id AS id_attach, attach_size AS size, attach_name AS filename,
@@ -236,14 +244,16 @@ TRUNCATE {$to_prefix}moderators;
 ---* {$to_prefix}moderators 25
 ---{
 $no_add = true;
-$keys = array('id_board', 'id_member');
 
 // All moderators are held in a period seperated array.
 $moderators = explode('.', $row['forum_moderators']);
 
 // Do a loop and get them corrected for inserting
 foreach ($moderators AS $mod)
-	$row[] = "{$row['id_board']}, {$mod}";
+	$rows[] = array(
+		'id_board' => $row['id_board'],
+		'id_member' => $mod
+	);
 ---}
 SELECT forum_id AS id_board, forum_moderators
 FROM {$from_prefix}forums;
@@ -261,6 +271,7 @@ WHERE id_group > 8;
 
 ---* {$to_prefix}membergroups
 	/* To get around weird ids we jump a little. We skip 8 just so its easier to know where the ids went */
-	SELECT group_id + 8 AS id_group, group_name AS group_name, '' AS online_color, '-1' AS min_posts, '' AS max_messages, '' AS stars
-	FROM {$from_prefix}user_groups;
+SELECT
+	group_id + 8 AS id_group, group_name AS group_name, '' AS online_color, '-1' AS min_posts, '' AS max_messages, '' AS stars
+FROM {$from_prefix}user_groups;
 ---*

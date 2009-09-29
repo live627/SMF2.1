@@ -204,7 +204,6 @@ FROM {$from_prefix}thread_notify;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads', 'width', 'height');
 
 // Hopefully we have the path to php-fusion.
 if (!file_exists($_POST['path_from']))
@@ -215,13 +214,22 @@ $yAttachmentDir = $_POST['path_from'] . '/forum/attachments';
 if (!file_exists($yAttachmentDir))
 	return;
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $row['id_attach']);
-if (strlen($newfilename) > 255)
+$file_hash = getAttachmentFilename($row['filename'], $row['id_attach'], null, true);
+if (strlen($file_hash) > 255)
 	return;
 
-copy($yAttachmentDir . '/' . $row['filename'], $attachmentUploadDir . '/' . $newfilename);
+copy($yAttachmentDir . '/' . $row['filename'], $attachmentUploadDir . '/' . $file_hash);
 
-$rows[] = "{$row['id_attach']}, {$row['size']}, '{$row['filename']}', {$row['id_msg']}, {$row['downloads']}, {$row['width']}, {$row['height']}";
+$rows[] = array(
+	'id_attach' => $id_attach,
+	'size' => $row['size'],
+	'filename' => $row['filename'],
+	'file_hash' => $file_hash,
+	'id_msg' => $row['id_msg'],
+	'downloads' => $row['downloads'],
+	'width' => $row['width'],
+	'height' => $row['height'],
+);
 ---}
 SELECT
 	attach_id AS id_attach, attach_size AS size, attach_name AS filename,

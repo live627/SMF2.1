@@ -258,14 +258,20 @@ WHERE forumid != 0;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getLegacyAttachmentFilename(basename($row['filename']), $id_attach);
+$file_hash = getLegacyAttachmentFilename(basename($row['filename']), $id_attach);
 $oldfile = $_POST['path_from'] . '/data/uploads/' . $row['attachpath'] . '/' . $row['location'] ;
-if (file_exists($oldfile) && strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/data/uploads/' . $row['attachpath'] . '/' . $row['location'], $attachmentUploadDir . '/' . $newfilename))
+if (file_exists($oldfile) && strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/data/uploads/' . $row['attachpath'] . '/' . $row['location'], $attachmentUploadDir . '/' . $file_hash))
 {
-	@touch($attachmentUploadDir . '/' . $newfilename, filemtime($row['filename']));
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes(basename($row['filename'])) . "', $row[id_msg], $row[downloads]";
+	@touch($attachmentUploadDir . '/' . $file_hash, filemtime($row['filename']));
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'filename' => basename($row['filename']),	
+		'file_hash' => $file_hash,
+		'id_msg' => $row['id_msg'],
+		'downloads' => $row['downloads'],
+	);
 	$id_attach++;
 }
 

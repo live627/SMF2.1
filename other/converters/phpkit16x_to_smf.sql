@@ -456,13 +456,18 @@ foreach ($avatars as $user_avatar)
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_member');
 $filepath = 'images/avatar/' . $row['user_avatar'];
-$newfilename = 'avatar_' . $row['id_member'] . strrchr($row['user_avatar'], '.');
+$file_hash = 'avatar_' . $row['id_member'] . strrchr($row['user_avatar'], '.');
 
-if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/' . $filepath, $attachmentUploadDir . '/' . $newfilename))
+if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/' . $filepath, $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($newfilename) . "', $row[id_member]";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'filename' => $row['filename'],	
+		'file_hash' => $file_hash,
+		'id_member' => $row['id_member'],
+	);
 	$id_attach++;
 }
 ---}

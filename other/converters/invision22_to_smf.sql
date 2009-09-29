@@ -943,7 +943,6 @@ updateSettingsFile(array(
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads', 'width', 'height');
 
 if (!isset($oldAttachmentDir))
 {
@@ -965,8 +964,9 @@ if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
 	$attachmentExtention = '';
 
 $oldFilename = strtr($row['old_encrypt'], array('upload:' => ''));
-$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
-if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $newfilename))
+$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+
+if (strlen($file_hash) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $file_hash))
 {
 	// Set the default empty values.
 	$width = '0';
@@ -976,7 +976,16 @@ if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, 
 	if (!empty($attachmentExtension))
 		list ($width, $height) = getimagesize($oldAttachmentDir . '/' . $oldFilename);
 
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads], '$width', 'height'";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize(attachmentUploadDir . '/' . $file_hash),
+		'filename' => $row['filename'],
+		'file_hash' => $file_hash,
+		'id_msg' => $row['id_msg'],
+		'downloads' => $row['downloads'],
+		'width' => $width,
+		'height' => $height,
+	);
 
 	$id_attach++;
 }
@@ -1069,7 +1078,16 @@ if (strlen($smf_avatar_filename) <= 255 && copy($ipb_avatar, $avatar_dir . '/' .
 	$filesize = filesize($ipb_avatar);
 	$id_member = $row['id_member'];
 
-	$rows[] = "'$id_attach', '$filesize', '" . addslashes($smf_avatar_filename) . "', '$id_member', '$width', '$height', '$attachment_type'";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => $filesize,
+		'filename' => $smf_avatar_filename,
+		'file_hash' => $file_hash,
+		'id_member' => $row['id_member'],
+		'width' => $row['width'],
+		'height' => $row['height'],
+	);
+
 }
 ---}
 SELECT id AS id_member, avatar_location AS filename, avatar_size AS dimension

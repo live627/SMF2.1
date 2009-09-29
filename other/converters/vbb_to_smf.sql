@@ -240,12 +240,19 @@ FROM {$from_prefix}subs;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
-if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/attachments/' . $row['filename'], $attachmentUploadDir . '/' . $newfilename))
+$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+
+if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/attachments/' . $row['filename'], $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, $row[size], '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => $row['size'],
+		'filename' => $row['filename'],
+		'file_hash' => $file_hash,
+		'id_msg' => $row['id_msg'],
+		'downloads' => $row['downloads'],
+	);
 
 	$id_attach++;
 }

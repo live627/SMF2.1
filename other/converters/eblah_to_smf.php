@@ -1315,8 +1315,7 @@ if (empty($preparsing))
 		while (true)
 		{
 			pastTime($_GET['substep']);
-
-			$setString = array();
+			$attachments = array();
 
 			$result = convert_query("
 				SELECT id_msg, temp_filename
@@ -1334,15 +1333,15 @@ if (empty($preparsing))
 
 						if (strlen($file) <= 255 && copy($eblah['uploaddir'] . '/' . $file, $attachmentUploadDir . '/' . $filename))
 						{
-							$setString[] = array($id_attach, $size, 0, addslashes($file), $row['id_msg']);
+							$attachments[] = array($id_attach, $size, 0, $file, $file_hash, $row['id_msg']);
 
 							$id_attach++;
 						}
 					}
 			}
 
-			if (!empty($setString))
-				convert_insert('attachments', array('id_attach', 'size', 'downloads', 'filename', 'id_msg'), $setString);
+			if (!empty($attachments))
+				convert_insert('attachments', array('id_attach' => 'int', 'size' => 'int', 'downloads' => 'int', 'filename' => 'string', 'file_hash' => 'string', 'id_msg' => 'int', 'width' => 'int', 'height' => 'int'), $attachments, 'insert');
 
 			$_GET['substep'] += 100;
 			if (convert_num_rows($result) < 100)

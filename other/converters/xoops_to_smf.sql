@@ -190,7 +190,6 @@ TRUNCATE {$to_prefix}attachments;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads', 'width', 'height');
 
 if (!isset($oldAttachmentDir))
 {
@@ -224,8 +223,9 @@ foreach ($attachments as $attachment)
 		$attachmentExtention = '';
 
 	$oldFilename = $row['oldfilename'];
-	$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
-	if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $newfilename))
+	$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+
+	if (strlen($file_hash) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $file_hash))
 	{
 
 		// Set the default empty values.
@@ -236,7 +236,17 @@ foreach ($attachments as $attachment)
 		if (!empty($attachmentExtension))
 			list ($width, $height) = getimagesize($oldAttachmentDir . '/' . $oldFilename);
 
-		$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads], '$width', '$height'";
+		$rows[] = array(
+			'id_attach' => $id_attach,
+			'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+			'filename' => $attachedfile['name_display'],
+			'file_hash' => $file_hash,
+			'id_msg' => $row['id_msg'],
+			'size' => $size,
+			'width' => $width,
+			'height' => $heigh,
+			'downloads' => $attachment['num_download']
+		);
 
 		$id_attach++;
 	}

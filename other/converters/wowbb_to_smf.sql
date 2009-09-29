@@ -711,14 +711,19 @@ copy_dir($wowbb_avatar_gallery_path, $smf_avatar_directory);
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_member');
 $filename = preg_replace('/images\/avatars\//','',$row['user_avatar']);
 $filepath = $row['user_avatar'];
-$newfilename = 'avatar_' . $row['id_member'] . strrchr($row['user_avatar'], '.');
+$file_hash = 'avatar_' . $row['id_member'] . strrchr($row['user_avatar'], '.');
 
-if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/' . $filepath, $attachmentUploadDir . '/' . $newfilename))
+if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/' . $filepath, $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($newfilename) . "', $row[id_member]";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'filename' => $row['filename'],
+		'file_hash' => $file_hash,
+		'id_member' => $row['id_member'],
+	);
 	$id_attach++;
 }
 ---}
@@ -735,15 +740,21 @@ AND user_avatar !='';
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
-$newfilename = getLegacyAttachmentFilename(basename($row['filename']), $id_attach);
+$file_hash = getAttachmentFilename(basename($row['filename']), $id_attach, null, true);
 
-$file=fopen($attachmentUploadDir . '/' . $newfilename,'wb');
-fwrite($file,$row['file_contents']);
+$file = fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
+fwrite($file, $row['file_contents']);
 fclose($file);
 
-@touch($attachmentUploadDir . '/' . $newfilename, filemtime($row['filename']));
-$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes(basename($row['filename'])) . "', $row[id_msg], $row[downloads]";
+@touch($attachmentUploadDir . '/' . $file_hash, filemtime($row['filename']));
+$rows[] = array(
+	'id_attach' => $id_attach,
+	'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+	'filename' => $row['filename'],
+	'file_hash' => $file_hash,
+	'id_msg' => $row['id_msg'],
+	'downloads' => $row['downloads'],
+);
 $id_attach++;
 ---}
 SELECT
@@ -805,18 +816,16 @@ if (isset($smiley_enable))
 		SET value = '1'
 		WHERE variable='smiley_enable'");
 else
-	convert_query("
-		INSERT IGNORE INTO {$to_prefix}settings
-			(variable, value)
-		VALUES ('smiley_enable','1')");
+	convert_insert('settings', array('variable' => 'string', 'value' => 'string'),
+		array('smiley_enable', '1'), 'ignore'
+	);
 
 if (is_file($_POST['path_from'] . '/images/emoticons/'. $row['filename']))
 {
 	copy($_POST['path_from'] . '/images/emoticons/'. $row['filename'] , $smf_smileys_directory . '/default/'.$row['filename']);
-	$request2 = convert_query("
-		INSERT IGNORE INTO {$to_prefix}smileys
-			(code, filename, description, hidden)
-		VALUES ('$row[code]','$row[filename]', '$row[description]','1')");
+	convert_insert('smileys', array('code' => 'string', 'filename' => 'string', 'description' => 'string', 'hidden' => 'int'),
+		array($row['code'], $row['newfilename'], $row['description'], 1), 'ignore'
+	);
 }
 ---}
 SELECT

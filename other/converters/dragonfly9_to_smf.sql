@@ -428,19 +428,15 @@ while ($row = mysql_fetch_assoc($request))
 		$this_board[$g][] = 'poll_add_own';
 	}
 
-	$setString = '';
+	$inserts = array();
 	foreach ($this_board as $id_group => $permissions)
 	{
 		foreach ($permissions as $perm)
-			$setString .= "
-			($id_group, $row[id_board], '$perm'),";
+			$inserts[] = array($id_group, $row['id_board'], $perm);
 	}
 
-	if ($setString != '')
-		convert_query("
-			INSERT IGNORE INTO {$to_prefix}board_permissions
-				(id_group, id_board, permission)
-			VALUES" . substr($setString, 0, -1));
+	if (!empty($inserts))
+		convert_insert('board_permissions', array('id_group' => 'int', 'id_board' => 'int', 'permission' => 'string'), $inserts);
 }
 convert_free_result($request);
 ---}
@@ -516,18 +512,12 @@ while ($row = mysql_fetch_assoc($request))
 		$this_group[] = 'split_any';
 	}
 
-	$setString = '';
+	$inserts = array();
 	foreach ($this_group as $perm)
-	{
-		$setString .= "
-			($row[id_group], $row[id_board], '$perm'),";
-	}
+			$inserts[] = array($id_group, $row['id_board'], $perm);
 
-	if ($setString != '')
-		convert_query("
-			INSERT IGNORE INTO {$to_prefix}board_permissions
-				(id_group, id_board, permission)
-			VALUES" . substr($setString, 0, -1));
+	if (!empty($inserts))
+		convert_insert('board_permissions', array('id_group' => 'int', 'id_board' => 'int', 'permission' => 'string'), $inserts);
 
 	// Give group access to board.
 	$result = convert_query("
@@ -764,21 +754,24 @@ while (true)
 			continue;
 
 		// Frankly I don't care whether they want encrypted filenames - they're having it - too dangerous.
-		$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
+		$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
 
-		if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $row['encrypted'], $attachmentUploadDir . '/' . $newfilename))
+		if (strlen($file_hash) <= 255 && copy($oldAttachmentDir . '/' . $row['encrypted'], $attachmentUploadDir . '/' . $file_hash))
 		{
-			$attachments[] = "($id_attach, $fileSize, SUBSTRING('" . addslashes($row['filename']) . "', 1, 255), $row[id_msg], $row[downloads])";
-
+			$attachments[] = array(
+				'id_attach' => $id_attach,
+				'size' => $fileSize,
+				'downloads' => $row['downloads'],
+				'filename' => $row['filename'],
+				'file_hash' => $file_hash,
+				'id_msg' => $row['id_msg'],
+			);
 			$id_attach++;
 		}
 	}
 
-	if (!empty($attachments))
-		convert_query("
-			INSERT INTO {$to_prefix}attachments
-				(id_attach, size, filename, id_msg, downloads)
-			VALUES " . implode(', ', $attachments));
+			if (!empty($attachments))
+				convert_insert('attachments', array('id_attach' => 'int', 'size' => 'int', 'downloads' => 'int', 'filename' => 'string', 'file_hash' => 'string', 'id_msg' => 'int'), $attachments, 'insert');
 
 	$_REQUEST['start'] += 100;
 	if (convert_num_rows($result) < 100)

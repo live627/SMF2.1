@@ -112,10 +112,9 @@ elseif ($row['user_avatar_type'] == 1 && strlen($row['avatar']) > 0)
 	$smf_avatar_filename = 'avatar_' . $row['id_member'] . strrchr($row['avatar'], '.');
 	copy($phpbb_avatar_upload_path . '/' . $row['avatar'], $smf_attachments_dir . '/' . $smf_avatar_filename);
 
-	convert_query("
-		INSERT INTO {$to_prefix}attachments
-			(id_msg, id_member, filename)
-		VALUES (0, $row[id_member], SUBSTRING('" . addslashes($smf_avatar_filename) . "', 1, 255))");
+	convert_insert('attachments', array('id_msg' => 'int', 'id_member' => 'int', 'filename' => 'string'),
+		array(0, $row['id_member'], $smf_avatar_filename)
+	);
 	$row['avatar'] = '';
 }
 elseif ($row['user_avatar_type'] == 3)
@@ -934,18 +933,26 @@ while (true)
 			continue;
 
 		// Frankly I don't care whether they want encrypted filenames - they're having it - too dangerous.
-		$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
+		$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
 
-		if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $row['encrypted'], $attachmentUploadDir . '/' . $newfilename))
+
+		if (strlen($file_hash) <= 255 && copy($oldAttachmentDir . '/' . $row['encrypted'], $attachmentUploadDir . '/' . $file_hash))
 		{
-			$attachments[] = array($id_attach, $fileSize, substr(addslashes($row['filename']), 0, 255), $row['id_msg'], $row['downloads']);
+			$rows[] = array(
+				'id_attach' => $id_attach,
+				'size' => $fileSize,
+				'filename' => $attachedfile['filename'],
+				'file_hash' => $file_hash,
+				'id_msg' => $row['post_id'],
+				'downloads' => 0
+			);
 
 			$id_attach++;
 		}
 	}
 
 	if (!empty($attachments))
-		convert_insert('attachments', array('id_attach', 'size', 'filename', 'id_msg', 'downloads'), $attachments);
+		convert_insert('attachments', array('id_attach' => 'int', 'size' => 'int', 'filename' => 'string', 'file_hash' => 'string', 'id_msg' => 'int', 'downloads' => 'int'), $attachments);
 
 	$_REQUEST['start'] += 100;
 	if (convert_num_rows($result) < 100)

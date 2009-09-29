@@ -1275,8 +1275,7 @@ if (empty($preparsing))
 		while (true)
 		{
 			pastTime($_GET['substep']);
-
-			$setString = '';
+			$attachments = array();
 
 			$result = convert_query("
 				SELECT id_msg, temp_filename
@@ -1286,18 +1285,18 @@ if (empty($preparsing))
 			while ($row = convert_fetch_assoc($result))
 			{
 				$size = filesize($yabb['uploaddir'] . '/' . $row['temp_filename']);
-				$filename = getLegacyAttachmentFilename($row['temp_filename'], $id_attach);
+				$file_hash = $id_attach . '_' . getAttachmentFilename($row['temp_filename'], $id_attach, null, true);
 
-				if (strlen($filename) <= 255 &&  copy($yabb['uploaddir'] . '/' . $row['temp_filename'], $attachmentUploadDir . '/' . $filename))
+				if (strlen($filename) <= 255 &&  copy($yabb['uploaddir'] . '/' . $row['temp_filename'], $attachmentUploadDir . '/' . $file_hash))
 				{
-					$setString[] = array($id_attach, $size, 0, addslashes($row['temp_filename']), $row['id_msg']);
+					$attachments[] = array($id_attach, $size, 0, $row['temp_filename'], $file_hash, $row['id_msg'], 0, 0);
 
 					$id_attach++;
 				}
 			}
 
-			if (!empty($setString))
-				convert_insert('attachments', array('id_attach', 'size', 'downloads', 'filename', 'id_msg'), $setString, 'replace');
+			if (!empty($attachments))
+				convert_insert('attachments', array('id_attach' => 'int', 'size' => 'int', 'downloads' => 'int', 'filename' => 'string', 'file_hash' => 'string', 'id_msg' => 'int', 'width' => 'int', 'height' => 'int'), $attachments, 'insert');
 
 			$_GET['substep'] += 100;
 			if (convert_num_rows($result) < 100)

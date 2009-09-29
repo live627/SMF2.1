@@ -723,15 +723,22 @@ updateSettingsFile(array(
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
 if (empty($INFO['upload_dir']) || !file_exists($INFO['upload_dir']))
 	$INFO['upload_dir'] = $_POST['path_from'] . '/uploads';
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
-if (strlen($newfilename) <= 255 && copy($INFO['upload_dir'] . '/' . $row['old_encrypt'], $attachmentUploadDir . '/' . $newfilename))
+$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+
+if (strlen($file_hash) <= 255 && copy($INFO['upload_dir'] . '/' . $row['old_encrypt'], $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'filename' => $row['filename'],
+		'file_hash' => $file_hash,
+		'id_msg' => $row['id_msg'],
+		'downloads' => $row['downloads'],
+	);
 
 	$id_attach++;
 }
@@ -750,16 +757,21 @@ WHERE IFNULL(attach_id, '') != '';
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_member');
 
 if (empty($INFO['upload_dir']) || !file_exists($INFO['upload_dir']))
 	$INFO['upload_dir'] = $_POST['path_from'] . '/uploads';
 
 $oldFileName = substr($row['avatar'], 7);
-$newfilename = getLegacyAttachmentFilename($oldFileName, $id_attach);
-if (strlen($newfilename) <= 255 && copy($INFO['upload_dir'] . '/' . $oldFileName, $attachmentUploadDir . '/' . $newfilename))
+$file_hash = getAttachmentFilename($oldFileName, $id_attach, null, true);
+if (strlen($file_hash) <= 255 && copy($INFO['upload_dir'] . '/' . $oldFileName, $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($oldFileName) . "', $row[id_member]";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => $filesize,
+		'filename' => $oldFileName,
+		'file_hash' => $file_hash,
+		'id_member' => $row['id_member'],
+	);
 
 	$id_attach++;
 }

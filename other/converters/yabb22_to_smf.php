@@ -1033,7 +1033,6 @@ if (empty($preparsing))
 		while (true)
 		{
 			pastTime($_GET['substep']);
-
 			$attachments = array();
 
 			$result = convert_query("
@@ -1045,14 +1044,14 @@ if (empty($preparsing))
 			while ($row = mysql_fetch_assoc($result))
 			{
 				$size = filesize($yabb['uploaddir'] . '/' . $row['temp_filename']);
-				$filename = getLegacyAttachmentFilename($row['temp_filename'], $id_attach);
+				$file_hash = $id_attach . '_' . getAttachmentFilename($row['temp_filename'], $id_attach, null, true);
 
 				// Is this an image???
 				$attachmentExtension = strtolower(substr(strrchr($row['temp_filename'], '.'), 1));
 				if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
 					$attachmentExtention = '';
 
-				if (strlen($filename) <= 255 &&  copy($yabb['uploaddir'] . '/' . $row['temp_filename'], $attachmentUploadDir . '/' . $filename))
+				if (strlen($filename) <= 255 &&  copy($yabb['uploaddir'] . '/' . $row['temp_filename'], $attachmentUploadDir . '/' . $file_hash))
 				{
 					// Set the default empty values.
 					$width = '0';
@@ -1062,14 +1061,14 @@ if (empty($preparsing))
 					if (!empty($attachmentExtension))
 						list ($width, $height) = getimagesize($yabb['uploaddir'] . '/' . $row['temp_filename']);
 
-					$attachments[] = array($id_attach, $size, 0, addslashes($row['temp_filename']), $row['id_msg'], $width, $height);
+					$attachments[] = array($id_attach, $size, 0, $row['temp_filename'], $file_hash, $row['id_msg'], $width, $height);
 
 					$id_attach++;
 				}
 			}
 
 			if (!empty($attachments))
-				convert_insert('attachments', array('id_attach', 'size', 'downloads', 'filename', 'id_msg', 'width', 'height'), $attachments, 'insert');
+				convert_insert('attachments', array('id_attach' => 'int', 'size' => 'int', 'downloads' => 'int', 'filename' => 'string', 'file_hash' => 'string', 'id_msg' => 'int', 'width' => 'int', 'height' => 'int'), $attachments, 'insert');
 
 			$_GET['substep'] += $block_size;
 			if (convert_num_rows($result) < $block_size)
@@ -1094,8 +1093,8 @@ if (empty($preparsing))
 
 			$result = convert_query("
 				SELECT t.id_topic, MIN(m.id_msg) AS id_first_msg, MAX(m.id_msg) AS id_last_msg
-	FROM {$to_prefix}topics AS t
-		INNER JOIN {$to_prefix}messages AS m
+				FROM {$to_prefix}topics AS t
+					INNER JOIN {$to_prefix}messages AS m
 				WHERE m.id_topic = t.id_topic
 				GROUP BY t.id_topic
 				LIMIT $_GET[substep], $block_size");
@@ -1119,7 +1118,8 @@ if (empty($preparsing))
 
 				convert_query("
 					UPDATE {$to_prefix}topics
-					SET id_first_msg = '$row[id_first_msg]', id_last_msg = '$row[id_last_msg]',
+					SET
+						id_first_msg = '$row[id_first_msg]', id_last_msg = '$row[id_last_msg]',
 						id_member_started = '$row[id_member_started]', id_member_updated = '$row[id_member_updated]'
 					WHERE id_topic = $row[id_topic]
 					LIMIT 1");

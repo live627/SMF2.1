@@ -264,18 +264,14 @@ $request = convert_query("
 
 	while ($mods=mysql_fetch_array($request))
 	{
-		$moderators =unserialize($mods['forum_moderator']);
+		$moderators = unserialize($mods['forum_moderator']);
 		foreach ($moderators as $id_member)
-		{
-			convert_query("
-				INSERT IGNORE INTO {$to_prefix}moderators
-					(id_board, id_member)
-				VALUES ('$mods[id_board]' , '$id_member')");
-		}
+			convert_insert('moderators', array('id_board' => 'int', 'id_member' => 'int'),
+				array($$mods['id_board'], $id_member), 'ignore'
+			);
 	}
 
 convert_free_result($request);
-
 ---}
 ---#
 
@@ -296,7 +292,6 @@ WHERE rank_special ='0';
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
 // Get the XOOPS Attachments path
 $request = convert_query("
@@ -309,25 +304,30 @@ convert_free_result($request);
 
 $attachments = unserialize(base64_decode($row['attachment']));
 foreach ($attachments as $attachedfile)
-	{
-		$newfilename = getLegacyAttachmentFilename(basename($attachedfile['name_display']), $id_attach);
-		$oldfile=$_POST['path_from'] . '/'.$xoops_attachment_path.'/'.$attachedfile['name_saved'];
+{
+	$file_hash = $id_attach . '_' . getAttachmentFilename(basename($attachedfile['name_display']), $id_attach, null, true);
+	$oldfile = $_POST['path_from'] . '/' . $xoops_attachment_path . '/' . $attachedfile['name_saved'];
 
-			if (file_exists($oldfile))
-			{
-				if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/'.$xoops_attachment_path.'/'.$attachedfile['name_saved'], $attachmentUploadDir . '/' . $newfilename))
-				{
-					$size=filesize($oldfile);
-					@touch($attachmentUploadDir . '/' .$newfilename, filemtime($attachedfile['name_saved']));
-					convert_query("
-						INSERT IGNORE INTO {$to_prefix}attachments
-						(id_attach, id_msg, filename, size)
-						VALUES ('$id_attach','$row[post_id]',
-								'$attachedfile[name_display]', '$size')");
-						$id_attach++;
-				}
-			}
+	if (file_exists($oldfile))
+	{
+		if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/' . $xoops_attachment_path . '/' . $attachedfile['name_saved'], $attachmentUploadDir . '/' . $file_hash))
+		{
+			$size = filesize($oldfile);
+			@touch($attachmentUploadDir . '/' .$file_hash, filemtime($attachedfile['name_saved']));
+
+			$rows[] = array(
+				'id_attach' => $id_attach,
+				'size' => $size,
+				'filename' => $attachedfile['name_display'],
+				'file_hash' => $file_hash,
+				'id_msg' => $row['post_id'],
+				'downloads' => 0
+			);
+
+			$id_attach++;
+		}
 	}
+}
 
 ---}
 SELECT post_id, attachment

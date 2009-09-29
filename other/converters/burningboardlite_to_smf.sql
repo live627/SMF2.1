@@ -69,12 +69,19 @@ FROM {$from_prefix}users AS u
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_member');
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
-if (copy($_POST['path_from'] . '/images/avatars/avatar-' . $row['avatarid'] . '.' . $row['avatarextension'], $attachmentUploadDir . '/' . $newfilename))
+$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+
+if (copy($_POST['path_from'] . '/images/avatars/avatar-' . $row['avatarid'] . '.' . $row['avatarextension'], $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_member]";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'filename' => $row['filename'],
+		'file_hash' => $file_hash,
+		'fileext' => $row['avatarextension'],
+		'id_member' => $row['id_member'],
+	);
 
 	$id_attach++;
 }

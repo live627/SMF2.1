@@ -142,12 +142,18 @@ FROM {$from_prefix}users AS u
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_member');
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
-if (copy($_POST['path_from'] . '/images/avatars/avatar-' . $row['avatarid'] . '.' . $row['avatarextension'], $attachmentUploadDir . '/' . $newfilename))
+$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+
+if (copy($_POST['path_from'] . '/images/avatars/avatar-' . $row['avatarid'] . '.' . $row['avatarextension'], $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_member]";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'filename' => $row['filename'],
+		'file_hash' => $file_hash,
+		'id_member' => $row['id_member'],
+	);
 
 	$id_attach++;
 }
@@ -394,7 +400,7 @@ while (true)
 			$ip_low4 = isset($sections[3]) && $sections[3] != '*' ? $sections[3] : 0;
 			$ip_high4 = isset($sections[3]) && $sections[3] != '*' ? $sections[3] : 255;
 
-			convert_insert('ban_groups', array('name', 'ban_time', 'expire_time', 'reason', 'notes', 'cannot_access'),
+			convert_insert('ban_groups', array('name' => 'string', 'ban_time' => 'int', 'expire_time' => 'int', 'reason' => 'string', 'notes' => 'string', 'cannot_access' => 'int'),
 				array("migrated_ban_" . $ban_count++, $ban_time, 0, '', 'Migrated from Burning Board', 1)
 			);
 			$id_ban_group = convert_insert_id();
@@ -402,7 +408,7 @@ while (true)
 			if (empty($id_ban_group))
 				continue;
 
-			convert_insert('ban_items', array('id_ban_group', 'ip_low1', 'ip_high1', 'ip_low2', 'ip_high2', 'ip_low3', 'ip_high3', 'ip_low4', 'ip_high4', 'email_address', 'hostname'),
+			convert_insert('ban_items', array('id_ban_group' => 'int', 'ip_low1' => 'int', 'ip_high1' => 'int', 'ip_low2' => 'int', 'ip_high2' => 'int', 'ip_low3' => 'int', 'ip_high3' => 'int', 'ip_low4' => 'int', 'ip_high4' => 'int', 'email_address' => 'string', 'hostname' => 'string'),
 				array($id_ban_group, $ip_low1, $ip_high1, $ip_low2, $ip_high2, $ip_low3, $ip_high3, $ip_low4, $ip_high4, '', '')
 			);
 		}
@@ -445,7 +451,7 @@ while (true)
 			if (empty($email))
 				continue;
 
-			convert_insert('ban_groups', array('name', 'ban_time', 'expire_time', 'reason', 'notes', 'cannot_access'),
+			convert_insert('ban_groups', array('name' => 'string', 'ban_time' => 'int', 'expire_time' => 'int', 'reason' => 'string', 'notes' => 'string', 'cannot_access' => 'int'),
 				array("migrated_ban_" . $ban_count++, $ban_time, 0, '', 'Migrated from Burning Board', 1)
 			);
 
@@ -454,7 +460,7 @@ while (true)
 			if (empty($id_ban_group))
 				continue;
 
-			convert_insert('ban_items', array('id_ban_group', 'email_address', 'hostname'),
+			convert_insert('ban_items', array('id_ban_group' => 'int', 'email_address' => 'string', 'hostname' => 'string'),
 				array($id_ban_group, $email, '')
 			);
 		}
@@ -523,7 +529,7 @@ foreach ($specificSmileys as $code => $name)
 }
 
 if (!empty($rows))
-	convert_insert('smileys', array('code', 'filename', 'description', 'smiley_order'), $rows, 'replace');
+	convert_insert('smileys', array('code' => 'string', 'filename' => 'string', 'description' => 'string', 'smiley_order' => 'int'), $rows, 'replace');
 ---}
 
 /******************************************************************************/
@@ -533,12 +539,19 @@ if (!empty($rows))
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
-if (copy($_POST['path_from'] . '/attachments/attachment-' . $row['attachmentid'] . '.' . $row['attachmentextension'], $attachmentUploadDir . '/' . $newfilename))
+$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach);
+if (copy($_POST['path_from'] . '/attachments/attachment-' . $row['attachmentid'] . '.' . $row['attachmentextension'], $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'id_msg' => $row['id_msg'],
+		'filename' => $row['filename'],
+		'file_hash' => $file_hash,
+		'fileext' => $row['attachmentextension'],
+		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'downloads' => $row['downloads'],
+	);
 
 	$id_attach++;
 }

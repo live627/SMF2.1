@@ -1255,7 +1255,7 @@ function doStep1()
 						}
 
 						// Not adding anything?
-						if (empty($no_add))
+						if (empty($no_add) && empty($ignore_slashes))
 						{
 							// You don't know where its been.
 							$temp = array();
@@ -1267,6 +1267,8 @@ function doStep1()
 							// Now that mess is over. Save it.
 							$rows[] = $temp;
 						}
+						elseif (empty($no_add) && !empty($ignore_slashes))
+							$rows[] = $row;
 						else
 							$no_add = false;
 

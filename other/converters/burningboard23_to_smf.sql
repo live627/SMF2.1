@@ -142,12 +142,18 @@ FROM {$from_prefix}users AS u
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_member');
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
-if (copy($_POST['path_from'] . '/images/avatars/avatar-' . $row['avatarid'] . '.' . $row['avatarextension'], $attachmentUploadDir . '/' . $newfilename))
+$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+
+if (copy($_POST['path_from'] . '/images/avatars/avatar-' . $row['avatarid'] . '.' . $row['avatarextension'], $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_member]";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'filename' => $row['filename'],
+		'file_hash' => $file_hash,
+		'id_member' => $row['id_member'],
+	);
 
 	$id_attach++;
 }
@@ -402,21 +408,17 @@ while (true)
 			$ip_low4 = isset($sections[3]) && $sections[3] != '*' ? $sections[3] : 0;
 			$ip_high4 = isset($sections[3]) && $sections[3] != '*' ? $sections[3] : 255;
 
-			convert_query("
-				INSERT INTO {$to_prefix}ban_groups
-					(name, ban_time, expire_time, notes, cannot_access, reason)
-				VALUES
-					('migrated_ban_" . ($ban_count++) . "', $ban_time, 0, 'Migrated from Burning Board', 1, '')");
+			convert_insert('ban_groups', array('name' => 'string', 'ban_time' => 'int', 'expire_time' => 'int', 'reason' => 'string', 'notes' => 'string', 'cannot_access' => 'int'),
+				array("migrated_ban_" . $ban_count++, $ban_time, 0, '', 'Migrated from Burning Board', 1)
+			);
 
 			$id_ban_group = convert_insert_id();
 
 			if (empty($id_ban_group))
 				continue;
 
-			convert_query("
-				INSERT INTO {$to_prefix}ban_items
-					(id_ban_group, ip_low1, ip_high1, ip_low2, ip_high2, ip_low3, ip_high3, ip_low4, ip_high4, hostname, email_address)
-				VALUES ($id_ban_group, $ip_low1, $ip_high1, $ip_low2, $ip_high2, $ip_low3, $ip_high3, $ip_low4, $ip_high4, '', '')");
+			convert_insert('ban_items', array('id_ban_group' => 'int', 'ip_low1' => 'int', 'ip_high1' => 'int', 'ip_low2' => 'int', 'ip_high2' => 'int', 'ip_low3' => 'int', 'ip_high3' => 'int', 'ip_low4' => 'int', 'ip_high4' => 'int', 'email_address' => 'string', 'hostname' => 'string'),
+				array($id_ban_group, $ip_low1, $ip_high1, $ip_low2, $ip_high2, $ip_low3, $ip_high3, $ip_low4, $ip_high4, '', '')
 		}
 	}
 
@@ -457,22 +459,18 @@ while (true)
 			if (empty($email))
 				continue;
 
-			convert_query("
-				INSERT INTO {$to_prefix}ban_groups
-					(name, ban_time, expire_time, notes, cannot_access, reason)
-				VALUES
-					('migrated_ban_" . ($ban_count++) . "', $ban_time, 0, 'Migrated from Burning Board', 1, '')");
+			convert_insert('ban_groups', array('name' => 'string', 'ban_time' => 'int', 'expire_time' => 'int', 'reason' => 'string', 'notes' => 'string', 'cannot_access' => 'int'),
+				array("migrated_ban_" . $ban_count++, $ban_time, 0, '', 'Migrated from Burning Board', 1)
+			);
 
 			$id_ban_group = convert_insert_id();
 
 			if (empty($id_ban_group))
 				continue;
 
-			convert_query("
-				INSERT INTO {$to_prefix}ban_items
-					(id_ban_group, email_address, hostname)
-				VALUES
-					($id_ban_group, SUBSTRING('$email', 1, 255), '')");
+			convert_insert('ban_items', array('id_ban_group' => 'int', 'email_address' => 'string', 'hostname' => 'string'),
+				array($id_ban_group, $email, '')
+			);
 		}
 	}
 
@@ -537,15 +535,11 @@ foreach ($specificSmileys as $code => $name)
 		continue;
 
 	$count++;
-	$rows[] = "SUBSTRING('$code', 1, 30), SUBSTRING('{$name}.gif', 1, 48), SUBSTRING('$name', 1, 80), $count";
+	$rows[] = array(substr($code, 0, 30), substr($name . '.gif', 0, 48), substr($name, 0, 80), $count);
 }
 
 if (!empty($rows))
-	convert_query("
-		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order)
-		VALUES (" . implode("),
-			(", $rows) . ")");
+	convert_insert('smileys', array('code' => 'string', 'filename' => 'string', 'description' => 'string', 'smiley_order' => 'int'), $rows, 'replace');
 ---}
 
 /******************************************************************************/
@@ -555,12 +549,20 @@ if (!empty($rows))
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
-if (copy($_POST['path_from'] . '/attachments/attachment-' . $row['attachmentid'] . '.' . $row['attachmentextension'], $attachmentUploadDir . '/' . $newfilename))
+$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+
+if (copy($_POST['path_from'] . '/attachments/attachment-' . $row['attachmentid'] . '.' . $row['attachmentextension'], $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
+		$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'filename' => $row['filename'],
+		'file_hash' => $file_hash,
+		'fileext' => $row['attachmentextension'],
+		'id_msg' => $row['id_msg'],
+		'downloads' => $row['downloads'],
+	);
 
 	$id_attach++;
 }

@@ -47,7 +47,6 @@ WHERE id != 1;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_member');
 
 if (!isset($allowedExt))
 {
@@ -78,10 +77,17 @@ foreach ($allowedExt as $ext)
 
 if (!empty($row['filename']))
 {
-	$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
-	if (copy($oldAttachmentDir . '/' . $row['filename'], $attachmentUploadDir . '/' . $newfilename))
+	$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+
+	if (copy($oldAttachmentDir . '/' . $row['filename'], $attachmentUploadDir . '/' . $file_hash))
 	{
-		$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_member]";
+		$rows[] = array(
+			'id_attach' => $id_attach,
+			'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+			'filename' => $row['filename'],
+			'file_hash' => $file_hash,
+			'id_member' => $row['id_member'],
+		);
 		$id_attach++;
 	}
 }

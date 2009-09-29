@@ -307,14 +307,19 @@ DROP COLUMN temp_id;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
 $real_filename = preg_replace('~^post-\d+-\d+-~', '', $row['filename']);
-$newfilename = getLegacyAttachmentFilename($real_filename, $id_attach);
-if (strlen($newfilename) <= 255 && copy($ib_uploads . '/' . $row['filename'], $attachmentUploadDir . '/' . $newfilename))
+$file_hash = getLegacyAttachmentFilename($real_filename, $id_attach);
+if (strlen($file_hash) <= 255 && copy($ib_uploads . '/' . $row['filename'], $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($real_filename) . "', $row[id_msg], $row[downloads]";
-
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'filename' => $real_filename,	
+		'file_hash' => $file_hash,
+		'id_msg' => $row['id_msg'],
+		'downloads' => $row['downloads'],
+	);
 	$id_attach++;
 }
 ---}

@@ -238,17 +238,22 @@ WHERE pm_folder != 1;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
-
-
 
 // Get the filesize!
 $row['size'] = filesize($_POST['path_from'] . '/attachments/' . $row['attach_file']);
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
-if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/attachments/' . $row['attach_file'], $attachmentUploadDir . '/' . $newfilename))
+$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+
+if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/attachments/' . $row['attach_file'], $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, $row[size], '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => $row['size'],
+		'filename' => $row['filename'],
+		'file_hash' => $file_hash,
+		'id_msg' => $row['id_msg'],
+		'downloads' => $row['downloads'],
+	);
 
 	$id_attach++;
 }
@@ -272,11 +277,20 @@ $originalName = str_replace('./avatars/uploaded/', '', $row['filename']);
 
 $row['size'] = filesize($_POST['path_from'] . '/avatars/uploaded/' . $originalName);
 $fileName = str_replace(array('.avtr', './avatars/uploaded/'), array('.jpg', ''), $row['filename']);
-$newFileName = getLegacyAttachmentFilename($fileName, $id_attach);
+$file_hash = getLegacyAttachmentFilename($fileName, $id_attach);
 
-if (strlen($newFileName) <= 225 && (file_exists($_POST['path_from'] . '/avatars/uploaded/' . $originalName) && copy($_POST['path_from'] . '/avatars/uploaded/' . $originalName, $attachmentUploadDir . '/' . $newFileName)))
-	$rows[] = "$row[id_member], '$newFileName', $row[width], $row[height], $row[size]";
+if (strlen($file_hash) <= 225 && (file_exists($_POST['path_from'] . '/avatars/uploaded/' . $originalName) && copy($_POST['path_from'] . '/avatars/uploaded/' . $originalName, $attachmentUploadDir . '/' . $file_hash)))
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'filename' => $row['filename'],
+		'file_hash' => $file_hash,
+		'id_member' => $row['id_member'],
+		'width' => $row['width'],
+		'height' => $row['height'],
+		'size' => $row['size'],
+	);
 
+$id_attach++;
 ---}
 SELECT
 	user_id AS id_member, user_avatar AS filename, user_avatar_width AS width,

@@ -215,7 +215,6 @@ FROM {$from_prefix}{$dbtables['notify_forum']};
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'id_msg', 'id_member', 'filename', 'size', 'downloads', 'width', 'height');
 
 if (!isset($yAttachmentDir))
 {
@@ -231,13 +230,24 @@ if (!isset($yAttachmentDir))
 if (!file_exists($yAttachmentDir))
 	return;
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $row['id_attach']);
-if (strlen($newfilename) > 255)
+$file_hash = $row['id_attach'] . '_' . getAttachmentFilename($row['filename'], 0, null, true);
+if (strlen($file_hash) > 255)
 	return;
 
-copy($yAttachmentDir . '/' . $row['at_file'], $attachmentUploadDir . '/' . $newfilename);
-
-$rows[] = "{$row['id_attach']}, {$row['id_msg']}, {$row['id_member']}, '{$row['filename']}', {$row['size']}, {$row['downloads']}, {$row['width']}, {$row['height']}";
+if (copy($yAttachmentDir . '/' . $row['at_file'], $attachmentUploadDir . '/' . $file_hash))
+{
+	$rows[] = array(
+		'id_attach' => $row['id_attach'],
+		'id_msg' => $row['id_msg'],
+		'id_member' => $row['id_member'],
+		'filename' => $row['filename'],
+		'file_hash' => $file_hash,
+		'size' => $row['size'],
+		'downloads' => $row['downloads'],
+		'width' => $row['width'],
+		'height' => $row['height'],
+	);
+}
 ---}
 SELECT
 	atid AS id_attach, 0 AS ID_THUMB, at_pid AS id_msg, at_mid AS id_member, at_file,

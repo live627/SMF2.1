@@ -1209,8 +1209,7 @@ return true;
 		while (true)
 		{
 			pastTime($_GET['substep']);
-
-			$setString = '';
+			$attachments = array();
 
 			$result = convert_query("
 				SELECT m.id_msg, con.temp as temp_filename
@@ -1221,14 +1220,14 @@ return true;
 			while ($row = mysql_fetch_assoc($result))
 			{
 				$size = filesize($yabb['uploaddir'] . '/' . $row['temp_filename']);
-				$filename = getLegacyAttachmentFilename($row['temp_filename'], $id_attach);
+				$file_hash = $id_attach . '_' . getAttachmentFilename($row['temp_filename'], $id_attach, null, true);
 
 				// Is this an image???
 				$attachmentExtension = strtolower(substr(strrchr($row['temp_filename'], '.'), 1));
 				if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
 					$attachmentExtention = '';
 
-				if (strlen($filename) <= 255 &&  copy($yabb['uploaddir'] . '/' . $row['temp_filename'], $attachmentUploadDir . '/' . $filename))
+				if (strlen($filename) <= 255 &&  copy($yabb['uploaddir'] . '/' . $row['temp_filename'], $attachmentUploadDir . '/' . $file_hash))
 				{
 					// Set the default empty values.
 					$width = '0';
@@ -1238,18 +1237,14 @@ return true;
 					if (!empty($attachmentExtension))
 						list ($width, $height) = getimagesize($yabb['uploaddir'] . '/' . $row['temp_filename']);
 
-					$setString .= "
-						($id_attach, $size, 0, '" . addslashes($row['temp_filename']) . "', $row[id_msg], '$width', '$height'),";
+					$attachments[] = array($id_attach, $size, 0, $row['temp_filename'], $file_hash, $row['id_msg'], $width, $height);
 
 					$id_attach++;
 				}
 			}
 
-			if ($setString != '')
-				convert_query("
-					INSERT INTO {$to_prefix}attachments
-						(id_attach, size, downloads, filename, id_msg, width, height)
-					VALUES" . substr($setString, 0, -1));
+			if (!empty($attachments))
+				convert_insert('attachments', array('id_attach' => 'int', 'size' => 'int', 'downloads' => 'int', 'filename' => 'string', 'file_hash' => 'string', 'id_msg' => 'int', 'width' => 'int', 'height' => 'int'), $attachments, 'insert');
 
 			$_GET['substep'] += $block_size;
 			if (convert_num_rows($result) < $block_size)
@@ -1644,7 +1639,7 @@ return true;
 		return $field;
 	}
 
-	function doBlock($table, &$block, $ignore = false, $return_first = false, $return_last = false)
+	function doBlock($table, &$block, $ignore = false, $return_first = false, $return_last = false, $no_prefix = false)
 	{
 		global $to_prefix;
 
@@ -1686,27 +1681,14 @@ return true;
 				unset($row['temp']);
 			}
 
-			convert_query("
-				INSERT IGNORE INTO {$to_prefix}$table
-					(" . implode(', ', array_keys($row)) . ")
-				VALUES ('" . implode('\', \'', $row) . "')");
+			$result = convert_insert($table, array_keys($row), $row, 'insert', $no_prefix);
 
-			$last = convert_insert_id();
+			$last = convert_insert_id($result);
 			if (empty($first))
 				$first = $last;
 
 			if (isset($temp))
-			{
-				$rec = $temp;
-				if (preg_match('/\.ou/i', $rec))
-					$rec = substr($temp, 0 , -3);
-
-				convert_query("
-					INSERT INTO {$to_prefix}convert
-						(real_id, temp, rec, type)
-					VALUES ({$last}, '{$temp}', '{$rec}', '{$table}')");
-
-			}
+				convert_insert('convert', array('real_id', 'temp', 'type'), array($last, $temp, $table), 'insert');
 		}
 
 		$block = array();

@@ -243,19 +243,26 @@ GROUP BY id_topic, id_member;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
-if (strlen($newfilename) > 255)
+$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+
+if (strlen($file_hash) > 255)
 	return;
-$fp = @fopen($attachmentUploadDir . '/' . $newfilename, 'wb');
+$fp = @fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
 if (!$fp)
 	return;
 
 fwrite($fp, $row['attachment']);
 fclose($fp);
 
-$rows[] = "$id_attach, $row[size], 0, '" . addslashes($row['filename']) . "', $row[id_msg]";
+$rows[] = array(
+	'id_attach' => $id_attach,
+	'size' => $row['size'],
+	'filename' => $row['filename'],
+	'file_hash' => $file_hash,
+	'id_msg' => $row['id_msg'],
+	'downloads' => 0,
+);
 $id_attach++;
 ---}
 SELECT postid AS id_msg, attachment, size, name AS filename

@@ -321,13 +321,21 @@ ALTER TABLE {$to_prefix}poll_choices
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
+$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
 
-if (copy($_POST['path_from'] . '/wcf/attachments/attachment-' . $row['attachmentID'] , $attachmentUploadDir . '/' . $newfilename))
+
+if (copy($_POST['path_from'] . '/wcf/attachments/attachment-' . $row['attachmentID'] , $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'filename' => $row['filename'],
+		'file_hash' => $file_hash,
+		'id_msg' => $row['id_msg'],
+		'downloads' => $row['downloads'],
+	);
+
 	$id_attach++;
 }
 ---}
@@ -343,12 +351,18 @@ FROM {$from_prefix}{$wcf_prefix}attachment;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_member');
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
-if (copy($_POST['path_from'] . '/wcf/images/avatars/avatar-' . $row['avatarID'] . '.' . $row['avatarExtension'], $attachmentUploadDir . '/' . $newfilename))
+$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+
+if (copy($_POST['path_from'] . '/wcf/images/avatars/avatar-' . $row['avatarID'] . '.' . $row['avatarExtension'], $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_member]";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'filename' => $row['filename'],
+		'file_hash' => $file_hash,
+		'id_member' => $row['id_member'],
+	);
 	$id_attach++;
 }
 ---}
@@ -418,19 +432,17 @@ if (isset($smiley_enable))
 		WHERE variable='smiley_enable'");
 
 else
-	convert_query("
-		INSERT IGNORE INTO {$to_prefix}settings
-			(variable, value)
-		VALUES ('smiley_enable','1')");
+	convert_insert('settings', array('variable' => 'string', 'value' => 'string'),
+		array('smiley_enable', '1'), 'ignore'
+	);
 
 if (is_file($_POST['path_from'] . '/wcf/images/smilies/'. $row['filename']))
 {
 	copy($_POST['path_from'] . '/wcf/images/smilies/'. $row['filename'] , $smf_smileys_directory . '/default/'.$row['filename']);
 
-	$request2 = convert_query("
-		INSERT IGNORE INTO {$to_prefix}smileys
-			(code, filename, description, hidden)
-		VALUES ('$row[code]','$row[filename]', '$row[description]','1')");
+	convert_insert('smileys', array('code' => 'string', 'filename' => 'string', 'description' => 'string', 'hidden' => 'int'),
+		array($row['code'], $row['newfilename'], $row['description'], 1), 'ignore'
+	);
 }
 ---}
 SELECT

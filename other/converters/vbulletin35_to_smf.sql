@@ -286,7 +286,6 @@ if (!empty($rows))
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads', 'width', 'height');
 
 if (!isset($vb_settings))
 {
@@ -317,10 +316,11 @@ if (empty($id_attach))
 	$id_attach = empty($id_attach) ? 1 : $id_attach;
 }
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
+$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+
 if (empty($vb_settings['attachfile']))
 {
-	$fp = @fopen($attachmentUploadDir . '/' . $newfilename, 'wb');
+	$fp = @fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
 	if (!$fp)
 		return;
 
@@ -329,12 +329,12 @@ if (empty($vb_settings['attachfile']))
 }
 elseif ($vb_settings['attachfile'] == 1)
 {
-	if (!copy($vb_settings['attachpath'] . '/' . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $newfilename))
+	if (!copy($vb_settings['attachpath'] . '/' . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $file_hash))
 		return;
 }
 elseif ($vb_settings['attachfile'] == 2)
 {
-	if (!copy($vb_settings['attachpath'] . '/' . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $newfilename))
+	if (!copy($vb_settings['attachpath'] . '/' . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $file_hash))
 		return;
 }
 
@@ -345,9 +345,18 @@ $height = '0';
 // Is an an image?
 $attachmentExtension = strtolower(substr(strrchr($row['filename'], '.'), 1));
 if (in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png', 'bmp')))
-	list ($width, $height) = getimagesize($attachmentUploadDir . '/' . $newfilename);
+	list ($width, $height) = getimagesize($attachmentUploadDir . '/' . $file_hash);
 
-$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads], '$width', '$height'";
+$rows[] = array(
+	'id_attach' => $id_attach,
+	'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+	'filename' => $row['filename'],	
+	'file_hash' => $file_hash,
+	'id_msg' => $row['id_msg'],
+	'downloads' => $row['downloads'],
+	'width' => $row['width'],
+	'height' => $row['height'],
+);
 $id_attach++;
 ---}
 SELECT
@@ -363,7 +372,6 @@ FROM {$from_prefix}attachment;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_member');
 
 if (!isset($vb_settings))
 {
@@ -383,22 +391,29 @@ if (!isset($vb_settings))
 }
 
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
-if (strlen($newfilename) > 255)
+$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+
+if (strlen($file_hash) > 255)
 	return;
 elseif (empty($vb_settings['usefileavatar']))
 {
-	$fp = @fopen($attachmentUploadDir . '/' . $newfilename, 'wb');
+	$fp = @fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
 	if (!$fp)
 		return;
 
 	fwrite($fp, $row['filedata']);
 	fclose($fp);
 }
-elseif (!copy($vb_settings['avatarpath'] . '/avatar' . $row['id_member'] . '_' . $row['avatarrevision'] . '.gif', $attachmentUploadDir . '/' . $newfilename))
+elseif (!copy($vb_settings['avatarpath'] . '/avatar' . $row['id_member'] . '_' . $row['avatarrevision'] . '.gif', $attachmentUploadDir . '/' . $file_hash))
 	return;
 
-$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_member]";
+$rows[] = array(
+	'id_attach' => $id_attach,
+	'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+	'filename' => $row['filename'],	
+	'file_hash' => $file_hash,
+	'id_member' => $row['id_member'],
+);
 $id_attach++;
 ---}
 SELECT ca.userid AS id_member, ca.filedata, ca.filename, u.avatarrevision

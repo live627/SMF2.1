@@ -217,13 +217,20 @@ if (!empty($rows))
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getLegacyAttachmentFilename(basename($row['filelocation']), $id_attach);
-if (strlen($newfilename) <= 255 && copy($row['filelocation'], $attachmentUploadDir . '/' . $newfilename))
+$file_hash = getAttachmentFilename(basename($row['filelocation']), $id_attach, null, true);
+if (strlen($file_hash) <= 255 && copy($row['filelocation'], $attachmentUploadDir . '/' . $file_hash))
 {
-	@touch($attachmentUploadDir . '/' . $newfilename, filemtime($row['filelocation']));
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes(basename($row['filelocation'])) . "', $row[id_msg], 0";
+	@touch($attachmentUploadDir . '/' . $file_hash, filemtime($row['filelocation']));
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'filename' => basename($row['filelocation']),
+		'file_hash' => $file_hash,
+		'id_msg' => $row['id_msg'],
+		'downloads' => 0,
+	);
+
 	$id_attach++;
 }
 ---}
@@ -238,12 +245,17 @@ FROM {$from_prefix}fb_attachments;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_member');
 
-$newfilename = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
-if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/components/com_fireboard/avatars/' . $row['filename'], $attachmentUploadDir . '/' . $newfilename))
+$file_hash = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
+if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/components/com_fireboard/avatars/' . $row['filename'], $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($newfilename) . "', $row[id_member]";
+	$rows[] = array(
+	'id_attach' => $id_attach,
+	'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+	'filename' => $row['filename'],	
+	'file_hash' => $file_hash,
+	'id_member' => $row['id_member'],
+);
 	$id_attach++;
 }
 ---}

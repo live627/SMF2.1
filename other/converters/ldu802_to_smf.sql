@@ -396,10 +396,9 @@ if (isset($smiley_enable))
 		WHERE variable='smiley_enable'");
 
 else
-	convert_query("
-		INSERT IGNORE INTO {$to_prefix}settings
-			(variable, value)
-		VALUES ('smiley_enable','1')");
+	convert_insert('settings', array('variable' => 'string', 'value' => 'string'),
+		array('smiley_enable', '1'), 'ignore'
+	);
 
 $row['newfilename'] = substr(strrchr($row['filename'], '/'),1);
 $row['description'] = htmlspecialchars($row['description'],ENT_QUOTES);
@@ -408,10 +407,9 @@ if (is_file($_POST['path_from'] . '/'. $row['filename']))
 {
  	copy($_POST['path_from'] . '/'. $row['filename'] , $smf_smileys_directory . '/default/'.$row['newfilename']);
 
-	$request2 = convert_query("
-		INSERT IGNORE INTO {$to_prefix}smileys
-			(code, filename, description, hidden)
-		VALUES ('$row[code]','$row[newfilename]', '$row[description]','1')");
+	convert_insert('smileys', array('code' => 'string', 'filename' => 'string', 'description' => 'string', 'hidden' => 'int'),
+		array($row['code'], $row['newfilename'], $row['description'], 1), 'ignore'
+	);
 }
 ---}
 SELECT
@@ -426,14 +424,19 @@ FROM {$from_prefix}smilies;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_member');
 
 $row['filename'] = substr(strrchr($row['user_avatar'], '/'),1);
-$newfilename = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
+$file_hash = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
 
-if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/' . $row['user_avatar'] , $attachmentUploadDir . '/' . $newfilename))
+if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/' . $row['user_avatar'] , $attachmentUploadDir . '/' . $file_hash))
 	{
-		$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($newfilename) . "', $row[id_member]";
+		$rows[] = array(
+			'id_attach' => $id_attach,
+			'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+			'filename' => $row['filename'],	
+			'file_hash' => $file_hash,
+			'id_member' => $row['id_member'],
+		);
 		$id_attach++;
 	}
 ---}

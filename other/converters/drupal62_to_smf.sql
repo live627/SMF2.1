@@ -200,14 +200,11 @@ TRUNCATE {$to_prefix}log_mark_read;
 Actually its not a mysql specific query, but why are we doing this?
 Just letting the select do its work would be a better option here
 */
-
 $no_add = true;
-$keys = array('id_topic', 'id_board', 'is_sticky', 'id_first_msg', 'id_last_msg', 'id_member_started', 'id_member_updated');
 
-$request = convert_query("
-	INSERT IGNORE INTO {$to_prefix}topics
-		(id_topic, id_board, is_sticky, id_first_msg, id_last_msg, id_member_started, id_member_updated)
-		VALUES ('$row[id_topic]' , '$row[id_board]' , '$row[is_sticky]' , '$row[id_first_msg]' , '$row[id_last_msg]' , '$row[id_member_started]' , '$row[id_member_updated]')");
+convert_insert('topics', array('id_topic' => 'int', 'id_board' => 'int', 'is_sticky' => 'int', 'id_first_msg' => 'int', 'id_last_msg' => 'int', 'id_member_started' => 'int', 'id_member_updated' => 'int'),
+	array($row['id_topic'], $row['id_board'], $row['is_sticky'], $row['id_first_msg'], $row['id_last_msg'], $row['id_member_started'], $row['id_member_updated'])
+);
 ---}
 
 SELECT
@@ -369,14 +366,21 @@ $_REQUEST['start'] = 0;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getLegacyAttachmentFilename(basename($row['filename']), $id_attach);
+$file_hash = getAttachmentFilename(basename($row['filename']), $id_attach, null, true);
 $oldfile = $_POST['path_from'] . '/' . $row['filepath'];
-if (file_exists($oldfile) && strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/'.$row['filepath'], $attachmentUploadDir . '/' . $newfilename))
+if (file_exists($oldfile) && strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/'.$row['filepath'], $attachmentUploadDir . '/' . $file_hash))
 {
-	@touch($attachmentUploadDir . '/' . $newfilename, filemtime($row['filename']));
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes(basename($row['filename'])) . "', $row[id_msg], 0";
+	@touch($attachmentUploadDir . '/' . $file_hash, filemtime($row['filename']));
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'filename' => basename($row['filename']),
+		'file_hash' => $file_hash,
+		'id_msg' => $row['id_msg'],
+		'downloads' => 0,
+	);
+
 	$id_attach++;
 }
 ---}
@@ -393,13 +397,18 @@ FROM {$from_prefix}upload AS u
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_member');
 $filepath = $row['picture'];
 $row['filename'] = substr(strrchr($row['picture'], '/'), 1);
-$newfilename = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
-if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/' . $filepath , $attachmentUploadDir . '/' . $newfilename))
+$file_hash = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
+if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/' . $filepath , $attachmentUploadDir . '/' . $file_hash))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($newfilename) . "', $row[id_member]";
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'filename' => basename($row['filename']),
+		'file_hash' => $file_hash,
+		'id_member' => $row['id_member'],
+	);
 	$id_attach++;
 }
 ---}

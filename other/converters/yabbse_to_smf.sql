@@ -344,7 +344,6 @@ unset($_GET['start']);
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
 if (!isset($yAttachmentDir))
 {
@@ -357,10 +356,11 @@ if (!isset($yAttachmentDir))
 	convert_free_result($result);
 }
 
-$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
-if (strlen($newfilename) > 255)
+$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+
+if (strlen($file_hash) > 255)
 	return;
-$fp = @fopen($attachmentUploadDir . '/' . $newfilename, 'wb');
+$fp = @fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
 if (!$fp)
 	return;
 
@@ -370,10 +370,17 @@ while (!feof($fp2))
 
 fclose($fp);
 
-$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
+$rows[] = array(
+	'id_attach' => $id_attach,
+	'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+	'filename' => $row['filename'],
+	'file_hash' => $file_hash,
+	'id_msg' => $row['id_msg'],
+	'downloads' => 0,
+);
 $id_attach++;
 ---}
-SELECT id_msg, 0 AS downloads, attachmentFilename AS filename
+SELECT id_msg, attachmentFilename AS filename
 FROM {$from_prefix}messages
 WHERE attachmentFilename IS NOT NULL
 	AND attachmentFilename != '';
