@@ -290,7 +290,7 @@ function template_main()
 				</div>
 			</div>
 		</div>
-		<div class="clear"></div>
+		<br class="clear" />
 		<div class="flow_hidden">
 			<h3 class="catbg"><span class="left"></span>
 				<img src="', $settings['images_url'], '/stats_history.gif" class="icon" alt="" /> ', $txt['forum_history'], '
@@ -299,7 +299,7 @@ function template_main()
 	if (!empty($context['yearly']))
 	{
 		echo '
-		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="tborder" style="margin-bottom: 1ex;" id="stats">
+		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="tborder" id="stats">
 			<tr class="titlebg" valign="middle" align="center">
 				<td width="25%">', $txt['yearly_summary'], '</td>
 				<td width="15%">', $txt['stats_new_topics'], '</td>
