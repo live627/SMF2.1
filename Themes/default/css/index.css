@@ -2532,7 +2532,11 @@ dl
 	font-size: 0.85em;
 	margin-bottom: 10px;
 }
-
+#personal_picture
+{
+	display: block;
+	margin-bottom: 0.3em;
+}
 #avatar_server_stored div
 {
 	float: left;
