@@ -161,7 +161,7 @@ if (!function_exists('text2words'))
 		global $smcFunc;
 
 		// Step 1: Remove entities/things we don't consider words:
-		$words = preg_replace('~([\x0B\0\xA0\t\r\s\n(){}\\[\\]<>!@$%^*.,:+=`\~\?/\\\\]|&(amp|lt|gt|quot);)+~', ' ', $text);
+		$words = preg_replace('~(?:[\x0B\0\xA0\t\r\s\n(){}\\[\\]<>!@$%^*.,:+=`\~\?/\\\\]|&(?:amp|lt|gt|quot);)+~', ' ', $text);
 
 		// Step 2: Entities we left to letters, where applicable, lowercase.
 		$words = preg_replace('~([^&\d]|^)[#;]~', '$1 ', un_htmlspecialchars(strtolower($words)));

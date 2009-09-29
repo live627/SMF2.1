@@ -195,7 +195,7 @@ function reloadSettings()
 			return ' . strtr($ent_check[0], array('&' => '&amp;'))  . 'htmlspecialchars($string, $quote_style, ' . ($utf8 ? '\'UTF-8\'' : '$charset') . ')' . $ent_check[1] . ';'),
 		'htmltrim' => create_function('$string', '
 			global $smcFunc;
-			return preg_replace(\'~^([ \t\n\r\x0B\x00' . $space_chars . ']|&nbsp;)+|([ \t\n\r\x0B\x00' . $space_chars . ']|&nbsp;)+$~' . ($utf8 ? 'u' : '') . '\', \'\', ' . implode('$string', $ent_check) . ');'),
+			return preg_replace(\'~^(?:[ \t\n\r\x0B\x00' . $space_chars . ']|&nbsp;)+|(?:[ \t\n\r\x0B\x00' . $space_chars . ']|&nbsp;)+$~' . ($utf8 ? 'u' : '') . '\', \'\', ' . implode('$string', $ent_check) . ');'),
 		'strlen' => create_function('$string', '
 			global $smcFunc;
 			return strlen(preg_replace(\'~' . $ent_list . ($utf8 ? '|.~u' : '~') . '\', \'_\', ' . implode('$string', $ent_check) . '));'),
@@ -243,7 +243,7 @@ function reloadSettings()
 			preg_match(\'~^(' . $ent_list . '|.){\' . $smcFunc[\'strlen\'](substr($string, 0, $length)) . \'}~'.  ($utf8 ? 'u' : '') . '\', $string, $matches);
 			$string = $matches[0];
 			while (strlen($string) > $length)
-				$string = preg_replace(\'~(' . $ent_list . '|.)$~'.  ($utf8 ? 'u' : '') . '\', \'\', $string);
+				$string = preg_replace(\'~(?:' . $ent_list . '|.)$~'.  ($utf8 ? 'u' : '') . '\', \'\', $string);
 			return $string;'),
 		'ucfirst' => $utf8 ? create_function('$string', '
 			global $smcFunc;

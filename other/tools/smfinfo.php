@@ -1159,7 +1159,7 @@ function show_footer()
 	/* Below is the hefty javascript for this. Upon opening the page it checks the current file versions with ones
 	   held at simplemachines.org and works out if they are up to date.  If they aren't it colors that files number
 	   red.  It also contains the function, swapOption, that toggles showing the detailed information for each of the
-	   file catorgories. (sources, languages, and templates.) */
+	   file categories. (sources, languages, and templates.) */
 	echo '
 		<script type="text/javascript" src="', $boardurl, '/Themes/default/', (strpos($context['forum_version'], '2.') !== false ? 'scripts/' : ''), 'script.js"></script>
 		<script type="text/javascript" src="http://www.simplemachines.org/smf/detailed-version.js?version=', $context['forum_version'], '"></script>

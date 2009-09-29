@@ -1336,7 +1336,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 						$add_begin = substr(trim($data), 0, 5) != \'&lt;?\';
 						$data = highlight_php_code($add_begin ? \'&lt;?php \' . $data . \'?&gt;\' : $data);
 						if ($add_begin)
-							$data = preg_replace(array(\'~^(.+?)&lt;\?.{0,40}?php(&nbsp;|\s)~\', \'~\?&gt;((?:</(font|span)>)*)$~\'), \'$1\', $data, 2);
+							$data = preg_replace(array(\'~^(.+?)&lt;\?.{0,40}?php(?:&nbsp;|\s)~\', \'~\?&gt;((?:</(font|span)>)*)$~\'), \'$1\', $data, 2);
 					}'),
 				'block_level' => false,
 				'disabled_content' => '$1',
@@ -1675,7 +1675,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			// Take care of some HTML!
 			if (!empty($modSettings['enablePostHTML']) && strpos($data, '&lt;') !== false)
 			{
-				$data = preg_replace('~&lt;a\s+href=(?:&quot;|")?((?:http://|ftp://|https://|ftps://|mailto:).+?)(?:&quot;|")?&gt;~i', '[url=$1]', $data);
+				$data = preg_replace('~&lt;a\s+href=(?:&quot;|")?((?:(?:ht|f)tp(?:s)?://|mailto:).+?)(?:&quot;|")?&gt;~i', '[url=$1]', $data);
 				$data = preg_replace('~&lt;/a&gt;~i', '[/url]', $data);
 
 				// <br /> should be empty.
@@ -1707,7 +1707,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 						// Remove action= from the URL - no funny business, now.
 						if (preg_match('~action(=|%3d)(?!dlattach)~i', $imgtag) != 0)
-							$imgtag = preg_replace('~action(=|%3d)(?!dlattach)~i', 'action-', $imgtag);
+							$imgtag = preg_replace('~action(?:=|%3d)(?!dlattach)~i', 'action-', $imgtag);
 
 						// Check if the image is larger than allowed.
 						if (!empty($modSettings['max_image_width']) && !empty($modSettings['max_image_height']))
@@ -2437,7 +2437,7 @@ function highlight_php_code($code)
 	error_reporting($oldlevel);
 
 	// Yes, I know this is kludging it, but this is the best way to preserve tabs from PHP :P.
-	$buffer = preg_replace('~SMF_TAB(</(font|span)><(font color|span style)="[^"]*?">)?\(\);~', '<pre style="display: inline;">' . "\t" . '</pre>', $buffer);
+	$buffer = preg_replace('~SMF_TAB(?:</(font|span)><(?:font color|span style)="[^"]*?">)?\(?:\);~', '<pre style="display: inline;">' . "\t" . '</pre>', $buffer);
 
 	return strtr($buffer, array('\'' => '&#039;', '<code>' => '', '</code>' => ''));
 }
@@ -2600,10 +2600,10 @@ function redirectexit($setLocation = '', $refresh = false)
 
 	// Put the session ID in.
 	if (defined('SID') && SID != '')
-		$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '(?!\?' . preg_quote(SID, '/') . ')(\?)?/', $scripturl . '?' . SID . ';', $setLocation);
+		$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '(?!\?' . preg_quote(SID, '/') . ')(?:\?)?/', $scripturl . '?' . SID . ';', $setLocation);
 	// Keep that debug in their for template debugging!
 	elseif (isset($_GET['debug']))
-		$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '(\?)?/', $scripturl . '?debug;', $setLocation);
+		$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '(?:\?)?/', $scripturl . '?debug;', $setLocation);
 
 	if (!empty($modSettings['queryless_urls']) && (empty($context['server']['is_cgi']) || @ini_get('cgi.fix_pathinfo') == 1 || @get_cfg_var('cgi.fix_pathinfo') == 1) && (!empty($context['server']['is_apache']) || !empty($context['server']['is_lighttpd'])))
 	{
@@ -3337,7 +3337,7 @@ function theme_copyright($get_it = false)
 	if (strpos($forum_copyright, '<!--') !== false)
 		$forum_copyright = preg_replace('~<!--(.+?)-->~is', '$1', $forum_copyright);
 	if (strpos($forum_copyright, '<div') !== false)
-		$forum_copyright = preg_replace('~<div[^>]+>(.+?)(</div>)?~is', '$1', $forum_copyright);
+		$forum_copyright = preg_replace('~<div[^>]+>(.+?)(?:</div>)?~is', '$1', $forum_copyright);
 
 	// For SSI and other things, detect the version.
 	if (!isset($forum_version) || strpos($forum_version, 'SMF') === false || isset($_GET['checkcopyright']))
@@ -3651,7 +3651,7 @@ function text2words($text, $max_chars = 20, $encrypt = false)
 	global $smcFunc, $context;
 
 	// Step 1: Remove entities/things we don't consider words:
-	$words = preg_replace('~(?:[\x0B\0' . ($context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{A0}' : "\xC2\xA0") : '\xA0') . '\t\r\s\n(){}\\[\\]<>!@$%^*.,:+=`\~\?/\\\\]|&(amp|lt|gt|quot);)+~' . ($context['utf8'] ? 'u' : ''), ' ', strtr($text, array('<br />' => ' ')));
+	$words = preg_replace('~(?:[\x0B\0' . ($context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{A0}' : "\xC2\xA0") : '\xA0') . '\t\r\s\n(){}\\[\\]<>!@$%^*.,:+=`\~\?/\\\\]|&(?:amp|lt|gt|quot);)+~' . ($context['utf8'] ? 'u' : ''), ' ', strtr($text, array('<br />' => ' ')));
 
 	// Step 2: Entities we left to letters, where applicable, lowercase.
 	$words = un_htmlspecialchars($smcFunc['strtolower']($words));

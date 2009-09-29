@@ -471,7 +471,7 @@ function MembergroupMembers()
 		// Get all the members to be added... taking into account names can be quoted ;)
 		$_REQUEST['toAdd'] = strtr($smcFunc['htmlspecialchars']($_REQUEST['toAdd'], ENT_QUOTES), array('&quot;' => '"'));
 		preg_match_all('~"([^"]+)"~', $_REQUEST['toAdd'], $matches);
-		$member_names = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_REQUEST['toAdd']))));
+		$member_names = array_unique(array_merge($matches[1], explode(',', preg_replace('~"(?:[^"]+)"~', '', $_REQUEST['toAdd']))));
 
 		foreach ($member_names as $index => $member_name)
 		{

@@ -933,7 +933,7 @@ function AdminSearchInternal()
 			{
 				// Format the name - and remove any descriptions the entry may have.
 				$name = isset($txt[$found]) ? $txt[$found] : (isset($txt['setting_' . $found]) ? $txt['setting_' . $found] : $found);
-				$name = preg_replace('~<(div|span)\sclass="smalltext">.+?</div>~', '', $name);
+				$name = preg_replace('~<(?:div|span)\sclass="smalltext">.+?</(?:div|span)>~', '', $name);
 
 				$context['search_results'][] = array(
 					'url' => (substr($item[1], 0, 4) == 'area' ? $scripturl . '?action=admin;' . $item[1] : $item[1]) . ';' . $context['session_var'] . '=' . $context['session_id'] . ((substr($item[1], 0, 4) == 'area' && $section == 'settings' ? '#' . $item[0][0] : '')),

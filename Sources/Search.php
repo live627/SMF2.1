@@ -418,7 +418,7 @@ function PlushSearch2()
 		$userString = strtr($userString, array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_'));
 
 		preg_match_all('~"([^"]+)"~', $userString, $matches);
-		$possible_users = array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $userString)));
+		$possible_users = array_merge($matches[1], explode(',', preg_replace('~"(?:[^"]+)"~', '', $userString)));
 
 		for ($k = 0, $n = count($possible_users); $k < $n; $k++)
 		{
@@ -621,7 +621,7 @@ function PlushSearch2()
 	}
 
 	// Change non-word characters into spaces.
-	$stripped_query = preg_replace('~(?:[\x0B\0' . ($context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{A0}' : "\xC2\xA0") : '\xA0') . '\t\r\s\n(){}\\[\\]<>!@$%^*.,:+=`\~\?/\\\\]|&(amp|lt|gt|quot);)+~' . ($context['utf8'] ? 'u' : ''), ' ', $search_params['search']);
+	$stripped_query = preg_replace('~(?:[\x0B\0' . ($context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{A0}' : "\xC2\xA0") : '\xA0') . '\t\r\s\n(){}\\[\\]<>!@$%^*.,:+=`\~\?/\\\\]|&(?:amp|lt|gt|quot);)+~' . ($context['utf8'] ? 'u' : ''), ' ', $search_params['search']);
 
 	// Make the query lower case. It's gonna be case insensitive anyway.
 	$stripped_query = un_htmlspecialchars($smcFunc['strtolower']($stripped_query));
@@ -630,14 +630,14 @@ function PlushSearch2()
 	if (!empty($modSettings['search_simple_fulltext']))
 		$stripped_query = strtr($stripped_query, array('"' => ''));
 
-	$no_regexp = preg_match('~&#(\d{1,7}|x[0-9a-fA-F]{1,6});~', $stripped_query) === 1;
+	$no_regexp = preg_match('~&#(?:\d{1,7}|x[0-9a-fA-F]{1,6});~', $stripped_query) === 1;
 
 	// Extract phrase parts first (e.g. some words "this is a phrase" some more words.)
 	preg_match_all('/(?:^|\s)([-]?)"([^"]+)"(?:$|\s)/', $stripped_query, $matches, PREG_PATTERN_ORDER);
 	$phraseArray = $matches[2];
 
 	// Remove the phrase parts and extract the words.
-	$wordArray = explode(' ', preg_replace('~(?:^|\s)([-]?)"([^"]+)"(?:$|\s)~' . ($context['utf8'] ? 'u' : ''), ' ', $search_params['search']));
+	$wordArray = explode(' ', preg_replace('~(?:^|\s)(?:[-]?)"(?:[^"]+)"(?:$|\s)~' . ($context['utf8'] ? 'u' : ''), ' ', $search_params['search']));
 
 	// A minus sign in front of a word excludes the word.... so...
 	$excludedWords = array();
@@ -1884,7 +1884,7 @@ function prepareSearchContext($reset = false)
 				$force_partial_word = false;
 				foreach ($context['key_words'] as $keyword)
 				{
-					$keyword = preg_replace('~(&amp;#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e', '$GLOBALS[\'smcFunc\'][\'entity_fix\'](\'\\2\')', strtr($keyword, array('\\\'' => '\'', '&' => '&amp;')));
+					$keyword = preg_replace('~&amp;#(\d{1,7}|x[0-9a-fA-F]{1,6});~e', '$GLOBALS[\'smcFunc\'][\'entity_fix\'](\'\\1\')', strtr($keyword, array('\\\'' => '\'', '&' => '&amp;')));
 
 					if (preg_match('~[\'\.,/@%&;:(){}\[\]_\-+\\\\]$~', $keyword) != 0 || preg_match('~^[\'\.,/@%&;:(){}\[\]_\-+\\\\]~', $keyword) != 0)
 						$force_partial_word = true;
@@ -1908,7 +1908,7 @@ function prepareSearchContext($reset = false)
 			}
 
 			// Re-fix the international characters.
-			$message['body'] = preg_replace('~(&amp;#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e', '$GLOBALS[\'smcFunc\'][\'entity_fix\'](\'\\2\')', $message['body']);
+			$message['body'] = preg_replace('~&amp;#(\d{1,7}|x[0-9a-fA-F]{1,6});~e', '$GLOBALS[\'smcFunc\'][\'entity_fix\'](\'\\1\')', $message['body']);
 		}
 	}
 	else
@@ -2037,7 +2037,6 @@ function prepareSearchContext($reset = false)
 		$query = strtr($smcFunc['htmlspecialchars']($query), array('\\\'' => '\''));
 
 		$body_highlighted = preg_replace('/((<[^>]*)|' . preg_quote(strtr($query, array('\'' => '&#039;')), '/') . ')/ie' . ($context['utf8'] ? 'u' : ''), "'\$2' == '\$1' ? stripslashes('\$1') : '<strong class=\"highlight\">\$1</strong>'", $body_highlighted);
-		//$body_highlighted = preg_replace('/((<[^>]*)|' . preg_quote(strtr($query, array('\'' => '&#039;')), '/') . ')/ie' . ($context['utf8'] ? 'u' : ''), '\'$2\' == \'$1\' ? \'$1\' : \'<strong class="highlight">$1</strong>\'', $body_highlighted);
 		$subject_highlighted = preg_replace('/(' . preg_quote($query, '/') . ')/i' . ($context['utf8'] ? 'u' : ''), '<strong class="highlight">$1</strong>', $subject_highlighted);
 	}
 

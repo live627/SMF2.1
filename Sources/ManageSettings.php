@@ -1092,8 +1092,8 @@ function ModifySignatureSettings($return_config = false)
 				// Try to fix disabled tags.
 				if (!empty($disabledTags))
 				{
-					$sig = preg_replace('~\[(' . implode('|', $disabledTags) . ').+?\]~i', '', $sig);
-					$sig = preg_replace('~\[/(' . implode('|', $disabledTags) . ')\]~i', '', $sig);
+					$sig = preg_replace('~\[(?:' . implode('|', $disabledTags) . ').+?\]~i', '', $sig);
+					$sig = preg_replace('~\[/(?:' . implode('|', $disabledTags) . ')\]~i', '', $sig);
 				}
 
 				$sig = strtr($sig, array("\n" => '<br />'));

@@ -1175,7 +1175,7 @@ function MessageSearch2()
 		$userString = strtr($userString, array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_'));
 
 		preg_match_all('~"([^"]+)"~', $userString, $matches);
-		$possible_users = array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $userString)));
+		$possible_users = array_merge($matches[1], explode(',', preg_replace('~"(?:[^"]+)"~', '', $userString)));
 
 		for ($k = 0, $n = count($possible_users); $k < $n; $k++)
 		{
@@ -1268,7 +1268,7 @@ function MessageSearch2()
 	$searchArray = $matches[2];
 
 	// Remove the phrase parts and extract the words.
-	$tempSearch = explode(' ', preg_replace('~(?:^|\s)([-]?)"([^"]+)"(?:$|\s)~' . ($context['utf8'] ? 'u' : ''), ' ', $search_params['search']));
+	$tempSearch = explode(' ', preg_replace('~(?:^|\s)(?:[-]?)"(?:[^"]+)"(?:$|\s)~' . ($context['utf8'] ? 'u' : ''), ' ', $search_params['search']));
 
 	// A minus sign in front of a word excludes the word.... so...
 	$excludedWords = array();
@@ -1649,7 +1649,7 @@ function MessagePost()
 		if (isset($_REQUEST['quote']))
 		{
 			// Remove any nested quotes and <br />...
-			$form_message = preg_replace('~<br( /)?' . '>~i', "\n", $row_quoted['body']);
+			$form_message = preg_replace('~<br(?: /)?' . '>~i', "\n", $row_quoted['body']);
 			if (!empty($modSettings['removeNestedQuotes']))
 				$form_message = preg_replace(array('~\n?\[quote.*?\].+?\[/quote\]\n?~is', '~^\n~', '~\[/quote\]~'), '', $form_message);
 			if (empty($row_quoted['id_member']))
@@ -2048,7 +2048,7 @@ function MessagePost2()
 			$recipientString = strtr($_REQUEST[$recipientType], array('\\"' => '"'));
 
 			preg_match_all('~"([^"]+)"~', $recipientString, $matches);
-			$namedRecipientList[$recipientType] = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $recipientString))));
+			$namedRecipientList[$recipientType] = array_unique(array_merge($matches[1], explode(',', preg_replace('~"(?:[^"]+)"~', '', $recipientString))));
 
 			foreach ($namedRecipientList[$recipientType] as $index => $recipient)
 			{
@@ -3053,7 +3053,7 @@ function ReportMessage()
 		$smcFunc['db_free_result']($request);
 
 		// Remove the line breaks...
-		$body = preg_replace('~<br( /)?' . '>~i', "\n", $body);
+		$body = preg_replace('~<br(?: /)?' . '>~i', "\n", $body);
 
 		// Get any other recipients of the email.
 		$request = $smcFunc['db_query']('', '

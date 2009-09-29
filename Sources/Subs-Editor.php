@@ -144,7 +144,7 @@ function bbc_to_html($text)
 
 	// Parse unique ID's and disable javascript into the smileys - using the double space.
 	$i = 1;
-	$text = preg_replace('~(\s|&nbsp;)?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/[^<>]+?/([^<>]+?)"\s*)[^<>]*?border="0" class="smiley" />~e', '\'<\' . ' . 'stripslashes(\'$2\') . \'border="0" alt="" title="" onresizestart="return false;" id="smiley_\' . ' . "\$" .'i++ . \'_$3" style="padding: 0 3px 0 3px;" />\'', $text);
+	$text = preg_replace('~(?:\s|&nbsp;)?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/[^<>]+?/([^<>]+?)"\s*)[^<>]*?border="0" class="smiley" />~e', '\'<\' . ' . 'stripslashes(\'$1\') . \'border="0" alt="" title="" onresizestart="return false;" id="smiley_\' . ' . "\$" .'i++ . \'_$2" style="padding: 0 3px 0 3px;" />\'', $text);
 
 	return $text;
 }
@@ -158,7 +158,7 @@ function html_to_bbc($text)
 	$text = strtr($text, array("\n" => '', "\r" => ''));
 
 	// Though some of us love paragraphs the parser will do better with breaks.
-	$text = preg_replace('~</p>(\s*?)<p~i', '</p><br /><p', $text);
+	$text = preg_replace('~</p>(?:\s*?)<p~i', '</p><br /><p', $text);
 
 	// Safari/webkit wraps lines in Wysiwyg in <div>'s.
 	if ($context['browser']['is_webkit'])
@@ -185,7 +185,7 @@ function html_to_bbc($text)
 	}
 
 	// Do the smileys ultra first!
-	preg_match_all('~<img\s+[^<>]*?id="*smiley_\d+_([^<>]+?)[\s"/>]\s*[^<>]*?/*>(\s)?~i', $text, $matches);
+	preg_match_all('~<img\s+[^<>]*?id="*smiley_\d+_([^<>]+?)[\s"/>]\s*[^<>]*?/*>(?:\s)?~i', $text, $matches);
 	if (!empty($matches))
 	{
 		// Easy if it's not custom.
@@ -505,12 +505,12 @@ function html_to_bbc($text)
 
 	// Try our hand at all manner of lists - doesn't matter if we mess up the children as the BBC will clean it.
 	$text = preg_replace('~<li>\s*</li>~i', '', $text);
-	$text = preg_replace('~<(ul|ol)[^<>]*>\s*</(ul|ol)>~i', '', $text);
+	$text = preg_replace('~<(?:ul|ol)[^<>]*>\s*</(?:ul|ol)>~i', '', $text);
 	$last_text = '';
 	while ($text != $last_text)
 	{
 		$last_text = $text;
-		$text = preg_replace('~(<br\s*/?' . '>\s*){0,1}<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(ol|ul)>~ie', '\'[list\' . (\'$2\' == \'ol\' || \'$2\' == \'OL\' ? \' type=decimal\' : (strlen(\'$4\') > 1 ? \' type=$4\' : \'\')) . \']' . "\n" . '\' . strtr(\'$5\', array(\'\\"\' => \'"\')) . \'[/list]\'', $text);
+		$text = preg_replace('~(?:<br\s*/?' . '>\s*){0,1}<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(?:ol|ul)>~ie', '\'[list\' . (\'$1\' == \'ol\' || \'$1\' == \'OL\' ? \' type=decimal\' : (strlen(\'$3\') > 1 ? \' type=$3\' : \'\')) . \']' . "\n" . '\' . strtr(\'$4\', array(\'\\"\' => \'"\')) . \'[/list]\'', $text);
 	}
 	$last_text = '';
 

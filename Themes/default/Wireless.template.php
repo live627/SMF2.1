@@ -103,7 +103,7 @@ function template_wap_display()
 	while ($message = $context['get_message']())
 	{
 		// This is a special modification to the post so it will work on phones:
-		$message['body'] = preg_replace('~<div class="(quote|code)header">(.+?)</div>~', '<br />--- $2 ---', $message['body']);
+		$message['body'] = preg_replace('~<div class="(?:quote|code)header">(.+?)</div>~', '<br />--- $1 ---', $message['body']);
 		$message['body'] = strip_tags(str_replace(
 			array(
 				'<blockquote>',
@@ -333,7 +333,7 @@ function template_imode_display()
 	while ($message = $context['get_message']())
 	{
 		// This is a special modification to the post so it will work on phones:
-		$message['body'] = preg_replace('~<div class="(quote|code)header">(.+?)</div>~', '<br />--- $2 ---', $message['body']);
+		$message['body'] = preg_replace('~<div class="(?:quote|code)header">(.+?)</div>~', '<br />--- $1 ---', $message['body']);
 		$message['body'] = strip_tags(str_replace(
 			array(
 				'<blockquote>',
@@ -642,7 +642,7 @@ function template_imode_pm()
 	else
 	{
 		$message = $context['get_pmessage']();
-		$message['body'] = preg_replace('~<div class="(quote|code)header">(.+?)</div>~', '<br />--- $2 ---', $message['body']);
+		$message['body'] = preg_replace('~<div class="(?:quote|code)header">(.+?)</div>~', '<br />--- $1 ---', $message['body']);
 		$message['body'] = strip_tags(str_replace(
 			array(
 				'<blockquote>',
@@ -983,7 +983,7 @@ function template_wap2_display()
 	while ($message = $context['get_message']())
 	{
 		// This is a special modification to the post so it will work on phones:
-		$message['body'] = preg_replace('~<div class="(quote|code)header">(.+?)</div>~', '<br />--- $2 ---', $message['body']);
+		$message['body'] = preg_replace('~<div class="(?:quote|code)header">(.+?)</div>~', '<br />--- $1 ---', $message['body']);
 		$message['body'] = strip_tags(str_replace(
 			array(
 				'<blockquote>',
@@ -1286,7 +1286,7 @@ function template_wap2_pm()
 	else
 	{
 		$message = $context['get_pmessage']();
-		$message['body'] = preg_replace('~<div class="(quote|code)header">(.+?)</div>~', '<br />--- $2 ---', $message['body']);
+		$message['body'] = preg_replace('~<div class="(?:quote|code)header">(.+?)</div>~', '<br />--- $1 ---', $message['body']);
 		$message['body'] = strip_tags(str_replace(
 			array(
 				'<blockquote>',

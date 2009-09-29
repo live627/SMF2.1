@@ -254,7 +254,7 @@ function preparsecode(&$message, $previewing = false)
 			}
 
 			// Let's look at the time tags...
-			$parts[$i] = preg_replace('~\[time(=(absolute))*\](.+?)\[/time\]~ie', '\'[time]\' . (is_numeric(\'$3\') || @strtotime(\'$3\') == 0 ? \'$3\' : strtotime(\'$3\') - (\'$2\' == \'absolute\' ? 0 : (($modSettings[\'time_offset\'] + $user_info[\'time_offset\']) * 3600))) . \'[/time]\'', $parts[$i]);
+			$parts[$i] = preg_replace('~\[time(?:=(absolute))*\](.+?)\[/time\]~ie', '\'[time]\' . (is_numeric(\'$2\') || @strtotime(\'$2\') == 0 ? \'$2\' : strtotime(\'$2\') - (\'$1\' == \'absolute\' ? 0 : (($modSettings[\'time_offset\'] + $user_info[\'time_offset\']) * 3600))) . \'[/time]\'', $parts[$i]);
 
 			// Change the color specific tags to [color=the color].
 			$parts[$i] = preg_replace('~\[(black|blue|green|red|white)\]~', '[color=$1]', $parts[$i]);  // First do the opening tags.
@@ -672,7 +672,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 	{
 		$send_html = true;
 		$message = strtr($message, array($line_break => '<br />' . $line_break));
-		$message = preg_replace('~(' . preg_quote($scripturl, '~') . '([?/][\w\-_%\.,\?&;=#]+)?)~', '<a href="$1">$1</a>', $message);
+		$message = preg_replace('~(' . preg_quote($scripturl, '~') . '(?:[?/][\w\-_%\.,\?&;=#]+)?)~', '<a href="$1">$1</a>', $message);
 	}
 
 	list (, $from_name) = mimespecialchars(addcslashes($from !== null ? $from : $context['forum_name'], '<>()\'\\"'), true, $hotmail_fix, $line_break);
