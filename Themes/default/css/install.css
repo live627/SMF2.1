@@ -28,8 +28,7 @@
 	float: right;
 	width: 50%;
 	margin-top: -60px;
- }
-
+}
 #main-steps h2
 {
 	font-size: 1.5em;
@@ -63,9 +62,9 @@
 	color: #666;
 }
 .panel
- {
+{
 	font-weight: normal;
- }
+}
 a:link, a:hover, a:visited
 {
 	text-decoration: underline;
