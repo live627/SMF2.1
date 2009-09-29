@@ -2005,12 +2005,6 @@ function getLanguages($use_cache = true, $ignore_utf8 = true)
 	}
 
 	return $context['languages'];
-
-	// Make this easier to access.
-	$languages = array();
-	foreach ($context['languages'] as $lang)
-		$languages[] = $lang['name'];
-	return $languages;
 }
 
 // Replace all vulgar words with respective proper words. (substring or whole words..)
