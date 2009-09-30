@@ -78,6 +78,7 @@ September 2009
  * the forum history should be separate from the upper stats (Stats template) [Bug 3786]
  ! Regex could reach php stack limit and cause seg fault when generating custom index. So be less aggressive with backreferences(Search.php, Subs.php) [Bug 3805]
  ! More regex's could opt out of backreferences (19 files)
+ ! Tabs in php blocks broken (Subs.php) [Bug 3813]
 
 
 August 2009
