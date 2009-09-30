@@ -2597,8 +2597,39 @@ unset($_GET['ren_col']);
 
 ---# Adding column that stores the PM receiving setting...
 ALTER TABLE {$db_prefix}members
-ADD COLUMN pm_receive_from tinyint(4) unsigned NOT NULL default '0';
+ADD COLUMN pm_receive_from tinyint(4) unsigned NOT NULL default '1';
 ---#
+
+---# Enable the buddy and ignore lists if we have not done so thus far...
+---{
+
+// Don't do this if we've done this already.
+if (empty($modSettings['dont_repeat_buddylists']))
+{
+	// Make sure the pm_receive_from column has the right default value - early adoptors might have a '0' set here.
+	upgrade_query("
+		ALTER TABLE {$db_prefix}members
+		CHANGE pm_receive_from pm_receive_from tinyint(3) unsigned NOT NULL default '1'");
+
+	// Ignore posts made by ignored users by default.
+	upgrade_query("
+		REPLACE INTO {$db_prefix}themes
+			(id_member, id_theme, variable, value)
+		VALUES
+			(-1, 1, 'posts_apply_ignore_list', '1')");
+
+	// Enable buddy and ignore lists, and make sure not to skip this step next time we run this.
+	upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('enable_buddylists', '1'),
+			('dont_repeat_buddylists', '1')");
+}
+
+---}
+---#
+
 
 /******************************************************************************/
 --- Installing new default theme...
@@ -2705,7 +2736,6 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 				(variable, value)
 			VALUES
 				" . implode(', ', $newSettings));
-
 
 		// What about members?
 		upgrade_query("

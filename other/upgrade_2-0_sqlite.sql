@@ -505,10 +505,54 @@ $smcFunc['db_alter_table']('members', array(
 			'null' => false,
 			'type' => 'tinyint',
 			'size' => 4,
-			'default' => '0'
+			'default' => '1'
 		)
 	)
 ));
+---}
+---#
+
+---# Enable the buddy and ignore lists if we have not done so thus far...
+---{
+
+// Don't do this if we've done this already.
+if (empty($modSettings['dont_repeat_buddylists']))
+{
+	// Make sure the pm_receive_from column has the right default value - early adoptors might have a '0' set here.
+	$smcFunc['db_alter_table']('members', array(
+		'change' => array(
+			'pm_receive_from' => array(
+				'name' => 'pm_receive_from',
+				'null' => false,
+				'type' => 'tinyint',
+				'size' => 4,
+				'default' => '1'
+			)
+		)
+	));
+
+	// Enable buddy and ignore lists.
+	upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('enable_buddylists', '1')");
+
+	// Ignore posts made by ignored users by default, too.
+	upgrade_query("
+		REPLACE INTO {$db_prefix}themes
+			(id_member, id_theme, variable, value)
+		VALUES
+			(-1, 1, 'posts_apply_ignore_list', '1')");
+
+	// Make sure not to skip this step next time we run this.
+	upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('dont_repeat_buddylists', '1')");
+}
+
 ---}
 ---#
 

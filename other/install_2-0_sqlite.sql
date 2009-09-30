@@ -1373,7 +1373,7 @@ CREATE TABLE {$db_prefix}members (
   ignore_boards text NOT NULL,
   warning smallint NOT NULL default '0',
   passwd_flood varchar(12) NOT NULL default '',
-  pm_receive_from smallint NOT NULL default '0'
+  pm_receive_from smallint NOT NULL default '1'
 );
 
 #
@@ -1925,6 +1925,7 @@ INSERT INTO {$db_prefix}settings (variable, value) VALUES ('pruningOptions', '30
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('cache_enable', '1');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('reg_verification', '1');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('visual_verification_type', '3');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('enable_buddylist', '1');
 COMMIT;
 
 # --------------------------------------------------------
@@ -2095,6 +2096,7 @@ INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (2, 'theme_url
 INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (2, 'images_url', '{$boardurl}/Themes/core/images');
 INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (2, 'theme_dir', '{$boarddir}/Themes/core');
 INSERT INTO {$db_prefix}themes (id_member, id_theme, variable, value) VALUES (-1, 1, 'display_quick_reply', '1');
+INSERT INTO {$db_prefix}themes (id_member, id_theme, variable, value) VALUES (-1, 1, 'posts_apply_ignore_list', '1');
 COMMIT;
 
 # --------------------------------------------------------
