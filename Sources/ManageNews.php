@@ -314,7 +314,7 @@ function ComposeMailing()
 			$_POST[$type] = strtr($_POST[$type], array('\\"' => '"'));
 
 			preg_match_all('~"([^"]+)"~', $_POST[$type], $matches);
-			$_POST[$type] = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_POST[$type]))));
+			$_POST[$type] = array_unique(array_merge($matches[1], explode(',', preg_replace('~"[^"]+"~', '', $_POST[$type]))));
 
 			foreach ($_POST[$type] as $index => $member)
 				if (strlen(trim($member)) > 0)

@@ -854,7 +854,7 @@ function Post()
 				$form_message = implode('', $parts);
 			}
 
-			$form_message = preg_replace('~<br(?: /)?' . '>~i', "\n", $form_message);
+			$form_message = preg_replace('~<br ?/?' . '>~i', "\n", $form_message);
 
 			// Remove any nested quotes, if necessary.
 			if (!empty($modSettings['removeNestedQuotes']))
@@ -2559,7 +2559,7 @@ function QuoteFast()
 		// Censor the message!
 		censorText($row['body']);
 
-		$row['body'] = preg_replace('~<br(?: /)?' . '>~i', "\n", $row['body']);
+		$row['body'] = preg_replace('~<br ?/?' . '>~i', "\n", $row['body']);
 
 		// Want to modify a single message by double clicking it?
 		if (isset($_REQUEST['modify']))

@@ -79,6 +79,7 @@ September 2009
  ! Regex could reach php stack limit and cause seg fault when generating custom index. So be less aggressive with backreferences(Search.php, Subs.php) [Bug 3805]
  ! More regex's could opt out of backreferences (19 files)
  ! Tabs in php blocks broken (Subs.php) [Bug 3813]
+ ! Regex's could be optimized even futher (Several files) [Bug 3812]
 
 
 August 2009

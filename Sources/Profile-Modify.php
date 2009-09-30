@@ -1371,7 +1371,7 @@ function editBuddies($memID)
 		// Prepare the string for extraction...
 		$_POST['new_buddy'] = strtr($smcFunc['htmlspecialchars']($_POST['new_buddy'], ENT_QUOTES), array('&quot;' => '"'));
 		preg_match_all('~"([^"]+)"~', $_POST['new_buddy'], $matches);
-		$new_buddies = array_unique(array_merge($matches[1], explode(',', preg_replace('~"(?:[^"]+)"~', '', $_POST['new_buddy']))));
+		$new_buddies = array_unique(array_merge($matches[1], explode(',', preg_replace('~"[^"]+"~', '', $_POST['new_buddy']))));
 
 		foreach ($new_buddies as $k => $dummy)
 		{
@@ -1476,7 +1476,7 @@ function editIgnoreList($memID)
 		// Prepare the string for extraction...
 		$_POST['new_ignore'] = strtr($smcFunc['htmlspecialchars']($_POST['new_ignore'], ENT_QUOTES), array('&quot;' => '"'));
 		preg_match_all('~"([^"]+)"~', $_POST['new_ignore'], $matches);
-		$new_entries = array_unique(array_merge($matches[1], explode(',', preg_replace('~"(?:[^"]+)"~', '', $_POST['new_ignore']))));
+		$new_entries = array_unique(array_merge($matches[1], explode(',', preg_replace('~"[^"]+"~', '', $_POST['new_ignore']))));
 
 		foreach ($new_entries as $k => $dummy)
 		{

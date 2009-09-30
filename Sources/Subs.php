@@ -2600,10 +2600,10 @@ function redirectexit($setLocation = '', $refresh = false)
 
 	// Put the session ID in.
 	if (defined('SID') && SID != '')
-		$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '(?!\?' . preg_quote(SID, '/') . ')(?:\?)?/', $scripturl . '?' . SID . ';', $setLocation);
+		$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '(?!\?' . preg_quote(SID, '/') . ')\\??/', $scripturl . '?' . SID . ';', $setLocation);
 	// Keep that debug in their for template debugging!
 	elseif (isset($_GET['debug']))
-		$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '(?:\?)?/', $scripturl . '?debug;', $setLocation);
+		$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\\??/', $scripturl . '?debug;', $setLocation);
 
 	if (!empty($modSettings['queryless_urls']) && (empty($context['server']['is_cgi']) || @ini_get('cgi.fix_pathinfo') == 1 || @get_cfg_var('cgi.fix_pathinfo') == 1) && (!empty($context['server']['is_apache']) || !empty($context['server']['is_lighttpd'])))
 	{

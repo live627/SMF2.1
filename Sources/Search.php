@@ -418,7 +418,7 @@ function PlushSearch2()
 		$userString = strtr($userString, array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_'));
 
 		preg_match_all('~"([^"]+)"~', $userString, $matches);
-		$possible_users = array_merge($matches[1], explode(',', preg_replace('~"(?:[^"]+)"~', '', $userString)));
+		$possible_users = array_merge($matches[1], explode(',', preg_replace('~"[^"]+"~', '', $userString)));
 
 		for ($k = 0, $n = count($possible_users); $k < $n; $k++)
 		{

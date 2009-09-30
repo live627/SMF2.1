@@ -664,7 +664,7 @@ function modifyBoard($board_id, &$boardOptions)
 			// Divvy out the usernames, remove extra space.
 			$moderator_string = strtr($smcFunc['htmlspecialchars']($boardOptions['moderator_string'], ENT_QUOTES), array('&quot;' => '"'));
 			preg_match_all('~"([^"]+)"~', $moderator_string, $matches);
-			$moderators = array_merge($matches[1], explode(',', preg_replace('~"(?:[^"]+)"~', '', $moderator_string)));
+			$moderators = array_merge($matches[1], explode(',', preg_replace('~"[^"]+"~', '', $moderator_string)));
 			for ($k = 0, $n = count($moderators); $k < $n; $k++)
 			{
 				$moderators[$k] = trim($moderators[$k]);

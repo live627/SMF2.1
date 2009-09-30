@@ -158,7 +158,7 @@ function html_to_bbc($text)
 	$text = strtr($text, array("\n" => '', "\r" => ''));
 
 	// Though some of us love paragraphs the parser will do better with breaks.
-	$text = preg_replace('~</p>(?:\s*?)<p~i', '</p><br /><p', $text);
+	$text = preg_replace('~</p>\s*?<p~i', '</p><br /><p', $text);
 
 	// Safari/webkit wraps lines in Wysiwyg in <div>'s.
 	if ($context['browser']['is_webkit'])
