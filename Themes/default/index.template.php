@@ -444,16 +444,16 @@ function template_menu()
 									</a>
 								</li>';
 
-						echo '
-							</ul>';
-					}
+					echo '
+						</ul>';
+				}
 
 				echo '
 						</li>';
 			}
 			echo '
 					</ul>';
-			}
+		}
 		echo '
 				</li>';
 	}
