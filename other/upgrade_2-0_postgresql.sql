@@ -739,6 +739,12 @@ if (empty($modSettings['dont_repeat_buddylists']))
 		ALTER TABLE {$db_prefix}members
 		CHANGE pm_receive_from pm_receive_from smallint NOT NULL default '1'");
 
+	// Update previous ignore lists if they're set to ignore all.
+	upgrade_query("
+		UPDATE {$db_prefix}members
+		SET pm_receive_from = 3, pm_ignore_list = ''
+		WHERE pm_ignore_list = '*'");
+
 	// Enable buddy and ignore lists.
 	upgrade_query("
 		REPLACE INTO {$db_prefix}settings
