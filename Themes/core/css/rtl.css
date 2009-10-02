@@ -19,11 +19,13 @@
 {
 	text-align: right;
 }
+
 /* GenericList */
 .additional_row input
 {
 	margin-left: 1em;
 }
+
 /* Lists with settings use these a lot.
 ------------------------------------------------------- */
 dl.settings dt
@@ -121,7 +123,6 @@ div#menu_toggle
 
 /* Styles for the general looks for the Core theme.
 ------------------------------------------------------- */
-/* the avatar, located to the left */
 #user_section #myavatar
 {
 	margin: 0 0 0 0.5em;
@@ -129,23 +130,24 @@ div#menu_toggle
 	border-left: solid 1px #ADADAD;
 	float: right;
 }
-/* page created in.. */
 #footerarea p
 {
 	text-align: right;
 	padding-right: 0.5em;
 }
+
 /* Styles for headers.
 ------------------------------------------------------- */
-/* Styles for headers used in Curve tempaltes. */
+
 h3.catbg img.icon, div.titlebg img.icon, h3.catbg img
 {
 	float: right;
 	margin: 5px 0 0 8px;
 }
+
 /* Styles for the general looks for the Core theme.
 ------------------------------------------------------- */
-/* The main menu. */
+
 #main_menu ul
 {
 	padding-right: 1em;
@@ -370,12 +372,14 @@ ul.postingbuttons li
 	margin-left: 1em;
 	float: left;
 }
+
 /* Styles for the move topic section.
 ---------------------------------------------------- */
 .move_topic
 {
 	text-align: right;
 }
+
 /* Styles for the login areas.
 ------------------------------------------------------- */
 .login dt
@@ -393,6 +397,7 @@ ul.postingbuttons li
 	float: right;
 	margin: 4px 0 0 0.5em;
 }
+
 /* Styles for the registration section.
 ------------------------------------------------------- */
 dl.register_form
@@ -409,6 +414,7 @@ dl.register_form dd
 {
 	float: right;
 }
+
 /* Styles for maintenance mode.
 ------------------------------------------------------- */
 #maintenance_mode
@@ -420,7 +426,7 @@ dl.register_form dd
 	margin-right: 0;
 	margin-left: 1em;
 }
-/* common for all admin sections */
+
 h3.titlebg img
 {
 	margin-right: 0;
@@ -439,6 +445,7 @@ tr.titlebg td
 {
 	clear: right;
 }
+
 /* Styles for sidebar menus.
 ------------------------------------------------------- */
 #left_admsection
@@ -456,6 +463,7 @@ tr.titlebg td
 	margin-left: 172px;
 	margin-right: 0;
 }
+
 /* Styles for generic tables.
 ------------------------------------------------------- */
 .topic_table td.stickybg2
@@ -627,11 +635,11 @@ tr.titlebg td
 {
 	float: right;
 }
-/*pick theme*/
 #pick_theme
 {
 	float: right;
 }
+
 /* Styles for the statistics centre.
 ------------------------------------------------- */
 #stats_left, #top_posters, #top_topics_replies,#top_topics_starter
@@ -674,6 +682,7 @@ dl.stats dd
 {
 	padding: 0 1ex 0 0;
 }
+
 /* Styles for the advanced search section.
 ------------------------------------------------- */
 #searchform fieldset
@@ -687,7 +696,7 @@ dl.stats dd
 }
 #advanced_search dd
 {
-	float: rigt;
+	float: right;
 	margin: 0 0.5em 0 0;
 	text-align: right;
 }
@@ -738,10 +747,9 @@ dl.stats dd
 {
 	margin: 0 0 0 0.2em !important;
 }
+
 /* Depreciated stuff from the old days.
 ------------------------------------------------- */
-/* First layer of menu items */
-/* Container for the new admin menu */
 
 ul.admin_menu li
 {
@@ -850,7 +858,6 @@ ul.admin_menu li.chosen h4
 	background: url(../images/maintab_last.gif) no-repeat bottom right;
 }
 
-
 /* float a list horizontally */
 ul.horizlist li
 {
@@ -909,6 +916,7 @@ h3.titlebg
 	margin-left: 0;
 	margin-right: 2em;
 }
+
 /* Styles for the package manager.
 ------------------------------------------------- */
 #package_list .tborder
@@ -920,8 +928,8 @@ h3.titlebg
 	margin-left: 0 !important;
 	margin-right: 50px !important;
 }
-/*ManageBoards*/
 
+/*ManageBoards*/
 .move_links
 {
 	padding: 0 0 0 13px  !important;
@@ -931,6 +939,7 @@ span.search_weight
 {
 	text-align: left !important;
 }
+
 /*Manage Bans*/
 .ban_restriction
 {
@@ -942,12 +951,13 @@ span.search_weight
 	padding-right: 18px !important;
 	background-position: 100% 0 !important;
  }
+ 
  /* Styles for the moderation centre.
 ------------------------------------------------- */
 .modblock_left
 {
 	float: right !important;
-	clear: left !important;;
+	clear: left !important;
 }
 .modblock_right
 {
