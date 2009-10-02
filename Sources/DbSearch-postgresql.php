@@ -61,10 +61,12 @@ function smf_db_search_query($identifier, $db_string, $db_values = array(), $con
 	$replacements = array(
 		'create_tmp_log_search_topics' => array(
 			'~mediumint\(\d\)~i' => 'int',
+			'~unsigned~i' => '',
 			'~TYPE=HEAP~i' => '',
 		),
 		'create_tmp_log_search_messages' => array(
-			'~mediumint\(\d\)~i' => 'int',
+			'~mediumint\(\d\)' => 'int',
+			'~unsigned~i' => '',
 			'~TYPE=HEAP~i' => '',
 		),
 		'drop_tmp_log_search_topics' => array(

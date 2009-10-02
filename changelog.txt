@@ -80,7 +80,8 @@ September 2009
  ! More regex's could opt out of backreferences (19 files)
  ! Tabs in php blocks broken (Subs.php) [Bug 3813]
  ! Regex's could be optimized even futher (Several files) [Bug 3812]
- ! Function to create new tables wasn't working properly in PostgreSQL (DbPackages-postgresql.php) [Bug 3817] 
+ ! Function to create new tables wasn't working properly in PostgreSQL (DbPackages-postgresql.php) [Bug 3817]
+ ! PostgreSQL doesn't support unsigned integers (DbSearch-postgresql.php)
 
 
 August 2009
