@@ -9,6 +9,7 @@ October 2009
  ! PostgreSQL doesn't support unsigned integers (DbSearch-postgresql.php)
  * Installer/Upgrader had no mention of overall/step progress (install.php, upgrade.php, install.css) [Bug 3814]
  ! Added a hidden setting to allow multiple paypal emails (Subscriptions-PayPal.php)
+ ! SMF's workaround for REPLACE and INSERT IGNORE queries in PostgreSQL caused a database error (Subs-Db-postgresql.php) [Bug 3821]
 
 
 September 2009

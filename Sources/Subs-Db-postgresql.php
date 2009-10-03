@@ -612,22 +612,19 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 		// Setup an UPDATE template.
 		$updateData = '';
 		$where = '';
-		$count = 0;
 		foreach ($columns as $columnName => $type)
 		{
 			// Are we restricting the length?
 			if (strpos($type, 'string-') !== false)
-				$actualType = sprintf($columnName . ' = SUBSTRING({string:%1$s}, 1, ' . substr($type, 7) . '), ', $count);
+				$actualType = sprintf($columnName . ' = SUBSTRING({string:%1$s}, 1, ' . substr($type, 7) . '), ', $columnName);
 			else
-				$actualType = sprintf($columnName . ' = {%1$s:%2$s}, ', $type, $count);
+				$actualType = sprintf($columnName . ' = {%1$s:%2$s}, ', $type, $columnName);
 
 			// Has it got a key?
 			if (in_array($columnName, $keys))
 				$where .= (empty($where) ? '' : ' AND ') . substr($actualType,0, -2);
 			else
 				$updateData .= $actualType;
-
-			$count++;
 		}
 		$updateData = substr($updateData, 0, -2);
 
