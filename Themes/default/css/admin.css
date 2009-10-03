@@ -159,6 +159,10 @@ h3.titlebg form
 {
 	margin-left: 2em;
 }
+.additional_row div.floatleft
+{
+	padding: 0 0.8em;
+}
 fieldset
 {
 	margin-bottom: 0.5em;
