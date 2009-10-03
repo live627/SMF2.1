@@ -3786,6 +3786,7 @@ function template_upgrade_above()
 				<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; width: 50%; margin: auto;">
 					<div id="overall_text" style="color: #000; position: absolute; margin-left: -5em;">', $upcontext['overall_percent'], '%</div>
 					<div id="overall_progress" style="width: ', $upcontext['overall_percent'], '%; height: 12pt; z-index: 1; background-color: lime;">&nbsp;</div>
+					<div class="progress">', $txt['upgrade_overall_progress'], '</div>
 				</div>
 				';
 
@@ -3794,6 +3795,7 @@ function template_upgrade_above()
 				<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; width: 50%; margin: 5px auto; ">
 					<div id="step_text" style="color: #000; position: absolute; margin-left: -5em;">', $upcontext['step_progress'], '%</div>
 					<div id="step_progress" style="width: ', $upcontext['step_progress'], '%; height: 12pt; z-index: 1; background-color: #FFD000;">&nbsp;</div>
+					<div class="progress">', $txt['upgrade_step_progress'], '</div>
 				</div>
 				';
 

@@ -2062,6 +2062,7 @@ function template_install_above()
 			<div style="font-size: 12pt; height: 25pt; border: 1px solid black; background: white; float: left; margin-left: 12%; width: 25%;">
 				<div id="overall_text" style="padding-top: 8pt;  z-index: 2; color: black; margin-left: -4em; position: absolute; text-align: center; font-weight: bold;">', $incontext['overall_percent'], '%</div>
 				<div id="overall_progress" style="width: ', $incontext['overall_percent'], '%; height: 25pt; z-index: 1; background-color: lime;">&nbsp;</div>
+				<div class="overall_progress">', $txt['upgrade_overall_progress'], '</div>
 			</div>
 			<div id="main_screen" class="clear">
 				<h2>', $incontext['page_title'], '</h2>

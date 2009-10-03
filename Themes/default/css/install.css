@@ -69,3 +69,13 @@ a:link, a:hover, a:visited
 {
 	text-decoration: underline;
 }
+.progress
+{
+	position: relative;
+	margin: -16px 3px 0 3px;
+}
+.overall_progress
+{
+	position: relative;
+	margin: -25px 3px 0 3px;
+}

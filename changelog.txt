@@ -82,6 +82,7 @@ September 2009
  ! Regex's could be optimized even futher (Several files) [Bug 3812]
  ! Function to create new tables wasn't working properly in PostgreSQL (DbPackages-postgresql.php) [Bug 3817]
  ! PostgreSQL doesn't support unsigned integers (DbSearch-postgresql.php)
+ * Installer/Upgrader had no mention of overall/step progress (install.php, upgrade.php, install.css) [Bug 3814]
 
 
 August 2009
