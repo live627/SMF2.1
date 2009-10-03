@@ -125,9 +125,8 @@ class paypal_payment
 		// Correct email address?
 		if (!isset($_POST['business']))
 			$_POST['business'] = $_POST['receiver_email'];
-		if ($modSettings['paypal_email'] != $_POST['business'])
+		if ($modSettings['paypal_email'] != $_POST['business'] || (!empty($modSettings['paypal_additional_emails']) && in_array($_POST['business'], explode(',', $modSettings['paypal_additional_emails']))))
 			return false;
-
 		return true;
 	}
 
@@ -205,7 +204,7 @@ class paypal_payment
 		}
 
 		// Check that this is intended for us.
-		if ($_POST['business'] != $modSettings['paypal_email'])
+		if ($_POST['business'] != $modSettings['paypal_email'] || (!empty($modSettings['paypal_additional_emails']) && in_array($_POST['business'], explode(',', $modSettings['paypal_additional_emails']))))
 			exit;
 
 		// Is this a subscription - and if so it's it a secondary payment that we need to process?

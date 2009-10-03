@@ -3,6 +3,14 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC2                                                                  ???
 ================================================================================
+October 2009
+--------------------------------------------------------------------------------
+ ! Function to create new tables wasn't working properly in PostgreSQL (DbPackages-postgresql.php) [Bug 3817]
+ ! PostgreSQL doesn't support unsigned integers (DbSearch-postgresql.php)
+ * Installer/Upgrader had no mention of overall/step progress (install.php, upgrade.php, install.css) [Bug 3814]
+ ! Added a hidden setting to allow multiple paypal emails (Subscriptions-PayPal.php)
+
+
 September 2009
 --------------------------------------------------------------------------------
  ! Holidays need to be checked (ManageCalendar.php)
@@ -80,9 +88,6 @@ September 2009
  ! More regex's could opt out of backreferences (19 files)
  ! Tabs in php blocks broken (Subs.php) [Bug 3813]
  ! Regex's could be optimized even futher (Several files) [Bug 3812]
- ! Function to create new tables wasn't working properly in PostgreSQL (DbPackages-postgresql.php) [Bug 3817]
- ! PostgreSQL doesn't support unsigned integers (DbSearch-postgresql.php)
- * Installer/Upgrader had no mention of overall/step progress (install.php, upgrade.php, install.css) [Bug 3814]
 
 
 August 2009
