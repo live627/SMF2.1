@@ -675,6 +675,9 @@ function template_main()
 				</div>
 			</div>';
 	}
+	else
+		echo '
+		<br class="clear" />';
 
 	if ($context['show_spellchecking'])
 		echo '
