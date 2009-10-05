@@ -64,7 +64,6 @@ $txt['paid_note'] = '<strong class="alert">Note:</strong><br />For subscriptions
 	For the other gateways (If installed) you can normally find it in your customer panels, usually under the term &quot;Return URL&quot; or &quot;Callback URL&quot;.';
 
 // View subscription strings.
-$txt['paid_add_subscription'] = 'Add New Subscription';
 $txt['paid_name'] = 'Name';
 $txt['paid_status'] = 'Status';
 $txt['paid_cost'] = 'Cost';
