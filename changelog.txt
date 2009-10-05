@@ -11,6 +11,7 @@ October 2009
  ! Added a hidden setting to allow multiple paypal emails (Subscriptions-PayPal.php)
  ! SMF's workaround for REPLACE and INSERT IGNORE queries in PostgreSQL caused a database error (Subs-Db-postgresql.php) [Bug 3821]
  ! Fix for Bug 2963 caused some issues with managing smilies, spiders and post settings (ManagePosts.php, ManageSearchEngines.php, ManageSmileys.php) [Bug 3831]
+ * Other languages caused the login screen to show a scroll bar (index.css, compat.css, ie7.css) [Bug 3832]
 
 
 September 2009

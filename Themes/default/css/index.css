@@ -2129,25 +2129,26 @@ fieldset.merge_options legend
 ------------------------------------------------------- */
 .login
 {
-	width: 480px;
+	width: 540px;
 	margin: 0 auto;
 }
 .login dl
 {
 	overflow: auto;
+	clear: right;
 }
 .login dt, .login dd
 {
-	margin: 0;
-	height: 2.5em;
-	width: 45%;
+	margin: 0 0 0.4em 0;
+	width: 44%;
+	padding: 0.1em;
 }
 .login dt
 {
 	float: left;
+	clear: both;
 	text-align: right;
 	font-weight: bold;
-	line-height: 1.5em;
 }
 .login dd
 {
