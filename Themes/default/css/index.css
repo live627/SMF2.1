@@ -427,7 +427,7 @@ tr.titlebg th.smalltext, thead tr.titlebg th a:link, thead tr.titlebg th a:visit
 .pagesection
 {
 	font-size: 0.9em;
-	padding: 0.5em;
+	padding: 0.2em 0;
 	overflow: hidden;
 }
 .pagelinks
@@ -3166,10 +3166,6 @@ span.hidelink
 #search_results form
 {
 	padding: 1em;
-}
-.pagelinks
-{
-	padding: 0.5em;
 }
 .topic_table td blockquote, .topic_table td .quoteheader
 {

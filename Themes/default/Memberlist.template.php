@@ -23,7 +23,7 @@ function template_main()
 		</h4>
 		<div class="pagesection">
 		', template_button_strip($memberlist_buttons, 'right'), '
-			<div class="align_left">', $txt['pages'], ': ', $context['page_index'], '</div>
+			<div class="pagelinks align_left">', $txt['pages'], ': ', $context['page_index'], '</div>
 		</div>';
 
 	echo '
@@ -124,7 +124,7 @@ function template_main()
 
 	echo '
 		<div class="pagesection">
-			<div class="align_left">', $txt['pages'], ': ', $context['page_index'], '</div>';
+			<div class="pagelinks align_left">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 	// If it is displaying the result of a search show a "search again" link to edit their criteria.
 	if (isset($context['old_search']))
