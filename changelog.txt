@@ -13,6 +13,7 @@ October 2009
  ! Fix for Bug 2963 caused some issues with managing smilies, spiders and post settings (ManagePosts.php, ManageSearchEngines.php, ManageSmileys.php) [Bug 3831]
  * Other languages caused the login screen to show a scroll bar (index.css, compat.css, ie7.css) [Bug 3832]
  & $txt['paid_add_subscription'] had a duplicate (ManagePaid language file) [Bug 3828]
+ ! The menu was broken with caching enabled (Subs.php) [Bug 3837]
 
 
 September 2009
