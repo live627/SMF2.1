@@ -2854,7 +2854,7 @@ function profileValidateSignature(&$value)
 		$disabledSigBBC = implode('|', $disabledTags);
 		if (!empty($disabledSigBBC))
 		{
-			if (preg_match('~\[(' . $disabledSigBBC . ')~', $unparsed_signature, $matches) !== false && isset($matches[1]))
+			if (preg_match('~\[(' . $disabledSigBBC . ')~i', $unparsed_signature, $matches) !== false && isset($matches[1]))
 			{
 				$disabledTags = array_unique($disabledTags);
 				$txt['profile_error_signature_disabled_bbc'] = sprintf($txt['profile_error_signature_disabled_bbc'], implode(', ', $disabledTags));

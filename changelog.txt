@@ -16,6 +16,7 @@ October 2009
  ! The menu was broken with caching enabled (Subs.php) [Bug 3837]
  ! Improved smiley parsing within BBC and fixed the issue of incorrect UTF-8 smiley parsing. (Subs.php) [Bug 3474]
  ! Updated support links to use redirects (Admin.php, Admin language)
+ ! BBC restrictions in a signature can be bypassed by using uppercase letters (Profile-Modify.php) [Bug 3848]
 
 
 September 2009
