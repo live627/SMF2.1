@@ -533,17 +533,17 @@ function AdminHome()
 	// Fill in the blanks in the support resources paragraphs.
 	$txt['support_resources_p1'] = sprintf($txt['support_resources_p1'],
 		'http://docs.simplemachines.org/',
-	 	'http://docs.simplemachines.org/index.php?board=51.0',
-	 	'http://docs.simplemachines.org/index.php?board=52.0',
-	 	'http://docs.simplemachines.org/index.php?board=54.0',
-	 	'http://docs.simplemachines.org/index.php?board=49.0'
+	 	'http://docs.simplemachines.org/redirect/features',
+	 	'http://docs.simplemachines.org/redirect/settings',
+	 	'http://docs.simplemachines.org/redirect/themes',
+	 	'http://docs.simplemachines.org/redirect/packages'
 	 	);
 	$txt['support_resources_p2'] = sprintf($txt['support_resources_p2'],
 		'http://www.simplemachines.org/community/',
-	 	'http://www.simplemachines.org/community/index.php?board=147.0',
-	 	'http://www.simplemachines.org/community/index.php?board=12.0',
-	 	'http://www.simplemachines.org/community/index.php#c3',
-	 	'http://www.simplemachines.org/community/index.php#c18'
+	 	'http://www.simplemachines.org/redirect/english_support',
+	 	'http://www.simplemachines.org/redirect/international_support_boards',
+	 	'http://www.simplemachines.org/redirect/smf_support',
+	 	'http://www.simplemachines.org/redirect/customize_support'
 	 	);
 
 	// Copyright?

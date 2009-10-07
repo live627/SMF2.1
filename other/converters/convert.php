@@ -2674,7 +2674,7 @@ function convert_insert($table, $columns, $block, $type = 'insert', $no_prefix =
 		{
 			if (in_array($col['type'], array('float', 'string', 'int', 'date')))
 				$data_type = $col['type'];
-			elseif (in_array($col['type'], array('tinyint', 'smallint', 'mediumnint', 'bigint')))
+			elseif (in_array($col['type'], array('tinyint', 'smallint', 'mediumint', 'bigint')))
 				$data_type = 'int';
 			else
 				$data_type = 'string';

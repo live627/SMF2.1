@@ -15,6 +15,7 @@ October 2009
  & $txt['paid_add_subscription'] had a duplicate (ManagePaid language file) [Bug 3828]
  ! The menu was broken with caching enabled (Subs.php) [Bug 3837]
  ! Improved smiley parsing within BBC and fixed the issue of incorrect UTF-8 smiley parsing. (Subs.php) [Bug 3474]
+ ! Updated support links to use redirects (Admin.php, Admin language)
 
 
 September 2009
