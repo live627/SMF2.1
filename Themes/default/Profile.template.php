@@ -2207,7 +2207,7 @@ function template_deleteAccount()
 					<div class="content">';
 
 	// If they are deleting their account AND the admin needs to approve it - give them another piece of info ;)
-	if (!$context['needs_approval'])
+	if ($context['needs_approval'])
 		echo '
 						<div class="alert profile_error">', $txt['deleteAccount_approval'], '</div>';
 
