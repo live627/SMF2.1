@@ -865,8 +865,6 @@ function template_show_settings()
 
 		if (is_array($config_var))
 		{
-			echo '
-							<dt', is_array($config_var) && !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>';
 			// First off, is this a span like a message?
 			if (in_array($config_var['type'], array('message', 'warning')))
 			{
@@ -878,6 +876,9 @@ function template_show_settings()
 			// Otherwise it's an input box of some kind.
 			else
 			{
+				echo '
+							<dt', is_array($config_var) && !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>';
+
 				// Some quick helpers...
 				$javascript = $config_var['javascript'];
 				$disabled = !empty($config_var['disabled']) ? ' disabled="disabled"' : '';
@@ -985,13 +986,13 @@ function template_show_settings()
 						<p>
 							<input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), (!empty($context['settings_save_onclick']) ? ' onclick="' . $context['settings_save_onclick'] . '"' : ''), ' class="button_submit" />
 						</p>';
-	
+
 	if ($is_open)
 		echo '
 					</div>
 				<span class="botslice"><span></span></span>
 			</div>';
-	
+
 	echo '
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
