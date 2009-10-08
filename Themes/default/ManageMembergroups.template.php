@@ -524,6 +524,7 @@ function template_group_members()
 			var oAddMemberSuggest = new smc_AutoSuggest({
 				sSelf: \'oAddMemberSuggest\',
 				sSessionId: \'', $context['session_id'], '\',
+				sSessionVar: \'', $context['session_var'], '\',
 				sSuggestId: \'to_suggest\',
 				sControlId: \'toAdd\',
 				sSearchType: \'member\',
