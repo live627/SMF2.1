@@ -976,7 +976,8 @@ function template_show_settings()
 		}
 	}
 
-	echo '
+	if ($is_open)
+		echo '
 						</dl>';
 
 	if (empty($context['settings_save_dont_show']))
@@ -984,12 +985,15 @@ function template_show_settings()
 						<p>
 							<input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), (!empty($context['settings_save_onclick']) ? ' onclick="' . $context['settings_save_onclick'] . '"' : ''), ' class="button_submit" />
 						</p>';
-
-	echo '
+	
+	if ($is_open)
+		echo '
 					</div>
 				<span class="botslice"><span></span></span>
-			</div>
-			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+			</div>';
+	
+	echo '
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
 	<br class="clear" />';

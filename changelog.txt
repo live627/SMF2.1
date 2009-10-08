@@ -20,6 +20,7 @@ October 2009
  ! Upgrade incorrectly set collapsed categories to be autoincrement on the cat id (Upgrade-mysql.sql) [Bug 3845]
  * Those who didn't need approval to delete an account were warned, the rest were not (Profile.template.php) [Bug 3849]
  ! Autosuggest failed when adding users to groups (ManageMembergroups.template.php) [Bug 3851]
+ * Invalid xhtml (Admin template) [Bug 3852]
 
 
 September 2009
