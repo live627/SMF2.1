@@ -1754,6 +1754,10 @@ ul.postingbuttons li
 	clear: right;
 	margin: 1em 0 0 16em;
 }
+#moderationbuttons_strip
+{
+	float: left;
+}
 
 /* Styles for the quick reply area.
 ---------------------------------------------------- */
