@@ -93,7 +93,16 @@ function Register($reg_errors = array())
 
 		// Skip the coppa procedure if the user says he's old enough.
 		if ($context['show_coppa'])
+		{
 			$_SESSION['skip_coppa'] = !empty($_POST['accept_agreement']);
+
+			// Are they saying they're under age, while under age registration is disabled?
+			if (empty($modSettings['coppaType']) && empty($_SESSION['skip_coppa']))
+			{
+				loadLanguage('Login');
+				fatal_lang_error('under_age_registration_prohibited', false, array($modSettings['coppaAge']));
+			}
+		}
 	}
 	// Make sure they don't squeeze through without agreeing.
 	elseif ($current_step > 1 && $context['require_agreement'] && !$context['registration_passed_agreement'])

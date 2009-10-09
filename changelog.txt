@@ -23,6 +23,7 @@ October 2009
  * Invalid xhtml (Admin template) [Bug 3852]
  * More invalid xhtml (Admin.template.php) [Bug 3859]
  * News fader didn't work when creating a copy of the default theme (BoardIndex.template.php)
+ ! Don't show the registration form with COPPA in effect and under age registrations disabled. (Register.php)
 
 
 September 2009
