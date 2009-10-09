@@ -125,7 +125,7 @@ class paypal_payment
 		// Correct email address?
 		if (!isset($_POST['business']))
 			$_POST['business'] = $_POST['receiver_email'];
-		if ($modSettings['paypal_email'] != $_POST['business'] || (!empty($modSettings['paypal_additional_emails']) && in_array($_POST['business'], explode(',', $modSettings['paypal_additional_emails']))))
+		if ($modSettings['paypal_email'] != $_POST['business'] && (empty($modSettings['paypal_additional_emails']) || !in_array($_POST['business'], explode(',', $modSettings['paypal_additional_emails']))))
 			return false;
 		return true;
 	}
@@ -144,10 +144,7 @@ class paypal_payment
 
 		// Now my dear, add all the posted bits.
 		foreach ($_POST as $k => $v)
-		{
-			// Append the string.
 			$requestString .= '&' . $k . '=' . urlencode($v);
-		}
 
 		// Can we use curl?
 		if (function_exists('curl_init') && $curl = curl_init('http://www.', !empty($modSettings['paidsubs_test']) ? 'sandbox.' : '', 'paypal.com/cgi-bin/webscr'))
@@ -197,22 +194,18 @@ class paypal_payment
 		}
 
 		// If this isn't verified then give up...
+		// !! This contained a comment "send an email", but we don't appear to send any?
 		if (strcmp($this->return_data, 'VERIFIED') != 0)
-		{
-			// Send an email.
 			exit;
-		}
 
 		// Check that this is intended for us.
-		if ($_POST['business'] != $modSettings['paypal_email'] || (!empty($modSettings['paypal_additional_emails']) && in_array($_POST['business'], explode(',', $modSettings['paypal_additional_emails']))))
+		if ($modSettings['paypal_email'] != $_POST['business'] && (empty($modSettings['paypal_additional_emails']) || !in_array($_POST['business'], explode(',', $modSettings['paypal_additional_emails']))))
 			exit;
 
 		// Is this a subscription - and if so it's it a secondary payment that we need to process?
 		if ($this->isSubscription() && (empty($_POST['item_number']) || strpos($_POST['item_number'], '+') === false))
-		{
 			// Calculate the subscription it relates to!
 			$this->_findSubscription();
-		}
 
 		// Verify the currency!
 		if (strtolower($_POST['mc_currency']) != $modSettings['paid_currency_code'])
