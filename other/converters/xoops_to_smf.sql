@@ -223,7 +223,7 @@ foreach ($attachments as $attachment)
 		$attachmentExtention = '';
 
 	$oldFilename = $row['oldfilename'];
-	$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+	$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 
 	if (strlen($file_hash) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $file_hash))
 	{

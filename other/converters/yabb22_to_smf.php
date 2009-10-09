@@ -1044,7 +1044,7 @@ if (empty($preparsing))
 			while ($row = mysql_fetch_assoc($result))
 			{
 				$size = filesize($yabb['uploaddir'] . '/' . $row['temp_filename']);
-				$file_hash = $id_attach . '_' . getAttachmentFilename($row['temp_filename'], $id_attach, null, true);
+				$file_hash = getAttachmentFilename($row['temp_filename'], $id_attach, null, true);
 
 				// Is this an image???
 				$attachmentExtension = strtolower(substr(strrchr($row['temp_filename'], '.'), 1));

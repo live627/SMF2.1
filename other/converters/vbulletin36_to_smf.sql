@@ -452,7 +452,7 @@ if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
 $width = '0';
 $height = '0';
 
-$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 
 if (empty($vb_settings['attachfile']))
 {
@@ -522,7 +522,7 @@ if (!isset($vb_settings))
 }
 
 
-$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 
 if (strlen($file_hash) > 255)
 	return;

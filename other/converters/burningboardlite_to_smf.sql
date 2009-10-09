@@ -70,7 +70,7 @@ FROM {$from_prefix}users AS u
 ---{
 $no_add = true;
 
-$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 
 if (copy($_POST['path_from'] . '/images/avatars/avatar-' . $row['avatarid'] . '.' . $row['avatarextension'], $attachmentUploadDir . '/' . $file_hash))
 {

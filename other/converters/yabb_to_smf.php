@@ -1266,7 +1266,7 @@ if (empty($preparsing))
 			while ($row = convert_fetch_assoc($result))
 			{
 				$size = filesize($yabb['upload_dir'] . '/' . $row['temp_filename']);
-				$file_hash = $id_attach . '_' . getAttachmentFilename($row['temp_filename'], $id_attach, null, true);
+				$file_hash = getAttachmentFilename($row['temp_filename'], $id_attach, null, true);
 
 				if (strlen($filename) <= 255 && copy($yabb['upload_dir'] . '/' . $row['temp_filename'], $attachmentUploadDir . '/' . $file_hash))
 				{

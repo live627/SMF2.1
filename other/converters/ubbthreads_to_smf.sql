@@ -279,7 +279,7 @@ $oldFilename = $row['ID_MDG'] . '-' .$row['filename'];
 $row['filename'] = strpos($oldFilename, '-') !== false ? substr($oldFilename, strpos($oldFilename, '-') + 1) : $oldFilename;
 $row['size'] = filesize($GLOBALS['config']['files'] . '/' . $row['filename']);
 
-$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 
 if (strlen($file_hash) <= 255 && copy($GLOBALS['config']['files'] . '/' . $oldFilename, $attachmentUploadDir . '/' . $file_hash))
 {

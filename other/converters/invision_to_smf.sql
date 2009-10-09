@@ -727,7 +727,7 @@ $no_add = true;
 if (empty($INFO['upload_dir']) || !file_exists($INFO['upload_dir']))
 	$INFO['upload_dir'] = $_POST['path_from'] . '/uploads';
 
-$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 
 if (strlen($file_hash) <= 255 && copy($INFO['upload_dir'] . '/' . $row['old_encrypt'], $attachmentUploadDir . '/' . $file_hash))
 {

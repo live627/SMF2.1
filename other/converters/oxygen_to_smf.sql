@@ -341,7 +341,7 @@ if (!empty($rows))
 ---{
 $no_add = true;
 
-$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 
 if (strlen($fp) > 255)
 	return;

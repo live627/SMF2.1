@@ -322,7 +322,7 @@ ALTER TABLE {$to_prefix}poll_choices
 ---{
 $no_add = true;
 
-$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 
 
 if (copy($_POST['path_from'] . '/wcf/attachments/attachment-' . $row['attachmentID'] , $attachmentUploadDir . '/' . $file_hash))
@@ -352,7 +352,7 @@ FROM {$from_prefix}{$wcf_prefix}attachment;
 ---{
 $no_add = true;
 
-$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 
 if (copy($_POST['path_from'] . '/wcf/images/avatars/avatar-' . $row['avatarID'] . '.' . $row['avatarExtension'], $attachmentUploadDir . '/' . $file_hash))
 {

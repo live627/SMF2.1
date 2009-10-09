@@ -843,7 +843,7 @@ if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
 	$attachmentExtention = '';
 
 $oldFilename = strtr($row['old_encrypt'], array('upload:' => ''));
-$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 
 if (strlen($file_hash) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $file_hash))
 {

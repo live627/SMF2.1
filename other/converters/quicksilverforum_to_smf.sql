@@ -242,7 +242,7 @@ $no_add = true;
 // Get the filesize!
 $row['size'] = filesize($_POST['path_from'] . '/attachments/' . $row['attach_file']);
 
-$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 
 if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/attachments/' . $row['attach_file'], $attachmentUploadDir . '/' . $file_hash))
 {

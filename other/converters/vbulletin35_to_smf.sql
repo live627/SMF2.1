@@ -316,7 +316,7 @@ if (empty($id_attach))
 	$id_attach = empty($id_attach) ? 1 : $id_attach;
 }
 
-$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 
 if (empty($vb_settings['attachfile']))
 {
@@ -391,7 +391,7 @@ if (!isset($vb_settings))
 }
 
 
-$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 
 if (strlen($file_hash) > 255)
 	return;

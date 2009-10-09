@@ -675,7 +675,7 @@ $attachmentExtension = strtolower(substr(strrchr($row['filename'], '.'), 1));
 if (in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png', 'bmp')))
 	list ($width, $height) = getimagesize($oldAttachmentDir . '/' . $row['physical_filename']);
 
-$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 if (strlen($file_hash) <= 255 && copy($oldAttachmentDir . '/' . $row['physical_filename'], $attachmentUploadDir . '/' . $file_hash))
 {
 	$rows[] = array(

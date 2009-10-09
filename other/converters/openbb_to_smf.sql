@@ -237,7 +237,7 @@ FROM {$from_prefix}moderators;
 ---{
 $no_add = true;
 
-$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 
 if (strlen($file_hash) > 255)
 	return;

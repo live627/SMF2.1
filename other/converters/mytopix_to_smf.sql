@@ -231,7 +231,7 @@ FROM {$from_prefix}tracker;
 ---{
 $no_add = true;
 
-$file_hash = $id_attach . '_' . getAttachmentFilename($row['filename'], $id_attach, null, true);
+$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 
 if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/uploads/attachments/' . $row['old_encrypt'] . '.' . $row['ext'], $attachmentUploadDir . '/' . $file_hash))
 {

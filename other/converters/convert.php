@@ -1272,7 +1272,8 @@ function doStep1()
 						else
 							$no_add = false;
 
-						$keys = array_keys($row);
+						if (empty($keys))
+							$keys = array_keys($row);
 					}
 
 					// Provide legacy for $ignore
