@@ -31,7 +31,7 @@ function template_main()
 	echo '
 		</ul>
 	</div>
-	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/fader.js"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/fader.js"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 
 		// Create a news fader object.
