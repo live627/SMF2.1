@@ -1,8 +1,10 @@
 /* styling the admin section */
 #quick_search
 {
-	height: 31px;
+	line-height: 0.9em;
+	margin-top: 7px;
 	margin-right: 5px;
+	vertical-align: top;
 }
 div#quick_search input, div#quick_search select
 {
