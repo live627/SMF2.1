@@ -146,6 +146,10 @@ table.table_list a.collapse
 
 /* Styles for the standard button lists.
 ------------------------------------------------------- */
+.buttonlist ul
+{
+	margin: 0 0 0 0.2em;
+}
 .buttonlist ul li a
 {
 	margin-left: 0;
