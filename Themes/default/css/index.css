@@ -1037,7 +1037,6 @@ span.lowerframe span
 	margin: 0;
 	position: relative;
 }
-
 .dropmenu li ul
 {
 	z-index: 90;
@@ -1049,7 +1048,6 @@ span.lowerframe span
 	background: url(../images/theme/menu_gfx.png) 0 -100px no-repeat;
 	padding: 7px 0 0 0;
 }
-
 .dropmenu li li
 {
 	width: 19em;
@@ -1101,17 +1099,18 @@ span.lowerframe span
 {
 	top: -999em;
 }
-
 .dropmenu li li:hover ul
 {
 	top: auto;
 }
-
 .dropmenu li:hover ul
 {
 	display: block;
 }
-
+.dropmenu li li.additional_items
+{
+	background-color: #fff;
+}
 
 /* The dropdown menu toggle image */
 #menu_toggle
