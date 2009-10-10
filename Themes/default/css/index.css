@@ -1959,6 +1959,10 @@ ul.quickbuttons li.inline_mod_check
 ---------------------------------------------------- */
 
 /* The quick-reply area. Horizontal alignments go a bit wonky in IE6 and IE7 but I'm not sure it's worth worrying about. */
+#quickreplybox img, #quickreplybox a
+{
+	padding-top: 1px;
+}
 #quickReplyOptions .roundframe
 {
 	text-align: center;
