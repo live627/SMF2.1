@@ -28,6 +28,7 @@ October 2009
  ! Changed the notice for verification after quick reply into something less obscure. (Post.php)
  * Rewrote the rest of the PersonalMessage template to match Curve's look and feel. (PersonalMessage.template.php, PersonalMessage.js)
  * Rewrote the rest of the Calendar template to match Curve's look and feel. (Calendar.template.php)
+ * Fixed some spacing on Poll template (Poll.template.php)
 
 
 September 2009

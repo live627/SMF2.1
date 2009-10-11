@@ -59,19 +59,19 @@ function template_main()
 	foreach ($context['choices'] as $choice)
 	{
 		echo '
-						<li>
-							<label for="options-', $choice['id'], '" ', (isset($context['poll_error']['poll_few']) ? ' class="error"' : ''), '>', $txt['option'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" size="25" value="', $choice['label'], '" class="input_text" />';
+							<li>
+								<label for="options-', $choice['id'], '" ', (isset($context['poll_error']['poll_few']) ? ' class="error"' : ''), '>', $txt['option'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" size="25" value="', $choice['label'], '" class="input_text" />';
 
 		// Does this option have a vote count yet, or is it new?
 		if ($choice['votes'] != -1)
 			echo ' (', $choice['votes'], ' ', $txt['votes'], ')';
 
 		echo '
-						</li>';
+							</li>';
 	}
 
 	echo '
-						<li id="pollMoreOptions"></li>
+							<li id="pollMoreOptions"></li>
 						</ul>
 						 <strong><a href="javascript:addPollOption(); void(0);">(', $txt['poll_add_option'], ')</a></strong>
 					</fieldset>
