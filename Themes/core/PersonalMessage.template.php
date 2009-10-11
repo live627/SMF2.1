@@ -951,6 +951,7 @@ function template_send()
 								<td>
 									<input type="text" name="bcc" id="bcc_control" value="', $context['bcc_value'], '" tabindex="', $context['tabindex']++, '" size="40" style="width: 130px;" class="input_text" />
 									<div id="bcc_item_list_container"></div>
+									<span id="bcc_div2"></span>
 								</td>
 							</tr>';
 
@@ -1086,6 +1087,7 @@ function template_send()
 				],
 				sBccControlId: \'bcc_control\',
 				sBccDivId: \'bcc_div\',
+				sBccDivId2: \'bcc_div2\',
 				sBccLinkId: \'bcc_link\',
 				sBccLinkContainerId: \'bcc_link_container\',
 				bBccShowByDefault: ', empty($context['recipients']['bcc']) && empty($context['bcc_value']) ? 'false' : 'true', ',

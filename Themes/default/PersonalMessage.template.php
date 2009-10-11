@@ -897,7 +897,7 @@ function template_send()
 
 	// Main message editing box.
 	echo '
-	<h3 class="titlebg">
+	<h3 class="catbg">
 		<span class="left"></span>
 		<img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt['new_message'], '" title="', $txt['new_message'], '" />&nbsp;', $txt['new_message'], '
 	</h3>';
@@ -925,113 +925,90 @@ function template_send()
 		<span class="topslice"><span></span></span>
 		<div class="content">
 			<form action="', $scripturl, '?action=pm;sa=send2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'message\']);">
-						<table border="0" cellpadding="3" width="100%">';
+				<dl id="post_header">';
 
 	// To and bcc. Include a button to search for members.
 	echo '
-							<tr valign="top">
-								<td align="right"><strong', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_to']) ? ' class="error"' : ''), '>', $txt['pm_to'], ':</strong></td>
-								<td>';
+					<dt>
+						<span', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_to']) ? ' class="error"' : ''), '>', $txt['pm_to'], ':</span>
+					</dt>';
 
 	// Autosuggest will be added by the JavaScript later on.
 	echo '
-									<input type="text" name="to" id="to_control" value="', $context['to_value'], '" tabindex="', $context['tabindex']++, '" size="40" style="width: 130px;" class="input_text" />';
+					<dd>
+						<input type="text" name="to" id="to_control" value="', $context['to_value'], '" tabindex="', $context['tabindex']++, '" size="40" style="width: 130px;" class="input_text" />';
 
 	// A link to add BCC, only visible with JavaScript enabled.
 	echo '
-									<span class="smalltext" id="bcc_link_container" style="display: none;"></span>';
+						<span class="smalltext" id="bcc_link_container" style="display: none;"></span>';
 
 	// A div that'll contain the items found by the autosuggest.
 	echo '
-									<div id="to_item_list_container"></div>';
+						<div id="to_item_list_container"></div>';
 
 	echo '
-								</td>
-							</tr>';
+					</dd>';
 
 	// This BCC row will be hidden by default if JavaScript is enabled.
 	echo '
-							<tr valign="top" id="bcc_div">
-								<td align="right"><strong', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_bcc']) ? ' class="error"' : ''), '>', $txt['pm_bcc'], ':</strong></td>
-								<td>
-									<input type="text" name="bcc" id="bcc_control" value="', $context['bcc_value'], '" tabindex="', $context['tabindex']++, '" size="40" style="width: 130px;" class="input_text" />
-									<div id="bcc_item_list_container"></div>
-								</td>
-							</tr>';
+					<dt id="bcc_div">
+						<span', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_bcc']) ? ' class="error"' : ''), '>', $txt['pm_bcc'], ':</span>
+					</dt>
+					<dd id="bcc_div2">
+						<input type="text" name="bcc" id="bcc_control" value="', $context['bcc_value'], '" tabindex="', $context['tabindex']++, '" size="40" style="width: 130px;" class="input_text" />
+						<div id="bcc_item_list_container"></div>
+					</dd>';
 
 	// The subject of the PM.
 	echo '
-							<tr>
-								<td align="right"><strong', (isset($context['post_error']['no_subject']) ? ' class="error"' : ''), '>', $txt['subject'], ':</strong></td>
-								<td><input type="text" name="subject" value="', $context['subject'], '" tabindex="', $context['tabindex']++, '" size="40" maxlength="50" /></td>
-							</tr>';
-
-	// Require an image to be typed to save spamming?
-	if ($context['require_verification'])
-	{
-		echo '
-							<tr>
-								<td align="right" valign="top">
-									<strong>', $txt['pm_visual_verification_label'], ':</strong>
-								</td>
-								<td>
-									', template_control_verification($context['visual_verification_id'], 'all'), '
-								</td>
-							</tr>';
-	}
+					<dt>
+						<span', (isset($context['post_error']['no_subject']) ? ' class="error"' : ''), '>', $txt['subject'], ':</span>
+					</dt>
+					<dd>
+						<input type="text" name="subject" value="', $context['subject'], '" tabindex="', $context['tabindex']++, '" size="40" maxlength="50" />
+					</dd>
+				</dl>';
 
 	// Showing BBC?
 	if ($context['show_bbc'])
 	{
 		echo '
-							<tr>
-								<td align="right"></td>
-								<td valign="middle" id="bbcBox_message">
-								</td>
-							</tr>';
+				<div id="bbcBox_message"></div>';
 	}
 
 	// What about smileys?
 	if (!empty($context['smileys']['postform']) || !empty($context['smileys']['popup']))
 		echo '
-							<tr>
-								<td align="right"></td>
-								<td valign="middle" id="smileyBox_message">
-								</td>
-							</tr>';
+				<div id="smileyBox_message"></div>';
 
 	// Show BBC buttons, smileys and textbox.
 	echo '
-							<tr>
-								<td valign="top" align="right"></td>
-								<td>
-									', template_control_richedit($context['post_box_name'], 'smileyBox_message', 'bbcBox_message'), '
-								</td>
-							</tr>';
+				', template_control_richedit($context['post_box_name'], 'smileyBox_message', 'bbcBox_message');
+
+	// Require an image to be typed to save spamming?
+	if ($context['require_verification'])
+	{
+		echo '
+				<div class="post_verification">
+					<strong>', $txt['pm_visual_verification_label'], ':</strong>
+					', template_control_verification($context['visual_verification_id'], 'all'), '
+				</div>';
+	}
 
 	// Send, Preview, spellcheck buttons.
 	echo '
-							<tr>
-								<td></td>
-								<td align="left">
-									<label for="outbox"><input type="checkbox" name="outbox" id="outbox" value="1" tabindex="', $context['tabindex']++, '"', $context['copy_to_outbox'] ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['pm_save_outbox'], '</label>
-								</td>
-							</tr>
-							<tr>
-								<td align="center" colspan="2">
-									<span class="smalltext"><br />', $txt['shortcuts'], '</span><br />
-									', template_control_richedit_buttons($context['post_box_name']), '
-								</td>
-							</tr>
-						</table>
-						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-						<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
-						<input type="hidden" name="replied_to" value="', !empty($context['quoted_message']['id']) ? $context['quoted_message']['id'] : 0, '" />
-						<input type="hidden" name="pm_head" value="', !empty($context['quoted_message']['pm_head']) ? $context['quoted_message']['pm_head'] : 0, '" />
-						<input type="hidden" name="f" value="', isset($context['folder']) ? $context['folder'] : '', '" />
-						<input type="hidden" name="l" value="', isset($context['current_label_id']) ? $context['current_label_id'] : -1, '" />
-					</form>
-			</div>
+				<p id="confirm_buttons">
+					<span class="smalltext">', $context['browser']['is_firefox'] ? $txt['shortcuts_firefox'] : $txt['shortcuts'], '</span><br />
+					', template_control_richedit_buttons($context['post_box_name']), '
+				</p>
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+				<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
+				<input type="hidden" name="replied_to" value="', !empty($context['quoted_message']['id']) ? $context['quoted_message']['id'] : 0, '" />
+				<input type="hidden" name="pm_head" value="', !empty($context['quoted_message']['pm_head']) ? $context['quoted_message']['pm_head'] : 0, '" />
+				<input type="hidden" name="f" value="', isset($context['folder']) ? $context['folder'] : '', '" />
+				<input type="hidden" name="l" value="', isset($context['current_label_id']) ? $context['current_label_id'] : -1, '" />
+			</form>
+		</div>
 		<span class="botslice"><span></span></span>
 	</div>';
 
@@ -1093,6 +1070,7 @@ function template_send()
 				],
 				sBccControlId: \'bcc_control\',
 				sBccDivId: \'bcc_div\',
+				sBccDivId2: \'bcc_div2\',
 				sBccLinkId: \'bcc_link\',
 				sBccLinkContainerId: \'bcc_link_container\',
 				bBccShowByDefault: ', empty($context['recipients']['bcc']) && empty($context['bcc_value']) ? 'false' : 'true', ',

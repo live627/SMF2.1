@@ -4,6 +4,7 @@ function smf_PersonalMessageSend(oOptions)
 {
 	this.opt = oOptions;
 	this.oBccDiv = null;
+	this.oBccDiv2 = null;
 	this.oToAutoSuggest = null;
 	this.oBccAutoSuggest = null;
 	this.oToListContainer = null;
@@ -17,6 +18,8 @@ smf_PersonalMessageSend.prototype.init = function()
 		// Hide the BCC control.
 		this.oBccDiv = document.getElementById(this.opt.sBccDivId);
 		this.oBccDiv.style.display = 'none';
+		this.oBccDiv2 = document.getElementById(this.opt.sBccDivId2);
+		this.oBccDiv2.style.display = 'none';
 
 		// Show the link to bet the BCC control back.
 		var oBccLinkContainer = document.getElementById(this.opt.sBccLinkContainerId);
@@ -71,6 +74,7 @@ smf_PersonalMessageSend.prototype.showBcc = function()
 {
 	// No longer hide it, show it to the world!
 	this.oBccDiv.style.display = '';
+	this.oBccDiv2.style.display = '';
 }
 
 

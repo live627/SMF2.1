@@ -25,7 +25,8 @@ October 2009
  * News fader didn't work when creating a copy of the default theme (BoardIndex.template.php)
  ! Don't show the registration form with COPPA in effect and under age registrations disabled. (Register.php)
  * The dropmenu background was sometimes too short, extend it with CSS (GenericMenu template, index.css) [Bug 3792]
- ! Changed the notice for verification after quick reply into something less obscure. (Post.php) 
+ ! Changed the notice for verification after quick reply into something less obscure. (Post.php)
+ * Rewrote the rest of the PersonalMessage template to match Curve's look and feel. (PersonalMessage.template.php, PersonalMessage.js)
 
 
 September 2009
