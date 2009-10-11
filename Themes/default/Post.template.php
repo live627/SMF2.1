@@ -64,7 +64,7 @@ function template_main()
 				}
 				pollOptionNum++
 
-				setOuterHTML(document.getElementById("pollMoreOptions"), \'<br /><label for="options-\' + pollOptionNum + \'">', $txt['option'], ' \' + pollOptionNum + \'<\' + \'/label>: <input type="text" name="options[\' + pollOptionNum + \']" id="options-\' + pollOptionNum + \'" value="" size="25" tabindex="\' + pollTabIndex + \'" class="input_text" /><span id="pollMoreOptions"><\' + \'/span>\');
+				setOuterHTML(document.getElementById("pollMoreOptions"), \'<li><label for="options-\' + pollOptionNum + \'">', $txt['option'], ' \' + pollOptionNum + \'<\' + \'/label>: <input type="text" name="options[\' + pollOptionNum + \']" id="options-\' + pollOptionNum + \'" value="" size="25" tabindex="\' + pollTabIndex + \'" class="input_text" /></li><li id="pollMoreOptions"><\' + \'/li>\');
 			}';
 
 	// If we are making a calendar event we want to ensure we show the current days in a month etc... this is done here.
@@ -98,18 +98,21 @@ function template_main()
 
 	// If the user wants to see how their message looks - the preview table is where it's at!
 	echo '
-		<div id="preview_section"', isset($context['preview_message']) ? '' : ' style="display: none;"', '>
-			<table border="0" width="100%" cellspacing="1" cellpadding="3" class="bordercolor" align="center" style="table-layout: fixed;">
-				<tr class="titlebg">
-					<td id="preview_subject">', empty($context['preview_subject']) ? '' : $context['preview_subject'], '</td>
-				</tr>
-				<tr class="windowbg">
-					<td class="post" width="100%" id="preview_body">
-						', empty($context['preview_message']) ? str_repeat('<br />', 5) : $context['preview_message'], '
-					</td>
-				</tr>
-			</table><br />
-		</div>';
+			<div id="preview_section"', isset($context['preview_message']) ? '' : ' style="display: none;"', '>
+				<h3 class="catbg">
+					<span class="left"></span>
+					<span id="preview_subject">', empty($context['preview_subject']) ? '' : $context['preview_subject'], '</span>
+				</h3>
+				<div class="windowbg">
+					<span class="topslice"><span></span></span>
+					<div class="content">
+						<div class="post" id="preview_body">
+							', empty($context['preview_message']) ? str_repeat('<br />', 5) : $context['preview_message'], '
+						</div>
+					</div>
+					<span class="botslice"><span></span></span>
+				</div>
+			</div><br />';
 
 	if ($context['make_event'] && (!$context['event']['new'] || !empty($context['current_board'])))
 		echo '
@@ -117,441 +120,401 @@ function template_main()
 
 	// Start the main table.
 	echo '
-			<table border="0" width="100%" align="center" cellspacing="1" cellpadding="3" class="bordercolor">
-				<tr class="titlebg">
-					<td>', $context['page_title'], '</td>
-				</tr>
-				<tr>
-					<td class="windowbg">', isset($context['current_topic']) ? '
-						<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />' : '', '
-						<table border="0" cellpadding="3" width="100%">';
+			<h3 class="catbg">
+				<span class="left"></span>
+				', $context['page_title'], '
+			</h3>
+			<div class="windowbg">
+				<span class="topslice"><span></span></span>
+				<div class="content">', isset($context['current_topic']) ? '
+					<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />' : '';
 
 	// If an error occurred, explain what happened.
 	echo '
-							<tr', empty($context['post_error']['messages']) ? ' style="display: none"' : '', ' id="errors">
-								<td></td>
-								<td align="left">
-									<div style="padding: 0px; font-weight: bold;', empty($context['error_type']) || $context['error_type'] != 'serious' ? ' display: none;' : '', '" id="error_serious">
-										', $txt['error_while_submitting'], '
-									</div>
-									<div class="error" style="margin: 1ex 0 2ex 3ex;" id="error_list">
-										', empty($context['post_error']['messages']) ? '' : implode('<br />', $context['post_error']['messages']), '
-									</div>
-								</td>
-							</tr>';
+					<div class="errorbox"', empty($context['post_error']['messages']) ? ' style="display: none"' : '', ' id="errors">
+						<dl>
+							<dt>
+								<strong style="', empty($context['error_type']) || $context['error_type'] != 'serious' ? 'display: none;' : '', '" id="error_serious">', $txt['error_while_submitting'], '</strong>
+							</dt>
+							<dt class="error" id="error_list">
+								', empty($context['post_error']['messages']) ? '' : implode('<br />', $context['post_error']['messages']), '
+							</dt>
+						</dl>
+					</div>';
 
 	// If this won't be approved let them know!
 	if (!$context['becomes_approved'])
 	{
 		echo '
-							<tr>
-								<td></td>
-								<td align="left">
-									<em>', $txt['wait_for_approval'], '</em>
-									<input type="hidden" name="not_approved" value="1" />
-								</td>
-							</tr>';
+					<p class="information">
+						<em>', $txt['wait_for_approval'], '</em>
+						<input type="hidden" name="not_approved" value="1" />
+					</p>';
 	}
 
 	// If it's locked, show a message to warn the replyer.
 	echo '
-							<tr', $context['locked'] ? '' : ' style="display: none"', ' id="lock_warning">
-								<td></td>
-								<td align="left">
-									', $txt['topic_locked_no_reply'], '
-								</td>
-							</tr>';
+					<p class="information"', $context['locked'] ? '' : ' style="display: none"', ' id="lock_warning">
+						', $txt['topic_locked_no_reply'], '
+					</p>';
+
+	// The post header... important stuff
+	echo '
+					<dl id="post_header">';
 
 	// Guests have to put in their name and email...
 	if (isset($context['name']) && isset($context['email']))
 	{
 		echo '
-							<tr>
-								<td align="right" style="font-weight: bold;"', isset($context['post_error']['long_name']) || isset($context['post_error']['no_name']) || isset($context['post_error']['bad_name']) ? ' class="error"' : '', ' id="caption_guestname">
-									', $txt['name'], ':
-								</td>
-								<td>
-									<input type="text" name="guestname" size="25" value="', $context['name'], '" tabindex="', $context['tabindex']++, '" class="input_text" />
-								</td>
-							</tr>';
+						<dt>
+							<span', isset($context['post_error']['long_name']) || isset($context['post_error']['no_name']) || isset($context['post_error']['bad_name']) ? ' class="error"' : '', ' id="caption_guestname">', $txt['name'], ':</span>
+						</dt>
+						<dd>
+							<input type="text" name="guestname" size="25" value="', $context['name'], '" tabindex="', $context['tabindex']++, '" class="input_text" />
+						</dd>';
 
 		if (empty($modSettings['guest_post_no_email']))
 			echo '
-							<tr>
-								<td align="right" style="font-weight: bold;"', isset($context['post_error']['no_email']) || isset($context['post_error']['bad_email']) ? ' class="error"' : '', ' id="caption_email">
-									', $txt['email'], ':
-								</td>
-								<td>
-									<input type="text" name="email" size="25" value="', $context['email'], '" tabindex="', $context['tabindex']++, '" class="input_text" />
-								</td>
-							</tr>';
+						<dt>
+							<span', isset($context['post_error']['no_email']) || isset($context['post_error']['bad_email']) ? ' class="error"' : '', ' id="caption_email">', $txt['email'], ':</span>
+						</dt>
+						<dd>
+							<input type="text" name="email" size="25" value="', $context['email'], '" tabindex="', $context['tabindex']++, '" class="input_text" />
+						</dd>';
 	}
 
-	// Is visual verification enabled?
-	if ($context['require_verification'])
-	{
+	// Now show the subject box for this post.
+	echo '
+						<dt>
+							<span', isset($context['post_error']['no_subject']) ? ' class="error"' : '', ' id="caption_subject">', $txt['subject'], ':</span>
+						</dt>
+						<dd>
+								<input type="text" name="subject"', $context['subject'] == '' ? '' : ' value="' . $context['subject'] . '"', ' tabindex="', $context['tabindex']++, '" size="80" maxlength="80" class="input_text" />
+						</dd>
+						<dt>
+							', $txt['message_icon'], ':
+						</dt>
+						<dd>
+							<select name="icon" id="icon" onchange="showimage()">';
+
+	// Loop through each message icon allowed, adding it to the drop down list.
+	foreach ($context['icons'] as $icon)
 		echo '
-							<tr>
-								<td align="right" valign="top"', !empty($context['post_error']['need_qr_verification']) ? ' class="error"' : '', '>
-									<strong>', $txt['verification'], ':</strong>
-								</td>
-								<td>
-									', template_control_verification($context['visual_verification_id'], 'all'), '
-								</td>
-							</tr>';
-	}
+								<option value="', $icon['value'], '"', $icon['value'] == $context['icon'] ? ' selected="selected"' : '', '>', $icon['name'], '</option>';
+
+	echo '
+							</select>
+							<img src="', $context['icon_url'], '" name="icons" hspace="15" alt="" />
+						</dd>
+					</dl>';
 
 	// Are you posting a calendar event?
 	if ($context['make_event'])
 	{
 		echo '
-							<tr>
-								<td align="right" style="font-weight: bold;"', isset($context['post_error']['no_event']) ? ' class="error"' : '', ' id="caption_evtitle">
-									', $txt['calendar_event_title'], '
-								</td>
-								<td class="smalltext">
-									<input type="text" name="evtitle" maxlength="60" size="60" value="', $context['event']['title'], '" tabindex="', $context['tabindex']++, '" class="input_text" />
-								</td>
-							</tr><tr>
-								<td></td>
-								<td class="smalltext">
-									<input type="hidden" name="calendar" value="1" />', $txt['calendar_year'], '&nbsp;
-									<select name="year" id="year" tabindex="', $context['tabindex']++, '" onchange="generateDays();">';
+					<div id="post_event">
+						<fieldset id="event_main">
+							<legend><span', isset($context['post_error']['no_event']) ? ' class="error"' : '', ' id="caption_evtitle">', $txt['calendar_event_title'], '</span></legend>
+							<input type="text" name="evtitle" maxlength="60" size="60" value="', $context['event']['title'], '" tabindex="', $context['tabindex']++, '" class="input_text" />
+							<div class="padding smalltext">
+								<input type="hidden" name="calendar" value="1" />', $txt['calendar_year'], '&nbsp;
+								<select name="year" id="year" tabindex="', $context['tabindex']++, '" onchange="generateDays();">';
 
 		// Show a list of all the years we allow...
 		for ($year = $modSettings['cal_minyear']; $year <= $modSettings['cal_maxyear']; $year++)
 			echo '
-										<option value="', $year, '"', $year == $context['event']['year'] ? ' selected="selected"' : '', '>', $year, '</option>';
+									<option value="', $year, '"', $year == $context['event']['year'] ? ' selected="selected"' : '', '>', $year, '</option>';
 
 		echo '
-									</select>&nbsp;
-									', $txt['calendar_month'], '&nbsp;
-									<select name="month" id="month" onchange="generateDays();">';
+								</select>&nbsp;
+								', $txt['calendar_month'], '&nbsp;
+								<select name="month" id="month" onchange="generateDays();">';
 
 		// There are 12 months per year - ensure that they all get listed.
 		for ($month = 1; $month <= 12; $month++)
 			echo '
-										<option value="', $month, '"', $month == $context['event']['month'] ? ' selected="selected"' : '', '>', $txt['months'][$month], '</option>';
+									<option value="', $month, '"', $month == $context['event']['month'] ? ' selected="selected"' : '', '>', $txt['months'][$month], '</option>';
 
 		echo '
-									</select>&nbsp;
-									', $txt['calendar_day'], '&nbsp;
-									<select name="day" id="day">';
+								</select>&nbsp;
+								', $txt['calendar_day'], '&nbsp;
+								<select name="day" id="day">';
 
 		// This prints out all the days in the current month - this changes dynamically as we switch months.
 		for ($day = 1; $day <= $context['event']['last_day']; $day++)
 			echo '
-										<option value="', $day, '"', $day == $context['event']['day'] ? ' selected="selected"' : '', '>', $day, '</option>';
+									<option value="', $day, '"', $day == $context['event']['day'] ? ' selected="selected"' : '', '>', $day, '</option>';
 
 		echo '
-									</select>
-								</td>
-							</tr>';
+								</select>
+							</div>
+						</fieldset>
+						<fieldset id="event_options">
+							<legend>', $txt['calendar_event_options'], '</legend>
+							<div class="smalltext event_options">
+								<ul class="event_options">';
 
 		// If events can span more than one day then allow the user to select how long it should last.
 		if (!empty($modSettings['cal_allowspan']))
 		{
 			echo '
-							<tr>
-								<td align="right"><strong>', $txt['calendar_numb_days'], '</strong></td>
-								<td class="smalltext">
-									<select name="span">';
+									<li>
+										', $txt['calendar_numb_days'], '
+										<span class="smalltext">
+											<select name="span">';
 
 			for ($days = 1; $days <= $modSettings['cal_maxspan']; $days++)
 				echo '
-										<option value="', $days, '"', $days == $context['event']['span'] ? ' selected="selected"' : '', '>', $days, '</option>';
+												<option value="', $days, '"', $days == $context['event']['span'] ? ' selected="selected"' : '', '>', $days, '</option>';
 
 			echo '
-									</select>
-								</td>
-							</tr>';
+											</select>
+										</span>
+									</li>';
 		}
 
 		// If this is a new event let the user specify which board they want the linked post to be put into.
 		if ($context['event']['new'] && $context['is_new_post'])
 		{
 			echo '
-							<tr>
-								<td align="right"><strong>', $txt['calendar_post_in'], '</strong></td>
-								<td class="smalltext">
-									<select name="board">';
+									<li>
+										', $txt['calendar_post_in'], '
+										<span class="smalltext">
+											<select name="board">';
 			foreach ($context['event']['categories'] as $category)
 			{
 				echo '
-										<optgroup label="', $category['name'], '">';
+												<optgroup label="', $category['name'], '">';
 				foreach ($category['boards'] as $board)
 					echo '
-											<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
+													<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
 				echo '
-										</optgroup>';
+												</optgroup>';
 			}
 			echo '
-									</select>
-								</td>
-							</tr>';
+											</select>
+										</span>
+									</li>';
 		}
-	}
-
-	// Now show the subject box for this post.
-	echo '
-							<tr>
-								<td align="right" style="font-weight: bold;"', isset($context['post_error']['no_subject']) ? ' class="error"' : '', ' id="caption_subject">
-									', $txt['subject'], ':
-								</td>
-								<td>
-									<input type="text" name="subject"', $context['subject'] == '' ? '' : ' value="' . $context['subject'] . '"', ' tabindex="', $context['tabindex']++, '" size="80" maxlength="80" class="input_text" />
-								</td>
-							</tr>
-							<tr>
-								<td align="right">
-									<strong>', $txt['message_icon'], ':</strong>
-								</td>
-								<td>
-									<select name="icon" id="icon" onchange="showimage()">';
-
-	// Loop through each message icon allowed, adding it to the drop down list.
-	foreach ($context['icons'] as $icon)
 		echo '
-										<option value="', $icon['value'], '"', $icon['value'] == $context['icon'] ? ' selected="selected"' : '', '>', $icon['name'], '</option>';
-
-	echo '
-									</select>
-									<img src="', $context['icon_url'], '" name="icons" hspace="15" alt="" />
-								</td>
-							</tr>';
+								</ul>
+							</div>
+						</fieldset>
+					</div>';
+	}
 
 	// If this is a poll then display all the poll options!
 	if ($context['make_poll'])
 	{
 		echo '
-							<tr>
-								<td align="right" style="font-weight: bold;"', isset($context['post_error']['no_question']) ? ' class="error"' : '', ' id="caption_question">
-									', $txt['poll_question'], ':
-								</td>
-								<td align="left">
-									<input type="text" name="question" value="', isset($context['question']) ? $context['question'] : '', '" tabindex="', $context['tabindex']++, '" size="80" class="input_text" />
-								</td>
-							</tr>
-							<tr>
-								<td align="right"></td>
-								<td>';
+					<div id="edit_poll">
+						<fieldset id="poll_main">
+							<legend><span ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '>' . $txt['poll_question'] . '</span></legend>
+							<input type="text" name="question" value="', isset($context['question']) ? $context['question'] : '', '" tabindex="', $context['tabindex']++, '" size="80" class="input_text" />
+							<ul class="smalltext poll_main">';
 
 		// Loop through all the choices and print them out.
 		foreach ($context['choices'] as $choice)
 		{
 			echo '
-									<label for="options-', $choice['id'], '">', $txt['option'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" value="', $choice['label'], '" tabindex="', $context['tabindex']++, '" size="25" class="input_text" />';
-
-			if (!$choice['is_last'])
-				echo '<br />';
+								<li>
+									<label for="options-', $choice['id'], '">', $txt['option'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" value="', $choice['label'], '" tabindex="', $context['tabindex']++, '" size="25" class="input_text" />
+								</li>';
 		}
 
 		echo '
-									<span id="pollMoreOptions"></span> <a href="#" onclick="addPollOption(); return false;">(', $txt['poll_add_option'], ')</a>
-								</td>
-							</tr>
-							<tr>
-								<td align="right"><strong>', $txt['poll_options'], ':</strong></td>
-								<td class="smalltext"><input type="text" name="poll_max_votes" size="2" value="', $context['poll_options']['max_votes'], '" class="input_text" /> ', $txt['poll_max_votes'], '</td>
-							</tr>
-							<tr>
-								<td align="right"></td>
-								<td class="smalltext">', $txt['poll_run'], ' <input type="text" id="poll_expire" name="poll_expire" size="2" value="', $context['poll_options']['expire'], '" onchange="pollOptions();" maxlength="4" class="input_text" /> ', $txt['poll_run_days'], '</td>
-							</tr>
-							<tr>
-								<td align="right"></td>
-								<td class="smalltext">
-									<label for="poll_change_vote"><input type="checkbox" id="poll_change_vote" name="poll_change_vote"', !empty($context['poll_options']['change_vote']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['poll_do_change_vote'], '</label>';
+								<li id="pollMoreOptions"></li>
+							</ul>
+							<strong><a href="javascript:addPollOption(); void(0);">(', $txt['poll_add_option'], ')</a></strong>
+						</fieldset>
+						<fieldset id="poll_options">
+							<legend>', $txt['poll_options'], '</legend>
+							<div class="smalltext poll_options">
+								<ul class="poll_options">
+									<li>
+										<input type="text" id="poll_max_votes" name="poll_max_votes" size="2" value="', $context['poll_options']['max_votes'], '" class="input_text" /> <label for="poll_max_votes">', $txt['poll_max_votes'], '</label>
+									</li>
+									<li>
+										<label for="poll_expire">', $txt['poll_run'], ' <input type="text" id="poll_expire" name="poll_expire" size="2" value="', $context['poll_options']['expire'], '" onchange="pollOptions();" maxlength="4" class="input_text" /> ', $txt['poll_run_days'], '</label>
+									</li>
+									<li>
+										<label for="poll_change_vote"><input type="checkbox" id="poll_change_vote" name="poll_change_vote"', !empty($context['poll_options']['change_vote']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['poll_do_change_vote'], '</label>
+									</li>';
 
 		if ($context['poll_options']['guest_vote_enabled'])
 			echo '
-									<br /><label for="poll_guest_vote"><input type="checkbox" id="poll_guest_vote" name="poll_guest_vote"', !empty($context['poll_options']['guest_vote']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['poll_guest_vote'], '</label>';
+									<li>
+										<label for="poll_guest_vote"><input type="checkbox" id="poll_guest_vote" name="poll_guest_vote"', !empty($context['poll_options']['guest_vote']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['poll_guest_vote'], '</label>
+									</li>';
 
 		echo '
-								</td>
-							</tr>
-							<tr>
-								<td align="right"></td>
-								<td class="smalltext">
-									<input type="radio" name="poll_hide" value="0"', $context['poll_options']['hide'] == 0 ? ' checked="checked"' : '', ' class="input_radio" /> ', $txt['poll_results_anyone'], '<br />
-									<input type="radio" name="poll_hide" value="1"', $context['poll_options']['hide'] == 1 ? ' checked="checked"' : '', ' class="input_radio" /> ', $txt['poll_results_voted'], '<br />
-									<input type="radio" name="poll_hide" value="2"', $context['poll_options']['hide'] == 2 ? ' checked="checked"' : '', empty($context['poll_options']['expire']) ? ' disabled="disabled"' : '', ' class="input_radio" /> ', $txt['poll_results_expire'], '<br />
-									<br />
-								</td>
-							</tr>';
+								</ul>
+							</div>
+							<div class="smalltext poll_options">
+								<ul class="poll_options">
+									<li>
+										<input type="radio" name="poll_hide" value="0"', $context['poll_options']['hide'] == 0 ? ' checked="checked"' : '', ' class="input_radio" /> ', $txt['poll_results_anyone'], '<br />
+									</li>
+									<li>
+										<input type="radio" name="poll_hide" value="1"', $context['poll_options']['hide'] == 1 ? ' checked="checked"' : '', ' class="input_radio" /> ', $txt['poll_results_voted'], '<br />
+									</li>
+									<li>
+										<input type="radio" name="poll_hide" value="2"', $context['poll_options']['hide'] == 2 ? ' checked="checked"' : '', empty($context['poll_options']['expire']) ? ' disabled="disabled"' : '', ' class="input_radio" /> ', $txt['poll_results_expire'], '<br />
+									</li>
+								</ul>
+							</div>
+						</fieldset>
+					</div>';
 	}
 
 	// Show the actual posting area...
 	if ($context['show_bbc'])
 	{
 		echo '
-							<tr>
-								<td align="right"></td>
-								<td valign="middle" id="bbcBox_message">
-								</td>
-							</tr>';
+					<div id="bbcBox_message"></div>';
 	}
 
 	// What about smileys?
 	if (!empty($context['smileys']['postform']) || !empty($context['smileys']['popup']))
 		echo '
-							<tr>
-								<td align="right"></td>
-								<td valign="middle" id="smileyBox_message">
-								</td>
-							</tr>';
+					<div id="smileyBox_message"></div>';
 
 	echo '
-							<tr>
-								<td valign="top" align="right"></td>
-								<td>
-									', template_control_richedit($context['post_box_name'], 'smileyBox_message', 'bbcBox_message'), '
-								</td>
-							</tr>';
+					', template_control_richedit($context['post_box_name'], 'smileyBox_message', 'bbcBox_message');
 
 	// If this message has been edited in the past - display when it was.
+	$context['last_modified'] = 'test';
 	if (isset($context['last_modified']))
 		echo '
-									<tr>
-										<td valign="top" align="right">
-											<strong>', $txt['last_edit'], ':</strong>
-										</td>
-										<td>
-											', $context['last_modified'], '
-										</td>
-									</tr>';
+					<div class="padding smalltext">
+						<strong>', $txt['last_edit'], ':</strong>
+						', $context['last_modified'], '
+					</div>';
 
 	// If the admin has enabled the hiding of the additional options - show a link and image for it.
 	if (!empty($settings['additional_options_collapsable']))
 		echo '
-									<tr>
-										<td colspan="2" style="padding-left: 5ex;">
-											<img src="', $settings['images_url'], '/collapse.gif" alt="-" id="postMoreExpand" style="display: none;" /> <strong><a href="#" id="postMoreExpandLink">', $txt['post_additionalopt'], '</a></strong>
-										</td>
-									</tr>';
+					<div>
+						<img src="', $settings['images_url'], '/collapse.gif" alt="-" id="postMoreExpand" style="display: none;" /> <strong><a href="#" id="postMoreExpandLink">', $txt['post_additionalopt'], '</a></strong>
+					</div>';
 
 	// Display the check boxes for all the standard options - if they are available to the user!
 	echo '
-									<tr>
-										<td></td>
-										<td>
-											<div id="postMoreOptions">
-												<table width="80%" cellpadding="0" cellspacing="0" border="0">
-													<tr>
-														<td class="smalltext">', $context['can_notify'] ? '<input type="hidden" name="notify" value="0" /><label for="check_notify"><input type="checkbox" name="notify" id="check_notify"' . ($context['notify'] || !empty($options['auto_notify']) ? ' checked="checked"' : '') . ' value="1" class="input_check" /> ' . $txt['notify_replies'] . '</label>' : '', '</td>
-														<td class="smalltext">', $context['can_lock'] ? '<input type="hidden" name="lock" value="0" /><label for="check_lock"><input type="checkbox" name="lock" id="check_lock"' . ($context['locked'] ? ' checked="checked"' : '') . ' value="1" class="input_check" /> ' . $txt['lock_topic'] . '</label>' : '', '</td>
-													</tr>
-													<tr>
-														<td class="smalltext"><label for="check_back"><input type="checkbox" name="goback" id="check_back"' . ($context['back_to_topic'] || !empty($options['return_to_post']) ? ' checked="checked"' : '') . ' value="1" class="input_check" /> ' . $txt['back_to_topic'] . '</label></td>
-														<td class="smalltext">', $context['can_sticky'] ? '<input type="hidden" name="sticky" value="0" /><label for="check_sticky"><input type="checkbox" name="sticky" id="check_sticky"' . ($context['sticky'] ? ' checked="checked"' : '') . ' value="1" class="input_check" /> ' . $txt['sticky_after'] . '</label>' : '', '</td>
-													</tr>
-													<tr>
-														<td class="smalltext"><label for="check_smileys"><input type="checkbox" name="ns" id="check_smileys"', $context['use_smileys'] ? '' : ' checked="checked"', ' value="NS" class="input_check" /> ', $txt['dont_use_smileys'], '</label></td>', '
-														<td class="smalltext">', $context['can_move'] ? '<input type="hidden" name="move" value="0" /><label for="check_move"><input type="checkbox" name="move" id="check_move" value="1" class="input_check" ' . (!empty($context['move']) ? 'checked="checked" ' : '') . '/> ' . $txt['move_after2'] . '</label>' : '', '</td>
-													</tr>
-													<tr>
-														<td class="smalltext">', $context['can_announce'] && $context['is_first_post'] ? '<label for="check_announce"><input type="checkbox" name="announce_topic" id="check_announce" value="1" class="input_check" ' . (!empty($context['announce']) ? 'checked="checked" ' : '') . '/> ' . $txt['announce_topic'] . '</label>' : '', '</td>
-														<td class="smalltext">', $context['show_approval'] ? '<label for="approve"><input type="checkbox" name="approve" id="approve" value="2" class="input_check" ' . ($context['show_approval'] === 2 ? 'checked="checked"' : '') . ' /> ' . $txt['approve_this_post'] . '</label>' : '', '</td>
-													</tr>
-												</table>
-											</div>
-										</td>
-									</tr>';
+					<div id="postMoreOptions" class="smalltext">
+						<ul class="post_options">
+							', $context['can_notify'] ? '<li><input type="hidden" name="notify" value="0" /><label for="check_notify"><input type="checkbox" name="notify" id="check_notify"' . ($context['notify'] || !empty($options['auto_notify']) ? ' checked="checked"' : '') . ' value="1" class="input_check" /> ' . $txt['notify_replies'] . '</label></li>' : '', '
+							', $context['can_lock'] ? '<li><input type="hidden" name="lock" value="0" /><label for="check_lock"><input type="checkbox" name="lock" id="check_lock"' . ($context['locked'] ? ' checked="checked"' : '') . ' value="1" class="input_check" /> ' . $txt['lock_topic'] . '</label></li>' : '', '
+							<li><label for="check_back"><input type="checkbox" name="goback" id="check_back"' . ($context['back_to_topic'] || !empty($options['return_to_post']) ? ' checked="checked"' : '') . ' value="1" class="input_check" /> ' . $txt['back_to_topic'] . '</label></li>
+							', $context['can_sticky'] ? '<li><input type="hidden" name="sticky" value="0" /><label for="check_sticky"><input type="checkbox" name="sticky" id="check_sticky"' . ($context['sticky'] ? ' checked="checked"' : '') . ' value="1" class="input_check" /> ' . $txt['sticky_after'] . '</label></li>' : '', '
+							<li><label for="check_smileys"><input type="checkbox" name="ns" id="check_smileys"', $context['use_smileys'] ? '' : ' checked="checked"', ' value="NS" class="input_check" /> ', $txt['dont_use_smileys'], '</label></li>', '
+							', $context['can_move'] ? '<li><input type="hidden" name="move" value="0" /><label for="check_move"><input type="checkbox" name="move" id="check_move" value="1" class="input_check" ' . (!empty($context['move']) ? 'checked="checked" ' : '') . '/> ' . $txt['move_after2'] . '</label></li>' : '', '
+							', $context['can_announce'] && $context['is_first_post'] ? '<li><label for="check_announce"><input type="checkbox" name="announce_topic" id="check_announce" value="1" class="input_check" ' . (!empty($context['announce']) ? 'checked="checked" ' : '') . '/> ' . $txt['announce_topic'] . '</label></li>' : '', '
+							', $context['show_approval'] ? '<li><label for="approve"><input type="checkbox" name="approve" id="approve" value="2" class="input_check" ' . ($context['show_approval'] === 2 ? 'checked="checked"' : '') . ' /> ' . $txt['approve_this_post'] . '</label></li>' : '', '
+						</ul>
+					</div>';
 
 	// If this post already has attachments on it - give information about them.
 	if (!empty($context['current_attachments']))
 	{
 		echo '
-							<tr id="postAttachment">
-								<td align="right" valign="top">
-									<strong>', $txt['attached'], ':</strong>
-								</td>
-								<td class="smalltext">
-									<input type="hidden" name="attach_del[]" value="0" />
-									', $txt['uncheck_unwatchd_attach'], ':<br />';
+					<dl id="postAttachment">
+						<dt>
+							', $txt['attached'], ':
+						</dt>
+						<dd class="smalltext">
+							<input type="hidden" name="attach_del[]" value="0" />
+							', $txt['uncheck_unwatchd_attach'], ':
+						</dd>';
 		foreach ($context['current_attachments'] as $attachment)
 			echo '
-									<input type="checkbox" name="attach_del[]" value="', $attachment['id'], '"', empty($attachment['unchecked']) ? ' checked="checked"' : '', ' class="input_check" /> ', $attachment['name'], (empty($attachment['approved']) ? ' (' . $txt['awaiting_approval'] . ')' : ''), '<br />';
+						<dd class="smalltext">
+							<input type="checkbox" name="attach_del[]" value="', $attachment['id'], '"', empty($attachment['unchecked']) ? ' checked="checked"' : '', ' class="input_check" /> ', $attachment['name'], (empty($attachment['approved']) ? ' (' . $txt['awaiting_approval'] . ')' : ''), '
+						</dd>';
 		echo '
-									<br />
-								</td>
-							</tr>';
+					</dl>';
 	}
 
 	// Is the user allowed to post any additional ones? If so give them the boxes to do it!
 	if ($context['can_post_attachment'])
 	{
 		echo '
-							<tr id="postAttachment2">
-								<td align="right" valign="top">
-									<strong>', $txt['attach'], ':</strong>
-								</td>
-								<td class="smalltext">
-									<input type="file" size="48" name="attachment[]" class="input_file" />';
+					<dl id="postAttachment2">
+						<dt>
+							', $txt['attach'], ':
+						</dt>
+						<dd class="smalltext">
+							<input type="file" size="60" name="attachment[]" class="input_file" />';
 
 		// Show more boxes only if they aren't approaching their limit.
 		if ($context['num_allowed_attachments'] > 1)
 			echo '
-									<script type="text/javascript"><!-- // --><![CDATA[
-										var allowed_attachments = ', $context['num_allowed_attachments'], ' - 1;
+							<script type="text/javascript"><!-- // --><![CDATA[
+								var allowed_attachments = ', $context['num_allowed_attachments'], ';
 
-										function addAttachment()
-										{
-											if (allowed_attachments <= 0)
-												return alert("', $txt['more_attachments_error'], '");
+								function addAttachment()
+								{
+									allowed_attachments = allowed_attachments - 1;
+									if (allowed_attachments <= 0)
+										return alert("', $txt['more_attachments_error'], '");
 
-											setOuterHTML(document.getElementById("moreAttachments"), \'<br /><input type="file" size="48" name="attachment[]" class="input_file" /><span id="moreAttachments"><\' + \'/span>\');
-											allowed_attachments = allowed_attachments - 1;
+									setOuterHTML(document.getElementById("moreAttachments"), \'<dd class="smalltext"><input type="file" size="60" name="attachment[]" class="input_file" /><\' + \'/dd><dd class="smalltext" id="moreAttachments"><a href="#" onclick="addAttachment(); return false;">(', $txt['more_attachments'], ')<\' + \'/a><\' + \'/dd>\');
 
-											return true;
-										}
-									// ]]></script>
-									<span id="moreAttachments"></span> <a href="#" onclick="addAttachment(); return false;">(', $txt['more_attachments'], ')</a><br />
-									<noscript><input type="file" size="48" name="attachment[]" class="input_file" /><br /></noscript>';
-		else
-			echo '
-									<br />';
+									return true;
+								}
+							// ]]></script>
+						</dd>
+						<dd class="smalltext" id="moreAttachments"><a href="#" onclick="addAttachment(); return false;">(', $txt['more_attachments'], ')</a></dd>';
+
+		echo '
+						<dd class="smalltext">';
 
 		// Show some useful information such as allowed extensions, maximum size and amount of attachments allowed.
 		if (!empty($modSettings['attachmentCheckExtensions']))
 			echo '
-									', $txt['allowed_types'], ': ', $context['allowed_extensions'], '<br />';
+							', $txt['allowed_types'], ': ', $context['allowed_extensions'], '<br />';
 
 		if (!empty($context['attachment_restrictions']))
 			echo '
-									', $txt['attach_restrictions'], ' ', implode(', ', $context['attachment_restrictions']), '.<br />';
+							', $txt['attach_restrictions'], ' ', implode(', ', $context['attachment_restrictions']), '<br />';
 
 		if (!$context['can_post_attachment_unapproved'])
 			echo '
-									<span class="alert">', $txt['attachment_requires_approval'], '</span><br />';
+							<span class="alert">', $txt['attachment_requires_approval'], '</span>', '<br />';
 
 		echo '
-								</td>
-							</tr>';
+						</dd>
+					</dl>';
+	}
+
+	// Is visual verification enabled?
+	if ($context['require_verification'])
+	{
+		echo '
+					<div class="post_verification">
+						<span', !empty($context['post_error']['need_qr_verification']) ? ' class="error"' : '', '>
+							<strong>', $txt['verification'], ':</strong>
+						</span>
+						', template_control_verification($context['visual_verification_id'], 'all'), '
+					</div>';
 	}
 
 	// Finally, the submit buttons.
 	echo '
-							<tr>
-								<td align="center" colspan="2">
-									<span class="smalltext"><br />', $context['browser']['is_firefox'] ? $txt['shortcuts_firefox'] : $txt['shortcuts'], '</span><br />
-									', template_control_richedit_buttons($context['post_box_name']);
+					<p id="confirm_buttons">
+						<span class="smalltext">', $context['browser']['is_firefox'] ? $txt['shortcuts_firefox'] : $txt['shortcuts'], '</span><br />
+						', template_control_richedit_buttons($context['post_box_name']);
 
 	// Option to delete an event if user is editing one.
 	if ($context['make_event'] && !$context['event']['new'])
 		echo '
-									<input type="submit" name="deleteevent" value="', $txt['event_delete'], '" onclick="return confirm(\'', $txt['event_delete_confirm'], '\');" class="button_submit" />';
+						<input type="submit" name="deleteevent" value="', $txt['event_delete'], '" onclick="return confirm(\'', $txt['event_delete_confirm'], '\');" class="button_submit" />';
 
 	echo '
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2"></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>';
+					</p>
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>
+			<br class="clear" />';
 
 	// Assuming this isn't a new topic pass across the number of replies when the topic was created.
 	if (isset($context['num_replies']))
@@ -713,7 +676,8 @@ function template_main()
 				aSwappableContainers: [
 					\'postMoreOptions\',
 					\'postAttachment\',
-					\'postAttachment2\'
+					\'postAttachment2\',
+					\'postAttachment3\'
 				],
 				aSwapImages: [
 					{
