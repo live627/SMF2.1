@@ -1066,9 +1066,6 @@ function Post()
 		$context['page_title'] = $txt['preview'] . ' - ' . strip_tags($context['preview_subject']);
 	elseif (empty($topic))
 		$context['page_title'] = $txt['start_new_topic'];
-	// This means they came from quick reply, and have to enter verification details.
-	elseif (!empty($_REQUEST['from_qr']))
-		$context['page_title'] = $txt['enter_verification_details'];
 	else
 		$context['page_title'] = $txt['post_reply'];
 
@@ -1175,6 +1172,13 @@ function Post()
 		);
 		$context['require_verification'] = create_control_verification($verificationOptions);
 		$context['visual_verification_id'] = $verificationOptions['id'];
+	}
+
+	// If they came from quick reply, and have to enter verification details, give them some notice.
+	if (!empty($_REQUEST['from_qr']) && !empty($context['require_verification']))
+	{
+		$context['post_error']['messages'][] = $txt['enter_verification_details'];
+		$context['error_type'] = 'minor';
 	}
 
 	// WYSIWYG only works if BBC is enabled
