@@ -449,11 +449,69 @@ ul.quickbuttons li.inline_mod_check
 	text-align: left;
 	clear: left;
 }
+
+/* Styles for edit post section
+---------------------------------------------------- */
+#post_header dt
+{
+	float: right;
+}
+#post_header dd
+{
+	float: right;
+}
+ul.post_options
+{
+	margin: 0 1em 0 0;
+}
+ul.post_options li
+{
+	float: right;
+}
+#postAttachment dd, #postAttachment2 dd
+{
+	margin: .3em 1em .3em 0;
+}
+#postAttachment dt, #postAttachment2 dt
+{
+	font-weight: bold;
+}
+#postAttachment3
+{
+	margin-left: 0;
+	margin-left: 1em;
+}
+.post_verification #verification_control
+{
+	margin: .3em 1em .3em 0;
+}
+
+/* Styles for edit event section
+---------------------------------------------------- */
+#post_event div.event_options
+{
+	float: right;
+}
+#post_event ul.event_main li
+{
+	float: right;
+}
+#post_event ul.event_options
+{
+	padding: 0 .7em .7em 0;
+}
+
+/* Styles for edit poll section.
+---------------------------------------------------- */
+
 #edit_poll div.poll_options
 {
 	float: right;
 }
-
+#edit_poll ul.poll_main, ul.poll_options
+{
+	padding: 0 .7em .7em 0;
+}
 #edit_poll ul.poll_main li
 {
 	float: right;
