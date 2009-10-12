@@ -44,6 +44,22 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 	padding: 0 !important;
 }
 
+/* overflow: hidden doesn't help in IE6. */
+h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
+{
+	display: inline-block;
+}
+
+h3.catbg, h3.catbg2, h4.catbg
+{
+	width: 100%;
+}
+
+#upper_section
+{
+	display: inline-block;
+}
+
 /* Overrides for the message index template
 ------------------------------------------------------- */
 #messageindex table
@@ -99,4 +115,13 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 #basicinfo h4
 {
 	word-wrap: break-word;
+}
+
+/* Overrides for the personal messages template
+------------------------------------------------------- */
+#personal_messages .postarea
+{
+	margin-left: 0px;
+	margin-right: 0px;
+	float: right;
 }

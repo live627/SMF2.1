@@ -131,15 +131,15 @@ function template_main()
 				// If the board or children is new, show an indicator.
 				if ($board['new'] || $board['children_new'])
 					echo '
-							<img src="', $settings['images_url'], '/' .$context['theme_variant'], '/on', $board['new'] ? '' : '2', '.png" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" border="0" />';
+							<img src="', $settings['images_url'], '/', $context['theme_variant'], '/on', $board['new'] ? '' : '2', '.png" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" />';
 				// Is it a redirection board?
 				elseif ($board['is_redirect'])
 					echo '
-							<img src="', $settings['images_url'], '/' .$context['theme_variant'], '/redirect.png" alt="*" title="*" border="0" />';
+							<img src="', $settings['images_url'], '/', $context['theme_variant'], '/redirect.png" alt="*" title="*" />';
 				// No new posts at all! The agony!!
 				else
 					echo '
-							<img src="', $settings['images_url'], '/' .$context['theme_variant'], '/off.png" alt="', $txt['old_posts'], '" title="', $txt['old_posts'], '" />';
+							<img src="', $settings['images_url'], '/', $context['theme_variant'], '/off.png" alt="', $txt['old_posts'], '" title="', $txt['old_posts'], '" />';
 
 				echo '
 						</a>
@@ -246,7 +246,7 @@ function template_main()
 	else
 	{
 		echo '
-	<div id="posting_icons">
+	<div id="posting_icons" class="flow_hidden">
 		<ul class="reset">
 			<li class="align_left"><img src="', $settings['images_url'], '/new_none.png" alt="" /> ', $txt['old_posts'], '</li>
 			<li class="align_left"><img src="', $settings['images_url'], '/new_redirect.png" alt="" /> ', $txt['redirect_board'], '</li>

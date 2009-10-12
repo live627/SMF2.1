@@ -843,6 +843,8 @@ table.table_list a.collapse
 	display: block;
 	padding-left: 20px;
 	background: url(../images/theme/main_block.png) 0 -40px no-repeat;
+	font-size: 5px;
+	line-height: 5px;
 	margin-bottom: 0.2em;
 }
 .windowbg span.botslice span
@@ -869,6 +871,8 @@ table.table_list a.collapse
 	display: block;
 	padding-left: 20px;
 	background: url(../images/theme/main_block.png) 0 -71px no-repeat;
+	font-size: 5px;
+	line-height: 5px;
 	margin-bottom: 0.2em;
 }
 .windowbg2 span.botslice span
