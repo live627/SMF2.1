@@ -29,8 +29,9 @@ October 2009
  * Rewrote the rest of the PersonalMessage template to match Curve's look and feel. (PersonalMessage.template.php, PersonalMessage.js)
  * Rewrote the rest of the Calendar template to match Curve's look and feel. (Calendar.template.php)
  * Fixed some spacing on Poll template (Poll.template.php)
- * Rewrote most of the Post template to match Cruve's look and feel. (Post.template.php, index.css, index.english.php)
- ! Unknown fix for direct ip access [Bug 3864] (Load.php)
+ * Rewrote most of the Post template to match Curve's look and feel. (Post.template.php, index.css, index.english.php)
+ ! Unknown's fix for direct ip access [Bug 3864] (Load.php)
+ * Curve: the board name wasn't shown in unread and unreadreplies. (Recent template) [Bug 3867]
 
 
 September 2009

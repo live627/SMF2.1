@@ -29,17 +29,17 @@ function template_main()
 		echo '
 		<div class="flow_hidden">
 			<h3 class="catbg"><span class="left"></span>
-				<span class="align_left">', $post['counter'], ' - </span>
+				<span class="align_left">', $post['counter'], ' -&nbsp;</span>
 				<span class="align_left">', $post['category']['link'], ' / ', $post['board']['link'], ' / <strong>', $post['link'], '</strong></span>
 			</h3>
+			<h4 class="titlebg"><span class="left"></span>
+				<span class="align_left">', $txt['started_by'], ' ', $post['first_poster']['link'], ' - ', $txt['last_post'], ' ', $txt['by'], ' ', $post['poster']['link'], ' </span>
+				<span class="align_right">', $txt['on'], ': ', $post['time'], '</span>
+			</h4>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<div class="content">
-					<h5 class="lower_padding flow_hidden">
-						<span class="align_left">', $txt['started_by'], ' ' . $post['first_poster']['link'] . ' - ' . $txt['last_post'] . ' ' . $txt['by'] . ' ' . $post['poster']['link'] . ' </span>
-						<span class="align_right">', $txt['on'], ': ', $post['time'], '</span>
-					</h5>
-					<p>', $post['message'], '</p>
+					', $post['message'], '
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';
@@ -69,7 +69,7 @@ function template_unread()
 		echo '
 	<div id="recent" class="main_content">
 		<form action="', $scripturl, '?action=quickmod" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;">
-			<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			<input type="hidden" name="qaction" value="markread" />
 			<input type="hidden" name="redirect_url" value="action=unread', (!empty($context['showing_all_topics']) ? ';all' : ''), $context['querystring_board_limits'], '" />';
 
@@ -156,9 +156,11 @@ function template_unread()
 						<td class="subject ', $color_class2, ' windowbg2">
 							<div>
 							', $topic['is_sticky'] ? '<strong>' : '', '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '' ,'
-								<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>
-								<p>', $txt['started_by'], ' ', $topic['first_post']['member']['link'], '
-									<small id="pages' . $topic['first_post']['id'] . '">', $topic['pages'], '</small>
+								<a href="', $topic['new_href'], '" id="newicon', $topic['first_post']['id'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>
+								<p>
+									', $txt['started_by'], ' ', $topic['first_post']['member']['link'], '
+									', $txt['in'], ' ', $topic['board']['link'], '
+									<small id="pages', $topic['first_post']['id'], '">', $topic['pages'], '</small>
 								</p>
 							</div>
 						</td>
@@ -217,14 +219,14 @@ function template_unread()
 			<p class="smalltext align_left">
 				', !empty($modSettings['enableParticipation']) ? '
 				<img src="' . $settings['images_url'] . '/topic/my_normal_post.gif" alt="" align="middle" /> ' . $txt['participation_caption'] . '<br />' : '', '
-				<img src="' . $settings['images_url'] . '/topic/normal_post.gif" alt="" align="middle" /> ' . $txt['normal_topic'] . '<br />
-				<img src="' . $settings['images_url'] . '/topic/hot_post.gif" alt="" align="middle" /> ' . sprintf($txt['hot_topics'], $modSettings['hotTopicPosts']) . '<br />
-				<img src="' . $settings['images_url'] . '/topic/veryhot_post.gif" alt="" align="middle" /> ' . sprintf($txt['very_hot_topics'], $modSettings['hotTopicVeryPosts']) . '
+				<img src="', $settings['images_url'], '/topic/normal_post.gif" alt="" align="middle" /> ', $txt['normal_topic'], '<br />
+				<img src="', $settings['images_url'], '/topic/hot_post.gif" alt="" align="middle" /> ', sprintf($txt['hot_topics'], $modSettings['hotTopicPosts']), '<br />
+				<img src="', $settings['images_url'], '/topic/veryhot_post.gif" alt="" align="middle" /> ', sprintf($txt['very_hot_topics'], $modSettings['hotTopicVeryPosts']), '
 			</p>
 			<p class="smalltext align_left">
-				<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" alt="" align="middle" /> ' . $txt['locked_topic'] . '<br />' . ($modSettings['enableStickyTopics'] == '1' ? '
-				<img src="' . $settings['images_url'] . '/icons/quick_sticky.gif" alt="" align="middle" /> ' . $txt['sticky_topic'] . '<br />' : '') . ($modSettings['pollMode'] == '1' ? '
-				<img src="' . $settings['images_url'] . '/topic/normal_poll.gif" alt="" align="middle" /> ' . $txt['poll'] : '') . '
+				<img src="', $settings['images_url'], '/icons/quick_lock.gif" alt="" align="middle" /> ', $txt['locked_topic'], '<br />', ($modSettings['enableStickyTopics'] == '1' ? '
+				<img src="' . $settings['images_url'] . '/icons/quick_sticky.gif" alt="" align="middle" /> ' . $txt['sticky_topic'] . '<br />' : ''), ($modSettings['pollMode'] == '1' ? '
+				<img src="' . $settings['images_url'] . '/topic/normal_poll.gif" alt="" align="middle" /> ' . $txt['poll'] : ''), '
 			</p>
 		</div>
 	</div>';
@@ -240,7 +242,7 @@ function template_replies()
 		echo '
 	<div id="recent">
 		<form action="', $scripturl, '?action=quickmod" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;">
-			<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			<input type="hidden" name="qaction" value="markread" />
 			<input type="hidden" name="redirect_url" value="action=unreadreplies', (!empty($context['showing_all_topics']) ? ';all' : ''), $context['querystring_board_limits'], '" />';
 
@@ -327,9 +329,11 @@ function template_replies()
 						<td class="subject ', $color_class2, ' windowbg2">
 							<div>
 								', $topic['is_sticky'] ? '<strong>' : '', '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '', '
-								<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>
-								<p>', $txt['started_by'], ' ', $topic['first_post']['member']['link'], '
-									<small id="pages' . $topic['first_post']['id'] . '">', $topic['pages'], '</small>
+								<a href="', $topic['new_href'], '" id="newicon', $topic['first_post']['id'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>
+								<p>
+									', $txt['started_by'], ' ', $topic['first_post']['member']['link'], '
+									', $txt['in'], ' ', $topic['board']['link'], '
+									<small id="pages', $topic['first_post']['id'], '">', $topic['pages'], '</small>
 								</p>
 							</div>
 						</td>
@@ -383,12 +387,12 @@ function template_replies()
 			<p class="smalltext align_left">
 				', !empty($modSettings['enableParticipation']) ? '
 				<img src="' . $settings['images_url'] . '/topic/my_normal_post.gif" alt="" align="middle" /> ' . $txt['participation_caption'] . '<br />' : '', '
-				<img src="' . $settings['images_url'] . '/topic/normal_post.gif" alt="" align="middle" /> ' . $txt['normal_topic'] . '<br />
-				<img src="' . $settings['images_url'] . '/topic/hot_post.gif" alt="" align="middle" /> ' . sprintf($txt['hot_topics'], $modSettings['hotTopicPosts']) . '<br />
-				<img src="' . $settings['images_url'] . '/topic/veryhot_post.gif" alt="" align="middle" /> ' . sprintf($txt['very_hot_topics'], $modSettings['hotTopicVeryPosts']) . '
+				<img src="', $settings['images_url'], '/topic/normal_post.gif" alt="" align="middle" /> ', $txt['normal_topic'], '<br />
+				<img src="', $settings['images_url'], '/topic/hot_post.gif" alt="" align="middle" /> ', sprintf($txt['hot_topics'], $modSettings['hotTopicPosts']), '<br />
+				<img src="', $settings['images_url'], '/topic/veryhot_post.gif" alt="" align="middle" /> ', sprintf($txt['very_hot_topics'], $modSettings['hotTopicVeryPosts']), '
 			</p>
 			<p class="smalltext align_left">
-				<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" alt="" align="middle" /> ' . $txt['locked_topic'] . '<br />' . ($modSettings['enableStickyTopics'] == '1' ? '
+				<img src="', $settings['images_url'], '/icons/quick_lock.gif" alt="" align="middle" /> ', $txt['locked_topic'], '<br />', ($modSettings['enableStickyTopics'] == '1' ? '
 				<img src="' . $settings['images_url'] . '/icons/quick_sticky.gif" alt="" align="middle" /> ' . $txt['sticky_topic'] . '<br />' : '') . ($modSettings['pollMode'] == '1' ? '
 				<img src="' . $settings['images_url'] . '/topic/normal_poll.gif" alt="" align="middle" /> ' . $txt['poll'] : '') . '
 			</p>
