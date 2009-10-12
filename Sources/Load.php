@@ -1481,7 +1481,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 			$do_fix = true;
 
 		// Okay, #4 - perhaps it's an IP address?  We're gonna want to use that one, then. (assuming it's the IP or something...)
-		if (!empty($do_fix) || preg_match('~^http[s]://[\d\.:]+($|/)~', $detected_url) == 1)
+		if (!empty($do_fix) || preg_match('~^http[s]?://(?:[\d\.:]+|\[[\d:]+\](?::\d+)?)(?:$|/)~', $detected_url) == 1)
 		{
 			// Caching is good ;).
 			$oldurl = $boardurl;
