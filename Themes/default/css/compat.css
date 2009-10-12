@@ -907,6 +907,138 @@ ul.postingbuttons li
 	display: none;
 }
 
+/* Styles for edit post section
+---------------------------------------------------- */
+#post_header
+{
+	margin-bottom: 0.5em;
+	border-bottom: 1px solid #666666;
+	padding: 0.5em;
+	overflow: hidden;
+}
+
+#post_header dt
+{
+	float: left;
+	margin: 0;
+	padding: 0;
+	width: 15%;
+	margin: .3em 0;
+	font-weight: bold;
+}
+
+#post_header dd
+{
+	float: left;
+	margin: 0;
+	padding: 0;
+	width: 83%;
+	margin: .3em 0;
+}
+
+#post_header img
+{
+	vertical-align: middle;
+}
+
+ul.post_options
+{
+	margin: 0 0 0 1em;
+	padding: 0;
+	list-style: none;
+	overflow: hidden;
+}
+
+ul.post_options li
+{
+	margin: 0.2em 0;
+	width: 49%;
+	float: left;
+}
+
+#postMoreOptions
+{
+	border-bottom: 1px solid #666666;
+	padding: 0.5em;
+}
+
+#postAttachment, #postAttachment2
+{
+	overflow: hidden;
+	margin: .5em 0;
+	padding: 0;
+	border-bottom: 1px solid #666666;
+	padding: 0.5em;
+}
+
+#postAttachment dd, #postAttachment2 dd
+{
+	margin: .3em 0 .3em 1em;
+}
+
+#postAttachment dt, #postAttachment2 dt
+{
+	font-weight: bold;
+}
+
+#postAttachment3
+{
+	margin-left: 1em;
+}
+
+.post_verification
+{
+	margin-top: .5em;
+}
+
+.post_verification #verification_control
+{
+	margin: .3em 0 .3em 1em;
+}
+
+/* Styles for edit event section
+---------------------------------------------------- */
+#post_event fieldset
+{
+	margin-bottom: 0.5em;
+	border: none;
+	border-bottom: 1px solid #666666;
+	padding: 0.5em;
+	clear: both;
+}
+#post_event legend
+{
+	font-weight: bold;
+	color: black;
+}
+#post_event div.event_options
+{
+	width: 49%;
+	float: left;
+}
+#post_event ul.event_main, ul.event_options
+{
+	padding: 0;
+	overflow: hidden;
+}
+#post_event ul.event_main li
+{
+	list-style-type: none;
+	margin: 0.2em 0;
+	width: 49%;
+	float: left;
+}
+#post_event ul.event_options
+{
+	margin: 0;
+	padding: 0 0 .7em .7em;
+}
+#post_event ul.event_options li
+{
+	list-style-type: none;
+	margin: 0.3em 0 0 0;
+}
+
 /* Styles for edit poll section.
 ---------------------------------------------------- */
 
@@ -930,8 +1062,9 @@ ul.postingbuttons li
 }
 #edit_poll ul.poll_main, ul.poll_options
 {
-	padding: 0;
 	overflow: hidden;
+	padding: 0 0 .7em .7em;
+	list-style: none;
 }
 #edit_poll ul.poll_main li
 {

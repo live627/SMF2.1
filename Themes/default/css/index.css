@@ -2149,7 +2149,6 @@ ul.post_options li
 }
 #edit_poll ul.poll_main, ul.poll_options
 {
-	padding: 0;
 	overflow: hidden;
 	padding: 0 0 .7em .7em;
 	list-style: none;
