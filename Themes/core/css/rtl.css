@@ -11,6 +11,14 @@
 {
 	float: right;
 }
+.clear_left
+{
+	clear: right;
+}
+.clear_right
+{
+	clear: left;
+}
 .righttext
 {
 	text-align: left;

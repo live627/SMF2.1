@@ -72,6 +72,14 @@ h1, h2, h3, h4, h5, h6
 {
 	clear: both;
 }
+.clear_left
+{
+	clear: left;
+}
+.clear_right
+{
+	clear: right;
+}
 
 /* Default font sizes: small (8pt), normal (10pt), and large (14pt). */
 .smalltext, tr.smalltext th
