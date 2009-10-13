@@ -565,7 +565,7 @@ function UnreadTopics()
 
 		$query_this_board = 'id_board IN ({array_int:boards})';
 		$query_parameters['boards'] = $boards;
-		$context['querystring_board_limits'] = ';start=%d';
+		$context['querystring_board_limits'] = ';start=%1$d';
 		$context['no_board_limits'] = true;
 	}
 
@@ -794,7 +794,7 @@ function UnreadTopics()
 		if ($num_topics == 0)
 		{
 			$context['topics'] = array();
-			if ($context['querystring_board_limits'] == ';start=%d')
+			if ($context['querystring_board_limits'] == ';start=%1$d')
 				$context['querystring_board_limits'] = '';
 			else
 				$context['querystring_board_limits'] = sprintf($context['querystring_board_limits'], $_REQUEST['start']);
