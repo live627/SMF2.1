@@ -263,6 +263,17 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	if (empty($modSettings['disableQueryCheck']) && strpos($db_string, '\'') !== false && !$security_override)
 		smf_db_error_backtrace('Hacking attempt...', 'Illegal character (\') used in query...', true, __FILE__, __LINE__);
 
+	// Use "ORDER BY null" to prevent Mysql doing filesorts for Group By clauses without an Order By
+	if (strpos($db_string, 'GROUP BY') !== false && strpos($db_string, 'ORDER BY') === false)
+	{
+		// Add before LIMIT
+		if ($pos = strpos($db_string, 'LIMIT '))
+			$db_string = substr($db_string, 0, $pos) . "\t\t\tORDER BY null\n" . substr($db_string, $pos, strlen($db_string));
+		else
+			// Append it.
+			$db_string .= "\n\t\t\tORDER BY null";
+	}
+
 	if (!$security_override && (!empty($db_values) || strpos($db_string, '{db_prefix}') !== false))
 	{
 		// Pass some values to the global space for use in the callback function.
@@ -273,17 +284,6 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 
 		// This shouldn't be residing in global space any longer.
 		$db_callback = array();
-	}
-
-	// Use "ORDER BY null" to prevent Mysql doing filesorts for Group By clauses without an Order By
-	if (strpos($db_string, 'GROUP BY') !== false && strpos($db_string, 'ORDER BY') === false)
-	{
-		// Add before LIMIT
-		if ($pos = strpos($db_string, 'LIMIT '))
-			$db_string = substr($db_string, 0, $pos) . "\t\t\tORDER BY null\n" . substr($db_string, $pos, strlen($db_string));
-		else
-			// Append it.
-			$db_string .= "\n\t\t\tORDER BY null";
 	}
 
 	// Debugging.
