@@ -701,10 +701,11 @@ tr.titlebg td
 	float: right;
 }
 
-#ignoreboards li
+#ignoreboards li.category
 {
 	float: right;
 }
+
 #pick_theme
 {
 	float: right;

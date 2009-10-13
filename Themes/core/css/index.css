@@ -2756,15 +2756,18 @@ div#profile_success
 #ignoreboards
 {
 	overflow: auto;
-}
-
-#ignoreboards li
-{
-	list-style: none;
 	margin: 0;
 	padding: 0;
+}
+#ignoreboards li.category
+{
+	list-style: none;
 	float: left;
 	width: 49%;
+}
+#ignoreboards li.board
+{
+	list-style: none;
 }
 
 #theme_settings

@@ -28,12 +28,13 @@ October 2009
  ! Changed the notice for verification after quick reply into something less obscure. (Post.php)
  * Rewrote the rest of the PersonalMessage template to match Curve's look and feel. (PersonalMessage.template.php, PersonalMessage.js)
  * Rewrote the rest of the Calendar template to match Curve's look and feel. (Calendar.template.php)
- * Fixed some spacing on Poll template (Poll.template.php)
+ * Fixed some spacing on Poll template. (Poll.template.php)
  * Rewrote most of the Post template to match Curve's look and feel. (Post.template.php, index.css, index.english.php)
- ! Unknown's fix for direct ip access [Bug 3864] (Load.php)
+ ! Unknown's fix for direct ip access. [Bug 3864] (Load.php)
  * Curve: the board name wasn't shown in unread and unreadreplies. (Recent template) [Bug 3867]
- * Modify ban group had to much padding (ManageBans template) [Bug 3871]
- * The quote button was missing when quick-reply disabled (Display template) [Bug 3875]
+ * Modify ban group had to much padding. (ManageBans template) [Bug 3871]
+ * The quote button was missing when quick-reply disabled. (Display template) [Bug 3875]
+ * Boards were misaligned in the ignore boards section. (Profile-Modify.php, Profile template, index.css, rtl.css, compat.css) [Bug 3876]
 
 
 September 2009

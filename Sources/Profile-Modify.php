@@ -2206,6 +2206,9 @@ function ignoreboards($memID)
 	$temp_boards = array();
 	foreach ($context['categories'] as $category)
 	{
+		// Include a list of boards per category for easy toggling.
+		$context['categories'][$category['id']]['child_ids'] = array_keys($category['boards']);
+
 		$temp_boards[] = array(
 			'name' => $category['name'],
 			'child_ids' => array_keys($category['boards'])

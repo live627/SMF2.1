@@ -1749,22 +1749,23 @@ function template_ignoreboards()
 					<div class="content">
 						<ul id="ignoreboards">';
 
-	foreach ($context['board_columns'] as $board)
+	foreach ($context['categories'] as $category)
 	{
 		echo '
-							<li>';
+							<li class="category">
+								<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $category['child_ids']), ']); return false;" style="text-decoration: underline;">', $category['name'], '</a>
+								<ul>';
 
-		if (!empty($board) && empty($board['child_ids']))
+		foreach ($category['boards'] as $board)
 			echo '
-								<label for="ignore_brd', $board['id'], '" style="margin-left: ', $board['child_level'], 'ex;"><input type="checkbox" id="ignore_brd', $board['id'], '" name="ignore_brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="input_check" /> ', $board['name'], '</label>';
-		elseif (!empty($board))
-			echo '
-								<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $board['child_ids']), ']); return false;" style="text-decoration: underline;">', $board['name'], '</a>';
+									<li class="board">
+										<label for="ignore_brd', $board['id'], '" style="margin-', $context['right_to_left'] ? 'right' : 'left' , ': ', $board['child_level'], 'ex;"><input type="checkbox" id="ignore_brd', $board['id'], '" name="ignore_brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="input_check" /> ', $board['name'], '</label>
+									</li>';
 
 		echo '
+								</ul>
 							</li>';
 	}
-
 
 	echo '
 						</ul>';
