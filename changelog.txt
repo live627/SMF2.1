@@ -33,6 +33,7 @@ October 2009
  ! Unknown's fix for direct ip access [Bug 3864] (Load.php)
  * Curve: the board name wasn't shown in unread and unreadreplies. (Recent template) [Bug 3867]
  * Modify ban group had to much padding (ManageBans template) [Bug 3871]
+ * The quote button was missing when quick-reply disabled (Display template) [Bug 3875]
 
 
 September 2009
