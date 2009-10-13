@@ -2920,21 +2920,28 @@ div#profile_success
 	margin: 0 0 10px 0;
 }
 
-#ignoreboards
+.ignoreboards
 {
-	overflow: auto;
 	margin: 0;
 	padding: 0;
+	width: 49%;
+	overflow: auto;
 }
-#ignoreboards li.category
+.ignoreboards a
+{
+	text-decoration: underline;
+}
+.ignoreboards ul
+{
+	overflow: auto;
+	margin: 0 0 0 1em;
+	padding: 0;
+}
+.ignoreboards li
 {
 	list-style: none;
 	float: left;
-	width: 49%;
-}
-#ignoreboards li.board
-{
-	list-style: none;
+	clear: both;
 }
 
 #theme_settings
@@ -3277,23 +3284,26 @@ span.hidelink
 }
 
 /* Boards picker */
-#searchform fieldset ul#searchBoardsExpand
+#searchform fieldset div#searchBoardsExpand ul
 {
-	overflow: hidden;
-	padding: 0.3em 1em;
-}
-#searchform fieldset ul#searchBoardsExpand li.category
-{
-	font-weight: bold;
 	width: 49%;
-	float: left;
-	overflow: hidden;
-	padding: 0.2em 0;
-	margin: 0;
 }
-#searchform fieldset ul#searchBoardsExpand li.board
+#searchform fieldset div#searchBoardsExpand ul ul
 {
-	font-weight: normal;
+	width: auto;
+	overflow: auto;
+	margin: 0 0 0 1em;
+	padding: 0;
+}
+#searchform fieldset ul#searchBoardsExpand a
+{
+	text-decoration: underline;
+}
+#searchform fieldset ul#searchBoardsExpand li
+{
+	list-style: none;
+	float: left;
+	clear: both;
 }
 #searchform fieldset p
 {

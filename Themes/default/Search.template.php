@@ -131,28 +131,42 @@ function template_main()
 				<h4 class="titlebg"><span class="left"></span>
 					<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><strong>', $txt['choose_board'], '</strong></a>
 				</h4>
-				<ul class="reset" id="searchBoardsExpand"', $context['boards_check_all'] ? ' style="display: none;"' : '', '>';
+				<div class="flow_auto" id="searchBoardsExpand"', $context['boards_check_all'] ? ' style="display: none;"' : '', '>
+					<ul class="ignoreboards floatleft">';
 
-			foreach ($context['categories'] as $category)
-			{
-				echo '
-					<li class="category">
-						<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $category['child_ids']), ']); return false;">', $category['name'], '</a>
-						<ul class="reset">';
+	$i = 0;
+	$limit = ceil(count($context['categories']) / 2);
+	foreach ($context['categories'] as $category)
+	{
+		if ($i == $limit)
+			echo '
+					</ul>
+					<ul class="ignoreboards floatright">';
+		
+		echo '
+						<li class="category">
+							<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $category['child_ids']), ']); return false;">', $category['name'], '</a>
+							<ul>';
 
-				foreach ($category['boards'] as $board)
-					echo '
-							<li class="board"', !empty($board['child_level']) ? ' style="margin-left: ' . $board['child_level'] . 'em"' : '', '>
-								<label for="brd', $board['id'], '"><input type="checkbox" id="brd', $board['id'], '" name="brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="input_check" />', $board['name'], '</label>
-							</li>';
+		foreach ($category['boards'] as $board)
+			echo '
+								<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left' , ': ', $board['child_level'], 'em;">
+									<label for="brd', $board['id'], '"><input type="checkbox" id="brd', $board['id'], '" name="brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="input_check" /> ', $board['name'], '</label>
+								</li>';
 
-				echo '
-						</ul>
-					</li>';
-			}
+		echo '
+							</ul>
+						</li>';
+
+		$i ++;
+	}
+
+	echo '
+					</ul>
+				</div>';
+
 
 			echo '
-				</ul>
 				<p>
 					<input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="input_check" />
 					<label for="check_all">', $txt['check_all'], '</label>
