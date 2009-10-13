@@ -124,9 +124,9 @@ function template_main()
 				<span class="left"></span>
 				', $context['page_title'], '
 			</h3>
-			<div class="windowbg">
-				<span class="topslice"><span></span></span>
-				<div class="content">', isset($context['current_topic']) ? '
+			<div class="">
+				<span class="upperframe"><span></span></span>
+				<div class="roundframe">', isset($context['current_topic']) ? '
 					<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />' : '';
 
 	// If an error occurred, explain what happened.
@@ -512,7 +512,7 @@ function template_main()
 	echo '
 					</p>
 				</div>
-				<span class="botslice"><span></span></span>
+				<span class="lowerframe"><span></span></span>
 			</div>
 			<br class="clear" />';
 

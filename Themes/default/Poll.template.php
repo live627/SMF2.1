@@ -47,9 +47,9 @@ function template_main()
 			</div>';
 
 	echo '
-			<div class="windowbg">
-			<span class="topslice"><span></span></span>
-				<div class="content">
+			<div>
+			<span class="upperframe"><span></span></span>
+				<div class="roundframe">
 					<input type="hidden" name="poll" value="' . $context['poll']['id'] . '" />
 					<fieldset id="poll_main">
 						<legend><span ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '>' . $txt['poll_question'] . '</span></legend>
@@ -81,7 +81,7 @@ function template_main()
 	if ($context['can_moderate_poll'])
 	{
 		echo '
-						<div class="poll_options">
+						<div class="poll_options smalltext">
 							<ul class="poll_options">
 								<li>
 									<input type="text" name="poll_max_votes" id="poll_max_votes" size="2" value="', $context['poll']['max_votes'], '" class="input_text" /> <label for="poll_max_votes">', $txt['poll_max_votes'], '</label>
@@ -105,7 +105,7 @@ function template_main()
 	}
 
 	echo '
-						<div class="poll_options">
+						<div class="poll_options smalltext">
 							<ul class="poll_options">
 								<li>
 									<input type="radio" name="poll_hide" id="poll_results_anyone" value="0"', $context['poll']['hide_results'] == 0 ? ' checked="checked"' : '', ' class="input_radio" /> <label for="poll_results_anyone">', $txt['poll_results_anyone'], '</label>
@@ -129,7 +129,7 @@ function template_main()
 	echo '
 				<input type="submit" name="post" value="', $txt['save'],  '" onclick="return submitThisOnce(this);" accesskey="s" class="button_submit" />
 				</div>
-				<span class="botslice"><span></span></span>
+				<span class="lowerframe"><span></span></span>
 			</div>
 			<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 			<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />

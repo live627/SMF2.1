@@ -119,9 +119,9 @@ function template_event_post()
 	}
 
 	echo '
-			<div class="windowbg">
-				<span class="topslice"><span></span></span>
-				<div class="content">
+			<div>
+				<span class="upperframe"><span></span></span>
+				<div class="roundframe">
 					<fieldset id="event_main">
 						<legend><span', isset($context['post_error']['no_event']) ? ' class="error"' : '', '>', $txt['calendar_event_title'], '</span></legend>
 						<input type="text" name="evtitle" maxlength="60" size="60" value="', $context['event']['title'], '" style="width: 90%;" class="input_text" />
@@ -160,7 +160,7 @@ function template_event_post()
 					</fieldset>
 					<fieldset id="event_options">
 						<legend>', $txt['calendar_event_options'], '</legend>
-						<div class="event_options">
+						<div class="event_options smalltext">
 							<ul class="event_options">';
 
 	// If events can span more than one day then allow the user to select how long it should last.
@@ -169,16 +169,14 @@ function template_event_post()
 		echo '
 								<li>
 									', $txt['calendar_numb_days'], '
-									<span class="smalltext">
-										<select name="span">';
+									<select name="span">';
 
 		for ($days = 1; $days <= $modSettings['cal_maxspan']; $days++)
 			echo '
-											<option value="', $days, '"', $context['event']['span'] == $days ? ' selected="selected"' : '', '>', $days, '</option>';
+										<option value="', $days, '"', $context['event']['span'] == $days ? ' selected="selected"' : '', '>', $days, '</option>';
 
 		echo '
-										</select>
-									</span>
+									</select>
 								</li>';
 	}
 
@@ -188,27 +186,23 @@ function template_event_post()
 		echo '
 								<li>
 									', $txt['calendar_link_event'], '
-									<span class="smalltext">
-										<input type="checkbox" class="input_check" name="link_to_board" checked="checked" onclick="toggleLinked(this.form);" />
-									</span>
+									<input type="checkbox" class="input_check" name="link_to_board" checked="checked" onclick="toggleLinked(this.form);" />
 								</li>
 								<li>
 									', $txt['calendar_post_in'], '
-									<span class="smalltext">
-										<select id="board" name="board" onchange="this.form.submit();">';
+									<select id="board" name="board" onchange="this.form.submit();">';
 		foreach ($context['event']['categories'] as $category)
 		{
 			echo '
-											<optgroup label="', $category['name'], '">';
+										<optgroup label="', $category['name'], '">';
 			foreach ($category['boards'] as $board)
 				echo '
-												<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
+											<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
 			echo '
-											</optgroup>';
+										</optgroup>';
 		}
 		echo '
-										</select>
-									</span>
+									</select>
 								</li>';
 	}
 
@@ -228,7 +222,7 @@ function template_event_post()
 
 	echo '
 				</div>
-				<span class="botslice"><span></span></span>
+				<span class="lowerframe"><span></span></span>
 			</div>
 			</div>
 		</form>

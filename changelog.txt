@@ -36,6 +36,7 @@ October 2009
  * The quote button was missing when quick-reply disabled. (Display template) [Bug 3875]
  * Boards were misaligned in the ignore boards section. (Profile-Modify.php, Profile template, index.css, rtl.css, compat.css) [Bug 3876]
  * Boards were misaligned in the advanced search section. (Search template, index.css, rtl.css, compat.css)
+ * Revise a few templates to better match curve (Calendar, PersonalMessage, Poll and Post templates)
 
 
 September 2009

@@ -922,9 +922,9 @@ function template_send()
 	}
 
 	echo '
-	<div class="windowbg2">
-		<span class="topslice"><span></span></span>
-		<div class="content">
+	<div>
+		<span class="upperframe"><span></span></span>
+		<div class="roundframe">
 			<form action="', $scripturl, '?action=pm;sa=send2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'message\']);">
 				<dl id="post_header">';
 
@@ -1010,7 +1010,7 @@ function template_send()
 				<input type="hidden" name="l" value="', isset($context['current_label_id']) ? $context['current_label_id'] : -1, '" />
 			</form>
 		</div>
-		<span class="botslice"><span></span></span>
+		<span class="lowerframe"><span></span></span>
 	</div>';
 
 	// Show the message you're replying to.
