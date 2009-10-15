@@ -114,31 +114,36 @@ function ViewModlog()
 		$search_params = @unserialize($search_params);
 	}
 
-	// If we have no search, a broken search, or a new search - then create a new array.
-	if (!isset($search_params['string']) || (!empty($_REQUEST['search']) && $search_params['string'] != $_REQUEST['search']))
-	{
-		// This array houses all the valid search types.
-		$searchTypes = array(
-			'action' => array('sql' => 'lm.action', 'label' => $txt['modlog_action']),
-			'member' => array('sql' => 'mem.real_name', 'label' => $txt['modlog_member']),
-			'group' => array('sql' => 'mg.group_name', 'label' => $txt['modlog_position']),
-			'ip' => array('sql' => 'lm.ip', 'label' => $txt['modlog_ip'])
-		);
+	// This array houses all the valid search types.
+	$searchTypes = array(
+		'action' => array('sql' => 'lm.action', 'label' => $txt['modlog_action']),
+		'member' => array('sql' => 'mem.real_name', 'label' => $txt['modlog_member']),
+		'group' => array('sql' => 'mg.group_name', 'label' => $txt['modlog_position']),
+		'ip' => array('sql' => 'lm.ip', 'label' => $txt['modlog_ip'])
+	);
 
-		$search_params = array(
-			'string' => empty($_REQUEST['search']) ? '' : $_REQUEST['search'],
-			'type' => isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $_REQUEST['search_type'] : isset($searchTypes[$context['order']]) ? $context['order'] : 'member',
-			'type_sql' => isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $searchTypes[$_REQUEST['search_type']]['sql'] : isset($searchTypes[$context['order']]) ? $searchTypes[$context['order']]['sql'] : 'mem.real_name',
-			'type_label' => isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $searchTypes[$_REQUEST['search_type']]['label'] : isset($searchTypes[$context['order']]) ? $searchTypes[$context['order']]['label'] : $txt['modlog_member'],
-		);
-	}
+	if (!isset($search_params['string']) || (!empty($_REQUEST['search']) && $search_params['string'] != $_REQUEST['search']))
+		$search_params_string = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
+	else
+		$search_params_string = $search_params['string'];
+
+	if (isset($_REQUEST['search_type']) || empty($search_params['type']) || !isset($searchTypes[$search_params['type']]))
+		$search_params_type = isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $_REQUEST['search_type'] : isset($searchTypes[$context['order']]) ? $context['order'] : 'member';
+	else
+		$search_params_type = $search_params['type'];
+
+	$search_params_column = $searchTypes[$search_params_type]['sql'];
+	$search_params = array(
+		'string' => $search_params_string,
+		'type' => $search_params_type,
+	);
 
 	// Setup the search context.
 	$context['search_params'] = empty($search_params['string']) ? '' : base64_encode(serialize($search_params));
 	$context['search'] = array(
 		'string' => $search_params['string'],
 		'type' => $search_params['type'],
-		'label' => $search_params['type_label']
+		'label' => $searchTypes[$search_params_type]['label'],
 	);
 
 	// If they are searching by action, then we must do some manual intervention to search in their language!
@@ -170,7 +175,7 @@ function ViewModlog()
 			'function' => 'list_getModLogEntries',
 			'params' => array(
 				(!empty($search_params['string']) ? ' INSTR({raw:sql_type}, {string:search_string})' : ''),
-				array('sql_type' => $search_params['type_sql'], 'search_string' => $search_params['string']),
+				array('sql_type' => $search_params_column, 'search_string' => $search_params['string']),
 				$context['log_type'],
 			),
 		),
@@ -178,7 +183,7 @@ function ViewModlog()
 			'function' => 'list_getModLogEntryCount',
 			'params' => array(
 				(!empty($search_params['string']) ? ' INSTR({raw:sql_type}, {string:search_string})' : ''),
-				array('sql_type' => $search_params['type_sql'], 'search_string' => $search_params['string']),
+				array('sql_type' => $search_params_column, 'search_string' => $search_params['string']),
 				$context['log_type'],
 			),
 		),

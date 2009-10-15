@@ -38,6 +38,8 @@ October 2009
  * Boards were misaligned in the advanced search section. (Search template, index.css, rtl.css, compat.css)
  * Revise a few templates to better match curve (Calendar, PersonalMessage, Poll and Post templates)
  ! When using MySQL, ORDER BY null was sometimes added when it shouldn't be. (Subs-Db-mysql.php) [Bug 3877]
+ ! Store less information in the query string when searching the moderation log, and verify it every time. (Modlog.php)
+ ! When navigating between pages in member administration, send the data being searched for in request prior to parsing, and parse it every time. (ManageMembers.php)
 
 
 September 2009

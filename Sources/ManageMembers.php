@@ -209,8 +209,11 @@ function ViewMemberlist()
 		}
 	}
 
+	if ($context['sub_action'] == 'query' && !empty($_REQUEST['params']) && empty($_POST))
+		$_POST += @unserialize(base64_decode($_REQUEST['params']));
+
 	// Check input after a member search has been submitted.
-	if ($context['sub_action'] == 'query' && empty($_REQUEST['params']))
+	if ($context['sub_action'] == 'query')
 	{
 		// Retrieving the membergroups and postgroups.
 		$context['membergroups'] = array(
@@ -431,17 +434,14 @@ function ViewMemberlist()
 		// Construct the where part of the query.
 		$where = empty($query_parts) ? '1' : implode('
 			AND ', $query_parts);
-	}
-	// If the query information was already packed in the URL, decode it.
-	// !!! Change this.
-	elseif ($context['sub_action'] == 'query')
-	{
-		list ($where, $where_params) = unserialize(base64_decode(strtr($_REQUEST['params'], array(' ' => '+'))));
 
+		$search_params = base64_encode(serialize($_POST));
 	}
+	else
+		$search_params = null;
 
 	// Construct the additional URL part with the query info in it.
-	$context['params_url'] = $context['sub_action'] == 'query' ? ';sa=query;params=' . base64_encode(serialize(array($where, $where_params))) : '';
+	$context['params_url'] = $context['sub_action'] == 'query' ? ';sa=query;params=' . $search_params : '';
 
 	// Get the title and sub template ready..
 	$context['page_title'] = $txt['admin_members'];
