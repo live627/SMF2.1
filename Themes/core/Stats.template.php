@@ -214,7 +214,7 @@ function template_main()
 				echo '
 							<tr class="windowbg2" valign="middle" id="tr_month_', $month['id'], '">
 								<th class="lefttext" width="25%" style="padding-', ($context['right_to_left'] ? 'right' : 'left'), ': 3ex;">
-									<a id="m', $month['id'], '" href="', $month['href'], '" onclick="return doingExpandCollapse || yearElements[', $id, '].toggleMonth(', $month['id'], ');"><img src="', $settings['images_url'], '/', $month['expanded'] ? 'collapse.gif' : 'expand.gif', '" alt="" id="img_', $month['id'], '" /> ', $month['month'], ' ', $month['year'], '</a>
+									<img src="', $settings['images_url'], '/', $month['expanded'] ? 'collapse.gif' : 'expand.gif', '" alt="" id="img_', $month['id'], '" /> <a id="m', $month['id'], '" href="', $month['href'], '" onclick="return doingExpandCollapse;">', $month['month'], ' ', $month['year'], '</a>
 								</th>
 								<th align="center" width="15%">', $month['new_topics'], '</th>
 								<th align="center" width="15%">', $month['new_posts'], '</th>

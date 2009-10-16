@@ -83,11 +83,13 @@ function smfStats_month(uniqueId, initialState)
 
 	var aLink = document.getElementById('m' +  uniqueId);
 
+	this.onBeforeCollapse = handleBeforeCollapse;
 	this.onBeforeExpand = handleBeforeExpand;
 	this.toggleElement = new smc_Toggle({
 		bToggleEnabled: true,
 		bCurrentlyCollapsed: initialState,
 		instanceRef: this,
+		funcOnBeforeCollapse: this.onBeforeCollapse,
 		funcOnBeforeExpand: this.onBeforeExpand,
 		aSwappableContainers: [
 		],
@@ -109,7 +111,6 @@ function smfStats_month(uniqueId, initialState)
 		]
 	});
 
-	this.toggle = expand_collapse;
 	this.addDay = addDayToMonth;
 
 	function handleBeforeExpand()
@@ -125,12 +126,10 @@ function smfStats_month(uniqueId, initialState)
 			}
 			else
 			{
-				var oldvalue = this.bCollapsed;
-
 				// If we are collapsing this make sure to tell the forum we don't need to load that data any more.
 				if (this.bCollapsed)
 				{
-					getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=stats;collapse=" + this.opt.instanceRef.uid + ";xml");
+					getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=stats;expand=" + this.opt.instanceRef.uid + ";xml");
 				}
 			}
 			return false;
@@ -142,27 +141,13 @@ function smfStats_month(uniqueId, initialState)
 
 	}
 
-	function expand_collapse()
+	function handleBeforeCollapse()
 	{
 		if ('XMLHttpRequest' in window)
 		{
-			if (this.daysloaded == false)
+			if (!this.bCollapsed)
 			{
-				getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=stats;expand=" + this.uid + ";xml", onDocReceived);
-				doingExpandCollapse = true;
-				if (typeof(window.ajax_indicator) == "function")
-					ajax_indicator(true);
-			}
-			else
-			{
-				var oldvalue = this.toggleElement.bCollapsed;
-				this.toggleElement.toggle();
-
-				// If we are collapsing this make sure to tell the forum we don't need to load that data any more.
-				if (this.toggleElement.bCollapsed)
-				{
-					getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=stats;collapse=" + this.uid + ";xml");
-				}
+				getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=stats;collapse=" + this.opt.instanceRef.uid + ";xml");
 			}
 			return false;
 		}
