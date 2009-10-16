@@ -41,6 +41,7 @@ October 2009
  ! Store less information in the query string when searching the moderation log, and verify it every time. (Modlog.php)
  ! When navigating between pages in member administration, send the data being searched for in request prior to parsing, and parse it every time. (ManageMembers.php)
  * Removed a variable which was probably used for debugging (Post template) [Bug 3889]
+ * The email link used wrong parameters (PersonalMessage template) [Bug 3887]
 
 
 September 2009
