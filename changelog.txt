@@ -40,6 +40,7 @@ October 2009
  ! When using MySQL, ORDER BY null was sometimes added when it shouldn't be. (Subs-Db-mysql.php) [Bug 3877]
  ! Store less information in the query string when searching the moderation log, and verify it every time. (Modlog.php)
  ! When navigating between pages in member administration, send the data being searched for in request prior to parsing, and parse it every time. (ManageMembers.php)
+ * Removed a variable which was probably used for debugging (Post template) [Bug 3889]
 
 
 September 2009

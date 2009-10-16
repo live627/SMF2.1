@@ -383,7 +383,6 @@ function template_main()
 					', template_control_richedit($context['post_box_name'], 'smileyBox_message', 'bbcBox_message');
 
 	// If this message has been edited in the past - display when it was.
-	$context['last_modified'] = 'test';
 	if (isset($context['last_modified']))
 		echo '
 					<div class="padding smalltext">
