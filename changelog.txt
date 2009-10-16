@@ -42,6 +42,7 @@ October 2009
  ! When navigating between pages in member administration, send the data being searched for in request prior to parsing, and parse it every time. (ManageMembers.php)
  * Removed a variable which was probably used for debugging (Post template) [Bug 3889]
  * The email link used wrong parameters (PersonalMessage template) [Bug 3887]
+ * Copied Themes should use the theme.js from the default theme folder (Index template) [Bug 3863]
 
 
 September 2009
