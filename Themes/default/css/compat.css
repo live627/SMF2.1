@@ -169,15 +169,10 @@ table.table_grid thead tr.catbg th.smalltext
 
 /* Semantic classes introduced per RC2, used as alternatives for .windowbg and .windowbg2
 ------------------------------------------------------------------------------------------ */
-.content
+.content, .roundframe
 {
 	color: #000000;
 	background-color: #ECEDF3;
-}
-.roundframe
-{
-	color: #000000;
-	background-color: #F6F6F6;
 }
 .description
 {

@@ -362,12 +362,12 @@ tr.catbg th.smalltext
 	font-size: 0.9em;
 }
 /* Alternating backgrounds for posts, and several other sections of the forum. */
-.windowbg, #preview_body, .content
+.windowbg, #preview_body, .content, .roundframe
 {
 	color: #000000;
 	background-color: #ECEDF3;
 }
-.windowbg2, .roundframe
+.windowbg2
 {
 	color: #000000;
 	background-color: #F6F6F6;

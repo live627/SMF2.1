@@ -620,7 +620,6 @@ function template_trackActivity()
 
 	// The first table shows IP information about the user.
 	echo '
-	<div id="profileview">
 			<h3 class="titlebg">
 				<span class="left"></span>
 				<strong>', $txt['view_ips_by'], ' ', $context['member']['name'], '</strong>
@@ -671,9 +670,6 @@ function template_trackActivity()
 
 	// Show the track user list.
 	template_show_list('track_user_list');
-
-	echo '
-	</div>';
 }
 
 // The template for trackIP, allowing the admin to see where/who a certain IP has been used.
