@@ -44,6 +44,7 @@ October 2009
  * The email link used wrong parameters (PersonalMessage template) [Bug 3887]
  * Copied Themes should use the theme.js from the default theme folder (index template) [Bug 3863]
  * Collapsing a month in the statistics centre wasn't saved properly. (Stats template, stats.js) [Bug 3802] 
+ ! Adding a new button strip wasn't working as expected in the Core theme. (index template, theme.js) 
 
 
 September 2009
