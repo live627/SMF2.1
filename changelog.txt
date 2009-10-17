@@ -42,10 +42,9 @@ October 2009
  ! When navigating between pages in member administration, send the data being searched for in request prior to parsing, and parse it every time. (ManageMembers.php)
  * Removed a variable which was probably used for debugging (Post template) [Bug 3889]
  * The email link used wrong parameters (PersonalMessage template) [Bug 3887]
- * Collapsing a month in the statistics centre wasn't saved properly. (Stats template, stats.js) [Bug 3802] 
+ * Collapsing a month in the statistics centre wasn't saved properly. (Stats template, stats.js) [Bug 3802]
  ! Adding a new button strip wasn't working as expected in the Core theme. (index template, theme.js)
  * ManageBans used an outdated JS function (ManageBans template) [Bug 3882]
- ! Passing a topic's id isn't needed for attachments (Display.php) [Bug 3888]
  ! Made the parsing of line breaks in textual attachments optional. (Display.php, ManageAttachments.php, Admin language file) [Bug 3865]
  ! Added an interface to set the formerly-hidden setting to disable template evaluation. (ManageServer.php, Help language file, ManageSettings language file)
  ! When creating a copy of the default theme, copy the rtl.css and theme.js files, too. (Themes.php) [Bug 3863]

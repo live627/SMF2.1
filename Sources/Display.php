@@ -1444,7 +1444,7 @@ function loadAttachmentContext($id_msg)
 				'downloads' => $attachment['downloads'],
 				'size' => round($attachment['filesize'] / 1024, 2) . ' ' . $txt['kilobyte'],
 				'byte_size' => $attachment['filesize'],
-				'href' => $scripturl . '?action=dlattach;attach=' . $attachment['id_attach'],
+				'href' => $scripturl . '?action=dlattach;topic=' . $topic . '.0;attach=' . $attachment['id_attach'],
 				'link' => '<a href="' . $scripturl . '?action=dlattach;topic=' . $topic . '.0;attach=' . $attachment['id_attach'] . '">' . htmlspecialchars($attachment['filename']) . '</a>',
 				'is_image' => !empty($attachment['width']) && !empty($attachment['height']) && !empty($modSettings['attachmentShowImages']),
 				'is_approved' => $attachment['approved'],
