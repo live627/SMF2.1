@@ -45,7 +45,8 @@ October 2009
  * Copied Themes should use the theme.js from the default theme folder (index template) [Bug 3863]
  * Collapsing a month in the statistics centre wasn't saved properly. (Stats template, stats.js) [Bug 3802] 
  ! Adding a new button strip wasn't working as expected in the Core theme. (index template, theme.js)
- * ManageBans used an outdated JS function (ManageBans template) [Bug 3882] 
+ * ManageBans used an outdated JS function (ManageBans template) [Bug 3882]
+ ! Passing a topic's id isn't needed for attachments (Display.php) [Bug 3888]
 
 
 September 2009
