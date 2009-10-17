@@ -47,7 +47,9 @@ October 2009
  ! Adding a new button strip wasn't working as expected in the Core theme. (index template, theme.js)
  * ManageBans used an outdated JS function (ManageBans template) [Bug 3882]
  ! Passing a topic's id isn't needed for attachments (Display.php) [Bug 3888]
-
+ ! Made the parsing of line breaks in textual attachments optional. (Display.php, ManageAttachments.php, Admin language file) [Bug 3865]
+ ! Added an interface to set the formerly-hidden setting to disable template evaluation. (ManageServer.php, Help language file, ManageSettings language file)
+ 
 
 September 2009
 --------------------------------------------------------------------------------
