@@ -129,7 +129,7 @@ function template_html_above()
 
 	echo '
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2"></script>
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc2"></script>
+	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/theme.js?rc2"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_default_theme_url = "', $settings['default_theme_url'], '";
