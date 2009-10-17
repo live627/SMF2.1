@@ -16,136 +16,138 @@ function template_search_members()
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
-					<div class="msearch_details align_left">
-						<dl class="settings right">
-							<dt class="righttext">
-								<strong>', $txt['member_id'], ':</strong>
-								<select name="types[mem_id]">
-									<option value="--">&lt;</option>
-									<option value="-">&lt;=</option>
-									<option value="=" selected="selected">=</option>
-									<option value="+">&gt;=</option>
-									<option value="++">&gt;</option>
-								</select>
-							</dt>
-							<dd>
-								<input type="text" name="mem_id" value="" size="6" class="input_text" />
-							</dd>
-							<dt class="righttext">
-								<strong>', $txt['age'], ':</strong>
-								<select name="types[age]">
-									<option value="--">&lt;</option>
-									<option value="-">&lt;=</option>
-									<option value="=" selected="selected">=</option>
-									<option value="+">&gt;=</option>
-									<option value="++">&gt;</option>
-								</select>
-							</dt>
-							<dd>
-								<input type="text" name="age" value="" size="6" class="input_text" />
-							</dd>
-							<dt class="righttext">
-								<strong>', $txt['member_postcount'], ':</strong>
-								<select name="types[posts]">
-									<option value="--">&lt;</option>
-									<option value="-">&lt;=</option>
-									<option value="=" selected="selected">=</option>
-									<option value="+">&gt;=</option>
-									<option value="++">&gt;</option>
-								</select>
-							</dt>
-							<dd>
-								<input type="text" name="posts" value="" size="6" class="input_text" />
-							</dd>
-							<dt class="righttext">
-								<strong>', $txt['date_registered'], ':</strong>
-								<select name="types[reg_date]">
-									<option value="--">&lt;</option>
-									<option value="-">&lt;=</option>
-									<option value="=" selected="selected">=</option>
-									<option value="+">&gt;=</option>
-									<option value="++">&gt;</option>
-								</select>
-							</dt>
-							<dd>
-								<input type="text" name="reg_date" value="" size="10" class="input_text" /><span class="smalltext">', $txt['date_format'], '</span>
-							</dd>
-							<dt class="righttext">
-								<strong>', $txt['viewmembers_online'], ':</strong>
-								<select name="types[last_online]">
-									<option value="--">&lt;</option>
-									<option value="-">&lt;=</option>
-									<option value="=" selected="selected">=</option>
-									<option value="+">&gt;=</option>
-									<option value="++">&gt;</option>
-								</select>
-							</dt>
-							<dd>
-								<input type="text" name="last_online" value="" size="10" class="input_text" /><span class="smalltext">', $txt['date_format'], '</span>
-							</dd>
-						</dl>
+					<div class="flow_hidden">
+						<div class="msearch_details align_left">
+							<dl class="settings right">
+								<dt class="righttext">
+									<strong>', $txt['member_id'], ':</strong>
+									<select name="types[mem_id]">
+										<option value="--">&lt;</option>
+										<option value="-">&lt;=</option>
+										<option value="=" selected="selected">=</option>
+										<option value="+">&gt;=</option>
+										<option value="++">&gt;</option>
+									</select>
+								</dt>
+								<dd>
+									<input type="text" name="mem_id" value="" size="6" class="input_text" />
+								</dd>
+								<dt class="righttext">
+									<strong>', $txt['age'], ':</strong>
+									<select name="types[age]">
+										<option value="--">&lt;</option>
+										<option value="-">&lt;=</option>
+										<option value="=" selected="selected">=</option>
+										<option value="+">&gt;=</option>
+										<option value="++">&gt;</option>
+									</select>
+								</dt>
+								<dd>
+									<input type="text" name="age" value="" size="6" class="input_text" />
+								</dd>
+								<dt class="righttext">
+									<strong>', $txt['member_postcount'], ':</strong>
+									<select name="types[posts]">
+										<option value="--">&lt;</option>
+										<option value="-">&lt;=</option>
+										<option value="=" selected="selected">=</option>
+										<option value="+">&gt;=</option>
+										<option value="++">&gt;</option>
+									</select>
+								</dt>
+								<dd>
+									<input type="text" name="posts" value="" size="6" class="input_text" />
+								</dd>
+								<dt class="righttext">
+									<strong>', $txt['date_registered'], ':</strong>
+									<select name="types[reg_date]">
+										<option value="--">&lt;</option>
+										<option value="-">&lt;=</option>
+										<option value="=" selected="selected">=</option>
+										<option value="+">&gt;=</option>
+										<option value="++">&gt;</option>
+									</select>
+								</dt>
+								<dd>
+									<input type="text" name="reg_date" value="" size="10" class="input_text" /><span class="smalltext">', $txt['date_format'], '</span>
+								</dd>
+								<dt class="righttext">
+									<strong>', $txt['viewmembers_online'], ':</strong>
+									<select name="types[last_online]">
+										<option value="--">&lt;</option>
+										<option value="-">&lt;=</option>
+										<option value="=" selected="selected">=</option>
+										<option value="+">&gt;=</option>
+										<option value="++">&gt;</option>
+									</select>
+								</dt>
+								<dd>
+									<input type="text" name="last_online" value="" size="10" class="input_text" /><span class="smalltext">', $txt['date_format'], '</span>
+								</dd>
+							</dl>
+						</div>
+						<div class="msearch_details align_right">
+							<dl class="settings right">
+								<dt class="righttext">
+									<strong>', $txt['username'], ':</strong>
+								</dt>
+								<dd>
+									<input type="text" name="membername" value="" class="input_text" />
+								</dd>
+								<dt class="righttext">
+									<strong>', $txt['email_address'], ':</strong>
+								</dt>
+								<dd>
+									<input type="text" name="email" value="" class="input_text" />
+								</dd>
+								<dt class="righttext">
+									<strong>', $txt['website'], ':</strong>
+								</dt>
+								<dd>
+									<input type="text" name="website" value="" class="input_text" />
+								</dd>
+								<dt class="righttext">
+									<strong>', $txt['location'], ':</strong>
+								</dt>
+								<dd>
+									<input type="text" name="location" value="" class="input_text" />
+								</dd>
+								<dt class="righttext">
+									<strong>', $txt['ip_address'], ':</strong>
+								</dt>
+								<dd>
+									<input type="text" name="ip" value="" class="input_text" />
+								</dd>
+								<dt class="righttext">
+									<strong>', $txt['messenger_address'], ':</strong>
+								</dt>
+								<dd>
+									<input type="text" name="messenger" value="" class="input_text" />
+								</dd>
+							</dl>
+						</div>
 					</div>
-					<div class="msearch_details align_right">
-						<dl class="settings right">
-							<dt class="righttext">
-								<strong>', $txt['username'], ':</strong>
-							</dt>
-							<dd>
-								<input type="text" name="membername" value="" class="input_text" />
-							</dd>
-							<dt class="righttext">
-								<strong>', $txt['email_address'], ':</strong>
-							</dt>
-							<dd>
-								<input type="text" name="email" value="" class="input_text" />
-							</dd>
-							<dt class="righttext">
-								<strong>', $txt['website'], ':</strong>
-							</dt>
-							<dd>
-								<input type="text" name="website" value="" class="input_text" />
-							</dd>
-							<dt class="righttext">
-								<strong>', $txt['location'], ':</strong>
-							</dt>
-							<dd>
-								<input type="text" name="location" value="" class="input_text" />
-							</dd>
-							<dt class="righttext">
-								<strong>', $txt['ip_address'], ':</strong>
-							</dt>
-							<dd>
-								<input type="text" name="ip" value="" class="input_text" />
-							</dd>
-							<dt class="righttext">
-								<strong>', $txt['messenger_address'], ':</strong>
-							</dt>
-							<dd>
-								<input type="text" name="messenger" value="" class="input_text" />
-							</dd>
-						</dl>
+					<div class="flow_hidden">
+						<div class="msearch_details align_left">
+							<fieldset>
+								<legend>', $txt['gender'], '</legend>
+								<label for="gender-0"><input type="checkbox" name="gender[]" value="0" id="gender-0" checked="checked" class="input_check" /> ', $txt['undefined_gender'], '</label>&nbsp;&nbsp;
+								<label for="gender-1"><input type="checkbox" name="gender[]" value="1" id="gender-1" checked="checked" class="input_check" /> ', $txt['male'], '</label>&nbsp;&nbsp;
+								<label for="gender-2"><input type="checkbox" name="gender[]" value="2" id="gender-2" checked="checked" class="input_check" /> ', $txt['female'], '</label>
+							</fieldset>
+						</div>
+						<div class="msearch_details align_right">
+							<fieldset>
+								<legend>', $txt['activation_status'], '</legend>
+								<label for="activated-0"><input type="checkbox" name="activated[]" value="1" id="activated-0" checked="checked" class="input_check" /> ', $txt['activated'], '</label>&nbsp;&nbsp;
+								<label for="activated-1"><input type="checkbox" name="activated[]" value="0" id="activated-1" checked="checked" class="input_check" /> ', $txt['not_activated'], '</label>
+							</fieldset>
+						</div>
 					</div>
-					<br class="clear" />
-					<div class="msearch_details align_left">
-						<fieldset>
-							<legend>', $txt['gender'], '</legend>
-							<label for="gender-0"><input type="checkbox" name="gender[]" value="0" id="gender-0" checked="checked" class="input_check" /> ', $txt['undefined_gender'], '</label>&nbsp;&nbsp;
-							<label for="gender-1"><input type="checkbox" name="gender[]" value="1" id="gender-1" checked="checked" class="input_check" /> ', $txt['male'], '</label>&nbsp;&nbsp;
-							<label for="gender-2"><input type="checkbox" name="gender[]" value="2" id="gender-2" checked="checked" class="input_check" /> ', $txt['female'], '</label>
-						</fieldset>
-					</div>
-					<div class="msearch_details align_right">
-						<fieldset>
-							<legend>', $txt['activation_status'], '</legend>
-							<label for="activated-0"><input type="checkbox" name="activated[]" value="1" id="activated-0" checked="checked" class="input_check" /> ', $txt['activated'], '</label>&nbsp;&nbsp;
-							<label for="activated-1"><input type="checkbox" name="activated[]" value="0" id="activated-1" checked="checked" class="input_check" /> ', $txt['not_activated'], '</label>
-						</fieldset>
-					</div>
-					<br class="clear" />
 				</div>
-			<span class="botslice"><span></span></span>
-		</div>
-
+				<span class="botslice"><span></span></span>
+			</div>
+			<br />
 			<h3 class="titlebg"><span class="left"></span>
 				', $txt['member_part_of_these_membergroups'], '
 			</h3>
