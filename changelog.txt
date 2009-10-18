@@ -53,6 +53,8 @@ October 2009
  * Large attachments were overflowing properly in the display template. (Display template, index.css) 
  * The upcoming calendar should be in small text. (BoardIndex template)
  ! Ensure the attachment permissions are verified for the correct board. (Display.php)
+ * Reintegrated former fonts to BBC font select (GenericControls template) [Bug 3880]
+ * Cleaned the BBC button layout (GenericControls template, index.css)
 
 
 September 2009

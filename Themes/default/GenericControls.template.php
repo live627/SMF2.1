@@ -137,7 +137,16 @@ function template_control_richedit($editor_id, $smileyContainer = null, $bbcCont
 								sName: \'sel_face\',
 								oOptions: {
 									\'\': ', JavaScriptEscape($txt['font_face']), ',
-									\'courier\': \'Courier\'
+									\'courier\': \'Courier\',	
+									\'arial\': \'Arial\',
+									\'arial black\': \'Arial Black\',
+									\'impact\': \'Impact\',
+									\'verdana\': \'Verdana\',
+									\'times new roman\': \'Times New Roman\',
+									\'georgia\': \'Georgia\',
+									\'andale mono\': \'Andale Mono\',
+									\'trebuchet ms\': \'Trebuchet MS\',
+									\'comic sans ms\': \'Comic Sans MS\'
 								}
 							}';
 
@@ -191,7 +200,7 @@ function template_control_richedit($editor_id, $smileyContainer = null, $bbcCont
 			echo '
 					],
 					sButtonTemplate: ', JavaScriptEscape('
-						<img id="%buttonId%" src="%buttonSrc%" align="bottom" width="23" height="22" alt="%buttonDescription%" title="%buttonDescription%" style="margin: 1px 2px 1px 1px;" />
+						<img id="%buttonId%" src="%buttonSrc%" align="bottom" width="23" height="22" alt="%buttonDescription%" title="%buttonDescription%" />
 					'), ',
 					sButtonBackgroundImage: ', JavaScriptEscape($settings['images_url'] . '/bbc/bbc_bg.gif'), ',
 					sButtonBackgroundImageHover: ', JavaScriptEscape($settings['images_url'] . '/bbc/bbc_hoverbg.gif'), ',
