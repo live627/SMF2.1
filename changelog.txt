@@ -52,6 +52,7 @@ October 2009
  * Text sized via BBC was overlapping itself in some cases. (index.css)
  * Large attachments were overflowing properly in the display template. (Display template, index.css) 
  * The upcoming calendar should be in small text. (BoardIndex template)
+ ! Ensure the attachment permissions are verified for the correct board. (Display.php)
 
 
 September 2009

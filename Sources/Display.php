@@ -1204,7 +1204,7 @@ function prepareDisplayContext($reset = false)
 // Download an attachment.
 function Download()
 {
-	global $txt, $modSettings, $user_info, $scripturl, $context, $sourcedir, $smcFunc;
+	global $txt, $modSettings, $user_info, $scripturl, $context, $sourcedir, $topic, $smcFunc;
 
 	// Some defaults that we need.
 	$context['character_set'] = empty($modSettings['global_character_set']) ? (empty($txt['lang_character_set']) ? 'ISO-8859-1' : $txt['lang_character_set']) : $modSettings['global_character_set'];
@@ -1235,18 +1235,21 @@ function Download()
 	// This is just a regular attachment...
 	else
 	{
+		// This checks only the current board for $board/$topic's permissions.
 		isAllowedTo('view_attachments');
 
 		// Make sure this attachment is on this board.
+		// NOTE: We must verify that $topic is the attachment's topic, or else the permission check above is broken.
 		$request = $smcFunc['db_query']('', '
 			SELECT a.id_folder, a.filename, a.file_hash, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved
 			FROM {db_prefix}attachments AS a
-				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
+				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg AND m.id_topic = {int:current_topic})
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
 			WHERE a.id_attach = {int:attach}
 			LIMIT 1',
 			array(
 				'attach' => $_REQUEST['attach'],
+				'current_topic' => $topic,
 			)
 		);
 	}
