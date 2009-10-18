@@ -1745,6 +1745,9 @@ function loadTheme($id_theme = 0, $initialize = true)
 
 	if (isset($modSettings['integrate_load_theme']) && function_exists($modSettings['integrate_load_theme']))
 		call_user_func($modSettings['integrate_load_theme']);
+
+	// We are ready to go.
+	$context['theme_loaded'] = true;
 }
 
 // Load a template - if the theme doesn't include it, use the default.

@@ -282,6 +282,10 @@ function setup_fatal_error_context($error_message)
 	if ($level > 1)
 		return false;
 
+	// Maybe they came from dlattach or similar?
+	if (SMF != 'SSI' && empty($context['theme_loaded']))
+		loadTheme();
+
 	// Don't bother indexing errors mate...
 	$context['robot_no_index'] = true;
 

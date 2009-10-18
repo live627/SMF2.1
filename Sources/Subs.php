@@ -2488,6 +2488,11 @@ function writeLog($force = false)
 	if (!empty($modSettings['who_enabled']))
 	{
 		$serialized = $_GET + array('USER_AGENT' => $_SERVER['HTTP_USER_AGENT']);
+
+		// In the case of a dlattach action, session_var may not be set.
+		if (!isset($context['session_var']))
+			$context['session_var'] = $_SESSION['session_var'];
+
 		unset($serialized['sesc'], $serialized[$context['session_var']]);
 		$serialized = serialize($serialized);
 	}

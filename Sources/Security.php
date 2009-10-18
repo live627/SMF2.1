@@ -194,6 +194,10 @@ function is_not_guest($message = '')
 	if (isset($_REQUEST['xml']))
 		obExit(false);
 
+	// Attempt to detect if they came from dlattach.
+	if (!WIRELESS && SMF != 'SSI' && empty($context['theme_loaded']))
+		loadTheme();
+
 	// Never redirect to an attachment
 	if (strpos($_SERVER['REQUEST_URL'], 'dlattach') === false)
 		$_SESSION['login_url'] = $_SERVER['REQUEST_URL'];

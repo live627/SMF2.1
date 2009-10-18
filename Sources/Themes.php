@@ -211,13 +211,11 @@ function ThemeAdmin()
 		);
 		$context['themes'] = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
-		{
 			$context['themes'][] = array(
 				'id' => $row['id_theme'],
 				'name' => $row['name'],
 				'known' => in_array($row['id_theme'], $knownThemes),
 			);
-		}
 		$smcFunc['db_free_result']($request);
 
 		// Can we create a new theme?
