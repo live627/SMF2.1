@@ -499,7 +499,6 @@ table.table_grid thead tr.catbg th.smalltext
 /* Posts and personal messages displayed throughout the forum. */
 .post, .personalmessage
 {
-	width: 100%;
 	overflow: auto;
 	line-height: 1.4em;
 }
@@ -507,18 +506,19 @@ table.table_grid thead tr.catbg th.smalltext
 /* All the signatures used in the forum.  If your forum users use Mozilla, Opera, or Safari, you might add max-height here ;). */
 .signature, .attachments
 {
+	width: 98%;
+	overflow: auto;
 	clear: right;
 	padding: 1em 0 3px 0;
-	width: 98%;
 	border-top: solid 1px #aaa;
 	line-height: 1.4em;
 	font-size: 0.85em;
 }
 .custom_fields_above_signature
 {
+	width: 98%;
 	clear: right;
 	padding: 1em 0 3px 0;
-	width: 98%;
 	border-top: solid 1px #aaa;
 	line-height: 1.4em;
 	font-size: 0.85em;

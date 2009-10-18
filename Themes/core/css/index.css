@@ -2494,8 +2494,9 @@ dl
 }
 .signature, .custom_fields_above_signature, .attachments
 {
+	width: 98%;
+	overflow: auto;
 	clear: right;
-	width: 100%;
 	border-top: 1px solid #666;
 }
 .signature h5

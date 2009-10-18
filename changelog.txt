@@ -50,6 +50,7 @@ October 2009
  ! When creating a copy of the default theme, copy the rtl.css and theme.js files, too. (Themes.php) [Bug 3863]
  * Curve's button strips were misaligned by one pixel. (index.css) [Bug 3894] 
  * Text sized via BBC was overlapping itself in some cases. (index.css)
+ * Large attachments were overflowing properly in the display template. (Display template, index.css) 
 
 
 September 2009

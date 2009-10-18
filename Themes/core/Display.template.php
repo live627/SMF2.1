@@ -448,8 +448,6 @@ function template_main()
 		// Assuming there are attachments...
 		if (!empty($message['attachment']))
 		{
-			echo '
-						<div style="overflow: ', $context['browser']['is_firefox'] ? 'visible' : 'auto', '; width: 100%;">';
 			$last_approved_state = 1;
 			foreach ($message['attachment'] as $attachment)
 			{
@@ -485,9 +483,6 @@ function template_main()
 			if ($last_approved_state == 0)
 				echo '
 							</fieldset>';
-
-			echo '
-						</div>';
 		}
 
 		echo '
