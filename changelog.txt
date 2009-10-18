@@ -48,6 +48,7 @@ October 2009
  ! Made the parsing of line breaks in textual attachments optional. (Display.php, ManageAttachments.php, Admin language file) [Bug 3865]
  ! Added an interface to set the formerly-hidden setting to disable template evaluation. (ManageServer.php, Help language file, ManageSettings language file)
  ! When creating a copy of the default theme, copy the rtl.css and theme.js files, too. (Themes.php) [Bug 3863]
+ * Curve's button strips were misaligned by one pixel. (index.css) [Bug 3894] 
 
 
 September 2009
