@@ -879,38 +879,46 @@ function template_announce()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
+	<div id="announcement">
 		<form action="', $scripturl, '?action=announce;sa=send" method="post" accept-charset="', $context['character_set'], '">
-			<table width="600" cellpadding="5" cellspacing="0" border="0" align="center" class="tborder">
-				<tr class="titlebg">
-					<td>', $txt['announce_title'], '</td>
-				</tr><tr class="windowbg">
-					<td class="smalltext" style="padding: 2ex;">', $txt['announce_desc'], '</td>
-				</tr><tr>
-					<td class="windowbg2">
-						', $txt['announce_this_topic'], ' <a href="', $scripturl, '?topic=', $context['current_topic'], '.0">', $context['topic_subject'], '</a><br />
-					</td>
-				</tr><tr>
-					<td class="windowbg2">';
+			<h3 class="catbg"><span class="left"></span>
+				', $txt['announce_title'], '
+			</h3>
+			<div class="information">
+				', $txt['announce_desc'], '
+			</div>
+			<div class="windowbg2">
+			<span class="topslice"><span></span></span>
+				<div class="content">
+					<p>
+						', $txt['announce_this_topic'], ' <a href="', $scripturl, '?topic=', $context['current_topic'], '.0">', $context['topic_subject'], '</a>
+					</p>
+					<ul class="reset">';
 
 	foreach ($context['groups'] as $group)
-				echo '
-						<label for="who_', $group['id'], '"><input type="checkbox" name="who[', $group['id'], ']" id="who_', $group['id'], '" value="', $group['id'], '" checked="checked" class="input_check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em><br />';
+		echo '
+						<li>
+							<label for="who_', $group['id'], '"><input type="checkbox" name="who[', $group['id'], ']" id="who_', $group['id'], '" value="', $group['id'], '" checked="checked" class="input_check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em>
+						</li>';
 
 	echo '
-						<br />
-						<label for="checkall"><input type="checkbox" id="checkall" class="input_check" onclick="invertAll(this, this.form);" checked="checked" /> <em>', $txt['check_all'], '</em></label>
-					</td>
-				</tr><tr>
-					<td class="windowbg2" style="padding-bottom: 1ex;" align="center">
+						<li>
+							<label for="checkall"><input type="checkbox" id="checkall" class="input_check" onclick="invertAll(this, this.form);" checked="checked" /> <em>', $txt['check_all'], '</em></label>
+						</li>
+					</ul>
+					<div id="confirm_buttons">
 						<input type="submit" value="', $txt['post'], '" class="button_submit" />
-					</td>
-				</tr>
-			</table>
-			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-			<input type="hidden" name="topic" value="', $context['current_topic'], '" />
-			<input type="hidden" name="move" value="', $context['move'], '" />
-			<input type="hidden" name="goback" value="', $context['go_back'], '" />
-		</form>';
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+						<input type="hidden" name="topic" value="', $context['current_topic'], '" />
+						<input type="hidden" name="move" value="', $context['move'], '" />
+						<input type="hidden" name="goback" value="', $context['go_back'], '" />
+					</div>
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>
+		</form>
+	</div>
+	<br />';
 }
 
 function template_announcement_send()
@@ -918,27 +926,28 @@ function template_announcement_send()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
+	<div id="announcement">
 		<form action="' . $scripturl . '?action=announce;sa=send" method="post" accept-charset="', $context['character_set'], '" name="autoSubmit" id="autoSubmit">
-			<table width="600" cellpadding="5" cellspacing="0" border="0" align="center" class="tborder">
-				<tr class="titlebg">
-					<td>
-						', $txt['announce_sending'], ' <a href="', $scripturl, '?topic=', $context['current_topic'], '.0" target="_blank" class="new_win">', $context['topic_subject'], '</a>
-					</td>
-				</tr><tr>
-					<td class="windowbg2"><strong>', $context['percentage_done'], '% ', $txt['announce_done'], '</strong></td>
-				</tr><tr>
-					<td class="windowbg2" style="padding-bottom: 1ex;" align="center">
+			<div class="windowbg2">
+			<span class="topslice"><span></span></span>
+				<div class="content">
+					<p>', $txt['announce_sending'], ' <a href="', $scripturl, '?topic=', $context['current_topic'], '.0" target="_blank" class="new_win">', $context['topic_subject'], '</a></p>
+					<p><strong>', $context['percentage_done'], '% ', $txt['announce_done'], '</strong></p>
+					<div id="confirm_buttons">
 						<input type="submit" name="b" value="', $txt['announce_continue'], '" class="button_submit" />
-					</td>
-				</tr>
-			</table>
-			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-			<input type="hidden" name="topic" value="', $context['current_topic'], '" />
-			<input type="hidden" name="move" value="', $context['move'], '" />
-			<input type="hidden" name="goback" value="', $context['go_back'], '" />
-			<input type="hidden" name="start" value="', $context['start'], '" />
-			<input type="hidden" name="membergroups" value="', $context['membergroups'], '" />
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+						<input type="hidden" name="topic" value="', $context['current_topic'], '" />
+						<input type="hidden" name="move" value="', $context['move'], '" />
+						<input type="hidden" name="goback" value="', $context['go_back'], '" />
+						<input type="hidden" name="start" value="', $context['start'], '" />
+						<input type="hidden" name="membergroups" value="', $context['membergroups'], '" />
+					</div>
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>
 		</form>
+	</div>
+	<br />
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var countdown = 2;
 			doAutoSubmit();
