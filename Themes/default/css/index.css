@@ -298,29 +298,29 @@ code
 }
 
 /* Styling for BBC tags */
+.bbc_size
+{
+	line-height: 1.4em;
+}
 .bbc_color a
 {
 	color: inherit;
 }
-
 .bbc_img
 {
 	border: 0;
 }
-
 .bbc_table
 {
 	font: inherit;
 	color: inherit;
 }
-
 .bbc_table td
 {
 	font: inherit;
 	color: inherit;
 	vertical-align: top;
 }
-
 .bbc_u
 {
 	text-decoration: underline;
