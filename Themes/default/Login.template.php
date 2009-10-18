@@ -12,7 +12,7 @@ function template_login()
 		<form action="', $scripturl, '?action=login2" name="frmLogin" id="frmLogin" method="post" accept-charset="', $context['character_set'], '" ', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
 		<div class="tborder login">
 			<h3 class="catbg"><span class="left"></span>
-				<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" /> ', $txt['login'], '
+				<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" class="icon" /> ', $txt['login'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">';
@@ -95,7 +95,7 @@ function template_kick_guest()
 	// And now the login information.
 	echo '
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
-				<img src="', $settings['images_url'], '/icons/login_sm.gif" alt=""  /> ', $txt['login'], '
+				<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" class="icon" /> ', $txt['login'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
@@ -187,7 +187,7 @@ function template_admin_login()
 <form action="', $scripturl, $context['get_data'], '" method="post" accept-charset="', $context['character_set'], '" name="frmLogin" id="frmLogin" onsubmit="hashAdminPassword(this, \'', $context['user']['username'], '\', \'', $context['session_id'], '\');">
 	<div class="tborder login" id="admin_login">
 		<h3 class="catbg"><span class="left"></span>
-			<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" /> ', $txt['login'], '
+			<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" class="icon" /> ', $txt['login'], '
 		</h3>
 		<span class="upperframe"><span></span></span>
 		<div class="roundframe centertext">

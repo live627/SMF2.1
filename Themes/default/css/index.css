@@ -1969,10 +1969,7 @@ ul.quickbuttons li.inline_mod_check
 ---------------------------------------------------- */
 
 /* The quick-reply area. Horizontal alignments go a bit wonky in IE6 and IE7 but I'm not sure it's worth worrying about. */
-#quickreplybox img, #quickreplybox a
-{
-	padding-top: 1px;
-}
+
 #quickReplyOptions .roundframe
 {
 	text-align: center;
@@ -1987,10 +1984,6 @@ ul.quickbuttons li.inline_mod_check
 	width: 91%;
 	height: 100px;
 	margin: 0.25em 0 1em 0;
-}
-#quickReplyExpand
-{
-	margin-top: 8px;
 }
 /* The jump to box */
 #display_jump_to
@@ -2334,11 +2327,6 @@ fieldset.merge_options legend
 .login p
 {
 	text-align: center;
-}
-.login h3 img
-{
-	float: left;
-	margin: 4px 0.5em 0 0;
 }
 
 /* Styles for the registration section.
