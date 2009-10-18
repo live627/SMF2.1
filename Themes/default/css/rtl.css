@@ -86,8 +86,7 @@ dl.settings img
 
 h3.catbg img.icon, h4.titlebg img.icon
 {
-	float: right;
-	margin: 5px 0 0 8px;
+	margin: -1px 0 0 8px;
 }
 h4.titlebg, h3.titlebg
 {

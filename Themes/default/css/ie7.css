@@ -13,7 +13,7 @@
 /* the tabled definition lists */
 dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.options dd, .login dd
 {
-	float: none;
+	float: none !important;
 	width: auto;
 }
 .table_grid thead th

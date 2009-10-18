@@ -896,7 +896,7 @@ function template_statPanel()
 		<div class="flow_hidden">
 			<div id="generalstats">
 				<h3 class="catbg"><span class="left"></span>
-					<img src="', $settings['images_url'], '/stats_info.gif" alt="" />
+					<img src="', $settings['images_url'], '/stats_info.gif" alt="" class="icon" />
 					', $txt['statPanel_generalStats'], ' - ', $context['member']['name'], '
 				</h3>
 				<div class="windowbg2">
@@ -923,7 +923,7 @@ function template_statPanel()
 	echo '
 			<div id="popularposts">
 				<h3 class="catbg"><span class="left"></span>
-					<img src="', $settings['images_url'], '/stats_replies.gif" alt="" />
+					<img src="', $settings['images_url'], '/stats_replies.gif" alt="" class="icon" />
 					', $txt['statPanel_topBoards'], '
 				</h3>
 				<div class="windowbg2">
@@ -960,7 +960,7 @@ function template_statPanel()
 			<div id="activitytime">
 				<h3 class="titlebg">
 					<span class="left"></span>
-					<img src="', $settings['images_url'], '/stats_views.gif" alt="" />
+					<img src="', $settings['images_url'], '/stats_views.gif" alt="" class="icon" />
 					', $txt['statPanel_activityTime'], '
 				</h3>
 				<div class="windowbg2">

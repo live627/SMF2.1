@@ -686,6 +686,12 @@ dl.settings img
 {
 	margin: 0 10px 0 0;
 }
+/* help icons */
+dl.settings dt a img
+{
+	position: relative;
+	top: 2px;
+}
 
 /* Styles for rounded headers.
 ------------------------------------------------------- */
@@ -726,8 +732,9 @@ h3.titlebg a:hover, h4.titlebg a:hover
 }
 h3.catbg img.icon, h4.titlebg img.icon
 {
-	float: left;
-	margin: 5px 8px 0 0;
+	
+	vertical-align: middle;
+	margin: -1px 5px 0 0;
 }
 h4.catbg span.left, h4.catbg2 span.left, h3.catbg span.left, h3.catbg2 span.left, .table_list tbody.header td span.left
 {
@@ -2385,6 +2392,7 @@ h3.titlebg img
 {
 	vertical-align: middle;
 	margin-right: 0.5em;
+	margin-top: -1px;
 }
 tr.titlebg td
 {
