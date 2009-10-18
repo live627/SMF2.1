@@ -1875,6 +1875,10 @@ ul.post_options li
 	float: left;
 }
 
+#postAdditionalOptionsHeader
+{
+	margin-top: 1em;
+}
 #postMoreOptions
 {
 	border-bottom: 1px solid #666666;
@@ -1903,6 +1907,11 @@ ul.post_options li
 #postAttachment3
 {
 	margin-left: 1em;
+}
+
+#post_confirm_strip, #shortcuts
+{
+	padding: 1em 0 0 0;
 }
 
 .post_verification

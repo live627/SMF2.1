@@ -393,7 +393,7 @@ function template_main()
 	// If the admin has enabled the hiding of the additional options - show a link and image for it.
 	if (!empty($settings['additional_options_collapsable']))
 		echo '
-					<div>
+					<div id="postAdditionalOptionsHeader">
 						<img src="', $settings['images_url'], '/collapse.gif" alt="-" id="postMoreExpand" style="display: none;" /> <strong><a href="#" id="postMoreExpandLink">', $txt['post_additionalopt'], '</a></strong>
 					</div>';
 
@@ -499,8 +499,10 @@ function template_main()
 
 	// Finally, the submit buttons.
 	echo '
-					<p id="confirm_buttons">
-						<span class="smalltext">', $context['browser']['is_firefox'] ? $txt['shortcuts_firefox'] : $txt['shortcuts'], '</span><br />
+					<p class="smalltext" id="shortcuts">
+						', $context['browser']['is_firefox'] ? $txt['shortcuts_firefox'] : $txt['shortcuts'], '
+					</p>
+					<p id="post_confirm_buttons">
 						', template_control_richedit_buttons($context['post_box_name']);
 
 	// Option to delete an event if user is editing one.
@@ -649,11 +651,10 @@ function template_main()
 				var numNewPosts = newPosts.length;
 				if (numNewPosts != 0)
 				{
-					var newTable = \'<span id="new_replies"><\' + \'/span><table width="100%" class="windowbg" cellspacing="0" cellpadding="2" align="center" style="table-layout: fixed;">\';
+					var newPostsHTML = \'<span id="new_replies"><\' + \'/span>\';
 					for (i = 0; i < numNewPosts; i++)
-						newTable += \'<tr class="catbg"><td colspan="2" align="left" class="smalltext"><div class="floatright">', $txt['posted_on'], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \' <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /><\' + \'/div>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'<\' + \'/td><\' + \'/tr><tr class="windowbg2"><td colspan="2" class="smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'" width="100%"><div class="righttext smalltext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt['bbc_quote'], '<\' + \'/a><\' + \'/div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'<\' + \'/div><\' + \'/td><\' + \'/tr>\';
-					newTable += \'<\' + \'/table>\';
-					setOuterHTML(document.getElementById("new_replies"), newTable);
+						newPostsHTML += \'<h4 class="titlebg"><span class="left"></span><span class="align_left">', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</span><span class="align_right">', $txt['posted_on'], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \'<img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /></span></h4><div class="windowbg2"><span class="topslice"><span></span></span><div class="content smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'"><div class="righttext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt['bbc_quote'], '<\' + \'/a></div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'<\' + \'/div></div><span class="botslice"><span></span></span></div>\';
+					setOuterHTML(document.getElementById("new_replies"), newPostsHTML);
 				}
 
 				if (typeof(smf_codeFix) != "undefined")
@@ -703,9 +704,6 @@ function template_main()
 	if (isset($context['previous_posts']) && count($context['previous_posts']) > 0)
 	{
 		echo '
-		<br />
-		<br />
-
 		<script type="text/javascript"><!-- // --><![CDATA[
 			function insertQuoteFast(messageid)
 			{
@@ -724,34 +722,29 @@ function template_main()
 			}
 		// ]]></script>
 
-			<table cellspacing="1" cellpadding="0" width="92%" align="center" class="bordercolor">
-				<tr>
-					<td>
-						<table width="100%" class="windowbg" cellspacing="0" cellpadding="2" align="center">
-							<tr class="titlebg">
-								<td colspan="2">', $txt['topic_summary'], '</td>
-							</tr>
-						</table>
-						<span id="new_replies"></span>
-						<table width="100%" class="windowbg" cellspacing="0" cellpadding="2" align="center" style="table-layout: fixed;">';
+		<div id="recent" class="flow_hidden main_section">
+			<h3 class="catbg"><span class="left"></span>
+				', $txt['topic_summary'], '
+			</h3>
+			<span id="new_replies"></span>';
+
 		foreach ($context['previous_posts'] as $post)
 			echo '
-							<tr class="catbg">
-								<td colspan="2" align="left" class="smalltext">
-									<div class="floatright">', $txt['posted_on'], ': ', $post['time'], $post['is_new'] ? ' <img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['preview_new'] . '" />' : '', '</div>
-									', $txt['posted_by'], ': ', $post['poster'], '
-								</td>
-							</tr><tr class="windowbg2">
-								<td colspan="2" class="smalltext" id="msg', $post['id'], '" width="100%">
-									<div class="righttext"><a href="#top" onclick="return insertQuoteFast(', $post['id'], ');">', $txt['bbc_quote'], '</a></div>
-									<div class="post">', $post['message'], '</div>
-								</td>
-							</tr>';
+			<h4 class="titlebg"><span class="left"></span>
+				<span class="align_left">', $txt['posted_by'], ': ', $post['poster'], '</span>
+				<span class="align_right">', $txt['posted_on'], ': ', $post['time'], $post['is_new'] ? ' <img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['preview_new'] . '" />' : '', '</span>
+			</h4>
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<div class="content smalltext" id="msg', $post['id'], '">
+					<div class="righttext"><a href="#top" onclick="return insertQuoteFast(', $post['id'], ');">', $txt['bbc_quote'], '</a></div>
+					<div class="post">', $post['message'], '</div>
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>';
+		
 		echo '
-						</table>
-					</td>
-				</tr>
-			</table>';
+		</div>';
 	}
 }
 

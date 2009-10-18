@@ -998,8 +998,10 @@ function template_send()
 
 	// Send, Preview, spellcheck buttons.
 	echo '
-				<p id="confirm_buttons">
-					<span class="smalltext">', $context['browser']['is_firefox'] ? $txt['shortcuts_firefox'] : $txt['shortcuts'], '</span><br />
+				<p id="shortcuts" class="smalltext">
+					', $context['browser']['is_firefox'] ? $txt['shortcuts_firefox'] : $txt['shortcuts'], '
+				</p>
+				<p id="post_confirm_strip">
 					', template_control_richedit_buttons($context['post_box_name']), '
 				</p>
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
