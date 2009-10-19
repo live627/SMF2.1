@@ -803,7 +803,7 @@ function template_warn_template()
 		echo '
 					<input type="checkbox" name="make_personal" id="make_personal" ', $context['template_data']['personal'] ? 'checked="checked"' : '', ' class="input_check" />
 						<label for="make_personal">
-							 <strong>', $txt['mc_warning_template_personal'], '</strong>
+							<strong>', $txt['mc_warning_template_personal'], '</strong>
 						</label>
 						<br />
 						<span class="smalltext">', $txt['mc_warning_template_personal_desc'], '</span>
