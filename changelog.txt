@@ -57,6 +57,7 @@ October 2009
  * Cleaned the BBC button layout (GenericControls template, index.css)
  ! dlattach caused errors when guests attempted to view them (Errors.php, Load.php, Security.php, Subs.php) [Bug 3862]
  * Incorrect verification check (Display Template) [Bug 3883]
+ * Removed a gap and fixed invalid xhtml (PersonalMessage template, index.css) [Bug 3903]
 
 
 September 2009

@@ -32,8 +32,7 @@ function template_pm_below()
 	global $context, $settings, $options;
 
 	echo '
-	</div>
-	<br class="clear" />';
+	</div>';
 }
 
 function template_folder()
@@ -258,6 +257,7 @@ function template_folder()
 						', !isset($context['disabled_fields']['msn']) && !empty($message['member']['msn']['link']) ? '<li>' . $message['member']['msn']['link'] . '</li>' : '', '
 						', !isset($context['disabled_fields']['aim']) && !empty($message['member']['aim']['link']) ? '<li>' . $message['member']['aim']['link'] . '</li>' : '', '
 						', !isset($context['disabled_fields']['yim']) && !empty($message['member']['yim']['link']) ? '<li>' . $message['member']['yim']['link'] . '</li>' : '', '
+					<li style="display: none;"></li>
 					</ul>
 				</li>';
 
