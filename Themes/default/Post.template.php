@@ -427,7 +427,7 @@ function template_main()
 		foreach ($context['current_attachments'] as $attachment)
 			echo '
 						<dd class="smalltext">
-							<input type="checkbox" name="attach_del[]" value="', $attachment['id'], '"', empty($attachment['unchecked']) ? ' checked="checked"' : '', ' class="input_check" /> ', $attachment['name'], (empty($attachment['approved']) ? ' (' . $txt['awaiting_approval'] . ')' : ''), '
+							<label for="attachment_', $attachment['id'], '"><input type="checkbox" id= "attachment_', $attachment['id'], '" name="attach_del[]" value="', $attachment['id'], '"', empty($attachment['unchecked']) ? ' checked="checked"' : '', ' class="input_check" /> ', $attachment['name'], (empty($attachment['approved']) ? ' (' . $txt['awaiting_approval'] . ')' : ''), '</label>
 						</dd>';
 		echo '
 					</dl>';
