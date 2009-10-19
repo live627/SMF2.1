@@ -110,7 +110,7 @@ if (!defined('SMF'))
 		- checks the password obeys the current forum settings for password
 		  strength.
 		- if password checking is enabled, will check that none of the words
-		  in redstrict_in appear in the password.
+		  in restrict_in appear in the password.
 		- returns an error identifier if the password is invalid, or null.
 
 	void rebuildModCache()

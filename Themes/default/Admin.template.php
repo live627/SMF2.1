@@ -592,7 +592,7 @@ function template_view_versions()
 	/* Below is the hefty javascript for this. Upon opening the page it checks the current file versions with ones
 	   held at simplemachines.org and works out if they are up to date.  If they aren't it colors that files number
 	   red.  It also contains the function, swapOption, that toggles showing the detailed information for each of the
-	   file catorgories. (sources, languages, and templates.) */
+	   file categories. (sources, languages, and templates.) */
 	echo '
 		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=detailed-version.js"></script>
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/admin.js?rc2"></script>
