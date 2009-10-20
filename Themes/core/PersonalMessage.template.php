@@ -239,7 +239,10 @@ function template_folder()
 							echo '
 									', $custom['value'];
 				}
-				echo '
+
+				// This shows the popular messaging icons.
+				if ($message['member']['has_messenger'] && $message['member']['can_view_profile'])
+					echo '
 									', $message['member']['icq']['link'], '
 									', $message['member']['msn']['link'], '
 									', $message['member']['yim']['link'], '
@@ -260,6 +263,11 @@ function template_folder()
 						echo '
 									<a href="', $scripturl, '?action=pm;sa=send;u=', $message['member']['id'], '" title="', $message['member']['online']['label'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/im_' . ($message['member']['online']['is_online'] ? 'on' : 'off') . '.gif" alt="' . $message['member']['online']['label'] . '" />' : $message['member']['online']['label'], '</a>';
 				}
+				
+				// Are we showing the warning status?
+				if ($message['member']['can_see_warning'])
+					echo '<br />
+									', $context['can_issue_warning'] ? '<a href="' . $scripturl . '?action=profile;area=issuewarning;u=' . $message['member']['id'] . '">' : '', '<img src="', $settings['images_url'], '/warning_', $message['member']['warning_status'], '.gif" alt="', $txt['user_warn_' . $message['member']['warning_status']], '" />', $context['can_issue_warning'] ? '</a>' : '', '<span class="warn_', $message['member']['warning_status'], '">', $txt['warn_' . $message['member']['warning_status']], '</span>';
 			}
 
 			echo '

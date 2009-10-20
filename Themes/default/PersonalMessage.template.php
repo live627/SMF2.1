@@ -250,11 +250,8 @@ function template_folder()
 			}
 
 			// This shows the popular messaging icons.
-			if ((!isset($context['disabled_fields']['icq']) && !empty($message['member']['icq']['link']))
-				|| (!isset($context['disabled_fields']['msn']) && !empty($message['member']['msn']['link']))
-				|| (!isset($context['disabled_fields']['aim']) && !empty($message['member']['aim']['link']))
-				|| (!isset($context['disabled_fields']['yim']) && !empty($message['member']['yim']['link'])))
-			echo '
+			if ($message['member']['has_messenger'] && $message['member']['can_view_profile'])
+				echo '
 				<li class="im_icons">
 					<ul>', !isset($context['disabled_fields']['icq']) && !empty($message['member']['icq']['link']) ? '
 						<li>' . $message['member']['icq']['link'] . '</li>' : '', !isset($context['disabled_fields']['msn']) && !empty($message['member']['msn']['link']) ? '

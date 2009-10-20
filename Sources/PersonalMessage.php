@@ -1006,6 +1006,8 @@ function prepareMessageContext($type = 'subject', $reset = false)
 		$memberContext[$message['id_member_from']]['show_email'] = showEmailAddress(true, 0);
 		$memberContext[$message['id_member_from']]['is_guest'] = true;
 	}
+	else
+		$memberContext[$message['id_member_from']]['can_view_profile'] = allowedTo('profile_view_any') || ($message['id_member_from'] == $user_info['id'] && allowedTo('profile_view_own'));
 
 	// Censor all the important text...
 	censorText($message['body']);
