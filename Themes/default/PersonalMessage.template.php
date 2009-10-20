@@ -250,14 +250,17 @@ function template_folder()
 			}
 
 			// This shows the popular messaging icons.
+			if ((!isset($context['disabled_fields']['icq']) && !empty($message['member']['icq']['link']))
+				|| (!isset($context['disabled_fields']['msn']) && !empty($message['member']['msn']['link']))
+				|| (!isset($context['disabled_fields']['aim']) && !empty($message['member']['aim']['link']))
+				|| (!isset($context['disabled_fields']['yim']) && !empty($message['member']['yim']['link'])))
 			echo '
 				<li class="im_icons">
-					<ul>
-						', !isset($context['disabled_fields']['icq']) && !empty($message['member']['icq']['link']) ? '<li>' . $message['member']['icq']['link'] . '</li>' : '', '
-						', !isset($context['disabled_fields']['msn']) && !empty($message['member']['msn']['link']) ? '<li>' . $message['member']['msn']['link'] . '</li>' : '', '
-						', !isset($context['disabled_fields']['aim']) && !empty($message['member']['aim']['link']) ? '<li>' . $message['member']['aim']['link'] . '</li>' : '', '
-						', !isset($context['disabled_fields']['yim']) && !empty($message['member']['yim']['link']) ? '<li>' . $message['member']['yim']['link'] . '</li>' : '', '
-					<li style="display: none;"></li>
+					<ul>', !isset($context['disabled_fields']['icq']) && !empty($message['member']['icq']['link']) ? '
+						<li>' . $message['member']['icq']['link'] . '</li>' : '', !isset($context['disabled_fields']['msn']) && !empty($message['member']['msn']['link']) ? '
+						<li>' . $message['member']['msn']['link'] . '</li>' : '', !isset($context['disabled_fields']['aim']) && !empty($message['member']['aim']['link']) ? '
+						<li>' . $message['member']['aim']['link'] . '</li>' : '', !isset($context['disabled_fields']['yim']) && !empty($message['member']['yim']['link']) ? '
+						<li>' . $message['member']['yim']['link'] . '</li>' : '', '
 					</ul>
 				</li>';
 

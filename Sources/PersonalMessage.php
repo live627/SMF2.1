@@ -110,7 +110,7 @@ if (!defined('SMF'))
 // This helps organize things...
 function MessageMain()
 {
-	global $txt, $scripturl, $sourcedir, $context, $user_info, $user_settings, $smcFunc;
+	global $txt, $scripturl, $sourcedir, $context, $user_info, $user_settings, $smcFunc, $modSettings;
 
 	// No guests!
 	is_not_guest();
