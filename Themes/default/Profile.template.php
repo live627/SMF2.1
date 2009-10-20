@@ -1753,7 +1753,7 @@ function template_ignoreboards()
 			echo '
 						</ul>
 						<ul class="ignoreboards floatright">';
-		
+
 		echo '
 							<li class="category">
 								<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $category['child_ids']), ']); return false;">', $category['name'], '</a>

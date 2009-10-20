@@ -195,7 +195,7 @@ function template_unread()
 							', template_button_strip($mark_read, 'top'), '
 						</td>
 				</tr>';
-	
+
 	if (empty($context['topics']))
 		echo '
 					<tr style="display: none;"><td></td></tr>';

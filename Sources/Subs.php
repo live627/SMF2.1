@@ -2322,13 +2322,13 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 		$message_parts = explode("\n", $message);
 		for ($i = 0, $n = count($message_parts); $i < $n; $i += 2)
 			parsesmileys($message_parts[$i]);
-		
+
 		$message = implode('', $message_parts);
 	}
-	
+
 	// No smileys, just get rid of the markers.
 	else
-		$message = strtr($message, array("\n" => ''));		
+		$message = strtr($message, array("\n" => ''));
 
 	if (substr($message, 0, 1) == ' ')
 		$message = '&nbsp;' . substr($message, 1);

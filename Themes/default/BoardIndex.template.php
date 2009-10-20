@@ -238,7 +238,7 @@ function template_main()
 			<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant'], '/new_redirect.png" alt="" /> ', $txt['redirect_board'], '</li>
 		</ul>
 	</div>';
-	
+
 		// Show the mark all as read button?
 		if ($settings['show_mark_read'] && !empty($context['categories']))
 			echo '<div class="mark_read">', template_button_strip($mark_read_button, 'right'), '</div>';

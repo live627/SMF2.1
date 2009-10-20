@@ -742,7 +742,7 @@ function template_main()
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';
-		
+
 		echo '
 		</div>';
 	}
