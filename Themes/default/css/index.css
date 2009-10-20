@@ -2479,7 +2479,7 @@ tr.titlebg td
 	margin-left: 172px;
 }
 
-tr.windowbg td, tr.windowbg2 td
+tr.windowbg td, tr.windowbg2 td, tr.approvebg td
 {
 	padding: 0.3em 0.7em;
 }

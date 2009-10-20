@@ -80,7 +80,7 @@ function template_wap_messageindex()
 
 		foreach ($context['topics'] as $topic)
 			echo '
-		<p><a href="', $scripturl, '?topic=', $topic['id'], '.0;wap">', $topic['first_post']['subject'], '</a> - ', $topic['first_post']['member']['name'], '<br /></p>';
+		<p><a href="', $scripturl, '?topic=', $topic['id'], '.0;wap">', $topic['first_post']['subject'], '</a>', (!$topic['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), ' - ', $topic['first_post']['member']['name'], '<br /></p>';
 
 		echo '
 		<p>', $txt['pages'], ': ', !empty($context['links']['prev']) ? '<a href="' . $context['links']['first'] . ';wap">&lt;&lt;</a> <a href="' . $context['links']['prev'] . ';wap">&lt;</a> ' : '', '(', $context['page_info']['current_page'], '/', $context['page_info']['num_pages'], ')', !empty($context['links']['next']) ? ' <a href="' . $context['links']['next'] . ';wap">&gt;</a> <a href="' . $context['links']['last'] . ';wap">&gt;&gt;</a> ' : '', '</p>';
@@ -123,8 +123,8 @@ function template_wap_display()
 			), $message['body']), '<br>');
 
 		echo '
-		<p><u>', $message['member']['name'], '</u>:<br /></p>
-		<p>', $message['body'], '<br /><br /></p>';
+		<p><u>', $message['member']['name'], '</u>:', (!$message['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), '<br /></p>
+ 		<p>', $message['body'], '<br /><br /></p>';
 	}
 
 	echo '
@@ -309,7 +309,7 @@ function template_imode_messageindex()
 		{
 			$count++;
 			echo '
-			<tr><td>', $count < 10 ? '&#' . (59105 + $count) . '; ' : '', '<a href="', $scripturl, '?topic=', $topic['id'], '.0;imode"', $count < 10 ? ' accesskey="' . $count . '"' : '', '>', $topic['first_post']['subject'], '</a>', $topic['new'] && $context['user']['is_logged'] ? ' [<a href="' . $scripturl . '?topic=' . $topic['id'] . '.msg' . $topic['new_from'] . ';imode#new">' . $txt['new'] . '</a>]' : '', '</td></tr>';
+			<tr><td>', $count < 10 ? '&#' . (59105 + $count) . '; ' : '', '<a href="', $scripturl, '?topic=', $topic['id'], '.0;imode"', $count < 10 ? ' accesskey="' . $count . '"' : '', '>', $topic['first_post']['subject'], '</a>', (!$topic['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), $topic['new'] && $context['user']['is_logged'] ? ' [<a href="' . $scripturl . '?topic=' . $topic['id'] . '.msg' . $topic['new_from'] . ';imode#new">' . $txt['new'] . '</a>]' : '', '</td></tr>';
 		}
 	}
 	echo '
@@ -356,7 +356,7 @@ function template_imode_display()
 			<tr><td>', $message['first_new'] ? '
 				<a id="new"></a>' : '',
 				$context['wireless_moderate'] && $message['member']['id'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';imode">' . $message['member']['name'] . '</a>' : '<strong>' . $message['member']['name'] . '</strong>', ':
-				', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';imode">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />
+				', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';imode">' . $txt['wireless_display_edit'] . '</a>]' : ''), (!$message['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), '<br />
 				', $message['body'], '
 			</td></tr>';
 	}
@@ -392,6 +392,10 @@ function template_imode_post()
 	echo '
 		<form action="', $scripturl, '?action=', $context['destination'], ';board=', $context['current_board'], '.0;imode" method="post">
 			<table border="0" cellspacing="0" cellpadding="0">';
+
+	if (!$context['becomes_approved'])
+		echo '
+				<tr><td>' . $txt['wait_for_approval'] . '<input type="hidden" name="not_approved" value="1" /></td></tr>';
 
 	if ($context['locked'])
 			echo '
@@ -959,7 +963,7 @@ function template_wap2_messageindex()
 		{
 			$count++;
 			echo '
-		<p class="windowbg">', $count < 10 ? '[' . $count . '] ' : '', '<a href="', $scripturl, '?topic=', $topic['id'], '.0;wap2"', $count < 10 ? ' accesskey="' . $count . '"' : '', '>', $topic['first_post']['subject'], '</a>', $topic['new'] && $context['user']['is_logged'] ? ' [<a href="' . $scripturl . '?topic=' . $topic['id'] . '.msg' . $topic['new_from'] . ';wap2#new" class="new">' . $txt['new'] . '</a>]' : '', '</p>';
+		<p class="windowbg">', $count < 10 ? '[' . $count . '] ' : '', '<a href="', $scripturl, '?topic=', $topic['id'], '.0;wap2"', $count < 10 ? ' accesskey="' . $count . '"' : '', '>', $topic['first_post']['subject'], '</a>', (!$topic['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), $topic['new'] && $context['user']['is_logged'] ? ' [<a href="' . $scripturl . '?topic=' . $topic['id'] . '.msg' . $topic['new_from'] . ';wap2#new" class="new">' . $txt['new'] . '</a>]' : '', '</p>';
 		}
 	}
 
@@ -1006,7 +1010,7 @@ function template_wap2_display()
 		<a id="new"></a>' : '', '
 		<p class="windowbg', $alternate ? '' : '2', '">
 			', $context['wireless_moderate'] && $message['member']['id'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';wap2">' . $message['member']['name'] . '</a>' : '<strong>' . $message['member']['name'] . '</strong>', ':
-			', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';wap2">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />
+			', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';wap2">' . $txt['wireless_display_edit'] . '</a>]' : ''), (!$message['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), '<br />
 			', $message['body'], '
 		</p>';
 		$alternate = !$alternate;
@@ -1072,6 +1076,13 @@ function template_wap2_post()
 	echo '
 		<form action="', $scripturl, '?action=', $context['destination'], ';board=', $context['current_board'], '.0;wap2" method="post">
 			<p class="titlebg">', $context['page_title'], '</p>';
+
+	if (!$context['becomes_approved'])
+		echo '
+			<p class="windowbg">
+				' . $txt['wait_for_approval'] . '
+				<input type="hidden" name="not_approved" value="1" />
+			</p>';
 
 	if ($context['locked'])
 		echo '

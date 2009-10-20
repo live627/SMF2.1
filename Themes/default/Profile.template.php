@@ -338,9 +338,19 @@ function template_showPosts()
 				<span class="counter">', $post['counter'], '</span>
 				<span class="subject"><a href="', $scripturl, '#c', $post['category']['id'], '">', $post['category']['name'], '</a> / <a href="', $scripturl, '?board=', $post['board']['id'], '.0">', $post['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $post['topic'], '.', $post['start'], '#msg', $post['id'], '">', $post['subject'], '</a></span>
 			</h3>
-			<div class="windowbg2">
+			<div class="', $post['approved'] ? 'windowbg2' : 'approvebg', '">
 				<span class="topslice"><span></span></span>
-				<div class="post">', $post['body'], '</div>
+				<div class="post">';
+
+			if (!$post['approved'])
+				echo '
+					<div class="approve_post">
+						<em>', $txt['post_awaiting_approval'], '</em>
+					</div>';
+
+			echo '
+					', $post['body'], '
+				</div>
 				<div class="middletext mod_icons">';
 
 			if ($post['can_delete'])
@@ -403,8 +413,8 @@ function template_showPosts()
 		foreach ($context['attachments'] as $attachment)
 		{
 			echo '
-			<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
-				<td><a href="', $scripturl, '?action=dlattach;topic=', $attachment['topic'], '.0;attach=', $attachment['id'], '">', $attachment['filename'], '</a></td>
+			<tr class="', $attachment['approved'] ? ($alternate ? 'windowbg' : 'windowbg2') : 'approvebg', '">
+				<td><a href="', $scripturl, '?action=dlattach;topic=', $attachment['topic'], '.0;attach=', $attachment['id'], '">', $attachment['filename'], '</a>', !$attachment['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : '', '</td>
 				<td align="center">', $attachment['downloads'], '</td>
 				<td><a href="', $scripturl, '?topic=', $attachment['topic'], '.msg', $attachment['msg'], '#msg', $attachment['msg'], '" rel="nofollow">', $attachment['subject'], '</a></td>
 				<td>', $attachment['posted'], '</td>

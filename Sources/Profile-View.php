@@ -416,7 +416,7 @@ function showPosts($memID)
 			$request = $smcFunc['db_query']('', '
 				SELECT
 					b.id_board, b.name AS bname, c.id_cat, c.name AS cname, t.id_member_started, t.id_first_msg, t.id_last_msg,
-					m.body, m.smileys_enabled, m.subject, m.poster_time, m.id_topic, m.id_msg
+					t.approved, m.body, m.smileys_enabled, m.subject, m.poster_time, m.id_topic, m.id_msg
 				FROM {db_prefix}topics AS t
 					INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 					LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
@@ -441,7 +441,7 @@ function showPosts($memID)
 				SELECT
 					b.id_board, b.name AS bname, c.id_cat, c.name AS cname, m.id_topic, m.id_msg,
 					t.id_member_started, t.id_first_msg, t.id_last_msg, m.body, m.smileys_enabled,
-					m.subject, m.poster_time
+					m.subject, m.poster_time, m.approved
 				FROM {db_prefix}messages AS m
 					INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 					INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
@@ -503,6 +503,7 @@ function showPosts($memID)
 			'can_mark_notify' => false,
 			'can_delete' => false,
 			'delete_possible' => ($row['id_first_msg'] != $row['id_msg'] || $row['id_last_msg'] == $row['id_msg']) && (empty($modSettings['edit_disable_time']) || $row['poster_time'] + $modSettings['edit_disable_time'] * 60 >= time()),
+			'approved' => $row['approved'],
 		);
 
 		if ($user_info['id'] == $row['id_member_started'])
@@ -625,8 +626,8 @@ function showAttachments($memID)
 
 	// Retrieve a some attachments.
 	$request = $smcFunc['db_query']('', '
-		SELECT a.id_attach, a.id_msg, a.filename, a.downloads, m.id_msg, m.id_topic, m.id_board,
-			m.poster_time, m.subject, b.name
+		SELECT a.id_attach, a.id_msg, a.filename, a.downloads, a.approved, m.id_msg, m.id_topic,
+			m.id_board, m.poster_time, m.subject, b.name
 		FROM {db_prefix}attachments AS a
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
@@ -665,6 +666,7 @@ function showAttachments($memID)
 			'topic' => $row['id_topic'],
 			'board' => $row['id_board'],
 			'board_name' => $row['name'],
+			'approved' => $row['approved'],
 		);
 	}
 	$smcFunc['db_free_result']($request);
