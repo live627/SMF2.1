@@ -65,6 +65,7 @@ October 2009
  ! Ensure that we have a column size and null values set (DbPackages-sqlite.php) [Bug 3854]
  ! Wireless users where unaware of unapproved posts (Wireless Template) [Bug 3197]
  ! Show unapproved posts/attachments in a different color (Profile-View.php, Profile Template, index.css) [Bug 3197]
+ ! The theme missing check occurred after a previous check (Errors.php) [Bug 3862]
 
 
 September 2009

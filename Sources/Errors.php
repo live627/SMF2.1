@@ -170,10 +170,14 @@ function fatal_error($error, $log = 'general')
 // A fatal error with a message stored in the language file.
 function fatal_lang_error($error, $log = 'general', $sprintf = array())
 {
-	global $txt, $language, $modSettings, $user_info, $settings;
+	global $txt, $language, $modSettings, $user_info, $context;
+
+	// Try to load a theme if we don't have one.
+	if (empty($context['theme_loaded']))
+		loadTheme();
 
 	// If we have no theme stuff we can't have the lanuage file...
-	if (empty($settings))
+	if (empty($context['theme_loaded']))
 		die($error);
 
 	$reload_lang_file = true;
