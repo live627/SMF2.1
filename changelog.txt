@@ -59,6 +59,7 @@ October 2009
  * Incorrect verification check (Display Template) [Bug 3883]
  * Removed a gap and fixed invalid xhtml (PersonalMessage template, index.css) [Bug 3903]
  * Attachments should use a label for better usability (Post template) [Bug 3898]
+ ! Warning status could display in some cases (Display.php, PersonalMessage.php, Display Template, PersonalMessage Template) [Bug 3905,3873] 
 
 
 September 2009
