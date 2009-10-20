@@ -156,7 +156,7 @@ function ShowHelp()
 				/*'quoting_posts' => array(
 					'label' => $txt['manual_section_quoting_posts'],
 					'template' => 'manual_quoting_posts',
- 				),
+				),
 				'modifying_posts' => array(
 					'label' => $txt['manual_section_modifying_posts'],
 					'template' => 'manual_modifying_posts',
@@ -177,7 +177,7 @@ function ShowHelp()
 				/*'wysiwyg' => array(
 					'label' => $txt['manual_section_wysiwyg'],
 					'template' => 'manual_wysiwyg',
- 				),*/
+				),*/
 			),
 		),
 		'personal_messages' => array(
@@ -191,8 +191,8 @@ function ShowHelp()
 				/*'actions' => array(
 					'label' => $txt['manual_section_pm_actions'],
 					'template' => 'manual_pm_actions',
- 				),
-			 	'preferences' => array(
+				),
+				'preferences' => array(
 					'label' => $txt['manual_section_pm_preferences'],
 					'template' => 'manual_pm_preferences',
 				),*/
