@@ -59,7 +59,10 @@ October 2009
  * Incorrect verification check (Display Template) [Bug 3883]
  * Removed a gap and fixed invalid xhtml (PersonalMessage template, index.css) [Bug 3903]
  * Attachments should use a label for better usability (Post template) [Bug 3898]
- ! Warning status could display in some cases (Display.php, PersonalMessage.php, Display Template, PersonalMessage Template) [Bug 3905,3873] 
+ ! Warning status could display in some cases (Display.php, PersonalMessage.php, Display Template, PersonalMessage Template) [Bug 3905,3873]
+ ! Use correct indexes when using db_insert (Subs-Db-sqlite.php) [Bug 3853]
+ ! real_prefix didn't exist! (DbPackages-sqlite.php) [Bug 3855]
+ ! Ensure that we have a column size and null values set (DbPackages-sqlite.php) [Bug 3854] 
 
 
 September 2009

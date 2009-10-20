@@ -104,6 +104,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 	global $reservedTables, $smcFunc, $db_package_log, $db_prefix;
 
 	// With or without the database name, the fullname looks like this.
+	$real_prefix = preg_match('~^(`?)(.+?)\\1\\.(.*?)$~', $db_prefix, $match) === 1 ? $match[3] : $db_prefix;
 	$full_table_name = str_replace('{db_prefix}', $real_prefix, $table_name);
 	$table_name = str_replace('{db_prefix}', $db_prefix, $table_name);
 
@@ -233,6 +234,8 @@ function smf_db_drop_table($table_name, $parameters = array(), $error = 'fatal')
 {
 	global $reservedTables, $smcFunc, $db_prefix;
 
+	// Strip out the table name, we might not need it in some cases
+	$real_prefix = preg_match('~^(`?)(.+?)\\1\\.(.*?)$~', $db_prefix, $match) === 1 ? $match[3] : $db_prefix;
 	$full_table_name = str_replace('{db_prefix}', $real_prefix, $table_name);
 	$table_name = str_replace('{db_prefix}', $db_prefix, $table_name);
 
@@ -677,7 +680,7 @@ function smf_db_alter_table($table_name, $columns)
 				'name' => $name,
 				'type' => $column['type'],
 				'size' => isset($column['size']) ? (int) $column['size'] : null,
-				'null' => $column['null'],
+				'null' => !empty($column['null']),
 				'auto' => isset($column['auto']) ? $column['auto'] : false,
 				'default' => isset($column['default']) ? $column['default'] : '',
 			);
@@ -694,8 +697,8 @@ function smf_db_alter_table($table_name, $columns)
 			$new_columns[$add['name']] = array(
 				'name' => $add['name'],
 				'type' => $add['type'],
-				'size' => $add['size'],
-				'null' => $add['null'],
+				'size' => isset($add['size']) ? (int) $add['size'] : null,
+				'null' => !empty($add['null']),
 				'auto' => isset($add['auto']) ? $add['auto'] : false,
 				'default' => isset($add['default']) ? $add['default'] : '',
 			);
@@ -711,8 +714,8 @@ function smf_db_alter_table($table_name, $columns)
 				$new_columns[$change['name']] = array(
 					'name' => $change['name'],
 					'type' => $change['type'],
-					'size' => $change['size'],
-					'null' => $change['null'],
+					'size' => isset($change['size']) ? (int) $change['size'] : null,
+					'null' => !empty($change['null']),
 					'auto' => isset($change['auto']) ? $change['auto'] : false,
 					'default' => isset($change['default']) ? $change['default'] : '',
 				);
