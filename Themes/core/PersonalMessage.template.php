@@ -1544,7 +1544,6 @@ function template_add_rule()
 						else
 							curDef = "";
 
-						curDef = smf_htmlspecialchars(curDef);
 						// Now pick the actions.
 						if (curVal == "lab" && curDef && labels[curDef])
 							actionText += joinText + ', JavaScriptEscape($txt['pm_readable_label']), '.replace("{LABEL}", labels[curDef]);
