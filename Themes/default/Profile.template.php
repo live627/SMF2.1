@@ -36,7 +36,7 @@ function template_summary()
 	echo '
 <div id="profileview" class="flow_auto">
 	<h3 class="catbg"><span class="left"></span>
-		<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
+		<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
 		', $txt['summary'], '
 	</h3>
 	<div id="basicinfo"><div class="windowbg">
@@ -313,7 +313,7 @@ function template_showPosts()
 	echo '
 		<h3 class="catbg">
 			<span class="left"></span>
-			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
+			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
 			', (!isset($context['attachments']) && empty($context['is_topics']) ? $txt['showMessages'] : (!empty($context['is_topics']) ? $txt['showTopics'] : $txt['showAttachments'])), ' - ', $context['member']['name'], '
 		</h3>
 		<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>';
@@ -457,7 +457,7 @@ function template_editBuddies()
 	echo '
 		<h3 class="titlebg">
 			<span class="left"></span>
-			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
+			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
 			', $txt['editBuddies'], '
 		</h3>
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
@@ -544,7 +544,7 @@ function template_editIgnoreList()
 	echo '
 		<h3 class="titlebg">
 			<span class="left"></span>
-			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
+			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
 			', $txt['editIgnoreList'], '
 		</h3>
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
@@ -1050,7 +1050,7 @@ function template_edit_options()
 		<form action="', (!empty($context['profile_custom_submit_url']) ? $context['profile_custom_submit_url'] : $scripturl . '?action=profile;area=' . $context['menu_item_selected'] . ';save'), '" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data" onsubmit="return checkProfileSubmit();">
 			<h3 class="catbg">
 				<span class="left"></span>
-				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />';
+				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />';
 
 	// Don't say "Profile" if this isn't the profile...
 	if (!empty($context['profile_header_text']))
@@ -1504,7 +1504,7 @@ function template_notification()
 	echo '
 			<h3 class="catbg">
 				<span class="left"></span>
-				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
+				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
 				', $txt['profile'], '
 			</h3>
 			<p class="windowbg description">', $txt['notification_info'], '</p>
@@ -1577,7 +1577,7 @@ function template_groupMembership()
 		<form action="', $scripturl, '?action=profile;area=groupmembership;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 			<h3 class="titlebg">
 				<span class="left"></span>
-				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />
+				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
 				', $txt['profile'], '
 			</h3>
 			<p class="description">', $txt['groupMembership_info'], '</p>';
@@ -1828,7 +1828,7 @@ function template_viewWarning()
 	echo '
 	<h3 class="titlebg">
 		<span class="left"></span>
-		<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
+		<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
 		', sprintf($txt['profile_viewwarning_for_user'], $context['member']['name']), '
 	</h3>
 	<div class="windowbg">
@@ -2013,7 +2013,7 @@ function template_issueWarning()
 	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=issuewarning" method="post" accept-charset="', $context['character_set'], '">
 		<h3 class="titlebg">
 			<span class="left"></span>
-			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
+			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
 			', $context['user']['is_owner'] ? $txt['profile_warning_level'] : $txt['profile_issue_warning'], '
 		</h3>';
 
@@ -2210,7 +2210,7 @@ function template_deleteAccount()
 		<form action="', $scripturl, '?action=profile;area=deleteaccount;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 			<h3 class="titlebg">
 				<span class="left"></span>
-				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
+				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
 				', $txt['deleteAccount'], '
 				</td>
 			</h3>';
@@ -2794,7 +2794,7 @@ function template_authentication_method()
 		<form action="', $scripturl, '?action=profile;area=authentication;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data">
 			<h3 class="catbg">
 				<span class="left"></span>
-				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
+				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
 				', $txt['authentication'], '
 			</h3>
 			<p class="windowbg description">', $txt['change_authentication'], '</p>

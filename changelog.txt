@@ -68,6 +68,8 @@ October 2009
  ! The theme missing check occurred after a previous check (Errors.php) [Bug 3862]
  * The signature settings page had improper alignment for the "Select All" checkbox (admin.css) [Bug 3826]
  * The "Save a copy in my outbox" checkbox was missing (PersonalMessage template) [Bug 3897]
+ * A scrollbar appeared in some cases with IE8 (index.css)[Bug 3868]
+ * Some profile icons were not properly aligned (Profile template) [Bug 3902]
 
 
 September 2009
