@@ -73,7 +73,7 @@ function template_ban_edit()
 						<dl class="settings">
 							<dt>
 								<input type="checkbox" name="ban_suggestion[]" id="main_ip_check" value="main_ip" class="input_check" />
-								', $txt['ban_on_ip'], '
+								<label for="main_ip_check">', $txt['ban_on_ip'], '</label>
 							</dt>
 							<dd>
 								<input type="text" name="main_ip" value="', $context['ban_suggestions']['main_ip'], '" size="50" onfocus="document.getElementById(\'main_ip_check\').checked = true;" class="input_text" />
@@ -83,7 +83,7 @@ function template_ban_edit()
 			echo '
 							<dt>
 								<input type="checkbox" name="ban_suggestion[]" id="hostname_check" value="hostname" class="input_check" /></td>
-								', $txt['ban_on_hostname'], '
+								<label for="hostname_check">', $txt['ban_on_hostname'], '</label>
 							</dt>
 							<dd>
 								<input type="text" name="hostname" value="', $context['ban_suggestions']['hostname'], '" size="50" onfocus="document.getElementById(\'hostname_check\').checked = true;" class="input_text" />
@@ -92,14 +92,14 @@ function template_ban_edit()
 		echo '
 							<dt>
 								<input type="checkbox" name="ban_suggestion[]" id="email_check" value="email" class="input_check" />
-								', $txt['ban_on_email'], '
+								<label for="email_check">', $txt['ban_on_email'], '</label>
 							</dt>
 							<dd>
 								<input type="text" name="email" value="', $context['ban_suggestions']['email'], '" size="50" onfocus="document.getElementById(\'email_check\').checked = true;" class="input_text" />
 							</dd>
 							<dt>
 								<input type="checkbox" name="ban_suggestion[]" id="user_check" value="user" class="input_check" />
-								', $txt['ban_on_username'], ':
+								<label for="user_check">', $txt['ban_on_username'], '</label>:
 							</dt>
 							<dd>';
 
