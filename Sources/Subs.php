@@ -1419,9 +1419,13 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'size',
 				'type' => 'unparsed_equals',
-				'test' => '[1-9]\]',
+				'test' => '[1-7]\]',
 				'before' => '<span style="font-size: $1;" class="bbc_size">',
 				'after' => '</span>',
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					$sizes = array(1 => 0.7, 2 => 1.0, 3 => 1.35, 4 => 1.45, 5 => 2.0, 6 => 2.65, 7 => 3.95);
+					$data = $sizes[$data] . \'em\';'
+				),
 			),
 			array(
 				'tag' => 'sub',
