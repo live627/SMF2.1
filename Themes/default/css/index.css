@@ -437,6 +437,7 @@ tr.titlebg th.smalltext, thead tr.titlebg th a:link, thead tr.titlebg th a:visit
 	font-size: 0.9em;
 	padding: 0 0 0.2em 0;
 	overflow: hidden;
+	margin-bottom: 1px;
 }
 div.pagesection div.floatright input
 {
@@ -1522,6 +1523,7 @@ p.moderators
 .nextlinks
 {
 	text-align: right;
+	margin-top: -1px;
 }
 .nextlinks_bottom
 {
@@ -2007,6 +2009,7 @@ ul.quickbuttons li.inline_mod_check
 {
 	clear: both;
 	padding: 5px;
+	margin-top: 2px;
 }
 
 /* Separator of posts. More useful in the print stylesheet. */
