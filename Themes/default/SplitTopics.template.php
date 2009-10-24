@@ -404,7 +404,7 @@ function template_merge_extra_options()
 	echo '
 							<option value="0">', $txt['merge_custom_subject'], ':</option>
 						</select>
-						<br /><input type="text" name="custom_subject" size="60" disabled="disabled" id="custom_subject" class="input_text custom_subject" style="display: none;" />
+						<br /><input type="text" name="custom_subject" size="60" id="custom_subject" class="input_text custom_subject" style="display: none;" />
 						<br />
 						<label for="enforce_subject"><input type="checkbox" class="input_check" name="enforce_subject" id="enforce_subject" value="1" /> ', $txt['merge_enforce_subject'], '</label>
 					</fieldset>';

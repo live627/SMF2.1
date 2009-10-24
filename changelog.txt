@@ -72,6 +72,7 @@ October 2009
  * Some profile icons were not properly aligned (Profile template) [Bug 3902]
  * The Message icon had a different padding when javascript is off (index.css, compat.css) [Bug 3711]
  ! BBC sizes without a unit weren't parsed correctly anymore. (Subs.php) 
+ * The custom subject was always disabled (SplitTopics template) [Bug 3914]
 
 
 September 2009
