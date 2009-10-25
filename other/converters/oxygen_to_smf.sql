@@ -342,14 +342,16 @@ if (!empty($rows))
 $no_add = true;
 
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
-if (strlen($fp) > 255)
+if (strlen($physical_filename) > 255)
 	return;
-$fp = @fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
+
+$fp = @fopen($attachmentUploadDir . '/' . $physical_filename, 'wb');
 if (!$fp)
 	return;
 
-// Oxygen decodes several filetypes so we are going to do the opposite - by the same method!!
+// Oxygen encodes several filetypes so we are going to do the opposite - by the same method!!
 $toConvert = array('exe', 'bz', 'tar', 'zip', 'gz', 'bz2');
 if (in_array(substr(strrchr($row['filename'], '.'), 1), $toConvert))
 	$row['filedata'] = base64_decode($row['filedata']);
@@ -359,7 +361,7 @@ fclose($fp);
 
 $rows[] = array(
 	'id_attach' => $id_attach,
-	'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+	'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 	'filename' => $row['filename'],
 	'file_hash' => $file_hash,
 	'id_msg' => $row['id_msg'],

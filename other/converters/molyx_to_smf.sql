@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Molyx 2.6"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/includes/config.php"
 ---~ globals: config
 ---~ from_prefix: "`{$config['dbname']}`.{$config['tableprefix']}"
@@ -58,7 +58,7 @@ WHERE parentid = -1;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -261,12 +261,12 @@ $no_add = true;
 
 $file_hash = getLegacyAttachmentFilename(basename($row['filename']), $id_attach);
 $oldfile = $_POST['path_from'] . '/data/uploads/' . $row['attachpath'] . '/' . $row['location'] ;
-if (file_exists($oldfile) && strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/data/uploads/' . $row['attachpath'] . '/' . $row['location'], $attachmentUploadDir . '/' . $file_hash))
+if (file_exists($oldfile) && copy($_POST['path_from'] . '/data/uploads/' . $row['attachpath'] . '/' . $row['location'], $attachmentUploadDir . '/' . $physical_filename))
 {
-	@touch($attachmentUploadDir . '/' . $file_hash, filemtime($row['filename']));
+	@touch($attachmentUploadDir . '/' . $physical_filename, filemtime($row['filename']));
 	$rows[] = array(
 		'id_attach' => $id_attach,
-		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 		'filename' => basename($row['filename']),	
 		'file_hash' => $file_hash,
 		'id_msg' => $row['id_msg'],

@@ -112,7 +112,7 @@ elseif ($row['user_avatar_type'] == 1 && strlen($row['avatar']) > 0)
 	$smf_avatar_filename = 'avatar_' . $row['id_member'] . strrchr($row['avatar'], '.');
 	copy($phpbb_avatar_upload_path . '/' . $row['avatar'], $smf_attachments_dir . '/' . $smf_avatar_filename);
 
-	convert_insert('attachments', array('id_msg' => 'int', 'id_member' => 'int', 'filename' => 'string'),
+	convert_insert('attachments', array('id_msg', 'id_member', 'filename'),
 		array(0, $row['id_member'], $smf_avatar_filename)
 	);
 	$row['avatar'] = '';
@@ -135,7 +135,8 @@ SELECT
 	SUBSTRING(u.user_password, 1, 64) AS passwd, u.user_lastvisit AS last_login,
 	u.user_regdate AS date_registered,
 	SUBSTRING(u.user_from, 1, 255) AS location,
-	u.user_posts AS posts, IF(u.user_level = 3, 1, mg.id_group) AS id_group,
+	u.user_posts AS posts, 
+	IF(u.user_level = 3, 1, (IF(ISNULL(mg.id_group), 0, mg.id_group))) AS id_group,
 	u.user_new_privmsg AS instant_messages,
 	SUBSTRING(u.user_email, 1, 255) AS email_address,
 	u.user_unread_privmsg AS unread_messages,
@@ -696,8 +697,8 @@ $censored_proper = addslashes(implode("\n", $censor_proper));
 
 convert_insert('settings', array('variable', 'value'),
 	array(
-		array('censor_vulgar', $censored_vulgar)
-		array('censor_proper', $censored_proper)
+		array('censor_vulgar', $censored_vulgar),
+		array('censor_proper', $censored_proper),
 	), 'replace');
 
 ---}
@@ -819,7 +820,7 @@ while ($row = convert_fetch_assoc($result))
 	elseif (in_array($row['config_name'], array('smtp_host', 'smtp_username', 'smtp_password')))
 		$setString[] = array($row[config_name], addslashes($row['value']));
 	elseif ($row['config_name'] == 'require_activation')
-		$setString[] array('registration_method', addslashes($row['value']));
+		$setString[] = array('registration_method', addslashes($row['value']));
 	elseif ($row['config_name'] == 'flood_interval')
 		$setString[] = array('spamWaitTime', addslashes($row['value']));
 	elseif ($row['config_name'] == 'avatar_max_width')
@@ -849,7 +850,7 @@ convert_free_result($result);
 
 convert_insert('settings', array('variable', 'value'), $setString, 'replace');
 
-updateSettingsFile(array(
+updateSettings(array(
 	'mbname' => '\'' . addcslashes($phpbb_forum_name, '\'\\') . '\'',
 	'webmaster_email' => '\'' . addcslashes($phpbb_admin_email, '\'\\') . '\''
 ));
@@ -934,9 +935,12 @@ while (true)
 
 		// Frankly I don't care whether they want encrypted filenames - they're having it - too dangerous.
 		$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+		$physical_filename = $id_attach . '_' . $file_hash;
 
+		if (strlen($physical_filename) > 255)
+			return;
 
-		if (strlen($file_hash) <= 255 && copy($oldAttachmentDir . '/' . $row['encrypted'], $attachmentUploadDir . '/' . $file_hash))
+		if (copy($oldAttachmentDir . '/' . $row['encrypted'], $attachmentUploadDir . '/' . $physical_filename))
 		{
 			$rows[] = array(
 				'id_attach' => $id_attach,

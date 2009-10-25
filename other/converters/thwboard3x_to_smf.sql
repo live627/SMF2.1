@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "THWBoard 3.x "
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/inc/config.inc.php"
 ---~ from_prefix: "`" . $mysql_db . "`.$pref"
 ---~ table_test: "{$from_prefix}user"
@@ -83,7 +83,7 @@ FROM {$from_prefix}category;
 
 TRUNCATE {$to_prefix}boards;
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT

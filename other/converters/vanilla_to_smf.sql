@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Vanilla"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/conf/database.php", "/conf/settings.php"
 ---~ from_prefix: "`$Configuration[DATABASE_NAME]`.$Configuration[DATABASE_TABLE_PREFIX]"
 ---~ table_test: "{$from_prefix}User"

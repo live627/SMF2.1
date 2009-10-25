@@ -71,12 +71,16 @@ FROM {$from_prefix}users AS u
 $no_add = true;
 
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
-if (copy($_POST['path_from'] . '/images/avatars/avatar-' . $row['avatarid'] . '.' . $row['avatarextension'], $attachmentUploadDir . '/' . $file_hash))
+if (strlen($physical_filename) > 255)
+	return;
+
+if (copy($_POST['path_from'] . '/images/avatars/avatar-' . $row['avatarid'] . '.' . $row['avatarextension'], $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
 		'id_attach' => $id_attach,
-		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 		'filename' => $row['filename'],
 		'file_hash' => $file_hash,
 		'fileext' => $row['avatarextension'],

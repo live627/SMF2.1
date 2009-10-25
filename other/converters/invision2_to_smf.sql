@@ -840,16 +840,20 @@ if (!isset($oldAttachmentDir))
 // Is this an image???
 $attachmentExtension = strtolower(substr(strrchr($row['filename'], '.'), 1));
 if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
-	$attachmentExtention = '';
+	$attachmentExtension = '';
 
 $oldFilename = strtr($row['old_encrypt'], array('upload:' => ''));
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
-if (strlen($file_hash) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $file_hash))
+if (strlen($physical_filename) > 255)
+	return;
+
+if (copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $physical_filename))
 {
 	// Set the default empty values.
-	$width = '0';
-	$height = '0';
+	$width = 0;
+	$height = 0;
 
 	// Is an an image?
 	if (!empty($attachmentExtension))
@@ -857,14 +861,14 @@ if (strlen($file_hash) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $a
 
 	$rows[] = array(
 		'id_attach' => $id_attach,
-		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 		'filename' => $row['filename'],
 		'file_hash' => $file_hash,
 		'fileext' => $attachmentExtension,
 		'id_msg' => $row['id_msg'],
 		'downloads' => $row['downloads'],
-		'width' => $row['width'],
-		'height' => $row['height'],
+		'width' => $width,
+		'height' => $height,
 	);
 
 	$id_attach++;
@@ -964,8 +968,8 @@ if (strlen($smf_avatar_filename) <= 255 && copy($ipb_avatar, $avatar_dir . '/' .
 		'filename' => $smf_avatar_filename,
 		'file_hash' => $file_hash,
 		'id_member' => $row['id_member'],
-		'width' => $row['width'],
-		'height' => $row['height'],
+		'width' => $width,
+		'height' => $height,
 	);
 
 }

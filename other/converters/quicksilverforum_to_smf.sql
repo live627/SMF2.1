@@ -243,8 +243,12 @@ $no_add = true;
 $row['size'] = filesize($_POST['path_from'] . '/attachments/' . $row['attach_file']);
 
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
-if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/attachments/' . $row['attach_file'], $attachmentUploadDir . '/' . $file_hash))
+if (strlen($physical_filename) > 255)
+	return;
+
+if (copy($_POST['path_from'] . '/attachments/' . $row['attach_file'], $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
 		'id_attach' => $id_attach,
@@ -279,7 +283,7 @@ $row['size'] = filesize($_POST['path_from'] . '/avatars/uploaded/' . $originalNa
 $fileName = str_replace(array('.avtr', './avatars/uploaded/'), array('.jpg', ''), $row['filename']);
 $file_hash = getLegacyAttachmentFilename($fileName, $id_attach);
 
-if (strlen($file_hash) <= 225 && (file_exists($_POST['path_from'] . '/avatars/uploaded/' . $originalName) && copy($_POST['path_from'] . '/avatars/uploaded/' . $originalName, $attachmentUploadDir . '/' . $file_hash)))
+if (strlen($file_hash) <= 225 && (file_exists($_POST['path_from'] . '/avatars/uploaded/' . $originalName) && copy($_POST['path_from'] . '/avatars/uploaded/' . $originalName, $attachmentUploadDir . '/' . $physical_filename)))
 	$rows[] = array(
 		'id_attach' => $id_attach,
 		'filename' => $row['filename'],

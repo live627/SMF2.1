@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "DragonFly 9.2"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/includes/config.php", "/includes/constants.php"
 ---~ defines: CPG_NUKE
 ---~ from_prefix: "`$dbname`.{$prefix}_"
@@ -128,7 +128,7 @@ while (true)
 		LIMIT $_REQUEST[start], 250");
 	$additional_groups = '';
 	$last_member = 0;
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		if (empty($last_member))
 			$last_member = $row['id_member'];
@@ -195,7 +195,7 @@ FROM {$from_prefix}bbcategories;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -376,7 +376,7 @@ $request = convert_query("
 		CASE auth_pollcreate WHEN 0 THEN '-1,0,2,3' WHEN 1 THEN '0,2,3' WHEN 3 THEN '2,3' ELSE '' END AS auth_pollcreate,
 		forum_id AS id_board
 	FROM {$from_prefix}bbforums");
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 {
 	// Accumulate permissions in here - the keys are id_groups.
 	$this_board = array(
@@ -459,7 +459,7 @@ $request = convert_query("
 		INNER JOIN {$to_prefix}membergroups AS mg
 	WHERE g.group_id = aa.group_id
 		AND mg.group_name = CONCAT('phpBB ', g.group_name)");
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 {
 	$this_group = array();
 
@@ -632,7 +632,7 @@ $result = convert_query("
 	FROM {$from_prefix}bbwords");
 $censor_vulgar = array();
 $censor_proper = array();
-while ($row = mysql_fetch_assoc($result))
+while ($row = convert_fetch_assoc($result))
 {
 	$censor_vulgar[] = $row['word'];
 	$censor_proper[] = $row['replacement'];
@@ -663,7 +663,7 @@ $result = convert_query("
 	SELECT disallow_username
 	FROM {$from_prefix}bbdisallow");
 $disallow = array();
-while ($row = mysql_fetch_assoc($result))
+while ($row = convert_fetch_assoc($result))
 	$disallow[] = str_replace('*', '', $row['disallow_username']);
 convert_free_result($result);
 
@@ -743,7 +743,7 @@ while (true)
 			AND ad.attach_id = a.attach_id
 		LIMIT $_REQUEST[start], 100");
 	$attachments = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		if (!file_exists($oldAttachmentDir . '/' . $row['encrypted']))
 			$row['encrypted'] = strtr($row['encrypted'], '& ', '__');
@@ -755,8 +755,12 @@ while (true)
 
 		// Frankly I don't care whether they want encrypted filenames - they're having it - too dangerous.
 		$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+		$physical_filename = $id_attach . '_' . $file_hash;
 
-		if (strlen($file_hash) <= 255 && copy($oldAttachmentDir . '/' . $row['encrypted'], $attachmentUploadDir . '/' . $file_hash))
+		if (strlen($physical_filename) > 255)
+			return;
+
+		if (copy($oldAttachmentDir . '/' . $row['encrypted'], $attachmentUploadDir . '/' . $physical_filename))
 		{
 			$attachments[] = array(
 				'id_attach' => $id_attach,
@@ -771,7 +775,7 @@ while (true)
 	}
 
 			if (!empty($attachments))
-				convert_insert('attachments', array('id_attach' => 'int', 'size' => 'int', 'downloads' => 'int', 'filename' => 'string', 'file_hash' => 'string', 'id_msg' => 'int'), $attachments, 'insert');
+				convert_insert('attachments', array('int', 'int', 'int', 'string', 'string', 'int'), $attachments, 'insert');
 
 	$_REQUEST['start'] += 100;
 	if (convert_num_rows($result) < 100)

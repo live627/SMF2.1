@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Snitz Forums"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ parameters: snitz_database text=MySQL database used by Snitz
 ---~ from_prefix: "`$snitz_database`."
 ---~ table_test: "{$from_prefix}FORUM_MEMBERS"
@@ -88,7 +88,7 @@ FROM {$from_prefix}FORUM_CATEGORY;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -209,7 +209,7 @@ $result = convert_query("
 	FROM {$from_prefix}FORUM_BADWORDS");
 $censor_vulgar = array();
 $censor_proper = array();
-while ($row = mysql_fetch_assoc($result))
+while ($row = convert_fetch_assoc($result))
 {
 	$censor_vulgar[] = $row['B_BADWORD'];
 	$censor_proper[] = $row['B_REPLACE'];

@@ -368,13 +368,18 @@ $_REQUEST['start'] = 0;
 $no_add = true;
 
 $file_hash = getAttachmentFilename(basename($row['filename']), $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
+
+if (strlen($physical_filename) > 255)
+	return;
+
 $oldfile = $_POST['path_from'] . '/' . $row['filepath'];
-if (file_exists($oldfile) && strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/'.$row['filepath'], $attachmentUploadDir . '/' . $file_hash))
+if (file_exists($oldfile) && copy($_POST['path_from'] . '/'.$row['filepath'], $attachmentUploadDir . '/' . $physical_filename))
 {
-	@touch($attachmentUploadDir . '/' . $file_hash, filemtime($row['filename']));
+	@touch($attachmentUploadDir . '/' . $physical_filename, filemtime($row['filename']));
 	$rows[] = array(
 		'id_attach' => $id_attach,
-		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 		'filename' => basename($row['filename']),
 		'file_hash' => $file_hash,
 		'id_msg' => $row['id_msg'],
@@ -400,11 +405,11 @@ $no_add = true;
 $filepath = $row['picture'];
 $row['filename'] = substr(strrchr($row['picture'], '/'), 1);
 $file_hash = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
-if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/' . $filepath , $attachmentUploadDir . '/' . $file_hash))
+if (copy($_POST['path_from'] . '/' . $filepath , $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
 		'id_attach' => $id_attach,
-		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 		'filename' => basename($row['filename']),
 		'file_hash' => $file_hash,
 		'id_member' => $row['id_member'],

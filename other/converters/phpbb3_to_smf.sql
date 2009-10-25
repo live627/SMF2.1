@@ -143,7 +143,7 @@ elseif ($row['user_avatar_type'] == 1 && strlen($row['avatar']) > 0)
 	$smf_avatar_filename = 'avatar_' . $row['id_member'] . strrchr($row['avatar'], '.');
 
 	if (file_exists($phpbb_avatar_upload_path . '/' . $phpbb_avatar_salt . '_' . $row['id_member'] . '.' . $phpbb_avatar_ext))
-		@copy($phpbb_avatar_upload_path . '/' . $phpbb_avatar_salt . '_' . $row['id_member'] . '.' . $phpbb_avatar_ext);
+		@copy($phpbb_avatar_upload_path . '/' . $phpbb_avatar_salt . '_' . $row['id_member'] . '.' . $phpbb_avatar_ext, $avatar_dir . '/' . $smf_avatar_filename);
 	else
 		@copy($phpbb_avatar_upload_path . '/' . $row['avatar'], $avatar_dir . '/' . $smf_avatar_filename);
 
@@ -667,8 +667,8 @@ if (empty($id_attach))
 
 
 // Set the default empty values.
-$width = '0';
-$height = '0';
+$width = 0;
+$height = 0;
 
 // Is an an image?
 $attachmentExtension = strtolower(substr(strrchr($row['filename'], '.'), 1));
@@ -676,11 +676,15 @@ if (in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png', 'bmp')))
 	list ($width, $height) = getimagesize($oldAttachmentDir . '/' . $row['physical_filename']);
 
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
-if (strlen($file_hash) <= 255 && copy($oldAttachmentDir . '/' . $row['physical_filename'], $attachmentUploadDir . '/' . $file_hash))
+$physical_filename = $id_attach . '_' . $file_hash;
+
+if (strlen($physical_filename) > 255)
+	return;
+if (copy($oldAttachmentDir . '/' . $row['physical_filename'], $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
 		'id_attach' => $id_attach,
-		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 		'filename' => $row['filename'],
 		'file_hash' => $file_hash,
 		'id_msg' => $row['id_msg'],

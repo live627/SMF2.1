@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "XOOPS 2.0.x & CBB 3.0.x"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/mainfile.php"
 ---~ variable: "$xoopsOption['nocommon'] = 1;"
 ---~ from_prefix: "`" . XOOPS_DB_NAME . "`." . XOOPS_DB_PREFIX . "_"
@@ -82,7 +82,7 @@ FROM {$from_prefix}bb_categories;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 
@@ -95,7 +95,7 @@ $result = convert_query("
 		FROM {$from_prefix}group_permission
 		WHERE gperm_itemid = $boards AND gperm_name = 'forum_view'; ");
 
-		while ($groupaccess=mysql_fetch_assoc($result))
+		while ($groupaccess=convert_fetch_assoc($result))
 		{
 			if($groupaccess['gperm_groupid'] == 3)
 				$groupaccess['gperm_groupid']= '-1';
@@ -306,11 +306,15 @@ $attachments = unserialize(base64_decode($row['attachment']));
 foreach ($attachments as $attachedfile)
 {
 	$file_hash = getAttachmentFilename(basename($attachedfile['name_display']), $id_attach, null, true);
+	$physical_filename = $id_attach . '_' . $file_hash;
+
+	if (strlen($physical_filename) > 255)
+		return;
 	$oldfile = $_POST['path_from'] . '/' . $xoops_attachment_path . '/' . $attachedfile['name_saved'];
 
 	if (file_exists($oldfile))
 	{
-		if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/' . $xoops_attachment_path . '/' . $attachedfile['name_saved'], $attachmentUploadDir . '/' . $file_hash))
+		if (copy($_POST['path_from'] . '/' . $xoops_attachment_path . '/' . $attachedfile['name_saved'], $attachmentUploadDir . '/' . $physical_filename))
 		{
 			$size = filesize($oldfile);
 			@touch($attachmentUploadDir . '/' .$file_hash, filemtime($attachedfile['name_saved']));

@@ -245,10 +245,12 @@ GROUP BY id_topic, id_member;
 $no_add = true;
 
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
-if (strlen($file_hash) > 255)
+if (strlen($physical_filename) > 255)
 	return;
-$fp = @fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
+
+$fp = @fopen($attachmentUploadDir . '/' . $physical_filename, 'wb');
 if (!$fp)
 	return;
 

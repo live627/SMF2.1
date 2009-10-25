@@ -154,8 +154,16 @@ $keys = array('id_poll', 'id_choice', 'label', 'votes');
 
 $options = explode('|||', $row['options']);
 $votes = explode('|||', $row['votes']);
+$id_poll = $row['id_poll'];
 for ($i = 0, $n = count($options); $i < $n; $i++)
-	$rows[] = $row['id_poll'] . ', ' . ($i + 1) . ", '" . addslashes(substr($options[$i], 0, 255)) . "', '" . $votes[$i] . "'";
+{
+	$rows[] = array(
+		'id_poll' => $id_poll,
+		'id_choice' => ($i + 1),
+		'label' => substr('" . addslashes($options[$i]) . "', 1, 255),
+		'votes' => @$votes[$i],
+	);
+}
 ---}
 SELECT pollid AS id_poll, options, votes
 FROM {$from_prefix}poll;
@@ -283,8 +291,12 @@ if (!empty($rows))
 $no_add = true;
 
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
-$fp = @fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
+if (strlen($physical_filename) > 255)
+	return;
+
+$fp = @fopen($attachmentUploadDir . '/' . $physical_filename, 'wb');
 if (!$fp)
 	return;
 
@@ -293,7 +305,7 @@ fclose($fp);
 
 $rows[] = array(
 	'id_attach' => $id_attach,
-	'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+	'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 	'filename' => $row['filename'],	
 	'file_hash' => $file_hash,
 	'id_msg' => $row['id_msg'],
@@ -316,11 +328,12 @@ $no_add = true;
 
 // !!! This can't be right!
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
-if (strlen($file_hash) > 255)
+if (strlen($physical_filename) > 255)
 	return;
 
-$fp = @fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
+$fp = @fopen($attachmentUploadDir . '/' . $physical_filename, 'wb');
 if (!$fp)
 	return;
 
@@ -329,7 +342,7 @@ fclose($fp);
 
 $rows[] = array(
 	'id_attach' => $id_attach,
-	'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+	'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 	'filename' => $row['filename'],	
 	'file_hash' => $file_hash,
 	'id_member' => $row['id_member'],

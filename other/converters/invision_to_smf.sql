@@ -728,12 +728,16 @@ if (empty($INFO['upload_dir']) || !file_exists($INFO['upload_dir']))
 	$INFO['upload_dir'] = $_POST['path_from'] . '/uploads';
 
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
-if (strlen($file_hash) <= 255 && copy($INFO['upload_dir'] . '/' . $row['old_encrypt'], $attachmentUploadDir . '/' . $file_hash))
+if (strlen($physical_filename) > 255)
+	return
+
+if (copy($INFO['upload_dir'] . '/' . $row['old_encrypt'], $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
 		'id_attach' => $id_attach,
-		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 		'filename' => $row['filename'],
 		'file_hash' => $file_hash,
 		'id_msg' => $row['id_msg'],
@@ -763,7 +767,12 @@ if (empty($INFO['upload_dir']) || !file_exists($INFO['upload_dir']))
 
 $oldFileName = substr($row['avatar'], 7);
 $file_hash = getAttachmentFilename($oldFileName, $id_attach, null, true);
-if (strlen($file_hash) <= 255 && copy($INFO['upload_dir'] . '/' . $oldFileName, $attachmentUploadDir . '/' . $file_hash))
+$physical_filename = $id_attach . '_' . $file_hash;
+
+if (strlen($physical_filename) > 255)
+	return;
+	
+if (copy($INFO['upload_dir'] . '/' . $oldFileName, $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
 		'id_attach' => $id_attach,

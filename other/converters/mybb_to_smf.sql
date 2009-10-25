@@ -144,8 +144,17 @@ $keys = array('id_poll', 'id_choice', 'label', 'votes');
 
 $options = explode('||~|~||', $row['options']);
 $votes = explode('||~|~||', $row['votes']);
+
+$id_poll = $row['id_poll'];
 for ($i = 0, $n = count($options); $i < $n; $i++)
-	$rows[] = $row['id_poll'] . ', ' . ($i + 1) . ", SUBSTRING('" . addslashes($options[$i]) . "', 1, 255), '" . $votes[$i] . "'";
+{
+	$rows[] = array(
+		'id_poll' => $id_poll,
+		'id_choice' => ($i + 1),
+		'label' => substr('" . addslashes($options[$i]) . "', 1, 255),
+		'votes' => @$votes[$i],
+	);
+}
 ---}
 SELECT pid AS id_poll, options, votes
 FROM {$from_prefix}polls;
@@ -272,10 +281,14 @@ FROM {$from_prefix}threadsread;
 $no_add = true;
 
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
+
+if (strlen($physical_filename) > 255)
+	return;
 
 if (strlen($file_hash) > 255)
 	return;
-$fp = @fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
+$fp = @fopen($attachmentUploadDir . '/' . $physical_filename, 'wb');
 if (!$fp)
 	return;
 

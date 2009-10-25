@@ -220,17 +220,21 @@ foreach ($attachments as $attachment)
 	// Is this an image???
 	$attachmentExtension = strtolower(substr(strrchr($row['oldfilename'], '.'), 1));
 	if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
-		$attachmentExtention = '';
+		$attachmentExtension = '';
 
 	$oldFilename = $row['oldfilename'];
 	$file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+	$physical_filename = $id_attach . '_' . $file_hash;
 
-	if (strlen($file_hash) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $file_hash))
+	if (strlen($physical_filename) > 255)
+		return;
+
+	if (copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $physical_filename))
 	{
 
 		// Set the default empty values.
-		$width = '0';
-		$height = '0';
+		$width = 0;
+		$height = 0;
 
 		// Is an an image?
 		if (!empty($attachmentExtension))
@@ -238,7 +242,7 @@ foreach ($attachments as $attachment)
 
 		$rows[] = array(
 			'id_attach' => $id_attach,
-			'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+			'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 			'filename' => $attachedfile['name_display'],
 			'file_hash' => $file_hash,
 			'id_msg' => $row['id_msg'],

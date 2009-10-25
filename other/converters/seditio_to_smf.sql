@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Seditio"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/datas/config.php"
 ---~ globals: config
 ---~ from_prefix: "`{$cfg['mysqldb']}`.sed_"
@@ -126,13 +126,13 @@ FROM {$from_prefix}forum_structure;
 
 TRUNCATE {$to_prefix}boards;
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
 	b.fs_id AS id_board, SUBSTRING(b.fs_title, 1, 255) AS name, '-1,0,1,2' AS member_groups,
 	SUBSTRING(b.fs_desc, 1, 65534) AS description, b.fs_order AS board_order,
-	'' AS num_posts, '' AS num_topics, c.fn_id AS id_cat
+	0 AS num_posts, 0 AS num_topics, c.fn_id AS id_cat
 FROM {$from_prefix}forum_sections AS b
 LEFT JOIN {$from_prefix}forum_structure AS c ON (b.fs_category = c.fn_code);
 ---*
@@ -417,11 +417,11 @@ $no_add = true;
 $row['filename'] = substr(strrchr($row['user_avatar'], '/'),1);
 $file_hash = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
 
-if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/' . $row['user_avatar'] , $attachmentUploadDir . '/' . $file_hash))
+if (copy($_POST['path_from'] . '/' . $row['user_avatar'] , $attachmentUploadDir . '/' . $physical_filename))
 	{
 		$rows[] = array(
 			'id_attach' => $id_attach,
-			'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+			'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 			'filename' => $row['filename'],	
 			'file_hash' => $file_hash,
 			'id_member' => $row['id_member'],

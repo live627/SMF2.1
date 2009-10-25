@@ -210,12 +210,12 @@ if (!empty($rows))
 $no_add = true;
 
 $file_hash = getLegacyAttachmentFilename(basename($row['filelocation']), $id_attach);
-if (strlen($file_hash) <= 255 && copy($row['filelocation'], $attachmentUploadDir . '/' . $file_hash))
+if (copy($row['filelocation'], $attachmentUploadDir . '/' . $physical_filename))
 {
-	@touch($attachmentUploadDir . '/' . $file_hash, filemtime($row['filelocation']));
+	@touch($attachmentUploadDir . '/' . $physical_filename, filemtime($row['filelocation']));
 		$rows[] = array(
 			'id_attach' => $id_attach,
-			'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+			'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 			'filename' => basename($row['filelocation']),
 			'file_hash' => $file_hash,
 			'id_msg' => $row['id_msg'],
@@ -238,11 +238,11 @@ FROM {$from_prefix}sb_attachments;
 $no_add = true;
 
 $file_hash = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
-if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/components/com_simpleboard/avatars/', $attachmentUploadDir . '/' . $file_hash))
+if (copy($_POST['path_from'] . '/components/com_simpleboard/avatars/', $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
 		'id_attach' => $id_attach,
-		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 		'filename' => $row['filename'],	
 		'file_hash' => $file_hash,
 		'id_member' => $row['id_member'],

@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "wowBB  1.7"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/config.php"
 ---~ from_prefix:  "`" . DB_NAME. "`. ".FILE_SYSTEM. "_"
 ---~ table_test: "{$from_prefix}users"
@@ -280,7 +280,7 @@ SELECT
 	END AS id_group,
 	UNIX_TIMESTAMP(u.user_joined) AS date_registered, '' AS last_login,
 	u.user_avatar AS avatar, IF(u.user_invisible = '1', 0, 1) AS show_online,
-	IF(u.user_view_email = '1', 0, 1) AS hide_email,	u.user_posts AS posts, '' AS gender,
+	IF(u.user_view_email = '1', 0, 1) AS hide_email,	u.user_posts AS posts, 0 AS gender,
     u.user_birthday AS birthdate, IF (u.user_activation_key != '', 0, 1) AS is_activated,
 	u.user_activation_key AS validation_code,
 	SUBSTRING(u.user_signature, 1, 65534) AS signature
@@ -306,7 +306,7 @@ FROM {$from_prefix}categories;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 ---{
@@ -715,11 +715,11 @@ $filename = preg_replace('/images\/avatars\//','',$row['user_avatar']);
 $filepath = $row['user_avatar'];
 $file_hash = 'avatar_' . $row['id_member'] . strrchr($row['user_avatar'], '.');
 
-if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/' . $filepath, $attachmentUploadDir . '/' . $file_hash))
+if (copy($_POST['path_from'] . '/' . $filepath, $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
 		'id_attach' => $id_attach,
-		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 		'filename' => $row['filename'],
 		'file_hash' => $file_hash,
 		'id_member' => $row['id_member'],
@@ -741,15 +741,19 @@ AND user_avatar !='';
 ---{
 $no_add = true;
 $file_hash = getAttachmentFilename(basename($row['filename']), $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
-$file = fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
+if (strlen($physical_filename) > 255)
+	return;
+
+$file = fopen($attachmentUploadDir . '/' . $physical_filename, 'wb');
 fwrite($file, $row['file_contents']);
 fclose($file);
 
-@touch($attachmentUploadDir . '/' . $file_hash, filemtime($row['filename']));
+@touch($attachmentUploadDir . '/' . $physical_filename, filemtime($row['filename']));
 $rows[] = array(
 	'id_attach' => $id_attach,
-	'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+	'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 	'filename' => $row['filename'],
 	'file_hash' => $file_hash,
 	'id_msg' => $row['id_msg'],

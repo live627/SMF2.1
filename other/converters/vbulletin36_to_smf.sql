@@ -119,7 +119,7 @@ DELETE FROM {$to_prefix}board_permissions
 WHERE id_profile > 4;
 
 ---{
-alterDatabase('bards', 'change column', array(
+alterDatabase('boards', 'change column', array(
 	'old_name' => 'id_board',
 	'name' => 'id_board',
 	'type' => 'smallint',
@@ -289,8 +289,17 @@ $keys = array('id_poll', 'id_choice', 'label', 'votes');
 
 $options = explode('|||', $row['options']);
 $votes = explode('|||', $row['votes']);
+
+$id_poll = $row['id_poll'];
 for ($i = 0, $n = count($options); $i < $n; $i++)
-	$rows[] = $row['id_poll'] . ', ' . ($i + 1) . ", '" . addslashes($options[$i]) . "', '" . @$votes[$i] . "'";
+{
+	$rows[] = array(
+		'id_poll' => $id_poll,
+		'id_choice' => ($i + 1),
+		'label' => substr('" . addslashes($options[$i]) . "', 1, 255),
+		'votes' => @$votes[$i],
+	);
+}
 ---}
 SELECT pollid AS id_poll, options, votes
 FROM {$from_prefix}poll;
@@ -446,17 +455,21 @@ if (!isset($vb_settings))
 // Is this an image???
 $attachmentExtension = strtolower(substr(strrchr($row['filename'], '.'), 1));
 if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
-	$attachmentExtention = '';
+	$attachmentExtension = '';
 
 // Set the default empty values.
-$width = '0';
-$height = '0';
+$width = 0;
+$height = 0;
 
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
+
+if (strlen($physical_filename) > 255)
+	return;
 
 if (empty($vb_settings['attachfile']))
 {
-	$fp = @fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
+	$fp = @fopen($attachmentUploadDir . '/' . $physical_filename, 'wb');
 	if (!$fp)
 		return;
 
@@ -465,28 +478,28 @@ if (empty($vb_settings['attachfile']))
 }
 elseif ($vb_settings['attachfile'] == 1)
 {
-	if (!copy($vb_settings['attachpath'] . '/' . $row['userid'] . '/' . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $file_hash))
+	if (!copy($vb_settings['attachpath'] . '/' . $row['userid'] . '/' . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $physical_filename))
 		return;
 }
 elseif ($vb_settings['attachfile'] == 2)
 {
-	if (!copy($vb_settings['attachpath'] . '/' . chunk_split($row['userid'], 1, '/') . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $file_hash))
+	if (!copy($vb_settings['attachpath'] . '/' . chunk_split($row['userid'], 1, '/') . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $physical_filename))
 		return;
 }
 
 // Is an an image?
 if (!empty($attachmentExtension))
-	list ($width, $height) = getimagesize($attachmentUploadDir . '/' . $file_hash);
+	list ($width, $height) = getimagesize($attachmentUploadDir . '/' . $physical_filename);
 
 $rows[] = array(
 	'id_attach' => $id_attach,
-	'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+	'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 	'filename' => $row['filename'],	
 	'file_hash' => $file_hash,
 	'id_msg' => $row['id_msg'],
 	'downloads' => $row['downloads'],
-	'width' => $row['width'],
-	'height' => $row['height'],
+	'width' => $width,
+	'height' => $height,
 );
 $id_attach++;
 ---}
@@ -521,26 +534,26 @@ if (!isset($vb_settings))
 	convert_free_result($result);
 }
 
-
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
-if (strlen($file_hash) > 255)
+if (strlen($physical_filename) > 255)
 	return;
 elseif (empty($vb_settings['usefileavatar']))
 {
-	$fp = @fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
+	$fp = @fopen($attachmentUploadDir . '/' . $physical_filename, 'wb');
 	if (!$fp)
 		return;
 
 	fwrite($fp, $row['filedata']);
 	fclose($fp);
 }
-elseif (!copy($vb_settings['avatarpath'] . '/avatar' . $row['id_member'] . '_' . $row['avatarrevision'] . '.gif', $attachmentUploadDir . '/' . $file_hash))
+elseif (!copy($vb_settings['avatarpath'] . '/avatar' . $row['id_member'] . '_' . $row['avatarrevision'] . '.gif', $attachmentUploadDir . '/' . $physical_filename))
 	return;
 
 $rows[] = array(
 	'id_attach' => $id_attach,
-	'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+	'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 	'filename' => $row['filename'],	
 	'file_hash' => $file_hash,
 	'id_member' => $row['id_member'],

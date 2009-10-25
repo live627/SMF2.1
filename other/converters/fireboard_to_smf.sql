@@ -1,7 +1,7 @@
 /* ATTENTION: You don't need to run or use this file!  The convert.php script does everything for you! */
 
 /******************************************************************************/
----~ name: "Fireboard 1.0"
+---~ name: "Fireboard 1.0.5 RC2"
 /******************************************************************************/
 ---~ version: "SMF 2.0"
 ---~ settings: "/configuration.php", "../../configuration.php", "../../../configuration.php"
@@ -20,7 +20,7 @@ alterDatabase('members', 'change column', array(
 	'name' => 'password_salt',
 	'type' => 'varchar',
 	'size' => 50,
-	'default' => '',
+	'default' => ''
 ));
 ---}
 
@@ -219,12 +219,16 @@ if (!empty($rows))
 $no_add = true;
 
 $file_hash = getAttachmentFilename(basename($row['filelocation']), $id_attach, null, true);
-if (strlen($file_hash) <= 255 && copy($row['filelocation'], $attachmentUploadDir . '/' . $file_hash))
+$physical_filename = $id_attach . '_' . $file_hash;
+
+if (strlen($physical_filename) > 255)
+	return;
+if (copy($row['filelocation'], $attachmentUploadDir . '/' . $physical_filename))
 {
-	@touch($attachmentUploadDir . '/' . $file_hash, filemtime($row['filelocation']));
+	@touch($attachmentUploadDir . '/' . $physical_filename, filemtime($row['filelocation']));
 	$rows[] = array(
 		'id_attach' => $id_attach,
-		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 		'filename' => basename($row['filelocation']),
 		'file_hash' => $file_hash,
 		'id_msg' => $row['id_msg'],
@@ -246,12 +250,18 @@ FROM {$from_prefix}fb_attachments;
 ---{
 $no_add = true;
 
-$file_hash = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
-if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/components/com_fireboard/avatars/' . $row['filename'], $attachmentUploadDir . '/' . $file_hash))
+$physical_filename = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
+$path_from = $_POST['path_from'];
+if(strpos($path_from, 'components/com_fireboard') !== false)
+{
+	$pos = strpos($path_from, 'components/com_fireboard');
+	$path_from = substr($path_from, 0, $pos);
+}
+if (copy($path_from . '/images/fbfiles/avatars/' . $row['filename'], $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
 	'id_attach' => $id_attach,
-	'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+	'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 	'filename' => $row['filename'],	
 	'file_hash' => $file_hash,
 	'id_member' => $row['id_member'],

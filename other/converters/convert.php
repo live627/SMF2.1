@@ -67,6 +67,7 @@ if (!empty($_GET['step']) && ($_GET['step'] == 1 || $_GET['step'] == 2))
 
 template_convert_below();
 
+
 function initialize_inputs()
 {
 	global $sourcedir, $smcFunc;
@@ -441,6 +442,9 @@ function loadSettings()
 	else
 		$to_prefix = $db_prefix;
 
+	// Keep in mind our important variables, we don't want them swept away by the code we're running
+	$smf_db_prefix = $db_prefix;
+
 	foreach ($convert_data['variable'] as $eval_me)
 		eval($eval_me);
 
@@ -456,6 +460,8 @@ function loadSettings()
 	if (preg_match('~^`[^`]+`.\d~', $from_prefix) != 0)
 		$from_prefix = strtr($from_prefix, array('`' => ''));
 
+	// recall our variables in case the software we're converting from defines one itself
+	$db_prefix = $smf_db_prefix;
 
 	if ($_REQUEST['start'] == 0 && empty($_GET['substep']) && empty($_GET['cstep']) && ($_GET['step'] == 1 || $_GET['step'] == 2) && isset($convert_data['table_test']))
 	{
@@ -486,6 +492,17 @@ function loadSettings()
 		if (empty($sql_max_join) || ($sql_max_join == '18446744073709551615' && $sql_max_join == '18446744073709551615'))
 			$smcFunc['db_query']('', "SET @@SQL_MAX_JOIN_SIZE = 18446744073709551615", 'security_override');
 	}
+
+	// Since we use now the attachment functions in Subs.php, we'll need this:
+	$result = convert_query("
+			SELECT value
+			FROM {$to_prefix}settings
+			WHERE variable = 'attachmentUploadDir'
+			LIMIT 1");
+	list($attachmentUploadDir) = $smcFunc['db_fetch_row']($result);
+	$modSettings['attachmentUploadDir'] = $attachmentUploadDir;
+	$smcFunc['db_free_result']($result);
+
 }
 
 function findConvertScripts()
@@ -952,7 +969,7 @@ function doStep0($error_message = null)
 // Do the main step.
 function doStep1()
 {
-	global $from_prefix, $to_prefix, $convert_data, $command_line, $smcFunc;
+	global $from_prefix, $to_prefix, $convert_data, $command_line, $smcFunc, $modSettings;
 	global $current_step, $current_substep, $last_step;
 
 	$current_step = 1;
@@ -1076,6 +1093,8 @@ function doStep1()
 					$special_code = $current_data;
 				else
 				{
+					echo ("<br>" . $current_data . "</br>");
+
 					if (eval($current_data) === false)
 						print_error('
 			<strong>Error in convert script ', $_SESSION['convert_script'], ' on line ', $line_number, '!</strong><br />');
@@ -1272,7 +1291,9 @@ function doStep1()
 						else
 							$no_add = false;
 
-						if (empty($keys))
+						if(!empty($rows))
+							$keys = array_keys($rows[0]);
+						else
 							$keys = array_keys($row);
 					}
 
@@ -1352,7 +1373,7 @@ function doStep2()
 	$_GET['step'] = '2';
 
 	$debug = false;
-	if (isset($_GET['debug']))
+	if (isset($_REQUEST['debug']))
 		$debug = true;
 
 	print_line(($command_line ? ' * ' : '') . 'Recalculating forum statistics... ', false);
@@ -1462,7 +1483,7 @@ function doStep2()
 							WHERE id_board = $row[id_board]
 							LIMIT 1");
 					}
-					$smcFunc['db_free_result']($request);
+					$smcFunc['db_free_result']($request2);
 				}
 			}
 			$smcFunc['db_free_result']($request);
@@ -1837,7 +1858,7 @@ function doStep2()
 				array('General Category',),
 				array('name')
 				);
-			$catch_cat = $smcFunc['db_insert_id']();
+			$catch_cat = $smcFunc['db_insert_id']('{db_prefix}categories');
 
 			convert_query("
 				UPDATE {$to_prefix}boards
@@ -1940,7 +1961,7 @@ function doStep2()
 					$filename = $custom_avatar_dir . '/' . $row['filename'];
 				}
 				else
-					$filename = getLegacyAttachmentFilename($row['filename'], $row['id_attach']);
+					$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
 
 				// Probably not one of the converted ones, then?
 				if (!file_exists($filename))
@@ -1977,37 +1998,43 @@ function doStep2()
 			print_line('rebuilding indexes for topics..');
 		db_extend('packages');
 
-		$indexes = $smcFunc['db_list_indexes']('topics', true);
+		$indexes = $smcFunc['db_list_indexes']($to_prefix . 'topics', true, array('no_prefix' => true));
 
 		if (!isset($indexes['PRIMARY']))
-			$smcFunc['db_add_index']('topics', array(
+			$smcFunc['db_add_index']($to_prefix . 'topics', array(
 				'type' => 'PRIMARY',
-				'columns' => array('id_topic')));
+				'columns' => array('id_topic')),
+				array('no_prefix' => true));
 		if (!isset($indexes['last_message']))
-			$smcFunc['db_add_index']('topics', array(
+			$smcFunc['db_add_index']($to_prefix . 'topics', array(
 				'type' => 'UNIQUE',
 				'name' => 'last_message',
-				'columns' => array('id_last_msg', 'id_board')));
+				'columns' => array('id_last_msg', 'id_board')),
+				array('no_prefix' => true));
 		if (!isset($indexes['first_message']))
-			$smcFunc['db_add_index']('topics', array(
+			$smcFunc['db_add_index']($to_prefix . 'topics', array(
 				'type' => 'UNIQUE',
 				'name' => 'first_message',
-				'columns' => array('id_first_msg', 'id_board')));
+				'columns' => array('id_first_msg', 'id_board')),
+				array('no_prefix' => true));
 		if (!isset($indexes['poll']))
-			$smcFunc['db_add_index']('topics', array(
+			$smcFunc['db_add_index']($to_prefix . 'topics', array(
 				'type' => 'UNIQUE',
 				'name' => 'poll',
-				'columns' => array('id_poll', 'id_topic')));
+				'columns' => array('id_poll', 'id_topic')),
+				array('no_prefix' => true));
 		if (!isset($indexes['is_sticky']))
-			$smcFunc['db_add_index']('topics', array(
+			$smcFunc['db_add_index']($to_prefix . 'topics', array(
 				'type' => 'INDEX', // no key
 				'name' => 'is_sticky',
-				'columns' => array('is_sticky')));
+				'columns' => array('is_sticky')),
+				array('no_prefix' => true));
 		if (!isset($indexes['id_board']))
-			$smcFunc['db_add_index']('topics', array(
+			$smcFunc['db_add_index']($to_prefix . 'topics', array(
 				'type' => 'INDEX', // no key
 				'name' => 'id_board',
-				'columns' => array('id_board')));
+				'columns' => array('id_board')),
+				array('no_prefix' => true));
 
 		$_REQUEST['start'] = 0;
 		pastTime(13);
@@ -2019,47 +2046,55 @@ function doStep2()
 			print_line('rebuilding indexes for messages..');
 		db_extend('packages');
 
-		$indexes = $smcFunc['db_list_indexes']('messages', true);
+		$indexes = $smcFunc['db_list_indexes']($to_prefix . 'messages', true, array('no_prefix' => true));
 
 		if (!isset($indexes['PRIMARY']))
-			$smcFunc['db_add_index']('messages', array(
+			$smcFunc['db_add_index']($to_prefix . 'messages', array(
 				'type' => 'PRIMARY',
-				'columns' => array('id_msg')));
+				'columns' => array('id_msg')),
+				array('no_prefix' => true));
 		if (!isset($indexes['topic']))
-			$smcFunc['db_add_index']('messages', array(
+			$smcFunc['db_add_index']($to_prefix . 'messages', array(
 				'type' => 'UNIQUE',
 				'name' => 'topic',
-				'columns' => array('id_topic', 'id_msg')));
-		if (!isset($indexes['id_boardx']))
-			$smcFunc['db_add_index']('messages', array(
+				'columns' => array('id_topic', 'id_msg')),
+				array('no_prefix' => true));
+		if (!isset($indexes['id_board']))
+			$smcFunc['db_add_index']($to_prefix . 'messages', array(
 				'type' => 'UNIQUE',
 				'name' => 'id_board',
-				'columns' => array('id_board', 'id_msg')));
+				'columns' => array('id_board', 'id_msg')),
+				array('no_prefix' => true));
 		if (!isset($indexes['id_member']))
-			$smcFunc['db_add_index']('messages', array(
+			$smcFunc['db_add_index']($to_prefix . 'messages', array(
 				'type' => 'UNIQUE',
 				'name' => 'id_member',
-				'columns' => array('id_member', 'id_msg')));
+				'columns' => array('id_member', 'id_msg')),
+				array('no_prefix' => true));
 		if (!isset($indexes['ipIndex']))
-			$smcFunc['db_add_index']('messages', array(
+			$smcFunc['db_add_index']($to_prefix . 'messages', array(
 				'type' => 'INDEX', // no key
 				'name' => 'ip_index',
-				'columns' => array('poster_ip(15)', 'id_topic')));
+				'columns' => array('poster_ip(15)', 'id_topic')),
+				array('no_prefix' => true));
 		if (!isset($indexes['participation']))
-			$smcFunc['db_add_index']('messages', array(
+			$smcFunc['db_add_index']($to_prefix . 'messages', array(
 				'type' => 'INDEX', // no key
 				'name' => 'participation',
-				'columns' => array('id_member', 'id_topic')));
+				'columns' => array('id_member', 'id_topic')),
+				array('no_prefix' => true));
 		if (!isset($indexes['showPosts']))
-			$smcFunc['db_add_index']('messages', array(
+			$smcFunc['db_add_index']($to_prefix . 'messages', array(
 				'type' => 'INDEX', // no key
 				'name' => 'show_posts',
-				'columns' => array('id_member', 'id_member')));
+				'columns' => array('id_member', 'id_member')),
+				array('no_prefix' => true));
 		if (!isset($indexes['id_topic']))
-			$smcFunc['db_add_index']('messages', array(
+			$smcFunc['db_add_index']($to_prefix . 'messages', array(
 				'type' => 'INDEX', // no key
 				'name' => 'id_topic',
-				'columns' => array('id_topic')));
+				'columns' => array('id_topic')),
+				array('no_prefix' => true));
 
 		$_REQUEST['start'] = 0;
 		pastTime(14);
@@ -2308,19 +2343,12 @@ function removeAllAttachments()
 		FROM {$to_prefix}attachments");
 	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
-		// We're duplicating this from below because it's slightly different for getting current ones.
-		$clean_name = strtr($row['filename'], 'ŠŽšžŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ', 'SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy');
-		$clean_name = strtr($clean_name, array('Þ' => 'TH', 'þ' => 'th', 'Ð' => 'DH', 'ð' => 'dh', 'ß' => 'ss', 'Œ' => 'OE', 'œ' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u'));
-		$clean_name = preg_replace(array('/\s/', '/[^\w_\.\-]/'), array('_', ''), $clean_name);
-		$enc_name = $row['id_attach'] . '_' . strtr($clean_name, '.', '_') . md5($clean_name);
-		$clean_name = preg_replace('~\.[\.]+~', '.', $clean_name);
+		$filename = $row['filename'];
+		$id_attach = $row['id_attach'];
+		$physical_filename =  getAttachmentFilename($filename, $id_attach);
 
-		if (file_exists($attachmentUploadDir . '/' . $enc_name))
-			$filename = $attachmentUploadDir . '/' . $enc_name;
-		else
-			$filename = $attachmentUploadDir . '/' . $clean_name;
-
-		@unlink($filename);
+		if (file_exists($physical_filename))
+			@unlink($physical_filename);
 	}
 	$smcFunc['db_free_result']($result);
 }
@@ -2376,75 +2404,6 @@ function convert_stripslashes_recursive($var, $level = 0)
 		$new_var[stripslashes($k)] = $level > 25 ? null : convert_stripslashes_recursive($v, $level + 1);
 
 	return $new_var;
-}
-
-if (!function_exists('updateSettingsFile'))
-{
-	// Update the Settings.php file.
-	function updateSettingsFile($config_vars)
-	{
-		// Load the file.
-		$settingsArray = file($_POST['path_to'] . '/Settings.php');
-
-		if (count($settingsArray) == 1)
-			$settingsArray = preg_split('~[\r\n]~', $settingsArray[0]);
-
-		for ($i = 0, $n = count($settingsArray); $i < $n; $i++)
-		{
-			// Don't trim or bother with it if it's not a variable.
-			if (substr($settingsArray[$i], 0, 1) != '$')
-				continue;
-
-			$settingsArray[$i] = trim($settingsArray[$i]) . "\n";
-
-			// Look through the variables to set....
-			foreach ($config_vars as $var => $val)
-			{
-				if (strncasecmp($settingsArray[$i], '$' . $var, 1 + strlen($var)) == 0)
-				{
-					$comment = strstr(substr($settingsArray[$i], strpos($settingsArray[$i], ';')), '#');
-					$settingsArray[$i] = '$' . $var . ' = ' . $val . ';' . ($comment == '' ? "\n" : "\t\t" . $comment);
-
-					// This one's been 'used', so to speak.
-					unset($config_vars[$var]);
-				}
-			}
-
-			if (trim(substr($settingsArray[$i], 0, 2)) == '?' . '>')
-				$end = $i;
-		}
-
-		// This should never happen, but apparently it is happening.
-		if (empty($end) || $end < 10)
-			$end = count($settingsArray) - 1;
-
-		// Still more?  Add them at the end.
-		if (!empty($config_vars))
-		{
-			$settingsArray[$end++] = '';
-			foreach ($config_vars as $var => $val)
-				$settingsArray[$end++] = '$' . $var . ' = ' . $val . ';' . "\n";
-			$settingsArray[$end] = '?' . '>';
-		}
-
-		// Sanity error checking: the file needs to be at least 10 lines.
-		if (count($settingsArray) < 10)
-			return;
-
-		// Blank out the file - done to fix a oddity with some servers.
-		$fp = fopen($_POST['path_to'] . '/Settings.php', 'w');
-		fclose($fp);
-
-		// Now actually write.
-		$fp = fopen($_POST['path_to'] . '/Settings.php', 'r+');
-		$lines = count($settingsArray);
-		for ($i = 0; $i < $lines - 1; $i++)
-			fwrite($fp, strtr($settingsArray[$i], "\r", ''));
-
-		// The last line should have no \n.
-		fwrite($fp, rtrim($settingsArray[$i]));
-		fclose($fp);
-	}
 }
 
 // The main convert function that does all the big daddy work.
@@ -2846,15 +2805,20 @@ function convert_num_rows($result)
 // The main purpose of this function is provide a simple way to edit anything in the database with a local method of doing so.
 function alterDatabase($table, $type, $parms, $no_prefix = false)
 {
-	global $smcFunc;
+	global $smcFunc, $db_prefix;
 
 	// We need packages.
 	db_extend('packages');
 
 	$extra_parms = array();
-	// Not using a prefix?
-	if ($no_prefix)
-		$extra_parms['no_prefix'] = TRUE;
+	// Not needing a prefix?
+	if (empty($no_prefix))
+	{
+		// RC2 compatibility: table name needs a prefix, be it already in the name, or sent as placeholder.
+		// We can add the actual prefix ourselves and that's that: it should work on RC1.2 as well
+		$table = $db_prefix . $table;
+	}
+	$extra_parms['no_prefix'] = true;
 
 	// Are we adding a column
 	if ($type == 'add column')
@@ -3221,4 +3185,76 @@ function convert_error_handler($error_level, $error_string, $file, $line, $is_da
 	elseif (!$is_database_error)
 		echo $error_array[1];
 }
+
+// This was not read anyway when needed, but it seems updateSettings does the job now.
+// Leaving it here just in case.
+if (!function_exists('updateSettingsFile'))
+{
+	// Update the Settings.php file.
+	function updateSettingsFile($config_vars)
+	{
+		// Load the file.
+		$settingsArray = file($_POST['path_to'] . '/Settings.php');
+
+		if (count($settingsArray) == 1)
+			$settingsArray = preg_split('~[\r\n]~', $settingsArray[0]);
+
+		for ($i = 0, $n = count($settingsArray); $i < $n; $i++)
+		{
+			// Don't trim or bother with it if it's not a variable.
+			if (substr($settingsArray[$i], 0, 1) != '$')
+				continue;
+
+			$settingsArray[$i] = trim($settingsArray[$i]) . "\n";
+
+			// Look through the variables to set....
+			foreach ($config_vars as $var => $val)
+			{
+				if (strncasecmp($settingsArray[$i], '$' . $var, 1 + strlen($var)) == 0)
+				{
+					$comment = strstr(substr($settingsArray[$i], strpos($settingsArray[$i], ';')), '#');
+					$settingsArray[$i] = '$' . $var . ' = ' . $val . ';' . ($comment == '' ? "\n" : "\t\t" . $comment);
+
+					// This one's been 'used', so to speak.
+					unset($config_vars[$var]);
+				}
+			}
+
+			if (trim(substr($settingsArray[$i], 0, 2)) == '?' . '>')
+				$end = $i;
+		}
+
+		// This should never happen, but apparently it is happening.
+		if (empty($end) || $end < 10)
+			$end = count($settingsArray) - 1;
+
+		// Still more?  Add them at the end.
+		if (!empty($config_vars))
+		{
+			$settingsArray[$end++] = '';
+			foreach ($config_vars as $var => $val)
+				$settingsArray[$end++] = '$' . $var . ' = ' . $val . ';' . "\n";
+			$settingsArray[$end] = '?' . '>';
+		}
+
+		// Sanity error checking: the file needs to be at least 10 lines.
+		if (count($settingsArray) < 10)
+			return;
+
+		// Blank out the file - done to fix a oddity with some servers.
+		$fp = fopen($_POST['path_to'] . '/Settings.php', 'w');
+		fclose($fp);
+
+		// Now actually write.
+		$fp = fopen($_POST['path_to'] . '/Settings.php', 'r+');
+		$lines = count($settingsArray);
+		for ($i = 0; $i < $lines - 1; $i++)
+			fwrite($fp, strtr($settingsArray[$i], "\r", ''));
+
+		// The last line should have no \n.
+		fwrite($fp, rtrim($settingsArray[$i]));
+		fclose($fp);
+	}
+}
+
 ?>

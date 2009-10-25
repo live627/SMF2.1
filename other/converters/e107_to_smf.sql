@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "e107 ver.0.7.7"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/e107_config.php"
 ---~ from_prefix: "`$mySQLdefaultdb`.$mySQLprefix"
 ---~ globals: "$IMAGES_DIRECTORY"
@@ -136,7 +136,7 @@ while (true)
 		LIMIT $_REQUEST[start], 250");
 	$additional_groups = '';
 	$last_member = 0;
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		if (empty($last_member))
 			$last_member = $row['id_member'];
@@ -208,7 +208,7 @@ WHERE forum_parent = 0;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -355,7 +355,7 @@ $request = convert_query("
 		INNER JOIN {$from_prefix}forum_t AS t
 	WHERE p.poll_datestamp = t.thread_id");
 $inserts = '';
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 {
 	$separateOptions = explode(chr(1), $row['poll_options']);
 	$countOptions = count($separateOptions);
@@ -464,7 +464,7 @@ $request = convert_query("
 	FROM {$from_prefix}forum
 	WHERE forum_class = 251");
 $readonlyBoards = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$readonlyBoards[] = $row['forum_id'];
 convert_free_result($request);
 
@@ -511,7 +511,7 @@ while (true)
 		LIMIT $_REQUEST[start], 250");
 	$ban_time = time();
 	$ban_num = 0;
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		$ban_num++;
 		convert_query("
@@ -583,7 +583,7 @@ if (convert_num_rows($request) > 0)
 		continue;
 
 	$inserts = '';
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = convert_fetch_assoc($request))
 		$inserts .= "
 			($id_ban_group, $row[user_id], '', ''),";
 	convert_free_result($request);
@@ -611,7 +611,7 @@ $request = convert_query("
 	WHERE e107_name LIKE 'emote_%'");
 
 $smileys_dir = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$smileys_dir[] = $row['smiley_dir'];
 
 // Find the path for SMF smileys.
@@ -640,7 +640,7 @@ $request = convert_query("
 	SELECT variable, value
 	FROM {$to_prefix}settings
 	WHERE variable IN ('smiley_sets_known', 'smiley_sets_names')");
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 {
 	if ($row['variable'] == 'smiley_sets_known')
 	{
@@ -667,7 +667,7 @@ $request = convert_query("
 	SELECT code
 	FROM {$to_prefix}smileys");
 $currentCodes = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$currentCodes[] = $row['code'];
 convert_free_result($request);
 
@@ -678,7 +678,7 @@ $request = convert_query("
 	WHERE e107_name LIKE 'emote_%'");
 
 $insert = '';
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 {
 	$smileys_set = @unserialize($row['smiley_codes']);
 

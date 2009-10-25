@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Burning Board Lite 2.0"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/wbblite2_migration.php"
 ---~ globals: wcf_prefix, wbb_prefix
 ---~ from_prefix: "`$wbblite2_database`."
@@ -132,7 +132,7 @@ WHERE boardType = 1;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -323,13 +323,16 @@ ALTER TABLE {$to_prefix}poll_choices
 $no_add = true;
 
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
+if (strlen($physical_filename) > 255)
+	return;
 
-if (copy($_POST['path_from'] . '/wcf/attachments/attachment-' . $row['attachmentID'] , $attachmentUploadDir . '/' . $file_hash))
+if (copy($_POST['path_from'] . '/wcf/attachments/attachment-' . $row['attachmentID'] , $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
 		'id_attach' => $id_attach,
-		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 		'filename' => $row['filename'],
 		'file_hash' => $file_hash,
 		'id_msg' => $row['id_msg'],
@@ -353,12 +356,16 @@ FROM {$from_prefix}{$wcf_prefix}attachment;
 $no_add = true;
 
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
-if (copy($_POST['path_from'] . '/wcf/images/avatars/avatar-' . $row['avatarID'] . '.' . $row['avatarExtension'], $attachmentUploadDir . '/' . $file_hash))
+if (strlen($physical_filename) > 255)
+	return;
+
+if (copy($_POST['path_from'] . '/wcf/images/avatars/avatar-' . $row['avatarID'] . '.' . $row['avatarExtension'], $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
 		'id_attach' => $id_attach,
-		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 		'filename' => $row['filename'],
 		'file_hash' => $file_hash,
 		'id_member' => $row['id_member'],

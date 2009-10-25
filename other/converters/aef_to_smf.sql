@@ -15,13 +15,15 @@
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}members;
-
 ---* {$to_prefix}members
+---{
+$ignore=true;
+---}
 SELECT
 	id AS id_member, SUBSTRING(username, 1, 80) AS member_name,
 	r_time AS date_registered, posts, SUBSTRING(password, 1, 64) AS passwd,
 	SUBSTRING(www, 1, 255) AS website_title,
-	SUBSTRING(www, 1, 255) AS website_url, last_login AS last_login,
+	SUBSTRING(www, 1, 255) AS website_url, lastlogin AS last_login,
 	birth_date AS birthdate, SUBSTRING(icq, 1, 255) AS icq,
 	SUBSTRING(IF(realname !='', realname, username), 1, 255) AS real_name,
 	SUBSTRING(email, 1, 255) AS email_address, 	language AS lngfile,
@@ -34,7 +36,7 @@ SELECT
 	SUBSTRING(location, 1, 255) AS location, timezone AS time_offset,
 	SUBSTRING(avatar, 1, 255) AS avatar,
 	SUBSTRING(users_text, 1, 255) AS usertitle,
-	pm_email_notify AS pm_email_notify, '' AS karma_bad, '' AS karma_good,
+	pm_email_notify AS pm_email_notify, 0 AS karma_bad, 0 AS karma_good,
 	adminemail AS notify_announcements,
 	'' AS secret_question,
 	'' AS secret_answer,
@@ -65,7 +67,7 @@ TRUNCATE {$to_prefix}boards;
 SELECT
 	fid AS id_board, cat_id AS id_cat, SUBSTRING(fname, 1, 255) AS name, forum_order AS board_order,
 	SUBSTRING(description, 1, 65534) AS description, ntopic AS num_topics, nposts AS num_posts,
-	'' AS count_posts, member_group AS member_groups,
+	0 AS count_posts, member_group AS member_groups,
 	par_board_id AS id_parent, id_skin AS ID_THEME, override_skin AS override_theme
 FROM {$from_prefix}{$dbtables['forums']};
 ---*
@@ -96,8 +98,10 @@ HAVING id_first_msg != 0
 TRUNCATE {$to_prefix}messages;
 TRUNCATE {$to_prefix}attachments;
 
-
 ---* {$to_prefix}messages 200
+---{
+$ignore=true;
+---}
 SELECT
 	p.pid AS id_msg, p.post_tid AS id_topic, p.post_fid AS id_board, p.poster_id AS id_member, p.ptime AS poster_time,
 	SUBSTRING(IF(p.gposter_name = '', mem.username, gposter_name), 1, 255) AS poster_name,
@@ -230,11 +234,13 @@ if (!isset($yAttachmentDir))
 if (!file_exists($yAttachmentDir))
 	return;
 
-$file_hash = $row['id_attach'] . '_' . getAttachmentFilename($row['filename'], 0, null, true);
-if (strlen($file_hash) > 255)
+$file_hash = getAttachmentFilename($row['filename'], 0, null, true);
+$physical_filename = $row['id_attach'] . '_' . $file_hash;
+
+if (strlen($physical_filename) > 255)
 	return;
 
-if (copy($yAttachmentDir . '/' . $row['at_file'], $attachmentUploadDir . '/' . $file_hash))
+if (copy($yAttachmentDir . '/' . $row['at_file'], $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
 		'id_attach' => $row['id_attach'],

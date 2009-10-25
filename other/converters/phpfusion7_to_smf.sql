@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "PHPFusion 7.0.x"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/config.php"
 ---~ from_prefix: "`{$db_name}`.$db_prefix"
 ---~ table_test: "{$from_prefix}users"
@@ -31,19 +31,19 @@ SELECT
 	SUBSTRING(user_web, 1, 255) AS website_url, user_lastvisit AS last_login,
 	user_birthdate AS birthdate, SUBSTRING(user_icq , 1, 255) AS icq,
 	SUBSTRING(user_name, 1, 255) AS real_name,
-	'' AS notify_once, '' AS lngfile,
+	'' AS lngfile,
 	SUBSTRING(user_email, 1, 255) AS email_address,
 	SUBSTRING(user_aim, 1, 16) AS aim,
 	'' AS personal_text,
 	user_hide_email AS hide_email, SUBSTRING(user_ip , 1, 255) AS member_ip,
 	SUBSTRING(user_ip , 1, 255) AS member_ip2,
-	SUBSTRING(user_yahoo, 1, 32) AS yim, '' AS gender,
+	SUBSTRING(user_yahoo, 1, 32) AS yim, 0 AS gender,
 	SUBSTRING(user_msn, 1, 255) AS msn,
 	SUBSTRING(REPLACE(user_sig, '<br>', '<br />'), 1, 65534) AS signature,
 	SUBSTRING(user_location, 1, 255) AS location, user_offset AS time_offset,
 	SUBSTRING(user_avatar, 1, 255) AS avatar,
-	'' AS usertitle, '' AS pm_email_notify, '' AS karma_bad, '' AS karma_good,
-	'' AS notify_announcements, '' AS secret_question, '' AS secret_answer,
+	'' AS usertitle, 0 AS pm_email_notify, 0 AS karma_bad, 0 AS karma_good,
+	0 AS notify_announcements, '' AS secret_question, '' AS secret_answer,
 	IF(user_level = 103, 1, 0) AS id_group, '' AS buddy_list, '' AS pm_ignore_list,
 	'' AS message_labels, '' AS validation_code, user_groups AS additional_groups,
 	'' AS smiley_set, '' AS password_salt
@@ -71,8 +71,8 @@ TRUNCATE {$to_prefix}boards;
 ---* {$to_prefix}boards
 SELECT
 	forum_id AS id_board, forum_cat AS id_cat, SUBSTRING(forum_name, 1, 255) AS name, forum_order AS board_order,
-	SUBSTRING(forum_description, 1, 65534) AS description, '' AS num_topics, '' AS num_posts,
-	'' AS count_posts,
+	SUBSTRING(forum_description, 1, 65534) AS description, 0 AS num_topics, 0 AS num_posts,
+	0 AS count_posts,
 	CASE forum_access
 		WHEN 0 THEN '-1,0'
 		WHEN 101 THEN '0'
@@ -204,6 +204,7 @@ FROM {$from_prefix}thread_notify;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
+$ignore = true;
 
 // Hopefully we have the path to php-fusion.
 if (!file_exists($_POST['path_from']))
@@ -215,21 +216,24 @@ if (!file_exists($yAttachmentDir))
 	return;
 
 $file_hash = getAttachmentFilename($row['filename'], $row['id_attach'], null, true);
-if (strlen($file_hash) > 255)
+$physical_filename = $id_attach . '_' . $file_hash;
+
+if (strlen($physical_filename) > 255)
 	return;
 
-copy($yAttachmentDir . '/' . $row['filename'], $attachmentUploadDir . '/' . $file_hash);
-
-$rows[] = array(
-	'id_attach' => $id_attach,
-	'size' => $row['size'],
-	'filename' => $row['filename'],
-	'file_hash' => $file_hash,
-	'id_msg' => $row['id_msg'],
-	'downloads' => $row['downloads'],
-	'width' => $row['width'],
-	'height' => $row['height'],
-);
+if (copy($yAttachmentDir . '/' . $row['filename'], $attachmentUploadDir . '/' . $physical_filename))
+{
+	$rows[] = array(
+		'id_attach' => $id_attach,
+		'size' => $row['size'],
+		'filename' => $row['filename'],
+		'file_hash' => $file_hash,
+		'id_msg' => $row['id_msg'],
+		'downloads' => $row['downloads'],
+		'width' => $row['width'],
+		'height' => $row['height'],
+	);
+}
 ---}
 SELECT
 	attach_id AS id_attach, attach_size AS size, attach_name AS filename,

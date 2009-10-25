@@ -459,11 +459,11 @@ $no_add = true;
 $filepath = 'images/avatar/' . $row['user_avatar'];
 $file_hash = 'avatar_' . $row['id_member'] . strrchr($row['user_avatar'], '.');
 
-if (strlen($file_hash) <= 255 && copy($_POST['path_from'] . '/' . $filepath, $attachmentUploadDir . '/' . $file_hash))
+if (copy($_POST['path_from'] . '/' . $filepath, $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
 		'id_attach' => $id_attach,
-		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 		'filename' => $row['filename'],	
 		'file_hash' => $file_hash,
 		'id_member' => $row['id_member'],

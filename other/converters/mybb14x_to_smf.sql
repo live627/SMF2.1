@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "MyBulletinBoard 1.4"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/inc/config.php"
 ---~ globals: config
 ---~ from_prefix: "`{$config['database']['database']}`.{$config['database']['table_prefix']}"
@@ -59,7 +59,7 @@ WHERE type = 'c';
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -85,7 +85,11 @@ TRUNCATE {$to_prefix}log_mark_read;
 SELECT
 	t.tid AS id_topic, t.fid AS id_board, t.sticky AS is_sticky,
 	t.poll AS id_poll, t.views AS num_views, t.uid AS id_member_started,
-	ul.uid AS id_member_updated, t.replies AS num_replies, t.closed AS locked,
+	ul.uid AS id_member_updated, t.replies AS num_replies, 
+	CASE
+		WHEN (t.closed = '1') THEN 1
+		ELSE 0
+	END AS locked,
 	MIN(p.pid) AS id_first_msg, MAX(p.pid) AS id_last_msg
 FROM {$from_prefix}threads AS t
 	INNER JOIN {$from_prefix}posts AS p
@@ -151,8 +155,17 @@ $keys = array('id_poll', 'id_choice', 'label', 'votes');
 
 $options = explode('||~|~||', $row['options']);
 $votes = explode('||~|~||', $row['votes']);
+
+$id_poll = $row['id_poll'];
 for ($i = 0, $n = count($options); $i < $n; $i++)
-	$rows[] = $row['id_poll'] . ', ' . ($i + 1) . ", SUBSTRING('" . addslashes($options[$i]) . "', 1, 255), '" . $votes[$i] . "'";
+{
+	$rows[] = array(
+		'id_poll' => $id_poll,
+		'id_choice' => ($i + 1),
+		'label' => substr('" . addslashes($options[$i]) . "', 1, 255),
+		'votes' => @$votes[$i],
+	);
+}	
 ---}
 SELECT pid AS id_poll, options, votes
 FROM {$from_prefix}polls;
@@ -236,7 +249,7 @@ $result = convert_query("
 	FROM {$from_prefix}badwords");
 $censor_vulgar = array();
 $censor_proper = array();
-while ($row = mysql_fetch_assoc($result))
+while ($row = convert_fetch_assoc($result))
 {
 	$censor_vulgar[] = $row['badword'];
 	$censor_proper[] = $row['replacement'];
@@ -300,16 +313,20 @@ if (!isset($oldAttachmentDir))
 // Is this an image???
 $attachmentExtension = strtolower(substr(strrchr($row['filename'], '.'), 1));
 if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
-	$attachmentExtention = '';
+	$attachmentExtension = '';
 
 $oldFilename = $row['attachname'];
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
-if (strlen($file_hash) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $file_hash))
+if (strlen($physical_filename) > 255)
+	return;
+
+if (copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $physical_filename))
 {
 	// Set the default empty values.
-	$width = '0';
-	$height = '0';
+	$width = 0;
+	$height = 0;
 
 	// Is an an image?
 	if (!empty($attachmentExtension))
@@ -317,13 +334,13 @@ if (strlen($file_hash) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $a
 
 	$rows[] = array(
 		'id_attach' => $id_attach,
-		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 		'filename' => $row['filename'],	
 		'file_hash' => $file_hash,
 		'id_msg' => $row['id_msg'],
 		'downloads' => $row['downloads'],
-		'width' => $row['width'],
-		'height' => $row['height'],
+		'width' => $width,
+		'height' => $height,
 	);
 
 	$id_attach++;

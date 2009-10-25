@@ -357,10 +357,12 @@ if (!isset($yAttachmentDir))
 }
 
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
-if (strlen($file_hash) > 255)
+if (strlen($physical_filename) > 255)
 	return;
-$fp = @fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
+
+$fp = @fopen($attachmentUploadDir . '/' . $physical_filename, 'wb');
 if (!$fp)
 	return;
 
@@ -372,7 +374,7 @@ fclose($fp);
 
 $rows[] = array(
 	'id_attach' => $id_attach,
-	'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+	'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 	'filename' => $row['filename'],
 	'file_hash' => $file_hash,
 	'id_msg' => $row['id_msg'],

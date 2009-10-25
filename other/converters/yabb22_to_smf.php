@@ -159,7 +159,7 @@ if (empty($preparsing))
 			elseif (preg_match('~\$Post\{\'(\d+)\'\} = [\'|"]([^|]*)\|(\d*)\|([^|]*)\|([^|]*)~', $group, $match) != 0)
 			{
 				$match = addslashes_recursive($match);
-				$extraGroups[] = array(substr($match[2], 0, 80), substr($match[5], 0, 20), max(0, $match[0]), substr($match[3] . '#' . $match[4], 0, 255);
+				$extraGroups[] = array(substr($match[2], 0, 80), substr($match[5], 0, 20), max(0, $match[0]), substr($match[3] . '#' . $match[4], 0, 255));
 
 				if ($match[3] < 1)
 					$newbie = true;
@@ -167,7 +167,7 @@ if (empty($preparsing))
 			elseif (preg_match('~\$NoPost\{(\d+)\} = [\'|"]([^|]*)\|(\d*)\|([^|]*)\|([^|]*)~', $group, $match) != 0)
 			{
 				$match = addslashes_recursive($match);
-				$extraGroups[] = array(substr($match[2], 0, 80), substr($match[5], 0, 20), '-1', substr($match[3] . '#' . $match[4], 0, 255);
+				$extraGroups[] = array(substr($match[2], 0, 80), substr($match[5], 0, 20), '-1', substr($match[3] . '#' . $match[4], 0, 255));
 			}
 		}
 

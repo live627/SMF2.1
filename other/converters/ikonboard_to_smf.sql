@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "IkonBoard 3.1.x"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ parameters: ib_database text=MySQL database used by IkonBoard
 ---~ parameters: ib_prefix text=Prefix used by IkonBoard
 ---~ parameters: ib_uploads text=Path to the uploads directory
@@ -75,7 +75,7 @@ FROM {$from_prefix}categories;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -310,11 +310,11 @@ $no_add = true;
 
 $real_filename = preg_replace('~^post-\d+-\d+-~', '', $row['filename']);
 $file_hash = getLegacyAttachmentFilename($real_filename, $id_attach);
-if (strlen($file_hash) <= 255 && copy($ib_uploads . '/' . $row['filename'], $attachmentUploadDir . '/' . $file_hash))
+if (copy($ib_uploads . '/' . $row['filename'], $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
 		'id_attach' => $id_attach,
-		'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 		'filename' => $real_filename,	
 		'file_hash' => $file_hash,
 		'id_msg' => $row['id_msg'],

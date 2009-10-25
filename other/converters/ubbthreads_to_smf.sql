@@ -280,8 +280,12 @@ $row['filename'] = strpos($oldFilename, '-') !== false ? substr($oldFilename, st
 $row['size'] = filesize($GLOBALS['config']['files'] . '/' . $row['filename']);
 
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
-if (strlen($file_hash) <= 255 && copy($GLOBALS['config']['files'] . '/' . $oldFilename, $attachmentUploadDir . '/' . $file_hash))
+if (strlen($physical_filename) > 255)
+	return;
+
+if (copy($GLOBALS['config']['files'] . '/' . $oldFilename, $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
 		'id_attach' => $id_attach,

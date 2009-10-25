@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "vBulletin 3.7"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/admin/config.php", "/includes/config.php"
 ---~ from_prefix: "`" . $config['Database']['dbname'] . "`." . $config['Database']['tableprefix'] . ""
 ---~ globals: config
@@ -70,7 +70,7 @@ $request = convert_query("
 	SELECT userid AS id_member
 	FROM {$from_prefix}administrator");
 $admins = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$admins[] = $row['id_member'];
 convert_free_result($request);
 
@@ -93,7 +93,7 @@ CHANGE COLUMN cat_order cat_order SMALLINT(5) NOT NULL;
 ---* {$to_prefix}categories
 SELECT
 	forumid AS id_cat, SUBSTRING(title, 1, 255) AS name,
-	displayorder AS cat_order, '' AS can_collapse
+	displayorder AS cat_order, 0 AS can_collapse
 FROM {$from_prefix}forum
 WHERE parentid = -1
 ORDER BY cat_order;
@@ -106,7 +106,7 @@ ORDER BY cat_order;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ALTER TABLE {$to_prefix}boards
 CHANGE COLUMN id_board id_board SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -114,6 +114,9 @@ CHANGE COLUMN id_cat id_cat SMALLINT(5) NOT NULL;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
+---{
+$ignore_slashes = true;
+---}
 SELECT
 	forumid AS id_board, SUBSTRING(title, 1, 255) AS name,
 	SUBSTRING(description, 1, 65534) AS description,
@@ -134,7 +137,7 @@ $request = convert_query("
 	WHERE parentid = '-1'");
 
 $cats = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$cats[$row['id_cat']] = $row['id_cat'];
 convert_free_result($request);
 
@@ -144,7 +147,7 @@ $request = convert_query("
 	FROM {$from_prefix}forum
 	WHERE parentid != '-1'");
 
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 {
 	foreach ($cats as $key => $value)
 	{
@@ -182,13 +185,13 @@ $ignore = true;
 SELECT
 	t.threadid AS id_topic, t.forumid AS id_board, t.sticky AS is_sticky,
 	t.pollid AS id_poll, t.views AS num_views, t.postuserid AS id_member_started,
-	ul.userid AS id_member_updated, t.replycount AS num_replies,
+	CASE WHEN (ISNULL(ul.userid) OR TRIM(ul.userid) = '') THEN 0 ELSE ul.userid END AS id_member_updated,
+	t.replycount AS num_replies,
 	IF(t.open, 0, 1) AS locked, MIN(p.postid) AS id_first_msg,
 	MAX(p.postid) AS id_last_msg
 FROM {$from_prefix}thread AS t
-	INNER JOIN {$from_prefix}post AS p
+	INNER JOIN {$from_prefix}post AS p ON (p.threadid = t.threadid)
 	LEFT JOIN {$from_prefix}user AS ul ON (ul.username = t.lastposter)
-WHERE p.threadid = t.threadid
 GROUP BY t.threadid
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -204,6 +207,7 @@ TRUNCATE {$to_prefix}attachments;
 ---* {$to_prefix}messages 200
 ---{
 $ignore = true;
+$ignore_slashes = true;
 $row['body'] = preg_replace(
 	array(
 		'~\[(quote)=([^\]]+)\]~i',
@@ -238,7 +242,7 @@ SELECT
 	'' AS modified_name, 'xx' AS icon
 FROM {$from_prefix}post AS p
 	INNER JOIN {$from_prefix}thread AS t
-WHERE t.threadid = p.threadid;
+ON t.threadid = p.threadid;
 ---*
 
 ---* {$to_prefix}messages (update id_msg)
@@ -281,8 +285,17 @@ $keys = array('id_poll', 'id_choice', 'label', 'votes');
 
 $options = explode('|||', $row['options']);
 $votes = explode('|||', $row['votes']);
+
+$id_poll = $row['id_poll'];
 for ($i = 0, $n = count($options); $i < $n; $i++)
-	$rows[] = $row['id_poll'] . ', ' . ($i + 1) . ", '" . addslashes($options[$i]) . "', '" . @$votes[$i] . "'";
+{
+	$rows[] = array(
+		'id_poll' => $id_poll,
+		'id_choice' => ($i + 1),
+		'label' => substr('" . addslashes($options[$i]) . "', 1, 255),
+		'votes' => @$votes[$i],
+	);
+}
 ---}
 SELECT pollid AS id_poll, options, votes
 FROM {$from_prefix}poll;
@@ -403,7 +416,7 @@ $request = convert_query("
 	SELECT code
 	FROM {$to_prefix}smileys");
 $currentCodes = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$currentCodes[] = $row['code'];
 convert_free_result($request);
 
@@ -441,7 +454,7 @@ if (!isset($vb_settings))
 		WHERE varname IN ('attachfile', 'attachpath', 'usefileavatar', 'avatarpath')
 		LIMIT 4");
 	$vb_settings = array();
-	while ($row2 = mysql_fetch_assoc($result))
+	while ($row2 = convert_fetch_assoc($result))
 	{
 		if (substr($row2['value'], 0, 2) == './')
 			$row2['value'] = $_POST['path_from'] . substr($row2['value'], 1);
@@ -453,17 +466,21 @@ if (!isset($vb_settings))
 // Is this an image???
 $attachmentExtension = strtolower(substr(strrchr($row['filename'], '.'), 1));
 if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
-	$attachmentExtention = '';
+	$attachmentExtension = '';
 
 // Set the default empty values.
-$width = '0';
-$height = '0';
+$width = 0;
+$height = 0;
 
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
+
+if (strlen($physical_filename) > 255)
+	return;
 
 if (empty($vb_settings['attachfile']))
 {
-	$fp = @fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
+	$fp = @fopen($attachmentUploadDir . '/' . $physical_filename, 'wb');
 	if (!$fp)
 		return;
 
@@ -472,28 +489,28 @@ if (empty($vb_settings['attachfile']))
 }
 elseif ($vb_settings['attachfile'] == 1)
 {
-	if (!copy($vb_settings['attachpath'] . '/' . $row['userid'] . '/' . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $file_hash))
+	if (!copy($vb_settings['attachpath'] . '/' . $row['userid'] . '/' . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $physical_filename))
 		return;
 }
 elseif ($vb_settings['attachfile'] == 2)
 {
-	if (!copy($vb_settings['attachpath'] . '/' . chunk_split($row['userid'], 1, '/') . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $file_hash))
+	if (!copy($vb_settings['attachpath'] . '/' . chunk_split($row['userid'], 1, '/') . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $physical_filename))
 		return;
 }
 
 // Is an an image?
 if (!empty($attachmentExtension))
-	list ($width, $height) = getimagesize($attachmentUploadDir . '/' . $file_hash);
+	list ($width, $height) = getimagesize($attachmentUploadDir . '/' . $physical_filename);
 
 $rows[] = array(
 	'id_attach' => $id_attach,
-	'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+	'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 	'filename' => $row['filename'],	
 	'file_hash' => $file_hash,
 	'id_msg' => $row['id_msg'],
 	'downloads' => $row['downloads'],
-	'width' => $row['width'],
-	'height' => $row['height'],
+	'width' => $width,
+	'height' => $height,
 );
 $id_attach++;
 ---}
@@ -519,7 +536,7 @@ if (!isset($vb_settings))
 		WHERE varname IN ('attachfile', 'attachpath', 'usefileavatar', 'avatarpath')
 		LIMIT 4");
 	$vb_settings = array();
-	while ($row2 = mysql_fetch_assoc($result))
+	while ($row2 = convert_fetch_assoc($result))
 	{
 		if (substr($row2['value'], 0, 2) == './')
 			$row2['value'] = $_POST['path_from'] . substr($row2['value'], 1);
@@ -528,26 +545,27 @@ if (!isset($vb_settings))
 	convert_free_result($result);
 }
 
-
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
+$physical_filename = $id_attach . '_' . $file_hash;
 
-if (strlen($file_hash) > 255)
+if (strlen($physical_filename) > 255)
 	return;
-elseif (empty($vb_settings['usefileavatar']))
+
+if (empty($vb_settings['usefileavatar']))
 {
-	$fp = @fopen($attachmentUploadDir . '/' . $file_hash, 'wb');
+	$fp = @fopen($attachmentUploadDir . '/' . $physical_filename, 'wb');
 	if (!$fp)
 		return;
 
 	fwrite($fp, $row['filedata']);
 	fclose($fp);
 }
-elseif (!copy($vb_settings['avatarpath'] . '/avatar' . $row['id_member'] . '_' . $row['avatarrevision'] . '.gif', $attachmentUploadDir . '/' . $file_hash))
+elseif (!copy($vb_settings['avatarpath'] . '/avatar' . $row['id_member'] . '_' . $row['avatarrevision'] . '.gif', $attachmentUploadDir . '/' . $physical_filename))
 	return;
 
 $rows[] = array(
 	'id_attach' => $id_attach,
-	'size' => filesize($attachmentUploadDir . '/' . $file_hash),
+	'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
 	'filename' => $row['filename'],	
 	'file_hash' => $file_hash,
 	'id_member' => $row['id_member'],
@@ -557,5 +575,5 @@ $id_attach++;
 SELECT ca.userid AS id_member, ca.filedata, ca.filename, u.avatarrevision
 FROM {$from_prefix}customavatar AS ca
 	INNER JOIN {$from_prefix}user AS u
-WHERE u.userid = ca.userid;
+ON u.userid = ca.userid;
 ---*
