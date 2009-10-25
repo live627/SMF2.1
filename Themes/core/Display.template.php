@@ -441,13 +441,13 @@ function template_main()
 					</div>', $message['can_modify'] ? '
 					<img src="' . $settings['images_url'] . '/icons/modify_inline.gif" alt="" title="' . $txt['modify_msg'] . '" class="modifybutton" id="modify_button_' . $message['id'] . '" style="cursor: ' . ($context['browser']['is_ie5'] || $context['browser']['is_ie5.5'] ? 'hand' : 'pointer') . '; display: none;" onclick="oQuickModify.modifyMsg(\'' . $message['id'] . '\', \'' . $context['session_id'] . '\', \'' . $context['session_var'] . '\')" />' : '';
 
-		// Now for the attachments, signature, ip logged, etc...
-		echo '
-					<div id="msg_', $message['id'], '_footer" class="attachments smalltext">';
-
 		// Assuming there are attachments...
 		if (!empty($message['attachment']))
 		{
+			// Now for the attachments, signature, ip logged, etc...
+			echo '
+					<div id="msg_', $message['id'], '_footer" class="attachments smalltext">';
+
 			$last_approved_state = 1;
 			foreach ($message['attachment'] as $attachment)
 			{
@@ -483,10 +483,12 @@ function template_main()
 			if ($last_approved_state == 0)
 				echo '
 							</fieldset>';
+
+			echo '
+					</div>';
 		}
 
 		echo '
-					</div>
 				</div>
 				<div class="moderatorbar">
 					<div class="smalltext floatleft" id="modified_', $message['id'], '">';

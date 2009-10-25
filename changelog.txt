@@ -73,6 +73,7 @@ October 2009
  * The Message icon had a different padding when javascript is off (index.css, compat.css) [Bug 3711]
  ! BBC sizes without a unit weren't parsed correctly anymore. (Subs.php) 
  * The custom subject was always disabled (SplitTopics template) [Bug 3914]
+ * Core: hide the attachments division when there aren't any attachments to show. (Display template)
 
 
 September 2009
