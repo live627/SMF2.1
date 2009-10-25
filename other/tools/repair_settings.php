@@ -69,9 +69,9 @@ $txt['db_prefix'] = 'Table prefix';
 $txt['db_persist'] = 'Connection type';
 $txt['db_persist0'] = 'Standard (recommended)';
 $txt['db_persist1'] = 'Persistent (might cause problems)';
-$txt['db_mysql'] = 'Mysql';
-$txt['db_postgresql'] = 'PostGreSql';
-$txt['db_sqlite'] = 'Sqlite';
+$txt['db_mysql'] = 'MySQL';
+$txt['db_postgresql'] = 'PostgreSQL';
+$txt['db_sqlite'] = 'SQLite';
 
 $txt['path_url_settings'] = 'Paths &amp; URLs';
 $txt['path_url_settings_info'] = 'These are the paths and URLs to your SMF installation, and can cause big problems when they are wrong.  Sorry, there are a lot of them.';
