@@ -77,6 +77,7 @@ October 2009
  & Properly capitalize the name of the DB software (repair_settings.php)
  ! Fixed a few JavaScript notices. (suggest.js)
  ! Fixed undefined index in case of a divergent detected URL. (Load.php)
+ ! The legalise_bbc function could not be called twice. (Subs-Editor.php)
 
 
 September 2009

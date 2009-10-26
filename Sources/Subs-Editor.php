@@ -914,10 +914,6 @@ function legalise_bbc($text)
 		$lastlen = strlen($text = preg_replace($backToBackPattern, '', $text));
 
 	// Need to sort the tags my name length.
-	function sort_array_length($a, $b)
-	{
-		return strlen($a) < strlen($b) ? 1 : -1;
-	}
 	uksort($valid_tags, 'sort_array_length');
 
 	// In case things changed above set these back to normal.
@@ -1177,6 +1173,12 @@ function legalise_bbc($text)
 		$lastlen = strlen($text = preg_replace($backToBackPattern, '', $text));
 
 	return $text;
+}
+
+// A help function for legalise_bbc for sorting arrays based on length.
+function sort_array_length($a, $b)
+{
+	return strlen($a) < strlen($b) ? 1 : -1;
 }
 
 // Compatibility function - used in 1.1 for showing a post box.
