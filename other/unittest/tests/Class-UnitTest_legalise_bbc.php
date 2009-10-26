@@ -136,6 +136,18 @@
 				'input' => "[hr]a\n[hr]",
 				'output' => "[hr]a\n[hr]",
 			),
+			'similar_style_tags_1' => array(
+				'name' => 'nested similar style tags (1)',
+				'description' => "Make sure nested tags with equal semantics are reduced to a single tag.\n\n.",
+				'input' => "[color=green][color=green]hello[/color][/color]",
+				'output' => "[color=green]hello[/color]",
+			),
+			'similar_style_tags_2' => array(
+				'name' => 'nested similar style tags (2)',
+				'description' => "Make sure nested tags with equal semantics are reduced to a single tag.\n\n.",
+				'input' => "[color=green][color=green][color=green]hello[/color][/color][/color]",
+				'output' => "[color=green]hello[/color]",
+			),
 		);
 
 		public function initialize()

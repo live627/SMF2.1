@@ -78,6 +78,7 @@ October 2009
  ! Fixed a few JavaScript notices. (suggest.js)
  ! Fixed undefined index in case of a divergent detected URL. (Load.php)
  ! The legalise_bbc function could not be called twice. (Subs-Editor.php)
+ ! Duplicate tags were not properly removed by the legalise_bbc function. (Subs-Editor.php) [Bug 3211-1]
 
 
 September 2009

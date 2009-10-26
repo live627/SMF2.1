@@ -186,7 +186,7 @@ function html_to_bbc($text)
 
 	// Do the smileys ultra first!
 	preg_match_all('~<img\s+[^<>]*?id="*smiley_\d+_([^<>]+?)[\s"/>]\s*[^<>]*?/*>(?:\s)?~i', $text, $matches);
-	if (!empty($matches))
+	if (!empty($matches[0]))
 	{
 		// Easy if it's not custom.
 		if (empty($modSettings['smiley_enable']))
@@ -240,7 +240,7 @@ function html_to_bbc($text)
 		$text = str_replace(array('-[]-smf_smily_end#|#-[]-smf_smily_start#|#', '-[]-smf_smily_end#|#', '-[]-smf_smily_start#|#'), ' ', $text);
 	}
 
-	// Only try to by more time if the client didn't quit.
+	// Only try to buy more time if the client didn't quit.
 	if (connection_aborted() && $context['server']['is_apache'])
 		@apache_reset_timeout();
 
@@ -265,17 +265,21 @@ function html_to_bbc($text)
 				$curCloseTags = '';
 				$extra_attr = '';
 
-				foreach ($styles as $style_item)
+				foreach ($styles as $type_value_pair)
 				{
-					if (trim($style_item) === '')
+					// Remove spaces and convert uppercase letters.
+					$clean_type_value_pair = strtolower(strtr(trim($type_value_pair), '=', ':'));
+					
+					// Something like 'font-weight: bold' is expected here.
+					if (strpos($clean_type_value_pair, ':') === false)
 						continue;
 
 					// Capture the elements of a single style item (e.g. 'font-weight' and 'bold').
-					@list ($style_type, $style_value) = explode(':', strtr($style_item, '=', ':'));
+					list ($style_type, $style_value) = explode(':', $type_value_pair);
 
-					$style_value = strtolower(trim($style_value));
+					$style_value = trim($style_value);
 
-					switch (strtolower(trim($style_type)))
+					switch (trim($style_type))
 					{
 						case 'font-weight':
 							if ($style_value === 'bold')
@@ -512,15 +516,16 @@ function html_to_bbc($text)
 		$last_text = $text;
 		$text = preg_replace('~(?:<br\s*/?' . '>\s*){0,1}<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(?:ol|ul)>~ie', '\'[list\' . (\'$1\' == \'ol\' || \'$1\' == \'OL\' ? \' type=decimal\' : (strlen(\'$3\') > 1 ? \' type=$3\' : \'\')) . \']' . "\n" . '\' . strtr(\'$4\', array(\'\\"\' => \'"\')) . \'[/list]\'', $text);
 	}
-	$last_text = '';
 
 	// Quick lists
+	$last_text = '';
 	while ($text != $last_text)
 	{
 		$last_text = $text;
 		$text = preg_replace('~<li type="?(disc|square|circle)"?[^<>]*?' . '>(.+?)</li>~ie', '\'[\' . (strtolower(\'$1\') == \'disc\' ? \'*\' : (strtolower(\'$1\') == \'square\' ? \'+\' : \'o\')) . \']$2<br />\'', $text);
 	}
 
+	$last_text = '';
 	while ($text != $last_text)
 	{
 		$last_text = $text;
@@ -943,9 +948,13 @@ function legalise_bbc($text)
 			$isOpeningTag = $parts[$i + 2] === '';
 			$isClosingTag = $parts[$i + 2] === '/';
 			$isBlockLevelTag = isset($valid_tags[$tag]) && $valid_tags[$tag] && !in_array($tag, $self_closing_tags);
+			
+			// Check if this might be one of those cleaned out tags.
+			if ($tag === '')
+				continue;
 
 			// Special case: inside [code] blocks any code is left untouched.
-			if ($tag === 'code')
+			elseif ($tag === 'code')
 			{
 				// We're inside a code block and closing it.
 				if ($inCode && $isClosingTag)
