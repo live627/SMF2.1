@@ -75,6 +75,7 @@ October 2009
  * The custom subject was always disabled (SplitTopics template) [Bug 3914]
  * Core: hide the attachments division when there aren't any attachments to show. (Display template)
  & Properly capitalize the name of the DB software (repair_settings.php)
+ ! Fixed a few JavaScript notices. (suggest.js)
 
 
 September 2009

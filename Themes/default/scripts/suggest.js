@@ -403,12 +403,12 @@ smc_AutoSuggest.prototype.autoSuggestShow = function()
 smc_AutoSuggest.prototype.populateDiv = function(aResults)
 {
 	// Cannot have any children yet.
-	while (this.oSuggestDivHandle.childNodes[0])
+	while (this.oSuggestDivHandle.childNodes.length > 0)
 	{
 		// Tidy up the events etc too.
 		this.oSuggestDivHandle.childNodes[0].onmouseover = null;
-		this.oSuggestDivHandle.childNodes[0].omouseout = null;
-		this.oSuggestDivHandle.childNodes[0].click = null;
+		this.oSuggestDivHandle.childNodes[0].onmouseout = null;
+		this.oSuggestDivHandle.childNodes[0].onclick = null;
 
 		this.oSuggestDivHandle.removeChild(this.oSuggestDivHandle.childNodes[0]);
 	}
@@ -421,7 +421,7 @@ smc_AutoSuggest.prototype.populateDiv = function(aResults)
 	}
 
 	var aNewDisplayData = [];
-	for (i = 0; i < (aResults.length > this.iMaxDisplayQuantity ? this.iMaxDisplayQuantity : aResults.length); i++)
+	for (var i = 0; i < (aResults.length > this.iMaxDisplayQuantity ? this.iMaxDisplayQuantity : aResults.length); i++)
 	{
 		// Create the sub element
 		var oNewDivHandle = document.createElement('div');
