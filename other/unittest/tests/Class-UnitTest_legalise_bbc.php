@@ -137,16 +137,28 @@
 				'output' => "[hr]a\n[hr]",
 			),
 			'similar_style_tags_1' => array(
-				'name' => 'nested similar style tags (1)',
+				'name' => 'Nested similar style tags (1)',
 				'description' => "Make sure nested tags with equal semantics are reduced to a single tag.\n\n.",
 				'input' => "[color=green][color=green]hello[/color][/color]",
 				'output' => "[color=green]hello[/color]",
 			),
 			'similar_style_tags_2' => array(
-				'name' => 'nested similar style tags (2)',
+				'name' => 'Nested similar style tags (2)',
 				'description' => "Make sure nested tags with equal semantics are reduced to a single tag.\n\n.",
 				'input' => "[color=green][color=green][color=green]hello[/color][/color][/color]",
 				'output' => "[color=green]hello[/color]",
+			),
+			'competing_style_tags_1' => array(
+				'name' => 'Competing style tags (1)',
+				'description' => "Make sure competing inline style tags are properly handled.\n\n.",
+				'input' => "a[size=8px]b[size=15px]c[/size]d[/size]e",
+				'output' => "a[size=8px]b[/size][size=15px]c[/size][size=8px]d[/size]e",
+			),
+			'competing_style_tags_2' => array(
+				'name' => 'Competing style tags (2)',
+				'description' => "Make sure competing inline style tags are properly handled.\n\n.",
+				'input' => "a[size=8px]b[size=9px]c[/size]d[size=10px]e[size=11px]f[/size]g[/size]h[/size]i",
+				'output' => "a[size=8px]b[/size][size=9px]c[/size][size=8px]d[/size][size=10px]e[/size][size=11px]f[/size][size=10px]g[/size][size=8px]h[/size]i",
 			),
 		);
 

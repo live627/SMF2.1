@@ -920,6 +920,12 @@ function legalise_bbc($text)
 
 	// Need to sort the tags my name length.
 	uksort($valid_tags, 'sort_array_length');
+	
+	// These inline tags can compete with each other regarding style.
+	$competing_tags = array(
+		'color',
+		'size',
+	);
 
 	// In case things changed above set these back to normal.
 	$in_code_nobbc = false;
@@ -940,6 +946,9 @@ function legalise_bbc($text)
 
 		// A buffer containing all opened block elements.
 		$blockElements = array();
+		
+		// A buffer containing the opened inline elements that might compete.
+		$competingElements = array();
 
 		// $i: text, $i + 1: '[', $i + 2: '/', $i + 3: tag, $i + 4: tag tail.
 		for ($i = 0, $n = count($parts) - 1; $i < $n; $i += 5)
@@ -948,6 +957,7 @@ function legalise_bbc($text)
 			$isOpeningTag = $parts[$i + 2] === '';
 			$isClosingTag = $parts[$i + 2] === '/';
 			$isBlockLevelTag = isset($valid_tags[$tag]) && $valid_tags[$tag] && !in_array($tag, $self_closing_tags);
+			$isCompetingTag = in_array($tag, $competing_tags);
 			
 			// Check if this might be one of those cleaned out tags.
 			if ($tag === '')
@@ -1076,7 +1086,20 @@ function legalise_bbc($text)
 
 					// Otherwise, add this one to the list.
 					else
+					{
+						if ($isCompetingTag)
+						{
+							if (!isset($competingElements[$tag]))
+								$competingElements[$tag] = array();
+								
+							$competingElements[$tag][] = $parts[$i + 4];
+							
+							if (count($competingElements[$tag]) > 1)
+								$parts[$i] .= '[/' . $tag . ']';
+						}
+											
 						$inlineElements[$elementContent] = $tag;
+					}
 				}
 
 			}
@@ -1148,6 +1171,15 @@ function legalise_bbc($text)
 							else
 								$parts[$i] .= '[/' . $tagToBeClosed . ']';
 						}
+						
+						if ($isCompetingTag && !empty($competingElements[$tag]))
+						{
+							array_pop($competingElements[$tag]);
+							
+							if (count($competingElements[$tag]) > 0)
+								$parts[$i + 5] = '[' . $tag . $competingElements[$tag][count($competingElements[$tag]) - 1] . $parts[$i + 5];
+						}
+						
 					}
 
 					// Unexpected closing tag, ex-ter-mi-nate.
