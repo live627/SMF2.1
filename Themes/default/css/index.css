@@ -1981,7 +1981,11 @@ ul.quickbuttons li.inline_mod_check
 }
 .attachments
 {
-	padding: 1em 0.5em 2em 0.5em;
+	padding: 1em 0 2em 0;
+}
+.attachments div
+{
+	padding: 0 0.5em;
 }
 
 /* Styles for the quick reply area.
