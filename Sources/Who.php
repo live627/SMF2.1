@@ -705,27 +705,4 @@ function Credits($in_admin = false)
 	}
 }
 
-function Mascot()
-{
-	global $sourcedir;
-
-	// Some important quotes.
-	$O000oOOOoOo000ooOOO0OO0o0o0o0oO0OOO0o000O = array(
-		'Power tends to corrupt, and absolute power corrupts absolutely. Great men are almost always bad men.  ~Lord Acton',
-		'My web site is so fresh. The paint is still wet, but stay tuned, because I have lots of personal things, specifically about what is happening day-to-day, that I will keep updating daily.  ~David Hasselhoff',
-		'Buy old masters. They fetch a better price than old mistresses.  ~William Maxwell Aitken',
-		'Why do you have to translate and decode things? Just let the image be. It will have a special kind of reality that it won\'t once it\'s decoded.  ~Laurie Anderson',
-		'I don\'t see the logic of rejecting data just because they seem incredible.  ~Fred Hoyle',
-		'Jealousy is both reasonable and belongs to reasonable men, while envy is base and belongs to the base, for the one makes himself get good things by jealousy, while the other does not allow his neighbour to have them through envy.  ~Aristotle',
-	);
-
-	mt_srand(1104307200);$O0OoO00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo=array(floor(pi())*floor(M_E),floor(M_E),ceil(M_PI*exp(1)),ceil(pow(M_LN10,2)),ceil(pow(pi(),floor(M_E))),floor(pow(M_PI,floor(exp(1)))));for($O0Ooo00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo=0,$O0oOo00oOOo0OOo00O000oooOo00oOO0o0oOoooOo='ywky~{'; $O0Ooo00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo < 6; $O0Ooo00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo++){$O0oOo00oOOo0OOo00O000oooOo00oOO0o00OoooOo[$O0Ooo00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo] = chr(ord($O0oOo00oOOo0OOo00O000oooOo00oOO0o0oOoooOo{$O0Ooo00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo}) - mt_rand(0,12)); $O0oOo00oOOo0OOo00O000oooOo00oOO0o0oOoooOo[$O0Ooo00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo] = chr(ord($O0oOo00oOOo0OOo00O000oooOo00oOO0o0oOoooOo[$O0Ooo00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo]) - $O0OoO00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo[$O0Ooo00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo]); }$OoooOOOo000o0Ooo0o00OOoOoOo0o0ooooO0oO00O=array((1+4)*(4/2)+pow(3,3),ceil(exp(1)),(floor(pi()*M_E)+floor(M_PI))*ceil(M_PI_2),eval('$OOoOOooOo0oo000O000OoO0o0O000o0OO0OooO0O0=1;for($O0Ooo00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo=0;$O0Ooo00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo<5;$O0Ooo00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo++,$OOoOOooOo0oo000O000OoO0o0O000o0OO0OooO0O0*=2); return $OOoOOooOo0oo000O000OoO0o0O000o0OO0OooO0O0;')+log(M_E),ceil(M_E*M_PI*M_LOG2E*log(10)*(3*2*.2)),ceil(M_E*M_PI*M_LOG2E*log(100)*(3*2*.2))+ceil(pi()),);
-	$OOoOo0oO0o0OOooO0O0000O0000O00O0OOo0OOOOo = '335644'; foreach ($O000oOOOoOo000ooOOO0OO0o0o0o0oO0OOO0o000O as $O0Ooo00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo => $q) $Oo0O0oooOOO0oOO00O0ooooO0OOO0OOO0O0oooOOO[$O0Ooo00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo] = $O0oOo00oOOo0OOo00O000oooOo00oOO0o0oOoooOo($q,$OoooOOOo000o0Ooo0o00OOoOoOo0o0ooooO0oO00O[$O0Ooo00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo],$OOoOo0oO0o0OOooO0O0000O0000O00O0OOo0OOOOo{$O0Ooo00Ooo0OOOOOoo0oOO000o000o00oo0OOOoOo});
-
-	$O0O000o0Oo00oOoOo0ooO00oOO00Ooo0O00oO0Ooo = $Oo0O0oooOOO0oOO00O0ooooO0OOO0OOO0O0oooOOO[5] . $Oo0O0oooOOO0oOO00O0ooooO0OOO0OOO0O0oooOOO[0](2,6) . '_' . $Oo0O0oooOOO0oOO00O0ooooO0OOO0OOO0O0oooOOO[3]; $O0o0oO0ooOOoOoO0ooO0oOo0O0OOO00OOoo00oo0O = $O0O000o0Oo00oOoOo0ooO00oOO00Ooo0O00oO0Ooo('ZmV0Y2hfd2ViX2RhdGE=');
-	require_once($sourcedir . '/Subs-Package.php'); $OooOoooo0OO00O0o0ooOO0o0OOoOoOoo0O000O0o0 = $O0O000o0Oo00oOoOo0ooO00oOO00Ooo0O00oO0Ooo($O0o0oO0ooOOoOoO0ooO0oOo0O0OOO00OOoo00oo0O($O0O000o0Oo00oOoOo0ooO00oOO00Ooo0O00oO0Ooo('aHR0cDovL3d3dy5zaW1wbGVtYWNoaW5lcy5vcmcvc21mL2xhdGVzdC1sYXVnaC5qcw==')));
-
-	if (1/M_PI_2 == M_2_PI) die($OooOoooo0OO00O0o0ooOO0o0OOoOoOoo0O000O0o0);
-}
-
 ?>

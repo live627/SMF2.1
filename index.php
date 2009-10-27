@@ -287,7 +287,6 @@ function smf_main()
 		'login2' => array('LogInOut.php', 'Login2'),
 		'logout' => array('LogInOut.php', 'Logout'),
 		'markasread' => array('Subs-Boards.php', 'MarkRead'),
-		'mascot' => array('Who.php', 'Mascot'),
 		'mergetopics' => array('SplitTopics.php', 'MergeTopics'),
 		'mlist' => array('Memberlist.php', 'Memberlist'),
 		'moderate' => array('ModerationCenter.php', 'ModerationMain'),
