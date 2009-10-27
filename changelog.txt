@@ -80,6 +80,7 @@ October 2009
  ! The legalise_bbc function could not be called twice. (Subs-Editor.php)
  ! Duplicate tags were not properly removed by the legalise_bbc function. (Subs-Editor.php) [Bug 3211-1]
  ! The legalise_bbc function didn't handle competing inline tags properly. (Subs-Editor.php) [Bug 3211-2]
+ ! is_not_guest() isn't called on dlattach if guest browsing is disabled (index.php) [Bug 3862]
 
 
 September 2009

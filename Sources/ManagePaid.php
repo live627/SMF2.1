@@ -1387,7 +1387,7 @@ function addSubscription($id_subscribe, $id_member, $renewal = 0, $forceStartTim
 	{
 		$id_group = $curSub['prim_group'];
 
-		// Ensure their old priviledges are maintained.
+		// Ensure their old privileges are maintained.
 		if ($old_id_group != 0)
 			$newAddGroups[] = $old_id_group;
 	}
