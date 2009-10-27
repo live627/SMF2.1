@@ -85,6 +85,7 @@ October 2009
  ! An extra incase sensitive check was being done to censorText (Load.php) [Bug 3922]
  ! Directories we didn't descend into were not listed (Packages.php) [Bug 3919]
  ! Package permissions did not handle custom cache directories (Packages.php) [Bug 3919]
+ + Removal of "stuck" or old mail (ManageMail.php) [Feature 3913] 
 
 
 September 2009

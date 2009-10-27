@@ -86,6 +86,20 @@ function BrowseMailQueue()
 	global $scripturl, $context, $modSettings, $txt, $smcFunc;
 	global $sourcedir;
 
+	// First, are we deleting something from the queue?
+	if (isset($_REQUEST['delete']))
+	{
+		checkSession('post');
+
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}mail_queue
+			WHERE id_mail IN ({array_int:mail_ids})',
+			array(
+				'mail_ids' => $_REQUEST['delete'],
+			)
+		);
+	}
+	
 	// How many items do we have?
 	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*) AS queue_size, MIN(time_sent) AS oldest
@@ -182,11 +196,27 @@ function BrowseMailQueue()
 					'reverse' => 'time_sent DESC',
 				),
 			),
+			'check' => array(
+				'header' => array(
+					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />',
+				),
+				'data' => array(
+					'function' => create_function('$rowData', '
+						return \'<input type="checkbox" name="delete[]" value="\' . $rowData[\'id_mail\'] . \'" class="input_check" />\';
+					'),
+					'class' => 'smalltext',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=admin;area=mailqueue',
+			'include_start' => true,
+			'include_sort' => true,
 		),
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '[<a href="' . $scripturl . '?action=admin;area=mailqueue;sa=clear;' . $context['session_var'] . '=' . $context['session_id'] . '" onclick="return confirm(\'' . $txt['mailqueue_clear_list_warning'] . '\');">' . $txt['mailqueue_clear_list'] . '</a>]',
+				'value' => '[<a href="' . $scripturl . '?action=admin;area=mailqueue;sa=clear;' . $context['session_var'] . '=' . $context['session_id'] . '" onclick="return confirm(\'' . $txt['mailqueue_clear_list_warning'] . '\');">' . $txt['mailqueue_clear_list'] . '</a>] <input type="hidden" name="\', $context[\'session_var\'], \'" value="\', $context[\'session_id\'], \'" /><input type="submit" name="delete_redirects" value="Delete" onclick="return confirm(\'' . $txt['quickmod_confirm'] . '\');" class="button_submit" />',
 				'class' => 'titlebg',
 			),
 		),
