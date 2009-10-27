@@ -1313,8 +1313,8 @@ function Download()
 	}
 
 	// Check whether the ETag was sent back, and cache based on that...
-	$file_md5 = '"' . md5_file($filename) . '"';
-	if (!empty($_SERVER['HTTP_IF_NONE_MATCH']) && strpos($_SERVER['HTTP_IF_NONE_MATCH'], $file_md5) !== false)
+	$eTag = '"' . substr($_REQUEST['attach'] . $real_filename . filemtime($filename), 0, 64) . '"';
+	if (!empty($_SERVER['HTTP_IF_NONE_MATCH']) && strpos($_SERVER['HTTP_IF_NONE_MATCH'], $eTag) !== false)
 	{
 		ob_end_clean();
 
@@ -1330,7 +1330,7 @@ function Download()
 	header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($filename)) . ' GMT');
 	header('Accept-Ranges: bytes');
 	header('Connection: close');
-	header('ETag: ' . $file_md5);
+	header('ETag: ' . $eTag);
 
 	// IE 6 just doesn't play nice. As dirty as this seems, it works.
 	if ($context['browser']['is_ie6'] && isset($_REQUEST['image']))
