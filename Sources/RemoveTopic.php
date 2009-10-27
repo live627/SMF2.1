@@ -987,7 +987,7 @@ function RestoreTopic()
 		fatal_lang_error('restored_disabled', 'critical');
 
 	// Can we be in here?
-	isAllowedTo('move_any', $modSettings['recycle_enable']);
+	isAllowedTo('move_any', $modSettings['recycle_board']);
 
 	// We need this file.
 	require_once($sourcedir . '/MoveTopic.php');
