@@ -479,11 +479,12 @@ function template_button_strip($button_strip, $direction = 'top', $strip_options
 			$buttons[] = '<a ' . (isset($value['active']) ? 'class="active" ' : '') . 'href="' . $value['url'] . '" ' . (isset($value['custom']) ? $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
 	}
 
-	if (!empty($buttons))
-	{
-		// Make the last one, as easy as possible.
-		$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
-	}
+	// No buttons? No button strip either.
+	if (empty($buttons))
+		return;
+
+	// Make the last one, as easy as possible.
+	$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
 
 	echo '
 		<div class="buttonlist', !empty($direction) ? ' align_' . $direction : '', '"', (empty($buttons) ? ' style="display: none;"' : ''), (!empty($strip_options['id']) ? ' id="' . $strip_options['id'] . '"': ''), '>

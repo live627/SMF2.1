@@ -497,14 +497,15 @@ function template_button_strip($button_strip, $direction = 'top', $strip_options
 		if (!isset($value['test']) || !empty($context[$value['test']]))
 			$buttons[] = '<li' . (isset($value['active']) ? ' class="active"' : '') . '><a href="' . $value['url'] . '"' . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '><span>' . (isset($value['active']) ? '<em>' : '') . $txt[$value['text']] . (isset($value['active']) ? '</em>' : '') . '</span></a></li>';
 
-	if (!empty($buttons))
-	{
-		// Make the last one, as easy as possible.
-		$list_item = array('<li>', '<li class="active">');
-		$active_item = array('<li class="last">', '<li class="active last">');
+	// No buttons? No button strip either.
+	if (empty($buttons))
+		return;
+	
+	// Make the last one, as easy as possible.
+	$list_item = array('<li>', '<li class="active">');
+	$active_item = array('<li class="last">', '<li class="active last">');
 
-		$buttons[count($buttons) - 1] = str_replace($list_item, $active_item, $buttons[count($buttons) - 1]);
-	}
+	$buttons[count($buttons) - 1] = str_replace($list_item, $active_item, $buttons[count($buttons) - 1]);
 
 	echo '
 		<div class="buttonlist', $direction != 'top' ? '_bottom' : '', '"', (empty($buttons) ? ' style="display: none;"' : ''), (!empty($strip_options['id']) ? ' id="' . $strip_options['id'] . '"': ''), '>

@@ -20,11 +20,12 @@ function template_button_strip($button_strip, $direction = 'top', $strip_options
 		if (!isset($value['test']) || !empty($context[$value['test']]))
 			$buttons[] = '<a href="' . $value['url'] . '"' . (isset($value['active']) ? ' class="active"' : '') . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
 
-	if (!empty($buttons))
-	{
-		// Make the last one, as easy as possible.
-		$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
-	}
+	// No buttons? No button strip either.
+	if (empty($buttons))
+		return;
+
+	// Make the last one, as easy as possible.
+	$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
 
 	echo '
 		<div class="buttonlist', $direction != 'top' ? '_bottom' : '', '"', (empty($buttons) ? ' style="display: none;"' : ''), (!empty($strip_options['id']) ? ' id="' . $strip_options['id'] . '"': ''), '>
