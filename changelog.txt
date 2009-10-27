@@ -83,6 +83,8 @@ October 2009
  ! is_not_guest() isn't called on dlattach if guest browsing is disabled (index.php) [Bug 3862]
  ! Check if we can move_any topics from the recycle board (RemoveTopic.php) [Bug 3684]
  ! An extra incase sensitive check was being done to censorText (Load.php) [Bug 3922]
+ ! Directories we didn't descend into were not listed (Packages.php) [Bug 3919]
+ ! Package permissions did not handle custom cache directories (Packages.php) [Bug 3919]
 
 
 September 2009

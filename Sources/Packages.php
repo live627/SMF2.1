@@ -1517,7 +1517,7 @@ function ViewOperations()
 // Allow the admin to reset permissions on files.
 function PackagePermissions()
 {
-	global $context, $txt, $modSettings, $boarddir, $sourcedir, $smcFunc, $package_ftp;
+	global $context, $txt, $modSettings, $boarddir, $sourcedir, $cachedir, $smcFunc, $package_ftp;
 
 	// Let's try and be good, yes?
 	checkSession('get');
@@ -1582,6 +1582,10 @@ function PackagePermissions()
 					'type' => 'dir',
 					'writable_on' => 'standard',
 				),
+				'cache' => array(
+					'type' => 'dir',
+					'writable_on' => 'restrictive',
+				),
 				'custom_avatar_dir' => array(
 					'type' => 'dir',
 					'writable_on' => 'restrictive',
@@ -1639,6 +1643,18 @@ function PackagePermissions()
 			'type' => 'dir',
 			'list_contents' => true,
 			'writable_on' => 'standard',
+		);
+	}
+
+var_dump($cachedir);
+	// Moved the cache?
+	if (substr($cachedir, 0, strlen($boarddir)) != $boarddir)
+	{
+		unset($context['file_tree'][strtr($boarddir, array('\\' => '/'))]['contents']['cache']);
+		$context['file_tree'][strtr($cachedir, array('\\' => '/'))] = array(
+			'type' => 'dir',
+			'list_contents' => false,
+			'writable_on' => 'restrictive',
 		);
 	}
 
@@ -1838,6 +1854,7 @@ function fetchPerms__recursive($path, &$data, $level)
 		'folders' => array(),
 	);
 
+
 	$dh = opendir($path);
 	while ($entry = readdir($dh))
 	{
@@ -1872,6 +1889,9 @@ function fetchPerms__recursive($path, &$data, $level)
 				// Actually do the recursive stuff...
 				fetchPerms__recursive($path . '/' . $entry, $data['contents'][$entry], $level + 1);
 			}
+			// Maybe it is a folder we are not descending into.
+			elseif (isset($data['contents'][$entry]))
+				$foundData['folders'][$entry] = true;
 			// Otherwise we stop here.
 		}
 	}
