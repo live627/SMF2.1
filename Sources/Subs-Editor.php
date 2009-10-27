@@ -514,17 +514,33 @@ function html_to_bbc($text)
 	while ($text != $last_text)
 	{
 		$last_text = $text;
-		$text = preg_replace('~(?:<br\s*/?' . '>\s*){0,1}<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(?:ol|ul)>~ie', '\'[list\' . (\'$1\' == \'ol\' || \'$1\' == \'OL\' ? \' type=decimal\' : (strlen(\'$3\') > 1 ? \' type=$3\' : \'\')) . \']' . "\n" . '\' . strtr(\'$4\', array(\'\\"\' => \'"\')) . \'[/list]\'', $text);
+		$text = preg_replace('~(?:<br\s*/?' . '>\s*)?<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(?:ol|ul)>~ie', '\'[list\' . (strtolower(\'$1\') == \'ol\' ? \' type=decimal\' : (strlen(\'$3\') > 1 ? \' type=$3\' : \'\')) . \']' . "\n" . '\' . strtr(\'$4\', array(\'\\"\' => \'"\')) . \'[/list]\'', $text);
 	}
+	
+	// If there are still list tags that are not closed, use the line breaks.
+	$last_text = '';
+	while ($text != $last_text)
+	{
+		$last_text = $text;
+		$text = preg_replace('~<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)(?:<br\s*/?' . '>|$)~ie', '\'[list\' . (strtolower(\'$1\') == \'ol\' ? \' type=decimal\' : (strlen(\'$3\') > 1 ? \' type=$3\' : \'\')) . \']' . "\n" . '\' . strtr(\'$4\', array(\'\\"\' => \'"\')) . \'[/list]\'', $text);
+	}	
 
 	// Quick lists
 	$last_text = '';
 	while ($text != $last_text)
 	{
 		$last_text = $text;
-		$text = preg_replace('~<li type="?(disc|square|circle)"?[^<>]*?' . '>(.+?)</li>~ie', '\'[\' . (strtolower(\'$1\') == \'disc\' ? \'*\' : (strtolower(\'$1\') == \'square\' ? \'+\' : \'o\')) . \']$2<br />\'', $text);
+		$text = preg_replace('~<li(?: type="?(disc|square|circle)"?)?[^<>]*?' . '>(.+?)</li>~ie', '\'[\' . (strtolower(\'$1\') == \'disc\' ? \'*\' : (strtolower(\'$1\') == \'square\' ? \'+\' : \'o\')) . \']$2<br />\'', $text);
 	}
-
+	
+	// In case of unclosed li tags, use the line breaks or end of lists.
+	$last_text = '';
+	while ($text != $last_text)
+	{
+		$last_text = $text;
+		$text = preg_replace('~<li(?: type="?(disc|square|circle)"?)?[^<>]*?' . '>(.+?)(?:<br\s*/?' . '>|\\[/list\\]|$)~ie', '\'[\' . (strtolower(\'$1\') == \'circle\' ? \'o\' : (strtolower(\'$1\') == \'square\' ? \'+\' : \'*\')) . \']$2<br />\'', $text);
+	}
+	
 	$last_text = '';
 	while ($text != $last_text)
 	{

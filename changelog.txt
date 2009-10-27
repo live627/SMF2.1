@@ -87,6 +87,7 @@ October 2009
  ! Package permissions did not handle custom cache directories (Packages.php) [Bug 3919]
  + Removal of "stuck" or old mail (ManageMail.php) [Feature 3913]
  ! md5_file can be slow, use another etag check (Display.php) [Bug 3886]
+ ! The html_to_bbc function doesn't parse lists with only opening tags. (Subs-Editor) [Bug 3211-3]
 
 
 September 2009

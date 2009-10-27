@@ -33,6 +33,12 @@
 				'input' => '<a href="test.html">test</a>',
 				'output' => "[url={baseURL}/test.html]test[/url]",
 			),
+			'list_1' => array(
+				'name' => 'Lists (1)',
+				'description' => "Make sure that lists that are not closed at all are still processed.",
+				'input' => '<ul class="bbc_list"><li>test',
+				'output' => "[list]\n[*]test\n[/list]",
+			),
 
 
 		);
