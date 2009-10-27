@@ -99,7 +99,8 @@ function template_new_group()
 	}
 	echo '
 						<dt>
-							<strong>', $txt['membergroups_new_board'], ':</strong><br />', $context['post_group'] ? '<div class="smalltext" style="font-weight: normal">' . $txt['membergroups_new_board_post_groups'] . '</div>' : '', '
+							<strong>', $txt['membergroups_new_board'], ':</strong>', $context['post_group'] ? '<br />
+							<span class="smalltext" style="font-weight: normal">' . $txt['membergroups_new_board_post_groups'] . '</span>' : '', '
 						</dt>
 						<dd>
 							<fieldset id="visible_boards">
@@ -273,7 +274,8 @@ function template_edit_group()
 	{
 		echo '
 						<dt>
-							', $txt['membergroups_new_board'], ':', $context['group']['is_post_group'] ? '<div class="smalltext" style="font-weight: normal">' . $txt['membergroups_new_board_post_groups'] . '</div>' : '', '
+							<strong>', $txt['membergroups_new_board'], ':</strong>', $context['group']['is_post_group'] ? '<br />
+							<span class="smalltext">' . $txt['membergroups_new_board_post_groups'] . '</span>' : '', '
 						</dt>
 						<dd>
 							<fieldset id="visible_boards" style="width: 95%;">
