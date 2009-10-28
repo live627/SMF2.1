@@ -37,10 +37,50 @@
 				'name' => 'Lists (1)',
 				'description' => "Make sure that lists that are not closed at all are still processed.",
 				'input' => '<ul class="bbc_list"><li>test',
-				'output' => "[list]\n[*]test\n[/list]",
+				'output' => "[list]\n\t[li]test[/li][/list]",
 			),
-
-
+			'list_2' => array(
+				'name' => 'Lists (2)',
+				'description' => "A simple example of nested lists.",
+				'input' => '<ul><li>a<ul><li>b</li></ul></li></ul>',
+				'output' => "[list]\n\t[li]a[list]\n\t\t[li]b[/li]\n\t[/list][/li]\n[/list]",
+			),
+			'list_3' => array(
+				'name' => 'Lists (3)',
+				'description' => "A nested list with an item just after the list definition.",
+				'input' => '<ul>a<li>b<ul><li>c</li></ul></li></ul>',
+				'output' => "[list]\n\t[li]a[/li]\n\t[li]b[list]\n\t\t[li]c[/li]\n\t[/list][/li]\n[/list]",
+			),
+			'list_4' => array(
+				'name' => 'Lists (4)',
+				'description' => "A nested list that has the nested list AS a list item instead of INSIDE a list item.",
+				'input' => '<ul><li>a</li><ul><li>b</li></ul></ul>',
+				'output' => "[list]\n\t[li]a[/li]\n\t[li][list]\n\t\t[li]b[/li]\n\t[/list][/li]\n[/list]",
+			),
+			'list_5' => array(
+				'name' => 'Lists (5)',
+				'description' => "A list that has a closing list item tag as its first item.",
+				'input' => '<ul></li><li>a</li></ul>',
+				'output' => "[list]\n\t[li]a[/li]\n[/list]",
+			),
+			'list_6' => array(
+				'name' => 'Lists (6)',
+				'description' => "A list that has a closing list tag as its first item.",
+				'input' => '</ul><ul><li>a</li></ul>',
+				'output' => "[list]\n\t[li]a[/li]\n[/list]",
+			),
+			'list_7' => array(
+				'name' => 'Lists (7)',
+				'description' => "A list that has numeric items.",
+				'input' => '<ol><li>a</li></ul>',
+				'output' => "[list type=decimal]\n\t[li]a[/li]\n[/list]",
+			),
+			'list_8' => array(
+				'name' => 'Lists (8)',
+				'description' => "A list that uses non-typical bullet points.",
+				'input' => '<ul type="square"><li>a</li></ul>',
+				'output' => "[list type=square]\n\t[li]a[/li]\n[/list]",
+			),
 		);
 
 		public function initialize()
@@ -84,7 +124,7 @@
 				return true;
 
 			else
-				return sprintf("Unexpected output received from legalise_bbc().\nInput: %1\$s\nExpected output: %2\$s\nReal output: %3\$s", htmlspecialchars($this->_tests[$testID]['input']), htmlspecialchars($expected_output), htmlspecialchars($output));
+				return sprintf("Unexpected output received from legalise_bbc().\nInput: %1\$s\nExpected output: <pre>%2\$s</pre>\nReal output: <pre>%3\$s</pre>", htmlspecialchars($this->_tests[$testID]['input']), htmlspecialchars($expected_output), htmlspecialchars($output));
 		}
 
 		public function getTestDescription($testID)

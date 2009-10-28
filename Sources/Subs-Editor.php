@@ -506,48 +506,206 @@ function html_to_bbc($text)
 	// Almost there, just a little more time.
 	if (connection_aborted() && $context['server']['is_apache'])
 		@apache_reset_timeout();
+		
+	if (count($parts = preg_split('~<(/?)(li|ol|ul)([^>]*)>~i', $text, null, PREG_SPLIT_DELIM_CAPTURE)) > 1)
+	{
+		// A toggle that dermines whether we're directly under a <ol> or <ul>.
+		$inList = false;
+		
+		// Keep track of the number of nested list levels.
+		$listDepth = 0;
+		
+		// Map what we can expect from the HTML to what is supported by SMF.
+		$listTypeMapping = array(
+			'1' => 'decimal',
+			'A' => 'upper-alpha',
+			'a' => 'lower-alpha',
+			'I' => 'upper-roman',
+			'i' => 'lower-roman',
+			'disc' => 'disc',
+			'square' => 'square',
+			'circle' => 'circle',
+		);
+		
+		// $i: text, $i + 1: '/', $i + 2: tag, $i + 3: tail.
+		for ($i = 0, $numParts = count($parts) - 1; $i < $numParts; $i += 4)
+		{
+			$tag = strtolower($parts[$i + 2]);
+			$isOpeningTag = $parts[$i + 1] === '';
+			
+			if ($isOpeningTag)
+			{
+				switch ($tag)
+				{
+					case 'ol':
+					case 'ul':
+						
+						// We have a problem, we're already in a list.
+						if ($inList)
+						{
+							// Inject a list opener, we'll deal with the ol/ul next loop.
+							array_splice($parts, $i, 0, array(
+								'',
+								'',
+								str_repeat("\t", $listDepth) . '[li]',
+								'',
+							));
+							$numParts = count($parts) - 1;
+							
+							// The inlist status changes a bit.
+							$inList = false;
+						}
+						
+						// Just starting a new list.
+						else 
+						{
+							$inList = true;
+							
+							if ($tag === 'ol')
+								$listType = 'decimal';
+							elseif (preg_match('~type="?(' . implode('|', array_keys($listTypeMapping)) . ')"?~', $parts[$i + 3], $match) === 1)
+								$listType = $listTypeMapping[$match[1]];
+							else
+								$listType = null;
+								
+							$listDepth++;
+							
+							$parts[$i + 2] = '[list' . ($listType === null ? '' : ' type=' . $listType) . ']' . "\n";
+							$parts[$i + 3] = '';
+						}
+					break;	
 
-	// Try our hand at all manner of lists - doesn't matter if we mess up the children as the BBC will clean it.
-	$text = preg_replace('~<li>\s*</li>~i', '', $text);
-	$text = preg_replace('~<(?:ul|ol)[^<>]*>\s*</(?:ul|ol)>~i', '', $text);
-	$last_text = '';
-	while ($text != $last_text)
-	{
-		$last_text = $text;
-		$text = preg_replace('~(?:<br\s*/?' . '>\s*)?<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(?:ol|ul)>~ie', '\'[list\' . (strtolower(\'$1\') == \'ol\' ? \' type=decimal\' : (strlen(\'$3\') > 1 ? \' type=$3\' : \'\')) . \']' . "\n" . '\' . strtr(\'$4\', array(\'\\"\' => \'"\')) . \'[/list]\'', $text);
-	}
-	
-	// If there are still list tags that are not closed, use the line breaks.
-	$last_text = '';
-	while ($text != $last_text)
-	{
-		$last_text = $text;
-		$text = preg_replace('~<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)(?:<br\s*/?' . '>|$)~ie', '\'[list\' . (strtolower(\'$1\') == \'ol\' ? \' type=decimal\' : (strlen(\'$3\') > 1 ? \' type=$3\' : \'\')) . \']' . "\n" . '\' . strtr(\'$4\', array(\'\\"\' => \'"\')) . \'[/list]\'', $text);
-	}	
+					case 'li':
 
-	// Quick lists
-	$last_text = '';
-	while ($text != $last_text)
-	{
-		$last_text = $text;
-		$text = preg_replace('~<li(?: type="?(disc|square|circle)"?)?[^<>]*?' . '>(.+?)</li>~ie', '\'[\' . (strtolower(\'$1\') == \'disc\' ? \'*\' : (strtolower(\'$1\') == \'square\' ? \'+\' : \'o\')) . \']$2<br />\'', $text);
-	}
-	
-	// In case of unclosed li tags, use the line breaks or end of lists.
-	$last_text = '';
-	while ($text != $last_text)
-	{
-		$last_text = $text;
-		$text = preg_replace('~<li(?: type="?(disc|square|circle)"?)?[^<>]*?' . '>(.+?)(?:<br\s*/?' . '>|\\[/list\\]|$)~ie', '\'[\' . (strtolower(\'$1\') == \'circle\' ? \'o\' : (strtolower(\'$1\') == \'square\' ? \'+\' : \'*\')) . \']$2<br />\'', $text);
-	}
-	
-	$last_text = '';
-	while ($text != $last_text)
-	{
-		$last_text = $text;
+						// This is how it should be: a list item inside the list.					
+						if ($inList)
+						{
+							$parts[$i + 2] = str_repeat("\t", $listDepth) . '[li]';
+							$parts[$i + 3] = '';
+							
+							// Within a list item, it's almost as if you're outside.
+							$inList = false;
+						}
+						
+						// The li is no direct child of a list.
+						else
+						{
+							// We are apparently in a list item.
+							if ($listDepth > 0)
+							{
+								$parts[$i + 2] = '[/li]' . "\n" . str_repeat("\t", $listDepth) . '[li]';
+								$parts[$i + 3] = '';
+							}
+							
+							// We're not even near a list.
+							else 
+							{
+								// Quickly create a list with an item.
+								$listDepth++;							
+								
+								$parts[$i + 2] = '[list]' . "\n\t" . '[li]';
+								$parts[$i + 3] = '';
+							}
+						}
+						
+					break;
+				}
+			}
+			
+			// Handle all the closing tags.
+			else 
+			{
+				switch ($tag)
+				{
+					case 'ol':
+					case 'ul':
+						
+						// As we expected it, closing the list while we're in it.
+						if ($inList)
+						{
+							$inList = false;
+							
+							$listDepth--;
+							
+							$parts[$i + 1] = '';
+							$parts[$i + 2] = str_repeat("\t", $listDepth) . '[/list]';
+							$parts[$i + 3] = '';
+						}
+						
+						else 
+						{
+							// We're in a list item.
+							if ($listDepth > 0)
+							{
+								// Inject closure for this list item first.
+								// The content of $parts[$i] is left as is!
+								array_splice($parts, $i + 1, 0, array(
+									'',				// $i + 1
+									'[/li]' . "\n",	// $i + 2
+									'',				// $i + 3
+									'',				// $i + 4
+								));
+								$numParts = count($parts) - 1;
+								
+								// Now that we've closed the li, we're in list space.
+								$inList = true;
+							}
+							
+							// We're not even in a list, ignore
+							else
+							{
+								$parts[$i + 1] = '';
+								$parts[$i + 2] = '';
+								$parts[$i + 3] = '';
+							}
+						}
+					break;	
 
-		$text = preg_replace('~<li\s*[^<>]*?' . '>(.+?)</li>~i', '[li]$1[/li]' . "\n", $text);
+					case 'li':
+
+						
+						if ($inList)
+						{
+							// There's no use for a </li> after <ol> or <ul>, ignore.
+							$parts[$i + 1] = '';
+							$parts[$i + 2] = '';
+							$parts[$i + 3] = '';
+						}
+						
+						else
+						{
+							// Remove the trailing breaks from the list item.
+							$parts[$i] = preg_replace('~\s*<br\s*' . '/?' . '>\s*$~', '', $parts[$i]);
+							$parts[$i + 1] = '';
+							$parts[$i + 2] = '[/li]' . "\n";
+							$parts[$i + 3] = '';
+
+							// And we're back in the [list] space.
+							$inList = true;
+						}
+						
+					break;
+				}				
+			}
+			
+			// If we're in the [list] space, no content is allowed.
+			if ($inList && trim(preg_replace('~\s*<br\s*' . '/?' . '>\s*~', '', $parts[$i + 4])) !== '')
+			{
+				// Fix it by injecting an extra list item.
+				array_splice($parts, $i + 4, 0, array(
+					'', // No content.
+					'', // Opening tag.
+					'li', // It's a <li>.
+					'', // No tail.
+				));
+				$numParts = count($parts) - 1;
+			}
+		}
+		
+		$text = implode('', $parts);
 	}
+
+
 
 	// I love my own image...
 	while (preg_match('~<img\s+([^<>]*)/*>~i', $text, $matches) === 1)
