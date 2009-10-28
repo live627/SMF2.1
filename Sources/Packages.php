@@ -1646,7 +1646,6 @@ function PackagePermissions()
 		);
 	}
 
-var_dump($cachedir);
 	// Moved the cache?
 	if (substr($cachedir, 0, strlen($boarddir)) != $boarddir)
 	{
@@ -1853,7 +1852,6 @@ function fetchPerms__recursive($path, &$data, $level)
 		'files' => array(),
 		'folders' => array(),
 	);
-
 
 	$dh = opendir($path);
 	while ($entry = readdir($dh))
