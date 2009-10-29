@@ -678,11 +678,11 @@ smc_Editor.prototype.handleButtonClick = function (oButtonProperties)
 		{
 			// Replace?
 			if (!('sAfter' in oButtonProperties) || oButtonProperties.sAfter == null)
-				replaceText(oButtonProperties.sBefore, this.oTextHandle)
+				replaceText(oButtonProperties.sBefore.replace(/\\n/g, '\n'), this.oTextHandle)
 
 			// Surround!
 			else
-				surroundText(oButtonProperties.sBefore, oButtonProperties.sAfter, this.oTextHandle)
+				surroundText(oButtonProperties.sBefore.replace(/\\n/g, '\n'), oButtonProperties.sAfter.replace(/\\n/g, '\n'), this.oTextHandle)
 		}
 		else
 		{
@@ -700,7 +700,7 @@ smc_Editor.prototype.handleButtonClick = function (oButtonProperties)
 
 			// Everything else means doing something ourselves.
 			else if ('sBefore' in oButtonProperties)
-				this.insertCustomHTML(oButtonProperties.sBefore, oButtonProperties.sAfter);
+				this.insertCustomHTML(oButtonProperties.sBefore.replace(/\\n/g, '\n'), oButtonProperties.sAfter.replace(/\\n/g, '\n'));
 
 		}
 	}
