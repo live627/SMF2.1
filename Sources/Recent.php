@@ -806,9 +806,9 @@ function UnreadTopics()
 		$request = $smcFunc['db_query']('substring', '
 			SELECT ' . $select_clause . '
 			FROM {db_prefix}messages AS ms
-				INNER JOIN {db_prefix}boards AS b ON (b.id_board = ms.id_board)
 				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = ms.id_topic AND t.id_first_msg = ms.id_msg)
 				INNER JOIN {db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)
+				LEFT JOIN {db_prefix}boards AS b ON (b.id_board = ms.id_board)
 				LEFT JOIN {db_prefix}members AS mems ON (mems.id_member = ms.id_member)
 				LEFT JOIN {db_prefix}members AS meml ON (meml.id_member = ml.id_member)
 				LEFT JOIN {db_prefix}log_topics_unread AS lt ON (lt.id_topic = t.id_topic)
@@ -884,8 +884,8 @@ function UnreadTopics()
 			SELECT ' . $select_clause . '
 			FROM {db_prefix}messages AS ms
 				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = ms.id_topic AND t.id_first_msg = ms.id_msg)
-				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 				INNER JOIN {db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)
+				LEFT JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 				LEFT JOIN {db_prefix}members AS mems ON (mems.id_member = ms.id_member)
 				LEFT JOIN {db_prefix}members AS meml ON (meml.id_member = ml.id_member)' . (!empty($have_temp_table) ? '
 				LEFT JOIN {db_prefix}log_topics_unread AS lt ON (lt.id_topic = t.id_topic)' : '
