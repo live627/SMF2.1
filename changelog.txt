@@ -91,7 +91,7 @@ October 2009
  * The button strip was outputting empty lists if no buttons were present. (index template, Compat template)
  ! Rewrote the list processing part of the html_to_bbc function. (Subs-Editor.php) [Bug 3211-4,3890,3724]
  * Replaced the bbc button backgrounds with brighter variants to match the post interface's background colour better. (bbc_bg.gif, bbc_hoverbg.gif)
- ! Don't include code, cdata, comment or style bocks in the html_to_bbc function. (Subs-Editor.php) [Bug 2311]
+ ! Don't include code, cdata, comment or style bocks in the html_to_bbc function. (Subs-Editor.php) [Bug 3211]
  ! Make sure lists are being properly closed by html_to_bbc function. (Subs-Editor.php)
 
 
