@@ -739,14 +739,16 @@ function template_trackIP()
 		<ul id="ip_list">
 			<li class="catbg3 header">', $txt['ip_address'], '</li>
 			<li class="catbg3 header">', $txt['display_name'], '</li>';
+
 		// Loop through each of the members and display them.
 		foreach ($context['ips'] as $ip => $memberlist)
 			echo '
 			<li class="windowbg2 ip"><a href="', $context['base_url'], ';searchip=', $ip, '">', $ip, '</a></li>
 			<li class="windowbg2 ip">', implode(', ', $memberlist), '</li>';
-	}
-	echo '
+
+		echo '
 		</ul>';
+	}
 
 	template_show_list('track_message_list');
 
@@ -1365,8 +1367,7 @@ function template_profile_pm_settings()
 								<dd>
 										<input type="hidden" name="default_options[pm_remove_inbox_label]" value="0" />
 										<input type="checkbox" name="default_options[pm_remove_inbox_label]" id="pm_remove_inbox_label" value="1"', !empty($context['member']['options']['pm_remove_inbox_label']) ? ' checked="checked"' : '', ' class="input_check" />
-								</dd>
-						</dl>';
+								</dd>';
 
 }
 
@@ -2212,7 +2213,6 @@ function template_deleteAccount()
 				<span class="left"></span>
 				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
 				', $txt['deleteAccount'], '
-				</td>
 			</h3>';
 	// If deleting another account give them a lovely info box.
 	if (!$context['user']['is_owner'])
