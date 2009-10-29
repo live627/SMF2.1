@@ -1508,21 +1508,30 @@ smc_BBCButtonBox.prototype.init = function ()
 	for (var iButtonRowIndex = 0, iRowCount = this.opt.aButtonRows.length; iButtonRowIndex < iRowCount; iButtonRowIndex++)
 	{
 		var sRowContent = '';
+		var bPreviousWasDivider = false;
 		for (var iButtonIndex = 0, iButtonCount = this.opt.aButtonRows[iButtonRowIndex].length; iButtonIndex < iButtonCount; iButtonIndex++)
 		{
 			var oCurButton = this.opt.aButtonRows[iButtonRowIndex][iButtonIndex];
 			switch (oCurButton.sType)
 			{
 				case 'button':
-					sRowContent += this.opt.sButtonTemplate.easyReplace({
-						buttonId: this.opt.sUniqueId.php_htmlspecialchars() + '_button_' + iButtonRowIndex.toString() + '_' + iButtonIndex.toString(),
-						buttonSrc: oCurButton.sImage.php_htmlspecialchars(),
-						buttonDescription: oCurButton.sDescription.php_htmlspecialchars()
-					});
+					if (oCurButton.bEnabled)
+					{
+						sRowContent += this.opt.sButtonTemplate.easyReplace({
+							buttonId: this.opt.sUniqueId.php_htmlspecialchars() + '_button_' + iButtonRowIndex.toString() + '_' + iButtonIndex.toString(),
+							buttonSrc: oCurButton.sImage.php_htmlspecialchars(),
+							buttonDescription: oCurButton.sDescription.php_htmlspecialchars()
+						});
+
+						bPreviousWasDivider = false;
+					}
 				break;
 
 				case 'divider':
-					sRowContent += this.opt.sDividerTemplate;
+					if (!bPreviousWasDivider)
+						sRowContent += this.opt.sDividerTemplate;
+
+					bPreviousWasDivider = true;
 				break;
 
 				case 'select':
@@ -1534,6 +1543,8 @@ smc_BBCButtonBox.prototype.init = function ()
 						selectId: this.opt.sUniqueId.php_htmlspecialchars() + '_select_' + iButtonRowIndex.toString() + '_' + iButtonIndex.toString(),
 						selectOptions: sOptions
 					});
+
+					bPreviousWasDivider = false;
 				break;
 			}
 		}
@@ -1553,6 +1564,9 @@ smc_BBCButtonBox.prototype.init = function ()
 			switch (oCurControl.sType)
 			{
 				case 'button':
+					if (!oCurControl.bEnabled)
+						break;
+				
 					oCurControl.oImg = document.getElementById(this.opt.sUniqueId.php_htmlspecialchars() + '_button_' + iButtonRowIndex.toString() + '_' + iButtonIndex.toString());
 					oCurControl.oImg.style.cursor = 'pointer';
 					if ('sButtonBackgroundImage' in this.opt)
@@ -1658,7 +1672,7 @@ smc_BBCButtonBox.prototype.setActive = function (aButtons)
 		for (var iButtonIndex = 0, iButtonCount = this.opt.aButtonRows[iButtonRowIndex].length; iButtonIndex < iButtonCount; iButtonIndex++)
 		{
 			var oCurControl = this.opt.aButtonRows[iButtonRowIndex][iButtonIndex];
-			if (oCurControl.sType == 'button')
+			if (oCurControl.sType == 'button' && oCurControl.bEnabled)
 			{
 				oCurControl.oImg.bIsActive = in_array(oCurControl.sCode, aButtons);
 				this.updateButtonStatus(oCurControl.oImg);
@@ -1669,7 +1683,6 @@ smc_BBCButtonBox.prototype.setActive = function (aButtons)
 
 smc_BBCButtonBox.prototype.emulateClick = function (sCode)
 {
-	alert('emulate');
 	for (var iButtonRowIndex = 0, iRowCount = this.opt.aButtonRows.length; iButtonRowIndex < iRowCount; iButtonRowIndex++)
 	{
 		for (var iButtonIndex = 0, iButtonCount = this.opt.aButtonRows[iButtonRowIndex].length; iButtonIndex < iButtonCount; iButtonIndex++)
