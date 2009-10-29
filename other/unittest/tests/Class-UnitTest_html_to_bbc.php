@@ -37,7 +37,7 @@
 				'name' => 'Lists (1)',
 				'description' => "Make sure that lists that are not closed at all are still processed.",
 				'input' => '<ul class="bbc_list"><li>test',
-				'output' => "[list]\n\t[li]test[/li][/list]",
+				'output' => "[list]\n\t[li]test[/li]\n[/list]",
 			),
 			'list_2' => array(
 				'name' => 'Lists (2)',
@@ -81,6 +81,43 @@
 				'input' => '<ul type="square"><li>a</li></ul>',
 				'output' => "[list type=square]\n\t[li]a[/li]\n[/list]",
 			),
+			'list_9' => array(
+				'name' => 'Lists (9)',
+				'description' => "A list that isn't properly closed at the end.",
+				'input' => '<ul>a',
+				'output' => "[list]\n\t[li]a[/li]\n[/list]",
+			),
+			'list_10' => array(
+				'name' => 'Lists (10)',
+				'description' => "A list that isn't properly closed at the end.",
+				'input' => '<ul><li><ul>a',
+				'output' => "[list]\n\t[li][list]\n\t\t[li]a[/li]\n\t[/list][/li]\n[/list]",
+			),
+			'script_1' => array(
+				'name' => 'Scripts (1)',
+				'description' => "A script and everything in it should simply be removed.",
+				'input' => 'a<script>b</script>c',
+				'output' => "ac",
+			),
+			'comment_1' => array(
+				'name' => 'Comments (1)',
+				'description' => "Comments within the html should be removed.",
+				'input' => 'a<!-- b<ul>c -->d',
+				'output' => "ad",
+			),
+			'comment_2' => array(
+				'name' => 'Comments (2)',
+				'description' => "CDATA blocks within the html should be removed.",
+				'input' => 'a<![CDATA[b<ul>c]]>d',
+				'output' => "ad",
+			),
+			'style_1' => array(
+				'name' => 'Style (1)',
+				'description' => "A style block and everything in it should simply be removed.",
+				'input' => 'a<style>b</style>c',
+				'output' => "ac",
+			),
+			
 		);
 
 		public function initialize()

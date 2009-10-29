@@ -183,6 +183,12 @@ function html_to_bbc($text)
 
 		$text = strtr(implode('', $parts), array('#smf_br_spec_grudge_cool!#' => '<br />'));
 	}
+	
+	// Remove scripts, style and comment blocks.
+	$text = preg_replace('~<script[^>]*[^/]?' . '>.*?</script>~i', '', $text);
+	$text = preg_replace('~<style[^>]*[^/]?' . '>.*?</style>~i', '', $text);
+	$text = preg_replace('~\\<\\!--.*?-->~i', '', $text);
+	$text = preg_replace('~\\<\\!\\[CDATA\\[.*?\\]\\]\\>~i', '', $text);
 
 	// Do the smileys ultra first!
 	preg_match_all('~<img\s+[^<>]*?id="*smiley_\d+_([^<>]+?)[\s"/>]\s*[^<>]*?/*>(?:\s)?~i', $text, $matches);
@@ -703,6 +709,16 @@ function html_to_bbc($text)
 		}
 		
 		$text = implode('', $parts);
+		
+		if ($inList)
+		{
+			$listDepth--;
+			$text .= str_repeat("\t", $listDepth) . '[/list]';
+		}
+		
+		for ($i = $listDepth; $i > 0; $i--)
+			$text .= '[/li]' . "\n" . str_repeat("\t", $i - 1) . '[/list]';
+		
 	}
 
 
