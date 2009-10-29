@@ -633,52 +633,6 @@ smc_Editor.prototype.insertText = function(sText, bClear, bForceEntityReverse, i
 				}
 
 				this.smf_execCommand('inserthtml', false, typeof(iMoveCursorBack) == 'undefined' ? sText : sText.substr(0, sText.length - iMoveCursorBack));
-
-				// This is a git - we need to do all kinds of crap. Thanks to this page:
-				// http://www.richercomponents.com/Forums/ShowPost.aspx?PostID=2777
-				// Create a new span element first...
-				/*var oElement = this.oFrameDocument.createElement('span');
-				oElement.innerHTML = sText;
-
-				var oSelection = this.getSelect();
-				if (!oRange)
-					oSelection.collapse(this.oFrameDocument.getElementsByTagName('body')[0].firstChild,0);
-
-				oSelection.removeAllRanges();
-				oRange.deleteContents();
-
-				var oContainer = oRange.startContainer;
-				var iPos = oRange.startOffset;
-				oRange = this.oFrameDocument.createRange();
-
-				if (oContainer.nodeType == 3)
-				{
-					var oTextNode = oContainer;
-					oContainer = oTextNode.parentNode;
-					sText = oTextNode.nodeValue;
-					var sTextBefore = sText.substr(0, iPos);
-					var sTextAfter = sText.substr(iPos);
-					var oBeforeNode = this.oFrameDocument.createTextNode(sTextBefore);
-					var oAfterNode = this.oFrameDocument.createTextNode(sTextAfter);
-					oContainer.insertBefore(oAfterNode, oTextNode);
-					oContainer.insertBefore(oElement, oAfterNode);
-					oContainer.insertBefore(oBeforeNode, oElement);
-					oContainer.removeChild(oTextNode);
-
-					//!!! Why does this not work on opera?
-					if (!is_opera)
-					{
-						oRange.setEndBefore(oAfterNode);
-						oRange.setStartBefore(oAfterNode);
-					}
-				}
-				else
-				{
-					oContainer.insertBefore(oElement, oContainer.childNodes[iPos]);
-					oRange.setEnd(oContainer, iPos + 1);
-					oRange.setStart(oContainer, iPos + 1);
-				}
-				oSelection.addRange(oRange);*/
 			}
 		}
 		else
