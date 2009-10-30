@@ -97,6 +97,7 @@ October 2009
  ! The editor still showed BBC buttons that were disabled. (editor.js) [Bug 3829]
  ! Prevent the BBC button bar to show a separator twice in sequence. (editor.js)
  ! Inserted lists while using the non-WYSIWYG mode in the editor, included literal newline characters. (editor.js) [Bug 3890]
+ ! The autosuggest in some cases deleted selected items on form submit. (suggest.js)
 
 
 September 2009

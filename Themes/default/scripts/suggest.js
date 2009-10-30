@@ -14,23 +14,23 @@ function smc_AutoSuggest(oOptions)
 	this.aCache = [];
 	this.aDisplayData = [];
 
-	this.sRetrieveURL = typeof(this.opt.sRetrieveURL) == 'string' ? this.opt.sRetrieveURL : '%scripturl%action=suggest;suggest_type=%suggest_type%;search=%search%;%sessionVar%=%sessionID%;xml;time=%time%';
+	this.sRetrieveURL = 'sRetrieveURL' in this.opt ? this.opt.sRetrieveURL : '%scripturl%action=suggest;suggest_type=%suggest_type%;search=%search%;%sessionVar%=%sessionID%;xml;time=%time%';
 
 	// How many objects can we show at once?
-	this.iMaxDisplayQuantity = typeof(this.opt.iMaxDisplayQuantity) == 'integer' ? this.opt.iMaxDisplayQuantity : 15;
+	this.iMaxDisplayQuantity = 'iMaxDisplayQuantity' in this.opt ? this.opt.iMaxDisplayQuantity : 15;
 
 	// How many characters shall we start searching on?
-	this.iMinimumSearchChars = typeof(this.opt.iMinimumSearchChars) == 'integer' ? this.opt.iMinimumSearchChars : 3;
+	this.iMinimumSearchChars = 'iMinimumSearchChars' in this.opt ? this.opt.iMinimumSearchChars : 3;
 
 	// Should selected items be added to a list?
-	this.bItemList = typeof(this.opt.bItemList) == 'boolean' ? this.opt.bItemList : false;
+	this.bItemList = 'bItemList' in this.opt ? this.opt.bItemList : false;
 
 	// Are there any items that should be added in advance?
-	this.aListItems = typeof(this.opt.aListItems) == 'object' ? this.opt.aListItems : [];
+	this.aListItems = 'aListItems' in this.opt ? this.opt.aListItems : [];
 
-	this.sItemTemplate = typeof(this.opt.sItemTemplate) == 'string' ? this.opt.sItemTemplate : '<input type="hidden" name="%post_name%[]" value="%item_id%" /><a href="%item_href%" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">%item_name%</a>&nbsp;<input type="image" src="%images_url%/pm_recipient_delete.gif" onclick="return %self%.deleteAddedItem(%item_id%);" alt="%delete_text%" title="%delete_text%" />';
+	this.sItemTemplate = 'sItemTemplate' in this.opt ? this.opt.sItemTemplate : '<input type="hidden" name="%post_name%[]" value="%item_id%" /><a href="%item_href%" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">%item_name%</a>&nbsp;<img src="%images_url%/pm_recipient_delete.gif" alt="%delete_text%" title="%delete_text%" onclick="return %self%.deleteAddedItem(%item_id%);" />';
 
-	this.sTextDeleteItem = typeof(this.opt.sTextDeleteItem) == 'string' ? this.opt.sTextDeleteItem : '';
+	this.sTextDeleteItem = 'sTextDeleteItem' in this.opt ? this.opt.sTextDeleteItem : '';
 
 	this.oCallback = {};
 	this.bDoAutoAdd = false;
@@ -89,7 +89,7 @@ smc_AutoSuggest.prototype.init = function init()
 
 	if (this.bItemList)
 	{
-		if (typeof(this.opt.sItemListContainerId) == 'string')
+		if ('sItemListContainerId' in this.opt)
 			this.oItemList = document.getElementById(this.opt.sItemListContainerId);
 		else
 		{
@@ -118,9 +118,9 @@ smc_AutoSuggest.prototype.handleKey = function(oEvent)
 
 	// Get the keycode of the key that was pressed.
 	var iKeyPress = 0;
-	if (oEvent.keyCode)
+	if ('keyCode' in oEvent)
 		iKeyPress = oEvent.keyCode;
-	else if (oEvent.which)
+	else if ('which' in oEvent)
 		iKeyPress = oEvent.which;
 
 	switch (iKeyPress)
@@ -161,7 +161,7 @@ smc_AutoSuggest.prototype.handleKey = function(oEvent)
 				// Loop through the display data trying to find our entry.
 				var bPrevHandle = false;
 				var oToHighlight = null;
-				for (i = 0; i < this.aDisplayData.length; i++)
+				for (var i = 0; i < this.aDisplayData.length; i++)
 				{
 					// If we're going up and yet the top one was already selected don't go around.
 					if (this.oSelectedDiv != null && this.oSelectedDiv == this.aDisplayData[i] && i == 0 && iKeyPress == 38)
@@ -225,7 +225,7 @@ smc_AutoSuggest.prototype.handleSubmit = function()
 	var oFoundEntry = null;
 
 	// Do we have something that matches the current text?
-	for (i = 0; i < this.aCache.length; i++)
+	for (var i = 0; i < this.aCache.length; i++)
 	{
 		if (this.sLastSearch.toLowerCase() == this.aCache[i].sItemName.toLowerCase().substr(0, this.sLastSearch.length))
 		{
@@ -332,7 +332,7 @@ smc_AutoSuggest.prototype.removeLastSearchString = function ()
 smc_AutoSuggest.prototype.addItemLink = function (sItemId, sItemName, bFromSubmit)
 {
 	// If there's a callback then call it.
-	if (typeof(this.oCallback.onBeforeAddItem) == 'string')
+	if ('oCallBack' in this && 'onBeforeAddItem' in this.oCallBack && typeof(this.oCallback.onBeforeAddItem) == 'string')
 	{
 		// If it returns false the item must not be added.
 		if (!eval(this.oCallback.onBeforeAddItem + '(' + this.opt.sSelf + ', \'' + sItemId + '\');'))
@@ -512,7 +512,7 @@ smc_AutoSuggest.prototype.onSuggestionReceived = function (oXMLDoc)
 smc_AutoSuggest.prototype.autoSuggestUpdate = function ()
 {
 	// If there's a callback then call it.
-	if (typeof(this.oCallback.onBeforeUpdate) == 'string')
+	if ('onBeforeUpdate' in this.oCallback && typeof(this.oCallback.onBeforeUpdate) == 'string')
 	{
 		// If it returns false the item must not be added.
 		if (!eval(this.oCallback.onBeforeUpdate + '(' + this.opt.sSelf + ');'))
@@ -591,7 +591,7 @@ smc_AutoSuggest.prototype.autoSuggestUpdate = function ()
 	}
 
 	// In progress means destroy!
-	if (this.oXmlRequestHandle != null && typeof(this.oXmlRequestHandle) == "object")
+	if (typeof(this.oXmlRequestHandle) == 'object' && this.oXmlRequestHandle != null)
 		this.oXmlRequestHandle.abort();
 
 	// Clean the text handle.
