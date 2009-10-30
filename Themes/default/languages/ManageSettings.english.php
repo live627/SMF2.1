@@ -109,8 +109,7 @@ $txt['caching_information'] = '<div class="aligncenter underline"><strong>Import
 	&quot;server1,server2,server3:port,server4&quot;<br /><br />
 	Note that if no port is specified SMF will use port 11211. SMF will attempt to perform rough/random load balancing across the servers.
 	<br /><br />
-	%1$s
-	<hr />';
+	%1$s';
 
 $txt['detected_no_caching'] = '<strong class="alert">SMF has not been able to detect a compatible accelerator on your server.</strong>';
 $txt['detected_APC'] = '<strong style="color: green">SMF has detected that your server has APC installed.</strong>';
