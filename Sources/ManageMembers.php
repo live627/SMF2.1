@@ -1148,6 +1148,7 @@ function AdminApprove()
 					'NAME' => $member['name'],
 					'USERNAME' => $member['username'],
 					'PROFILELINK' => $scripturl . '?action=profile;u=' . $member['id'],
+                    'FORGOTPASSWORDLINK' => $scripturl . '?action=reminder',
 				);
 
 				$emaildata = loadEmailTemplate('admin_approve_accept', $replacements, $member['language']);

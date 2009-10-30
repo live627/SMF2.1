@@ -613,6 +613,7 @@ function Activate()
 			'USERNAME' => $row['member_name'],
 			'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $row['id_member'] . ';code=' . $row['validation_code'],
 			'ACTIVATIONCODE' => $row['validation_code'],
+            'FORGOTPASSWORDLINK' => $scripturl . '?action=reminder',
 		);
 
 		$emaildata = loadEmailTemplate('resend_activate_message', $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
