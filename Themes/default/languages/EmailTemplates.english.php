@@ -375,7 +375,7 @@ To edit your subscriptions visit the following URL:
 		'body' => 'In order to re-validate your email address, your account has been deactivated.  Click the following link to activate it again:
 {ACTIVATIONLINK}
 
-Should you have any problems with activation, please visit {ACTIVATIONLINKWITHOUTCODE) and use the code "{ACTIVATIONCODE}".
+Should you have any problems with activation, please visit {ACTIVATIONLINKWITHOUTCODE} and use the code "{ACTIVATIONCODE}".
 
 {REGARDS}',
 	),
