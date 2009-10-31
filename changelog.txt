@@ -105,6 +105,7 @@ October 2009
  * Extended the frame image by 200px to avoid breaking the header easily. (main_block.png)
  ! In some rare cases, the {REGARDS} part of a notification message was sent in the wrong language. (Subs-Post.php)
  ! Collapsing of months wasn't saved properly (Stats.php, stats.js, script.js, Stats template) [Bug 3802]
+ ! A form with an auto suggest control didn't always submit properly when pressing the enter key. (suggest.js) [Bug 
 
 
 September 2009

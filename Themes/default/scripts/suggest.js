@@ -141,16 +141,16 @@ smc_AutoSuggest.prototype.handleKey = function(oEvent)
 
 		// Enter.
 		case 13:
-			if (this.aDisplayData.length > 0)
+			if (this.aDisplayData.length > 0 && this.oSelectedDiv != null)
 			{
-				if (this.oSelectedDiv != null)
-					this.itemClicked(this.oSelectedDiv);
-				else
-					this.handleSubmit();
-			}
+				this.itemClicked(this.oSelectedDiv);
 
-			// Do our best to stop it submitting the form!
-			return false;
+				// Do our best to stop it submitting the form!
+				return false;
+			}
+			else
+				return true;
+
 		break;
 
 		// Up/Down arrow?
