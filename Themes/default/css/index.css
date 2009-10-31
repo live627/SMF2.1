@@ -1402,7 +1402,7 @@ div#upper_section div.news form
 #footer_section
 {
 	text-align: center;
-	background: url(../images/theme/main_block.png) no-repeat 0 -620px;
+	background: url(../images/theme/main_block.png) no-repeat 0 -820px;
 	padding-left: 20px;
 }
 #footer_section span.smalltext
@@ -1411,7 +1411,7 @@ div#upper_section div.news form
 }
 #footer_section div.frame
 {
-	background: url(../images/theme/main_block.png) no-repeat 100% -620px;
+	background: url(../images/theme/main_block.png) no-repeat 100% -820px;
 	display: block;
 	padding: 60px 0 0 0;
 }
@@ -1465,7 +1465,7 @@ table.table_list tbody.content td.stats
 }
 table.table_list tbody.content td.lastpost
 {
-	line-height: 1.2em;
+	line-height: 1.3em;
 	font-size: 85%;
 	width: 24%;
 }
@@ -2538,15 +2538,17 @@ tr.windowbg td, tr.windowbg2 td, tr.approvebg td
 {
 	font-size: 1em;
 }
-.topic_table td.subject
-{
-	padding: 4px;
-}
-.topic_table td.subject p, .topic_table td.stats, .topic_table td.lastpost
+.topic_table td.subject p, .topic_table td.stats
 {
 	font-size: 0.85em;
 	padding: 0;
 	margin: 0;
+}
+.topic_table td.lastpost
+{
+	font-size: 0.85em;
+	line-height: 1.3em;
+	padding: 4px;
 }
 .topic_table td.lastpost,.topic_table td.lastpost
 {

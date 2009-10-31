@@ -108,21 +108,26 @@ function template_unread()
 	if (!empty($context['topics']))
 	{
 		echo '
-						<th scope="col" class="smalltext" width="8%" colspan="2">&nbsp;</th>
+						<th scope="col" class="smalltext first_th" width="8%" colspan="2">&nbsp;</th>
 						<th scope="col" class="smalltext">
 							<a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=subject', $context['sort_by'] == 'subject' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['subject'], $context['sort_by'] == 'subject' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a>
 						</th>
 						<th scope="col" class="smalltext" width="14%" align="center">
 							<a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=replies', $context['sort_by'] == 'replies' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['replies'], $context['sort_by'] == 'replies' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a>
-						</th>
+						</th>';
+		// Show a "select all" box for quick moderation?
+		if ($showCheckboxes)
+				echo '		
 						<th scope="col" class="smalltext" width="22%">
 							<a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a>
-						</th>';
-
-		if ($showCheckboxes)
-			echo '
-						<th>
+						</th>
+						<th class="smalltext last_th">
 							<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />
+						</th>';						
+						else
+				echo '			
+						<th scope="col" class="smalltext last_th" width="22%">
+							<a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a>
 						</th>';
 	}
 	else
@@ -158,8 +163,8 @@ function template_unread()
 							', $topic['is_sticky'] ? '<strong>' : '', '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '' ,'
 								<a href="', $topic['new_href'], '" id="newicon', $topic['first_post']['id'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>
 								<p>
-									', $txt['started_by'], ' ', $topic['first_post']['member']['link'], '
-									', $txt['in'], ' ', $topic['board']['link'], '
+									', $txt['started_by'], ' <strong>', $topic['first_post']['member']['link'], '</strong>
+									', $txt['in'], ' <em>', $topic['board']['link'], '</em>
 									<small id="pages', $topic['first_post']['id'], '">', $topic['pages'], '</small>
 								</p>
 							</div>
@@ -285,21 +290,26 @@ function template_replies()
 	if (!empty($context['topics']))
 	{
 		echo '
-						<th scope="col" class="smalltext" width="8%" colspan="2">&nbsp;</th>
+						<th scope="col" class="smalltext first_th" width="8%" colspan="2">&nbsp;</th>
 						<th scope="col" class="smalltext">
 							<a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=subject', $context['sort_by'] == 'subject' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['subject'], $context['sort_by'] == 'subject' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a>
 						</th>
 						<th scope="col" class="smalltext" width="14%" align="center">
 							<a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=replies', $context['sort_by'] == 'replies' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['replies'], $context['sort_by'] == 'replies' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a>
-						</th>
+						</th>';
+		// Show a "select all" box for quick moderation?
+		if ($showCheckboxes)
+				echo '		
 						<th scope="col" class="smalltext" width="22%">
 							<a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a>
-						</th>';
-
-		if ($showCheckboxes)
-			echo '
-						<th>
+						</th>
+						<th class="smalltext last_th">
 							<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />
+						</th>';						
+						else
+				echo '			
+						<th scope="col" class="smalltext last_th" width="22%">
+							<a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a>
 						</th>';
 	}
 	else
@@ -335,8 +345,8 @@ function template_replies()
 								', $topic['is_sticky'] ? '<strong>' : '', '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '', '
 								<a href="', $topic['new_href'], '" id="newicon', $topic['first_post']['id'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>
 								<p>
-									', $txt['started_by'], ' ', $topic['first_post']['member']['link'], '
-									', $txt['in'], ' ', $topic['board']['link'], '
+									', $txt['started_by'], ' <strong>', $topic['first_post']['member']['link'], '</strong>
+									', $txt['in'], ' <em>', $topic['board']['link'], '</em>
 									<small id="pages', $topic['first_post']['id'], '">', $topic['pages'], '</small>
 								</p>
 							</div>
