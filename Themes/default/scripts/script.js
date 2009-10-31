@@ -382,7 +382,7 @@ function replaceText(text, oTextHandle)
 function surroundText(text1, text2, oTextHandle)
 {
 	// Can a text range be created?
-	if ('caretPos' in oTextHandle != 'undefined' && 'createTextRange' in oTextHandle)
+	if ('caretPos' in oTextHandle && 'createTextRange' in oTextHandle)
 	{
 		var caretPos = oTextHandle.caretPos, temp_length = caretPos.text.length;
 
