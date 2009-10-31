@@ -2019,7 +2019,7 @@ function template_install_above()
 			<h1 class="forumtitle">', $txt['smf_installer'], '</h1>
 			<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />
 		</div>
-		<div id="upper_section" class="middletext" style="overflow: hidden;">
+		<div id="upper_section" class="middletext flow_hidden">
 			<div class="user"></div>
 			<div class="news normaltext">';
 
@@ -2027,7 +2027,7 @@ function template_install_above()
 	if (!empty($incontext['detected_languages']) && count($incontext['detected_languages']) > 1 && $incontext['current_step'] == 0)
 	{
 		echo '
-				<div style="text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';">
+				<div class="righttext">
 					<form action="', $installurl, '" method="get">
 						<label for="installer_language">', $txt['installer_language'], ':</label> <select id="installer_language" name="lang_file" onchange="location.href = \'', $installurl, '?lang_file=\' + this.options[this.selectedIndex].value;">';
 
