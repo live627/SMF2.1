@@ -551,7 +551,7 @@ function template_main()
 					if (\'opera\' in window)
 					{
 						var test = new XMLHttpRequest();
-						if (!(setRequestHeader in test))
+						if (!(\'setRequestHeader\' in test))
 							return submitThisOnce(document.forms.postmodify);
 					}
 					// !!! Currently not sending poll options and option checkboxes.
@@ -579,7 +579,7 @@ function template_main()
 						if (numericFields[i] in document.forms.postmodify.elements && \'value\' in document.forms.postmodify[numericFields[i]])
 							x[x.length] = numericFields[i] + "=" + parseInt(document.forms.postmodify.elements[numericFields[i]].value);
 					for (i in checkboxFields)
-						if (checkboxFields[i] in document.forms.postmodify.elements && checked in document.forms.postmodify.elements[checkboxFields[i]])
+						if (checkboxFields[i] in document.forms.postmodify.elements && \'checked\' in document.forms.postmodify.elements[checkboxFields[i]])
 							x[x.length] = checkboxFields[i] + "=" + document.forms.postmodify.elements[checkboxFields[i]].value;
 
 					sendXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=post2" + (current_board ? ";board=" + current_board : "") + (make_poll ? ";poll" : "") + ";preview;xml", x.join("&"), onDocSent);

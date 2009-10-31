@@ -106,6 +106,7 @@ October 2009
  ! In some rare cases, the {REGARDS} part of a notification message was sent in the wrong language. (Subs-Post.php)
  ! Collapsing of months wasn't saved properly (Stats.php, stats.js, script.js, Stats template) [Bug 3802]
  ! A form with an auto suggest control didn't always submit properly when pressing the enter key. (suggest.js) [Bug 3546]
+ * The preview post could cause a JavaScript error in some browsers. (Post template) [Bug 3717]
 
 
 September 2009
