@@ -98,6 +98,9 @@ October 2009
  ! Prevent the BBC button bar to show a separator twice in sequence. (editor.js)
  ! Inserted lists while using the non-WYSIWYG mode in the editor, included literal newline characters. (editor.js) [Bug 3890]
  ! The autosuggest in some cases deleted selected items on form submit. (suggest.js)
+ * Removed a bunch of unused images from the trunk. (various images)
+ * Updated Curve's board status images to look slightly better. (on.png, on2.png, off.png, redirect.png)
+ * Added a new style for the AJAX in progress bar to make it fit better in the Curve theme. (index.css, loadingbar.png)
 
 
 September 2009
