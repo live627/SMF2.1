@@ -378,43 +378,38 @@ function template_main()
 		echo '
 		</table>
 		</div>
-	</div>';
-	}
+	</div>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/stats.js"></script>
+	<script type="text/javascript"><!-- // --><![CDATA[
+		var oStatsCenter = new smf_StatsCenter({
+			sTableId: \'stats\',
+			
+			reYearPattern: /year_(\d+)/,
+			sYearImageCollapsed: \'expand.gif\',
+			sYearImageExpanded: \'collapse.gif\',
+			sYearImageIdPrefix: \'year_img_\',
+			sYearLinkIdPrefix: \'year_link_\',
 
-	echo '
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/stats.js"></script>
-		<script type="text/javascript"><!-- // --><![CDATA[';
+			reMonthPattern: /tr_month_(\d+)/,
+			sMonthImageCollapsed: \'expand.gif\',
+			sMonthImageExpanded: \'collapse.gif\',
+			sMonthImageIdPrefix: \'img_\',
+			sMonthLinkIdPrefix: \'m\',
 
-	if (!empty($context['yearly']))
-	{
-		echo '
-			var yearElements = new Array();';
+			reDayPattern: /tr_day_(\d+-\d+-\d+)/,
+			sDayRowClassname: \'windowbg2\',
+			sDayRowIdPrefix: \'tr_day_\',
 
-		foreach ($context['yearly'] as $id => $year)
-		{
-			echo '
-			yearElements[', $id, '] = new smfStats_year("', $id, '", false);';
-
-			foreach ($year['months'] as $month)
-			{
-				echo '
-			yearElements[', $id, '].addMonth("', $month['id'], '", ', $month['expanded'] ? 'false' : 'true', ');';
-
-			if ($month['expanded'])
-			{
-				foreach ($month['days'] as $day)
-					echo '
-			yearElements[', $id, '].addDay(', $month['id'], ', "', $day['year'], '-', $day['month'], '-', $day['day'], '");';
-			}
-
-			if (!$year['expanded'] && !$year['current_year'])
-				echo '
-			yearElements[', $id, '].toggle()';
-			}
-		}
-
-		echo '
-		// ]]></script>';
+			aDataCells: [
+				\'date\',
+				\'new_topics\',
+				\'new_posts\',
+				\'new_members\',
+				\'most_members_online\'', empty($modSettings['hitStats']) ? '' :',
+				\'hits\'
+			]
+		});
+	// ]]></script>';
 	}
 }
 

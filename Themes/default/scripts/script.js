@@ -749,6 +749,18 @@ function expandPages(spanNode, baseURL, firstPage, lastPage, perPage)
 	setInnerHTML(spanNode, replacement);
 }
 
+function smc_preCacheImage(sSrc)
+{
+	if (!('smc_aCachedImages' in window))
+		window.smc_aCachedImages = [];
+
+	if (!in_array(sSrc, window.smc_aCachedImages))
+	{
+		var oImage = new Image();
+		oImage.src = sSrc;
+	}
+}
+
 
 // *** smc_Cookie class.
 function smc_Cookie(oOptions)
@@ -811,7 +823,7 @@ smc_Toggle.prototype.init = function ()
 
 	// If the init state is set to be collapsed, collapse it.
 	if (this.opt.bCurrentlyCollapsed)
-		this.changeState(true);
+		this.changeState(true, true);
 
 	// Initialize the images to be clickable.
 	if ('aSwapImages' in this.opt)
@@ -833,8 +845,7 @@ smc_Toggle.prototype.init = function ()
 				oImage.style.cursor = 'pointer';
 
 				// Preload the collapsed image.
-				var oCollapsedImg = new Image();
-				oCollapsedImg.src = this.opt.aSwapImages[i].srcCollapsed;
+				smc_preCacheImage(this.opt.aSwapImages[i].srcCollapsed);
 			}
 		}
 	}
@@ -863,10 +874,13 @@ smc_Toggle.prototype.init = function ()
 }
 
 // Collapse or expand the section.
-smc_Toggle.prototype.changeState = function(bCollapse)
+smc_Toggle.prototype.changeState = function(bCollapse, bInit)
 {
+	// Default bInit to false.
+	bInit = typeof(bInit) == 'undefined' ? false : true;
+
 	// Handle custom function hook before collapse.
-	if (bCollapse && 'funcOnBeforeCollapse' in this.opt)
+	if (!bInit && bCollapse && 'funcOnBeforeCollapse' in this.opt)
 	{
 		this.tmpMethod = this.opt.funcOnBeforeCollapse;
 		this.tmpMethod();
@@ -874,7 +888,7 @@ smc_Toggle.prototype.changeState = function(bCollapse)
 	}
 
 	// Handle custom function hook before expand.
-	else if (!bCollapse && 'funcOnBeforeExpand' in this.opt)
+	else if (!bInit && !bCollapse && 'funcOnBeforeExpand' in this.opt)
 	{
 		this.tmpMethod = this.opt.funcOnBeforeExpand;
 		this.tmpMethod();
@@ -889,7 +903,11 @@ smc_Toggle.prototype.changeState = function(bCollapse)
 			var oImage = document.getElementById(this.opt.aSwapImages[i].sId);
 			if (typeof(oImage) == 'object' && oImage != null)
 			{
-				oImage.src = bCollapse ? this.opt.aSwapImages[i].srcCollapsed : this.opt.aSwapImages[i].srcExpanded;
+				// Only (re)load the image if it's changed.
+				var sTargetSource = bCollapse ? this.opt.aSwapImages[i].srcCollapsed : this.opt.aSwapImages[i].srcExpanded;
+				if (oImage.src != sTargetSource)
+					oImage.src = sTargetSource;
+
 				oImage.alt = oImage.title = bCollapse ? this.opt.aSwapImages[i].altCollapsed : this.opt.aSwapImages[i].altExpanded;
 			}
 		}

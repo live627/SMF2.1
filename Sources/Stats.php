@@ -51,6 +51,8 @@ function DisplayStats()
 {
 	global $txt, $scripturl, $modSettings, $user_info, $context, $smcFunc;
 
+	isAllowedTo('view_stats');
+	
 	if (!empty($_REQUEST['expand']))
 	{
 		$context['robot_no_index'] = true;
@@ -88,8 +90,6 @@ function DisplayStats()
 
 	loadLanguage('Stats');
 	loadTemplate('Stats');
-
-	isAllowedTo('view_stats');
 
 	// Build the link tree......
 	$context['linktree'][] = array(
