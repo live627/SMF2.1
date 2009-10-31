@@ -101,6 +101,9 @@ October 2009
  * Removed a bunch of unused images from the trunk. (various images)
  * Updated Curve's board status images to look slightly better. (on.png, on2.png, off.png, redirect.png)
  * Added a new style for the AJAX in progress bar to make it fit better in the Curve theme. (index.css, loadingbar.png)
+ * Added rounded corners to the unread topics and unread replies screens. (Recent template)
+ * Extended the frame image by 200px to avoid breaking the header easily. (main_block.png)
+ ! In some rare cases, the {REGARDS} part of a notification message was sent in the wrong language. (Subs-Post.php)
 
 
 September 2009

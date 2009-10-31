@@ -1187,7 +1187,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	foreach ($notifications as $lang => $notification_list)
 	{
 		// Make sure to use the right language.
-		loadLanguage('PersonalMessage', $lang, false);
+		loadLanguage('index+PersonalMessage', $lang, false);
 
 		// Replace the right things in the message strings.
 		$mailsubject = str_replace(array('SUBJECT', 'SENDER'), array($subject, un_htmlspecialchars($from['name'])), $txt['new_pm_subject']);
@@ -1199,7 +1199,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	}
 
 	// Back to what we were on before!
-	loadLanguage('PersonalMessage');
+	loadLanguage('index+PersonalMessage');
 
 	// Add one to their unread and read message counts.
 	foreach ($all_to as $k => $id)
