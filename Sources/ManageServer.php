@@ -1798,7 +1798,7 @@ function prepareDBSettingContext(&$config_vars)
 				'size' => !empty($config_var[2]) && !is_array($config_var[2]) ? $config_var[2] : (in_array($config_var[0], array('int', 'float')) ? 6 : 0),
 				'data' => array(),
 				'name' => $config_var[1],
-				'value' => isset($modSettings[$config_var[1]]) ? htmlspecialchars($modSettings[$config_var[1]]) : (in_array($config_var[0], array('int', 'float')) ? 0 : ''),
+				'value' => $config_var[0] == 'select' ? $modSettings[$config_var[1]] : (isset($modSettings[$config_var[1]]) ? htmlspecialchars($modSettings[$config_var[1]]) : (in_array($config_var[0], array('int', 'float')) ? 0 : '')),
 				'disabled' => false,
 				'invalid' => !empty($config_var['invalid']),
 				'javascript' => '',
@@ -1810,6 +1810,13 @@ function prepareDBSettingContext(&$config_vars)
 			// If this is a select box handle any data.
 			if (!empty($config_var[2]) && is_array($config_var[2]))
 			{
+				// If we allow multiple selections, we need to adjust a few things.
+				if ($config_var[0] == 'select' && !empty($config_var['multiple']))
+				{
+					$context['config_vars'][$config_var[1]]['name'] .= '[]';
+					$context['config_vars'][$config_var[1]]['value'] = unserialize($context['config_vars'][$config_var[1]]['value']);
+				}
+
 				// If it's associative
 				if (isset($config_var[2][0]) && is_array($config_var[2][0]))
 					$context['config_vars'][$config_var[1]]['data'] = $config_var[2];
@@ -2011,6 +2018,16 @@ function saveDBSettings(&$config_vars)
 		// Select boxes!
 		elseif ($var[0] == 'select' && in_array($_POST[$var[1]], array_keys($var[2])))
 			$setArray[$var[1]] = $_POST[$var[1]];
+		elseif ($var[0] == 'select' && !empty($var['multiple']) && array_intersect($_POST[$var[1]], array_keys($var[2])) != array())
+		{
+			// For security purposes we validate this line by line.
+			$options = array();
+			foreach ($_POST[$var[1]] as $invar)
+				if (in_array($invar, array_keys($var[2])))
+					$options[] = $invar;
+
+			$setArray[$var[1]] = serialize($options);
+		}
 		// Integers!
 		elseif ($var[0] == 'int')
 			$setArray[$var[1]] = (int) $_POST[$var[1]];
