@@ -236,7 +236,7 @@ function template_ban_edit()
 		addLoadEvent(fUpdateStatus);';
 
 	// Auto suggest only needed for adding new bans, not editing
-	if ($context['ban']['is_new'])
+	if ($context['ban']['is_new'] && empty($_REQUEST['u']))
 		echo '
 			var oAddMemberSuggest = new smc_AutoSuggest({
 			sSelf: \'oAddMemberSuggest\',

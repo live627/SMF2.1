@@ -111,6 +111,7 @@ October 2009
  ! Language selection did not show correctly in profile (Profile-Modify.php)
  ! In some cases the guest_title may not exist (Load.php) [Bug 3916]
  * IE6 and IE7 were having difficulties with the Core theme's implementation of min-height. (index.css, rtl.css) 
+ ! Auto suggest will throw an error if the field doesn't exist (ManageBans Template)
 
 
 September 2009
