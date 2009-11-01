@@ -110,6 +110,7 @@ October 2009
  ! Inserting BBC in non-WYSIWYG mode was broken for some browsers. (script.js)
  ! Language selection did not show correctly in profile (Profile-Modify.php)
  ! In some cases the guest_title may not exist (Load.php) [Bug 3916]
+ * IE6 and IE7 were having difficulties with the Core theme's implementation of min-height. (index.css, rtl.css) 
 
 
 September 2009
