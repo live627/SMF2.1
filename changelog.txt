@@ -48,9 +48,9 @@ October 2009
  ! Made the parsing of line breaks in textual attachments optional. (Display.php, ManageAttachments.php, Admin language file) [Bug 3865]
  ! Added an interface to set the formerly-hidden setting to disable template evaluation. (ManageServer.php, Help language file, ManageSettings language file)
  ! When creating a copy of the default theme, copy the rtl.css and theme.js files, too. (Themes.php) [Bug 3863]
- * Curve's button strips were misaligned by one pixel. (index.css) [Bug 3894] 
+ * Curve's button strips were misaligned by one pixel. (index.css) [Bug 3894]
  * Text sized via BBC was overlapping itself in some cases. (index.css)
- * Large attachments were overflowing properly in the display template. (Display template, index.css) 
+ * Large attachments were overflowing properly in the display template. (Display template, index.css)
  * The upcoming calendar should be in small text. (BoardIndex template)
  ! Ensure the attachment permissions are verified for the correct board. (Display.php)
  * Reintegrated former fonts to BBC font select (GenericControls template) [Bug 3880]
@@ -71,7 +71,7 @@ October 2009
  * A scrollbar appeared in some cases with IE8 (index.css)[Bug 3868]
  * Some profile icons were not properly aligned (Profile template) [Bug 3902]
  * The Message icon had a different padding when javascript is off (index.css, compat.css) [Bug 3711]
- ! BBC sizes without a unit weren't parsed correctly anymore. (Subs.php) 
+ ! BBC sizes without a unit weren't parsed correctly anymore. (Subs.php)
  * The custom subject was always disabled (SplitTopics template) [Bug 3914]
  * Core: hide the attachments division when there aren't any attachments to show. (Display template)
  & Properly capitalize the name of the DB software (repair_settings.php)
@@ -109,6 +109,7 @@ October 2009
  * The preview post could cause a JavaScript error in some browsers. (Post template) [Bug 3717]
  ! Inserting BBC in non-WYSIWYG mode was broken for some browsers. (script.js)
  ! Language selection did not show correctly in profile (Profile-Modify.php)
+ ! In some cases the guest_title may not exist (Load.php) [Bug 3916]
 
 
 September 2009

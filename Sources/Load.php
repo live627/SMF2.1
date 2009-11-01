@@ -1530,10 +1530,10 @@ function loadTheme($id_theme = 0, $initialize = true)
 		'email' => $user_info['email'],
 		'ignoreusers' => $user_info['ignoreusers'],
 	);
-	if ($context['user']['is_guest'])
-		$context['user']['name'] = $txt['guest_title'];
-	else
+	if (!$context['user']['is_guest'])
 		$context['user']['name'] = $user_info['name'];
+	elseif ($context['user']['is_guest'] && !empty($txt['guest_title']))
+		$context['user']['name'] = $txt['guest_title'];
 
 	// Determine the current smiley set.
 	$user_info['smiley_set'] = (!in_array($user_info['smiley_set'], explode(',', $modSettings['smiley_sets_known'])) && $user_info['smiley_set'] != 'none') || empty($modSettings['smiley_sets_enable']) ? (!empty($settings['smiley_sets_default']) ? $settings['smiley_sets_default'] : $modSettings['smiley_sets_default']) : $user_info['smiley_set'];
@@ -1648,6 +1648,10 @@ function loadTheme($id_theme = 0, $initialize = true)
 	// Load the compatibility stylesheet if the theme hasn't been updated for 2.0 RC2 (yet).
 	if (isset($settings['theme_version']) && version_compare($settings['theme_version'], '2.0 RC2', '<'))
 		loadTemplate(false, 'compat');
+
+	// Guests may still need a name.
+	if ($context['user']['is_guest'] && empty($context['user']['name']))
+		$context['user']['name'] = $txt['guest_title'];
 
 	// Any theme-related strings that need to be loaded?
 	if (!empty($settings['require_theme_strings']))
