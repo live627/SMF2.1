@@ -1007,7 +1007,10 @@ function prepareMessageContext($type = 'subject', $reset = false)
 		$memberContext[$message['id_member_from']]['is_guest'] = true;
 	}
 	else
+	{
 		$memberContext[$message['id_member_from']]['can_view_profile'] = allowedTo('profile_view_any') || ($message['id_member_from'] == $user_info['id'] && allowedTo('profile_view_own'));
+		$memberContext[$message['id_member_from']]['can_see_warning'] = !isset($context['disabled_fields']['warning_status']) && $memberContext[$message['id_member_from']]['warning_status'] && (($context['user']['can_mod'] || !empty($modSettings['warning_show'])) || ($memberContext[$message['id_member_from']]['id'] == $context['user']['id'] && !empty($modSettings['warning_show']) && $modSettings['warning_show'] == 1));
+	}
 
 	// Censor all the important text...
 	censorText($message['body']);
@@ -1034,9 +1037,6 @@ function prepareMessageContext($type = 'subject', $reset = false)
 		'is_unread' => &$context['message_unread'][$message['id_pm']],
 		'is_selected' => !empty($temp_pm_selected) && in_array($message['id_pm'], $temp_pm_selected),
 	);
-
-	// Perhaps they can see the warning status?
-	$output['member']['can_see_warning'] = !isset($context['disabled_fields']['warning_status']) && $memberContext[$message['id_member_from']]['warning_status'] && (($context['user']['can_mod'] || !empty($modSettings['warning_show'])) || ($memberContext[$message['id_member_from']]['id'] == $context['user']['id'] && !empty($modSettings['warning_show']) && $modSettings['warning_show'] == 1));
 
 	$counter++;
 
