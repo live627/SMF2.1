@@ -1291,8 +1291,8 @@ function detectBrowser()
 
 	// Internet Explorer 5 and 6 are often "emulated".
 	$context['browser']['is_ie8'] = !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'] && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 8') !== false;
-	$context['browser']['is_ie7'] = !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'] && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 7') !== false;
-	$context['browser']['is_ie6'] = !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'] && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 6') !== false;
+	$context['browser']['is_ie7'] = !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'] && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 7') !== false && !$context['browser']['is_ie8'];
+	$context['browser']['is_ie6'] = !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'] && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 6') !== false && !$context['browser']['is_ie8'] && !$context['browser']['is_ie7'];
 	$context['browser']['is_ie5.5'] = !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'] && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 5.5') !== false;
 	$context['browser']['is_ie5'] = !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'] && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 5.0') !== false;
 
