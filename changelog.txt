@@ -113,6 +113,7 @@ October 2009
  * IE6 and IE7 were having difficulties with the Core theme's implementation of min-height. (index.css, rtl.css) 
  * Auto suggest will throw an error if the field doesn't exist (ManageBans template)
  ! Guests can't have warnings, so don't try to find them. (PersonalMessage.php) [Bug 3941]
+ + Allow multiple selections in select boxes (Admin Template)
 
 
 September 2009

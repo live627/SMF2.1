@@ -911,7 +911,7 @@ function template_show_settings()
 				elseif ($config_var['type'] == 'select')
 				{
 					echo '
-								<select name="', $config_var['name'], '" id="', $config_var['name'], '" ', $javascript, $disabled, '>';
+								<select name="', $config_var['name'], '" id="', $config_var['name'], '" ', $javascript, $disabled, (!empty($config_var['multiple']) ? ' multiple="multiple"' : ''), '>';
 					foreach ($config_var['data'] as $option)
 						echo '
 									<option value="', $option[0], '"', ($option[0] == $config_var['value'] ? ' selected="selected"' : ''), '>', $option[1], '</option>';
