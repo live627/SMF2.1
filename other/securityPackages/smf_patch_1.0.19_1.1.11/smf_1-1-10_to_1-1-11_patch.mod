@@ -1,5 +1,5 @@
 <edit file>
-.Sources/Load.php
+$sourcedir/Load.php
 </edit file>
 <search for>
 * =============================================================================== *
@@ -25,7 +25,7 @@
 
 
 <edit file>
-.Sources/Modlog.php
+$sourcedir/Modlog.php
 </edit file>
 <search for>
 
@@ -77,7 +77,7 @@
 <replace>
 
 	if (isset($_REQUEST['search_type']) || empty($search_params['type']) || !isset($searchTypes[$search_params['type']]))
-		$search_params_type = isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $_REQUEST['search_type'] : isset($searchTypes[$context['order']]) ? $context['order'] : 'member';
+		$search_params_type = isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $_REQUEST['search_type'] : (isset($searchTypes[$context['order']]) ? $context['order'] : 'member');
 	else
 		$search_params_type = $search_params['type'];
 
@@ -123,7 +123,7 @@
 
 
 <edit file>
-.Sources/ManageAttachments.php
+$sourcedir/ManageAttachments.php
 </edit file>
 <search for>
 * =============================================================================== *
@@ -173,7 +173,7 @@
 
 
 <edit file>
-.Sources/ManageMembers.php
+$sourcedir/ManageMembers.php
 </edit file><search for>
 	// Check input after a member search has been submitted.
 </search for>
@@ -254,7 +254,7 @@
 
 
 <edit file>
-.Sources/Display.php
+$sourcedir/Display.php
 </edit file>
 <search for>
 function Download()
@@ -312,7 +312,7 @@ function Download()
 
 
 <edit file>
-.Sources/Subs-Graphics.php
+$sourcedir/Subs-Graphics.php
 </edit file>
 <search for>
 	// Ask for more memory: we need it for this, and it'll only happen once!
@@ -326,7 +326,7 @@ function Download()
 
 
 <edit file>
-.Sources/ManageCalendar.php
+$sourcedir/ManageCalendar.php
 </edit file><search for>
 
 	// Submitting?
@@ -346,7 +346,7 @@ function Download()
 
 
 <edit file>
-.Sources/ManagePermissions.php
+$sourcedir/ManagePermissions.php
 </edit file>
 <search for>
 			'can_search' => true,
@@ -371,7 +371,7 @@ function Download()
 
 
 <edit file>
-.index.php
+$boarddir/index.php
 </edit file>
 <search for>
 * =============================================================================== *
