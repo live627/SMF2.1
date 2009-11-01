@@ -249,6 +249,8 @@ function template_main()
 
 		echo '
 					</table>
+				</td></tr>
+			</table>
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/stats.js"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var oStatsCenter = new smf_StatsCenter({
@@ -276,7 +278,7 @@ function template_main()
 				\'new_posts\',
 				\'new_members\',
 				\'most_members_online\'', empty($modSettings['hitStats']) ? '' :',
-				\'hits\'
+				\'hits\'', '
 			]
 		});
 	// ]]></script>';

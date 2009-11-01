@@ -405,8 +405,8 @@ function template_main()
 				\'new_topics\',
 				\'new_posts\',
 				\'new_members\',
-				\'most_members_online\'', empty($modSettings['hitStats']) ? '' :',
-				\'hits\'
+				\'most_members_online\'', empty($modSettings['hitStats']) ? '' : ',
+				\'hits\'', '
 			]
 		});
 	// ]]></script>';
