@@ -136,7 +136,7 @@ if (!defined('SMF'))
 // This defines every profile field known to man.
 function loadProfileFields($force_reload = false)
 {
-	global $context, $profile_fields, $txt, $scripturl, $modSettings, $user_info, $old_profile, $smcFunc, $cur_profile;
+	global $context, $profile_fields, $txt, $scripturl, $modSettings, $user_info, $old_profile, $smcFunc, $cur_profile, $language;
 
 	// Don't load this twice!
 	if (!empty($profile_fields) && !$force_reload)
@@ -417,6 +417,7 @@ function loadProfileFields($force_reload = false)
 			'permission' => 'profile_identity',
 			'preload' => 'profileLoadLanguages',
 			'enabled' => !empty($modSettings['userLanguage']),
+			'value' => empty($cur_profile['lngfile']) ? $language : $cur_profile['lngfile'],
 			'input_validate' => create_function('&$value', '
 				global $context, $cur_profile;
 
@@ -2241,9 +2242,6 @@ function profileLoadLanguages()
 
 	$context['profile_languages'] = array();
 
-	// Select the default language if the user has no language selected yet.
-	$selectedLanguage = empty($cur_profile['lngfile']) ? $language : $cur_profile['lngfile'];
-
 	// Do we have any languages?
 	if (empty($context['languages']))
 		getLanguages();
@@ -2251,6 +2249,7 @@ function profileLoadLanguages()
 	// Setup our languages.
 	foreach ($context['languages'] as $lang)
 		$context['profile_languages'][$lang['filename']] = strtr($lang['name'], array('-utf8' => ''));
+	ksort($context['profile_languages']);
 
 	// Return whether we should proceed with this.
 	return count($context['profile_languages']) > 1 ? true : false;
