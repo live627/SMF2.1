@@ -677,8 +677,8 @@ function SMStats()
 	global $modSettings, $user_info, $forum_version, $sourcedir;
 
 	// First, is it disabled?
-//	if (empty($modSettings['allow_sm_stats']))
-//		die();
+	if (empty($modSettings['allow_sm_stats']))
+		die();
 
 	// Are we saying who we are, and are we right? (OR an admin)
 	if (!$user_info['is_admin'] && (!isset($_GET['sid']) || $_GET['sid'] != $modSettings['allow_sm_stats']))
