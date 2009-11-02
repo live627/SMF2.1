@@ -15,6 +15,7 @@ November 2009
  + Allow multiple selections in select boxes. (Admin template)
  ! Prevent the detectBrowser function from being mislead by Internet Explorer identifying itself as two different versions. (Load.php)
  ! Improved debugging of load times. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php, Subs.php, ViewQuery.php, index language file)
+ ! Stat collection didn't send out proper database information (Stats.php)
 
 
 October 2009

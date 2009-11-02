@@ -677,8 +677,8 @@ function SMStats()
 	global $modSettings, $user_info, $forum_version, $sourcedir;
 
 	// First, is it disabled?
-	if (empty($modSettings['allow_sm_stats']))
-		die();
+//	if (empty($modSettings['allow_sm_stats']))
+//		die();
 
 	// Are we saying who we are, and are we right? (OR an admin)
 	if (!$user_info['is_admin'] && (!isset($_GET['sid']) || $_GET['sid'] != $modSettings['allow_sm_stats']))
@@ -705,7 +705,8 @@ function SMStats()
 		'topics' => $modSettings['totalTopics'],
 		'boards' => 0,
 		'php_version' => $serverVersions['php']['version'],
-		'mysql_version' => $serverVersions['db_server']['version'],
+		'database_type' => strtolower($serverVersions['db_server']['title']),
+		'database_version' => $serverVersions['db_server']['version'],
 		'smf_version' => $forum_version,
 		'smfd_version' => $modSettings['smfVersion'],
 	);
