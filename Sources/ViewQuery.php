@@ -39,7 +39,7 @@ if (!defined('SMF'))
 // See the queries....
 function ViewQuery()
 {
-	global $scripturl, $user_info, $settings, $context, $db_connection, $modSettings, $smcFunc, $txt;
+	global $scripturl, $user_info, $settings, $context, $db_connection, $modSettings, $boarddir, $smcFunc, $txt;
 
 	// Don't allow except for administrators.
 	isAllowedTo('admin_forum');
@@ -80,7 +80,8 @@ function ViewQuery()
 			}
 		</style>
 	</head>
-	<body>';
+	<body id="help_popup">
+		<div class="tborder windowbg description">';
 
 	foreach ($_SESSION['debug'] as $q => $query_data)
 	{
@@ -97,6 +98,10 @@ function ViewQuery()
 		foreach ($query as $l => $dummy)
 			$query[$l] = substr($dummy, $min_indent);
 		$query_data['q'] = implode("\n", $query);
+
+		// Make the filenames look a bit better.
+		if (isset($query_data['f']))
+			$query_data['f'] = preg_replace('~^' . preg_quote($boarddir, '~') . '~', '...', $query_data['f']);
 
 		$is_select_query = substr(trim($query_data['q']), 0, 6) == 'SELECT';
 		if ($is_select_query)
@@ -127,10 +132,16 @@ function ViewQuery()
 			<a', $is_select_query ? ' href="' . $scripturl . '?action=viewquery;qq=' . ($q + 1) . '#qq' . $q . '"' : '', ' style="font-weight: bold; text-decoration: none;">
 				', nl2br(str_replace("\t", '&nbsp;&nbsp;&nbsp;', htmlspecialchars($query_data['q']))), '
 			</a><br />';
-			if (!empty($query_data['f']) && !empty($query_data['l']))
-				echo sprintf($txt['debug_query_in_line'], $query_data['f'], $query_data['l']);
 
-			echo sprintf($txt['debug_query_which_took'], round($query_data['t'], 8)) . '
+		if (!empty($query_data['f']) && !empty($query_data['l']))
+			echo sprintf($txt['debug_query_in_line'], $query_data['f'], $query_data['l']);
+
+		if (isset($query_data['s'], $query_data['t']) && isset($txt['debug_query_which_took_at']))
+			echo sprintf($txt['debug_query_which_took_at'], round($query_data['t'], 8), round($query_data['s'], 8));
+		else
+			echo sprintf($txt['debug_query_which_took'], round($query_data['t'], 8));
+
+		echo '
 		</div>';
 
 		// Explain the query.
@@ -178,6 +189,7 @@ function ViewQuery()
 	}
 
 	echo '
+		</div>
 	</body>
 </html>';
 

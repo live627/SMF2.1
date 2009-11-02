@@ -12,8 +12,9 @@ November 2009
  * IE6 and IE7 were having difficulties with the Core theme's implementation of min-height. (index.css, rtl.css) 
  * Auto suggest will throw an error if the field doesn't exist (ManageBans template)
  ! Guests can't have warnings, so don't try to find them. (PersonalMessage.php) [Bug 3941]
- + Allow multiple selections in select boxes (Admin template)
+ + Allow multiple selections in select boxes. (Admin template)
  ! Prevent the detectBrowser function from being mislead by Internet Explorer identifying itself as two different versions. (Load.php)
+ ! Improved debugging of load times. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php, Subs.php, ViewQuery.php, index language file)
 
 
 October 2009

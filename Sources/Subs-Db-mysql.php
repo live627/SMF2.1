@@ -234,7 +234,7 @@ function smf_db_quote($db_string, $db_values, $connection = null)
 // Do a query.  Takes care of errors too.
 function smf_db_query($identifier, $db_string, $db_values = array(), $connection = null)
 {
-	global $db_cache, $db_count, $db_connection, $db_show_debug;
+	global $db_cache, $db_count, $db_connection, $db_show_debug, $time_start;
 	global $db_unbuffered, $db_callback, $modSettings;
 
 	// Comments that are allowed in a query are preg_removed.
@@ -303,11 +303,12 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 			$_SESSION['debug_redirect'] = array();
 		}
 
+		$st = microtime();
 		// Don't overload it.
 		$db_cache[$db_count]['q'] = $db_count < 50 ? $db_string : '...';
 		$db_cache[$db_count]['f'] = $file;
 		$db_cache[$db_count]['l'] = $line;
-		$st = microtime();
+		$db_cache[$db_count]['s'] = array_sum(explode(' ', $st)) - array_sum(explode(' ', $time_start));
 	}
 
 	// First, we clean strings out of the query, reduce whitespace, lowercase, and trim - so we can check it over.

@@ -3422,7 +3422,7 @@ function template_footer()
 // Debugging.
 function db_debug_junk()
 {
-	global $context, $scripturl, $boarddir, $modSettings;
+	global $context, $scripturl, $boarddir, $modSettings, $boarddir;
 	global $db_cache, $db_count, $db_show_debug, $cache_count, $cache_hits, $txt;
 
 	// Add to Settings.php if you want to show the debugging information.
@@ -3513,12 +3513,19 @@ function db_debug_junk()
 			elseif (preg_match('~^CREATE TEMPORARY TABLE .+?SELECT .+$~s', trim($qq['q'])) != 0)
 				$is_select = true;
 
+			// Make the filenames look a bit better.
+			if (isset($qq['f']))
+				$qq['f'] = preg_replace('~^' . preg_quote($boarddir, '~') . '~', '...', $qq['f']);
+
 			echo '
 	<strong>', $is_select ? '<a href="' . $scripturl . '?action=viewquery;qq=' . ($q + 1) . '#qq' . $q . '" target="_blank" class="new_win" style="text-decoration: none;">' : '', nl2br(str_replace("\t", '&nbsp;&nbsp;&nbsp;', htmlspecialchars(ltrim($qq['q'], "\n\r")))) . ($is_select ? '</a></strong>' : '</strong>') . '<br />
 	&nbsp;&nbsp;&nbsp;';
 			if (!empty($qq['f']) && !empty($qq['l']))
 				echo sprintf($txt['debug_query_in_line'], $qq['f'], $qq['l']);
-			if (isset($qq['t']))
+
+			if (isset($qq['s'], $qq['t']) && isset($txt['debug_query_which_took_at']))
+				echo sprintf($txt['debug_query_which_took_at'], round($qq['t'], 8), round($qq['s'], 8)) . '<br />';
+			elseif (isset($qq['t']))
 				echo sprintf($txt['debug_query_which_took'], round($qq['t'], 8)) . '<br />';
 		echo '
 	<br />';
