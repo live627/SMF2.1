@@ -573,9 +573,9 @@ if (empty($modSettings['dont_repeat_buddylists']))
 // Firstly, I'm going out of my way to not do this twice!
 if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC2') && empty($modSettings['dont_repeat_theme_core']))
 {
-	// Check it's not already here, just incase.
+	// Check it's not already here, just in case.
 	$theme_request = upgrade_query("
-		SELECT ID_THEME
+		SELECT id_theme
 		FROM {$db_prefix}themes
 		WHERE variable = 'theme_dir'
 			AND value LIKE '%core'");
@@ -586,14 +586,14 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 		$request = upgrade_query("
 			SELECT t1.value AS theme_dir, t2.value AS theme_url, t3.value AS images_url
 			FROM ({$db_prefix}themes AS t1, {$db_prefix}themes AS t2, {$db_prefix}themes AS t3)
-			WHERE t1.ID_THEME = 1
-				AND t1.ID_MEMBER = 0
+			WHERE t1.id_theme = 1
+				AND t1.id_member = 0
 				AND t1.variable = 'theme_dir'
-				AND t2.ID_THEME = 1
-				AND t2.ID_MEMBER = 0
+				AND t2.id_theme = 1
+				AND t2.id_member = 0
 				AND t2.variable = 'theme_url'
-				AND t3.ID_THEME = 1
-				AND t3.ID_MEMBER = 0
+				AND t3.id_theme = 1
+				AND t3.id_member = 0
 				AND t3.variable = 'images_url'
 			LIMIT 1");
 		if ($smcFunc['db_num_rows']($request) != 0)
@@ -623,7 +623,7 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 		list ($id_core_theme) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 
-		// Insert the babylon theme into the tables.
+		// Insert the core theme into the tables.
 		upgrade_query("
 			INSERT INTO {$db_prefix}themes
 				(id_member, id_theme, variable, value)
@@ -632,6 +632,13 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 				(0, $id_core_theme, 'theme_url', '$core[theme_url]'),
 				(0, $id_core_theme, 'images_url', '$core[images_url]'),
 				(0, $id_core_theme, 'theme_dir', '$core[theme_dir]')");
+
+		// Update the name of the default theme in the database.
+		upgrade_query("
+		    UPDATE {$db_prefix}themes
+		    SET value = 'SMF Default Theme - Curve'
+		    WHERE id_theme = 1
+				AND variable = 'name'");
 
 		$newSettings = array();
 		// Now that we have the old theme details - switch anyone who used the default to it (Make sense?!)
