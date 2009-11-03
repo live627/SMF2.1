@@ -1093,8 +1093,6 @@ function doStep1()
 					$special_code = $current_data;
 				else
 				{
-					echo ("<br>" . $current_data . "</br>");
-
 					if (eval($current_data) === false)
 						print_error('
 			<strong>Error in convert script ', $_SESSION['convert_script'], ' on line ', $line_number, '!</strong><br />');

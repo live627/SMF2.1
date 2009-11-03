@@ -489,7 +489,14 @@ elseif ($vb_settings['attachfile'] == 2)
 
 // Is an an image?
 if (!empty($attachmentExtension))
+{
 	list ($width, $height) = getimagesize($attachmentUploadDir . '/' . $physical_filename);
+	// This shouldn't happen but apparently it might
+	if(empty($width))
+		$width = 0;
+	if(empty($height))
+		$height = 0;
+}
 
 $rows[] = array(
 	'id_attach' => $id_attach,

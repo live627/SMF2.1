@@ -1049,7 +1049,7 @@ if (empty($preparsing))
 				// Is this an image???
 				$attachmentExtension = strtolower(substr(strrchr($row['temp_filename'], '.'), 1));
 				if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
-					$attachmentExtention = '';
+					$attachmentExtension = '';
 
 				if (strlen($filename) <= 255 &&  copy($yabb['uploaddir'] . '/' . $row['temp_filename'], $attachmentUploadDir . '/' . $file_hash))
 				{
@@ -1059,7 +1059,14 @@ if (empty($preparsing))
 
 					// Is an an image?
 					if (!empty($attachmentExtension))
+					{
 						list ($width, $height) = getimagesize($yabb['uploaddir'] . '/' . $row['temp_filename']);
+						// This shouldn't happen but apparently it might
+						if(empty($width))
+							$width = 0;
+						if(empty($height))
+							$height = 0;
+					}
 
 					$attachments[] = array($id_attach, $size, 0, $row['temp_filename'], $file_hash, $row['id_msg'], $width, $height);
 

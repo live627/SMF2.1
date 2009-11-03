@@ -358,8 +358,14 @@ $height = 0;
 // Is an an image?
 $attachmentExtension = strtolower(substr(strrchr($row['filename'], '.'), 1));
 if (in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png', 'bmp')))
+{
 	list ($width, $height) = getimagesize($attachmentUploadDir . '/' . $physical_filename);
-
+	// This shouldn't happen but apparently it might
+	if(empty($width))
+		$width = 0;
+	if(empty($height))
+		$height = 0;
+}
 $rows[] = array(
 	'id_attach' => $id_attach,
 	'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
