@@ -150,7 +150,7 @@ function ViewErrorLog()
 			'time' => timeformat($row['log_time']),
 			'timestamp' => $row['log_time'],
 			'url' => array(
-				'html' => htmlspecialchars(($row['url'][0] == '?' ? $scripturl : '') . $row['url']),
+				'html' => htmlspecialchars((substr($row['url'], 0, 1) == '?' ? $scripturl : '') . $row['url']),
 				'href' => base64_encode($smcFunc['db_escape_wildcard_string']($row['url']))
 			),
 			'message' => array(
@@ -231,7 +231,7 @@ function ViewErrorLog()
 			$context['filter']['value']['html'] = '<a href="' . $scripturl . '?action=profile;u=' . $id . '">' . $user_profile[$id]['real_name'] . '</a>';
 		}
 		elseif ($filter['variable'] == 'url')
-			$context['filter']['value']['html'] = '\'' . strtr(htmlspecialchars(($filter['value']['sql'][0] == '?' ? $scripturl : '') . $filter['value']['sql']), array('\_' => '_')) . '\'';
+			$context['filter']['value']['html'] = '\'' . strtr(htmlspecialchars((substr($filter['value']['sql'], 0, 1) == '?' ? $scripturl : '') . $filter['value']['sql']), array('\_' => '_')) . '\'';
 		elseif ($filter['variable'] == 'message')
 		{
 			$context['filter']['value']['html'] = '\'' . strtr(htmlspecialchars($filter['value']['sql']), array("\n" => '<br />', '&lt;br /&gt;' => '<br />', "\t" => '&nbsp;&nbsp;&nbsp;', '\_' => '_', '\\%' => '%', '\\\\' => '\\')) . '\'';

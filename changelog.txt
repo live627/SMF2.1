@@ -9,7 +9,7 @@ November 2009
  ! Inserting BBC in non-WYSIWYG mode was broken for some browsers. (script.js)
  ! Language selection did not show correctly in profile (Profile-Modify.php)
  ! In some cases the guest_title may not exist (Load.php) [Bug 3916]
- * IE6 and IE7 were having difficulties with the Core theme's implementation of min-height. (index.css, rtl.css) 
+ * IE6 and IE7 were having difficulties with the Core theme's implementation of min-height. (index.css, rtl.css)
  * Auto suggest will throw an error if the field doesn't exist (ManageBans template)
  ! Guests can't have warnings, so don't try to find them. (PersonalMessage.php) [Bug 3941]
  + Allow multiple selections in select boxes. (Admin template)
@@ -121,6 +121,7 @@ October 2009
  ! In some rare cases, the {REGARDS} part of a notification message was sent in the wrong language. (Subs-Post.php)
  ! Collapsing of months wasn't saved properly (Stats.php, stats.js, script.js, Stats template) [Bug 3802]
  ! A form with an auto suggest control didn't always submit properly when pressing the enter key. (suggest.js) [Bug 3546]
+ ! Viewing the error logs caused an undefined index in some PHP versions. (ManageErrors.php)
 
 
 September 2009
