@@ -17,6 +17,8 @@ November 2009
  ! Improved debugging of load times. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php, Subs.php, ViewQuery.php, index language file)
  ! Stat collection didn't send out proper database information (Stats.php)
  ! Update the default theme's name when installing the Core theme on upgrade. (upgrade_2-0_mysql.sql, upgrade_2-0_postgresql.sql, upgrade_2-0_sqlite.sql) [Bug 3779]
+ * Rewrote the 'Getting Started' part of the help section to match Curve's look and feel. (Help template, index.css)
+ * Changed the way linktrees are classes in order for there to be more than three linktree instances on a page. (index template, index.css)   
 
 
 October 2009

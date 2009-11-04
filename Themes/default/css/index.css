@@ -1376,15 +1376,16 @@ div#upper_section div.news form
 {
 	overflow: hidden;
 }
+
 /* the navigation list */
-#navigate_section_upper, #navigate_section_lower
+.navigate_section
 {
 	overflow: hidden;
 	margin: 0;
 	padding: 0.5em;
 	margin: 1em 0 0 0;
 }
-#navigate_section_upper ul, #navigate_section_lower ul
+.navigate_section ul
 {
 	display: block;
 	margin: 0;
@@ -1392,7 +1393,7 @@ div#upper_section div.news form
 	padding: 1em 0 0.5em 0;
 	border-top: solid #ccc 1px;
 }
-#navigate_section_upper ul li, #navigate_section_lower ul li
+.navigate_section ul li
 {
 	display: inline;
 	font-size: 0.95em;
@@ -3402,40 +3403,53 @@ span.hidelink
 	margin: 8px 0 0 0;
 	padding: 0 0 8px 0;
 }
-
 #helpmain
 {
 	padding: 0 1em;
 }
-
-#helpmain h1
+#helpmain h1.section
 {
 	font-size: 18px;
 }
-
-#helpmain h2
+#helpmain h2.section
 {
 	font-size: 18px;
 	border-bottom: solid 1px;
 	padding-bottom: 0.5em;
 	margin: 0 0 0.5em 0;
 }
-
-#helpmain h3, #helpmain h4, #helpmain h5, #helpmain h6
+#helpmain h3.section
 {
 	font-size: 16px;
-	margin: 2em 0 0.5em 0;
 	font-weight: normal;
+	margin: 2em 0 0.5em 0;
 	padding: 0 0 0.5em 0.5em;
 }
 
-/* we need some air between the lines :) */
+/* Samples should be easily distinguishable. */
+#helpmain .help_sample
+{
+	border: 1px solid #99a;
+	background: #fff;
+	padding: 1em;
+	overflow: auto;
+}
+#helpmain .help_sample .navigate_section
+{
+	margin: 0;
+}
+#helpmain .help_sample .navigate_section ul
+{
+	padding-top: 0;
+	border: none;
+}
+
+/* We need some air between the lines */
 #helpmain p
 {
 	margin: 0 0 1.5em 0;
 	line-height: 1.5em;
 }
-
 #helpmain ol
 {
 	font-weight: bold;
@@ -3453,17 +3467,6 @@ span.hidelink
 }
 
 /* put back the bullets please */
-#helpmain ul
-{
-	margin: 0 0 1em 2em;
-	padding-left: 1em;
-}
-#helpmain ul li
-{
-	line-height: 1.5em;
-	list-style-type: disc;
-	padding-left: 0.2em;
-}
 #helpmain #messageindex
 {
 	clear: right;

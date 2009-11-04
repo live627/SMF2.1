@@ -363,7 +363,7 @@ function theme_linktree($force_show = false)
 		$context['linktree'] = array_reverse($context['linktree'], true);
 
 	echo '
-	<div id="navigate_section_', empty($shown_linktree) ? 'upper' : 'lower', '">
+	<div class="navigate_section">
 		<ul>';
 
 	// Each tree item has a URL and name. Some may have extra_before and extra_after.

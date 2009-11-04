@@ -74,13 +74,7 @@ function template_main()
 
 	echo '
 	<div id="boardindex_table">
-		<table class="table_list">
-			<thead>
-				<tr><th colspan="4"></th></tr>
-			</thead>
-			<tfoot>
-				<tr><td colspan="4"></td></tr>
-			</tfoot>';
+		<table class="table_list">';
 
 	/* Each category in categories is made up of:
 	id, href, link, name, is_collapsed (is it collapsed?), can_collapse (is it okay if it is?),
@@ -107,9 +101,8 @@ function template_main()
 						<a class="unreadlink" href="', $scripturl, '?action=unread;c=', $category['id'], '">', $txt['view_unread_category'], '</a>';
 
 		echo '
-						', $category['link'];
-
-		echo '	</td>
+						', $category['link'], '
+					</td>
 				</tr>
 			</tbody>
 			<tbody class="content">	';
