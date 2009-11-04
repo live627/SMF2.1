@@ -860,11 +860,11 @@ dl.stats dd
 	text-align: right;
 }
 /* Boards picker */
-#searchform fieldset div#searchBoardsExpand ul ul
+#searchform fieldset div#searchBoardsExpand ul
 {
 	margin: 0 1em 0 0;
 }
-#searchform fieldset ul#searchBoardsExpand li
+#searchform fieldset div#searchBoardsExpand li
 {
 	float: right;
 }

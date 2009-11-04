@@ -19,6 +19,8 @@ November 2009
  ! Update the default theme's name when installing the Core theme on upgrade. (upgrade_2-0_mysql.sql, upgrade_2-0_postgresql.sql, upgrade_2-0_sqlite.sql) [Bug 3779]
  * Rewrote the 'Getting Started' part of the help section to match Curve's look and feel. (Help template, index.css)
  * Changed the way linktrees are classes in order for there to be more than three linktree instances on a page. (index template, index.css)   
+ * Rewrote the 'Registering' and 'Forum Tools' parts of the help section to match Curve's look and feel. (Help template, Manual language file, index.css)
+ * The board selection part of the advanced search screen could break on some resolutions. (Search template, index.css, compat.css, rtl.css)
 
 
 October 2009

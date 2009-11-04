@@ -166,7 +166,7 @@ function template_registration_form()
 					</dl>';
 	}
 
-	echo'
+	echo '
 					<dl class="register_form" id="password1_group">
 						<dt><strong><label for="smf_autov_pwmain">', $txt['choose_pass'], ':</label></strong></dt>
 						<dd>

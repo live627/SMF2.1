@@ -621,70 +621,76 @@ function template_manual_registration_screen()
 		<li>', $txt['manual_registering_select_register_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_registering_select_register_link_index_main'], '</a>', $txt['manual_registering_select_register_part2'], '</li>
 		<li>', $txt['manual_registering_login_Scr_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_registering_login_Scr_link_index_main'], '</a>', $txt['manual_registering_login_Scr_part2'], '</li>
 	</ul>
-	<table width="400" cellspacing="0" cellpadding="3" class="tborder" align="center">
-		<tr class="titlebg">
-			<td>', $txt['manual_registering_warning'], '</td>
-		</tr>
-		<tr>
-			<td class="windowbg" style="padding-top: 2ex; padding-bottom: 2ex;">', $txt['manual_registering_warning_desc_1'], '<br />
-			', $txt['manual_registering_warning_desc_2'], '<a href="', $scripturl, '?action=help;area=registration_screen#screen" class="board">', $txt['manual_registering_warning_desc_3'], '</a>', $txt['manual_registering_warning_desc_4'], '</td>
-		</tr>
-	</table><br />
-	<h2 class="section" id="screen">', $txt['manual_registering_sec_reg_screen'], '</h2>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
-			<form action="', $scripturl, '?action=help;area=registration_screen" method="post" accept-charset="', $context['character_set'], '">
-				<table border="0" width="100%" cellpadding="3" cellspacing="0" class="tborder">
-					<tr class="titlebg">
-						<td>', $txt['manual_registering_required_info'], '</td>
-					</tr>
-					<tr class="windowbg">
-						<td width="100%">
-							<table cellpadding="3" cellspacing="0" border="0" width="100%">
-								<tr>
-									<td width="40%">
-										<strong>', $txt['manual_registering_choose_username'], ':</strong>
-										<div class="smalltext">
-											', $txt['manual_registering_caption_username'], '
-										</div>
-									</td>
-									<td><input type="text" size="20" maxlength="18" class="input_text" /></td>
-								</tr>
-								<tr>
-									<td width="40%">
-										<strong>', $txt['manual_registering_email'], ':</strong>
-										<div class="smalltext">
-											', $txt['manual_registering_caption_email'], '
-										</div>
-									</td>
-									<td><input type="text" size="30" class="input_text" /> <input type="checkbox" class="input_check" /> <label>', $txt['manual_registering_hide_email'], '</label></td>
-								</tr>
-								<tr>
-									<td width="40%"><strong>', $txt['manual_registering_choose_pass'], ':</strong></td>
-									<td><input type="password" size="30" class="input_password" /></td>
-								</tr>
-								<tr>
-									<td width="40%"><strong>', $txt['manual_registering_verify_pass'], ':</strong></td>
-									<td><input type="password" size="30" class="input_password" /></td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table>
-				<table width="100%" align="center" border="0" cellspacing="0" cellpadding="5" class="tborder" style="border-top: 0;">
-					<tr>
-						<td class="windowbg2" style="padding-top: 8px; padding-bottom: 8px;">', $txt['manual_registering_agreement'], '</td>
-					</tr>
-					<tr>
-						<td align="center" class="windowbg2"><label><input type="checkbox" class="input_check" /> <strong>', $txt['manual_registering_agree'], '</strong></label></td>
-					</tr>
-				</table><br />
-				<div class="centertext">
-					<input type="button" value="', $txt['manual_registering_register'], '" class="button_submit" />
-				</div>
-			</form>
+	<div class="help_sample">
+		<div id="fatal_error">
+			<h3 class="catbg"><span class="left"></span>
+				', $txt['manual_registering_warning'], '
+			</h3>
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<div class="padding">', $txt['manual_registering_warning_desc_1'], '<br />
+				', $txt['manual_registering_warning_desc_2'], '<a href="', $scripturl, '?action=help;area=registration_screen#screen" class="board">', $txt['manual_registering_warning_desc_3'], '</a>', $txt['manual_registering_warning_desc_4'], '</div>
+				<span class="botslice"><span></span></span>
+			</div>
 		</div>
-	</div><br />
+	</div>
+	<h2 class="section" id="screen">', $txt['manual_registering_sec_reg_screen'], '</h2>
+	<div class="help_sample">
+		<form action="', $scripturl, '?action=help;area=registration_screen" method="post" accept-charset="', $context['character_set'], '">
+			<h3 class="catbg"><span class="left"></span>
+				', $txt['manual_registering_registration_form'], '
+			</h3>
+			<h4 class="titlebg"><span class="left"></span>
+				', $txt['manual_registering_required_info'], '
+			</h4>
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<fieldset class="content">
+					<dl class="register_form">
+						<dt><strong><label for="smf_autov_username">', $txt['username'], ':</label></strong></dt>
+						<dd>
+							<input type="text" name="user" id="smf_autov_username" size="30" tabindex="', $context['tabindex']++, '" maxlength="25" value="', isset($context['username']) ? $context['username'] : '', '" class="input_text" />
+							<span id="smf_autov_username_div" style="display: none;">
+								<a id="smf_autov_username_link" href="#">
+									<img id="smf_autov_username_img" src="', $settings['images_url'], '/icons/field_check.gif" alt="*" />
+								</a>
+							</span>
+						</dd>
+						<dt><strong><label for="smf_autov_reserve1">', $txt['email'], ':</label></strong></dt>
+						<dd>
+							<input type="text" name="email" id="smf_autov_reserve1" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['email']) ? $context['email'] : '', '" class="input_text" />
+						</dd>
+						<dt><strong><label for="allow_email">', $txt['allow_user_email'], ':</label></strong></dt>
+						<dd>
+							<input type="checkbox" name="allow_email" id="allow_email" tabindex="', $context['tabindex']++, '" class="input_check" />
+						</dd>
+					</dl>
+					<dl class="register_form" id="password1_group">
+						<dt><strong><label for="smf_autov_pwmain">', $txt['choose_pass'], ':</label></strong></dt>
+						<dd>
+							<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" class="input_password" />
+							<span id="smf_autov_pwmain_div" style="display: none;">
+								<img id="smf_autov_pwmain_img" src="', $settings['images_url'], '/icons/field_invalid.gif" alt="*" />
+							</span>
+						</dd>
+					</dl>
+					<dl class="register_form" id="password2_group">
+						<dt><strong><label for="smf_autov_pwverify">', $txt['verify_pass'], ':</label></strong></dt>
+						<dd>
+							<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" class="input_password" />
+							<span id="smf_autov_pwverify_div" style="display: none;">
+								<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" />
+							</span>
+						</dd>
+					</dl>
+				</fieldset>
+				<span class="botslice"><span></span></span>
+			</div>
+			<div id="confirm_buttons">
+				<input type="submit" name="regSubmit" value="', $txt['register'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />
+			</div>
+		</form>
+	</div>
 	<p>', $txt['manual_registering_reg_screen_requirements_part1'], '<a href="', $scripturl, '?action=help;area=logging_in#screen">', $txt['manual_registering_reg_screen_requirements_link_loginout_screen'], '</a>', $txt['manual_registering_reg_screen_requirements_part2'], '</p>
 	<ul>
 		<li>', $txt['manual_registering_email_activate'], '</li>
@@ -719,71 +725,62 @@ function template_manual_logging_in_out()
 	<p>', $txt['manual_loginout_login_desc'], '</p>
 	<h3 class="section" id="screen">', $txt['manual_loginout_login_screen'], '</h3>
 	<p>', $txt['manual_loginout_login_screen_desc_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_loginout_login_screen_desc_link_index_main'], '</a>', $txt['manual_loginout_login_screen_desc_part2'], '</p>
-	<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '" style="margin-top: 4ex;">
-		<table border="0" width="400" cellspacing="0" cellpadding="4" class="tborder" align="center">
-			<tr class="titlebg">
-				<td colspan="2"><img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" align="top" /> ', $txt['manual_loginout_login'], '</td>
-			</tr>
-			<tr class="windowbg">
-				<td width="50%" align="right"><strong>', $txt['manual_loginout_username'], ':</strong></td>
-				<td><input type="text" size="20" value="" class="input_text" /></td>
-			</tr>
-			<tr class="windowbg">
-				<td align="right"><strong>', $txt['manual_loginout_password'], ':</strong></td>
-				<td><input type="password" value="" size="20" class="input_password" /></td>
-			</tr>
-			<tr class="windowbg">
-				<td align="right"><strong>', $txt['manual_loginout_how_long'], ':</strong></td>
-				<td><input name="cookielength" type="text" size="4" maxlength="4" value="60" class="input_text" /></td>
-			</tr>
-			<tr class="windowbg">
-				<td align="right"><strong>', $txt['manual_loginout_always'], ':</strong></td>
-				<td><input type="checkbox" class="input_check" onclick="this.form.cookielength.disabled = this.checked;" /></td>
-			</tr>
-			<tr class="windowbg">
-				<td align="center" colspan="2"><input type="button" style="margin-top: 2ex;" value="Login" class="button_submit" /></td>
-			</tr>
-			<tr class="windowbg">
-				<td align="center" colspan="2" class="smalltext"><a href="', $scripturl, '?action=help;area=password_reminders" style="font-size: x-small;" class="board">', $txt['manual_loginout_forgot'], '?</a><br />
-				<br /></td>
-			</tr>
-		</table>
-	</form><br />
+	<div class="help_sample">
+		<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '">
+			<div class="tborder login">
+				<h3 class="catbg"><span class="left"></span>
+					<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" class="icon" /> ', $txt['manual_loginout_login'], '
+				</h3>
+				<span class="upperframe"><span></span></span>
+				<div class="roundframe">
+					<dl>
+						<dt>', $txt['manual_loginout_username'], ':</dt>
+						<dd><input type="text" name="user" size="20" class="input_text" /></dd>
+						<dt>', $txt['manual_loginout_password'], ':</dt>
+						<dd><input type="password" name="passwrd" size="20" class="input_password" /></dd>
+					</dl>
+					<dl>
+						<dt>', $txt['manual_loginout_how_long'], ':</dt>
+						<dd><input type="text" name="cookielength" size="4" maxlength="4" class="input_text" /></dd>
+						<dt>', $txt['manual_loginout_always'], ':</dt>
+						<dd><input type="checkbox" name="cookieneverexp" class="input_check" /></dd>
+					</dl>
+					<p><input type="submit" value="', $txt['login'], '" class="button_submit" /></p>
+					<div class="centertext smalltext"><a href="', $scripturl, '?action=help;area=password_reminders">', $txt['manual_loginout_forgot'], '?</a></div>
+					<input type="hidden" name="hash_passwrd" value="" />
+				</div>
+				<span class="lowerframe"><span></span></span>
+			</div>
+		</form>
+	</div>
 	<p>', $txt['manual_loginout_login_screen_explanation'], '</p>
 	<h3 class="section" id="quick">', $txt['manual_loginout_sub_quick_login'], '</h3>
 	<p>', $txt['manual_loginout_although_many_forums_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_loginout_although_many_forums_link_index_main'], '</a>', $txt['manual_loginout_although_many_forums_part2'], '</p>
-	<table cellspacing="0" cellpadding="0" border="0" align="center" width="400" class="tborder">
-		<tr>
-			<td style="border: solid 1px;">
-				<table width="99%" cellpadding="0" cellspacing="5" border="0">
-					<tr>
-						<td width="100%" valign="top" class="smalltext" style="font-family: verdana, arial, sans-serif;">
-							<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '" style="margin: 3px 1ex 1px 0; text-align:right;">
-								<input type="text" size="10" class="input_text" /> <input type="password" size="10" class="input_text" /> <select>
-									<option>
-										', $txt['manual_loginout_hour'], '
-									</option>
-									<option>
-										', $txt['manual_loginout_day'], '
-									</option>
-									<option>
-										', $txt['manual_loginout_week'], '
-									</option>
-									<option>
-										', $txt['manual_loginout_mo'], '
-									</option>
-									<option selected="selected">
-										', $txt['manual_loginout_forever'], '
-									</option>
-								</select> <input type="button" value="Login" class="button_submit" /><br />
-								', $txt['manual_loginout_login_all'], '
-							</form>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table><br />
+	<div class="help_sample">
+		<form id="guest_form" action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '">
+			<input type="text" size="10" class="input_text" />
+			<input type="password" size="10" class="input_text" />
+			<select>
+				<option>
+					', $txt['manual_loginout_hour'], '
+				</option>
+				<option>
+					', $txt['manual_loginout_day'], '
+				</option>
+				<option>
+					', $txt['manual_loginout_week'], '
+				</option>
+				<option>
+					', $txt['manual_loginout_mo'], '
+				</option>
+				<option selected="selected">
+					', $txt['manual_loginout_forever'], '
+				</option>
+			</select>
+			<input type="button" value="Login" class="button_submit" /><br />
+			<div class="info">', $txt['manual_loginout_login_all'], '</div>
+		</form>
+	</div>
 	<p>', $txt['manual_loginout_use_quick_login'], '</p>
 	<h2 class="section" id="logout">', $txt['manual_loginout_logout'], '</h2>
 	<p>', $txt['manual_loginout_logout_desc_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_loginout_logout_desc_link_index_main'], '</a>', $txt['manual_loginout_logout_desc_part2'], '</p>';
@@ -796,26 +793,26 @@ function template_manual_password_reminders()
 
 	echo '
 	<p>', $txt['manual_loginout_reminder_desc_part1'], '<a href="', $scripturl, '?action=help;area=logging_in#screen">', $txt['manual_loginout_reminder_desc_link_screen'], '</a>', $txt['manual_loginout_reminder_desc_part2'], '</p>
-	<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '">
-		<table border="0" width="400" cellspacing="0" cellpadding="4" align="center" class="tborder">
-			<tr class="titlebg">
-				<td colspan="2">', $txt['manual_loginout_password_reminder'], '</td>
-			</tr>
-			<tr class="windowbg">
-				<td colspan="2" class="smalltext" style="padding: 2ex;">', $txt['manual_loginout_q_explanation'], '</td>
-			</tr>
-			<tr class="windowbg2">
-				<td width="40%">', $txt['manual_loginout_username_email'], ':</td>
-				<td><input type="text" name="user" size="30" class="input_text" /></td>
-			</tr>
-			<tr class="windowbg2">
-				<td colspan="2" align="center"><label for="secret"><input type="checkbox" name="sa" value="secret" id="secret" class="input_check" /> ', $txt['manual_loginout_ask_q'], '.</label></td>
-			</tr>
-			<tr class="windowbg2">
-				<td colspan="2" align="center"><input type="button" value="', $txt['manual_loginout_send'], '" class="button_submit" /></td>
-			</tr>
-		</table>
-	</form>
+	<div class="help_sample">
+		<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '">
+			<div class="tborder login">
+				<h3 class="catbg"><span class="left"></span>
+					', $txt['manual_loginout_password_reminder'], '
+				</h3>
+				<span class="upperframe"><span></span></span>
+				<div class="roundframe">
+					<p class="smalltext centertext">', $txt['manual_loginout_q_explanation'], '</p>
+					<dl>
+						<dt>', $txt['manual_loginout_username_email'], ':</dt>
+						<dd><input type="text" name="user" size="30" class="input_text" /></dd>
+					</dl>
+					<div class="centertext"><input type="submit" value="', $txt['manual_loginout_send'], '" class="button_submit" /></div>
+				</div>
+				<span class="lowerframe"><span></span></span>
+			</div>
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+		</form>
+	</div>
 	<p>', $txt['manual_loginout_reminder_explanation'], '</p>';
 }
 
@@ -840,7 +837,7 @@ function template_manual_profile_info_summary()
 				<li><a href="', $scripturl, '?action=help;area=profile_summary#info-all">', $txt['manual_profile_profile_info'], '</a></li>
 			</ol>
 		</li>
-				<li>
+		<li>
 			<a href="', $scripturl, '?action=help;area=modifying_profiles#owners">', $txt['manual_profile_sec_normal'], '</a>
 			<ol class="la">
 				<li><a href="', $scripturl, '?action=help;area=modifying_profiles#edit-owners">', $txt['manual_profile_modify_profile'], '</a></li>
@@ -858,8 +855,7 @@ function template_manual_profile_info_summary()
 	</ol>
 	<h2 class="section" id="all">', $txt['manual_profile_available_to_all'], '</h2>
 	<h3 class="section" id="info-all">', $txt['manual_profile_profile_info'], '</h3>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
+	<div class="help_sample">
 			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
 				<tr>
 					<td width="100%" valign="top">
@@ -985,8 +981,7 @@ function template_manual_profile_info_summary()
 					</td>
 				</tr>
 			</table><br />
-		</div>
-	</div><br />
+	</div>
 	<ul>
 		<li>', $txt['manual_profile_summary_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary#owners">', $txt['manual_profile_summary_link_owners'], '</a>', $txt['manual_profile_summary_part2'], '</li>
 		<li>', $txt['manual_profile_hide_email'], '</li>
@@ -1021,8 +1016,7 @@ function template_manual_modify_profile()
 		<li>', $txt['manual_profile_forum_profile_info'], '</li>
 		<li>', $txt['manual_profile_look_layout'], '</li>
 	</ul>
-		<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
+		<div class="help_sample">
 			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
 				<tr>
 					<td width="180" valign="top">
@@ -1206,8 +1200,7 @@ function template_manual_modify_profile()
 					</td>
 				</tr>
 			</table><br />
-		</div>
-	</div><br />
+	</div>
 	<ul>
 		<li>', $txt['manual_profile_notify_email_prefs'], '</li>
 		<li>', $txt['manual_profile_pm_options_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms">', $txt['manual_profile_pm_options_link_pm'], '</a>', $txt['manual_profile_pm_options_part2'], '</li>
@@ -1366,8 +1359,7 @@ function template_manual_posting_topics()
 	<h2 class="section" id="basics">', $txt['manual_posting_sec_posting_basics'], '</h2>
 	<h3 class="section" id="newtopic">', $txt['manual_posting_starting_topic'], '</h3>
 	<p>', $txt['manual_posting_starting_topic_desc_part1'], '<a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_posting_starting_topic_desc_link_index_message'], '</a>', $txt['manual_posting_starting_topic_desc_part2'], '<a href="', $scripturl, '?action=help;area=posting_topics#standard">', $txt['manual_posting_starting_topic_desc_link_index_message_standard'], '</a>', $txt['manual_posting_starting_topic_desc_part3'], '</p>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
+	<div class="help_sample">
 			<form action="', $scripturl, '?action=help;area=posting_topics" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 				<table width="100%" align="center" cellpadding="0" cellspacing="3">
 					<tr>
@@ -1410,8 +1402,7 @@ function template_manual_posting_topics()
 					</tr>
 				</table>
 			</form><br />
-		</div>
-	</div><br />
+	</div>
 	<ul>
 		<li>', $txt['manual_posting_nav_tree'], '</li>
 		<li>', $txt['manual_posting_spell_check'], '</li>
@@ -1435,8 +1426,7 @@ function template_manual_posting_topics()
 	<p>', $txt['manual_posting_modify_desc'], '</p>
 	<p>', $txt['manual_posting_delete_desc'], '</p>
 	<h2 class="section" id="standard">', $txt['manual_posting_sec_posting_options'], '</h2>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
+	<div class="help_sample">
 			<br />
 			<script type="text/javascript">
 //<![CDATA[
@@ -1590,8 +1580,7 @@ function template_manual_posting_topics()
 					</tr>
 				</table>
 			</form><br />
-		</div>
-	</div><br />
+	</div>
 	<h3 class="section" id="messageicon">', $txt['manual_posting_sub_message_icon'], '</h3>
 	<p>', $txt['manual_posting_msg_icon_dropdown'], '</p>
 	<h3 class="section" id="bbc">', $txt['manual_posting_sub_bbc'], '</h3>
@@ -1605,8 +1594,7 @@ function template_manual_posting_topics()
 	<p>', $txt['manual_posting_note_tags'], '</p>
 	<h2 class="section" id="additional">', $txt['manual_posting_sec_additional_options'], '</h2>
 	<p>', $txt['manual_posting_sec_additional_options_desc'], '</p>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
+	<div class="help_sample">
 			<br />
 			<script type="text/javascript">
 //<![CDATA[
@@ -1665,7 +1653,7 @@ function template_manual_posting_topics()
 //]]>
 </script> <span class="smalltext"><br />
 										', $context['browser']['is_firefox'] ? $txt['manual_posting_shortcuts_firefox'] : $txt['manual_posting_shortcuts'], '</span><br />
-										<input type="button" accesskey="s" tabindex="3" value="', $txt['manual_posting_posts'], '" /> <input type="button" accesskey="p" tabindex="4" value="', $txt['manual_posting_preview'], '" class="button_submit" />
+										<input type="button" accesskey="s" tabindex="3" value="', $txt['manual_posting_posts'], '" class="button_submit" /> <input type="button" accesskey="p" tabindex="4" value="', $txt['manual_posting_preview'], '" class="button_submit" />
 									</td>
 								</tr>
 							</table>
@@ -1673,8 +1661,7 @@ function template_manual_posting_topics()
 					</tr>
 				</table>
 			</form><br />
-		</div>
-	</div><br />
+	</div>
 	<h3 class="section" id="notify">', $txt['manual_posting_sub_notify'], '</h3>
 	<p>', $txt['manual_posting_notify_desc'], '</p>
 	<h3 class="section" id="return">', $txt['manual_posting_sub_return'], '</h3>
@@ -1707,28 +1694,32 @@ function template_manual_smileys()
 
 	echo '
 	<p>', $txt['manual_posting_smileys_help_desc'], '</p>
-	<table cellspacing="1" cellpadding="3">
-		<tr>
-			<th class="catbg">', $txt['manual_posting_smileys_help_name'], '</th>
-			<th class="catbg">', $txt['manual_posting_smileys_help_img'], '</th>
-			<th class="catbg">', $txt['manual_posting_smileys_help_code'], '</th>
-		</tr>';
+	<p>', $txt['manual_posting_smiley_parse'], '</p>
+	<table cellspacing="1" cellpadding="3" class="table_grid">
+		<thead>
+			<tr>
+				<th class="catbg first_th">', $txt['manual_posting_smileys_help_name'], '</th>
+				<th class="catbg">', $txt['manual_posting_smileys_help_img'], '</th>
+				<th class="catbg last_th">', $txt['manual_posting_smileys_help_code'], '</th>
+			</tr>
+		</thead>
+		<tbody>';
 
 	$alternate = false;
 	foreach ($context['smileys'] as $smiley)
 	{
 		echo '
-		<tr class="windowbg', $alternate ? '2' : '', '">
-			<td>', $smiley['name'], '</td>
-			<td>', $smiley['to'], '</td>
-			<td>', $smiley['from'], '</td>
-		</tr>';
+			<tr class="windowbg', $alternate ? '2' : '', '">
+				<td>', $smiley['name'], '</td>
+				<td>', $smiley['to'], '</td>
+				<td>', $smiley['from'], '</td>
+			</tr>';
 		$alternate = !$alternate;
 	}
 
 	echo '
-	</table><br />
-	<p>', $txt['manual_posting_smiley_parse'], '</p>';
+		</tbody>
+	</table>';
 }
 
 function template_manual_bbcode()
@@ -1737,390 +1728,394 @@ function template_manual_bbcode()
 
 	echo '
 	<p>', $txt['manual_posting_sub_smf_bbc_desc'], '</p>
-	<table cellspacing="1" cellpadding="3">
-		<tr>
-			<th class="catbg">', $txt['manual_posting_header_name'], '</th>
-			<th class="catbg">', $txt['manual_posting_header_button'], '</th>
-			<th class="catbg">', $txt['manual_posting_header_code'], '</th>
-			<th class="catbg">', $txt['manual_posting_header_output'], '</th>
-			<th class="catbg">', $txt['manual_posting_header_comments'], '</th>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_bbc_bold'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/bold.gif" alt="', $txt['manual_posting_bbc_bold'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_bold_code'], '</td>
-			<td><strong>', $txt['manual_posting_bold_output'], '</strong></td>
-			<td>', $txt['manual_posting_bold_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_bbc_italic'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/italicize.gif" alt="', $txt['manual_posting_bbc_italic'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_italic_code'], '</td>
-			<td><em>', $txt['manual_posting_italic_output'], '</em></td>
-			<td>', $txt['manual_posting_italic_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_bbc_underline'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/underline.gif" alt="', $txt['manual_posting_bbc_underline'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_underline_code'], '</td>
-			<td><span class="underline">', $txt['manual_posting_underline_output'], '</span></td>
-			<td>', $txt['manual_posting_underline_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_bbc_strike'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/strike.gif" alt="', $txt['manual_posting_bbc_strike'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_strike_code'], '</td>
-			<td><del>', $txt['manual_posting_strike_output'], '</del></td>
-			<td>', $txt['manual_posting_strike_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_bbc_glow'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/glow.gif" alt="', $txt['manual_posting_bbc_glow'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_glow_code'], '</td>
-			<td>
-				<div style="filter: Glow(color=red, strength=2); width: 30px;">
-					', $txt['manual_posting_glow_output'], '
-				</div>
-			</td>
-			<td>', $txt['manual_posting_glow_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_bbc_shadow'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/shadow.gif" alt="', $txt['manual_posting_bbc_shadow'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_shadow_code'], '</td>
-			<td>
-				<div style="filter: Shadow(color=red, direction=240); width: 30px;">
-					', $txt['manual_posting_shadow_output'], '
-				</div>
-			</td>
-			<td>', $txt['manual_posting_shadow_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_bbc_move'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/move.gif" alt="', $txt['manual_posting_bbc_move'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_move_code'], '</td>
-			<td>', $context['browser']['is_ie'] ? '<marquee>' . $txt['manual_posting_move_output'] . '</marquee>' : '', '</td>
-			<td>', $txt['manual_posting_move_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_bbc_pre'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/pre.gif" alt="', $txt['manual_posting_bbc_pre'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>[pre]Simple<br />
-			&nbsp;&nbsp;Machines<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;Forum[/pre]</td>
-			<td>
-				<pre>
+	<table cellspacing="1" cellpadding="3" class="table_grid">
+		<thead>
+			<tr>
+				<th class="catbg first_th">', $txt['manual_posting_header_name'], '</th>
+				<th class="catbg">', $txt['manual_posting_header_button'], '</th>
+				<th class="catbg">', $txt['manual_posting_header_code'], '</th>
+				<th class="catbg">', $txt['manual_posting_header_output'], '</th>
+				<th class="catbg last_th">', $txt['manual_posting_header_comments'], '</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_bbc_bold'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/bold.gif" alt="', $txt['manual_posting_bbc_bold'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_bold_code'], '</td>
+				<td><strong>', $txt['manual_posting_bold_output'], '</strong></td>
+				<td>', $txt['manual_posting_bold_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_bbc_italic'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/italicize.gif" alt="', $txt['manual_posting_bbc_italic'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_italic_code'], '</td>
+				<td><em>', $txt['manual_posting_italic_output'], '</em></td>
+				<td>', $txt['manual_posting_italic_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_bbc_underline'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/underline.gif" alt="', $txt['manual_posting_bbc_underline'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_underline_code'], '</td>
+				<td><span class="underline">', $txt['manual_posting_underline_output'], '</span></td>
+				<td>', $txt['manual_posting_underline_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_bbc_strike'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/strike.gif" alt="', $txt['manual_posting_bbc_strike'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_strike_code'], '</td>
+				<td><del>', $txt['manual_posting_strike_output'], '</del></td>
+				<td>', $txt['manual_posting_strike_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_bbc_glow'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/glow.gif" alt="', $txt['manual_posting_bbc_glow'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_glow_code'], '</td>
+				<td>
+					<div style="filter: Glow(color=red, strength=2); width: 30px;">
+						', $txt['manual_posting_glow_output'], '
+					</div>
+				</td>
+				<td>', $txt['manual_posting_glow_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_bbc_shadow'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/shadow.gif" alt="', $txt['manual_posting_bbc_shadow'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_shadow_code'], '</td>
+				<td>
+					<div style="filter: Shadow(color=red, direction=240); width: 30px;">
+						', $txt['manual_posting_shadow_output'], '
+					</div>
+				</td>
+				<td>', $txt['manual_posting_shadow_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_bbc_move'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/move.gif" alt="', $txt['manual_posting_bbc_move'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_move_code'], '</td>
+				<td>', $context['browser']['is_ie'] ? '<marquee>' . $txt['manual_posting_move_output'] . '</marquee>' : '', '</td>
+				<td>', $txt['manual_posting_move_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_bbc_pre'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/pre.gif" alt="', $txt['manual_posting_bbc_pre'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>[pre]Simple<br />
+				&nbsp;&nbsp;Machines<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;Forum[/pre]</td>
+				<td>
+					<pre>
 Simple
   Machines
     Forum
 </pre>
-			</td>
-			<td>', $txt['manual_posting_pre_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_bbc_left'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/left.gif" alt="', $txt['manual_posting_bbc_left'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_left_code'], '</td>
-			<td>
-				<p align="left">', $txt['manual_posting_left_output'], '</p>
-			</td>
-			<td>', $txt['manual_posting_left_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_bbc_centered'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/center.gif" alt="', $txt['manual_posting_bbc_centered'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_centered_code'], '</td>
-			<td>
-				<span class="centertext">
-					', $txt['manual_posting_centered_output'], '
-				</span>
-			</td>
-			<td>', $txt['manual_posting_centered_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_bbc_right'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/right.gif" alt="', $txt['manual_posting_bbc_right'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_right_code'], '</td>
-			<td>
-				<p align="right">', $txt['manual_posting_right_output'], '</p>
-			</td>
-			<td>', $txt['manual_posting_right_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_bbc_rtl'], '</td>
-			<td>*</td>
-			<td>', $txt['manual_posting_rtl_code'], '</td>
-			<td>
-				<div dir="rtl">
-					', $txt['manual_posting_rtl_output'], '
-				</div>
-			</td>
-			<td>', $txt['manual_posting_rtl_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_bbc_ltr'], '</td>
-			<td>*</td>
-			<td>', $txt['manual_posting_ltr_code'], '</td>
-			<td>
-				<div dir="ltr">
-					', $txt['manual_posting_ltr_output'], '
-				</div>
-			</td>
-			<td>', $txt['manual_posting_ltr_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_bbc_hr'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/hr.gif" alt="', $txt['manual_posting_bbc_hr'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_hr_code'], '</td>
-			<td>
-				<hr />
-			</td>
-			<td>', $txt['manual_posting_hr_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_bbc_size'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/size.gif" alt="', $txt['manual_posting_bbc_size'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_size_code'], '</td>
-			<td><span style="font-size: 10pt;">', $txt['manual_posting_size_output'], '</span></td>
-			<td>', $txt['manual_posting_size_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_bbc_font'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/face.gif" alt="', $txt['manual_posting_bbc_font'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_font_code'], '</td>
-			<td><span style="font-family: Verdana;">', $txt['manual_posting_font_output'], '</span></td>
-			<td>', $txt['manual_posting_font_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_bbc_color'], '</td>
-			<td><select>
-				<option value="" selected="selected">
-					', $txt['manual_posting_Change_Color'], '
-				</option>
-				<option value="Black">
-					', $txt['manual_posting_color_black'], '
-				</option>
-				<option value="Red">
-					', $txt['manual_posting_color_red'], '
-				</option>
-				<option value="Yellow">
-					', $txt['manual_posting_color_yellow'], '
-				</option>
-				<option value="Pink">
-					', $txt['manual_posting_color_pink'], '
-				</option>
-				<option value="Green">
-					', $txt['manual_posting_color_green'], '
-				</option>
-				<option value="Orange">
-					', $txt['manual_posting_color_orange'], '
-				</option>
-				<option value="Purple">
-					', $txt['manual_posting_color_purple'], '
-				</option>
-				<option value="Blue">
-					', $txt['manual_posting_color_blue'], '
-				</option>
-				<option value="Beige">
-					', $txt['manual_posting_color_beige'], '
-				</option>
-				<option value="Brown">
-					', $txt['manual_posting_color_brown'], '
-				</option>
-				<option value="Teal">
-					', $txt['manual_posting_color_teal'], '
-				</option>
-				<option value="Navy">
-					', $txt['manual_posting_color_navy'], '
-				</option>
-				<option value="Maroon">
-					', $txt['manual_posting_color_maroon'], '
-				</option>
-				<option value="LimeGreen">
-					', $txt['manual_posting_color_lime'], '
-				</option>
-			</select></td>
-			<td>', $txt['manual_posting_color_code'], '</td>
-			<td><span style="color: red;">', $txt['manual_posting_color_output'], '</span></td>
-			<td>', $txt['manual_posting_color_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_bbc_flash'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/flash.gif" alt="', $txt['manual_posting_bbc_flash'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_flash_code'], '</td>
-			<td><a href="http://somesite/somefile.swf" class="board new_win" target="_blank">', $txt['manual_posting_flash_output'], '</a></td>
-			<td>', $txt['manual_posting_flash_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td rowspan="2">', $txt['manual_posting_bbc_img'], '</td>
-			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/img.gif" alt="', $txt['manual_posting_bbc_img'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_img_top_code'], '</td>
-			<td><img src="', $settings['images_url'], '/on.gif" alt="" /></td>
-			<td rowspan="2">', $txt['manual_posting_img_top_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_img_bottom_code'], '</td>
-			<td><img src="', $settings['images_url'], '/on.gif" width="48" height="48" alt="" /></td>
-		</tr>
-		<tr class="windowbg2">
-			<td rowspan="2">', $txt['manual_posting_bbc_url'], '</td>
-			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/url.gif" alt="', $txt['manual_posting_bbc_url'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_url_code'], '</td>
-			<td><a href="http://somesite" class="board new_win" target="_blank">', $txt['manual_posting_url_output'], '</a></td>
-			<td rowspan="2">', $txt['manual_posting_url_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_url_bottom_code'], '</td>
-			<td><a href="http://somesite" class="board new_win" target="_blank">', $txt['manual_posting_url_bottom_output'], '</a></td>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_bbc_email'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/email.gif" alt="', $txt['manual_posting_bbc_email'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_email_code'], '</td>
-			<td><a href="mailto:someone@somesite" class="board">', $txt['manual_posting_email_output'], '</a></td>
-			<td>', $txt['manual_posting_email_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td rowspan="2">', $txt['manual_posting_bbc_ftp'], '</td>
-			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/ftp.gif" alt="', $txt['manual_posting_bbc_ftp'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_ftp_code'], '</td>
-			<td><a href="ftp://somesite/somefile" class="board new_win" target="_blank">', $txt['manual_posting_ftp_output'], '</a></td>
-			<td rowspan="2">', $txt['manual_posting_ftp_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_ftp_bottom_code'], '</td>
-			<td><a href="ftp://somesite/somefile" class="board new_win" target="_blank">', $txt['manual_posting_ftp_bottom_output'], '</a></td>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_bbc_table'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/table.gif" alt="', $txt['manual_posting_bbc_table'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_table_code'], '</td>
-			<td>*</td>
-			<td>', $txt['manual_posting_table_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_bbc_row'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/tr.gif" alt="', $txt['manual_posting_bbc_row'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_row_code'], '</td>
-			<td>*</td>
-			<td>', $txt['manual_posting_row_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td rowspan="2">', $txt['manual_posting_bbc_column'], '</td>
-			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/td.gif" alt="', $txt['manual_posting_bbc_column'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_column_code'], '</td>
-			<td>
-				<table>
-					<tr>
-						<td valign="top">', $txt['manual_posting_column_output'], '</td>
-					</tr>
-				</table>
-			</td>
-			<td rowspan="2">', $txt['manual_posting_column_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td>[table][tr][td]SMF[/td]<br />
-			[td]Bulletin[/td][/tr]<br />
-			[tr][td]Board[/td]<br />
-			[td]Code[/td][/tr][/table]</td>
-			<td>
-				<table>
-					<tr>
-						<td valign="top">SMF</td>
-						<td valign="top">Bulletin</td>
-					</tr>
-					<tr>
-						<td valign="top">Board</td>
-						<td valign="top">Code</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_bbc_sup'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/sup.gif" alt="', $txt['manual_posting_bbc_sup'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_sup_code'], '</td>
-			<td><sup>', $txt['manual_posting_sup_output'], '</sup></td>
-			<td>', $txt['manual_posting_sup_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_bbc_sub'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/sub.gif" alt="', $txt['manual_posting_bbc_sub'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_sub_code'], '</td>
-			<td><sub>', $txt['manual_posting_sub_output'], '</sub></td>
-			<td>', $txt['manual_posting_sub_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_bbc_tt'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/tele.gif" alt="', $txt['manual_posting_bbc_tt'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_tt_code'], '</td>
-			<td><tt>', $txt['manual_posting_tt_output'], '</tt></td>
-			<td>', $txt['manual_posting_tt_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_bbc_code'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/code.gif" alt="', $txt['manual_posting_bbc_code'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_code_code'], '</td>
-			<td>
-				<div class="codeheader">
-					Code:
-				</div>
-				<div class="code">
-					<span style="color: #0000BB;">&lt;?php phpinfo</span><span style="color: #007700;">();</span> <span style="color: #0000BB;">?&gt;</span>
-				</div>
-			</td>
-			<td>', $txt['manual_posting_code_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td rowspan="2">', $txt['manual_posting_bbc_quote'], '</td>
-			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/quote.gif" alt="', $txt['manual_posting_bbc_quote'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_quote_code'], '</td>
-			<td>
-				<div class="', $txt['manual_posting_quote_output'], 'header">
-					Quote
-				</div>
-				<blockquote>
-					', $txt['manual_posting_quote_output'], '
-				</blockquote>
-			</td>
-			<td rowspan="2">', $txt['manual_posting_quote_comment'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_quote_buttom_code'], '</td>
-			<td>
-				<div class="', $txt['manual_posting_quote_buttom_output'], 'header">
-					Quote from: author
-				</div>
-				<blockquote>
-					', $txt['manual_posting_quote_buttom_output'], '
-				</blockquote>
-			</td>
-		</tr>
-		<tr class="windowbg">
-			<td rowspan="2">', $txt['manual_posting_bbc_list'], '</td>
-			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/list.gif" alt="', $txt['manual_posting_bbc_list'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_list_code'], '</td>
-			<td>', $txt['manual_posting_list_output'], '</td>
-			<td rowspan="2">', $txt['manual_posting_list_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_list_buttom_code'], '</td>
-			<td>', $txt['manual_posting_list_buttom_output'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>', $txt['manual_posting_bbc_abbr'], '</td>
-			<td>*</td>
-			<td>', $txt['manual_posting_abbr_code'], '</td>
-			<td><abbr title="exempli gratia">', $txt['manual_posting_abbr_output'], '</abbr></td>
-			<td>', $txt['manual_posting_abbr_comment'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td>', $txt['manual_posting_bbc_acro'], '</td>
-			<td>*</td>
-			<td>', $txt['manual_posting_acro_code'], '</td>
-			<td><acronym title="Simple Machines Forum">', $txt['manual_posting_acro_output'], '</acronym></td>
-			<td>', $txt['manual_posting_acro_comment'], '</td>
-		</tr>
+				</td>
+				<td>', $txt['manual_posting_pre_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_bbc_left'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/left.gif" alt="', $txt['manual_posting_bbc_left'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_left_code'], '</td>
+				<td>
+					<p align="left">', $txt['manual_posting_left_output'], '</p>
+				</td>
+				<td>', $txt['manual_posting_left_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_bbc_centered'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/center.gif" alt="', $txt['manual_posting_bbc_centered'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_centered_code'], '</td>
+				<td>
+					<span class="centertext">
+						', $txt['manual_posting_centered_output'], '
+					</span>
+				</td>
+				<td>', $txt['manual_posting_centered_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_bbc_right'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/right.gif" alt="', $txt['manual_posting_bbc_right'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_right_code'], '</td>
+				<td>
+					<p align="right">', $txt['manual_posting_right_output'], '</p>
+				</td>
+				<td>', $txt['manual_posting_right_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_bbc_rtl'], '</td>
+				<td>*</td>
+				<td>', $txt['manual_posting_rtl_code'], '</td>
+				<td>
+					<div dir="rtl">
+						', $txt['manual_posting_rtl_output'], '
+					</div>
+				</td>
+				<td>', $txt['manual_posting_rtl_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_bbc_ltr'], '</td>
+				<td>*</td>
+				<td>', $txt['manual_posting_ltr_code'], '</td>
+				<td>
+					<div dir="ltr">
+						', $txt['manual_posting_ltr_output'], '
+					</div>
+				</td>
+				<td>', $txt['manual_posting_ltr_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_bbc_hr'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/hr.gif" alt="', $txt['manual_posting_bbc_hr'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_hr_code'], '</td>
+				<td>
+					<hr />
+				</td>
+				<td>', $txt['manual_posting_hr_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_bbc_size'], '</td>
+				<td>*</td>
+				<td>', $txt['manual_posting_size_code'], '</td>
+				<td><span style="font-size: 10pt;">', $txt['manual_posting_size_output'], '</span></td>
+				<td>', $txt['manual_posting_size_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_bbc_font'], '</td>
+				<td>*</td>
+				<td>', $txt['manual_posting_font_code'], '</td>
+				<td><span style="font-family: Verdana;">', $txt['manual_posting_font_output'], '</span></td>
+				<td>', $txt['manual_posting_font_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_bbc_color'], '</td>
+				<td><select>
+					<option value="" selected="selected">
+						', $txt['manual_posting_Change_Color'], '
+					</option>
+					<option value="Black">
+						', $txt['manual_posting_color_black'], '
+					</option>
+					<option value="Red">
+						', $txt['manual_posting_color_red'], '
+					</option>
+					<option value="Yellow">
+						', $txt['manual_posting_color_yellow'], '
+					</option>
+					<option value="Pink">
+						', $txt['manual_posting_color_pink'], '
+					</option>
+					<option value="Green">
+						', $txt['manual_posting_color_green'], '
+					</option>
+					<option value="Orange">
+						', $txt['manual_posting_color_orange'], '
+					</option>
+					<option value="Purple">
+						', $txt['manual_posting_color_purple'], '
+					</option>
+					<option value="Blue">
+						', $txt['manual_posting_color_blue'], '
+					</option>
+					<option value="Beige">
+						', $txt['manual_posting_color_beige'], '
+					</option>
+					<option value="Brown">
+						', $txt['manual_posting_color_brown'], '
+					</option>
+					<option value="Teal">
+						', $txt['manual_posting_color_teal'], '
+					</option>
+					<option value="Navy">
+						', $txt['manual_posting_color_navy'], '
+					</option>
+					<option value="Maroon">
+						', $txt['manual_posting_color_maroon'], '
+					</option>
+					<option value="LimeGreen">
+						', $txt['manual_posting_color_lime'], '
+					</option>
+				</select></td>
+				<td>', $txt['manual_posting_color_code'], '</td>
+				<td><span style="color: red;">', $txt['manual_posting_color_output'], '</span></td>
+				<td>', $txt['manual_posting_color_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_bbc_flash'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/flash.gif" alt="', $txt['manual_posting_bbc_flash'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_flash_code'], '</td>
+				<td><a href="http://somesite/somefile.swf" class="board new_win" target="_blank">', $txt['manual_posting_flash_output'], '</a></td>
+				<td>', $txt['manual_posting_flash_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td rowspan="2">', $txt['manual_posting_bbc_img'], '</td>
+				<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/img.gif" alt="', $txt['manual_posting_bbc_img'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_img_top_code'], '</td>
+				<td><img src="', $settings['images_url'], '/on.gif" alt="" /></td>
+				<td rowspan="2">', $txt['manual_posting_img_top_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_img_bottom_code'], '</td>
+				<td><img src="', $settings['images_url'], '/on.gif" width="48" height="48" alt="" /></td>
+			</tr>
+			<tr class="windowbg2">
+				<td rowspan="2">', $txt['manual_posting_bbc_url'], '</td>
+				<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/url.gif" alt="', $txt['manual_posting_bbc_url'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_url_code'], '</td>
+				<td><a href="http://somesite" class="board new_win" target="_blank">', $txt['manual_posting_url_output'], '</a></td>
+				<td rowspan="2">', $txt['manual_posting_url_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_url_bottom_code'], '</td>
+				<td><a href="http://somesite" class="board new_win" target="_blank">', $txt['manual_posting_url_bottom_output'], '</a></td>
+			</tr>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_bbc_email'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/email.gif" alt="', $txt['manual_posting_bbc_email'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_email_code'], '</td>
+				<td><a href="mailto:someone@somesite" class="board">', $txt['manual_posting_email_output'], '</a></td>
+				<td>', $txt['manual_posting_email_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td rowspan="2">', $txt['manual_posting_bbc_ftp'], '</td>
+				<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/ftp.gif" alt="', $txt['manual_posting_bbc_ftp'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_ftp_code'], '</td>
+				<td><a href="ftp://somesite/somefile" class="board new_win" target="_blank">', $txt['manual_posting_ftp_output'], '</a></td>
+				<td rowspan="2">', $txt['manual_posting_ftp_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_ftp_bottom_code'], '</td>
+				<td><a href="ftp://somesite/somefile" class="board new_win" target="_blank">', $txt['manual_posting_ftp_bottom_output'], '</a></td>
+			</tr>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_bbc_table'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/table.gif" alt="', $txt['manual_posting_bbc_table'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_table_code'], '</td>
+				<td>*</td>
+				<td>', $txt['manual_posting_table_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_bbc_row'], '</td>
+				<td>*</td>
+				<td>', $txt['manual_posting_row_code'], '</td>
+				<td>*</td>
+				<td>', $txt['manual_posting_row_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td rowspan="2">', $txt['manual_posting_bbc_column'], '</td>
+				<td rowspan="2">*</td>
+				<td>', $txt['manual_posting_column_code'], '</td>
+				<td>
+					<table>
+						<tr>
+							<td valign="top">', $txt['manual_posting_column_output'], '</td>
+						</tr>
+					</table>
+				</td>
+				<td rowspan="2">', $txt['manual_posting_column_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td>[table][tr][td]SMF[/td]<br />
+				[td]Bulletin[/td][/tr]<br />
+				[tr][td]Board[/td]<br />
+				[td]Code[/td][/tr][/table]</td>
+				<td>
+					<table>
+						<tr>
+							<td valign="top">SMF</td>
+							<td valign="top">Bulletin</td>
+						</tr>
+						<tr>
+							<td valign="top">Board</td>
+							<td valign="top">Code</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_bbc_sup'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/sup.gif" alt="', $txt['manual_posting_bbc_sup'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_sup_code'], '</td>
+				<td><sup>', $txt['manual_posting_sup_output'], '</sup></td>
+				<td>', $txt['manual_posting_sup_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_bbc_sub'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/sub.gif" alt="', $txt['manual_posting_bbc_sub'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_sub_code'], '</td>
+				<td><sub>', $txt['manual_posting_sub_output'], '</sub></td>
+				<td>', $txt['manual_posting_sub_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_bbc_tt'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/tele.gif" alt="', $txt['manual_posting_bbc_tt'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_tt_code'], '</td>
+				<td><tt>', $txt['manual_posting_tt_output'], '</tt></td>
+				<td>', $txt['manual_posting_tt_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_bbc_code'], '</td>
+				<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/code.gif" alt="', $txt['manual_posting_bbc_code'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_code_code'], '</td>
+				<td>
+					<div class="codeheader">
+						Code:
+					</div>
+					<div class="code">
+						<span style="color: #0000BB;">&lt;?php phpinfo</span><span style="color: #007700;">();</span> <span style="color: #0000BB;">?&gt;</span>
+					</div>
+				</td>
+				<td>', $txt['manual_posting_code_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td rowspan="2">', $txt['manual_posting_bbc_quote'], '</td>
+				<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/quote.gif" alt="', $txt['manual_posting_bbc_quote'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_quote_code'], '</td>
+				<td>
+					<div class="', $txt['manual_posting_quote_output'], 'header">
+						Quote
+					</div>
+					<blockquote>
+						', $txt['manual_posting_quote_output'], '
+					</blockquote>
+				</td>
+				<td rowspan="2">', $txt['manual_posting_quote_comment'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_quote_buttom_code'], '</td>
+				<td>
+					<div class="', $txt['manual_posting_quote_buttom_output'], 'header">
+						Quote from: author
+					</div>
+					<blockquote>
+						', $txt['manual_posting_quote_buttom_output'], '
+					</blockquote>
+				</td>
+			</tr>
+			<tr class="windowbg">
+				<td rowspan="2">', $txt['manual_posting_bbc_list'], '</td>
+				<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/list.gif" alt="', $txt['manual_posting_bbc_list'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+				<td>', $txt['manual_posting_list_code'], '</td>
+				<td>', $txt['manual_posting_list_output'], '</td>
+				<td rowspan="2">', $txt['manual_posting_list_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_list_buttom_code'], '</td>
+				<td>', $txt['manual_posting_list_buttom_output'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td>', $txt['manual_posting_bbc_abbr'], '</td>
+				<td>*</td>
+				<td>', $txt['manual_posting_abbr_code'], '</td>
+				<td><abbr title="exempli gratia">', $txt['manual_posting_abbr_output'], '</abbr></td>
+				<td>', $txt['manual_posting_abbr_comment'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td>', $txt['manual_posting_bbc_acro'], '</td>
+				<td>*</td>
+				<td>', $txt['manual_posting_acro_code'], '</td>
+				<td><acronym title="Simple Machines Forum">', $txt['manual_posting_acro_output'], '</acronym></td>
+				<td>', $txt['manual_posting_acro_comment'], '</td>
+			</tr>
+		</tbody>
 	</table>';
 }
 
@@ -2161,8 +2156,7 @@ function template_manual_pm_messages()
 	<p>', $txt['manual_pm_reading_desc_part1'], '<a href="', $scripturl, '?action=help;area=logging_in">', $txt['manual_pm_reading_desc_link_loginout'], '</a>', $txt['manual_pm_reading_desc_part2'], '<a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_reading_desc_link_loginout_interface'], '</a>', $txt['manual_pm_reading_desc_part3'], '</p>
 	<h2 class="section" id="interface">', $txt['manual_pm_sec_pm2'], '</h2>
 	<p>', $txt['manual_pm_pm_desc2_part1'], '<a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_pm_pm_desc2_link_index_message'], '</a>', $txt['manual_pm_pm_desc2_part2'], '</p>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
+	<div class="help_sample">
 			<script type="text/javascript">
 //<![CDATA[
 			var currentSort = false;
@@ -2234,8 +2228,7 @@ function template_manual_pm_messages()
 			</tr></table>
 			<br />
 			</form>
-		</div>
-	</div><br />
+	</div>
 	<ul>
 		<li>', $txt['manual_pm_nav_tree'], '</li>
 		<li>', $txt['manual_pm_delete_button'], '</li>
@@ -2303,98 +2296,95 @@ function template_manual_searching()
 	<p>', $txt['manual_searching_simple_desc'], '</p>
 	<h3 class="section" id="advanced">', $txt['manual_searching_sub_adv'], '</h3>
 	<p>', $txt['manual_searching_adv_desc'], '</p>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
-			<form action="', $scripturl, '?action=help;area=searching" method="post" accept-charset="', $context['character_set'], '">
-				<table width="80%" border="0" cellspacing="0" cellpadding="3" align="center">
-					<tr>
-						<td><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_searching_forum_name'], '</a></strong><br />
-						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=searching#advanced" class="nav">', $txt['manual_searching_search'], '</a></strong></span></td>
-					</tr>
-				</table>
-				<table width="80%" border="0" cellspacing="0" cellpadding="4" align="center" class="tborder">
-					<tr class="titlebg">
-						<td>', $txt['manual_searching_search_param'], '</td>
-					</tr>
-					<tr>
-						<td class="windowbg">
-							<table>
-								<tr>
-									<td><strong>', $txt['manual_searching_search_for'], ':</strong></td>
-									<td>&nbsp;</td>
-									<td><strong>', $txt['manual_searching_by_user'], ':</strong></td>
-								</tr>
-								<tr>
-									<td><input type="text" size="40" class="input_text" /></td>
-									<td><select>
-										<option selected="selected">
-											', $txt['manual_searching_match_all'], '
-										</option>
-										<option>
-											', $txt['manual_searching_match_any'], '
-										</option>
-									</select>&nbsp;&nbsp;&nbsp;</td>
-									<td><input type="text" value="*" size="40" class="input_text" />&nbsp;</td>
-								</tr>
-								<tr>
-									<td colspan="3">&nbsp;</td>
-								</tr>
-																<tr>
-									<td colspan="2"><strong>', $txt['manual_searching_options'], ':</strong></td>
-									<td><strong>', $txt['manual_searching_msg_age'], ':</strong></td>
-								</tr>
-								<tr>
-									<td colspan="2"><input type="checkbox" class="input_check" /> <label>', $txt['manual_searching_show_results'], '</label><br />
-									<input type="checkbox" class="input_check" /> <label>', $txt['manual_searching_subject_only'], '</label><br /></td>
-									<td>', $txt['manual_searching_between'], '<input type="text" value="0" size="5" maxlength="5" class="input_text" />', $txt['manual_searching_and'], '<input type="text" value="9999" size="5" maxlength="5" class="input_text" />', $txt['manual_searching_days'], '.</td>
-								</tr>
-								<tr>
-									<td colspan="3" style="padding-top: 2ex;"><strong>', $txt['manual_searching_search_order'], ':</strong></td>
-								</tr>
-								<tr>
-									<td colspan="3"><select>
-										<option selected="selected">
-											', $txt['manual_searching_relevant_first'], '
-										</option>
-										<option>
-											', $txt['manual_searching_big_first'], '
-										</option>
-										<option>
-											', $txt['manual_searching_small_first'], '
-										</option>
-										<option>
-											', $txt['manual_searching_recent_first'], '
-										</option>
-										<option>
-											', $txt['manual_searching_oldest_first'], '
-										</option>
-									</select></td>
-								</tr>
-							</table><br />
-							<strong>', $txt['manual_searching_choose'], ':</strong><br />
-							<br />
-							<table width="80%" border="0" cellpadding="1" cellspacing="0">
-								<tr>
-									<td width="50%"><span style="text-decoration: underline;">', $txt['manual_searching_cat'], '</span></td>
-									<td width="50%"><input type="checkbox" id="brd2" name="brd[2]" value="2" checked="checked" class="input_check" /> <label for="brd2">', $txt['manual_searching_another_board'], '</label></td>
-								</tr>
-								<tr>
-									<td width="50%"><input type="checkbox" id="brd1" name="brd[1]" value="1" checked="checked" class="input_check" /> <label for="brd1">', $txt['manual_searching_board_name'], '</label></td>
-								</tr>
-							</table><br />
-							<input type="checkbox" name="all" id="check_all" value="" checked="checked" onclick="invertAll(this, this.form, \'brd\');" class="input_check" /><em><label for="check_all">', $txt['manual_searching_check_all'], '</label></em><br />
-							<br />
-							<table border="0" cellpadding="2" cellspacing="0" align="left">
-								<tr>
-									<td valign="bottom"><input type="button" value="', $txt['manual_searching_search'], '" class="button_submit" /></td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table><br />
-			</form>
-		</div>
-	</div><br />
+	<div class="help_sample">
+		<form id="searchform" action="', $scripturl, '?action=help;area=searching" method="post" accept-charset="', $context['character_set'], '">
+			<h3 class="catbg"><span class="left"></span>
+				', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />' : '', $txt['manual_searching_search_param'], '
+			</h3>
+			<fieldset id="advanced_search">
+				<span class="upperframe"><span></span></span>
+				<div class="roundframe">
+					<input type="hidden" name="advanced" value="1" />
+					<span class="enhanced">
+						<strong>', $txt['manual_searching_search_for'], ':</strong>
+						<input type="text" name="search" size="40" class="input_text" />
+						<select name="searchtype">
+							<option value="1">', $txt['manual_searching_match_all'], '</option>
+							<option value="2">', $txt['manual_searching_match_any'], '</option>
+						</select>
+					</span>
+					<dl id="search_options">
+						<dt>', $txt['manual_searching_by_user'], ':</dt>
+						<dd><input id="userspec" type="text" name="userspec" size="40" class="input_text" /></dd>
+						<dt>', $txt['manual_searching_search_order'], ':</dt>
+						<dd>
+							<select>
+								<option selected="selected">
+									', $txt['manual_searching_relevant_first'], '
+								</option>
+								<option>
+									', $txt['manual_searching_big_first'], '
+								</option>
+								<option>
+									', $txt['manual_searching_small_first'], '
+								</option>
+								<option>
+									', $txt['manual_searching_recent_first'], '
+								</option>
+								<option>
+									', $txt['manual_searching_oldest_first'], '
+								</option>
+							</select>
+						</dd>
+						<dt class="options">', $txt['manual_searching_options'], ':</dt>
+						<dd class="options">
+							<label for="show_complete"><input type="checkbox" name="show_complete" id="show_complete" value="1"', !empty($context['search_params']['show_complete']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['manual_searching_show_results'], '</label><br />
+							<label for="subject_only"><input type="checkbox" name="subject_only" id="subject_only" value="1"', !empty($context['search_params']['subject_only']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['manual_searching_subject_only'], '</label>
+						</dd>
+						<dt class="between">', $txt['manual_searching_msg_age'], ': </dt>
+						<dd>', $txt['manual_searching_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="4" class="input_text" />&nbsp;', $txt['manual_searching_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="4" class="input_text" /> ', $txt['manual_searching_days'], '</dd>
+					</dl>
+				</div>
+				<span class="lowerframe"><span></span></span>
+			</fieldset>
+			<fieldset>
+				<span class="upperframe"><span></span></span>
+				<div class="roundframe">
+					<h4 class="titlebg"><span class="left"></span>
+						', $txt['manual_searching_choose'], '
+					</h4>
+					<div class="flow_auto" id="searchBoardsExpand">
+						<ul class="floatleft">
+							<li class="category">
+								<span>', $txt['manual_searching_cat'], '</span>
+								<ul>
+									<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left' , ': 1em;">
+										<label for="brd2"><input type="checkbox" id="brd2" name="brd[2]" value="2" class="input_check" /> ', $txt['manual_searching_another_board'], '</label>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<ul class="floatright">
+							<li class="category">
+								<span>', $txt['manual_searching_cat'], '</span>
+								<ul>
+									<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left' , ': 1em;">
+										<label for="brd1"><input type="checkbox" id="brd1" name="brd[1]" value="1" class="input_check" /> ', $txt['manual_searching_board_name'], '</label>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div><br />
+					<div>
+						<input type="checkbox" name="all" id="check_all" value="" checked="checked" onclick="invertAll(this, this.form, \'brd\');" class="input_check" />
+						<label for="check_all">', $txt['manual_searching_check_all'], '</label>
+					</div>
+				</div>
+				<span class="lowerframe"><span></span></span>
+			</fieldset>
+			<div><input type="submit" name="submit" value="', $txt['manual_searching_search'], '" class="button_submit" /></div>
+		</form>
+	</div>
 	<ul>
 		<li>', $txt['manual_searching_nav_tree'], '</li>
 		<li>', $txt['manual_searching_three_options_part1'], '<a href="', $scripturl, '?action=help;area=searching#syntax">', $txt['manual_searching_three_options_link_syntax'], '</a>', $txt['manual_searching_three_options_part2'], '</li>

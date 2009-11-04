@@ -3341,20 +3341,20 @@ span.hidelink
 /* Boards picker */
 #searchform fieldset div#searchBoardsExpand ul
 {
-	width: 49%;
+	overflow: auto;
+	margin: 0 0 0 1em;
+	padding: 0;
+	width: 48%;
 }
 #searchform fieldset div#searchBoardsExpand ul ul
 {
 	width: auto;
-	overflow: auto;
-	margin: 0 0 0 1em;
-	padding: 0;
 }
-#searchform fieldset ul#searchBoardsExpand a
+#searchform fieldset div#searchBoardsExpand a
 {
 	text-decoration: underline;
 }
-#searchform fieldset ul#searchBoardsExpand li
+#searchform fieldset div#searchBoardsExpand li
 {
 	list-style: none;
 	float: left;
@@ -3433,6 +3433,7 @@ span.hidelink
 	background: #fff;
 	padding: 1em;
 	overflow: auto;
+	margin-bottom: 1em;
 }
 #helpmain .help_sample .navigate_section
 {

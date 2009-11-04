@@ -132,7 +132,7 @@ function template_main()
 					<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><strong>', $txt['choose_board'], '</strong></a>
 				</h4>
 				<div class="flow_auto" id="searchBoardsExpand"', $context['boards_check_all'] ? ' style="display: none;"' : '', '>
-					<ul class="ignoreboards floatleft">';
+					<ul class="floatleft">';
 
 	$i = 0;
 	$limit = ceil(count($context['categories']) / 2);
@@ -141,7 +141,7 @@ function template_main()
 		if ($i == $limit)
 			echo '
 					</ul>
-					<ul class="ignoreboards floatright">';
+					<ul class="floatright">';
 
 		echo '
 						<li class="category">

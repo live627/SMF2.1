@@ -1865,14 +1865,14 @@ Simple
 		</tr>
 		<tr class="windowbg">
 			<td>', $txt['manual_posting_bbc_size'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/size.gif" alt="', $txt['manual_posting_bbc_size'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+			<td>*</td>
 			<td>', $txt['manual_posting_size_code'], '</td>
 			<td><span style="font-size: 10pt;">', $txt['manual_posting_size_output'], '</span></td>
 			<td>', $txt['manual_posting_size_comment'], '</td>
 		</tr>
 		<tr class="windowbg2">
 			<td>', $txt['manual_posting_bbc_font'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/face.gif" alt="', $txt['manual_posting_bbc_font'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+			<td>*</td>
 			<td>', $txt['manual_posting_font_code'], '</td>
 			<td><span style="font-family: Verdana;">', $txt['manual_posting_font_output'], '</span></td>
 			<td>', $txt['manual_posting_font_comment'], '</td>
@@ -1986,14 +1986,14 @@ Simple
 		</tr>
 		<tr class="windowbg2">
 			<td>', $txt['manual_posting_bbc_row'], '</td>
-			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/tr.gif" alt="', $txt['manual_posting_bbc_row'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+			<td>*</td>
 			<td>', $txt['manual_posting_row_code'], '</td>
 			<td>*</td>
 			<td>', $txt['manual_posting_row_comment'], '</td>
 		</tr>
 		<tr class="windowbg">
 			<td rowspan="2">', $txt['manual_posting_bbc_column'], '</td>
-			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/td.gif" alt="', $txt['manual_posting_bbc_column'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
+			<td rowspan="2">*</td>
 			<td>', $txt['manual_posting_column_code'], '</td>
 			<td>
 				<table>
