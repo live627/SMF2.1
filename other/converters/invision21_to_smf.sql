@@ -322,7 +322,12 @@ if (is_array($choices))
 				$current_choices[$row['id_poll']][$choiceid] = $label;
 
 			// Finally - a row of information!
-			$rows[] = "$row[id_poll], $choiceid, $label, $votes";
+			$rows[] = array(
+				'id_poll' => $row[id_poll],
+				'id_choice' => $choiceid,
+				'label' => $label,
+				'votes' => $votes,
+			);
 		}
 	}
 }
