@@ -29,9 +29,10 @@ SELECT
 	/* // !!! We could use m.name for the real_name? */
 	m.id AS id_member, SUBSTRING(m.username, 1, 80) AS member_name,
 	SUBSTRING(m.username, 1, 255) AS real_name,
-	SUBSTRING(fb.signature, 1, 65534) AS signature, fb.posts,
+	SUBSTRING(fb.signature, 1, 65534) AS signature,
+	IF(ISNULL(fb.posts), 0, fb.posts) AS posts,
 	SUBSTRING(SUBSTRING_INDEX(m.password, ':', 1), 1, 64) AS passwd, SUBSTRING_INDEX(m.password, ':', -1) AS password_salt,
-	fb.karma AS karma_good, SUBSTRING(m.email, 1, 255) AS email_address,
+	IF(ISNULL(fb.karma), 0, fb.karma) AS karma_good, SUBSTRING(m.email, 1, 255) AS email_address,
 	SUBSTRING(cd.country, 1, 255) AS location,
 	IF(m.activation = 1, 0, 1) AS is_activated,
 	UNIX_TIMESTAMP(m.registerDate) AS date_registered,
