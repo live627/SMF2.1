@@ -186,7 +186,7 @@ $smcFunc['db_alter_table']('members', array(
 --- Adding weekly maintenance task.
 /******************************************************************************/
 
----# Adding scheduled task...
+---# Adding weekly maintenance task...
 ---{
 $smcFunc['db_insert']('ignore',
 	'{db_prefix}scheduled_tasks',
@@ -199,6 +199,19 @@ $smcFunc['db_insert']('ignore',
 	),
 	array('task')
 );
+---}
+---#
+
+---# Setting the birthday email template if not set...
+---{
+if (!isset($modSettings['birthday_email']))
+{
+	upgrade_query("
+		INSERT INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('birthday_email', 'happy_birthday')");
+}
 ---}
 ---#
 

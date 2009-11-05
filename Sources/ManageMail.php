@@ -284,8 +284,8 @@ function ModifyMailSettings($return_config = false)
 
 	loadLanguage('EmailTemplates');
 
-	$body = $birthdayEmails[empty($modSettings['birthday_email']) ? 'karlbenson1' : $modSettings['birthday_email']]['body'];
-	$subject = $birthdayEmails[empty($modSettings['birthday_email']) ? 'karlbenson1' : $modSettings['birthday_email']]['subject'];
+	$body = $birthdayEmails[empty($modSettings['birthday_email']) ? 'happy_birthday' : $modSettings['birthday_email']]['body'];
+	$subject = $birthdayEmails[empty($modSettings['birthday_email']) ? 'happy_birthday' : $modSettings['birthday_email']]['subject'];
 
 	$emails = array();
 	foreach ($birthdayEmails as $index => $dummy)
@@ -304,8 +304,8 @@ function ModifyMailSettings($return_config = false)
 			array('text', 'smtp_username'),
 			array('password', 'smtp_password'),
 		'',
-			array('select', 'birthday_email', $emails, 'value' => empty($modSettings['birthday_email']) ? 'karlbenson1' : $modSettings['birthday_email'], 'javascript' => 'onchange="fetch_birthday_preview()"'),
-			'birthday_subject' => array('text', 'birthday_subject', 'value' => $birthdayEmails[empty($modSettings['birthday_email']) ? 'karlbenson1' : $modSettings['birthday_email']]['subject'], 'disabled' => true, 'size' => strlen($subject) + 3),
+			array('select', 'birthday_email', $emails, 'value' => empty($modSettings['birthday_email']) ? 'happy_birthday' : $modSettings['birthday_email'], 'javascript' => 'onchange="fetch_birthday_preview()"'),
+			'birthday_subject' => array('text', 'birthday_subject', 'value' => $birthdayEmails[empty($modSettings['birthday_email']) ? 'happy_birthday' : $modSettings['birthday_email']]['subject'], 'disabled' => true, 'size' => strlen($subject) + 3),
 			'birthday_body' => array('large_text', 'birthday_body', 'value' => $body, 'disabled' => true, 'size' => ceil(strlen($body) / 25)),
 		'',
 

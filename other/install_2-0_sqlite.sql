@@ -1926,6 +1926,7 @@ INSERT INTO {$db_prefix}settings (variable, value) VALUES ('cache_enable', '1');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('reg_verification', '1');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('visual_verification_type', '3');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('enable_buddylist', '1');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('birthday_email', 'happy_birthday');
 COMMIT;
 
 # --------------------------------------------------------

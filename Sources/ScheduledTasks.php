@@ -1318,7 +1318,7 @@ function scheduled_birthdayemails()
 	// Going to need this to send the emails.
 	require_once($sourcedir . '/Subs-Post.php');
 
-	$greeting = isset($modSettings['birthday_email']) ? $modSettings['birthday_email'] : 'karlbenson1';
+	$greeting = isset($modSettings['birthday_email']) ? $modSettings['birthday_email'] : 'happy_birthday';
 
 	// Get the month and day of today.
 	$month = date('n'); // Month without leading zeros.

@@ -1783,7 +1783,8 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('cache_enable', '1'),
 	('reg_verification', '1'),
 	('visual_verification_type', '3'),
-	('enable_buddylist', '1');
+	('enable_buddylist', '1'),
+	('birthday_email', 'happy_birthday');
 # --------------------------------------------------------
 
 #

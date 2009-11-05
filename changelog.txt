@@ -25,6 +25,7 @@ November 2009
  ! In some rare cases, creating a cache file for language files failed, leading to undefined indices. (ManageMaintenance.php) [Bug 3951]   
  * Curve does not support showing buttons as images, so don't offer it as an option. (Settings template)
  ! Skip separators when saving theme settings, as they aren't actual settings. (Themes.php) 
+ ! Make sure there's always a birthday email template set, and be consistent with it. (install script, upgrade script, ManageMail.php, ScheduledTasks.php)  
 
 
 October 2009

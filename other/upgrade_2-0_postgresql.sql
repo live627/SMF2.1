@@ -341,8 +341,21 @@ else
 --- Adding weekly maintenance task.
 /******************************************************************************/
 
----# Adding scheduled task...
+---# Adding weekly maintenance task...
 INSERT INTO {$db_prefix}scheduled_tasks (next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (0, 0, 1, 'w', 0, 'weekly_maintenance');
+---#
+
+---# Setting the birthday email template if not set...
+---{
+if (!isset($modSettings['birthday_email']))
+{
+	upgrade_query("
+		INSERT INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('birthday_email', 'happy_birthday')");
+}
+---}
 ---#
 
 /******************************************************************************/

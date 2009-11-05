@@ -1564,6 +1564,19 @@ if (!isset($modSettings['next_task_time']))
 ---}
 ---#
 
+---# Setting the birthday email template if not set...
+---{
+if (!isset($modSettings['birthday_email']))
+{
+	upgrade_query("
+		INSERT INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('birthday_email', 'happy_birthday')");
+}
+---}
+---#
+
 /******************************************************************************/
 --- Adding permission profiles for boards.
 /******************************************************************************/
