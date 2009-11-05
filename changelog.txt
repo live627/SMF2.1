@@ -21,6 +21,7 @@ November 2009
  * Changed the way linktrees are classes in order for there to be more than three linktree instances on a page. (index template, index.css)   
  * Rewrote the 'Registering' and 'Forum Tools' parts of the help section to match Curve's look and feel. (Help template, Manual language file, index.css)
  * The board selection part of the advanced search screen could break on some resolutions. (Search template, index.css, compat.css, rtl.css)
+ ! Don't typecast when checking for empty variables in the View Member section of the admin centre. (ManageMembers.php) [Bug 3917] 
 
 
 October 2009

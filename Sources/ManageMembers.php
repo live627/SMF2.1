@@ -329,7 +329,7 @@ function ViewMemberlist()
 		foreach ($params as $param_name => $param_info)
 		{
 			// Not filled in?
-			if (!isset($_POST[$param_name]) || $_POST[$param_name] == '')
+			if (!isset($_POST[$param_name]) || $_POST[$param_name] === '')
 				continue;
 
 			// Make sure numeric values are really numeric.
