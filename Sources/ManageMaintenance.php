@@ -1603,8 +1603,10 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 			$invalid_file_found = true;
 
 			if ($fatal)
+			{
 				log_error(sprintf($txt['theme_language_error'], $template_name . '.' . $lang, 'template'));
-			break;
+				break;
+			}
 		}
 		else
 			unset($language_url);

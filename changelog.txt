@@ -22,6 +22,7 @@ November 2009
  * Rewrote the 'Registering' and 'Forum Tools' parts of the help section to match Curve's look and feel. (Help template, Manual language file, index.css)
  * The board selection part of the advanced search screen could break on some resolutions. (Search template, index.css, compat.css, rtl.css)
  ! Don't typecast when checking for empty variables in the View Member section of the admin centre. (ManageMembers.php) [Bug 3917] 
+ ! In some rare cases, creating a cache file for language files failed, leading to undefined indices. (ManageMaintenance.php) [Bug 3951]   
 
 
 October 2009
