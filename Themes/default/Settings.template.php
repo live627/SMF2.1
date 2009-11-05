@@ -190,10 +190,6 @@ function template_settings()
 			'id' => 'enable_news',
 			'label' => $txt['enable_random_news'],
 		),
-		array(
-			'id' => 'use_image_buttons',
-			'label' => $txt['admin_image_text'],
-		),
 	'',
 		array(
 			'id' => 'show_newsfader',
