@@ -63,11 +63,13 @@ function template_unread()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
+	echo '
+	<div id="recent" class="main_content">';
+
 	$showCheckboxes = !empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $settings['show_mark_read'];
 
 	if ($showCheckboxes)
 		echo '
-	<div id="recent" class="main_content">
 		<form action="', $scripturl, '?action=quickmod" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;">
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			<input type="hidden" name="qaction" value="markread" />
@@ -199,7 +201,7 @@ function template_unread()
 						<td class="catbg" colspan="', $showCheckboxes ? '6' : '5', '" align="right">
 							', template_button_strip($mark_read, 'top'), '
 						</td>
-				</tr>';
+					</tr>';
 
 	if (empty($context['topics']))
 		echo '
@@ -245,11 +247,13 @@ function template_replies()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
+	echo '
+	<div id="recent">';
+
 	$showCheckboxes = !empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $settings['show_mark_read'];
 
 	if ($showCheckboxes)
 		echo '
-	<div id="recent">
 		<form action="', $scripturl, '?action=quickmod" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;">
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			<input type="hidden" name="qaction" value="markread" />
