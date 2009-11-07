@@ -29,6 +29,7 @@ November 2009
  ! Fixed footer breaking due to possible invalid XHTML. (Recent template)
  ! Output additional HTML for quotes to make it possible to style them with rounded corners. (Subs.php)
  ! time bbc was handled improperly when editing a post (Subs-Post.php)
+ ! Buddy list used wrong permission check (Profile.php)
 
 
 October 2009

@@ -253,8 +253,8 @@ function ModifyProfile($post_errors = array())
 					'enabled' => !empty($modSettings['enable_buddylist']) && $context['user']['is_owner'],
 					'sc' => 'post',
 					'subsections' => array(
-						'buddies' => array($txt['editBuddies'], 'moderate_forum'),
-						'ignore' => array($txt['editIgnoreList'], 'moderate_forum'),
+						'buddies' => array($txt['editBuddies']),
+						'ignore' => array($txt['editIgnoreList']),
 					),
 					'permission' => array(
 						'own' => array('profile_extra_any', 'profile_extra_own'),
