@@ -28,8 +28,9 @@ November 2009
  ! Make sure there's always a birthday email template set, and be consistent with it. (install script, upgrade script, ManageMail.php, ScheduledTasks.php)  
  ! Fixed footer breaking due to possible invalid XHTML. (Recent template)
  ! Output additional HTML for quotes to make it possible to style them with rounded corners. (Subs.php)
- ! time bbc was handled improperly when editing a post (Subs-Post.php)
- ! Buddy list used wrong permission check (Profile.php)
+ ! Time bbcode was handled improperly when editing a post. (Subs-Post.php)
+ ! Buddy list used wrong permission check. (Profile.php)
+ ! Store the selected filter for the Who's Online page in the session, so it may be applied again if the user revisits the page later. (Who.php) 
 
 
 October 2009
