@@ -2987,7 +2987,7 @@ ADD INDEX attachment_type (attachment_type);
 /******************************************************************************/
 
 ---# Removing index on hits...
-ALTER TABLE {$db_prefix}log_actions
+ALTER TABLE {$db_prefix}log_activity
 DROP INDEX hits;
 ---#
 
