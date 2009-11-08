@@ -1984,6 +1984,7 @@ INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidd
 INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES ('O0', 'afro.gif', '{$default_afro_smiley}', 18, 1);
 INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (':))', 'laugh.gif', '{$default_laugh_smiley}', 19, 1);
 INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES ('C:-)', 'police.gif', '{$default_police_smiley}', 20, 1);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES ('O:-)', 'angel.gif', '{$default_angel_smiley}', 21, 1);
 COMMIT;
 
 # --------------------------------------------------------
