@@ -3159,21 +3159,18 @@ span.hidelink
 	padding: 1em;
 	border: 1px solid #696969;
 }
-
-#helpmain h1
+#helpmain h1.section
 {
 	font-size: 18px;
 }
-
-#helpmain h2
+#helpmain h2.section
 {
 	font-size: 18px;
 	border-bottom: solid 1px;
 	padding-bottom: 0.5em;
 	margin: 0 0 0.5em 0;
 }
-
-#helpmain h3, #helpmain h4, #helpmain h5, #helpmain h6
+#helpmain h3.section
 {
 	font-size: 16px;
 	margin: 1em 0 0.5em 0;
@@ -3181,7 +3178,26 @@ span.hidelink
 	padding: 0 0 0.5em 0;
 }
 
-/* we need some air between the lines :) */
+/* Samples should be easily distinguishable. */
+#helpmain .help_sample
+{
+	border: 1px solid #99a;
+	background: #fff;
+	padding: 1em;
+	overflow: auto;
+	margin-bottom: 1em;
+}
+#helpmain .help_sample .navigate_section
+{
+	margin: 0;
+}
+#helpmain .help_sample .navigate_section ul
+{
+	padding-top: 0;
+	border: none;
+}
+
+/* We need some air between the lines */
 #helpmain p
 {
 	margin: 0 0 1.5em 0;

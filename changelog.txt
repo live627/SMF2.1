@@ -1,7 +1,7 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0 RC2                                                                  ???
+SMF 2.0 RC2                                                      8 November 2009
 ================================================================================
 November 2009
 --------------------------------------------------------------------------------
@@ -35,6 +35,7 @@ November 2009
  ! Added three new smileys sets to the package, replacing the old ones. (Smileys/default/*, Smileys/aaron/*, Smileys/akyhne/*)  
  * Updated Curve's post icons to reflect the new default smiley set. (Themes/default/images/post/*)
  ! Hide the View Results button for polls when it is no longer possible to vote. (Display.php)
+ ! Include the compatibility stylesheets for themes designed for 2.0 Beta, too. (Load.php) 
 
 
 October 2009

@@ -43,8 +43,9 @@ function template_find_members()
 			{
 				var theTextBox = window.opener.document.getElementById("', $context['input_box_name'], '");
 
-				if (typeof(membersAdded[name]) != "undefined")
+				if (name in membersAdded)
 					return;
+
 				// If we only accept one name don\'t remember what is there.
 				if (\'', $context['delimiter'], '\' != \'null\')
 					membersAdded[name] = true;
@@ -1248,18 +1249,18 @@ function template_manual_modify_profile()
 			</table>
 		</div><br />
 		<div style="margin: -1.8em 20px 0 200px;">
-			<h3 id="info-admins">', $txt['manual_profile_sub_profile_info'], '</h3>
+			<h3 class="section" id="info-admins">', $txt['manual_profile_sub_profile_info'], '</h3>
 			<ul>
 				<li>', $txt['manual_profile_sub_track_user'], '</li>
 				<li>', $txt['manual_profile_sub_track_ip'], '</li>
 				<li>', $txt['manual_profile_sub_show_permissions'], '</li>
 			</ul>
-			<h3 id="edit-admins">', $txt['manual_profile_sub_modify_profile'], '</h3>
+			<h3 class="section" id="edit-admins">', $txt['manual_profile_sub_modify_profile'], '</h3>
 			<ul>
 				<li>', $txt['manual_profile_sub_acct_settings'], '</li>
 				<li>', $txt['manual_profile_sub_forum_profile_info'], '</li>
 			</ul>
-			<h3 id="actions-admins">', $txt['manual_profile_sub_actions2'], '</h3>
+			<h3 class="section" id="actions-admins">', $txt['manual_profile_sub_actions2'], '</h3>
 			<ul>
 				<li>', $txt['manual_profile_sub_ban_user'], '</li>
 				<li>', $txt['manual_profile_sub_delete_acct'], '</li>

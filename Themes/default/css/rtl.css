@@ -880,7 +880,7 @@ dl.stats dd
 
 /* Styles for the help section.
 ------------------------------------------------- */
-#helpmain h3, #helpmain h4, #helpmain h5, #helpmain h6
+#helpmain h3.section
 {
 	padding: 0 0.5em 0.5em 0;
 }

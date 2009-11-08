@@ -155,9 +155,10 @@ function template_manual_above()
 
 	echo '
 		<div id="helpmain" class="windowbg2">
-			<h2>', $context['manual_area_data']['label'], '</h2>';
+			<h2 class="section">', $context['manual_area_data']['label'], '</h2>';
 }
 
+// Bottom half of the help template.
 function template_manual_below()
 {
 	global $context, $settings, $options, $txt, $scripturl;
@@ -216,14 +217,13 @@ function template_manual_board_index()
 
 	echo '
 	<p>', $txt['manual_index_sec_board_index_def'], '</p>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
-			<table width="100%" cellpadding="3" cellspacing="0">
-				<tr>
-					<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></strong></span></td>
-				</tr>
-			</table><script language="JavaScript1.2" type="text/javascript">
-//<![CDATA[
+	<div class="help_sample">
+		<table width="100%" cellpadding="3" cellspacing="0">
+			<tr>
+				<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></strong></span></td>
+			</tr>
+		</table>
+		<script type="text/javascript">//<![CDATA[
 			var collapseExpand = false;
 			function collapseExpandCategory()
 			{
@@ -237,8 +237,7 @@ function template_manual_board_index()
 					document.getElementById("board-new-or-not").src = smf_images_url + "/" + "off.gif";
 					document.getElementById("board-new-or-not").alt = "', $txt['manual_index_no_new'], '";
 			}
-//]]>
-</script>
+		//]]></script>
 			<div class="tborder">
 				<table border="0" width="100%" cellspacing="1" cellpadding="5">
 					<tr>
@@ -298,9 +297,8 @@ function template_manual_board_index()
 	}
 
 	echo '
-		</div>
-	</div><br />
-		<ul>
+	</div>
+	<ul>
 		<li>', $txt['manual_index_f_name'], '</li>
 		<li>', $txt['manual_index_cat'], '</li>
 		<li>', $txt['manual_index_b_name_part1'], '<a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_index_b_name_link_message'], '</a>', $txt['manual_index_b_name_part2'], '</li>
@@ -317,10 +315,8 @@ function template_manual_message_view()
 
 	echo '
 	<p>', $txt['manual_index_sec_msg_index_def'], '</p>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
-			<script language="JavaScript1.2" type="text/javascript">
-//<![CDATA[
+	<div class="help_sample">
+		<script type="text/javascript">//<![CDATA[
 			var currentSort = false;
 			function sortLastPost()
 			{
@@ -332,8 +328,7 @@ function template_manual_message_view()
 			{
 					document.getElementById("message-new-or-not").style.display = "none";
 			}
-//]]>
-</script>
+		//]]></script>
 			<table width="100%" cellpadding="3" cellspacing="0">
 				<tr>
 					<td><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></strong><br />
@@ -463,8 +458,7 @@ function template_manual_message_view()
 					</td>
 				</tr>
 			</table><br />
-		</div>
-	</div><br />
+	</div>
 	<ul>
 		<li>', $txt['manual_index_nav_tree'], '</li>
 		<li>', $txt['manual_index_page_number'], '</li>
@@ -497,8 +491,7 @@ function template_manual_topic_view()
 	);
 
 	echo '
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
+	<div class="help_sample">
 			<table width="100%" cellpadding="3" cellspacing="0">
 				<tr>
 					<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></strong><br />
@@ -646,9 +639,7 @@ function template_manual_topic_view()
 					</select>&nbsp; <input type="button" onclick="if (this.form.jump2.options[this.form.jump2.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;area=topic_view\' + this.form.jump2.options[this.form.jump2.selectedIndex].value;" value="', $txt['manual_index_go'], '" class="button_submit" />
 				</form>
 			</div><br />
-			<br clear="all" />
-		</div>
-	</div><br />
+	</div>
 	<ul>
 		<li>', $txt['manual_index_navigation_tree'], '</li>
 		<li>', $txt['manual_index_prev_next'], '</li>
@@ -669,8 +660,114 @@ function template_manual_topic_view()
 	</ul>';
 }
 
+// When and how to register page.
+function template_manual_when_how_register()
+{
+	// TODO : Write this.
+}
+
+// The register help page.
+function template_manual_registration_screen()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
+	<p>', $txt['manual_registering_you_have_arrived_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary">', $txt['manual_registering_you_have_arrived_link_profile'], '</a>', $txt['manual_registering_you_have_arrived_part2'], '<a href="', $scripturl, '?action=help;area=sending_pms">', $txt['manual_registering_you_have_arrived_link_profile_pm'], '</a>', $txt['manual_registering_you_have_arrived_part3'], '</p>
+	<ol>
+		<li><a href="', $scripturl, '?action=help;area=registration_screen#how-to">', $txt['manual_registering_sec_register'], '</a></li>
+		<li><a href="', $scripturl, '?action=help;area=registration_screen#screen">', $txt['manual_registering_sec_reg_screen'], '</a></li>
+	</ol>
+	<h2 class="section" id="how-to">', $txt['manual_registering_sec_register'], '</h2>
+	<p>', $txt['manual_registering_register_desc'], '</p>
+	<ul>
+		<li>', $txt['manual_registering_select_register_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_registering_select_register_link_index_main'], '</a>', $txt['manual_registering_select_register_part2'], '</li>
+		<li>', $txt['manual_registering_login_Scr_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_registering_login_Scr_link_index_main'], '</a>', $txt['manual_registering_login_Scr_part2'], '</li>
+	</ul>
+	<div class="help_sample">
+		<div id="fatal_error">
+			<h3 class="catbg"><span class="left"></span>
+				', $txt['manual_registering_warning'], '
+			</h3>
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<div class="padding">', $txt['manual_registering_warning_desc_1'], '<br />
+				', $txt['manual_registering_warning_desc_2'], '<a href="', $scripturl, '?action=help;area=registration_screen#screen" class="board">', $txt['manual_registering_warning_desc_3'], '</a>', $txt['manual_registering_warning_desc_4'], '</div>
+				<span class="botslice"><span></span></span>
+			</div>
+		</div>
+	</div>
+	<h2 class="section" id="screen">', $txt['manual_registering_sec_reg_screen'], '</h2>
+	<div class="help_sample">
+		<form action="', $scripturl, '?action=help;area=registration_screen" method="post" accept-charset="', $context['character_set'], '">
+			<h3 class="catbg"><span class="left"></span>
+				', $txt['manual_registering_registration_form'], '
+			</h3>
+			<h4 class="titlebg"><span class="left"></span>
+				', $txt['manual_registering_required_info'], '
+			</h4>
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<fieldset class="content">
+					<dl class="register_form">
+						<dt><strong><label for="smf_autov_username">', $txt['username'], ':</label></strong></dt>
+						<dd>
+							<input type="text" name="user" id="smf_autov_username" size="30" tabindex="', $context['tabindex']++, '" maxlength="25" value="', isset($context['username']) ? $context['username'] : '', '" class="input_text" />
+							<span id="smf_autov_username_div" style="display: none;">
+								<a id="smf_autov_username_link" href="#">
+									<img id="smf_autov_username_img" src="', $settings['images_url'], '/icons/field_check.gif" alt="*" />
+								</a>
+							</span>
+						</dd>
+						<dt><strong><label for="smf_autov_reserve1">', $txt['email'], ':</label></strong></dt>
+						<dd>
+							<input type="text" name="email" id="smf_autov_reserve1" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['email']) ? $context['email'] : '', '" class="input_text" />
+						</dd>
+						<dt><strong><label for="allow_email">', $txt['allow_user_email'], ':</label></strong></dt>
+						<dd>
+							<input type="checkbox" name="allow_email" id="allow_email" tabindex="', $context['tabindex']++, '" class="input_check" />
+						</dd>
+					</dl>
+					<dl class="register_form" id="password1_group">
+						<dt><strong><label for="smf_autov_pwmain">', $txt['choose_pass'], ':</label></strong></dt>
+						<dd>
+							<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" class="input_password" />
+							<span id="smf_autov_pwmain_div" style="display: none;">
+								<img id="smf_autov_pwmain_img" src="', $settings['images_url'], '/icons/field_invalid.gif" alt="*" />
+							</span>
+						</dd>
+					</dl>
+					<dl class="register_form" id="password2_group">
+						<dt><strong><label for="smf_autov_pwverify">', $txt['verify_pass'], ':</label></strong></dt>
+						<dd>
+							<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" class="input_password" />
+							<span id="smf_autov_pwverify_div" style="display: none;">
+								<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" />
+							</span>
+						</dd>
+					</dl>
+				</fieldset>
+				<span class="botslice"><span></span></span>
+			</div>
+			<div id="confirm_buttons">
+				<input type="submit" name="regSubmit" value="', $txt['register'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />
+			</div>
+		</form>
+	</div>
+	<p>', $txt['manual_registering_reg_screen_requirements_part1'], '<a href="', $scripturl, '?action=help;area=logging_in#screen">', $txt['manual_registering_reg_screen_requirements_link_loginout_screen'], '</a>', $txt['manual_registering_reg_screen_requirements_part2'], '</p>
+	<ul>
+		<li>', $txt['manual_registering_email_activate'], '</li>
+		<li>', $txt['manual_registering_admin_approve'], '</li>
+	</ul>';
+}
+
+// Activating account page.
+function template_manual_activating_account()
+{
+	// TODO : Write this.
+}
+
 // Logging in and out page.
-function template_manual_logging_in()
+function template_manual_logging_in_out()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
@@ -686,237 +783,109 @@ function template_manual_logging_in()
 		</li>
 		<li><a href="', $scripturl, '?action=help;area=logging_in#logout">', $txt['manual_loginout_logout'], '</a></li>
 	</ol>
-	<h2 id="login">', $txt['manual_loginout_sec_login'], '</h2>
+	<h2 class="section" id="login">', $txt['manual_loginout_sec_login'], '</h2>
 	<p>', $txt['manual_loginout_login_desc'], '</p>
-	<h3 id="screen">', $txt['manual_loginout_login_screen'], '</h3>
+	<h3 class="section" id="screen">', $txt['manual_loginout_login_screen'], '</h3>
 	<p>', $txt['manual_loginout_login_screen_desc_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_loginout_login_screen_desc_link_index_main'], '</a>', $txt['manual_loginout_login_screen_desc_part2'], '</p>
-	<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '" style="margin-top: 4ex;">
-		<table border="0" width="400" cellspacing="0" cellpadding="4" class="tborder" align="center">
-			<tr class="titlebg">
-				<td colspan="2"><img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" align="top" /> ', $txt['manual_loginout_login'], '</td>
-			</tr>
-			<tr class="windowbg">
-				<td width="50%" align="right"><strong>', $txt['manual_loginout_username'], ':</strong></td>
-				<td><input type="text" size="20" value="" class="input_text" /></td>
-			</tr>
-			<tr class="windowbg">
-				<td align="right"><strong>', $txt['manual_loginout_password'], ':</strong></td>
-				<td><input type="password" value="" size="20" class="input_password" /></td>
-			</tr>
-			<tr class="windowbg">
-				<td align="right"><strong>', $txt['manual_loginout_how_long'], ':</strong></td>
-				<td><input name="cookielength" type="text" size="4" maxlength="4" value="60" class="input_text" /></td>
-			</tr>
-			<tr class="windowbg">
-				<td align="right"><strong>', $txt['manual_loginout_always'], ':</strong></td>
-				<td><input type="checkbox" class="input_check" onclick="this.form.cookielength.disabled = this.checked;" /></td>
-			</tr>
-			<tr class="windowbg">
-				<td align="center" colspan="2"><input type="button" style="margin-top: 2ex;" value="Login" class="button_submit" /></td>
-			</tr>
-			<tr class="windowbg">
-				<td align="center" colspan="2" class="smalltext"><a href="', $scripturl, '?action=help;area=password_reminders" style="font-size: x-small;" class="board">', $txt['manual_loginout_forgot'], '?</a><br />
-				<br /></td>
-			</tr>
-		</table>
-	</form><br />
+	<div class="help_sample">
+		<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '">
+			<div class="tborder login">
+				<h3 class="catbg"><span class="left"></span>
+					<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" class="icon" /> ', $txt['manual_loginout_login'], '
+				</h3>
+				<span class="upperframe"><span></span></span>
+				<div class="roundframe">
+					<dl>
+						<dt>', $txt['manual_loginout_username'], ':</dt>
+						<dd><input type="text" name="user" size="20" class="input_text" /></dd>
+						<dt>', $txt['manual_loginout_password'], ':</dt>
+						<dd><input type="password" name="passwrd" size="20" class="input_password" /></dd>
+					</dl>
+					<dl>
+						<dt>', $txt['manual_loginout_how_long'], ':</dt>
+						<dd><input type="text" name="cookielength" size="4" maxlength="4" class="input_text" /></dd>
+						<dt>', $txt['manual_loginout_always'], ':</dt>
+						<dd><input type="checkbox" name="cookieneverexp" class="input_check" /></dd>
+					</dl>
+					<p><input type="submit" value="', $txt['login'], '" class="button_submit" /></p>
+					<div class="centertext smalltext"><a href="', $scripturl, '?action=help;area=password_reminders">', $txt['manual_loginout_forgot'], '?</a></div>
+					<input type="hidden" name="hash_passwrd" value="" />
+				</div>
+				<span class="lowerframe"><span></span></span>
+			</div>
+		</form>
+	</div>
 	<p>', $txt['manual_loginout_login_screen_explanation'], '</p>
-	<h3 id="quick">', $txt['manual_loginout_sub_quick_login'], '</h3>
+	<h3 class="section" id="quick">', $txt['manual_loginout_sub_quick_login'], '</h3>
 	<p>', $txt['manual_loginout_although_many_forums_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_loginout_although_many_forums_link_index_main'], '</a>', $txt['manual_loginout_although_many_forums_part2'], '</p>
-	<table cellspacing="0" cellpadding="0" border="0" align="center" width="400" class="tborder">
-		<tr>
-			<td style="border: solid 1px;">
-				<table width="99%" cellpadding="0" cellspacing="5" border="0">
-					<tr>
-						<td width="100%" valign="top" class="smalltext" style="font-family: verdana, arial, sans-serif;">
-							<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '" style="margin: 3px 1ex 1px 0; text-align:right;">
-								<input type="text" size="10" class="input_text" /> <input type="password" size="10" class="input_password" /> <select>
-									<option>
-										', $txt['manual_loginout_hour'], '
-									</option>
-									<option>
-										', $txt['manual_loginout_day'], '
-									</option>
-									<option>
-										', $txt['manual_loginout_week'], '
-									</option>
-									<option>
-										', $txt['manual_loginout_mo'], '
-									</option>
-									<option selected="selected">
-										', $txt['manual_loginout_forever'], '
-									</option>
-								</select> <input type="button" value="Login" class="button_submit" /><br />
-								', $txt['manual_loginout_login_all'], '
-							</form>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table><br />
+	<div class="help_sample">
+		<form id="guest_form" action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '">
+			<input type="text" size="10" class="input_text" />
+			<input type="password" size="10" class="input_text" />
+			<select>
+				<option>
+					', $txt['manual_loginout_hour'], '
+				</option>
+				<option>
+					', $txt['manual_loginout_day'], '
+				</option>
+				<option>
+					', $txt['manual_loginout_week'], '
+				</option>
+				<option>
+					', $txt['manual_loginout_mo'], '
+				</option>
+				<option selected="selected">
+					', $txt['manual_loginout_forever'], '
+				</option>
+			</select>
+			<input type="button" value="Login" class="button_submit" /><br />
+			<div class="info">', $txt['manual_loginout_login_all'], '</div>
+		</form>
+	</div>
 	<p>', $txt['manual_loginout_use_quick_login'], '</p>
-	<h2 id="logout">', $txt['manual_loginout_logout'], '</h2>
+	<h2 class="section" id="logout">', $txt['manual_loginout_logout'], '</h2>
 	<p>', $txt['manual_loginout_logout_desc_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_loginout_logout_desc_link_index_main'], '</a>', $txt['manual_loginout_logout_desc_part2'], '</p>';
 }
 
+// Password reminders page.
 function template_manual_password_reminders()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
 	<p>', $txt['manual_loginout_reminder_desc_part1'], '<a href="', $scripturl, '?action=help;area=logging_in#screen">', $txt['manual_loginout_reminder_desc_link_screen'], '</a>', $txt['manual_loginout_reminder_desc_part2'], '</p>
-	<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '">
-		<table border="0" width="400" cellspacing="0" cellpadding="4" align="center" class="tborder">
-			<tr class="titlebg">
-				<td colspan="2">', $txt['manual_loginout_password_reminder'], '</td>
-			</tr>
-			<tr class="windowbg">
-				<td colspan="2" class="smalltext" style="padding: 2ex;">', $txt['manual_loginout_q_explanation'], '</td>
-			</tr>
-			<tr class="windowbg2">
-				<td width="40%">', $txt['manual_loginout_username_email'], ':</td>
-				<td><input type="text" name="user" size="30" class="input_text" /></td>
-			</tr>
-			<tr class="windowbg2">
-				<td colspan="2" align="center"><label for="secret"><input type="checkbox" name="sa" value="secret" id="secret" class="input_check" /> ', $txt['manual_loginout_ask_q'], '.</label></td>
-			</tr>
-			<tr class="windowbg2">
-				<td colspan="2" align="center"><input type="button" value="', $txt['manual_loginout_send'], '" class="button_submit" /></td>
-			</tr>
-		</table>
-	</form>
+	<div class="help_sample">
+		<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '">
+			<div class="tborder login">
+				<h3 class="catbg"><span class="left"></span>
+					', $txt['manual_loginout_password_reminder'], '
+				</h3>
+				<span class="upperframe"><span></span></span>
+				<div class="roundframe">
+					<p class="smalltext centertext">', $txt['manual_loginout_q_explanation'], '</p>
+					<dl>
+						<dt>', $txt['manual_loginout_username_email'], ':</dt>
+						<dd><input type="text" name="user" size="30" class="input_text" /></dd>
+					</dl>
+					<div class="centertext"><input type="submit" value="', $txt['manual_loginout_send'], '" class="button_submit" /></div>
+				</div>
+				<span class="lowerframe"><span></span></span>
+			</div>
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+		</form>
+	</div>
 	<p>', $txt['manual_loginout_reminder_explanation'], '</p>';
 }
 
-// Sending personal messages.
-function template_manual_sending_pms()
+// Profile info page.
+function template_manual_profile_info()
 {
-	global $context, $settings, $options, $txt, $scripturl, $modSettings;
-
-	echo '
-		<p>', $txt['manual_pm_community'], '</p>
-	<ol>
-		<li>
-			<a href="', $scripturl, '?action=help;area=sending_pms#pm">', $txt['manual_pm_sec_pm'], '</a>
-			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;area=sending_pms#description">', $txt['manual_pm_pm_desc'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;area=sending_pms#reading">', $txt['manual_pm_reading'], '</a></li>
-			</ol>
-		</li>
-		<li>
-			<a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_sec_pm2'], '</a>
-			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;area=sending_pms#starting">', $txt['manual_pm_start_reply'], '</a></li>
-			</ol>
-		</li>
-	</ol>
-	<h2 id="pm">', $txt['manual_pm_sec_pm'], '</h2>
-	<h3 id="description">', $txt['manual_pm_pm_desc'], '</h3>
-	<p>', $txt['manual_pm_pm_desc_1'], '</p>
-	<p>', $txt['manual_pm_pm_desc_2'], '</p>
-	<p>', $txt['manual_pm_pm_desc_3'], '</p>
-	<h3 id="reading">', $txt['manual_pm_reading'], '</h3>
-	<p>', $txt['manual_pm_reading_desc_part1'], '<a href="', $scripturl, '?action=help;area=logging_in">', $txt['manual_pm_reading_desc_link_loginout'], '</a>', $txt['manual_pm_reading_desc_part2'], '<a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_reading_desc_link_loginout_interface'], '</a>', $txt['manual_pm_reading_desc_part3'], '</p>
-	<h2 id="interface">', $txt['manual_pm_sec_pm2'], '</h2>
-	<p>', $txt['manual_pm_pm_desc2_part1'], '<a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_pm_pm_desc2_link_index_message'], '</a>', $txt['manual_pm_pm_desc2_part2'], '</p>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
-			<script language="JavaScript1.2" type="text/javascript">
-//<![CDATA[
-			var currentSort = false;
-			function sortLastPM()
-			{
-					document.getElementById("sort-arrow").src = smf_images_url + "/" + (currentSort ? "sort_up.gif" : "sort_down.gif");
-					document.getElementById("sort-arrow").alt = "";
-					currentSort = !currentSort;
-			}
-//]]>
-</script>
-			<form action="', $scripturl, '?action=help;area=sending_pms" method="post" accept-charset="', $context['character_set'], '">
-				<table border="0" width="100%" cellspacing="0" cellpadding="3">
-					<tr>
-						<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_pm_forum_name'], '</a></strong><br />
-						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="nav">', $txt['manual_pm_personal_msgs'], '</a></strong><br />
-						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="nav">', $txt['manual_pm_inbox'], '</a></strong></span></td>
-					</tr>
-				</table>
-				<table width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
-					<td width="125" valign="top">
-						<table border="0" cellpadding="4" cellspacing="1" class="bordercolor" width="100">
-							<tr>
-								<td class="catbg">', $txt['manual_pm_messages'], '</td>
-							</tr>
-							<tr class="windowbg">
-								<td class="smalltext" style="padding-bottom: 2ex;">
-								', $txt['manual_pm_new_msg'], '<br /><br />
-								<strong>', $txt['manual_pm_inbox'], '</strong><br />
-								', $txt['manual_pm_outbox'], '<br />
-							</td>
-						</tr>
-					</table>
-					<br />
-				</td>
-				<td valign="top">
-					<table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor" align="center">
-						<tr>
-							<td>
-								<table border="0" width="100%" cellspacing="1" class="bordercolor">
-									<tr class="titlebg">
-										<td>&nbsp;</td>
-										<td style="width: 32ex;"><a href="javascript:sortLastPM();">', $txt['manual_pm_date'], '&nbsp; <img id="sort-arrow" src="', $settings['images_url'], '/sort_up.gif" alt="" border="0" name="sort-arrow" /></a></td>
-										<td width="46%"><a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_subject2'], '</a></td>
-										<td><a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_from'], '</a></td>
-										<td align="center" width="24"><input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" /></td>
-									</tr>
-									<tr class="windowbg">
-										<td align="center" width="2%"><img src="' . $settings['images_url'] . '/icons/pm_read.gif" style="margin-right: 4px;" alt="" /></td>
-										<td>', $txt['manual_pm_date_and_time'], '</td>
-										<td><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="board">', $txt['manual_pm_subject'], '</a></td>
-										<td>', $txt['manual_pm_another_member'], '</td>
-										<td align="center"><input type="checkbox" class="input_check" /></td>
-									</tr>
-									<tr>
-										<td class="windowbg" style="padding: 2px;" align="right" colspan="6"></td>
-									</tr>
-									<tr>
-										<td colspan="6" class="catbg" height="25">
-											<div class="floatleft"><strong>', $txt['manual_pm_pages'], ':</strong> [<strong>1</strong>]</div>
-											<div class="floatright">&nbsp;<input type="button" value="', $txt['manual_pm_delete_selected'], '" class="button_submit" /></div>
-										</td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-					</table><br />
-				</td>
-			</tr></table>
-			<br />
-			</form>
-		</div>
-	</div><br />
-	<ul>
-		<li>', $txt['manual_pm_nav_tree'], '</li>
-		<li>', $txt['manual_pm_delete_button'], '</li>
-		<li>', $txt['manual_pm_outbox_button'], '</li>
-		<li>', $txt['manual_pm_new_msg2_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms#newtopic">', $txt['manual_pm_new_msg2_link_posting_newtopic'], '</a>', $txt['manual_pm_new_msg2_part2'], '</li>
-		<li>', $txt['manual_pm_reload'], '</li>
-		<li>', $txt['manual_pm_sort_by'], '</li>
-		<li>', $txt['manual_pm_main_subject'], '</li>
-		<li>', $txt['manual_pm_page_nos'], '</li>
-	</ul>
-	<h3 id="starting">', $txt['manual_pm_start_reply'], '</h3>
-	<p>', $txt['manual_pm_how_to_start_reply_part1'], '<a href="', $scripturl, '?action=help;area=logging_in">', $txt['manual_pm_how_to_start_reply_link_loginout'], '</a>', $txt['manual_pm_how_to_start_reply_part2'], '</p>
-	<ul>
-		<li>', $txt['manual_pm_msg_link_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_msg_link_link_interface'], '</a>', $txt['manual_pm_msg_link_part2'], '</li>
-		<li>', $txt['manual_pm_click_name_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary#info-all">', $txt['manual_pm_click_name_link_profile_info-all'], '</a>', $txt['manual_pm_click_name_part2'], '</li>
-		<li>', $txt['manual_pm_click_im_icon'], '</li>
-		<li>', $txt['manual_pm_click_pm_icon_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms#info-all">', $txt['manual_pm_click_pm_icon_link_profile_info-all'], '</a>', $txt['manual_pm_click_pm_icon_part2'], '</li>
-		<li>', $txt['manual_pm_reply_msg_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#reply">', $txt['manual_pm_reply_msg_link_posting_reply'], '</a>', $txt['manual_pm_reply_msg_part2'], '</li>
-	</ul>';
+	// TODO : Write this.
 }
 
-function template_manual_profile_summary()
+// Profile summary page.
+function template_manual_profile_info_summary()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
@@ -930,7 +899,7 @@ function template_manual_profile_summary()
 				<li><a href="', $scripturl, '?action=help;area=profile_summary#info-all">', $txt['manual_profile_profile_info'], '</a></li>
 			</ol>
 		</li>
-				<li>
+		<li>
 			<a href="', $scripturl, '?action=help;area=modifying_profiles#owners">', $txt['manual_profile_sec_normal'], '</a>
 			<ol class="la">
 				<li><a href="', $scripturl, '?action=help;area=modifying_profiles#edit-owners">', $txt['manual_profile_modify_profile'], '</a></li>
@@ -946,10 +915,9 @@ function template_manual_profile_summary()
 			</ol>
 		</li>
 	</ol>
-	<h2 id="all">', $txt['manual_profile_available_to_all'], '</h2>
-	<h3 id="info-all">', $txt['manual_profile_profile_info'], '</h3>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
+	<h2 class="section" id="all">', $txt['manual_profile_available_to_all'], '</h2>
+	<h3 class="section" id="info-all">', $txt['manual_profile_profile_info'], '</h3>
+	<div class="help_sample">
 			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
 				<tr>
 					<td width="100%" valign="top">
@@ -1075,8 +1043,7 @@ function template_manual_profile_summary()
 					</td>
 				</tr>
 			</table><br />
-		</div>
-	</div><br />
+	</div>
 	<ul>
 		<li>', $txt['manual_profile_summary_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary#owners">', $txt['manual_profile_summary_link_owners'], '</a>', $txt['manual_profile_summary_part2'], '</li>
 		<li>', $txt['manual_profile_hide_email'], '</li>
@@ -1087,7 +1054,20 @@ function template_manual_profile_summary()
 	</ul>';
 }
 
-function template_manual_modifying_profiles()
+// Profile show posts page.
+function template_manual_profile_info_posts()
+{
+	// TODO : Write this.
+}
+
+// Profile show stats page.
+function template_manual_profile_info_stats()
+{
+	// TODO : Write this.
+}
+
+// Modify profile page.
+function template_manual_modify_profile()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
@@ -1098,8 +1078,7 @@ function template_manual_modifying_profiles()
 		<li>', $txt['manual_profile_forum_profile_info'], '</li>
 		<li>', $txt['manual_profile_look_layout'], '</li>
 	</ul>
-		<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
+		<div class="help_sample">
 			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
 				<tr>
 					<td width="180" valign="top">
@@ -1283,17 +1262,16 @@ function template_manual_modifying_profiles()
 					</td>
 				</tr>
 			</table><br />
-		</div>
-	</div><br />
+	</div>
 	<ul>
 		<li>', $txt['manual_profile_notify_email_prefs'], '</li>
 		<li>', $txt['manual_profile_pm_options_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms">', $txt['manual_profile_pm_options_link_pm'], '</a>', $txt['manual_profile_pm_options_part2'], '</li>
 	</ul>
-	<h3 id="actions-owners">', $txt['manual_profile_sub_actions'], '</h3>
+	<h3 class="section" id="actions-owners">', $txt['manual_profile_sub_actions'], '</h3>
 	<ul>
 		<li>', $txt['manual_profile_confirm_delete_acct'], '</li>
 	</ul>
-	<h2 id="admins">', $txt['manual_profile_sec_settings'], '</h2>
+	<h2 class="section" id="admins">', $txt['manual_profile_sec_settings'], '</h2>
 	<p>', $txt['manual_profile_settings_desc'], '</p>
 		<div>
 		<div style="width: 180px; float: left; border: none;">
@@ -1332,18 +1310,18 @@ function template_manual_modifying_profiles()
 			</table>
 		</div><br />
 		<div style="margin: -1.8em 20px 0 200px;">
-			<h3 id="info-admins">', $txt['manual_profile_sub_profile_info'], '</h3>
+			<h3 class="section" id="info-admins">', $txt['manual_profile_sub_profile_info'], '</h3>
 			<ul>
 				<li>', $txt['manual_profile_sub_track_user'], '</li>
 				<li>', $txt['manual_profile_sub_track_ip'], '</li>
 				<li>', $txt['manual_profile_sub_show_permissions'], '</li>
 			</ul>
-			<h3 id="edit-admins">', $txt['manual_profile_sub_modify_profile'], '</h3>
+			<h3 class="section" id="edit-admins">', $txt['manual_profile_sub_modify_profile'], '</h3>
 			<ul>
 				<li>', $txt['manual_profile_sub_acct_settings'], '</li>
 				<li>', $txt['manual_profile_sub_forum_profile_info'], '</li>
 			</ul>
-			<h3 id="actions-admins">', $txt['manual_profile_sub_actions2'], '</h3>
+			<h3 class="section" id="actions-admins">', $txt['manual_profile_sub_actions2'], '</h3>
 			<ul>
 				<li>', $txt['manual_profile_sub_ban_user'], '</li>
 				<li>', $txt['manual_profile_sub_delete_acct'], '</li>
@@ -1353,6 +1331,55 @@ function template_manual_modifying_profiles()
 
 }
 
+// Modify profile account settings page.
+function template_manual_modify_profile_settings()
+{
+	// TODO : Write this.
+}
+
+// Modify forum profile page.
+function template_manual_modify_profile_forum()
+{
+	// TODO : Write this.
+}
+
+// Modify profile look and layout page.
+function template_manual_modify_profile_look()
+{
+	// TODO : Write this.
+}
+
+// Modify profile notifications page.
+function template_manual_modify_profile_notify()
+{
+	// TODO : Write this.
+}
+
+// Modify profile personal messages page.
+function template_manual_modify_profile_pm()
+{
+	// TODO : Write this.
+}
+
+// Modify profile edit buddies page.
+function template_manual_modify_profile_buddies()
+{
+	// TODO : Write this.
+}
+
+// Modify profile group membership page.
+function template_manual_modify_profile_groups()
+{
+	// TODO : Write this.
+}
+
+// Posting screen page.
+function template_manual_posting_screen()
+{
+	// TODO : Write this.
+}
+
+// Posting topics page.
 function template_manual_posting_topics()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
@@ -1391,11 +1418,10 @@ function template_manual_posting_topics()
 			</ol>
 		</li>
 	</ol>
-	<h2 id="basics">', $txt['manual_posting_sec_posting_basics'], '</h2>
-	<h3 id="newtopic">', $txt['manual_posting_starting_topic'], '</h3>
+	<h2 class="section" id="basics">', $txt['manual_posting_sec_posting_basics'], '</h2>
+	<h3 class="section" id="newtopic">', $txt['manual_posting_starting_topic'], '</h3>
 	<p>', $txt['manual_posting_starting_topic_desc_part1'], '<a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_posting_starting_topic_desc_link_index_message'], '</a>', $txt['manual_posting_starting_topic_desc_part2'], '<a href="', $scripturl, '?action=help;area=posting_topics#standard">', $txt['manual_posting_starting_topic_desc_link_index_message_standard'], '</a>', $txt['manual_posting_starting_topic_desc_part3'], '</p>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
+	<div class="help_sample">
 			<form action="', $scripturl, '?action=help;area=posting_topics" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 				<table width="100%" align="center" cellpadding="0" cellspacing="3">
 					<tr>
@@ -1431,42 +1457,40 @@ function template_manual_posting_topics()
 								<tr>
 									<td align="center" colspan="2"><span class="smalltext"><br />
 									', $context['browser']['is_firefox'] ? $txt['manual_posting_shortcuts_firefox'] : $txt['manual_posting_shortcuts'], '</span><br />
-									<input type="button" accesskey="s" tabindex="3" value="', $txt['manual_posting_posts'], '" /> <input type="button" accesskey="p" tabindex="4" value="', $txt['manual_posting_preview'], '" class="button_submit" /></td>
+									<input type="button" accesskey="s" tabindex="3" value="', $txt['manual_posting_posts'], '" class="button_submit" /> <input type="button" accesskey="p" tabindex="4" value="', $txt['manual_posting_preview'], '" class="button_submit" /></td>
 								</tr>
 							</table>
 						</td>
 					</tr>
 				</table>
 			</form><br />
-		</div>
-	</div><br />
+	</div>
 	<ul>
 		<li>', $txt['manual_posting_nav_tree'], '</li>
 		<li>', $txt['manual_posting_spell_check'], '</li>
 	</ul>
-	<h3 id="newpoll">', $txt['manual_posting_start_poll'], '</h3>
+	<h3 class="section" id="newpoll">', $txt['manual_posting_start_poll'], '</h3>
 	<p>', $txt['manual_posting_poll_desc_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#newtopic">', $txt['manual_posting_poll_desc_link_newtopic'], '</a>', $txt['manual_posting_poll_desc_part2'], '</p>
 	<p>', $txt['manual_posting_poll_options'], '</p>
 	<p>', $txt['manual_posting_poll_note'], '</p>
-	<h3 id="calendar">', $txt['manual_posting_post_event'], '</h3>
+	<h3 class="section" id="calendar">', $txt['manual_posting_post_event'], '</h3>
 	<p>', $txt['manual_posting_event_desc_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_posting_event_desc_link_index_main'], '</a>', $txt['manual_posting_event_desc_part2'], '</p>
-	<h3 id="reply">', $txt['manual_posting_replying'], '</h3>
+	<h3 class="section" id="reply">', $txt['manual_posting_replying'], '</h3>
 	<p>', $txt['manual_posting_replying_desc_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#newtopic">', $txt['manual_posting_replying_desc_link_newtopic'], '</a>', $txt['manual_posting_replying_desc_part2'], '</p>
 	<p>', $txt['manual_posting_quick_reply_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#bbc">', $txt['manual_posting_quick_reply_link_bbc'], '</a>', $txt['manual_posting_quick_reply_part2'], '<a href="', $scripturl, '?action=help;area=posting_topics#smileys">', $txt['manual_posting_quick_reply_link_bbc_smileys'], '</a>', $txt['manual_posting_quick_reply_part3'], '</p>
-	<h3 id="quote">', $txt['manual_posting_quote_post'], '</h3>
+	<h3 class="section" id="quote">', $txt['manual_posting_quote_post'], '</h3>
 	<p>', $txt['manual_posting_quote_desc'], '</p>
 	<ul>
 		<li>', $txt['manual_posting_quote_both_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#bbc">', $txt['manual_posting_quote_both_link_bbc'], '</a>', $txt['manual_posting_quote_both_part2'], '</li>
 		<li>', $txt['manual_posting_quote_independant_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#bbcref">', $txt['manual_posting_quote_independant_link_bbcref'], '</a>', $txt['manual_posting_quote_independant_part2'], '</li>
 	</ul>
-	<h3 id="modify">', $txt['manual_posting_modify_delete'], '</h3>
+	<h3 class="section" id="modify">', $txt['manual_posting_modify_delete'], '</h3>
 	<p>', $txt['manual_posting_modify_desc'], '</p>
 	<p>', $txt['manual_posting_delete_desc'], '</p>
-	<h2 id="standard">', $txt['manual_posting_sec_posting_options'], '</h2>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
+	<h2 class="section" id="standard">', $txt['manual_posting_sec_posting_options'], '</h2>
+	<div class="help_sample">
 			<br />
-			<script language="JavaScript1.2" type="text/javascript">
+			<script type="text/javascript">
 //<![CDATA[
 			function showimage()
 			{
@@ -1618,25 +1642,23 @@ function template_manual_posting_topics()
 					</tr>
 				</table>
 			</form><br />
-		</div>
-	</div><br />
-	<h3 id="messageicon">', $txt['manual_posting_sub_message_icon'], '</h3>
+	</div>
+	<h3 class="section" id="messageicon">', $txt['manual_posting_sub_message_icon'], '</h3>
 	<p>', $txt['manual_posting_msg_icon_dropdown'], '</p>
-	<h3 id="bbc">', $txt['manual_posting_sub_bbc'], '</h3>
+	<h3 class="section" id="bbc">', $txt['manual_posting_sub_bbc'], '</h3>
 	<p>', $txt['manual_posting_bbc_desc'], '</p>
 	<p>', $txt['manual_posting_bbc_ref_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#bbcref">', $txt['manual_posting_bbc_ref_link_bbcref'], '</a>', $txt['manual_posting_bbc_ref_part2'], '</p>
-	<h3 id="smileys">', $txt['manual_posting_sub_smileys'], '</h3>
+	<h3 class="section" id="smileys">', $txt['manual_posting_sub_smileys'], '</h3>
 	<p>', $txt['manual_posting_smiley_desc_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#nosmileys">', $txt['manual_posting_smiley_desc_link_nosmileys'], '</a>', $txt['manual_posting_smiley_desc_part2'], '</p>
 	<p>', $txt['manual_posting_smiley_ref_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#smileysref">', $txt['manual_posting_smiley_ref_link_smileysref'], '</a>', $txt['manual_posting_smiley_ref_part2'], '</p>
-	<h2 id="tags">', $txt['manual_posting_sec_tags'], '</h2>
+	<h2 class="section" id="tags">', $txt['manual_posting_sec_tags'], '</h2>
 	<p>', $txt['manual_posting_tags_desc_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#bbcref">', $txt['manual_posting_tags_desc_link_bbcref'], '</a>', $txt['manual_posting_tags_desc_part2'], '</p>
 	<p>', $txt['manual_posting_note_tags'], '</p>
-	<h2 id="additional">', $txt['manual_posting_sec_additional_options'], '</h2>
+	<h2 class="section" id="additional">', $txt['manual_posting_sec_additional_options'], '</h2>
 	<p>', $txt['manual_posting_sec_additional_options_desc'], '</p>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
+	<div class="help_sample">
 			<br />
-			<script language="JavaScript1.2" type="text/javascript">
+			<script type="text/javascript">
 //<![CDATA[
 			var currentSwap = false;
 			function swapOptions()
@@ -1701,20 +1723,65 @@ function template_manual_posting_topics()
 					</tr>
 				</table>
 			</form><br />
-		</div>
-	</div><br />
-	<h3 id="notify">', $txt['manual_posting_sub_notify'], '</h3>
+	</div>
+	<h3 class="section" id="notify">', $txt['manual_posting_sub_notify'], '</h3>
 	<p>', $txt['manual_posting_notify_desc'], '</p>
-	<h3 id="return">', $txt['manual_posting_sub_return'], '</h3>
+	<h3 class="section" id="return">', $txt['manual_posting_sub_return'], '</h3>
 	<p>', $txt['manual_posting_return_desc'], '</p>
-	<h3 id="nosmileys">', $txt['manual_posting_sub_no_smiley'], '</h3>
+	<h3 class="section" id="nosmileys">', $txt['manual_posting_sub_no_smiley'], '</h3>
 	<p>', $txt['manual_posting_no_smiley_desc_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#smileysref">', $txt['manual_posting_no_smiley_desc_link_smileysref'], '</a>', $txt['manual_posting_no_smiley_desc_part2'], '</p>
-	<h3 id="attachments">', $txt['manual_posting_sub_attach'], '</h3>
+	<h3 class="section" id="attachments">', $txt['manual_posting_sub_attach'], '</h3>
 	<p>', $txt['manual_posting_attach_desc_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#modify">', $txt['manual_posting_attach_desc_link_modify'], '</a>', $txt['manual_posting_attach_desc_part2'], '</p>
 	<ul>
 		<li>', $txt['manual_posting_attach_desc2'], '</li>
 		<li>', $txt['manual_posting_most_forums_attach'], '</li>
 	</ul>';
+}
+
+// Quoting posts page.
+function template_manual_quoting_posts()
+{
+	// TODO : Write this.
+}
+
+// Modifying posts page.
+function template_manual_modifying_posts()
+{
+	// TODO : Write this.
+}
+
+function template_manual_smileys()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
+	<p>', $txt['manual_posting_smileys_help_desc'], '</p>
+	<p>', $txt['manual_posting_smiley_parse'], '</p>
+	<table cellspacing="1" cellpadding="3" class="table_grid">
+		<thead>
+			<tr>
+				<th class="catbg first_th">', $txt['manual_posting_smileys_help_name'], '</th>
+				<th class="catbg">', $txt['manual_posting_smileys_help_img'], '</th>
+				<th class="catbg last_th">', $txt['manual_posting_smileys_help_code'], '</th>
+			</tr>
+		</thead>
+		<tbody>';
+
+	$alternate = false;
+	foreach ($context['smileys'] as $smiley)
+	{
+		echo '
+			<tr class="windowbg', $alternate ? '2' : '', '">
+				<td>', $smiley['name'], '</td>
+				<td>', $smiley['to'], '</td>
+				<td>', $smiley['from'], '</td>
+			</tr>';
+		$alternate = !$alternate;
+	}
+
+	echo '
+		</tbody>
+	</table>';
 }
 
 function template_manual_bbcode()
@@ -2110,122 +2177,147 @@ Simple
 	</table>';
 }
 
-function template_manual_smileys()
+// WYSIWYG page.
+function template_manual_wysiwyg()
 {
-	global $context, $settings, $options, $txt, $scripturl, $modSettings;
-
-	echo '
-	<p>', $txt['manual_posting_smileys_help_desc'], '</p>
-	<table class="bordercolor" cellspacing="1" cellpadding="3">
-		<tr>
-			<th class="catbg">', $txt['manual_posting_smileys_help_name'], '</th>
-			<th class="catbg">', $txt['manual_posting_smileys_help_img'], '</th>
-			<th class="catbg">', $txt['manual_posting_smileys_help_code'], '</th>
-		</tr>';
-
-	$alternate = false;
-	foreach ($context['smileys'] as $smiley)
-	{
-		echo '
-		<tr class="windowbg', $alternate ? '2' : '', '">
-			<td>', $smiley['name'], '</td>
-			<td>', $smiley['to'], '</td>
-			<td>', $smiley['from'], '</td>
-		</tr>';
-		$alternate = !$alternate;
-	}
-
-	echo '
-	</table><br />
-	<p>', $txt['manual_posting_smiley_parse'], '</p>';
+	// TODO : Write this.
 }
 
-// The register help page.
-function template_manual_registration_screen()
+// Personal messages page.
+function template_manual_pm_messages()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-		<p>', $txt['manual_registering_you_have_arrived_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary">', $txt['manual_registering_you_have_arrived_link_profile'], '</a>', $txt['manual_registering_you_have_arrived_part2'], '<a href="', $scripturl, '?action=help;area=sending_pms">', $txt['manual_registering_you_have_arrived_link_profile_pm'], '</a>', $txt['manual_registering_you_have_arrived_part3'], '</p>
+		<p>', $txt['manual_pm_community'], '</p>
 	<ol>
-		<li><a href="', $scripturl, '?action=help;area=registration_screen#how-to">', $txt['manual_registering_sec_register'], '</a></li>
-		<li><a href="', $scripturl, '?action=help;area=registration_screen#screen">', $txt['manual_registering_sec_reg_screen'], '</a></li>
+		<li>
+			<a href="', $scripturl, '?action=help;area=sending_pms#pm">', $txt['manual_pm_sec_pm'], '</a>
+			<ol class="la">
+				<li><a href="', $scripturl, '?action=help;area=sending_pms#description">', $txt['manual_pm_pm_desc'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=sending_pms#reading">', $txt['manual_pm_reading'], '</a></li>
+			</ol>
+		</li>
+		<li>
+			<a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_sec_pm2'], '</a>
+			<ol class="la">
+				<li><a href="', $scripturl, '?action=help;area=sending_pms#starting">', $txt['manual_pm_start_reply'], '</a></li>
+			</ol>
+		</li>
 	</ol>
-	<h2 id="how-to">', $txt['manual_registering_sec_register'], '</h2>
-	<p>', $txt['manual_registering_register_desc'], '</p>
-	<ul>
-		<li>', $txt['manual_registering_select_register_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_registering_select_register_link_index_main'], '</a>', $txt['manual_registering_select_register_part2'], '</li>
-		<li>', $txt['manual_registering_login_Scr_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_registering_login_Scr_link_index_main'], '</a>', $txt['manual_registering_login_Scr_part2'], '</li>
-	</ul>
-	<table width="400" cellspacing="0" cellpadding="3" class="tborder" align="center">
-		<tr class="titlebg">
-			<td>', $txt['manual_registering_warning'], '</td>
-		</tr>
-		<tr>
-			<td class="windowbg" style="padding-top: 2ex; padding-bottom: 2ex;">', $txt['manual_registering_warning_desc_1'], '<br />
-			', $txt['manual_registering_warning_desc_2'], '<a href="', $scripturl, '?action=help;area=registration_screen#screen" class="board">', $txt['manual_registering_warning_desc_3'], '</a>', $txt['manual_registering_warning_desc_4'], '</td>
-		</tr>
-	</table><br />
-	<h2 id="screen">', $txt['manual_registering_sec_reg_screen'], '</h2>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
-			<form action="', $scripturl, '?action=help;area=registration_screen" method="post" accept-charset="', $context['character_set'], '">
-				<table border="0" width="100%" cellpadding="3" cellspacing="0" class="tborder">
-					<tr class="titlebg">
-						<td>', $txt['manual_registering_required_info'], '</td>
-					</tr>
-					<tr class="windowbg">
-						<td width="100%">
-							<table cellpadding="3" cellspacing="0" border="0" width="100%">
-								<tr>
-									<td width="40%">
-										<strong>', $txt['manual_registering_choose_username'], ':</strong>
-										<div class="smalltext">
-											', $txt['manual_registering_caption_username'], '
-										</div>
-									</td>
-									<td><input type="text" size="20" maxlength="18" class="input_text" /></td>
-								</tr>
-								<tr>
-									<td width="40%">
-										<strong>', $txt['manual_registering_email'], ':</strong>
-										<div class="smalltext">
-											', $txt['manual_registering_caption_email'], '
-										</div>
-									</td>
-									<td><input type="text" size="30" class="input_text" /> <input type="checkbox" class="input_check" /> <label>', $txt['manual_registering_hide_email'], '</label></td>
-								</tr>
-								<tr>
-									<td width="40%"><strong>', $txt['manual_registering_choose_pass'], ':</strong></td>
-									<td><input type="password" size="30" class="input_password" /></td>
-								</tr>
-								<tr>
-									<td width="40%"><strong>', $txt['manual_registering_verify_pass'], ':</strong></td>
-									<td><input type="password" size="30" class="input_password" /></td>
-								</tr>
-							</table>
-						</td>
+	<h2 class="section" id="pm">', $txt['manual_pm_sec_pm'], '</h2>
+	<h3 class="section" id="description">', $txt['manual_pm_pm_desc'], '</h3>
+	<p>', $txt['manual_pm_pm_desc_1'], '</p>
+	<p>', $txt['manual_pm_pm_desc_2'], '</p>
+	<p>', $txt['manual_pm_pm_desc_3'], '</p>
+	<h3 class="section" id="reading">', $txt['manual_pm_reading'], '</h3>
+	<p>', $txt['manual_pm_reading_desc_part1'], '<a href="', $scripturl, '?action=help;area=logging_in">', $txt['manual_pm_reading_desc_link_loginout'], '</a>', $txt['manual_pm_reading_desc_part2'], '<a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_reading_desc_link_loginout_interface'], '</a>', $txt['manual_pm_reading_desc_part3'], '</p>
+	<h2 class="section" id="interface">', $txt['manual_pm_sec_pm2'], '</h2>
+	<p>', $txt['manual_pm_pm_desc2_part1'], '<a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_pm_pm_desc2_link_index_message'], '</a>', $txt['manual_pm_pm_desc2_part2'], '</p>
+	<div class="help_sample">
+			<script type="text/javascript">
+//<![CDATA[
+			var currentSort = false;
+			function sortLastPM()
+			{
+					document.getElementById("sort-arrow").src = smf_images_url + "/" + (currentSort ? "sort_up.gif" : "sort_down.gif");
+					document.getElementById("sort-arrow").alt = "";
+					currentSort = !currentSort;
+			}
+//]]>
+</script>
+			<form action="', $scripturl, '?action=help;area=sending_pms" method="post" accept-charset="', $context['character_set'], '">
+				<table border="0" width="100%" cellspacing="0" cellpadding="3">
+					<tr>
+						<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_pm_forum_name'], '</a></strong><br />
+						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="nav">', $txt['manual_pm_personal_msgs'], '</a></strong><br />
+						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="nav">', $txt['manual_pm_inbox'], '</a></strong></span></td>
 					</tr>
 				</table>
-				<table width="100%" align="center" border="0" cellspacing="0" cellpadding="5" class="tborder" style="border-top: 0;">
-					<tr>
-						<td class="windowbg2" style="padding-top: 8px; padding-bottom: 8px;">', $txt['manual_registering_agreement'], '</td>
-					</tr>
-					<tr>
-						<td align="center" class="windowbg2"><label><input type="checkbox" class="input_check" /> <strong>', $txt['manual_registering_agree'], '</strong></label></td>
-					</tr>
-				</table><br />
-				<div class="centertext">
-					<input type="button" value="', $txt['manual_registering_register'], '" class="button_submit" />
-				</div>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
+					<td width="125" valign="top">
+						<table border="0" cellpadding="4" cellspacing="1" class="bordercolor" width="100">
+							<tr>
+								<td class="catbg">', $txt['manual_pm_messages'], '</td>
+							</tr>
+							<tr class="windowbg">
+								<td class="smalltext" style="padding-bottom: 2ex;">
+								', $txt['manual_pm_new_msg'], '<br /><br />
+								<strong>', $txt['manual_pm_inbox'], '</strong><br />
+								', $txt['manual_pm_outbox'], '<br />
+							</td>
+						</tr>
+					</table>
+					<br />
+				</td>
+				<td valign="top">
+					<table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor" align="center">
+						<tr>
+							<td>
+								<table border="0" width="100%" cellspacing="1" class="bordercolor">
+									<tr class="titlebg">
+										<td>&nbsp;</td>
+										<td style="width: 32ex;"><a href="javascript:sortLastPM();">', $txt['manual_pm_date'], '&nbsp; <img id="sort-arrow" src="', $settings['images_url'], '/sort_up.gif" alt="" border="0" name="sort-arrow" /></a></td>
+										<td width="46%"><a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_subject2'], '</a></td>
+										<td><a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_from'], '</a></td>
+										<td align="center" width="24"><input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" /></td>
+									</tr>
+									<tr class="windowbg">
+										<td align="center" width="2%"><img src="' . $settings['images_url'] . '/icons/pm_read.gif" style="margin-right: 4px;" alt="" /></td>
+										<td>', $txt['manual_pm_date_and_time'], '</td>
+										<td><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="board">', $txt['manual_pm_subject'], '</a></td>
+										<td>', $txt['manual_pm_another_member'], '</td>
+										<td align="center"><input type="checkbox" class="input_check" /></td>
+									</tr>
+									<tr>
+										<td class="windowbg" style="padding: 2px;" align="right" colspan="6"></td>
+									</tr>
+									<tr>
+										<td colspan="6" class="catbg" height="25">
+											<div class="floatleft"><strong>', $txt['manual_pm_pages'], ':</strong> [<strong>1</strong>]</div>
+											<div class="floatright">&nbsp;<input type="button" value="', $txt['manual_pm_delete_selected'], '" class="button_submit" /></div>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table><br />
+				</td>
+			</tr></table>
+			<br />
 			</form>
-		</div>
-	</div><br />
-	<p>', $txt['manual_registering_reg_screen_requirements_part1'], '<a href="', $scripturl, '?action=help;area=logging_in#screen">', $txt['manual_registering_reg_screen_requirements_link_loginout_screen'], '</a>', $txt['manual_registering_reg_screen_requirements_part2'], '</p>
+	</div>
 	<ul>
-		<li>', $txt['manual_registering_email_activate'], '</li>
-		<li>', $txt['manual_registering_admin_approve'], '</li>
+		<li>', $txt['manual_pm_nav_tree'], '</li>
+		<li>', $txt['manual_pm_delete_button'], '</li>
+		<li>', $txt['manual_pm_outbox_button'], '</li>
+		<li>', $txt['manual_pm_new_msg2_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms#newtopic">', $txt['manual_pm_new_msg2_link_posting_newtopic'], '</a>', $txt['manual_pm_new_msg2_part2'], '</li>
+		<li>', $txt['manual_pm_reload'], '</li>
+		<li>', $txt['manual_pm_sort_by'], '</li>
+		<li>', $txt['manual_pm_main_subject'], '</li>
+		<li>', $txt['manual_pm_page_nos'], '</li>
+	</ul>
+	<h3 class="section" id="starting">', $txt['manual_pm_start_reply'], '</h3>
+	<p>', $txt['manual_pm_how_to_start_reply_part1'], '<a href="', $scripturl, '?action=help;area=logging_in">', $txt['manual_pm_how_to_start_reply_link_loginout'], '</a>', $txt['manual_pm_how_to_start_reply_part2'], '</p>
+	<ul>
+		<li>', $txt['manual_pm_msg_link_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_msg_link_link_interface'], '</a>', $txt['manual_pm_msg_link_part2'], '</li>
+		<li>', $txt['manual_pm_click_name_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary#info-all">', $txt['manual_pm_click_name_link_profile_info-all'], '</a>', $txt['manual_pm_click_name_part2'], '</li>
+		<li>', $txt['manual_pm_click_im_icon'], '</li>
+		<li>', $txt['manual_pm_click_pm_icon_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms#info-all">', $txt['manual_pm_click_pm_icon_link_profile_info-all'], '</a>', $txt['manual_pm_click_pm_icon_part2'], '</li>
+		<li>', $txt['manual_pm_reply_msg_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#reply">', $txt['manual_pm_reply_msg_link_posting_reply'], '</a>', $txt['manual_pm_reply_msg_part2'], '</li>
 	</ul>';
+}
+
+// Personal message actions page.
+function template_manual_pm_actions()
+{
+	// TODO : Write this.
+}
+
+// Personal message preferences page.
+function template_manual_pm_preferences()
+{
+	// TODO : Write this.
 }
 
 // The search help page.
@@ -2251,109 +2343,106 @@ function template_manual_searching()
 			</ol>
 		</li>
 	</ol>
-	<h2 id="starting">', $txt['manual_searching_sec_search'], '</h2>
+	<h2 class="section" id="starting">', $txt['manual_searching_sec_search'], '</h2>
 	<p>', $txt['manual_searching_search_desc_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_searching_search_desc_link_index_main'], '</a>', $txt['manual_searching_search_desc_part2'], '</p>
-	<h2 id="syntax">', $txt['manual_searching_sec_syntax'], '</h2>
+	<h2 class="section" id="syntax">', $txt['manual_searching_sec_syntax'], '</h2>
 	<p>', $txt['manual_searching_syntax_desc'], '</p>
-	<h3 id="quotes">', $txt['manual_searching_sub_quotes'], '</h3>
+	<h3 class="section" id="quotes">', $txt['manual_searching_sub_quotes'], '</h3>
 	<p>', $txt['manual_searching_quotes_desc'], '</p>
-	<h2 id="searching">', $txt['manual_searching_sec_simple_adv'], '</h2>
-	<h3 id="simple">', $txt['manual_searching_sub_simple'], '</h3>
+	<h2 class="section" id="searching">', $txt['manual_searching_sec_simple_adv'], '</h2>
+	<h3 class="section" id="simple">', $txt['manual_searching_sub_simple'], '</h3>
 	<p>', $txt['manual_searching_simple_desc'], '</p>
-	<h3 id="advanced">', $txt['manual_searching_sub_adv'], '</h3>
+	<h3 class="section" id="advanced">', $txt['manual_searching_sub_adv'], '</h3>
 	<p>', $txt['manual_searching_adv_desc'], '</p>
-	<div style="border: solid 1px;">
-		<div style="padding: 2px 30px;">
-			<form action="', $scripturl, '?action=help;area=searching" method="post" accept-charset="', $context['character_set'], '">
-				<table width="80%" border="0" cellspacing="0" cellpadding="3" align="center">
-					<tr>
-						<td><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_searching_forum_name'], '</a></strong><br />
-						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=searching#advanced" class="nav">', $txt['manual_searching_search'], '</a></strong></span></td>
-					</tr>
-				</table>
-				<table width="80%" border="0" cellspacing="0" cellpadding="4" align="center" class="tborder">
-					<tr class="titlebg">
-						<td>', $txt['manual_searching_search_param'], '</td>
-					</tr>
-					<tr>
-						<td class="windowbg">
-							<table>
-								<tr>
-									<td><strong>', $txt['manual_searching_search_for'], ':</strong></td>
-									<td>&nbsp;</td>
-									<td><strong>', $txt['manual_searching_by_user'], ':</strong></td>
-								</tr>
-								<tr>
-									<td><input type="text" size="40" class="input_text" /></td>
-									<td><select>
-										<option selected="selected">
-											', $txt['manual_searching_match_all'], '
-										</option>
-										<option>
-											', $txt['manual_searching_match_any'], '
-										</option>
-									</select>&nbsp;&nbsp;&nbsp;</td>
-									<td><input type="text" value="*" size="40" class="input_text" />&nbsp;</td>
-								</tr>
-								<tr>
-									<td colspan="3">&nbsp;</td>
-								</tr>
-																<tr>
-									<td colspan="2"><strong>', $txt['manual_searching_options'], ':</strong></td>
-									<td><strong>', $txt['manual_searching_msg_age'], ':</strong></td>
-								</tr>
-								<tr>
-									<td colspan="2"><input type="checkbox" class="input_check" /> <label>', $txt['manual_searching_show_results'], '</label><br />
-									<input type="checkbox" class="input_check" /> <label>', $txt['manual_searching_subject_only'], '</label><br /></td>
-									<td>', $txt['manual_searching_between'], '<input type="text" value="0" size="5" maxlength="5" class="input_text" />', $txt['manual_searching_and'], '<input type="text" value="9999" size="5" maxlength="5" class="input_text" />', $txt['manual_searching_days'], '.</td>
-								</tr>
-								<tr>
-									<td colspan="3" style="padding-top: 2ex;"><strong>', $txt['manual_searching_search_order'], ':</strong></td>
-								</tr>
-								<tr>
-									<td colspan="3"><select>
-										<option selected="selected">
-											', $txt['manual_searching_relevant_first'], '
-										</option>
-										<option>
-											', $txt['manual_searching_big_first'], '
-										</option>
-										<option>
-											', $txt['manual_searching_small_first'], '
-										</option>
-										<option>
-											', $txt['manual_searching_recent_first'], '
-										</option>
-										<option>
-											', $txt['manual_searching_oldest_first'], '
-										</option>
-									</select></td>
-								</tr>
-							</table><br />
-							<strong>', $txt['manual_searching_choose'], ':</strong><br />
-							<br />
-							<table width="80%" border="0" cellpadding="1" cellspacing="0">
-								<tr>
-									<td width="50%"><span style="text-decoration: underline;">', $txt['manual_searching_cat'], '</span></td>
-									<td width="50%"><input type="checkbox" id="brd2" name="brd[2]" value="2" checked="checked" class="input_check" /> <label for="brd2">', $txt['manual_searching_another_board'], '</label></td>
-								</tr>
-								<tr>
-									<td width="50%"><input type="checkbox" id="brd1" name="brd[1]" value="1" checked="checked" class="input_check" /> <label for="brd1">', $txt['manual_searching_board_name'], '</label></td>
-								</tr>
-							</table><br />
-							<input type="checkbox" name="all" id="check_all" value="" checked="checked" onclick="invertAll(this, this.form, \'brd\');" class="input_check" /><em><label for="check_all">', $txt['manual_searching_check_all'], '</label></em><br />
-							<br />
-							<table border="0" cellpadding="2" cellspacing="0" align="left">
-								<tr>
-									<td valign="bottom"><input type="button" value="', $txt['manual_searching_search'], '" class="button_submit" /></td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table><br />
-			</form>
-		</div>
-	</div><br />
+	<div class="help_sample">
+		<form id="searchform" action="', $scripturl, '?action=help;area=searching" method="post" accept-charset="', $context['character_set'], '">
+			<h3 class="catbg"><span class="left"></span>
+				', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />' : '', $txt['manual_searching_search_param'], '
+			</h3>
+			<fieldset id="advanced_search">
+				<span class="upperframe"><span></span></span>
+				<div class="roundframe">
+					<input type="hidden" name="advanced" value="1" />
+					<span class="enhanced">
+						<strong>', $txt['manual_searching_search_for'], ':</strong>
+						<input type="text" name="search" size="40" class="input_text" />
+						<select name="searchtype">
+							<option value="1">', $txt['manual_searching_match_all'], '</option>
+							<option value="2">', $txt['manual_searching_match_any'], '</option>
+						</select>
+					</span>
+					<dl id="search_options">
+						<dt>', $txt['manual_searching_by_user'], ':</dt>
+						<dd><input id="userspec" type="text" name="userspec" size="40" class="input_text" /></dd>
+						<dt>', $txt['manual_searching_search_order'], ':</dt>
+						<dd>
+							<select>
+								<option selected="selected">
+									', $txt['manual_searching_relevant_first'], '
+								</option>
+								<option>
+									', $txt['manual_searching_big_first'], '
+								</option>
+								<option>
+									', $txt['manual_searching_small_first'], '
+								</option>
+								<option>
+									', $txt['manual_searching_recent_first'], '
+								</option>
+								<option>
+									', $txt['manual_searching_oldest_first'], '
+								</option>
+							</select>
+						</dd>
+						<dt class="options">', $txt['manual_searching_options'], ':</dt>
+						<dd class="options">
+							<label for="show_complete"><input type="checkbox" name="show_complete" id="show_complete" value="1"', !empty($context['search_params']['show_complete']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['manual_searching_show_results'], '</label><br />
+							<label for="subject_only"><input type="checkbox" name="subject_only" id="subject_only" value="1"', !empty($context['search_params']['subject_only']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['manual_searching_subject_only'], '</label>
+						</dd>
+						<dt class="between">', $txt['manual_searching_msg_age'], ': </dt>
+						<dd>', $txt['manual_searching_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="4" class="input_text" />&nbsp;', $txt['manual_searching_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="4" class="input_text" /> ', $txt['manual_searching_days'], '</dd>
+					</dl>
+				</div>
+				<span class="lowerframe"><span></span></span>
+			</fieldset>
+			<fieldset>
+				<span class="upperframe"><span></span></span>
+				<div class="roundframe">
+					<h4 class="titlebg"><span class="left"></span>
+						', $txt['manual_searching_choose'], '
+					</h4>
+					<div class="flow_auto" id="searchBoardsExpand">
+						<ul class="floatleft">
+							<li class="category">
+								<span>', $txt['manual_searching_cat'], '</span>
+								<ul>
+									<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left' , ': 1em;">
+										<label for="brd2"><input type="checkbox" id="brd2" name="brd[2]" value="2" class="input_check" /> ', $txt['manual_searching_another_board'], '</label>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<ul class="floatright">
+							<li class="category">
+								<span>', $txt['manual_searching_cat'], '</span>
+								<ul>
+									<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left' , ': 1em;">
+										<label for="brd1"><input type="checkbox" id="brd1" name="brd[1]" value="1" class="input_check" /> ', $txt['manual_searching_board_name'], '</label>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div><br />
+					<div>
+						<input type="checkbox" name="all" id="check_all" value="" checked="checked" onclick="invertAll(this, this.form, \'brd\');" class="input_check" />
+						<label for="check_all">', $txt['manual_searching_check_all'], '</label>
+					</div>
+				</div>
+				<span class="lowerframe"><span></span></span>
+			</fieldset>
+			<div><input type="submit" name="submit" value="', $txt['manual_searching_search'], '" class="button_submit" /></div>
+		</form>
+	</div>
 	<ul>
 		<li>', $txt['manual_searching_nav_tree'], '</li>
 		<li>', $txt['manual_searching_three_options_part1'], '<a href="', $scripturl, '?action=help;area=searching#syntax">', $txt['manual_searching_three_options_link_syntax'], '</a>', $txt['manual_searching_three_options_part2'], '</li>
@@ -2363,6 +2452,36 @@ function template_manual_searching()
 		<li>', $txt['manual_searching_which_board'], '</li>
 		<li>', $txt['manual_searching_search_button'], '</li>
 	</ul>';
+}
+
+// Memberlist page.
+function template_manual_memberlist()
+{
+	// TODO : Write this.
+}
+
+// Calendar page.
+function template_manual_calendar()
+{
+	// TODO : Write this.
+}
+
+// BBC reference page.
+function template_manual_bbc_ag()
+{
+	// TODO : Write this.
+}
+
+// BBC reference page.
+function template_manual_bbc_hq()
+{
+	// TODO : Write this.
+}
+
+// BBC reference page.
+function template_manual_bbc_rz()
+{
+	// TODO : Write this.
 }
 
 ?>
