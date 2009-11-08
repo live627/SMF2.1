@@ -837,8 +837,8 @@ function Display()
 		// 3. you can see them after you voted (hide_results == 1), or
 		// 4. you've waited long enough for the poll to expire. (whether hide_results is 1 or 2.)
 		$context['allow_poll_view'] = allowedTo('moderate_board') || $pollinfo['hide_results'] == 0 || ($pollinfo['hide_results'] == 1 && $context['poll']['has_voted']) || $context['poll']['is_expired'];
-		$context['poll']['show_results'] = $context['allow_poll_view'] && ((isset($_REQUEST['viewresults']) || isset($_REQUEST['viewResults'])) || $context['poll']['has_voted']);
-		$context['show_view_results_button'] = !$context['allow_poll_view'] || !$context['poll']['show_results'];
+		$context['poll']['show_results'] = $context['allow_poll_view'] && (isset($_REQUEST['viewresults']) || isset($_REQUEST['viewResults']));
+		$context['show_view_results_button'] = $context['allow_vote'] && (!$context['allow_poll_view'] || !$context['poll']['show_results'] || !$context['poll']['has_voted']);
 
 		// You're allowed to change your vote if:
 		// 1. the poll did not expire, and
@@ -874,7 +874,7 @@ function Display()
 				'votes' => $option['votes'],
 				'voted_this' => $option['voted_this'] != -1,
 				'bar' => '<span style="white-space: nowrap;"><img src="' . $settings['images_url'] . '/poll_' . ($context['right_to_left'] ? 'right' : 'left') . '.gif" alt="" /><img src="' . $settings['images_url'] . '/poll_middle.gif" width="' . $barWide . '" height="12" alt="-" /><img src="' . $settings['images_url'] . '/poll_' . ($context['right_to_left'] ? 'left' : 'right') . '.gif" alt="" /></span>',
-				'bar_ndt' => '<span class="statsbar"><span class="left"></span><div style="width: ' . $barWide . 'px;" class="stats_bar"></div><span class="right"></span></span>',
+				'bar_ndt' => '<div class="statsbar"><span class="left"></span><div style="width: ' . $barWide . 'px;" class="stats_bar"></div><span class="right"></span></div>',
 				'bar_width' => $barWide,
 				'option' => parse_bbc($option['label']),
 				'vote_button' => '<input type="' . ($pollinfo['max_votes'] > 1 ? 'checkbox' : 'radio') . '" name="options[]" id="options-' . $i . '" value="' . $i . '" class="input_' . ($pollinfo['max_votes'] > 1 ? 'check' : 'radio') . '" />'

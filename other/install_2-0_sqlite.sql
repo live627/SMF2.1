@@ -812,7 +812,6 @@ CREATE TABLE {$db_prefix}log_activity (
 #
 # Indexes for table `log_activity`
 #
-CREATE INDEX {$db_prefix}log_activity_hits ON {$db_prefix}log_activity (hits);
 CREATE INDEX {$db_prefix}log_activity_most_on ON {$db_prefix}log_activity (most_on);
 
 #
@@ -1888,9 +1887,10 @@ INSERT INTO {$db_prefix}settings (variable, value) VALUES ('who_enabled', '1');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('time_offset', '0');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('cookieTime', '60');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('lastActive', '15');
-INSERT INTO {$db_prefix}settings (variable, value) VALUES ('smiley_sets_known', 'default,classic');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('smiley_sets_known', 'default,aaron,akyhne');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('smiley_sets_names', '{$default_smileyset_name}
-{$default_classic_smileyset_name}');
+{$default_aaron_smileyset_name}
+{$default_akyhne_smileyset_name}');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('smiley_sets_default', 'default');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('cal_days_for_index', '7');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('requireAgreement', '1');
@@ -1927,6 +1927,8 @@ INSERT INTO {$db_prefix}settings (variable, value) VALUES ('reg_verification', '
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('visual_verification_type', '3');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('enable_buddylist', '1');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('birthday_email', 'happy_birthday');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('dont_repeat_theme_core', '1');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('dont_repeat_smileys_20', '1');
 COMMIT;
 
 # --------------------------------------------------------

@@ -777,7 +777,6 @@ CREATE TABLE {$db_prefix}log_activity (
   registers smallint(5) unsigned NOT NULL default '0',
   most_on smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY (date),
-  KEY hits (hits),
   KEY most_on (most_on)
 ) ENGINE=MyISAM;
 
@@ -1747,8 +1746,8 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('time_offset', '0'),
 	('cookieTime', '60'),
 	('lastActive', '15'),
-	('smiley_sets_known', 'default,classic'),
-	('smiley_sets_names', '{$default_smileyset_name}\n{$default_classic_smileyset_name}'),
+	('smiley_sets_known', 'default,aaron,akyhne'),
+	('smiley_sets_names', '{$default_smileyset_name}\n{$default_aaron_smileyset_name}\n{$default_akyhne_smileyset_name}'),
 	('smiley_sets_default', 'default'),
 	('cal_days_for_index', '7'),
 	('requireAgreement', '1'),
@@ -1784,7 +1783,9 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('reg_verification', '1'),
 	('visual_verification_type', '3'),
 	('enable_buddylist', '1'),
-	('birthday_email', 'happy_birthday');
+	('birthday_email', 'happy_birthday'),
+	('dont_repeat_theme_core', '1'),
+	('dont_repeat_smileys_20', '1');
 # --------------------------------------------------------
 
 #

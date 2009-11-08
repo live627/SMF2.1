@@ -2818,7 +2818,7 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 	}
 	mysql_free_result($theme_request);
 
-	// This ain't running twice either - not with the risk of log_tables timing us all out!
+	// This ain't running twice either.
 	upgrade_query("
 		REPLACE INTO {$db_prefix}settings
 			(variable, value)
@@ -2826,6 +2826,37 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 			('dont_repeat_theme_core', '1')");
 }
 
+---}
+---#
+
+/******************************************************************************/
+--- Installing new smileys sets...
+/******************************************************************************/
+
+---# Installing new smiley sets...
+---{
+// Don't do this twice!
+if (empty($modSettings['dont_repeat_smileys_20']))
+{
+	// First, the entries.
+	upgrade_query("
+		UPDATE {$db_prefix}settings
+		SET value = CONCAT(value, ',aaron,akyhne')
+		WHERE variable = 'smiley_sets_known'");
+
+	// Second, the names.
+	upgrade_query("
+		UPDATE {$db_prefix}settings
+		SET value = CONCAT(value, '\nAaron\nAkyhne')
+		WHERE variable = 'smiley_sets_names'");
+
+	// This ain't running twice either.
+	upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('installed_new_smiley_sets_20', '1')");
+}
 ---}
 ---#
 
@@ -2949,6 +2980,15 @@ ADD INDEX related_ip (id_member, poster_ip, id_msg);
 ---# Adding index on attachment_type...
 ALTER TABLE {$db_prefix}attachments
 ADD INDEX attachment_type (attachment_type);
+---#
+
+/******************************************************************************/
+--- Dropping unnecessary indexes...
+/******************************************************************************/
+
+---# Removing index on hits...
+ALTER TABLE {$db_prefix}log_actions
+DROP INDEX hits;
 ---#
 
 /******************************************************************************/

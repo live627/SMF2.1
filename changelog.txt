@@ -31,6 +31,10 @@ November 2009
  ! Time bbcode was handled improperly when editing a post. (Subs-Post.php)
  ! Buddy list used wrong permission check. (Profile.php)
  ! Store the selected filter for the Who's Online page in the session, so it may be applied again if the user revisits the page later. (Who.php) 
+ ! Remove the index on the hits column of the log_activity table, as it's a waste of cycles. 
+ ! Added three new smileys sets to the package, replacing the old ones. (Smileys/default/*, Smileys/aaron/*, Smileys/akyhne/*)  
+ * Updated Curve's post icons to reflect the new default smiley set. (Themes/default/images/post/*)
+ ! Hide the View Results button for polls when it is no longer possible to vote. (Display.php)
 
 
 October 2009

@@ -506,6 +506,14 @@ CREATE INDEX {$db_prefix}attachments_attachment_type ON {$db_prefix}attachments 
 ---#
 
 /******************************************************************************/
+--- Dropping unnecessary indexes...
+/******************************************************************************/
+
+---# Removing index on hits...
+DROP INDEX {$db_prefix}log_activity_hits;
+---#
+
+/******************************************************************************/
 --- Adding new personal message setting.
 /******************************************************************************/
 
@@ -751,5 +759,36 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 			('dont_repeat_theme_core', '1')");
 }
 
+---}
+---#
+
+/******************************************************************************/
+--- Installing new smileys sets...
+/******************************************************************************/
+
+---# Installing new smiley sets...
+---{
+// Don't do this twice!
+if (empty($modSettings['dont_repeat_smileys_20']))
+{
+	// First, the entries.
+	upgrade_query("
+		UPDATE {$db_prefix}settings
+		SET value = CONCAT(value, ',aaron,akyhne')
+		WHERE variable = 'smiley_sets_known'");
+
+	// Second, the names.
+	upgrade_query("
+		UPDATE {$db_prefix}settings
+		SET value = CONCAT(value, '\nAaron\nAkyhne')
+		WHERE variable = 'smiley_sets_names'");
+
+	// This ain't running twice either.
+	upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('installed_new_smiley_sets_20', '1')");
+}
 ---}
 ---#
