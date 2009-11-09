@@ -38,7 +38,7 @@ function template_main()
 		echo '
 			function pollOptions()
 			{
-				var expire_time = document.getElementById("poll_expire");
+				var expire_time = document.getElementById(\'poll_expire\');
 
 				if (isEmptyText(expire_time) || expire_time.value == 0)
 				{
@@ -55,8 +55,8 @@ function template_main()
 			{
 				if (pollOptionNum == 0)
 				{
-					for (var i = 0; i < document.forms.postmodify.elements.length; i++)
-						if (document.forms.postmodify.elements[i].id.substr(0, 8) == "options-")
+					for (var i = 0, n = document.forms.postmodify.elements.length; i < n; i++)
+						if (document.forms.postmodify.elements[i].id.substr(0, 8) == \'options-\')
 						{
 							pollOptionNum++;
 							pollTabIndex = document.forms.postmodify.elements[i].tabIndex;
@@ -64,7 +64,7 @@ function template_main()
 				}
 				pollOptionNum++
 
-				setOuterHTML(document.getElementById("pollMoreOptions"), \'<li><label for="options-\' + pollOptionNum + \'">', $txt['option'], ' \' + pollOptionNum + \'<\' + \'/label>: <input type="text" name="options[\' + pollOptionNum + \']" id="options-\' + pollOptionNum + \'" value="" size="25" tabindex="\' + pollTabIndex + \'" class="input_text" /></li><li id="pollMoreOptions"><\' + \'/li>\');
+				setOuterHTML(document.getElementById(\'pollMoreOptions\'), ', JavaScriptEscape('<li><label for="options-'), ' + pollOptionNum + ', JavaScriptEscape('">' . $txt['option'] . ' '), ' + pollOptionNum + ', JavaScriptEscape('</label>: <input type="text" name="options['), ' + pollOptionNum + ', JavaScriptEscape(']" id="options-'), ' + pollOptionNum + ', JavaScriptEscape('" value="" size="25" tabindex="'), ' + pollTabIndex + ', JavaScriptEscape('" class="input_text" /></li><li id="pollMoreOptions"></li>'), ');
 			}';
 
 	// If we are making a calendar event we want to ensure we show the current days in a month etc... this is done here.
@@ -74,7 +74,7 @@ function template_main()
 
 			function generateDays()
 			{
-				var dayElement = document.getElementById("day"), yearElement = document.getElementById("year"), monthElement = document.getElementById("month");
+				var dayElement = document.getElementById(\'day\'), yearElement = document.getElementById(\'year\'), monthElement = document.getElementById(\'month\');
 				var days, selected = dayElement.selectedIndex;
 
 				monthLength[1] = yearElement.options[yearElement.selectedIndex].value % 4 == 0 ? 29 : 28;
@@ -538,13 +538,15 @@ function template_main()
 			var txt_preview_title = "', $txt['preview_title'], '";
 			var txt_preview_fetch = "', $txt['preview_fetch'], '";
 			function previewPost()
-			{
-				', $context['browser']['is_firefox'] ? '
+			{';
+	if ($context['browser']['is_firefox'])
+		echo '
 				// Firefox doesn\'t render <marquee> that have been put it using javascript
-				if (document.forms.postmodify.elements["' . $context['post_box_name'] . '"].value.indexOf("[move]") != -1)
+				if (document.forms.postmodify.elements[', JavaScriptEscape($context['post_box_name']), '].value.indexOf(\'[move]\') != -1)
 				{
 					return submitThisOnce(document.forms.postmodify);
-				}' : '', '
+				}';
+	echo '
 				if (window.XMLHttpRequest)
 				{
 					// Opera didn\'t support setRequestHeader() before 8.01.
@@ -555,38 +557,38 @@ function template_main()
 							return submitThisOnce(document.forms.postmodify);
 					}
 					// !!! Currently not sending poll options and option checkboxes.
-					var i, x = new Array();
-					var textFields = ["subject", "', $context['post_box_name'], '", "icon", "guestname", "email", "evtitle", "question", "topic"];
+					var x = new Array();
+					var textFields = [\'subject\', ', JavaScriptEscape($context['post_box_name']), ', \'icon\', \'guestname\', \'email\', \'evtitle\', \'question\', \'topic\'];
 					var numericFields = [
-						"board", "topic", "num_replies",
-						"eventid", "calendar", "year", "month", "day",
-						"poll_max_votes", "poll_expire", "poll_change_vote", "poll_hide"
+						\'board\', \'topic\', \'num_replies\',
+						\'eventid\', \'calendar\', \'year\', \'month\', \'day\',
+						\'poll_max_votes\', \'poll_expire\', \'poll_change_vote\', \'poll_hide\'
 					];
 					var checkboxFields = [
-						"ns",
+						\'ns\'
 					];
 
-					for (i in textFields)
-						if (document.forms.postmodify.elements[textFields[i]])
+					for (var i = 0, n = textFields.length; i < n; i++)
+						if (textFields[i] in document.forms.postmodify)
 						{
 							// Handle the WYSIWYG editor.
-							if (textFields[i] == "', $context['post_box_name'], '" && ', JavaScriptEscape('oEditorHandle_' . $context['post_box_name']), ' in window && oEditorHandle_', $context['post_box_name'], '.bRichTextEnabled)
-								x[x.length] = "message_mode=1&" + textFields[i] + "=" + oEditorHandle_', $context['post_box_name'], '.getText(false).replace(/&#/g, "&#38;#").php_to8bit().php_urlencode();
+							if (textFields[i] == ', JavaScriptEscape($context['post_box_name']), ' && ', JavaScriptEscape('oEditorHandle_' . $context['post_box_name']), ' in window && oEditorHandle_', $context['post_box_name'], '.bRichTextEnabled)
+								x[x.length] = \'message_mode=1&\' + textFields[i] + \'=\' + oEditorHandle_', $context['post_box_name'], '.getText(false).replace(/&#/g, \'&#38;#\').php_to8bit().php_urlencode();
 							else
-								x[x.length] = textFields[i] + "=" + document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#").php_to8bit().php_urlencode();
+								x[x.length] = textFields[i] + \'=\' + document.forms.postmodify[textFields[i]].value.replace(/&#/g, \'&#38;#\').php_to8bit().php_urlencode();
 						}
-					for (i in numericFields)
-						if (numericFields[i] in document.forms.postmodify.elements && \'value\' in document.forms.postmodify[numericFields[i]])
-							x[x.length] = numericFields[i] + "=" + parseInt(document.forms.postmodify.elements[numericFields[i]].value);
-					for (i in checkboxFields)
-						if (checkboxFields[i] in document.forms.postmodify.elements && \'checked\' in document.forms.postmodify.elements[checkboxFields[i]])
-							x[x.length] = checkboxFields[i] + "=" + document.forms.postmodify.elements[checkboxFields[i]].value;
+					for (var i = 0, n = numericFields.length; i < n; i++)
+						if (numericFields[i] in document.forms.postmodify && \'value\' in document.forms.postmodify[numericFields[i]])
+							x[x.length] = numericFields[i] + \'=\' + parseInt(document.forms.postmodify.elements[numericFields[i]].value);
+					for (var i = 0, n = checkboxFields.length; i < n; i++)
+						if (checkboxFields[i] in document.forms.postmodify && document.forms.postmodify.elements[checkboxFields[i]].checked)
+							x[x.length] = checkboxFields[i] + \'=\' + document.forms.postmodify.elements[checkboxFields[i]].value;
 
-					sendXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=post2" + (current_board ? ";board=" + current_board : "") + (make_poll ? ";poll" : "") + ";preview;xml", x.join("&"), onDocSent);
+					sendXMLDocument(smf_prepareScriptUrl(smf_scripturl) + \'action=post2\' + (current_board ? \';board=\' + current_board : \'\') + (make_poll ? \';poll\' : \'\') + \';preview;xml\', x.join(\'&\'), onDocSent);
 
-					document.getElementById("preview_section").style.display = "";
-					setInnerHTML(document.getElementById("preview_subject"), txt_preview_title);
-					setInnerHTML(document.getElementById("preview_body"), txt_preview_fetch);
+					document.getElementById(\'preview_section\').style.display = \'\';
+					setInnerHTML(document.getElementById(\'preview_subject\'), txt_preview_title);
+					setInnerHTML(document.getElementById(\'preview_body\'), txt_preview_fetch);
 
 					return false;
 				}
@@ -605,59 +607,59 @@ function template_main()
 				}
 
 				// Show the preview section.
-				var i, preview = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("preview")[0];
-				setInnerHTML(document.getElementById("preview_subject"), preview.getElementsByTagName("subject")[0].firstChild.nodeValue);
+				var preview = XMLDoc.getElementsByTagName(\'smf\')[0].getElementsByTagName(\'preview\')[0];
+				setInnerHTML(document.getElementById(\'preview_subject\'), preview.getElementsByTagName(\'subject\')[0].firstChild.nodeValue);
 
-				var bodyText = "";
-				for (i = 0; i < preview.getElementsByTagName("body")[0].childNodes.length; i++)
-					bodyText += preview.getElementsByTagName("body")[0].childNodes[i].nodeValue;
+				var bodyText = \'\';
+				for (var i = 0, n = preview.getElementsByTagName(\'body\')[0].childNodes.length; i < n; i++)
+					bodyText += preview.getElementsByTagName(\'body\')[0].childNodes[i].nodeValue;
 
-				setInnerHTML(document.getElementById("preview_body"), bodyText);
-				document.getElementById("preview_body").className = "post";
+				setInnerHTML(document.getElementById(\'preview_body\'), bodyText);
+				document.getElementById(\'preview_body\').className = \'post\';
 
 				// Show a list of errors (if any).
-				var errors = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("errors")[0];
-				var numErrors = errors.getElementsByTagName("error").length, errorList = new Array();
-				for (i = 0; i < numErrors; i++)
-					errorList[errorList.length] = errors.getElementsByTagName("error")[i].firstChild.nodeValue;
-				document.getElementById("errors").style.display = numErrors == 0 ? "none" : "";
-				document.getElementById("error_serious").style.display = errors.getAttribute("serious") == 1 ? "" : "none";
-				setInnerHTML(document.getElementById("error_list"), numErrors == 0 ? "" : errorList.join("<br />"));
+				var errors = XMLDoc.getElementsByTagName(\'smf\')[0].getElementsByTagName(\'errors\')[0];
+				var errorList = new Array();
+				for (var i = 0, numErrors = errors.getElementsByTagName(\'error\').length; i < numErrors; i++)
+					errorList[errorList.length] = errors.getElementsByTagName(\'error\')[i].firstChild.nodeValue;
+				document.getElementById(\'errors\').style.display = numErrors == 0 ? \'none\' : \'\';
+				document.getElementById(\'error_serious\').style.display = errors.getAttribute(\'serious\') == 1 ? \'\' : \'none\';
+				setInnerHTML(document.getElementById(\'error_list\'), numErrors == 0 ? \'\' : errorList.join(\'<br />\'));
 
 				// Show a warning if the topic has been locked.
-				document.getElementById("lock_warning").style.display = errors.getAttribute("topic_locked") == 1 ? "" : "none";
+				document.getElementById(\'lock_warning\').style.display = errors.getAttribute(\'topic_locked\') == 1 ? \'\' : \'none\';
 
 				// Adjust the color of captions if the given data is erroneous.
-				var captions = errors.getElementsByTagName("caption"), numCaptions = errors.getElementsByTagName("caption").length;
-				for (i = 0; i < numCaptions; i++)
-					if (document.getElementById("caption_" + captions[i].getAttribute("name")))
-						document.getElementById("caption_" + captions[i].getAttribute("name")).style.color = captions[i].getAttribute("color");
+				var captions = errors.getElementsByTagName(\'caption\');
+				for (var i = 0, numCaptions = errors.getElementsByTagName(\'caption\').length; i < numCaptions; i++)
+					if (document.getElementById(\'caption_\' + captions[i].getAttribute(\'name\')))
+						document.getElementById(\'caption_\' + captions[i].getAttribute(\'name\')).style.color = captions[i].getAttribute(\'color\');
 
-				if (errors.getElementsByTagName("post_error").length == 1)
-					document.forms.postmodify.', $context['post_box_name'], '.style.border = "1px solid red";
-				else if (document.forms.postmodify.', $context['post_box_name'], '.style.borderColor == "red" || document.forms.postmodify.', $context['post_box_name'], '.style.borderColor == "red red red red")
+				if (errors.getElementsByTagName(\'post_error\').length == 1)
+					document.forms.postmodify.', $context['post_box_name'], '.style.border = \'1px solid red\';
+				else if (document.forms.postmodify.', $context['post_box_name'], '.style.borderColor == \'red\' || document.forms.postmodify.', $context['post_box_name'], '.style.borderColor == \'red red red red\')
 				{
 					if (\'runtimeStyle\' in document.forms.postmodify.', $context['post_box_name'], ')
-						document.forms.postmodify.', $context['post_box_name'], '.style.borderColor = "";
+						document.forms.postmodify.', $context['post_box_name'], '.style.borderColor = \'\';
 					else
 						document.forms.postmodify.', $context['post_box_name'], '.style.border = null;
 				}
 
 				// Set the new number of replies.
 				if (\'num_replies\' in document.forms.postmodify.elements)
-					document.forms.postmodify.num_replies.value = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("num_replies")[0].firstChild.nodeValue;
+					document.forms.postmodify.num_replies.value = XMLDoc.getElementsByTagName(\'smf\')[0].getElementsByTagName(\'num_replies\')[0].firstChild.nodeValue;
 
-				var newPosts = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("new_posts")[0] ? XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("new_posts")[0].getElementsByTagName("post") : {length: 0};
+				var newPosts = XMLDoc.getElementsByTagName(\'smf\')[0].getElementsByTagName(\'new_posts\')[0] ? XMLDoc.getElementsByTagName(\'smf\')[0].getElementsByTagName(\'new_posts\')[0].getElementsByTagName(\'post\') : {length: 0};
 				var numNewPosts = newPosts.length;
 				if (numNewPosts != 0)
 				{
 					var newPostsHTML = \'<span id="new_replies"><\' + \'/span>\';
-					for (i = 0; i < numNewPosts; i++)
+					for (var i = 0; i < numNewPosts; i++)
 						newPostsHTML += \'<h4 class="titlebg"><span class="left"></span><span class="align_left">', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</span><span class="align_right">', $txt['posted_on'], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \'<img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /></span></h4><div class="windowbg2"><span class="topslice"><span></span></span><div class="content smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'"><div class="righttext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt['bbc_quote'], '<\' + \'/a></div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'<\' + \'/div></div><span class="botslice"><span></span></span></div>\';
-					setOuterHTML(document.getElementById("new_replies"), newPostsHTML);
+					setOuterHTML(document.getElementById(\'new_replies\'), newPostsHTML);
 				}
 
-				if (typeof(smf_codeFix) != "undefined")
+				if (typeof(smf_codeFix) != \'undefined\')
 					smf_codeFix();
 			}';
 
@@ -708,16 +710,16 @@ function template_main()
 			function insertQuoteFast(messageid)
 			{
 				if (window.XMLHttpRequest)
-					getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=quotefast;quote=" + messageid + ";', $context['session_var'], '=', $context['session_id'], ';xml;pb=', $context['post_box_name'], ';mode=" + (oEditorHandle_', $context['post_box_name'], '.bRichTextEnabled ? 1 : 0), onDocReceived);
+					getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + \'action=quotefast;quote=\' + messageid + \';', $context['session_var'], '=', $context['session_id'], ';xml;pb=', $context['post_box_name'], ';mode=\' + (oEditorHandle_', $context['post_box_name'], '.bRichTextEnabled ? 1 : 0), onDocReceived);
 				else
-					reqWin(smf_prepareScriptUrl(smf_scripturl) + "action=quotefast;quote=" + messageid + ";', $context['session_var'], '=', $context['session_id'], ';pb=', $context['post_box_name'], ';mode=" + (oEditorHandle_', $context['post_box_name'], '.bRichTextEnabled ? 1 : 0), 240, 90);
+					reqWin(smf_prepareScriptUrl(smf_scripturl) + \'action=quotefast;quote=\' + messageid + \';', $context['session_var'], '=', $context['session_id'], ';pb=', $context['post_box_name'], ';mode=\' + (oEditorHandle_', $context['post_box_name'], '.bRichTextEnabled ? 1 : 0), 240, 90);
 				return true;
 			}
 			function onDocReceived(XMLDoc)
 			{
-				var text = "";
-				for (var i = 0; i < XMLDoc.getElementsByTagName("quote")[0].childNodes.length; i++)
-					text += XMLDoc.getElementsByTagName("quote")[0].childNodes[i].nodeValue;
+				var text = \'\';
+				for (var i = 0, n = XMLDoc.getElementsByTagName(\'quote\')[0].childNodes.length; i < n; i++)
+					text += XMLDoc.getElementsByTagName(\'quote\')[0].childNodes[i].nodeValue;
 				oEditorHandle_', $context['post_box_name'], '.insertText(text, false, true);
 			}
 		// ]]></script>
