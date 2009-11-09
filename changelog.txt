@@ -1,6 +1,14 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
+SMF 2.0 RC3                                                      			 ???
+================================================================================
+November 2009
+--------------------------------------------------------------------------------
+! Not all mail is private (Subs-Post.php) [Bug 3967]
+! Allow forcefully sending the mail queue, even if being run by cron (ScheduledTasks.php, ManageMail.php)
+
+
 SMF 2.0 RC2                                                      8 November 2009
 ================================================================================
 November 2009

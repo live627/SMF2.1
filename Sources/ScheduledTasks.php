@@ -869,12 +869,12 @@ function scheduled_weekly_digest()
 }
 
 // Send a bunch of emails from the mail queue.
-function ReduceMailQueue($number = false, $override_limit = false)
+function ReduceMailQueue($number = false, $override_limit = false, $force_send = false)
 {
 	global $modSettings, $smcFunc, $sourcedir;
 
 	// Are we intending another script to be sending out the queue?
-	if (!empty($modSettings['mail_queue_use_cron']))
+	if (!empty($modSettings['mail_queue_use_cron']) && empty($force_send))
 		return false;
 
 	// By default send 5 at once.
@@ -882,7 +882,7 @@ function ReduceMailQueue($number = false, $override_limit = false)
 		$number = empty($modSettings['mail_quantity']) ? 5 : $modSettings['mail_quantity'];
 
 	// If we came with a timestamp, and that doesn't match the next event, then someone else has beaten us.
-	if (isset($_GET['ts']) && $_GET['ts'] != $modSettings['mail_next_send'])
+	if (isset($_GET['ts']) && $_GET['ts'] != $modSettings['mail_next_send'] && empty($force_send))
 		return false;
 
 	// By default move the next sending on by 10 seconds, and require an affected row.

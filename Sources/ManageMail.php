@@ -394,7 +394,7 @@ function ClearMailQueue()
 	$_GET['sent'] = isset($_GET['sent']) ? (int) $_GET['sent'] : 0;
 
 	// Send 50 at a time, then go for a break...
-	while (ReduceMailQueue(50, true) === true)
+	while (ReduceMailQueue(50, true, true) === true)
 	{
 		// Sent another 50.
 		$_GET['sent'] += 50;
