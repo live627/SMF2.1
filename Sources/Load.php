@@ -1646,7 +1646,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 	loadSubTemplate('init', 'ignore');
 
 	// Load the compatibility stylesheet if the theme hasn't been updated for 2.0 RC2 (yet).
-	if (isset($settings['theme_version']) && version_compare($settings['theme_version'], '2.0 RC2', '<') || strpos($settings['theme_version'], '2.0 Beta') !== false)
+	if (isset($settings['theme_version']) && (version_compare($settings['theme_version'], '2.0 RC2', '<') || strpos($settings['theme_version'], '2.0 Beta') !== false))
 		loadTemplate(false, 'compat');
 
 	// Guests may still need a name.
