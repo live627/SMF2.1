@@ -7,7 +7,7 @@ November 2009
 --------------------------------------------------------------------------------
 ! Not all mail is private (Subs-Post.php) [Bug 3967]
 ! Allow forcefully sending the mail queue, even if being run by cron (ScheduledTasks.php, ManageMail.php)
-! Previewing posts using XMLHTTP didn't send all posted information correctly, preventing smileys from being parsed. (Post template)
+! Previewing posts using XMLHTTP didn't send all posted information correctly, preventing smileys from being parsed. (Post template) [Bug 3961]
 
 
 SMF 2.0 RC2                                                      8 November 2009
