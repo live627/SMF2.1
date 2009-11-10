@@ -296,7 +296,7 @@ function reloadSettings()
 		require_once(strtr($modSettings['integrate_pre_include'], array('$boarddir' => $boarddir)));
 
 	if (isset($modSettings['integrate_pre_load']) && is_callable($modSettings['integrate_pre_load']))
-		call_user_func($modSettings['integrate_pre_load']);
+		call_user_func(strpos($modSettings['integrate_pre_load'], '::') === false ? $modSettings['integrate_pre_load'] : explode('::', $modSettings['integrate_pre_load']));
 }
 
 // Load all the important user information...
@@ -308,7 +308,7 @@ function loadUserSettings()
 	// Check first the integration, then the cookie, and last the session.
 	if (isset($modSettings['integrate_verify_user']) && is_callable($modSettings['integrate_verify_user']))
 	{
-		$id_member = (int) call_user_func($modSettings['integrate_verify_user']);
+		$id_member = (int) call_user_func(strpos($modSettings['integrate_verify_user'], '::') === false ? $modSettings['integrate_verify_user'] : explode('::', $modSettings['integrate_verify_user']));
 		$already_verified = $id_member > 0;
 	}
 	else
@@ -1751,7 +1751,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 	}
 
 	if (isset($modSettings['integrate_load_theme']) && is_callable($modSettings['integrate_load_theme']))
-		call_user_func($modSettings['integrate_load_theme']);
+		call_user_func(strpos($modSettings['integrate_load_theme'], '::') === false ? $modSettings['integrate_load_theme'] : explode('::', $modSettings['integrate_load_theme']));
 
 	// We are ready to go.
 	$context['theme_loaded'] = true;

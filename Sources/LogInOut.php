@@ -218,7 +218,7 @@ function Login2()
 
 	// Are we using any sort of integration to validate the login?
 	if (isset($modSettings['integrate_validate_login']) && is_callable($modSettings['integrate_validate_login']))
-		if (call_user_func($modSettings['integrate_validate_login'], $_REQUEST['user'], isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40 ? $_REQUEST['hash_passwrd'] : null, $modSettings['cookieTime']) == 'retry')
+		if (call_user_func(strpos($modSettings['integrate_validate_login'], '::') === false ? $modSettings['integrate_validate_login'] : explode('::', $modSettings['integrate_validate_login']), $_REQUEST['user'], isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40 ? $_REQUEST['hash_passwrd'] : null, $modSettings['cookieTime']) == 'retry')
 		{
 			$context['login_errors'] = array($txt['login_hash_error']);
 			$context['disable_login_hashing'] = true;
@@ -482,7 +482,7 @@ function DoLogin()
 	require_once($sourcedir . '/Subs-Auth.php');
 
 	if (isset($modSettings['integrate_login']) && is_callable($modSettings['integrate_login']))
-		$modSettings['integrate_login']($user_settings['member_name'], isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40 ? $_REQUEST['hash_passwrd'] : null, $modSettings['cookieTime']);
+		call_user_func(strpos($modSettings['integrate_login'], '::') === false ? $modSettings['integrate_login'] : explode('::', $modSettings['integrate_login']), $user_settings['member_name'], isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40 ? $_REQUEST['hash_passwrd'] : null, $modSettings['cookieTime']);
 
 	// Get ready to set the cookie...
 	$username = $user_settings['member_name'];
@@ -573,7 +573,7 @@ function Logout($internal = false, $redirect = true)
 	if (!$user_info['is_guest'])
 	{
 		if (isset($modSettings['integrate_logout']) && is_callable($modSettings['integrate_logout']))
-			call_user_func($modSettings['integrate_logout'], $user_settings['member_name']);
+			call_user_func(strpos($modSettings['integrate_logout'], '::') === false ? $modSettings['integrate_logout'] : explode('::', $modSettings['integrate_logout']), $user_settings['member_name']);
 
 		// If you log out, you aren't online anymore :P.
 		$smcFunc['db_query']('', '

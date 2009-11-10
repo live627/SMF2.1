@@ -135,7 +135,7 @@ function validateSession()
 
 		$good_password = false;
 		if (isset($modSettings['integrate_verify_password']) && is_callable($modSettings['integrate_verify_password']))
-			if (call_user_func($modSettings['integrate_verify_password'], $user_info['username'], $_POST['admin_hash_pass'], true) === true)
+			if (call_user_func(strpos($modSettings['integrate_verify_password'], '::') === false ? $modSettings['integrate_verify_password'] : explode('::', $modSettings['integrate_verify_password']), $user_info['username'], $_POST['admin_hash_pass'], true) === true)
 				$good_password = true;
 
 		if ($good_password || $_POST['admin_hash_pass'] == sha1($user_info['passwd'] . $sc))
@@ -151,7 +151,7 @@ function validateSession()
 
 		$good_password = false;
 		if (isset($modSettings['integrate_verify_password']) && is_callable($modSettings['integrate_verify_password']))
-			if (call_user_func($modSettings['integrate_verify_password'], $user_info['username'], $_POST['admin_pass'], false) === true)
+			if (call_user_func(strpos($modSettings['integrate_verify_password'], '::') === false ? $modSettings['integrate_verify_password'] : explode('::', $modSettings['integrate_verify_password']), $user_info['username'], $_POST['admin_pass'], false) === true)
 				$good_password = true;
 
 		// Password correct?

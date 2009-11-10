@@ -61,7 +61,7 @@ function activateAccount($memID)
 		}
 
 		if (isset($modSettings['integrate_activate']) && is_callable($modSettings['integrate_activate']))
-			call_user_func($modSettings['integrate_activate'], $user_profile[$memID]['member_name']);
+			call_user_func(strpos($modSettings['integrate_activate'], '::') === false ? $modSettings['integrate_activate'] : explode('::', $modSettings['integrate_activate']), $user_profile[$memID]['member_name']);
 
 		// Actually update this member now, as it guarantees the unapproved count can't get corrupted.
 		updateMemberData($context['id_member'], array('is_activated' => $user_profile[$memID]['is_activated'] >= 10 ? 11 : 1, 'validation_code' => ''));

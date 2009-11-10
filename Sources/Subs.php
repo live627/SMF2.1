@@ -478,7 +478,7 @@ function updateMemberData($members, $data)
 
 			if (!empty($member_names))
 				foreach ($vars_to_integrate as $var)
-					call_user_func($modSettings['integrate_change_member_data'], $member_names, $var, $data[$var]);
+					call_user_func(strpos($modSettings['integrate_change_member_data'], '::') === false ? $modSettings['integrate_change_member_data'] : explode('::', $modSettings['integrate_change_member_data']), $member_names, $var, $data[$var]);
 		}
 	}
 
@@ -2636,7 +2636,7 @@ function redirectexit($setLocation = '', $refresh = false)
 	}
 
 	if (isset($modSettings['integrate_redirect']) && is_callable($modSettings['integrate_redirect']))
-		$modSettings['integrate_redirect']($setLocation, $refresh);
+		call_user_func(strpos($modSettings['integrate_redirect'], '::') === false ? $modSettings['integrate_redirect'] : explode('::', $modSettings['integrate_redirect']), $setLocation, $refresh);
 
 	// We send a Refresh header only in special cases because Location looks better. (and is quicker...)
 	if ($refresh && !WIRELESS)
@@ -2756,7 +2756,7 @@ function obExit($header = null, $do_footer = null, $from_index = false)
 
 	// Hand off the output to the portal, etc. we're integrated with.
 	if (isset($modSettings['integrate_exit']) && is_callable($modSettings['integrate_exit']))
-		call_user_func($modSettings['integrate_exit'], $do_footer && !WIRELESS);
+		call_user_func(strpos($modSettings['integrate_exit'], '::') === false ? $modSettings['integrate_exit'] : explode('::', $modSettings['integrate_exit']), $do_footer && !WIRELESS);
 
 	// Don't exit if we're coming from index.php; that will pass through normally.
 	if (!$from_index || WIRELESS)

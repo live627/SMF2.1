@@ -1136,7 +1136,7 @@ function AdminApprove()
 		if (isset($modSettings['integrate_activate']) && is_callable($modSettings['integrate_activate']))
 		{
 			foreach ($member_info as $member)
-				call_user_func($modSettings['integrate_activate'], $member['username']);
+				call_user_func(strpos($modSettings['integrate_activate'], '::') === false ? $modSettings['integrate_activate'] : explode('::', $modSettings['integrate_activate']), $member['username']);
 		}
 
 		// Check for email.

@@ -255,7 +255,7 @@ function error_handler($error_level, $error_string, $file, $line)
 
 	//Let's give integrations a chance to ouput a bit differently
 	if (isset($modSettings['integrate_output_error']) && is_callable($modSettings['integrate_output _error']))
-		$modSettings['integrate_output_error']($message, $error_type, $error_level, $file, $line);
+		call_user_func(strpos($modSettings['integrate_output_error'], '::') === false ? $modSettings['integrate_output_error'] : explode('::', $modSettings['integrate_output_error']), $message, $error_type, $error_level, $file, $line);
 
 	// Dying on these errors only causes MORE problems (blank pages!)
 	if ($file == 'Unknown')

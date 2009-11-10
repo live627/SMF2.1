@@ -381,7 +381,7 @@ function fix_possible_url($val)
 		return $val;
 
 	if (isset($modSettings['integrate_fix_url']) && is_callable($modSettings['integrate_fix_url']))
-		$val = call_user_func($modSettings['integrate_fix_url'], $val);
+		$val = call_user_func(strpos($modSettings['integrate_fix_url'], '::') === false ? $modSettings['integrate_fix_url'] : explode('::', $modSettings['integrate_fix_url']), $val);
 
 	if (empty($modSettings['queryless_urls']) || ($context['server']['is_cgi'] && @ini_get('cgi.fix_pathinfo') == 0 && @get_cfg_var('cgi.fix_pathinfo') == 0) || (!$context['server']['is_apache'] && !$context['server']['is_lighttpd']))
 		return $val;
