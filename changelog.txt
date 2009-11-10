@@ -10,6 +10,7 @@ November 2009
  ! Previewing posts using XMLHTTP didn't send all posted information correctly, preventing smileys from being parsed. (Post template) [Bug 3961]
  ! The integration hook functionality didn't support static methods properly. (several files)
  ! select boxess could cause undefined errors (ManageServer.php) [Bug 3972,3968]
+ ! Web install would clean passwords, breaking any containing special characters (webinstall.php)
 
 
 SMF 2.0 RC2                                                      8 November 2009

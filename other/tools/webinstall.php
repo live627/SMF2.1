@@ -172,7 +172,8 @@ function initialize_inputs()
 				foreach ($v as $k2 => $v2)
 					$_POST[$k][$k2] = addslashes($v2);
 			}
-			else
+			// It is possible our password contains special characters.
+			elseif ($k != 'ftp_password' && $k != 'member_password')
 				$_POST[$k] = addslashes($v);
 		}
 	}
