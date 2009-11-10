@@ -346,7 +346,7 @@ function determineActions($urls, $preferred_prefix = false)
 			{
 				$data[$k] = $txt['who_index'];
 				// ...or maybe it's just integrated into another system...
-				if (isset($modSettings['integrate_whos_online']) && function_exists($modSettings['integrate_whos_online']))
+				if (isset($modSettings['integrate_whos_online']) && is_callable($modSettings['integrate_whos_online']))
 					$data[$k] = $modSettings['integrate_whos_online']($actions);
 			}
 		}

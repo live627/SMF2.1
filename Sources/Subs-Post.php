@@ -689,7 +689,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 	$headers .= 'X-Mailer: SMF' . $line_break;
 
 	// pass this to the integration before we start modifying the output -- it'll make it easier later
-	if (isset($modSettings['integrate_outgoing_email']) && function_exists($modSettings['integrate_outgoing_email']))
+	if (isset($modSettings['integrate_outgoing_email']) && is_callable($modSettings['integrate_outgoing_email']))
 	{
 		if ($modSettings['integrate_outgoing_email']($subject, $message, $headers) === false)
 			return false;
@@ -912,7 +912,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	preparsecode($htmlmessage);
 
 	// Integrated PMs
-	if (isset($modSettings['integrate_personal_message']) && function_exists($modSettings['integrate_personal_message']))
+	if (isset($modSettings['integrate_personal_message']) && is_callable($modSettings['integrate_personal_message']))
 		$modSettings['integrate_personal_message']($recipients, $from['username'], $subject, $message);
 
 	// Get a list of usernames and convert them to IDs.
@@ -1895,7 +1895,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		updateStats('topic', true);
 		updateStats('subject', $topicOptions['id'], $msgOptions['subject']);
 		//What if we want to export new topics out to a CMS?
-		if (isset($modSettings['integrate_create_topic']) && function_exists($modSettings['integrate_create_topic']))
+		if (isset($modSettings['integrate_create_topic']) && is_callable($modSettings['integrate_create_topic']))
 			$modSettings['integrate_create_topic']($msgOptions, $topicOptions, $posterOptions);
 	}
 	// The topic already exists, it only needs a little updating.

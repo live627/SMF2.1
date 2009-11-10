@@ -435,7 +435,7 @@ function updateMemberData($members, $data)
 		$parameters['member'] = $members;
 	}
 
-	if (isset($modSettings['integrate_change_member_data']) && function_exists($modSettings['integrate_change_member_data']))
+	if (isset($modSettings['integrate_change_member_data']) && is_callable($modSettings['integrate_change_member_data']))
 	{
 		// Only a few member variables are really interesting for integration.
 		$integration_vars = array(
@@ -2635,7 +2635,7 @@ function redirectexit($setLocation = '', $refresh = false)
 			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?$/e', "\$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2'", $setLocation);
 	}
 
-	if (isset($modSettings['integrate_redirect']) && function_exists($modSettings['integrate_redirect']))
+	if (isset($modSettings['integrate_redirect']) && is_callable($modSettings['integrate_redirect']))
 		$modSettings['integrate_redirect']($setLocation, $refresh);
 
 	// We send a Refresh header only in special cases because Location looks better. (and is quicker...)
@@ -2755,7 +2755,7 @@ function obExit($header = null, $do_footer = null, $from_index = false)
 	}
 
 	// Hand off the output to the portal, etc. we're integrated with.
-	if (isset($modSettings['integrate_exit']) && function_exists($modSettings['integrate_exit']))
+	if (isset($modSettings['integrate_exit']) && is_callable($modSettings['integrate_exit']))
 		call_user_func($modSettings['integrate_exit'], $do_footer && !WIRELESS);
 
 	// Don't exit if we're coming from index.php; that will pass through normally.

@@ -516,7 +516,7 @@ function ModifyProfile($post_errors = array())
 
 				// Does the integration want to check passwords?
 				$good_password = false;
-				if (isset($modSettings['integrate_verify_password']) && function_exists($modSettings['integrate_verify_password']))
+				if (isset($modSettings['integrate_verify_password']) && is_callable($modSettings['integrate_verify_password']))
 					if (call_user_func($modSettings['integrate_verify_password'], $cur_profile['member_name'], $_POST['oldpasswrd'], false) === true)
 						$good_password = true;
 
@@ -580,7 +580,7 @@ function ModifyProfile($post_errors = array())
 		elseif (!empty($profile_vars))
 		{
 			// If we've changed the password, notify any integration that may be listening in.
-			if (isset($profile_vars['passwd']) && isset($modSettings['integrate_reset_pass']) && function_exists($modSettings['integrate_reset_pass']))
+			if (isset($profile_vars['passwd']) && isset($modSettings['integrate_reset_pass']) && is_callable($modSettings['integrate_reset_pass']))
 				call_user_func($modSettings['integrate_reset_pass'], $cur_profile['member_name'], $cur_profile['member_name'], $_POST['passwrd1']);
 
 			updateMemberData($memID, $profile_vars);

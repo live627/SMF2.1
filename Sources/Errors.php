@@ -254,7 +254,7 @@ function error_handler($error_level, $error_string, $file, $line)
 	$message = log_error($error_level . ': ' . $error_string, $error_type, $file, $line);
 
 	//Let's give integrations a chance to ouput a bit differently
-	if (isset($modSettings['integrate_output_error']) && function_exists($modSettings['integrate_output _error']))
+	if (isset($modSettings['integrate_output_error']) && is_callable($modSettings['integrate_output _error']))
 		$modSettings['integrate_output_error']($message, $error_type, $error_level, $file, $line);
 
 	// Dying on these errors only causes MORE problems (blank pages!)
@@ -313,7 +313,7 @@ function setup_fatal_error_context($error_message)
 	// If this is SSI, what do they want us to do?
 	if (SMF == 'SSI')
 	{
-		if (!empty($ssi_on_error_method) && $ssi_on_error_method !== true && function_exists($ssi_on_error_method))
+		if (!empty($ssi_on_error_method) && $ssi_on_error_method !== true && is_callable($ssi_on_error_method))
 			$ssi_on_error_method();
 		elseif (empty($ssi_on_error_method) || $ssi_on_error_method !== true)
 			loadSubTemplate('fatal_error');

@@ -380,7 +380,7 @@ function fix_possible_url($val)
 	if (substr($val, 0, strlen($scripturl)) != $scripturl)
 		return $val;
 
-	if (isset($modSettings['integrate_fix_url']) && function_exists($modSettings['integrate_fix_url']))
+	if (isset($modSettings['integrate_fix_url']) && is_callable($modSettings['integrate_fix_url']))
 		$val = call_user_func($modSettings['integrate_fix_url'], $val);
 
 	if (empty($modSettings['queryless_urls']) || ($context['server']['is_cgi'] && @ini_get('cgi.fix_pathinfo') == 0 && @get_cfg_var('cgi.fix_pathinfo') == 0) || (!$context['server']['is_apache'] && !$context['server']['is_lighttpd']))

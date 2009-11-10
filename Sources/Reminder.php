@@ -273,7 +273,7 @@ function setPassword2()
 	// User validated.  Update the database!
 	updateMemberData($_POST['u'], array('validation_code' => '', 'passwd' => sha1(strtolower($username) . $_POST['passwrd1'])));
 
-	if (isset($modSettings['integrate_reset_pass']) && function_exists($modSettings['integrate_reset_pass']))
+	if (isset($modSettings['integrate_reset_pass']) && is_callable($modSettings['integrate_reset_pass']))
 		call_user_func($modSettings['integrate_reset_pass'], $username, $username, $_POST['passwrd1']);
 
 	loadTemplate('Login');
@@ -393,7 +393,7 @@ function SecretAnswer2()
 	// Alright, so long as 'yer sure.
 	updateMemberData($row['id_member'], array('passwd' => sha1(strtolower($row['member_name']) . $_POST['passwrd1'])));
 
-	if (isset($modSettings['integrate_reset_pass']) && function_exists($modSettings['integrate_reset_pass']))
+	if (isset($modSettings['integrate_reset_pass']) && is_callable($modSettings['integrate_reset_pass']))
 		call_user_func($modSettings['integrate_reset_pass'], $row['member_name'], $row['member_name'], $_POST['passwrd1']);
 
 	// Tell them it went fine.

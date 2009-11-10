@@ -217,7 +217,7 @@ function Login2()
 	}
 
 	// Are we using any sort of integration to validate the login?
-	if (isset($modSettings['integrate_validate_login']) && function_exists($modSettings['integrate_validate_login']))
+	if (isset($modSettings['integrate_validate_login']) && is_callable($modSettings['integrate_validate_login']))
 		if (call_user_func($modSettings['integrate_validate_login'], $_REQUEST['user'], isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40 ? $_REQUEST['hash_passwrd'] : null, $modSettings['cookieTime']) == 'retry')
 		{
 			$context['login_errors'] = array($txt['login_hash_error']);
@@ -481,7 +481,7 @@ function DoLogin()
 	// Load cookie authentication stuff.
 	require_once($sourcedir . '/Subs-Auth.php');
 
-	if (isset($modSettings['integrate_login']) && function_exists($modSettings['integrate_login']))
+	if (isset($modSettings['integrate_login']) && is_callable($modSettings['integrate_login']))
 		$modSettings['integrate_login']($user_settings['member_name'], isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40 ? $_REQUEST['hash_passwrd'] : null, $modSettings['cookieTime']);
 
 	// Get ready to set the cookie...
@@ -572,7 +572,7 @@ function Logout($internal = false, $redirect = true)
 	// Just ensure they aren't a guest!
 	if (!$user_info['is_guest'])
 	{
-		if (isset($modSettings['integrate_logout']) && function_exists($modSettings['integrate_logout']))
+		if (isset($modSettings['integrate_logout']) && is_callable($modSettings['integrate_logout']))
 			call_user_func($modSettings['integrate_logout'], $user_settings['member_name']);
 
 		// If you log out, you aren't online anymore :P.

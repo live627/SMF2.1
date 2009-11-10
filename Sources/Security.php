@@ -134,7 +134,7 @@ function validateSession()
 		checkSession();
 
 		$good_password = false;
-		if (isset($modSettings['integrate_verify_password']) && function_exists($modSettings['integrate_verify_password']))
+		if (isset($modSettings['integrate_verify_password']) && is_callable($modSettings['integrate_verify_password']))
 			if (call_user_func($modSettings['integrate_verify_password'], $user_info['username'], $_POST['admin_hash_pass'], true) === true)
 				$good_password = true;
 
@@ -150,7 +150,7 @@ function validateSession()
 		checkSession();
 
 		$good_password = false;
-		if (isset($modSettings['integrate_verify_password']) && function_exists($modSettings['integrate_verify_password']))
+		if (isset($modSettings['integrate_verify_password']) && is_callable($modSettings['integrate_verify_password']))
 			if (call_user_func($modSettings['integrate_verify_password'], $user_info['username'], $_POST['admin_pass'], false) === true)
 				$good_password = true;
 

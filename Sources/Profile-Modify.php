@@ -1743,7 +1743,7 @@ function authentication($memID, $saving = false)
 			if (empty($post_errors))
 			{
 				// Integration?
-				if (isset($modSettings['integrate_reset_pass']) && function_exists($modSettings['integrate_reset_pass']))
+				if (isset($modSettings['integrate_reset_pass']) && is_callable($modSettings['integrate_reset_pass']))
 					call_user_func($modSettings['integrate_reset_pass'], $cur_profile['member_name'], $cur_profile['member_name'], $_POST['passwrd1']);
 
 				// Go then.

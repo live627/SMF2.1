@@ -1133,7 +1133,7 @@ function AdminApprove()
 		);
 
 		// Do we have to let the integration code know about the activations?
-		if (isset($modSettings['integrate_activate']) && function_exists($modSettings['integrate_activate']))
+		if (isset($modSettings['integrate_activate']) && is_callable($modSettings['integrate_activate']))
 		{
 			foreach ($member_info as $member)
 				call_user_func($modSettings['integrate_activate'], $member['username']);

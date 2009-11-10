@@ -60,7 +60,7 @@ function activateAccount($memID)
 			redirectexit();
 		}
 
-		if (isset($modSettings['integrate_activate']) && function_exists($modSettings['integrate_activate']))
+		if (isset($modSettings['integrate_activate']) && is_callable($modSettings['integrate_activate']))
 			call_user_func($modSettings['integrate_activate'], $user_profile[$memID]['member_name']);
 
 		// Actually update this member now, as it guarantees the unapproved count can't get corrupted.
