@@ -11,6 +11,7 @@ November 2009
  ! The integration hook functionality didn't support static methods properly. (several files)
  ! select boxess could cause undefined errors (ManageServer.php) [Bug 3972,3968]
  ! Web install would clean passwords, breaking any containing special characters (webinstall.php)
+ ! The border style of the WYSIWYG control could in some cases be improperly defined. (editor.js)
 
 
 SMF 2.0 RC2                                                      8 November 2009

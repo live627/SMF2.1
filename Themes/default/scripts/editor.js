@@ -296,7 +296,7 @@ smc_Editor.prototype.init = function()
 				this.oFrameDocument.body.style.fontSize = 'small';
 				this.oFrameDocument.body.style.fontFamily = 'verdana';
 				this.oFrameDocument.body.style.border = 'none';
-				this.oFrameHandle.style.border = '#808080';
+				this.oFrameHandle.style.border = '1px solid #808080';
 			}
 		}
 
