@@ -1681,14 +1681,14 @@ function create_control_richedit($editorOptions)
 				'code' => 'list',
 				'before' => '[list]\n[li]',
 				'after' => '[/li]\n[li][/li]\n[/list]',
-				'description' => $txt['list']
+				'description' => $txt['list_unordened']
 			),
 			array(
 				'image' => 'orderlist',
 				'code' => 'orderlist',
 				'before' => '[list type=decimal]\n[li]',
 				'after' => '[/li]\n[li][/li]\n[/list]',
-				'description' => $txt['list']
+				'description' => $txt['list_ordened']
 			),
 			array(
 				'image' => 'hr',

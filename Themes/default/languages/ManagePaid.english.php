@@ -168,7 +168,7 @@ $txt['authorize'] = 'Authorize.Net';
 $txt['paid_confirm_authorize'] = 'To pay using <a href="http://www.authorize.net">Authorize.Net</a> please click the button below. You will be directed to the Authorize.Net site for payment.';
 $txt['paid_authorize_order'] = 'Order with Authorize.Net';
 $txt['2co'] = '2checkout';
-$txt['paid_confirm_2co'] = 'To pay using <a href="http://www.2com.com">2co.com</a> please click the button below. You will be directed to the 2co.com site for payment.';
+$txt['paid_confirm_2co'] = 'To pay using <a href="http://www.2co.com">2co.com</a> please click the button below. You will be directed to the 2co.com site for payment.';
 $txt['paid_2co_order'] = 'Order with 2co.com';
 $txt['paid_done'] = 'Payment Complete';
 $txt['paid_done_desc'] = 'Thank you for your payment. Once the transaction has been verified the subscription will be activated.';

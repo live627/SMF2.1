@@ -198,7 +198,11 @@ function template_main()
 						$children[] = $child['new'] ? '<strong>' . $child['link'] . '</strong>' : $child['link'];
 					}
 					echo '
-					<tr><td colspan="3" class="children windowbg"><strong>', $txt['parent_boards'], '</strong>: ', implode(', ', $children), '</td></tr>';
+					<tr>
+						<td colspan="3" class="children windowbg">
+							<strong>', $txt['parent_boards'], '</strong>: ', implode(', ', $children), '
+						</td>
+					</tr>';
 				}
 			}
 		}

@@ -1132,10 +1132,10 @@ function template_postmod_permissions()
 	echo '
 			</tbody>
 			</table>
+			<div class="righttext padding">
+				<input type="submit" name="save_changes" value="', $txt['permissions_commit'], '" class="button_submit" />
+			</div>
 		</form>
-		<div class="righttext padding">
-			<input type="submit" name="save_changes" value="', $txt['permissions_commit'], '" class="button_submit" />
-		</div>
 		<p class="smalltext" style="padding-left: 10px;">
 			<strong>', $txt['permissions_post_moderation_legend'], ':</strong><br />
 			<img src="', $settings['default_images_url'], '/admin/post_moderation_allow.gif" alt="', $txt['permissions_post_moderation_allow'], '" /> - ', $txt['permissions_post_moderation_allow'], '<br />

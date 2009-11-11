@@ -23,6 +23,8 @@ $txt['bbc_code'] = 'Insert Code';
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
 $txt['bbc_quote'] = 'Insert Quote';
 $txt['list'] = 'Insert List';
+$txt['list_unordened'] = 'Insert Unordened List';
+$txt['list_ordened'] = 'Insert Ordened List';
 
 $txt['change_color'] = 'Change Color';
 $txt['black'] = 'Black';

@@ -579,26 +579,26 @@ $helptxt['field_show_enclosed'] = 'Encloses the user input between some text or 
 		</ul>';
 
 $helptxt['custom_mask'] = 'The input mask is important for your forum\'s security. Validating the input from a user can help ensure that data is not used in a way you do not expect. We have provided some simple regular expressions as hints.<br /><br />
-	<span class="smalltext">
-		&nbsp;&nbsp;"[A-Za-z]+" - Match all upper and lower case alphabet characters.<br />
-		&nbsp;&nbsp;"[0-9]+" - Match all numeric characters.<br />
-		&nbsp;&nbsp;"[A-Za-z0-9]{7}" - Match all upper and loser case alphabet and numeric characters seven times.<br />
-		&nbsp;&nbsp;"[^0-9]?" - Forbid any number from being matched.<br />
-		&nbsp;&nbsp;"^([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$" - Only allow 3 or 6 character hexcodes.<br />
-	</span><br /><br />
+	<div class="smalltext" style="margin: 0 2em">
+		&quot;[A-Za-z]+&quot; - Match all upper and lower case alphabet characters.<br />
+		&quot;[0-9]+&quot; - Match all numeric characters.<br />
+		&quot;[A-Za-z0-9]{7}&quot; - Match all upper and lower case alphabet and numeric characters seven times.<br />
+		&quot;[^0-9]?&quot; - Forbid any number from being matched.<br />
+		&quot;^([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$&quot; - Only allow 3 or 6 character hexcodes.<br />
+	</div><br /><br />
 	Additionally, special metacharacters ?+*^$ and {xx} can be defined.
-	<span class="smalltext">
-		&nbsp;&nbsp;? - None or one match of previous expression.<br />
-		&nbsp;&nbsp;+ - One or more of previous expression.<br />
-		&nbsp;&nbsp;* - None or more of previous expression.e<br />
-		&nbsp;&nbsp;{xx} - An exact number from previous expression.<br />
-		&nbsp;&nbsp;{xx,} - An exact number or more from previous expression.<br />
-		&nbsp;&nbsp;{,xx} - An exact number or less from previous expression.<br />
-		&nbsp;&nbsp;{xx,yy} - An exact match between the two numbers from previous expression.<br />
-		&nbsp;&nbsp;$ - Start of string.<br />
-		&nbsp;&nbsp;^ - End of string.<br />
-		&nbsp;&nbsp;\ - Escapes the next character.<br />
-	</span><br /><br />
+	<div class="smalltext" style="margin: 0 2em">
+		? - None or one match of previous expression.<br />
+		+ - One or more of previous expression.<br />
+		* - None or more of previous expression.<br />
+		{xx} - An exact number from previous expression.<br />
+		{xx,} - An exact number or more from previous expression.<br />
+		{,xx} - An exact number or less from previous expression.<br />
+		{xx,yy} - An exact match between the two numbers from previous expression.<br />
+		^ - Start of string.<br />
+		$ - End of string.<br />
+		\ - Escapes the next character.<br />
+	</div><br /><br />
 	More information and advanced techniques may be found on the internet.';
 
 ?>

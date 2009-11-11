@@ -9,9 +9,12 @@ November 2009
  ! Allow forcefully sending the mail queue, even if being run by cron (ScheduledTasks.php, ManageMail.php)
  ! Previewing posts using XMLHTTP didn't send all posted information correctly, preventing smileys from being parsed. (Post template) [Bug 3961]
  ! The integration hook functionality didn't support static methods properly. (several files)
- ! select boxess could cause undefined errors (ManageServer.php) [Bug 3972,3968]
- ! Web install would clean passwords, breaking any containing special characters (webinstall.php)
+ ! Settings using select boxes could cause undefined errors. (ManageServer.php) [Bug 3972,3968]
+ ! Web install would clean passwords, breaking any containing special characters. (webinstall.php)
  ! The border style of the WYSIWYG control could in some cases be improperly defined. (editor.js)
+ * Post moderation permissions could not be saved. (ManagePermissions template) [Bug 3976]
+ & Fixed a few typos in language files. (Help language file, ManagePaid language file)
+ & Gave the list-related BBC buttons a more appropriated title. (Subs-Post.php, Post language file) [Bug 3939]
 
 
 SMF 2.0 RC2                                                      8 November 2009
