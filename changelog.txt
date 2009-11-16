@@ -15,6 +15,7 @@ November 2009
  * Post moderation permissions could not be saved. (ManagePermissions template) [Bug 3976]
  & Fixed a few typos in language files. (Help language file, ManagePaid language file)
  & Gave the list-related BBC buttons a more appropriated title. (Subs-Editor.php, Post language file) [Bug 3939]
+ ! Detect other names for firefox (Load.php, script.js)
 
 
 SMF 2.0 RC2                                                      8 November 2009

@@ -1281,7 +1281,7 @@ function detectBrowser()
 		'is_firefox' => preg_match('~(?:Firefox|Ice[wW]easel|IceCat)/~', $_SERVER['HTTP_USER_AGENT']) === 1,
 		'is_firefox1' => preg_match('~(?:Firefox|Ice[wW]easel|IceCat)/1\\.~', $_SERVER['HTTP_USER_AGENT']) === 1,
 		'is_firefox2' => preg_match('~(?:Firefox|Ice[wW]easel|IceCat)/2\\.~', $_SERVER['HTTP_USER_AGENT']) === 1,
-		'is_firefox3' => preg_match('~(?:Firefox|Ice[wW]easel|IceCat)/3\\.~', $_SERVER['HTTP_USER_AGENT']) === 1,
+		'is_firefox3' => preg_match('~(?:Firefox|Ice[wW]easel|IceCat|Shiretoko|Minefield)/3\\.~', $_SERVER['HTTP_USER_AGENT']) === 1,
 		'is_iphone' => strpos($_SERVER['HTTP_USER_AGENT'], 'iPhone') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'iPod') !== false,
 	);
 

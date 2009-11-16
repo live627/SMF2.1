@@ -16,7 +16,7 @@ var is_opera96 = ua.indexOf('opera/9.6') != -1 || ua.indexOf('opera 9.6') != -1;
 var is_opera10 = (ua.indexOf('opera/9.8') != -1 || ua.indexOf('opera 9.8') != -1 || ua.indexOf('opera/10.') != -1 || ua.indexOf('opera 10.') != -1) || ua.indexOf('version/10.') != -1;
 var is_opera95up = is_opera95 || is_opera96 || is_opera10;
 
-var is_ff = (ua.indexOf('firefox') != -1 || ua.indexOf('iceweasel') != -1 || ua.indexOf('icecat') != -1) && !is_opera;
+var is_ff = (ua.indexOf('firefox') != -1 || ua.indexOf('iceweasel') != -1 || ua.indexOf('icecat') != -1 || ua.indexOf('shiretoko') != -1 || ua.indexOf('minefield') != -1) && !is_opera;
 var is_gecko = ua.indexOf('gecko') != -1 && !is_opera;
 
 var is_chrome = ua.indexOf('chrome') != -1;
