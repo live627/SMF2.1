@@ -306,6 +306,10 @@ code
 }
 
 /* Styling for BBC tags */
+.bbc_link:link, .bbc_link:visited
+{
+	color: #778899;
+}
 .bbc_size
 {
 	line-height: 1.4em;
