@@ -616,7 +616,7 @@ function Credits($in_admin = false)
 						'Daniel Diehl',
 						'Jade Elizabeth Trainor',
 						'Brannon &quot;B&quot; Hall',
-						'Graeme &quot;Trekkie101&quot; Spence',
+						'Graeme Spence',
 						'Peter Duggan',
 						'Dannii Willis',
 					),

@@ -17,6 +17,7 @@ November 2009
  & Gave the list-related BBC buttons a more appropriated title. (Subs-Editor.php, Post language file) [Bug 3939]
  ! Detect other names for firefox (Load.php, script.js)
  * Change our post link color so they stand out more (index.css)
+ * Removed obsolete template_profile_ignore_list_modify function. (Profile template) [Bug 3997]
 
 
 SMF 2.0 RC2                                                      8 November 2009

@@ -2418,25 +2418,6 @@ function template_profile_birthdate()
 							</dd>';
 }
 
-// Show an ignore user box?
-function template_profile_ignore_list_modify()
-{
-	global $txt, $context, $settings, $scripturl;
-
-	echo '
-							<dt>
-								<strong>', $txt['ignorelist'], ':</strong><br />
-								<span class="smalltext">
-									', $txt['username_line'], '<br />
-									<br />
-									[<a href="', $scripturl, '?action=findmember;input=pm_ignore_list;delim=LB;', $context['session_var'], '=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);">', $txt['find_members'], '</a>]
-								</span>
-							</dt>
-							<dd>
-								<textarea name="pm_ignore_list" id="pm_ignore_list" rows="10" cols="50">', $context['ignore_list'], '</textarea>
-							</dd>';
-}
-
 // Show the signature editing box?
 function template_profile_signature_modify()
 {
