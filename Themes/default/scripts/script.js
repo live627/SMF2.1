@@ -740,7 +740,7 @@ function expandPages(spanNode, baseURL, firstPage, lastPage, perPage)
 
 	// Calculate the new pages.
 	for (i = firstPage; i < lastPage; i += perPage)
-		replacement += '<a class="navPages" href="' + baseURL.replace(/%1\$d/, i) + '">' + (1 + i / perPage) + '</a> ';
+		replacement += '<a class="navPages" href="' + baseURL.replace(/%1\$d/, i).replace(/%%/g, '%') + '">' + (1 + i / perPage) + '</a> ';
 
 	if (oldLastPage > 0)
 		replacement += '<span style="font-weight: bold; cursor: ' + (is_ie && !is_ie6up ? 'hand' : 'pointer') + ';" onclick="expandPages(this, \'' + baseURL + '\', ' + lastPage + ', ' + oldLastPage + ', ' + perPage + ');"> ... </span> ';
