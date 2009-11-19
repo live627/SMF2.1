@@ -802,9 +802,9 @@ smc_Editor.prototype.insertLink = function(sType)
 			sText = 'mailto:' + sText;
 
 		// Check if we have text selected and if not force us to have some.
-		curText = this.getSelect(true);
+		var oCurText = this.getSelect(true);
 
-		if (curText.toString().length != 0)
+		if (oCurText.toString().length != 0)
 		{
 			this.smf_execCommand('unlink');
 			this.smf_execCommand('createlink', false, sText);
