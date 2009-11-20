@@ -20,6 +20,7 @@ November 2009
  * Removed obsolete template_profile_ignore_list_modify function. (Profile template) [Bug 3997]
  ! Dynamic pagination didn't work properly in case of urlencoded base URL's. (Subs.php, script.js)
  * The manage bans page could output invalid XHTML in some cases. (ManageBans template)  
+ * Highlight parent items while hovering over submenus in Curve's dropdown menus. (index.css) [Bug 4008]
 
 
 SMF 2.0 RC2                                                      8 November 2009
