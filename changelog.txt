@@ -19,6 +19,7 @@ November 2009
  * Change our post link color so they stand out more (index.css)
  * Removed obsolete template_profile_ignore_list_modify function. (Profile template) [Bug 3997]
  ! Dynamic pagination didn't work properly in case of urlencoded base URL's. (Subs.php, script.js)
+ * The manage bans page could output invalid XHTML in some cases. (ManageBans template)  
 
 
 SMF 2.0 RC2                                                      8 November 2009

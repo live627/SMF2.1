@@ -82,7 +82,7 @@ function template_ban_edit()
 		if (empty($modSettings['disableHostnameLookup']))
 			echo '
 							<dt>
-								<input type="checkbox" name="ban_suggestion[]" id="hostname_check" value="hostname" class="input_check" /></td>
+								<input type="checkbox" name="ban_suggestion[]" id="hostname_check" value="hostname" class="input_check" />
 								<label for="hostname_check">', $txt['ban_on_hostname'], '</label>
 							</dt>
 							<dd>
@@ -165,6 +165,7 @@ function template_ban_edit()
 	if (!$context['ban']['is_new'] && empty($context['ban_suggestions']))
 	{
 		echo '
+			<br />
 			<form action="', $scripturl, '?action=admin;area=ban;sa=edit" method="post" accept-charset="', $context['character_set'], '" style="padding: 0px;margin: 0px;" onsubmit="return confirm(\'', $txt['ban_remove_selected_triggers_confirm'], '\');">
 				<table class="table_grid" width="100%">
 				<thead>
@@ -208,11 +209,13 @@ function template_ban_edit()
 		echo '
 				</tbody>
 				</table>
-				<div class="align_left">
-					[<a href="', $scripturl, '?action=admin;area=ban;sa=edittrigger;bg=', $context['ban']['id'], '"><strong>', $txt['ban_add_trigger'], '</strong></a>]
-				</div>
-				<div class="align_right">
-					<input type="submit" name="remove_selection" value="', $txt['ban_remove_selected_triggers'], '" class="button_submit" />
+				<div class="additional_rows">
+					<div class="align_left">
+						[<a href="', $scripturl, '?action=admin;area=ban;sa=edittrigger;bg=', $context['ban']['id'], '">', $txt['ban_add_trigger'], '</a>]
+					</div>
+					<div class="align_right">
+						<input type="submit" name="remove_selection" value="', $txt['ban_remove_selected_triggers'], '" class="button_submit" />
+					</div>
 				</div>
 				<br class="clear" />
 				<input type="hidden" name="bg" value="', $context['ban']['id'], '" />
