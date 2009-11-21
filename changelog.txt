@@ -21,6 +21,7 @@ November 2009
  ! Dynamic pagination didn't work properly in case of urlencoded base URL's. (Subs.php, script.js)
  * The manage bans page could output invalid XHTML in some cases. (ManageBans template)  
  * Highlight parent items while hovering over submenus in Curve's dropdown menus. (index.css) [Bug 4008]
+ * Rewrote the text of the Getting Started part of the help section. (Help template, Manual language file)
 
 
 SMF 2.0 RC2                                                      8 November 2009
