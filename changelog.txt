@@ -22,6 +22,8 @@ November 2009
  * The manage bans page could output invalid XHTML in some cases. (ManageBans template)  
  * Highlight parent items while hovering over submenus in Curve's dropdown menus. (index.css) [Bug 4008]
  * Rewrote the text of the Getting Started part of the help section. (Help template, Manual language file)
+ * Don't try to hide avatar options that aren't there. (Profile template) [Bug 3933]
+ ! Users who can only see their own profiles couldn't see the subitems of the Show Posts menu. (Profile.php)
 
 
 SMF 2.0 RC2                                                      8 November 2009
