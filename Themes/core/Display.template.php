@@ -184,7 +184,7 @@ function template_main()
 		<div class="bordercolor">';
 
 		// Are we ignoring this message?
-		if (!empty($options['posts_apply_ignore_list']) && in_array($message['member']['id'], $context['user']['ignoreusers']))
+		if (!empty($message['is_ignored']))
 		{
 			$ignoring = true;
 			$ignoredMsgs[] = $message['id'];

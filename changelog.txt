@@ -24,6 +24,8 @@ November 2009
  * Rewrote the text of the Getting Started part of the help section. (Help template, Manual language file)
  * Don't try to hide avatar options that aren't there. (Profile template) [Bug 3933]
  ! Users who can only see their own profiles couldn't see the subitems of the Show Posts menu. (Profile.php)
+ * Don't hide posts by ignored members if the buddy and ignore lists are disabled. (Display.php, Display template) [Bug 3974]
+ ! The buddy/ignore check for sending PM's was checking the wrong setting. (Subs-Post.php)
 
 
 SMF 2.0 RC2                                                      8 November 2009
