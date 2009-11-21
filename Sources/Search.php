@@ -665,7 +665,10 @@ function PlushSearch2()
 	foreach ($searchArray as $index => $value)
 	{
 		if (($searchArray[$index] = trim($value, '-_\' ')) === '' || in_array($searchArray[$index], $blacklisted_words))
+		{
+			$foundBlackListedWords = true;
 			unset($searchArray[$index]);
+		}
 		// Don't allow very, very short words.
 		elseif (strlen($value) < 2)
 		{
@@ -688,7 +691,7 @@ function PlushSearch2()
 
 	// Make sure at least one word is being searched for.
 	if (empty($searchArray))
-		$context['search_errors']['invalid_search_string'] = true;
+		$context['search_errors']['invalid_search_string' . (!empty($foundBlackListedWords) ? '_blacklist' : '')] = true;
 	// All words/sentences must match.
 	elseif (empty($search_params['searchtype']))
 		$orParts[0] = $searchArray;
