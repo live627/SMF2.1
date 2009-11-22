@@ -3536,7 +3536,8 @@ function db_debug_junk()
 </div></body></html>';
 
 	// Empty the language cache,
-	clean_cache('lang');
+	if (isset($_REQUEST['clearcache']))
+		clean_cache('lang');
 }
 
 // Get an attachment's encrypted filename.  If $new is true, won't check for file existence.
@@ -4039,6 +4040,8 @@ function setupMenuContext()
 		$current_action = 'register';
 	elseif ($context['current_action'] == 'login2' || ($user_info['is_guest'] && $context['current_action'] == 'reminder'))
 		$current_action = 'login';
+	elseif ($context['current_action'] == 'groups'  && $context['allow_moderation_center'])
+		$current_action = 'moderate';
 
 	$context['menu_buttons'][$current_action]['active_button'] = true;
 

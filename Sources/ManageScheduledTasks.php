@@ -471,7 +471,7 @@ function TaskLog()
 				),
 				'data' => array(
 					'function' => create_function('$rowData', '
-						return timeformat($rowData[\'time_run\'], true, \'server\');
+						return timeformat($rowData[\'time_run\'], true);
 					'),
 				),
 				'sort' => array(

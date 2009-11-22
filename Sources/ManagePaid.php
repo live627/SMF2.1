@@ -1475,11 +1475,11 @@ function addSubscription($id_subscribe, $id_member, $renewal = 0, $forceStartTim
 		'{db_prefix}log_subscribed',
 		array(
 			'id_subscribe' => 'int', 'id_member' => 'int', 'old_id_group' => 'int', 'start_time' => 'int',
-			'end_time' => 'int', 'status' => 'int',
+			'end_time' => 'int', 'status' => 'int', 'pending_details' => 'string',
 		),
 		array(
 			$id_subscribe, $id_member, $old_id_group, $starttime,
-			$endtime, 1,
+			$endtime, 1, '',
 		),
 		array('id_sublog')
 	);

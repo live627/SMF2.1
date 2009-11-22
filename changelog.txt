@@ -29,6 +29,10 @@ November 2009
  & Show a different error message when a search string is rejected due to blacklisted words. (Search.php, Errors language file) [Bug 3998]
  * Duplicate upshrink css (index.css) [Bug 4015]
  & Missing username message was misleading (Login language) [Bug 4013]
+ ! Debug mode would always empty the language cache (Subs.php) [Bug 3988]
+ ! Task notifications in some cases can appear to processed in the future (ManageScheduledTasks.php) [Bug 3965]
+ ! Pending details can not be empty (ManagePaid.php) [Bug 3964]
+ ! Group action may show incorrect active menu link (Subs.php) [Bug 3956]
 
 
 SMF 2.0 RC2                                                      8 November 2009
