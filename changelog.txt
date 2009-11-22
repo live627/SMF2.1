@@ -33,6 +33,7 @@ November 2009
  ! Task notifications in some cases can appear to processed in the future (ManageScheduledTasks.php) [Bug 3965]
  ! Pending details can not be empty (ManagePaid.php) [Bug 3964]
  ! Group action may show incorrect active menu link (Subs.php) [Bug 3956]
+ * Our webkit post fix didn't completely fix the issue (webkit.css) [Bug 3995]
 
 
 SMF 2.0 RC2                                                      8 November 2009
