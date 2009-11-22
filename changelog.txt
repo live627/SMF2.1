@@ -45,6 +45,7 @@ November 2009
  ! Prevent undefined errors for template eval errors at end of file (Load.php) [Bug 3978]
  ! A fatal language error in loadTheme could cause a infinite loop (Errors.php) [Bug 3959]
  ! A few of our tools needed fixed (reapir_*.php, repair.php, *_backup.php, smf_api.php) [Bug 3943]
+ ! Allow administrators to change their warning level (Profile.php) [Bug 3935]
 
 
 SMF 2.0 RC2                                                      8 November 2009

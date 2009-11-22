@@ -287,7 +287,7 @@ function ModifyProfile($post_errors = array())
 				),
 				'issuewarning' => array(
 					'label' => $txt['profile_issue_warning'],
-					'enabled' => $modSettings['warning_settings'][0] == 1 && !$context['user']['is_owner'],
+					'enabled' => $modSettings['warning_settings'][0] == 1 && (!$context['user']['is_owner'] || $context['user']['is_admin']),
 					'file' => 'Profile-Actions.php',
 					'function' => 'issueWarning',
 					'permission' => array(
