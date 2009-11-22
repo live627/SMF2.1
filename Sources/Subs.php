@@ -3226,7 +3226,7 @@ function setupThemeContext($forceload = false)
 
 	// Set some specific vars.
 	$context['page_title_html_safe'] = $smcFunc['htmlspecialchars'](un_htmlspecialchars($context['page_title']));
-	$context['meta_keywords'] = !empty($modSettings['meta_keywords']) ? $smcFunc['htmlspecialchars']($modSettings['meta_keywords']) : 'PHP, MySQL, bulletin, board, free, open, source, smf, simple, machines, forum';
+	$context['meta_keywords'] = isset($modSettings['meta_keywords']) ? $smcFunc['htmlspecialchars']($modSettings['meta_keywords']) : 'PHP, MySQL, bulletin, board, free, open, source, smf, simple, machines, forum';
 }
 
 // This is the only template included in the sources...

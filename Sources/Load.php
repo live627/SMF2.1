@@ -2216,10 +2216,10 @@ function template_include($filename, $once = false)
 						echo '</pre><div style="background-color: #ffb0b5;"><pre style="margin: 0;">';
 
 					echo '<span style="color: black;">', sprintf('%' . strlen($n) . 's', $line), ':</span> ';
-					if ($data2[$line] != '')
+					if (isset($data2[$line]) && $data2[$line] != '')
 						echo substr($data2[$line], 0, 2) == '</' ? preg_replace('~^</[^>]+>~', '', $data2[$line]) : $last_line . $data2[$line];
 
-					if (preg_match('~(<[^/>]+>)[^<]*$~', $data2[$line], $color_match) != 0)
+					if (isset($data2[$line]) && preg_match('~(<[^/>]+>)[^<]*$~', $data2[$line], $color_match) != 0)
 					{
 						$last_line = $color_match[1];
 						echo '</', substr($last_line, 1, 4), '>';

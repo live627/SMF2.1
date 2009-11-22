@@ -171,10 +171,14 @@ function fatal_error($error, $log = 'general')
 function fatal_lang_error($error, $log = 'general', $sprintf = array())
 {
 	global $txt, $language, $modSettings, $user_info, $context;
+	static $fatal_error_called = false;
 
 	// Try to load a theme if we don't have one.
-	if (empty($context['theme_loaded']))
+	if (empty($context['theme_loaded']) && empty($fatal_error_called))
+	{
+		$fatal_error_called = true;
 		loadTheme();
+	}
 
 	// If we have no theme stuff we can't have the lanuage file...
 	if (empty($context['theme_loaded']))

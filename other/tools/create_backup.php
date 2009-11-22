@@ -229,11 +229,11 @@ function step2()
 	$start_time = time();
 
 	$result = $smcFunc['db_query']('', '
-		SHOW TABLE STATUS{raw:like}'
+		SHOW TABLE STATUS{raw:like}',
 		array(
-		'like' => $_POST['db_prefix'] == '' ? '' : '
+			'like' => $_POST['db_prefix'] == '' ? '' : '
 		LIKE "' . strtr($_POST['db_prefix'], array('_' => '\_')) . '"'
-		));
+	));
 	$tables = array();
 	$table_row_lengths = array();
 	$table_sizes = array();
@@ -247,7 +247,7 @@ function step2()
 	}
 	$smcFunc['db_free_result'](result);
 
-	$result = $smcFunc['db_get_version']
+	$result = $smcFunc['db_get_version']();
 	list ($database_version) = $smcFunc['db_fetch_row']($result);
 	$smcFunc['db_free_result']($result);
 
@@ -285,7 +285,8 @@ function step2()
 			SELECT COUNT(*)
 			FROM {raw:table}',
 			array(
-				'table' => '`' . $tables[$table] . '`');
+				'table' => '`' . $tables[$table] . '`'
+		));
 		list ($num_rows) = $smcFunc['db_fetch_row']($result);
 		$smcFunc['db_free_result']($result);
 
@@ -317,7 +318,8 @@ function step2()
 				array(
 					'table' => '`' . $tables[$table] . '`',
 					'row' => $row,
-					'limit' => $table_row_lengths[$table] >= 100 ? 96 : 192);
+					'limit' => $table_row_lengths[$table] >= 100 ? 96 : 192
+			));
 			$data = '';
 			$i = 0;
 			while ($values = $smcFunc['db_fetch_assoc']($result))
@@ -336,7 +338,7 @@ function step2()
 					elseif (is_numeric($value))
 						$field_list[] = $value;
 					else
-						$field_list[] = $smcFunc(['db_quote']('{string:value}', array('value' => $value));
+						$field_list[] = $smcFunc['db_quote']('{string:value}', array('value' => $value));
 				}
 
 				$data .= '(' . implode(', ', $field_list) . '),' . "\n\t";
@@ -1441,13 +1443,12 @@ function smc_compat_database($db_type, $db_server, $db_user, $db_passwd, $db_nam
 	// No version?
 	if (empty($smcFunc['db_get_version']) && function_exists('db_extend'))
 		db_extend('extra');
-	if (empty($smcFunc['db_get_version'])
+	if (empty($smcFunc['db_get_version']))
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT VERSION()',
 			array(
-			)
-		);
+		));
 		list ($smcFunc['db_get_version']) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 	}

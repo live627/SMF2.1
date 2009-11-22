@@ -371,7 +371,8 @@ function step3()
 			'{db_prefix}settings',
 			array('variable' => 'string', 'value' => 'string'),
 			$inserts,
-			array('variable', 'value')
+			array('variable', 'value'
+		));
 		}
 
 	$result = $smcFunc['db_query']('', '
@@ -1079,13 +1080,12 @@ function smc_compat_database($db_type, $db_server, $db_user, $db_passwd, $db_nam
 	// No version?
 	if (empty($smcFunc['db_get_version']) && function_exists('db_extend'))
 		db_extend('extra');
-	if (empty($smcFunc['db_get_version'])
+	if (empty($smcFunc['db_get_version']))
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT VERSION()',
 			array(
-			)
-		);
+		));
 		list ($smcFunc['db_get_version']) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 	}

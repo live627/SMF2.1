@@ -481,7 +481,7 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 		));
 	$smcFunc['db_insert']('replace',
 		$smf_settings['db_prefix'] . 'settings',
-		array('variable' => 'string', 'value' => 'string',
+		array('variable' => 'string', 'value' => 'string'),
 		array(
 			array('latestMember', $id_member),
 			array('latestRealName', $username),
@@ -509,7 +509,7 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 	{
 		$inserts = array();
 		foreach ($theme_options as $var => $val)
-			$inserts[] = array($memberID, substr($var, 0, 255), substr($val, 0, 65534);
+			$inserts[] = array($memberID, substr($var, 0, 255), substr($val, 0, 65534));
 
 		$smcFunc['db_insert']('insert',
 			$smf_settings['db_prefix'] . 'themes',
@@ -633,7 +633,7 @@ function smf_logError($error_message, $file = null, $line = null)
 
 	// Insert the error into the database.
 	$smcFunc['db_insert']('insert',
-		$smf_settings['db_prefix'] . 'log_errors'
+		$smf_settings['db_prefix'] . 'log_errors',
 		array(
 			'id_member' => 'int', 'log_time' => 'int', 'ip' => 'string', 'url' => 'string', 'message' => 'string', 'session' => 'string'
 		),

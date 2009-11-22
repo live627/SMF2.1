@@ -74,7 +74,8 @@ if ($_GET['step'] <= 1)
 			LIMIT {int:start}, {int:max_once}',
 			array(
 				'start' => $start,
-				'max_once' => $maxOnce,);
+				'max_once' => $maxOnce
+		));
 
 		// If less rows were inserted than selected, we're done!
 		if ($smcFunc['db_affected_rows']() < $maxOnce)

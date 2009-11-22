@@ -73,7 +73,7 @@ if ($_GET['step'] <= 1)
 			ORDER BY poster_time
 			LIMIT {int:start}, {int:max_once}',
 			array(
-				'start' = $start,
+				'start' => $start,
 				'max_once' => $maxOnce,
 		));
 

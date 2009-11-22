@@ -278,7 +278,8 @@ function action_resort()
 				LIMIT {int:start}, {int:limit}',
 				array(
 					'start' => $_GET['start'],
-					'limit' => $rows);
+					'limit' => $rows
+			));
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 				$smcFunc['db_query']('', '
 					UPDATE {db_prefix}{raw:table}
@@ -562,7 +563,7 @@ function protectTimeOut($request)
 	echo '
 		<em>This repair has paused to avoid overloading your server, please click continue.</em><br />
 		<br />
-		<form action="', $_SERVER['PHP_SELF'], '?action=' $_REQUEST['action'], '&', (isset($_REQUEST['sa']) ? 'sa=' . $_REQUEST['sa'] : '') . '&' . $request, '" method="post" name="autoSubmit">
+		<form action="', $_SERVER['PHP_SELF'], '?action=', $_REQUEST['action'], '&', (isset($_REQUEST['sa']) ? 'sa=' . $_REQUEST['sa'] : '') . '&' . $request, '" method="post" name="autoSubmit">
 			<input type="submit" value="Continue" class="button_submit" />
 		</form>
 		<script type="text/javascript"><!-- // --><![CDATA[
@@ -801,7 +802,7 @@ function smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_pre
 	}
 
 	// Now, go functions, spread your love.
-	$smcFunc['db_free_result'] = '$smcFunc['db_free_result']';
+	$smcFunc['db_free_result'] = 'mysql_free_result';
 	$smcFunc['db_fetch_row'] = 'mysql_fetch_row';
 	$smcFunc['db_fetch_assoc'] = 'mysql_fetch_assoc';
 	$smcFunc['db_num_rows'] = 'mysql_num_rows';
@@ -875,13 +876,12 @@ function smc_compat_database($db_type, $db_server, $db_user, $db_passwd, $db_nam
 	// No version?
 	if (empty($smcFunc['db_get_version']) && function_exists('db_extend'))
 		db_extend('extra');
-	if (empty($smcFunc['db_get_version'])
+	if (empty($smcFunc['db_get_version']))
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT VERSION()',
 			array(
-			)
-		);
+		));
 		list ($smcFunc['db_get_version']) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 	}

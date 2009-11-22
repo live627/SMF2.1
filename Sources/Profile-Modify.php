@@ -555,7 +555,7 @@ function loadProfileFields($force_reload = false)
 
 				$context[\'display_mode\'] = $cur_profile[\'pm_prefs\'] & 3;
 				$context[\'send_email\'] = $cur_profile[\'pm_email_notify\'];
-				$context[\'receive_from\'] = $cur_profile[\'pm_receive_from\'];
+				$context[\'receive_from\'] = !empty($cur_profile[\'pm_receive_from\']) ? $cur_profile[\'pm_receive_from\'] : 0;
 
 				return true;
 			'),

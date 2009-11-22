@@ -164,7 +164,8 @@ if ($_GET['step'] <= 4)
 		GROUP BY mem.id_member
 		HAVING count != instant_messages',
 		array(
-			'deleted' => 1);
+			'deleted' => 1
+	));
 	$array = array();
 	while ($row = $smcFunc['db_fetch_assoc']($result))
 		$array[] = $row;

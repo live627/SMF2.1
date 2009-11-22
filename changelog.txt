@@ -40,6 +40,11 @@ November 2009
  ! theme_variant being empty would cause double slashes in urls (Load.php, BoardIndex Template, MessageIndex Template) [Bug 3937]
  ! Theme related profile options would update even when errors occurred, which is inconsistant with other profile fields (Profile-Modify.php) [Bug 3808]
  ! Upgrading would fail for mysql4 users (upgrade.php) [Bug 3944]
+ ! Do not show empty meta keywords (Subs.php, index template) [Bug 3977]
+ ! Users who have not set who they receive pms from would cause errors (Profile-Modify.php) [Bug 3989]
+ ! Prevent undefined errors for template eval errors at end of file (Load.php) [Bug 3978]
+ ! A fatal language error in loadTheme could cause a infinite loop (Errors.php) [Bug 3959]
+ ! A few of our tools needed fixed (reapir_*.php, repair.php, *_backup.php, smf_api.php) [Bug 3943]
 
 
 SMF 2.0 RC2                                                      8 November 2009
