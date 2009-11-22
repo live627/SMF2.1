@@ -952,7 +952,7 @@ function saveProfileFields()
 		$changeOther = allowedTo(array('profile_extra_any', 'profile_extra_own'));
 	else
 		$changeOther = allowedTo('profile_extra_any');
-	if ($changeOther)
+	if ($changeOther && empty($post_errors))
 	{
 		makeThemeChanges($context['id_member'], isset($_POST['id_theme']) ? (int) $_POST['id_theme'] : $old_profile['id_theme']);
 		if (!empty($_REQUEST['sa']))

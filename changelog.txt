@@ -38,6 +38,7 @@ November 2009
  * Highlight would not change the text color as intended (index.css) [Bug 3996]
  ! SMF would override a post variable, which could break our integration (Profile-Modify.php) [Bug 3986]
  ! theme_variant being empty would cause double slashes in urls (Load.php, BoardIndex Template, MessageIndex Template) [Bug 3937]
+ ! Theme related profile options would update even when errors occurred, which is inconsistant with other profile fields (Profile-Modify.php) [Bug 3808]
 
 
 SMF 2.0 RC2                                                      8 November 2009
