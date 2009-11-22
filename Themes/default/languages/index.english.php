@@ -148,7 +148,6 @@ $txt['yes'] = 'Yes';
 $txt['no'] = 'No';
 
 $txt['search_end_results'] = 'End of results';
-$txt['search_no_results'] = 'Sorry, no matches were found';
 $txt['search_on'] = 'on';
 
 $txt['search'] = 'Search';
@@ -608,7 +607,7 @@ $txt['smileys_none'] = 'No Smileys';
 $txt['smileys_forum_board_default'] = 'Forum/Board Default';
 
 $txt['search_results'] = 'Search Results';
-$txt['search_no_results'] = 'No results found';
+$txt['search_no_results'] = 'Sorry, no matches were found';
 
 $txt['totalTimeLogged1'] = 'Total time logged in: ';
 $txt['totalTimeLogged2'] = ' days, ';

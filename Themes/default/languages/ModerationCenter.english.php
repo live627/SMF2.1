@@ -89,7 +89,6 @@ $txt['show_notice_text'] = 'Text';
 
 $txt['mc_watched_users_title'] = 'Watched Members';
 $txt['mc_watched_users_desc'] = 'Here you can keep a track of all members who have been assigned a &quot;watch&quot; by the moderation team.';
-$txt['mc_watched_users_member'] = 'View by Member';
 $txt['mc_watched_users_post'] = 'View by Post';
 $txt['mc_watched_users_warning'] = 'Warning Level';
 $txt['mc_watched_users_last_login'] = 'Last Login';
