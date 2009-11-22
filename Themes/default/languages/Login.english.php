@@ -13,7 +13,7 @@ $txt['agreement_agree_coppa_below'] = 'I accept the terms of the agreement and I
 
 // Registration form.
 $txt['registration_form'] = 'Registration Form';
-$txt['need_username'] = 'You should fill in a username.';
+$txt['need_username'] = 'You need to fill in a username.';
 $txt['no_password'] = 'You didn\'t enter your password.';
 $txt['incorrect_password'] = 'Password incorrect';
 $txt['choose_username'] = 'Choose username';

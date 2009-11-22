@@ -27,6 +27,8 @@ November 2009
  * Don't hide posts by ignored members if the buddy and ignore lists are disabled. (Display.php, Display template) [Bug 3974]
  ! The buddy/ignore check for sending PM's was checking the wrong setting. (Subs-Post.php)
  & Show a different error message when a search string is rejected due to blacklisted words. (Search.php, Errors language file) [Bug 3998]
+ * Duplicate upshrink css (index.css) [Bug 4015]
+ & Missing username message was misleading (Login language) [Bug 4013]
 
 
 SMF 2.0 RC2                                                      8 November 2009
