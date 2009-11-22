@@ -2124,13 +2124,10 @@ ul.post_options li
 /* the BBC buttons */
 #bbcBox_message
 {
-	margin-bottom: 2px;
+	margin-bottom: 1em;
 }
 #bbcBox_message div
 {
-	margin: 0.3em 0 1em 0;
-	line-height: 1.2em;
-	height: 1.2em;
 	vertical-align: top;
 }
 #bbcBox_message div img
