@@ -1534,7 +1534,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 	{
 		$fh = fopen($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php', 'w');
 		@flock($fh, LOCK_EX);
-		fwrite($fh, '<?php' . "\n");
+		fwrite($fh, '<' . '?php' . "\n");
 	}
 
 	// For each file open it up and write it out!
@@ -1575,7 +1575,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 				{
 					foreach (file($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php') as $line)
 					{
-						if (substr($line, 0, 2) != '?>' && substr($line, 0, 2) != '<?')
+						if (substr($line, 0, 2) != '?' . '>' && substr($line, 0, 2) != '<' . '?')
 						{
 							// Some common variables get parsed in...
 							$line = preg_replace('~\{NL\}~', '\\\\n', $line);
@@ -1614,7 +1614,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 
 	if ($can_write)
 	{
-		fwrite($fh, '?>');
+		fwrite($fh, '?' . '>');
 		@flock($fh, LOCK_UN);
 		fclose($fh);
 

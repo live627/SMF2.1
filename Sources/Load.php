@@ -1667,6 +1667,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 
 	// We allow theme variants, because we're cool.
 	$context['theme_variant'] = '';
+	$context['theme_variant_url'] = '';
 	if (!empty($settings['theme_variants']))
 	{
 		// Overriding - for previews and that ilk.
@@ -1681,6 +1682,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 
 		// Do this to keep things easier in the templates.
 		$context['theme_variant'] = '_' . $context['theme_variant'];
+		$context['theme_variant_url'] = $context['theme_variant'] . '/';
 	}
 
 	// Let's be compatible with old themes!
