@@ -361,14 +361,14 @@ code
 {
 	background-color: yellow;
 	font-weight: bold;
-	color: black;
+	color: black !important;
 }
 
 /* A more discreet highlight color, for selected membergroups etc. */
 .highlight2
 {
 	background-color: #B3F4B0;
-	color: black;
+	color: black !important;
 }
 
 /* Generic, mostly colour-related, classes.

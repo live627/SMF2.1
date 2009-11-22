@@ -1747,10 +1747,10 @@ function authentication($memID, $saving = false)
 					call_user_func(strpos($modSettings['integrate_reset_pass'], '::') === false ? $modSettings['integrate_reset_pass'] : explode('::', $modSettings['integrate_reset_pass']), $cur_profile['member_name'], $cur_profile['member_name'], $_POST['passwrd1']);
 
 				// Go then.
-				$_POST['passwrd1'] = sha1(strtolower($cur_profile['member_name']) . un_htmlspecialchars($_POST['passwrd1']));
+				$passwd = sha1(strtolower($cur_profile['member_name']) . un_htmlspecialchars($_POST['passwrd1']));
 
 				// Do the important bits.
-				updateMemberData($memID, array('openid_uri' => '', 'passwd' => $_POST['passwrd1']));
+				updateMemberData($memID, array('openid_uri' => '', 'passwd' => $passwd));
 				if ($context['user']['is_owner'])
 					setLoginCookie(60 * $modSettings['cookieTime'], $memID, sha1(sha1(strtolower($cur_profile['member_name']) . un_htmlspecialchars($_POST['passwrd2'])) . $cur_profile['password_salt']));
 

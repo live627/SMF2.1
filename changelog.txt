@@ -35,6 +35,8 @@ November 2009
  ! Group action may show incorrect active menu link (Subs.php) [Bug 3956]
  * Our webkit post fix didn't completely fix the issue (webkit.css) [Bug 3995]
  * BBC buttons would overlap smileys (index.css) [Bug 3999]
+ * Highlight would not change the text color as intended (index.css) [Bug 3996]
+ ! SMF would override a post variable, which could break our integration (Profile-Modify.php) [Bug 3986]
 
 
 SMF 2.0 RC2                                                      8 November 2009
