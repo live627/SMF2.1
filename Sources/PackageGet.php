@@ -716,13 +716,16 @@ function PackageServerAdd()
 	if (substr($_POST['serverurl'], -1) == '/')
 		$_POST['serverurl'] = substr($_POST['serverurl'], 0, -1);
 
+	// No need for any thing fancy. 
+	$servername = $smcFunc['htmlspecialchars']($_POST['servername']);
+
 	$smcFunc['db_insert']('',
 		'{db_prefix}package_servers',
 		array(
 			'name' => 'string-255', 'url' => 'string-255',
 		),
 		array(
-			$_POST['servername'], $_POST['serverurl'],
+			$servername, $_POST['serverurl'],
 		),
 		array('id_server')
 	);
@@ -734,6 +737,8 @@ function PackageServerAdd()
 function PackageServerRemove()
 {
 	global $smcFunc;
+
+	checkSession('get');
 
 	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}package_servers

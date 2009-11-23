@@ -47,6 +47,9 @@ November 2009
  ! A few of our tools needed fixed (reapir_*.php, repair.php, *_backup.php, smf_api.php) [Bug 3943]
  ! Allow administrators to change their warning level (Profile.php) [Bug 3935]
  ! Ensure that our website_url field only has valid http links (Profile-Modify.php)
+ ! Package server deletion was missing a session check (PackageGet.php, Packages Template)
+ ! Clean our package server name of any html (PackageGet.php)
+ ! Do better validation on which packages we are deleting (Packages.php, Packages Template)
 
 
 SMF 2.0 RC2                                                      8 November 2009
