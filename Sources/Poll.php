@@ -153,6 +153,7 @@ function Vote()
 	// Otherwise if they can change their vote yet they haven't sent any options... remove their vote and redirect.
 	elseif (!empty($row['change_vote']) && !$user_info['is_guest'])
 	{
+		checkSession('request');
 		$pollOptions = array();
 
 		// Find out what they voted for before.

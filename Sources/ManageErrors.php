@@ -339,16 +339,16 @@ function deleteErrors()
 
 function ViewFile()
 {
-	global $context, $txt;
+	global $context, $txt, $boarddir, $sourcedir;
 	// Check for the administrative permission to do this.
 	isAllowedTo('admin_forum');
 
 	// decode the file and get the line
 	$file = base64_decode($_REQUEST['file']);
-	$line = (int)$_REQUEST['line'];
+	$line = isset($_REQUEST['line']) ? (int) $_REQUEST['line'] : 0;
 
 	// Make sure the file we are looking for is one they are allowed to look at
-	if (!is_readable($file))
+	if (!is_readable($file) || (strpos($file, '../') !== false && ( strpos($file, $boarddir) === false || strpos($file, $sourcedir) === false)))
 		fatal_lang_error('error_bad_file', true, array($file));
 
 	// get the min and max lines

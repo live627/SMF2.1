@@ -3202,6 +3202,8 @@ function ManageRules()
 	// Applying all rules?
 	if (isset($_GET['apply']))
 	{
+		checkSession('get');
+
 		ApplyRules(true);
 		redirectexit('action=pm;sa=manrules');
 	}
@@ -3248,6 +3250,7 @@ function ManageRules()
 	// Saving?
 	elseif (isset($_GET['save']))
 	{
+		checkSession('post');
 		$context['rid'] = isset($_GET['rid']) && isset($context['rules'][$_GET['rid']])? (int) $_GET['rid'] : 0;
 
 		// Name is easy!
@@ -3357,6 +3360,7 @@ function ManageRules()
 	// Deleting?
 	elseif (isset($_POST['delselected']) && !empty($_POST['delrule']))
 	{
+		checkSession('post');
 		$toDelete = array();
 		foreach ($_POST['delrule'] as $k => $v)
 			$toDelete[] = (int) $k;

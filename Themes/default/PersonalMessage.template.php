@@ -1353,7 +1353,7 @@ function template_rules()
 
 	if (!empty($context['rules']))
 		echo '
-				[<a href="', $scripturl, '?action=pm;sa=manrules;apply" onclick="return confirm(\'', $txt['pm_js_apply_rules_confirm'], '\');">', $txt['pm_apply_rules'], '</a>]';
+				[<a href="', $scripturl, '?action=pm;sa=manrules;apply;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['pm_js_apply_rules_confirm'], '\');">', $txt['pm_apply_rules'], '</a>]';
 
 	echo '
 			</div>';
@@ -1361,6 +1361,7 @@ function template_rules()
 	if (!empty($context['rules']))
 		echo '
 			<div class="floatright">
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				<input type="submit" name="delselected" value="', $txt['pm_delete_selected_rule'], '" onclick="return confirm(\'', $txt['pm_js_delete_rule_confirm'], '\');" class="button_submit" />
 			</div>';
 
@@ -1668,6 +1669,7 @@ function template_add_rule()
 			<div id="ruletext" class="smalltext">', $txt['pm_rule_js_disabled'], '</div>
 		</div>
 		<div class="pagesection">
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			<input type="submit" name="save" value="', $txt['pm_rule_save'], '" class="button_submit" />
 		</div>
 	</form>';

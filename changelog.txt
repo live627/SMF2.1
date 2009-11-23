@@ -50,6 +50,10 @@ November 2009
  ! Package server deletion was missing a session check (PackageGet.php, Packages Template)
  ! Clean our package server name of any html (PackageGet.php)
  ! Do better validation on which packages we are deleting (Packages.php, Packages Template)
+ ! We only can see files in our directory (ManageErrors.php)
+ ! Check our session prior to saving any moderation center settings (ModerationCenter.php, ModerationCenter Template)
+ ! Only remove our vote for valid sessions (Poll.php)
+ ! Rule management needed a session check (PersonalMessage.php)
 
 
 SMF 2.0 RC2                                                      8 November 2009

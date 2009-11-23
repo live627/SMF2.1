@@ -1972,6 +1972,7 @@ function ModerationSettings()
 	// Are we saving?
 	if (isset($_POST['save']))
 	{
+		checkSession('post');
 		/* Current format of mod_prefs is:
 			x|ABCD|yyy
 
