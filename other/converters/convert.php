@@ -344,6 +344,10 @@ function loadSettings()
 	require($sourcedir . '/Errors.php');
 	require($sourcedir . '/Load.php');
 	require($sourcedir . '/Security.php');
+	// PHP4 users compatibility
+	if (@version_compare(PHP_VERSION, '5') == -1)
+		require_once($sourcedir . '/Subs-Compat.php');
+
 	$GLOBALS['boardurl'] = $boardurl;
 	$modSettings['disableQueryCheck'] = true; // !!! Do we really need this?
 
