@@ -15,13 +15,11 @@
 
 TRUNCATE {$to_prefix}members;
 TRUNCATE {$to_prefix}attachments;
-
----{
-if empty($INFO['admin_group']))
-	$INFO['admin_group'] = 1;
-
 ---* {$to_prefix}members
 ---{
+if (empty($INFO['admin_group']))
+	$INFO['admin_group'] = 1;
+	
 $row['signature'] = preg_replace(
 	array(
 		'~<!--QuoteBegin.*?-->.+?<!--QuoteEBegin-->~is',
