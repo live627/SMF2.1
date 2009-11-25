@@ -54,6 +54,7 @@ November 2009
  ! Check our session prior to saving any moderation center settings (ModerationCenter.php, ModerationCenter Template)
  ! Only remove our vote for valid sessions (Poll.php)
  ! Rule management needed a session check (PersonalMessage.php)
+ ! Package option settings didn't check the session (Packages.php)
 
 
 SMF 2.0 RC2                                                      8 November 2009

@@ -1414,6 +1414,8 @@ function PackageOptions()
 
 	if (isset($_POST['submit']))
 	{
+		checkSession('post');
+
 		updateSettings(array(
 			'package_server' => $_POST['pack_server'],
 			'package_port' => $_POST['pack_port'],
