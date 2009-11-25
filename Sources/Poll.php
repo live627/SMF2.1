@@ -898,6 +898,9 @@ function RemovePoll()
 	if (empty($topic))
 		fatal_lang_error('no_access', false);
 
+	// Verify the session.
+	checkSession('get');
+
 	// Check permissions.
 	if (!allowedTo('poll_remove_any'))
 	{
