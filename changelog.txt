@@ -55,6 +55,7 @@ November 2009
  ! Only remove our vote for valid sessions (Poll.php)
  ! Rule management needed a session check (PersonalMessage.php)
  ! Package option settings didn't check the session (Packages.php)
+ ! Permissions settings was missing a session check (ManagePermissions)
 
 
 SMF 2.0 RC2                                                      8 November 2009

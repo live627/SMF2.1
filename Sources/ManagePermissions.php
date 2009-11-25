@@ -1028,6 +1028,7 @@ function GeneralPermissionSettings($return_config = false)
 	// Saving the settings?
 	if (isset($_GET['save']))
 	{
+		checkSession('post');
 		saveDBSettings($config_vars);
 
 		// Clear all deny permissions...if we want that.
