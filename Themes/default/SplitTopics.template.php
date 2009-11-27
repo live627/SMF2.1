@@ -281,6 +281,7 @@ function template_merge()
 						<form action="', $scripturl , '?action=mergetopics;sa=options" method="post" accept-charset="', $context['character_set'], '" style="display: inline;">
 							<input type="hidden" name="topics[]" value="', $context['origin_topic'], '" />
 							<input type="text" name="topics[]" class="input_text" />
+							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 							<input type="submit" value="', $txt['merge'], '" class="button_submit" />
 						</form>
 					</dd>';
@@ -444,6 +445,7 @@ function template_merge_extra_options()
 	}
 	echo '
 					<input type="submit" value="' . $txt['merge'] . '" class="button_submit" />
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="hidden" name="sa" value="execute" />
 				</div>
 				<span class="botslice"><span></span></span>

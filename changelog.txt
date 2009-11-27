@@ -57,6 +57,7 @@ November 2009
  ! Package option settings didn't check the session (Packages.php)
  ! Permissions settings was missing a session check (ManagePermissions.php)
  ! Poll removal was missing a session check (Poll.php)
+ ! Merging topics needed a session check (SplitTopics.php, SplitTopics Template)
 
 
 SMF 2.0 RC2                                                      8 November 2009

@@ -972,6 +972,9 @@ function MergeExecute($topics = array())
 		loadTemplate('SplitTopics');
 	}
 
+	// Check the session.
+	checkSession();
+
 	// Handle URLs from MergeIndex.
 	if (!empty($_GET['from']) && !empty($_GET['to']))
 		$topics = array((int) $_GET['from'], (int) $_GET['to']);
