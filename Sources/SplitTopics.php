@@ -973,7 +973,7 @@ function MergeExecute($topics = array())
 	}
 
 	// Check the session.
-	checkSession();
+	checkSession('request');
 
 	// Handle URLs from MergeIndex.
 	if (!empty($_GET['from']) && !empty($_GET['to']))
