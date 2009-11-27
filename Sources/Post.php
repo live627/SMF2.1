@@ -1752,7 +1752,7 @@ function Post2()
 			$attachmentOptions = array(
 				'post' => isset($_REQUEST['msg']) ? $_REQUEST['msg'] : 0,
 				'poster' => $user_info['id'],
-				'name' => $_FILES['attachment']['name'][$n],
+				'name' => $smcFunc['htmlspecialchars']($_FILES['attachment']['name'][$n]),
 				'tmp_name' => $_FILES['attachment']['tmp_name'][$n],
 				'size' => $_FILES['attachment']['size'][$n],
 				'approved' => !$modSettings['postmod_active'] || allowedTo('post_attachment'),
