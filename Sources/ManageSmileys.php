@@ -172,6 +172,8 @@ function EditSmileySettings($return_config = false)
 	// Saving the settings?
 	if (isset($_GET['save']))
 	{
+		checkSession();
+
 		// Validate the smiley set name.
 		$_POST['smiley_sets_default'] = empty($smiley_context[$_POST['smiley_sets_default']]) ? 'default' : $_POST['smiley_sets_default'];
 
@@ -1375,9 +1377,7 @@ function InstallSmileySet()
 		$extracted = read_tgz_file($_FILES['set_gz']['tmp_name'], $boarddir . '/Smileys/' . $name);
 	elseif (isset($_REQUEST['set_gz']))
 	{
-		checkSession('request');
-
-		// Check that the theme is from simplemachines.org, for now... maybe add mirroring later.
+		// Check that the smiley is from simplemachines.org, for now... maybe add mirroring later.
 		if (preg_match('~^http://[\w_\-]+\.simplemachines\.org/~', $_REQUEST['set_gz']) == 0 || strpos($_REQUEST['set_gz'], 'dlattach') !== false)
 			fatal_lang_error('not_on_simplemachines');
 
