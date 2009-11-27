@@ -16,11 +16,11 @@ TRUNCATE {$to_prefix}members;
 
 ---* {$to_prefix}members
 SELECT
-	/* // !!! We could use m.name for the real_name? */
 	m.id AS id_member, SUBSTRING(m.username, 1, 80) AS member_name,
-	SUBSTRING(m.username, 1, 255) AS real_name,
+	SUBSTRING(m.name, 1, 255) AS real_name,
 	SUBSTRING(sb.signature, 1, 65534) AS signature, sb.posts,
-	sb.karma AS karma_good, SUBSTRING(m.password, 1, 64) AS passwd,
+	SUBSTRING(SUBSTRING_INDEX(m.password, ':', 1), 1, 64) AS passwd, SUBSTRING_INDEX(m.password, ':', -1) AS password_salt,
+	sb.karma AS karma_good,
 	SUBSTRING(m.email, 1, 255) AS email_address,
 	SUBSTRING(cd.country, 1, 255) AS location,
 	IF(m.activation = 1, 0, 1) AS is_activated,
@@ -33,7 +33,7 @@ SELECT
 	'' AS aim, '' AS yim, '' AS msn, '' AS time_format, '' AS avatar,
 	'' AS usertitle, '' AS member_ip, '' AS secret_question, '' AS secret_answer,
 	'' AS validation_code, '' AS additional_groups, '' AS smiley_set,
-	'' AS password_salt, '' AS member_ip2
+	'' AS member_ip2
 FROM {$from_prefix}users AS m
 	LEFT JOIN {$from_prefix}sb_users AS sb ON (sb.userid = m.id)
 	LEFT JOIN {$from_prefix}contact_details AS cd ON (cd.user_id = m.id);

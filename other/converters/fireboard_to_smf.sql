@@ -26,9 +26,8 @@ alterDatabase('members', 'change column', array(
 
 ---* {$to_prefix}members
 SELECT
-	/* // !!! We could use m.name for the real_name? */
 	m.id AS id_member, SUBSTRING(m.username, 1, 80) AS member_name,
-	SUBSTRING(m.username, 1, 255) AS real_name,
+	SUBSTRING(m.name, 1, 255) AS real_name,
 	SUBSTRING(fb.signature, 1, 65534) AS signature, 
 	IF(ISNULL(fb.posts), 0, fb.posts) AS posts,
 	SUBSTRING(SUBSTRING_INDEX(m.password, ':', 1), 1, 64) AS passwd, SUBSTRING_INDEX(m.password, ':', -1) AS password_salt,
