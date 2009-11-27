@@ -22,7 +22,7 @@ SELECT
 	IF(group_id = 1, 1, IF(group_id = 2, 2, 0)) AS id_group,
 	SUBSTRING(title, 1, 255) AS usertitle, last_visit AS last_login,
 	SUBSTRING(password, 1, 64) AS passwd,
-	SUBSTRING(IFNULL(real_name, username), 1, 255) AS real_name,
+	SUBSTRING(IFNULL(realname, username), 1, 255) AS real_name,
 	SUBSTRING(location, 1, 255) AS location,
 	SUBSTRING(email, 1, 255) AS email_address,
 	SUBSTRING(url, 1, 255) AS website_title,
@@ -97,8 +97,7 @@ if (!empty($row['filename']))
 }
 ---}
 SELECT id AS id_member
-FROM {$from_prefix}users
-WHERE use_avatar = 1;
+FROM {$from_prefix}users;
 ---*
 
 /******************************************************************************/
