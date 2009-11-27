@@ -59,6 +59,7 @@ November 2009
  ! Poll removal was missing a session check (Poll.php)
  ! Merging topics needed a session check (SplitTopics.php, SplitTopics Template)
  ! Try to clean our attachment names better (Post.php)
+ ! Do a better job at cleaning our admin login page (Subs-Auth.php) 
 
 
 SMF 2.0 RC2                                                      8 November 2009
