@@ -503,6 +503,44 @@ $sourcedir/Modlog.php
 
 
 <edit file>
+$sourcedir/PackageGet.php
+</edit file>
+
+<search for>
+* Software Version:           SMF 1.1.9                                           *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.11                                          *
+</replace>
+
+
+<search for>
+		VALUES (SUBSTRING('$_POST[servername]', 1, 255), SUBSTRING('$_POST[serverurl]', 1, 255))", __FILE__, __LINE__);
+</search for>
+
+<replace>
+		VALUES (SUBSTRING('" . htmlspecialchars($_POST['servername']) . "', 1, 255), SUBSTRING('$_POST[serverurl]', 1, 255))", __FILE__, __LINE__);
+</replace>
+
+
+<search for>
+function PackageServerRemove()
+{
+	global $db_prefix;
+</search for>
+
+<replace>
+function PackageServerRemove()
+{
+	global $db_prefix;
+
+	checkSession('get');
+</replace>
+
+
+
+<edit file>
 $sourcedir/Profile.php
 </edit file>
 
@@ -530,7 +568,7 @@ $sourcedir/Subs-Boards.php
 </edit file>
 
 <search for>
-* Software Version:           SMF 1.1.9                                           *
+* Software Version:           SMF 1.1.5                                           *
 </search for>
 
 <replace>
@@ -539,11 +577,11 @@ $sourcedir/Subs-Boards.php
 
 
 <search for>
-* Software Version:           SMF 1.1.9                                           *
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 </search for>
 
 <replace>
-* Software Version:           SMF 1.1.11                                          *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -581,3 +619,27 @@ $sourcedir/Subs-Graphics.php
 	// Ask for more memory: we need it for this, and it'll only happen once!
 	@ini_set('memory_limit', '90M');
 </replace>
+
+
+
+<edit file>
+$themedir/Packages.template.php
+</edit file>
+
+<search for>
+// Version: 1.1.8; Packages
+</search for>
+
+<replace>
+// Version: 1.1.11; Packages
+</replace>
+
+
+<search for>
+								<a href="' . $scripturl . '?action=packageget;sa=remove;server=' . $server['id'] . '">[ ' . $txt['smf138'] . ' ]</a>
+</search for>
+
+<replace>
+								<a href="' . $scripturl . '?action=packageget;sa=remove;server=' . $server['id'] . ';sesc=', $context['session_id'], '">[ ' . $txt['smf138'] . ' ]</a>
+</replace>
+
