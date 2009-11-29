@@ -204,7 +204,8 @@ $ignore = true;
 SELECT
 	t.threadid AS id_topic, t.forumid AS id_board, t.sticky AS is_sticky,
 	t.pollid AS id_poll, t.views AS num_views, t.postuserid AS id_member_started,
-	ul.userid AS id_member_updated, t.replycount AS num_replies,
+	CASE WHEN (ISNULL(ul.userid) OR TRIM(ul.userid) = '') THEN 0 ELSE ul.userid END AS id_member_updated,
+	t.replycount AS num_replies,
 	IF(t.open, 0, 1) AS locked, MIN(p.postid) AS id_first_msg,
 	MAX(p.postid) AS id_last_msg
 FROM {$from_prefix}thread AS t

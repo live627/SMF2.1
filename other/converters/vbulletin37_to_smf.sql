@@ -268,7 +268,7 @@ SELECT
 	IF(p.active = 0, 1, 0) AS voting_locked, p.multiple AS max_votes,
 	SUBSTRING(IFNULL(t.postusername, 'Guest'), 1, 255) AS poster_name,
 	IF(p.timeout = 0, 0, p.dateline + p.timeout * 86400) AS expire_time,
-	t.postuserid AS id_member
+	CASE WHEN (ISNULL(t.postuserid) OR TRIM(t.postuserid) = '') THEN 0 ELSE t.postuserid END AS id_member
 FROM {$from_prefix}poll AS p
 	LEFT JOIN {$from_prefix}thread AS t ON (t.pollid = p.pollid);
 ---*
@@ -293,7 +293,7 @@ for ($i = 0, $n = count($options); $i < $n; $i++)
 		'id_poll' => $id_poll,
 		'id_choice' => ($i + 1),
 		'label' => substr('" . addslashes($options[$i]) . "', 1, 255),
-		'votes' => @$votes[$i],
+		'votes' => (is_numeric($votes[$i]) ? $votes[$i] : 0),
 	);
 }
 ---}
