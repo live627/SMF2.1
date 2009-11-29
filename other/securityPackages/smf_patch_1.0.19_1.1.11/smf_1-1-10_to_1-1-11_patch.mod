@@ -543,6 +543,33 @@ function PackageServerRemove()
 
 
 <edit file>
+$sourcedir/Packages.php
+</edit file>
+
+<search for>
+* Software Version:           SMF 1.1.10                                          *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.11                                          *
+</replace>
+
+
+<search for>
+	$_GET['package'] = preg_replace('~[\.]+~', '.', strtr($_GET['package'], array('/' => '_', '\\' => '_')));
+
+	if (file_exists($boarddir . '/Packages/' . $_GET['package']))
+</search for>
+
+<replace>
+	$_GET['package'] = preg_replace('~[\.]+~', '.', strtr($_GET['package'], array('/' => '_', '\\' => '_')));
+
+	if (file_exists($boarddir . '/Packages/' . $_GET['package']) && (substr($_GET['package'], -4) == '.zip' || substr($_GET['package'], -4) == '.tgz' || substr($_GET['package'], -7) == '.tar.gz' || is_dir($boarddir . '/Packages/' . $_GET['package'])) && $_GET['package'] != 'backups' && substr($_GET['package'], 0, 1) != '.')
+</replace>
+
+
+
+<edit file>
 $sourcedir/Profile.php
 </edit file>
 
