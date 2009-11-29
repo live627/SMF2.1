@@ -516,11 +516,13 @@ $sourcedir/PackageGet.php
 
 
 <search for>
-		VALUES (SUBSTRING('$_POST[servername]', 1, 255), SUBSTRING('$_POST[serverurl]', 1, 255))", __FILE__, __LINE__);
+			'name' => $row['name'],
+			'url' => $row['url'],
 </search for>
 
 <replace>
-		VALUES (SUBSTRING('" . htmlspecialchars($_POST['servername']) . "', 1, 255), SUBSTRING('$_POST[serverurl]', 1, 255))", __FILE__, __LINE__);
+			'name' => htmlspecialchars($row['name']),
+			'url' => htmlspecialchars($row['url']),
 </replace>
 
 
