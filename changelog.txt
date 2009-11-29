@@ -64,6 +64,7 @@ November 2009
  ! The board index category collapse was missing a session check - reported by WHK. (BoardIndex.php, Subs-BoardIndex.php)
  ! The parsing of basic HTML images wasn't properly escaped - reported by sirdarckcat. (Subs.php)
  ! Smiley sets weren't properly escaped - reported by cicatriz.r00t. (ManageSmileys.php, Profile.php, Subs.php)
+ ! The 'find members' delimiter wasn't properly escaped - reported by WHK. (Subs-Auth.php, Help template)
 
 
 SMF 2.0 RC2                                                      8 November 2009

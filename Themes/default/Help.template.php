@@ -47,13 +47,13 @@ function template_find_members()
 					return;
 
 				// If we only accept one name don\'t remember what is there.
-				if (\'', $context['delimiter'], '\' != \'null\')
+				if (', JavaScriptEscape($context['delimiter']), ' != \'null\')
 					membersAdded[name] = true;
 
-				if (theTextBox.value.length < 1 || \'', $context['delimiter'], '\' == \'null\')
+				if (theTextBox.value.length < 1 || ', JavaScriptEscape($context['delimiter']), ' == \'null\')
 					theTextBox.value = ', $context['quote_results'] ? '"\"" + name + "\""' : 'name', ';
 				else
-					theTextBox.value += "', $context['delimiter'], '" + ', $context['quote_results'] ? '"\"" + name + "\""' : 'name', ';
+					theTextBox.value += ', JavaScriptEscape($context['delimiter']), ' + ', $context['quote_results'] ? '"\"" + name + "\""' : 'name', ';
 
 				window.focus();
 			}
