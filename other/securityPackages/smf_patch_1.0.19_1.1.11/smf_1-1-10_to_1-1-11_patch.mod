@@ -892,6 +892,41 @@ $sourcedir/Profile.php
 
 
 <edit file>
+$sourcedir/SplitTopics.php
+</edit file>
+
+<search for>
+* Software Version:           SMF 1.1.6                                           *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.11                                          *
+</replace>
+
+
+<search for>
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+</search for>
+
+<replace>
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+</replace>
+
+
+<search for>
+
+	// Handle URLs from MergeIndex.
+</search for>
+
+<replace>
+	checkSession('request');
+
+	// Handle URLs from MergeIndex.
+</replace>
+
+
+
+<edit file>
 $sourcedir/Subs.php
 </edit file>
 
@@ -1072,5 +1107,29 @@ $themedir/Packages.template.php
 
 <replace>
 								<a href="' . $scripturl . '?action=packageget;sa=remove;server=' . $server['id'] . ';sesc=', $context['session_id'], '">[ ' . $txt['smf138'] . ' ]</a>
+</replace>
+
+
+
+<edit file>
+$themedir/SplitTopics.template.php
+</edit file>
+
+<search for>
+// Version: 1.1; SplitTopics
+</search for>
+
+<replace>
+// Version: 1.1.11; SplitTopics
+</replace>
+
+
+<search for>
+						<input type="hidden" name="sa" value="execute" />
+</search for>
+
+<replace>
+						<input type="hidden" name="sa" value="execute" />
+						<input type="hidden" name="sc" value="', $context['session_id'], '" />
 </replace>
 
