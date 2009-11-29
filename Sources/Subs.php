@@ -1681,7 +1681,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			// Take care of some HTML!
 			if (!empty($modSettings['enablePostHTML']) && strpos($data, '&lt;') !== false)
 			{
-				$data = preg_replace('~&lt;a\s+href=(?:&quot;|")?((?:(?:ht|f)tp(?:s)?://|mailto:).+?)(?:&quot;|")?&gt;~i', '[url=$1]', $data);
+				$data = preg_replace('~&lt;a\s+href=((?:&quot;)?)((?:https?://|ftps?://|mailto:)\S+?)\\1&gt;~i', '[url=$2]', $data);
 				$data = preg_replace('~&lt;/a&gt;~i', '[/url]', $data);
 
 				// <br /> should be empty.
@@ -1701,15 +1701,13 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				}
 
 				// Do <img ... /> - with security... action= -> action-.
-				preg_match_all('~&lt;img\s+src=(?:&quot;)?((?:http://|ftp://|https://|ftps://).+?)(?:&quot;)?(?:\s+alt=(?:&quot;)?(.*?)(?:&quot;)?)?(?:\s?/)?&gt;~i', $data, $matches, PREG_PATTERN_ORDER);
+				preg_match_all('~&lt;img\s+src=((?:&quot;)?)((?:https?://|ftps?://)\S+?)\\1(?:\s+alt=(&quot;.*?&quot;|\S*?))?(?:\s?/)?&gt;~i', $data, $matches, PREG_PATTERN_ORDER);
 				if (!empty($matches[0]))
 				{
 					$replaces = array();
-					foreach ($matches[1] as $match => $imgtag)
+					foreach ($matches[2] as $match => $imgtag)
 					{
-						// No alt?
-						if (!isset($matches[2][$match]))
-							$matches[2][$match] = '';
+						$alt = empty($matches[3][$match]) ? '' : ' alt=' . preg_replace('~^&quot;|&quot;$~', '', $matches[3][$match]);
 
 						// Remove action= from the URL - no funny business, now.
 						if (preg_match('~action(=|%3d)(?!dlattach)~i', $imgtag) != 0)
@@ -1733,10 +1731,10 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 							}
 
 							// Set the new image tag.
-							$replaces[$matches[0][$match]] = '<img src="' . $imgtag . '" width="' . $width . '" height="' . $height . '" alt="' . $matches[2][$match] . '" border="0" />';
+							$replaces[$matches[0][$match]] = '[img width=' . $width . ' height=' . $height . $alt . ']' . $imgtag . '[/img]';
 						}
 						else
-							$replaces[$matches[0][$match]] = '<img src="' . $imgtag . '" alt="' . $matches[2][$match] . '" border="0" />';
+							$replaces[$matches[0][$match]] = '[img' . $alt . ']' . $imgtag . '[/img]';
 					}
 
 					$data = strtr($data, $replaces);

@@ -570,6 +570,68 @@ $sourcedir/Packages.php
 
 
 <edit file>
+$sourcedir/Subs.php
+</edit file>
+
+<search for>
+* Software Version:           SMF 1.1.9                                           *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.11                                          *
+</replace>
+
+
+<search for>
+				$data = preg_replace('~&lt;a\s+href=(?:&quot;)?((?:http://|ftp://|https://|ftps://|mailto:).+?)(?:&quot;)?&gt;~i', '[url=$1]', $data);
+</search for>
+
+<replace>
+				$data = preg_replace('~&lt;a\s+href=((?:&quot;)?)((?:https?://|ftps?://|mailto:)\S+?)\\1&gt;~i', '[url=$2]', $data);
+</replace>
+
+
+<search for>
+				preg_match_all('~&lt;img\s+src=(?:&quot;)?((?:http://|ftp://|https://|ftps://).+?)(?:&quot;)?(?:\s+alt=(?:&quot;)?(.*?)(?:&quot;)?)?(?:\s?/)?&gt;~i', $data, $matches, PREG_PATTERN_ORDER);
+</search for>
+
+<replace>
+				preg_match_all('~&lt;img\s+src=((?:&quot;)?)((?:https?://|ftps?://)\S+?)\\1(?:\s+alt=(&quot;.*?&quot;|\S*?))?(?:\s?/)?&gt;~i', $data, $matches, PREG_PATTERN_ORDER);
+</replace>
+
+
+<search for>
+					foreach ($matches[1] as $match => $imgtag)
+					{
+						// No alt?
+						if (!isset($matches[2][$match]))
+							$matches[2][$match] = '';
+</search for>
+
+<replace>
+					foreach ($matches[2] as $match => $imgtag)
+					{
+						$alt = empty($matches[3][$match]) ? '' : ' alt=' . preg_replace('~^&quot;|&quot;$~', '', $matches[3][$match]);
+</replace>
+
+
+<search for>
+							$replaces[$matches[0][$match]] = '[img width=' . $width . ' height=' . $height . $alt . ']' . $imgtag . '[/img]';
+						}
+						else
+							$replaces[$matches[0][$match]] = '[img' . $alt . ']' . $imgtag . '[/img]';
+</search for>
+
+<replace>
+							$replaces[$matches[0][$match]] = '[img width=' . $width . ' height=' . $height . $alt . ']' . $imgtag . '[/img]';
+						}
+						else
+							$replaces[$matches[0][$match]] = '[img' . $alt . ']' . $imgtag . '[/img]';
+</replace>
+
+
+
+<edit file>
 $sourcedir/Profile.php
 </edit file>
 
