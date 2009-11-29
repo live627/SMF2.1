@@ -666,7 +666,7 @@ function Post()
 					if ($row['filesize'] <= 0)
 						continue;
 					$context['current_attachments'][] = array(
-						'name' => $row['filename'],
+						'name' => htmlspecialchars($row['filename']),
 						'id' => $row['id_attach'],
 						'approved' => $row['approved'],
 					);
@@ -776,7 +776,7 @@ function Post()
 		{
 			if ($attachment['filesize'] >= 0 && !empty($modSettings['attachmentEnable']))
 				$context['current_attachments'][] = array(
-					'name' => $attachment['filename'],
+					'name' => htmlspecialchars($attachment['filename']),
 					'id' => $attachment['id_attach'],
 					'approved' => $attachment['attachment_approved'],
 				);
@@ -949,7 +949,7 @@ function Post()
 				$total_size += filesize($current_attach_dir . '/' . $attachID);
 
 				$context['current_attachments'][] = array(
-					'name' => $name,
+					'name' => htmlspecialchars($name),
 					'id' => $attachID,
 					'approved' => 1,
 				);
@@ -1029,7 +1029,7 @@ function Post()
 				$attachID = 'post_tmp_' . $user_info['id'] . '_' . $temp_start++;
 				$_SESSION['temp_attachments'][$attachID] = basename($_FILES['attachment']['name'][$n]);
 				$context['current_attachments'][] = array(
-					'name' => basename($_FILES['attachment']['name'][$n]),
+					'name' => htmlspecialchars(basename($_FILES['attachment']['name'][$n])),
 					'id' => $attachID,
 					'approved' => 1,
 				);
@@ -1752,7 +1752,7 @@ function Post2()
 			$attachmentOptions = array(
 				'post' => isset($_REQUEST['msg']) ? $_REQUEST['msg'] : 0,
 				'poster' => $user_info['id'],
-				'name' => $smcFunc['htmlspecialchars']($_FILES['attachment']['name'][$n]),
+				'name' => $_FILES['attachment']['name'][$n],
 				'tmp_name' => $_FILES['attachment']['tmp_name'][$n],
 				'size' => $_FILES['attachment']['size'][$n],
 				'approved' => !$modSettings['postmod_active'] || allowedTo('post_attachment'),

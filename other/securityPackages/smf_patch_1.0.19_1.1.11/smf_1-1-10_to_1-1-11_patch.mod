@@ -848,6 +848,38 @@ $sourcedir/Poll.php
 
 
 <edit file>
+$sourcedir/Post.php
+</edit file>
+
+<search for>
+* Software Version:           SMF 1.1.10                                          *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.11                                          *
+</replace>
+
+
+<search for>
+						'name' => $row['filename'],
+</search for>
+
+<replace>
+						'name' => htmlspecialchars($row['filename']),
+</replace>
+
+
+<search for>
+					'name' => $attachment['filename'],
+</search for>
+
+<replace>
+					'name' => htmlspecialchars($attachment['filename']),
+</replace>
+
+
+
+<edit file>
 $sourcedir/Profile.php
 </edit file>
 
