@@ -785,6 +785,19 @@ $sourcedir/Packages.php
 </replace>
 
 
+<search for>
+	if (isset($_POST['submit']))
+	{
+</search for>
+
+<replace>
+	if (isset($_POST['submit']))
+	{
+		checkSession('post');
+
+</replace>
+
+
 
 <edit file>
 $sourcedir/Poll.php

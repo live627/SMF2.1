@@ -54,7 +54,7 @@ November 2009
  ! Check our session prior to saving any moderation center settings - reported by sirdarckcat. (ModerationCenter.php, ModerationCenter Template)
  ! Only remove our vote for valid sessions - reported by sirdarckcat. (Poll.php)
  ! Rule management needed a session check - reported by sirdarckcat. (PersonalMessage.php)
- ! Package option settings didn't check the session (Packages.php)
+ ! Package option settings didn't check the session - reported by cicatriz.r00t. (Packages.php)
  ! Permissions settings was missing a session check (ManagePermissions.php)
  ! Poll removal was missing a session check (Poll.php)
  ! Merging topics needed a session check (SplitTopics.php, SplitTopics Template)
