@@ -385,6 +385,223 @@ $sourcedir/ManagePermissions.php
 
 
 <edit file>
+$sourcedir/ManageSmileys.php
+</edit file>
+
+<search for>
+* Software Version:           SMF 1.1.1                                           *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.11                                          *
+</replace>
+
+
+<search for>
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+</search for>
+
+<replace>
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+</replace>
+
+
+<search for>
+			'path' => $set,
+			'name' => $set_names[$i],
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+}
+</search for>
+
+<replace>
+			'path' => htmlspecialchars($set),
+			'name' => htmlspecialchars($set_names[$i]),
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+}
+</replace>
+
+
+<search for>
+			'path' => $set,
+			'name' => $set_names[$i],
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+
+	// Importing any smileys from an existing set?
+</search for>
+
+<replace>
+			'path' => htmlspecialchars($set),
+			'name' => htmlspecialchars($set_names[$i]),
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+
+	// Importing any smileys from an existing set?
+</replace>
+
+
+<search for>
+			ImportSmileys($context['smiley_sets'][$_GET['set']]['path']);
+</search for>
+
+<replace>
+			ImportSmileys(un_htmlspecialchars($context['smiley_sets'][$_GET['set']]['path']));
+</replace>
+
+
+<search for>
+			'path' => $set,
+			'name' => $set_names[$i],
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+
+	// Submitting a form?
+</search for>
+
+<replace>
+			'path' => htmlspecialchars($set),
+			'name' => htmlspecialchars($set_names[$i]),
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+
+	// Submitting a form?
+</replace>
+
+
+<search for>
+				if (!is_writable($context['smileys_dir'] . '/' . $set['path']))
+</search for>
+
+<replace>
+				if (!is_writable($context['smileys_dir'] . '/' . un_htmlspecialchars($set['path'])))
+</replace>
+
+
+<search for>
+			while (isset($context['smiley_sets'][$i]) && file_exists($context['smileys_dir'] . '/' . $context['smiley_sets'][$i]['path'] . '/' . $destName))
+</search for>
+
+<replace>
+			while (isset($context['smiley_sets'][$i]) && file_exists($context['smileys_dir'] . '/' . un_htmlspecialchars($context['smiley_sets'][$i]['path']) . '/' . $destName))
+</replace>
+
+
+<search for>
+				$smileyLocation = $context['smileys_dir'] . '/' . $context['smiley_sets'][$i]['path'] . '/' . $destName;
+				move_uploaded_file($_FILES['uploadSmiley']['tmp_name'], $smileyLocation);
+				@chmod($smileyLocation, 0644);
+
+				// Now, we want to move it from there to all the other sets.
+				for ($n = count($context['smiley_sets']); $i < $n; $i++)
+				{
+					$currentPath = $context['smileys_dir'] . '/' . $context['smiley_sets'][$i]['path'] . '/' . $destName;
+</search for>
+
+<replace>
+				$smileyLocation = $context['smileys_dir'] . '/' . un_htmlspecialchars($context['smiley_sets'][$i]['path']) . '/' . $destName;
+				move_uploaded_file($_FILES['uploadSmiley']['tmp_name'], $smileyLocation);
+				@chmod($smileyLocation, 0644);
+
+				// Now, we want to move it from there to all the other sets.
+				for ($n = count($context['smiley_sets']); $i < $n; $i++)
+				{
+					$currentPath = $context['smileys_dir'] . '/' . un_htmlspecialchars($context['smiley_sets'][$i]['path']) . '/' . $destName;
+</replace>
+
+
+<search for>
+				if (!isset($_FILES['individual_' . $set['name']]['name']) || $_FILES['individual_' . $set['name']]['name'] == '')
+</search for>
+
+<replace>
+				$set['name'] = un_htmlspecialchars($set['name']);
+				$set['path'] = un_htmlspecialchars($set['path']);
+
+				if (!isset($_FILES['individual_' . $set['name']]['name']) || $_FILES['individual_' . $set['name']]['name'] == '')
+</replace>
+
+
+<search for>
+			if (!file_exists($context['smileys_dir'] . '/' . $smiley_set['path']))
+				continue;
+
+			$dir = dir($context['smileys_dir'] . '/' . $smiley_set['path']);
+</search for>
+
+<replace>
+			if (!file_exists($context['smileys_dir'] . '/' . un_htmlspecialchars($smiley_set['path'])))
+				continue;
+
+			$dir = dir($context['smileys_dir'] . '/' . un_htmlspecialchars($smiley_set['path']));
+</replace>
+
+
+<search for>
+			'path' => $set,
+			'name' => $set_names[$i],
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+
+	// Prepare overview of all (custom) smileys.
+</search for>
+
+<replace>
+			'path' => htmlspecialchars($set),
+			'name' => htmlspecialchars($set_names[$i]),
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+
+	// Prepare overview of all (custom) smileys.
+</replace>
+
+
+<search for>
+					if (!file_exists($modSettings['smileys_dir'] . '/' . $smiley_set['path'] . '/' . $smiley['filename']))
+</search for>
+
+<replace>
+					if (!file_exists($modSettings['smileys_dir'] . '/' . un_htmlspecialchars($smiley_set['path']) . '/' . $smiley['filename']))
+</replace>
+
+
+<search for>
+				'path' => $set,
+				'name' => $set_names[$i],
+				'selected' => $set == $modSettings['smiley_sets_default']
+			);
+
+		$context['selected_set'] = $modSettings['smiley_sets_default'];
+</search for>
+
+<replace>
+				'path' => htmlspecialchars($set),
+				'name' => htmlspecialchars($set_names[$i]),
+				'selected' => $set == $modSettings['smiley_sets_default']
+			);
+
+		$context['selected_set'] = $modSettings['smiley_sets_default'];
+</replace>
+
+
+<search for>
+				if (!file_exists($context['smileys_dir'] . '/' . $smiley_set['path']))
+					continue;
+
+				$dir = dir($context['smileys_dir'] . '/' . $smiley_set['path']);
+</search for>
+
+<replace>
+				if (!file_exists($context['smileys_dir'] . '/' . un_htmlspecialchars($smiley_set['path'])))
+					continue;
+
+				$dir = dir($context['smileys_dir'] . '/' . un_htmlspecialchars($smiley_set['path']));
+</replace>
+
+
+
+<edit file>
 $sourcedir/Modlog.php
 </edit file>
 
@@ -639,6 +856,27 @@ $sourcedir/Profile.php
 </replace>
 
 
+<search for>
+			'id' => $set,
+			'name' => $set_names[$i],
+			'selected' => $set == $context['member']['smiley_set']['id']
+		);
+
+		if ($context['smiley_sets'][$i]['selected'])
+			$context['member']['smiley_set']['name'] = $set_names[$i];
+</search for>
+
+<replace>
+			'id' => htmlspecialchars($set),
+			'name' => htmlspecialchars($set_names[$i]),
+			'selected' => $set == $context['member']['smiley_set']['id']
+		);
+
+		if ($context['smiley_sets'][$i]['selected'])
+			$context['member']['smiley_set']['name'] = htmlspecialchars($set_names[$i]);
+</replace>
+
+
 
 <edit file>
 $sourcedir/Subs.php
@@ -701,6 +939,15 @@ $sourcedir/Subs.php
 </replace>
 
 
+<search for>
+			$smileytocache[] = '<img src="' . $modSettings['smileys_url'] . '/' . $user_info['smiley_set'] . '/' . $smileysto[$i] . '" alt="' . strtr(htmlspecialchars($smileysdescs[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')) . '" border="0" />';
+</search for>
+
+<replace>
+			$smileytocache[] = '<img src="' . htmlspecialchars($modSettings['smileys_url'] . '/' . $user_info['smiley_set'] . '/' . $smileysto[$i]) . '" alt="' . strtr(htmlspecialchars($smileysdescs[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')) . '" border="0" />';
+</replace>
+
+
 
 <edit file>
 $sourcedir/Subs-Boards.php
@@ -757,6 +1004,38 @@ $sourcedir/Subs-Graphics.php
 <replace>
 	// Ask for more memory: we need it for this, and it'll only happen once!
 	@ini_set('memory_limit', '90M');
+</replace>
+
+
+
+<edit file>
+$sourcedir/Themes.php
+</edit file>
+
+<search for>
+* Software Version:           SMF 1.1.7                                           *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.11                                          *
+</replace>
+
+
+<search for>
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+</search for>
+
+<replace>
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+</replace>
+
+
+<search for>
+		$context['smiley_sets'][$set] = $set_names[$i];
+</search for>
+
+<replace>
+		$context['smiley_sets'][$set] = htmlspecialchars($set_names[$i]);
 </replace>
 
 

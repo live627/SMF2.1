@@ -656,8 +656,8 @@ function loadProfileFields($force_reload = false)
 				foreach ($context[\'smiley_sets\'] as $i => $set)
 				{
 					$context[\'smiley_sets\'][$i] = array(
-						\'id\' => $set,
-						\'name\' => $set_names[$i],
+						\'id\' => htmlspecialchars($set),
+						\'name\' => htmlspecialchars($set_names[$i]),
 						\'selected\' => $set == $context[\'member\'][\'smiley_set\'][\'id\']
 					);
 

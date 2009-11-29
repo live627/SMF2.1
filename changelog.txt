@@ -53,16 +53,17 @@ November 2009
  ! We only can see files in our directory - reported by sirdarckcat. (ManageErrors.php)
  ! Check our session prior to saving any moderation center settings - reported by sirdarckcat. (ModerationCenter.php, ModerationCenter Template)
  ! Only remove our vote for valid sessions - reported by sirdarckcat. (Poll.php)
- ! Rule management needed a session check (PersonalMessage.php)
+ ! Rule management needed a session check - reported by sirdarckcat. (PersonalMessage.php)
  ! Package option settings didn't check the session (Packages.php)
  ! Permissions settings was missing a session check (ManagePermissions.php)
  ! Poll removal was missing a session check (Poll.php)
  ! Merging topics needed a session check (SplitTopics.php, SplitTopics Template)
  ! Try to clean our attachment names better (Post.php)
  ! Do a better job at cleaning our admin login page (Subs-Auth.php)
- ! Fixed a missing Smiley Settings session check (ManageSmileys.php)
+ ! Fixed a missing Smiley Settings session check. (ManageSmileys.php)
  ! The board index category collapse was missing a session check - reported by WHK. (BoardIndex.php, Subs-BoardIndex.php)
  ! The parsing of basic HTML images wasn't properly escaped - reported by sirdarckcat. (Subs.php)
+ ! Smiley sets weren't properly escaped - reported by cicatriz.r00t. (ManageSmileys.php, Profile.php, Subs.php)
 
 
 SMF 2.0 RC2                                                      8 November 2009

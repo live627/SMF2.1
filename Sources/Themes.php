@@ -767,7 +767,7 @@ function SetThemeSettings()
 		'' => $txt['smileys_no_default']
 	);
 	foreach ($sets as $i => $set)
-		$context['smiley_sets'][$set] = $set_names[$i];
+		$context['smiley_sets'][$set] = htmlspecialchars($set_names[$i]);
 
 	$old_id = $settings['theme_id'];
 	$old_settings = $settings;
