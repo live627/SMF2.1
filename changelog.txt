@@ -46,7 +46,7 @@ November 2009
  ! A fatal language error in loadTheme could cause a infinite loop (Errors.php) [Bug 3959]
  ! A few of our tools needed fixed (reapir_*.php, repair.php, *_backup.php, smf_api.php) [Bug 3943]
  ! Allow administrators to change their warning level (Profile.php) [Bug 3935]
- ! Ensure that our website_url field only has valid http links (Profile-Modify.php)
+ ! Ensure that our website_url field only has valid http links - reported by WHK. (Profile-Modify.php)
  ! Package server deletion was missing a session check (PackageGet.php, Packages Template)
  ! Clean our package server name of any html (PackageGet.php)
  ! Do better validation on which packages we are deleting (Packages.php, Packages Template)
@@ -61,6 +61,7 @@ November 2009
  ! Try to clean our attachment names better (Post.php)
  ! Do a better job at cleaning our admin login page (Subs-Auth.php)
  ! Fixed a missing Smiley Settings session check (ManageSmileys.php)
+ ! The board index category collapse was missing a session check - reported by WHK. (BoardIndex.php, Subs-BoardIndex.php)
 
 
 SMF 2.0 RC2                                                      8 November 2009

@@ -134,6 +134,8 @@ function CollapseCategory()
 	// Just in case, no need, no need.
 	$context['robot_no_index'] = true;
 
+	checkSession('request');
+
 	if (!isset($_GET['sa']))
 		fatal_lang_error('no_access', false);
 
