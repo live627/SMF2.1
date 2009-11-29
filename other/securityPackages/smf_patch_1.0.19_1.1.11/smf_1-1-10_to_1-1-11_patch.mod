@@ -570,6 +570,77 @@ $sourcedir/Packages.php
 
 
 <edit file>
+$sourcedir/Poll.php
+</edit file>
+
+<search for>
+* Software Version:           SMF 1.1                                             *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.11                                          *
+</replace>
+
+
+<search for>
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+</search for>
+
+<replace>
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+</replace>
+
+
+<search for>
+	elseif (!empty($row['changeVote']))
+	{
+</search for>
+
+<replace>
+	elseif (!empty($row['changeVote']))
+	{
+		checkSession('request');
+</replace>
+
+
+<search for>
+	// Check permissions.
+	if (!allowedTo('poll_remove_any'))
+</search for>
+
+<replace>
+	checkSession('get');
+
+	// Check permissions.
+	if (!allowedTo('poll_remove_any'))
+</replace>
+
+
+
+<edit file>
+$sourcedir/Profile.php
+</edit file>
+
+<search for>
+* Software Version:           SMF 1.1.10                                          *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.11                                          *
+</replace>
+
+
+<search for>
+		if (strlen($_POST['websiteUrl']) < 8)
+</search for>
+
+<replace>
+		if (strlen($_POST['websiteUrl']) < 8 || (substr($_POST['websiteUrl'], 0, 7) !== 'http://' && substr($_POST['websiteUrl'], 0, 8) !== 'https://'))
+</replace>
+
+
+
+<edit file>
 $sourcedir/Subs.php
 </edit file>
 
@@ -627,29 +698,6 @@ $sourcedir/Subs.php
 						}
 						else
 							$replaces[$matches[0][$match]] = '[img' . $alt . ']' . $imgtag . '[/img]';
-</replace>
-
-
-
-<edit file>
-$sourcedir/Profile.php
-</edit file>
-
-<search for>
-* Software Version:           SMF 1.1.10                                          *
-</search for>
-
-<replace>
-* Software Version:           SMF 1.1.11                                          *
-</replace>
-
-
-<search for>
-		if (strlen($_POST['websiteUrl']) < 8)
-</search for>
-
-<replace>
-		if (strlen($_POST['websiteUrl']) < 8 || (substr($_POST['websiteUrl'], 0, 7) !== 'http://' && substr($_POST['websiteUrl'], 0, 8) !== 'https://'))
 </replace>
 
 
