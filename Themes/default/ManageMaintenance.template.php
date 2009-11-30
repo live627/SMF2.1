@@ -362,16 +362,21 @@ function template_maintain_topics()
 			function swapRot()
 			{
 				rotSwap = !rotSwap;
-				var rotForm = document.getElementById(\'rotForm\');
 
+				// Toggle icon
 				document.getElementById("rotIcon").src = smf_images_url + (rotSwap ? "/collapse.gif" : "/expand.gif");
-				setInnerHTML(document.getElementById("rotText"), rotSwap ? "', $txt['maintain_old_choose'], '" : "', $txt['maintain_old_all'], '");
-				document.getElementById("rotPanel").style.display = (rotSwap ? "block" : "none");
+				setInnerHTML(document.getElementById("rotText"), rotSwap ? ', JavaScriptEscape($txt['maintain_old_choose']), ' : ', JavaScriptEscape($txt['maintain_old_all']), ');
 
-				for (var i = 0; i < rotForm.length; i++)
+				// Toggle panel
+				document.getElementById("rotPanel").style.display = !rotSwap ? "none" : "";
+
+				// Toggle checkboxes
+				var rotPanel = document.getElementById(\'rotPanel\');
+				var oBoardCheckBoxes = rotPanel.getElementsByTagName(\'input\');
+				for (var i = 0; i < oBoardCheckBoxes.length; i++)
 				{
-					if (rotForm.elements[i].type.toLowerCase() == "checkbox" && rotForm.elements[i].id != "delete_old_not_sticky")
-						rotForm.elements[i].checked = !rotSwap;
+					if (oBoardCheckBoxes[i].type.toLowerCase() == "checkbox")
+						oBoardCheckBoxes[i].checked = !rotSwap;
 				}
 			}
 		// ]]></script>';
@@ -384,7 +389,7 @@ function template_maintain_topics()
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content flow_auto">
-					<form action="', $scripturl, '?action=admin;area=maintain;sa=topics;activity=pruneold" method="post" accept-charset="', $context['character_set'], '" id="rotForm">';
+					<form action="', $scripturl, '?action=admin;area=maintain;sa=topics;activity=pruneold" method="post" accept-charset="', $context['character_set'], '">';
 
 	// The otherwise hidden "choose which boards to prune".
 	echo '
@@ -404,38 +409,40 @@ function template_maintain_topics()
 						</p>';
 
 		echo '
-						<div>
+						<p>
 							<a href="#rotLink" onclick="swapRot();"><img src="', $settings['images_url'], '/expand.gif" alt="+" id="rotIcon" /></a> <a href="#rotLink" onclick="swapRot();" id="rotText" style="font-weight: bold;">', $txt['maintain_old_all'], '</a>
-
-							<div style="display: none;" id="rotPanel" class="flow_hidden">
-								<div class="align_left">';
+						</p>
+						<div style="display: none;" id="rotPanel" class="flow_hidden">
+							<div class="align_left" style="width: 49%">';
 
 	// This is the "middle" of the list.
-	$middle = count($context['categories']) / 2;
+	$middle = ceil(count($context['categories']) / 2);
 
 	$i = 0;
 	foreach ($context['categories'] as $category)
 	{
 		echo '
-									<fieldset style="width:20em;">
-										<legend>', $category['name'], '</legend>';
+								<fieldset>
+									<legend>', $category['name'], '</legend>
+									<ul class="reset">';
 
 		// Display a checkbox with every board.
 		foreach ($category['boards'] as $board)
 			echo '
-											<label for="boards_', $board['id'], '"><input type="checkbox" name="boards[', $board['id'], ']" id="boards_', $board['id'], '" checked="checked" class="input_check" /> ', str_repeat('&nbsp; ', $board['child_level']), $board['name'], '</label><br />';
+										<li style="margin-', $context['right_to_left'] ? 'right' : 'left', ': ', $board['child_level'] * 1.5, 'em;"><label for="boards_', $board['id'], '"><input type="checkbox" name="boards[', $board['id'], ']" id="boards_', $board['id'], '" checked="checked" class="input_check" />', $board['name'], '</label></li>';
+
 		echo '
-									</fieldset>';
+									</ul>
+								</fieldset>';
 
 		// Increase $i, and check if we're at the middle yet.
 		if (++$i == $middle)
 			echo '
-								</div>
-								<div  class="align_left">';
+							</div>
+							<div class="align_right" style="width: 49%;">';
 	}
 
 	echo '
-								</div>
 							</div>
 						</div>
 						<span><input type="submit" value="', $txt['maintain_old_remove'], '" onclick="return confirm(\'', $txt['maintain_old_confirm'], '\');" class="button_submit" /></span>

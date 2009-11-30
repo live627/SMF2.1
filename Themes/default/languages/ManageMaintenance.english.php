@@ -152,8 +152,8 @@ $txt['maintain_old_nothing_else'] = 'Any sort of topic.';
 $txt['maintain_old_are_moved'] = 'Moved topic notices.';
 $txt['maintain_old_are_locked'] = 'Locked.';
 $txt['maintain_old_are_not_stickied'] = 'But don\'t count stickied topics.';
-$txt['maintain_old_all'] = 'All Boards';
-$txt['maintain_old_choose'] = 'Choose Specific Boards';
+$txt['maintain_old_all'] = 'All Boards (click to select specific boards)';
+$txt['maintain_old_choose'] = 'Specific Boards (click to select all)';
 $txt['maintain_old_remove'] = 'Remove now';
 $txt['maintain_old_confirm'] = 'Are you really sure you want to delete old posts now?\\n\\nThis cannot be undone!';
 

@@ -1344,7 +1344,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'quote',
 				'before' => '<div class="quoteheader"><div class="topslice_quote">' . $txt['quote'] . '</div></div><blockquote>',
-				'after' => '</blockquote><div class="quotefooter"><div class="botslice_quote"></div></div><br />',
+				'after' => '</blockquote><div class="quotefooter"><div class="botslice_quote"></div></div>',
 				'block_level' => true,
 			),
 			array(
@@ -1353,14 +1353,14 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					'author' => array('match' => '(.{1,192}?)', 'quoted' => true),
 				),
 				'before' => '<div class="quoteheader"><div class="topslice_quote">' . $txt['quote_from'] . ': {author}</div></div><blockquote>',
-				'after' => '</blockquote><div class="quotefooter"><div class="botslice_quote"></div></div><br />',
+				'after' => '</blockquote><div class="quotefooter"><div class="botslice_quote"></div></div>',
 				'block_level' => true,
 			),
 			array(
 				'tag' => 'quote',
 				'type' => 'parsed_equals',
 				'before' => '<div class="quoteheader"><div class="topslice_quote">' . $txt['quote_from'] . ': $1</div></div><blockquote>',
-				'after' => '</blockquote><div class="quotefooter"><div class="botslice_quote"></div></div><br />',
+				'after' => '</blockquote><div class="quotefooter"><div class="botslice_quote"></div></div>',
 				'quoted' => 'optional',
 				// Don't allow everything to be embedded with the author name.
 				'parsed_tags_allowed' => array('url', 'iurl', 'ftp'),
@@ -1374,7 +1374,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					'date' => array('match' => '(\d+)', 'validate' => 'timeformat'),
 				),
 				'before' => '<div class="quoteheader"><div class="topslice_quote"><a href="' . $scripturl . '?{link}">' . $txt['quote_from'] . ': {author} ' . $txt['search_on'] . ' {date}</a></div></div><blockquote>',
-				'after' => '</blockquote><div class="quotefooter"><div class="botslice_quote"></div></div><br />',
+				'after' => '</blockquote><div class="quotefooter"><div class="botslice_quote"></div></div>',
 				'block_level' => true,
 			),
 			array(
@@ -1383,7 +1383,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					'author' => array('match' => '(.{1,192}?)'),
 				),
 				'before' => '<div class="quoteheader"><div class="topslice_quote">' . $txt['quote_from'] . ': {author}</div></div><blockquote>',
-				'after' => '</blockquote><div class="quotefooter"><div class="botslice_quote"></div></div><br />',
+				'after' => '</blockquote><div class="quotefooter"><div class="botslice_quote"></div></div>',
 				'block_level' => true,
 			),
 			array(
@@ -3224,7 +3224,7 @@ function setupThemeContext($forceload = false)
 
 	// Set some specific vars.
 	$context['page_title_html_safe'] = $smcFunc['htmlspecialchars'](un_htmlspecialchars($context['page_title']));
-	$context['meta_keywords'] = isset($modSettings['meta_keywords']) ? $smcFunc['htmlspecialchars']($modSettings['meta_keywords']) : 'PHP, MySQL, bulletin, board, free, open, source, smf, simple, machines, forum';
+	$context['meta_keywords'] = !empty($modSettings['meta_keywords']) ? $smcFunc['htmlspecialchars']($modSettings['meta_keywords']) : '';
 }
 
 // This is the only template included in the sources...

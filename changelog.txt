@@ -40,7 +40,7 @@ November 2009
  ! theme_variant being empty would cause double slashes in urls (Load.php, BoardIndex Template, MessageIndex Template) [Bug 3937]
  ! Theme related profile options would update even when errors occurred, which is inconsistant with other profile fields (Profile-Modify.php) [Bug 3808]
  ! Upgrading would fail for mysql4 users (upgrade.php) [Bug 3944]
- ! Do not show empty meta keywords (Subs.php, index template) [Bug 3977]
+ ! Do not show meta keywords, unless set. (Subs.php, index template) [Bug 3977]
  ! Users who have not set who they receive pms from would cause errors (Profile-Modify.php) [Bug 3989]
  ! Prevent undefined errors for template eval errors at end of file (Load.php) [Bug 3978]
  ! A fatal language error in loadTheme could cause a infinite loop (Errors.php) [Bug 3959]
@@ -65,6 +65,9 @@ November 2009
  ! The parsing of basic HTML images wasn't properly escaped - reported by sirdarckcat. (Subs.php)
  ! Smiley sets weren't properly escaped - reported by cicatriz.r00t. (ManageSmileys.php, Profile.php, Subs.php)
  ! The 'find members' delimiter wasn't properly escaped - reported by WHK. (Subs-Auth.php, Help template)
+ * The Core theme was missing an image. (Themes/core/images/icons/modify_small.gif)
+ * The Remove Old Posts template of the Forum Maintenance section wasn't working as expected. (ManageMaintenance template, ManageMaintenance language file)
+ ! Removed the trailing <br /> for quote tags to meet expectations - this was changed unintentionally in RC2. (Subs.php)
 
 
 SMF 2.0 RC2                                                      8 November 2009

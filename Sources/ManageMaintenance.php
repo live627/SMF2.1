@@ -158,7 +158,7 @@ function ManageMaintenance()
 				'cleancache' => 'MaintainCleanCache',
 			),
 		),
-	'database' => array(
+		'database' => array(
 			'function' => 'MaintainDatabase',
 			'template' => 'maintain_database',
 			'activities' => array(
