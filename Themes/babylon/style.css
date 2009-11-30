@@ -574,3 +574,8 @@ a.moderation_link, a.moderation_link:visited
 	float: right;
 	border: 0;
 }
+/* Correction for IE6 and 7. */
+.move_topic dl.settings
+{
+	height: 50px;
+}
