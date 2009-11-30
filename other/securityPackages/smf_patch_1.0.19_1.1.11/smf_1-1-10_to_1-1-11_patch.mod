@@ -262,6 +262,7 @@ $sourcedir/ManageMembers.php
 
 <search for>
 	// Check input after a member search has been submitted.
+	if ($context['sub_action'] == 'query' && empty($_REQUEST['params']))
 </search for>
 
 <replace>
@@ -284,16 +285,6 @@ $sourcedir/ManageMembers.php
 	}
 
 	// Check input after a member search has been submitted.
-</replace>
-
-
-<search for>
-	// Check input after a member search has been submitted.
-	if ($context['sub_action'] == 'query' && empty($_REQUEST['params']))
-</search for>
-
-<replace>
-	// Check input after a member search has been submitted.
 	if ($context['sub_action'] == 'query')
 </replace>
 
@@ -302,37 +293,20 @@ $sourcedir/ManageMembers.php
 	}
 	// If the query information was already packed in the URL, decode it.
 	// !!! Change this.
+	elseif ($context['sub_action'] == 'query')
+		$where = base64_decode(strtr($_REQUEST['params'], array(' ' => '+')));
+
+	// Construct the additional URL part with the query info in it.
+	$context['params_url'] = $context['sub_action'] == 'query' ? ';sa=query;params=' . base64_encode($where) : '';
 </search for>
 
 <replace>
 
 		$search_params = base64_encode(serialize(stripslashes__recursive($_POST)));
 	}
-	// If the query information was already packed in the URL, decode it.
-	// !!! Change this.
-</replace>
-
-
-<search for>
-	// If the query information was already packed in the URL, decode it.
-	// !!! Change this.
-	elseif ($context['sub_action'] == 'query')
-		$where = base64_decode(strtr($_REQUEST['params'], array(' ' => '+')));
-</search for>
-
-<replace>
-	// Check input after a member search has been submitted.
 	else
 		$search_params = null;
-</replace>
 
-
-<search for>
-	// Construct the additional URL part with the query info in it.
-	$context['params_url'] = $context['sub_action'] == 'query' ? ';sa=query;params=' . base64_encode($where) : '';
-</search for>
-
-<replace>
 	// Construct the additional URL part with the query info in it.
 	$context['params_url'] = $context['sub_action'] == 'query' ? ';sa=query;params=' . $search_params : '';
 </replace>
@@ -624,24 +598,8 @@ $sourcedir/Modlog.php
 
 
 <search for>
-
 	// If we have no search, a broken search, or a new search - then create a new array.
-</search for>
-
-<replace>
-
-	// This array houses all the valid search types.
-	$searchTypes = array(
-		'action' => array('sql' => 'lm.action', 'label' => $txt['modlog_action']),
-		'member' => array('sql' => 'mem.realName', 'label' => $txt['modlog_member']),
-		'group' => array('sql' => 'mg.groupName', 'label' => $txt['modlog_position']),
-		'ip' => array('sql' => 'lm.ip', 'label' => $txt['modlog_ip'])
-	);
-
-</replace>
-
-
-<search for>
+	if (!isset($search_params['string']) || (!empty($_REQUEST['search']) && $search_params['string'] != $_REQUEST['search']))
 	{
 		// This array houses all the valid search types.
 		$searchTypes = array(
@@ -650,17 +608,7 @@ $sourcedir/Modlog.php
 			'group' => array('sql' => 'mg.groupName', 'label' => $txt['modlog_position']),
 			'ip' => array('sql' => 'lm.ip', 'label' => $txt['modlog_ip'])
 		);
-</search for>
 
-<replace>
-
-		$search_params_string = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
-	else
-		$search_params_string = $search_params['string'];
-</replace>
-
-
-<search for>
 		$search_params = array(
 			'string' => empty($_REQUEST['search']) ? '' : $_REQUEST['search'],
 			'type' => isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $_REQUEST['search_type'] : isset($searchTypes[$context['order']]) ? $context['order'] : 'member',
@@ -671,6 +619,18 @@ $sourcedir/Modlog.php
 </search for>
 
 <replace>
+	// This array houses all the valid search types.
+	$searchTypes = array(
+		'action' => array('sql' => 'lm.action', 'label' => $txt['modlog_action']),
+		'member' => array('sql' => 'mem.realName', 'label' => $txt['modlog_member']),
+		'group' => array('sql' => 'mg.groupName', 'label' => $txt['modlog_position']),
+		'ip' => array('sql' => 'lm.ip', 'label' => $txt['modlog_ip'])
+	);
+
+	if (!isset($search_params['string']) || (!empty($_REQUEST['search']) && $search_params['string'] != $_REQUEST['search']))
+		$search_params_string = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
+	else
+		$search_params_string = $search_params['string'];
 
 	if (isset($_REQUEST['search_type']) || empty($search_params['type']) || !isset($searchTypes[$search_params['type']]))
 		$search_params_type = isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $_REQUEST['search_type'] : (isset($searchTypes[$context['order']]) ? $context['order'] : 'member');
@@ -686,34 +646,28 @@ $sourcedir/Modlog.php
 
 
 <search for>
-		'type' => $search_params['type'],
 		'label' => $search_params['type_label']
 </search for>
 
 <replace>
-		'type' => $search_params['type'],
 		'label' => $searchTypes[$search_params_type]['label'],
 </replace>
 
 
 <search for>
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = IF(mem.ID_GROUP = 0, mem.ID_POST_GROUP, mem.ID_GROUP))" . (!empty($search_params['string']) ? "
 		WHERE INSTR($search_params[type_sql], '$search_params[string]')" : ''), __FILE__, __LINE__);
 </search for>
 
 <replace>
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = IF(mem.ID_GROUP = 0, mem.ID_POST_GROUP, mem.ID_GROUP))" . (!empty($search_params['string']) ? "
 		WHERE INSTR($search_params_column, '$search_params[string]')" : ''), __FILE__, __LINE__);
 </replace>
 
 
 <search for>
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = IF(mem.ID_GROUP = 0, mem.ID_POST_GROUP, mem.ID_GROUP))" . (!empty($search_params['string']) ? "
 		WHERE INSTR($search_params[type_sql], '$search_params[string]')" : '') . "
 </search for>
 
 <replace>
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = IF(mem.ID_GROUP = 0, mem.ID_POST_GROUP, mem.ID_GROUP))" . (!empty($search_params['string']) ? "
 		WHERE INSTR($search_params_column, '$search_params[string]')" : '') . "
 </replace>
 
@@ -773,14 +727,16 @@ $sourcedir/Packages.php
 
 
 <search for>
-	$_GET['package'] = preg_replace('~[\.]+~', '.', strtr($_GET['package'], array('/' => '_', '\\' => '_')));
+	$_GET['package'] = preg_replace('~[\.]+~', '.', strtr($_GET['package'], '/', '_'));
 
+	// Can't delete what's not there.
 	if (file_exists($boarddir . '/Packages/' . $_GET['package']))
 </search for>
 
 <replace>
 	$_GET['package'] = preg_replace('~[\.]+~', '.', strtr($_GET['package'], array('/' => '_', '\\' => '_')));
 
+	// Can't delete what's not there.
 	if (file_exists($boarddir . '/Packages/' . $_GET['package']) && (substr($_GET['package'], -4) == '.zip' || substr($_GET['package'], -4) == '.tgz' || substr($_GET['package'], -7) == '.tar.gz' || is_dir($boarddir . '/Packages/' . $_GET['package'])) && $_GET['package'] != 'backups' && substr($_GET['package'], 0, 1) != '.')
 </replace>
 
@@ -1005,10 +961,10 @@ $sourcedir/Subs.php
 
 
 <search for>
-							$replaces[$matches[0][$match]] = '[img width=' . $width . ' height=' . $height . $alt . ']' . $imgtag . '[/img]';
+							$replaces[$matches[0][$match]] = '<img src="' . $imgtag . '" width="' . $width . '" height="' . $height . '" alt="' . $matches[2][$match] . '" border="0" />';
 						}
 						else
-							$replaces[$matches[0][$match]] = '[img' . $alt . ']' . $imgtag . '[/img]';
+							$replaces[$matches[0][$match]] = '<img src="' . $imgtag . '" alt="' . $matches[2][$match] . '" border="0" />';
 </search for>
 
 <replace>
@@ -1025,6 +981,55 @@ $sourcedir/Subs.php
 
 <replace>
 			$smileytocache[] = '<img src="' . htmlspecialchars($modSettings['smileys_url'] . '/' . $user_info['smiley_set'] . '/' . $smileysto[$i]) . '" alt="' . strtr(htmlspecialchars($smileysdescs[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')) . '" border="0" />';
+</replace>
+
+
+
+<edit file>
+$sourcedir/Subs-Auth.php
+</edit file>
+
+<search for>
+* Software Version:           SMF 1.1.10                                          *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.11                                          *
+</replace>
+
+
+<search for>
+				$context['get_data'] .= $k . '=' . $v . ';';
+			// If it changed, put it out there, but with an ampersand.
+			elseif ($temp[$k] != $_GET[$k])
+				$context['get_data'] .= $k . '=' . $v . '&amp;';
+</search for>
+
+<replace>
+				$context['get_data'] .= urlencode($k) . '=' . urlencode($v) . ';';
+			// If it changed, put it out there, but with an ampersand.
+			elseif ($temp[$k] != $_GET[$k])
+				$context['get_data'] .= urlencode($k) . '=' . urlencode($v) . '&amp;';
+</replace>
+
+
+<search for>
+		foreach ($_GET as $k => $v)
+			$context['get_data'] .= $k . '=' . $v . ';';
+</search for>
+
+<replace>
+		foreach ($_GET as $k => $v)
+			$context['get_data'] .= urlencode($k) . '=' . urlencode($v) . ';';
+</replace>
+
+
+<search for>
+<input type="hidden" name="' . $k . '" value="' . strtr(stripslashes($v), array('"' => '&quot;', '<' => '&lt;', '>' => '&gt;')) . '" />';
+</search for>
+
+<replace>
+<input type="hidden" name="' . htmlspecialchars($k) . '" value="' . strtr(stripslashes($v), array('"' => '&quot;', '<' => '&lt;', '>' => '&gt;')) . '" />';
 </replace>
 
 
