@@ -68,6 +68,8 @@ November 2009
  * The Core theme was missing an image. (Themes/core/images/icons/modify_small.gif)
  * The Remove Old Posts template of the Forum Maintenance section wasn't working as expected. (ManageMaintenance template, ManageMaintenance language file)
  ! Removed the trailing <br /> for quote tags to meet expectations - this was changed unintentionally in RC2. (Subs.php)
+ * Make use of theme variations in the help section's faux board index, too. (Help template) [Bug 4032]
+ * Invalid XHTML was generated for custom fields above signature.  (Display template) [Bug 4035]
 
 
 SMF 2.0 RC2                                                      8 November 2009

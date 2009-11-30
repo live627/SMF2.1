@@ -320,7 +320,7 @@ function template_manual_board_index()
 			}
 			function markBoardRead()
 			{
-					document.getElementById("board-new-or-not").src = smf_images_url + "/" + "off.png";
+					document.getElementById("board-new-or-not").src = smf_images_url + "/', $context['theme_variant_url'], '" + "off.png";
 					document.getElementById("board-new-or-not").title = "', $txt['old_posts'], '";
 			}
 		//]]></script>
@@ -339,7 +339,7 @@ function template_manual_board_index()
 					<tr class="windowbg2">
 						<td class="icon windowbg">
 							<a href="#">
-								<img src="', $settings['images_url'], '/redirect.png" alt="*" title="*" border="0" />
+								<img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'redirect.png" alt="*" title="*" border="0" />
 							</a>
 						</td>
 						<td class="info">
@@ -356,7 +356,7 @@ function template_manual_board_index()
 					<tr class="windowbg2">
 						<td class="icon windowbg" rowspan="2">
 							<a href="#">
-								<img src="', $settings['images_url'], '/on.png" id="board-new-or-not" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" />
+								<img src="', $settings['images_url'], '/', $context['theme_variant_url'], '/on.png" id="board-new-or-not" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" />
 							</a>
 						</td>
 						<td class="info">
@@ -377,7 +377,7 @@ function template_manual_board_index()
 					</tr>
 					<tr class="windowbg2">
 						<td class="icon windowbg">
-							<a href="#"><img src="', $settings['images_url'], '/off.png" alt="', $txt['old_posts'], '" title="', $txt['old_posts'], '" /></a>
+							<a href="#"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], '/off.png" alt="', $txt['old_posts'], '" title="', $txt['old_posts'], '" /></a>
 						</td>
 						<td class="info">
 							<a class="subject" href="', $scripturl, '?action=help;area=message_view" name="b2">', $txt['manual_board_index_board_name'], '</a>
@@ -401,9 +401,9 @@ function template_manual_board_index()
 		</div>
 		<div id="posting_icons" class="align_left">
 			<ul class="reset">
-				<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant'], '/new_some.png" alt="" /> ', $txt['new_posts'], '</li>
-				<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant'], '/new_none.png" alt="" /> ', $txt['old_posts'], '</li>
-				<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant'], '/new_redirect.png" alt="" /> ', $txt['redirect_board'], '</li>
+				<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'new_some.png" alt="" /> ', $txt['new_posts'], '</li>
+				<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'new_none.png" alt="" /> ', $txt['old_posts'], '</li>
+				<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'new_redirect.png" alt="" /> ', $txt['redirect_board'], '</li>
 			</ul>
 		</div>';
 

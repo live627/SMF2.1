@@ -557,7 +557,7 @@ function template_main()
 					$shown = true;
 					echo '
 							<div class="custom_fields_above_signature">
-								<ul class="reset nolist>';
+								<ul class="reset nolist">';
 				}
 				echo '
 									<li>', $custom['value'], '</li>';
