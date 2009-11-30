@@ -105,6 +105,7 @@ November 2009
  * Updated Curve's post icons to reflect the new default smiley set. (Themes/default/images/post/*)
  ! Hide the View Results button for polls when it is no longer possible to vote. (Display.php)
  ! Include the compatibility stylesheets for themes designed for 2.0 Beta, too. (Load.php) 
+ ! The inline URL detection could in some cases cause bad parsing results - reported by yacg. (Subs.php)
 
 
 October 2009
