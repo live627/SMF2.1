@@ -48,7 +48,7 @@ $sourcedir/BoardIndex.php
 </search for>
 
 <replace>
-				'collapse_href' => isset($row_board['canCollapse']) ? $scripturl . '?action=collapse;c=' . $row_board['ID_CAT'] . ';sa=' . ($row_board['isCollapsed'] > 0 ? 'expand' : 'collapse') . ';sesc=' .$context['session_id'] . '#' . $row_board['ID_CAT'] : '',
+				'collapse_href' => isset($row_board['canCollapse']) ? $scripturl . '?action=collapse;c=' . $row_board['ID_CAT'] . ';sa=' . ($row_board['isCollapsed'] > 0 ? 'expand' : 'collapse') . ';sesc=' . $context['session_id'] . '#' . $row_board['ID_CAT'] : '',
 </replace>
 
 
