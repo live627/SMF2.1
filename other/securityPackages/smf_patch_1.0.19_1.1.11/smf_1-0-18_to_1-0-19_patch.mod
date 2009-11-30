@@ -858,7 +858,7 @@ $sourcedir/Post.php
 
 <replace>
 				$context['current_attachments'][] = array(
-					'name' =>(htmlspecialchars)$attachment['filename']),
+					'name' =>htmlspecialchars($attachment['filename']),
 </replace>
 
 
@@ -874,18 +874,6 @@ $sourcedir/Post.php
 	// Editing a message...
 	elseif (isset($_REQUEST['msg']))
 	{
-</replace>
-
-
-
-<search for>
-					(" . (!empty($_REQUEST['msg']) ? 'ID_MSG, ' : '') . "filename, file_hash, size)
-				VALUES (" . (!empty($_REQUEST['msg']) ? (int) $_REQUEST['msg'] . ', ' : '') . "'" . $_FILES['attachment']['name'][$n] . "', '" . $_FILES['attachment']['file_hash'][$n] . "', " . $_FILES['attachment']['size'][$n] . ')', __FILE__, __LINE__);
-</search for>
-
-<replace>
-					(" . (!empty($_REQUEST['msg']) ? 'ID_MSG, ' : '') . "filename, file_hash, size)
-				VALUES (" . (!empty($_REQUEST['msg']) ? (int) $_REQUEST['msg'] . ', ' : '') . "'" . htmlspecialchars($_FILES['attachment']['name'][$n]) . "', '" . $_FILES['attachment']['file_hash'][$n] . "', " . $_FILES['attachment']['size'][$n] . ')', __FILE__, __LINE__);
 </replace>
 
 
