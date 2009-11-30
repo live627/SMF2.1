@@ -33,7 +33,6 @@ $sourcedir/PackageGet.php
 </replace>
 
 
-
 <edit file>
 $sourcedir/ManageSmileys.php
 </edit file>
@@ -46,6 +45,7 @@ $sourcedir/ManageSmileys.php
 </replace>
 
 
+
 <search for>
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 </search for>
@@ -55,26 +55,43 @@ $sourcedir/ManageSmileys.php
 </replace>
 
 
+
 <search for>
 			'path' => $set,
 			'name' => $set_names[$i],
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+}
 </search for>
 
 <replace>
 			'path' => htmlspecialchars($set),
 			'name' => htmlspecialchars($set_names[$i]),
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+}
 </replace>
+
 
 
 <search for>
 			'path' => $set,
 			'name' => $set_names[$i],
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+
+	// Importing any smileys from an existing set?
 </search for>
 
 <replace>
 			'path' => htmlspecialchars($set),
 			'name' => htmlspecialchars($set_names[$i]),
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+
+	// Importing any smileys from an existing set?
 </replace>
+
 
 
 <search for>
@@ -88,16 +105,26 @@ $sourcedir/ManageSmileys.php
 </replace>
 
 
+
 <search for>
 			'path' => $set,
 			'name' => $set_names[$i],
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+
+	// Submitting a form?
 </search for>
 
 <replace>
 		if (isset($context['smiley_sets'][$_GET['id']]))
 			'path' => htmlspecialchars($set),
 			'name' => htmlspecialchars($set_names[$i]),
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+
+	// Submitting a form?
 </replace>
+
 
 
 <search for>
@@ -113,6 +140,7 @@ $sourcedir/ManageSmileys.php
 </replace>
 
 
+
 <search for>
 			// Keep going until we find a set the file doesn't exist in. (or maybe it exists in all of them?)
 			while (isset($context['smiley_sets'][$i]) && file_exists($context['smileys_dir'] . '/' . $context['smiley_sets'][$i]['path'] . '/' . $destName))
@@ -122,6 +150,7 @@ $sourcedir/ManageSmileys.php
 			// Keep going until we find a set the file doesn't exist in. (or maybe it exists in all of them?)
 			while (isset($context['smiley_sets'][$i]) && file_exists($context['smileys_dir'] . '/' . un_htmlspecialchars($context['smiley_sets'][$i]['path']) . '/' . $destName))
 </replace>
+
 
 
 <search for>
@@ -137,6 +166,7 @@ $sourcedir/ManageSmileys.php
 </replace>
 
 
+
 <search for>
 				for ($n = count($context['smiley_sets']); $i < $n; $i++)
 				{
@@ -148,6 +178,7 @@ $sourcedir/ManageSmileys.php
 				{
 					$currentPath = $context['smileys_dir'] . '/' . un_htmlspecialchars($context['smiley_sets'][$i]['path']) . '/' . $destName;
 </replace>
+
 
 <search for>
 				if (!isset($_FILES['individual_' . $set['name']]['name']) || $_FILES['individual_' . $set['name']]['name'] == '')
@@ -164,6 +195,7 @@ $sourcedir/ManageSmileys.php
 
 
 
+
 <search for>
 		foreach ($context['smiley_sets'] as $smiley_set)
 		{
@@ -177,24 +209,63 @@ $sourcedir/ManageSmileys.php
 </replace>
 
 
+
 <search for>
 			$dir = dir($context['smileys_dir'] . '/' . $smiley_set['path']);
+			while ($entry = $dir->read())
+			{
+				if (!in_array($entry, $context['filenames']) && in_array(strrchr($entry, '.'), array('.jpg', '.gif', '.jpeg', '.png')))
+					$context['filenames'][strtolower($entry)] = array(
+						'id' => htmlspecialchars($entry),
+						'selected' => false,
+					);
+			}
+			$dir->close();
+		}
+		ksort($context['filenames']);
+	}
+
+	// Create a new smiley from scratch.
 </search for>
 
 <replace>
 			$dir = dir($context['smileys_dir'] . '/' . un_htmlspecialchars($smiley_set['path']));
+			while ($entry = $dir->read())
+			{
+				if (!in_array($entry, $context['filenames']) && in_array(strrchr($entry, '.'), array('.jpg', '.gif', '.jpeg', '.png')))
+					$context['filenames'][strtolower($entry)] = array(
+						'id' => htmlspecialchars($entry),
+						'selected' => false,
+					);
+			}
+			$dir->close();
+		}
+		ksort($context['filenames']);
+	}
+
+	// Create a new smiley from scratch.
 </replace>
+
 
 
 <search for>
 			'path' => $set,
 			'name' => $set_names[$i],
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+
+	// Prepare overview of all (custom) smileys.
 </search for>
 
 <replace>
 			'path' => htmlspecialchars($set),
 			'name' => htmlspecialchars($set_names[$i]),
+			'selected' => $set == $modSettings['smiley_sets_default']
+		);
+
+	// Prepare overview of all (custom) smileys.
 </replace>
+
 
 
 <search for>
@@ -208,16 +279,25 @@ $sourcedir/ManageSmileys.php
 </replace>
 
 
+
 <search for>
 				'path' => $set,
 				'name' => $set_names[$i],
+				'selected' => $set == $modSettings['smiley_sets_default']
+			);
+
+		$context['selected_set'] = $modSettings['smiley_sets_default'];
 </search for>
 
 <replace>
-				foreach ($context['smileys'] as $smiley_id => $smiley)
 				'path' => htmlspecialchars($set),
 				'name' => htmlspecialchars($set_names[$i]),
+				'selected' => $set == $modSettings['smiley_sets_default']
+			);
+
+		$context['selected_set'] = $modSettings['smiley_sets_default'];
 </replace>
+
 
 
 <search for>
@@ -235,11 +315,40 @@ $sourcedir/ManageSmileys.php
 
 <search for>
 				$dir = dir($context['smileys_dir'] . '/' . $smiley_set['path']);
+				while ($entry = $dir->read())
+				{
+					if (!in_array($entry, $context['filenames']) && in_array(strrchr($entry, '.'), array('.jpg', '.gif', '.jpeg', '.png')))
+						$context['filenames'][strtolower($entry)] = array(
+							'id' => htmlspecialchars($entry),
+							'selected' => false,
+						);
+				}
+				$dir->close();
+			}
+			ksort($context['filenames']);
+		}
+
+		$request = db_query("
 </search for>
 
 <replace>
 				$dir = dir($context['smileys_dir'] . '/' . un_htmlspecialchars($smiley_set['path']));
+				while ($entry = $dir->read())
+				{
+					if (!in_array($entry, $context['filenames']) && in_array(strrchr($entry, '.'), array('.jpg', '.gif', '.jpeg', '.png')))
+						$context['filenames'][strtolower($entry)] = array(
+							'id' => htmlspecialchars($entry),
+							'selected' => false,
+						);
+				}
+				$dir->close();
+			}
+			ksort($context['filenames']);
+		}
+
+		$request = db_query("
 </replace>
+
 
 
 <edit file>
@@ -271,7 +380,6 @@ $sourcedir/Profile.php
 </search for>
 
 <replace>
-			$_POST['websiteUrl'] = 'http://' . $_POST['websiteUrl'];
 			'id' => htmlspecialchars($set),
 			'name' => htmlspecialchars($set_names[$i]),
 </replace>
@@ -755,11 +863,18 @@ $sourcedir/Post.php
 
 
 <search for>
-			checkSession('get');
+	// Editing a message...
+	elseif (isset($_REQUEST['msg']))
+	{
+		checkSession('get');
 
 </search for>
 
-<replace></replace>
+<replace>
+	// Editing a message...
+	elseif (isset($_REQUEST['msg']))
+	{
+</replace>
 
 
 
