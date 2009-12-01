@@ -299,24 +299,44 @@ h4#pollquestion
 #poll_options ul.options
 {
 	padding: 1em 2em 0 2.5em;
+	margin: 0 0 1em 0;
 }
 #poll_options div.submitbutton
 {
+	clear: both;
 	padding: 0 2em 1em 0;
+	margin: 0 0 1em 0;
 }
+
 /* Poll results */
 #poll_options dl.options
 {
-	padding: 1em 2em 0 2.5em;
-	clear: left;
+	padding: 1em 2em 1em 2.5em;
+	margin: 0 0 1em 1em;
 }
 #poll_options dl.options dt
 {
+	padding: 0.3em 0;
+	width: 30%;
 	float: right;
+	margin: 0;
+	clear: right;
 }
 #poll_options dl.options dd
 {
+	margin: 0;
+	padding: 0.3em 2em 0.3em 0;
+	width: 60%;
+	max-width: 500px;
 	float: right;
+}
+span.percent
+{
+	float: left;
+}
+span.pollbar
+{
+	margin-left: 6em;
 }
 
 /* author and topic informaton */
@@ -400,13 +420,29 @@ ul.quickbuttons li a
 	padding: 0 20px 0 0;
 	float: right;
 }
+ul.quickbuttons li.quote_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 100% 0;
+}
+ul.quickbuttons li.remove_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 100% -30px;
+}
+ul.quickbuttons li.modify_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 100% -60px;
+}
 ul.quickbuttons li.approve_button
 {
 	background: url(../images/theme/quickbuttons.png) no-repeat 100% -90px;
 }
-ul.quickbuttons li.quote_button
+ul.quickbuttons li.restore_button
 {
-	background: url(../images/theme/quickbuttons.png) no-repeat 100% 0;
+	background: url(../images/theme/quickbuttons.png) no-repeat 100% -120px;	
+}
+ul.quickbuttons li.split_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 100% -150px;
 }
 ul.quickbuttons li.reply_button
 {
@@ -416,21 +452,9 @@ ul.quickbuttons li.reply_all_button
 {
 	background: url(../images/theme/quickbuttons.png) no-repeat 100% -180px;
 }
-ul.quickbuttons li.modify_button
+ul.quickbuttons li.notify_button
 {
-	background: url(../images/theme/quickbuttons.png) no-repeat 100% -60px;
-}
-ul.quickbuttons li.remove_button
-{
-	background: url(../images/theme/quickbuttons.png) no-repeat 100% -30px;
-}
-ul.quickbuttons li.split_button
-{
-	background: url(../images/theme/quickbuttons.png) no-repeat 100% -150px;
-}
-ul.quickbuttons li.restore_button
-{
-	background: url(../images/theme/quickbuttons.png) no-repeat 100% -120px;
+	background: url(../images/theme/quickbuttons.png) no-repeat 100% -210px;
 }
 ul.quickbuttons li.inline_mod_check
 {

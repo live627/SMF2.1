@@ -184,6 +184,10 @@ em
 {
 	overflow: hidden;
 }
+.flow_hidden .windowbg, .flow_hidden .windowbg2
+{
+	margin-top: 2px;
+}
 .clear
 {
 	clear: both;
@@ -1736,35 +1740,57 @@ h4#pollquestion
 {
 	border: solid #9999AA;
 	border-width: 1px 0;
-	padding: 1em 2.5em 0 2em;
+	padding: 1em 2.5em 1em 2em;
 	margin: 0 1em 1em 0;
-	clear: right;
-	overflow: hidden;
 }
+
 #poll_options dl.options dt
 {
-	line-height: 1.6em;
-	vertical-align: middle;
-	width: 48%;
+	padding: 0.3em 0;
+	width: 30%;
 	float: left;
-	clear: both;
-	margin-bottom: 4px;
+	margin: 0;
+	clear: left;
 }
+
 #poll_options dl.options dt.voted
 {
 	font-weight: bold;
 }
 #poll_options dl.options dd
 {
-	margin: 0 4px 1em 0;
-	vertical-align: middle;
-	line-height: 1.6em;
-	width: 48%;
+	margin: 0;
+	padding: 0.3em 0 0.3em 2em;
+	width: 60%;
+	max-width: 500px;
 	float: left;
 }
 #poll .content
 {
 	padding: 0 1em;
+}
+span.pollbar, span.pollbar span, span.percent
+{
+	height: 1.1em;
+	display: block;
+}
+span.percent
+{
+	float: right;
+}
+span.pollbar
+{
+	background: white;
+	border: solid 1px #888;
+	margin-right: 6em;
+}
+span.pollbar span
+{
+	background: #FE9540;
+}
+#poll_options dd.voted span.pollbar span
+{
+	background: #FFC495;
 }
 
 /* Poll notices */
@@ -1906,13 +1932,29 @@ ul.quickbuttons li a
 	line-height: 18px;
 	float: left;
 }
+ul.quickbuttons li.quote_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 0 0;
+}
+ul.quickbuttons li.remove_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 0 -30px;
+}
+ul.quickbuttons li.modify_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 0 -60px;
+}
 ul.quickbuttons li.approve_button
 {
 	background: url(../images/theme/quickbuttons.png) no-repeat 0 -90px;
 }
-ul.quickbuttons li.quote_button
+ul.quickbuttons li.restore_button
 {
-	background: url(../images/theme/quickbuttons.png) no-repeat 0 0;
+	background: url(../images/theme/quickbuttons.png) no-repeat 0 -120px;
+}
+ul.quickbuttons li.split_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 0 -150px;
 }
 ul.quickbuttons li.reply_button
 {
@@ -1922,21 +1964,9 @@ ul.quickbuttons li.reply_all_button
 {
 	background: url(../images/theme/quickbuttons.png) no-repeat 0 -180px;
 }
-ul.quickbuttons li.modify_button
+ul.quickbuttons li.notify_button
 {
-	background: url(../images/theme/quickbuttons.png) no-repeat 0 -60px;
-}
-ul.quickbuttons li.remove_button
-{
-	background: url(../images/theme/quickbuttons.png) no-repeat 0 -30px;
-}
-ul.quickbuttons li.split_button
-{
-	background: url(../images/theme/quickbuttons.png) no-repeat 0 -150px;
-}
-ul.quickbuttons li.restore_button
-{
-	background: url(../images/theme/quickbuttons.png) no-repeat 0 -120px;
+	background: url(../images/theme/quickbuttons.png) no-repeat 0 -210px;
 }
 ul.quickbuttons li.inline_mod_check
 {
