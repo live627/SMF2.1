@@ -126,7 +126,7 @@ function template_folder()
 	if ($context['display_mode'] != 1)
 	{
 		template_subject_list();
-		echo '<div class="clear"><br /></div>';
+		echo '<div class="clear_right"><br /></div>';
 	}
 
 	// Got some messages to display?
@@ -398,7 +398,7 @@ function template_folder()
 						$shown = true;
 						echo '
 				<div class="custom_fields_above_signature">
-					<ul class="reset nolist>';
+					<ul class="reset nolist">';
 					}
 					echo '
 						<li>', $custom['value'], '</li>';

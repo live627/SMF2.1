@@ -444,7 +444,7 @@ function ComposeMailing()
 	$context['sub_template'] = 'email_members_compose';
 
 	$context['default_subject'] = htmlspecialchars($context['forum_name'] . ': ' . $txt['subject']);
-	$context['default_message'] = htmlspecialchars($txt['message'] . "\n\n" . $txt['regards_team'] . "\n\n" . '{$board_url})');
+	$context['default_message'] = htmlspecialchars($txt['message'] . "\n\n" . $txt['regards_team'] . "\n\n" . '{$board_url}');
 }
 
 // Send out the mailing!
