@@ -1090,6 +1090,12 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'block_level' => true,
 			),
 			array(
+				'tag' => 'center',
+				'before' => '<div align="center">',
+				'after' => '</div>',
+				'block_level' => true,
+			),
+			array(
 				'tag' => 'code',
 				'type' => 'unparsed_equals_content',
 				'content' => '<div class="codeheader">' . $txt['code'] . ': ($2) <a href="#" onclick="return smfSelectText(this);" class="codeoperation">' . $txt['code_select'] . '</a></div><code>$1</code>',
@@ -1134,12 +1140,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'block_level' => true,
 			),
 			array(
-				'tag' => 'center',
-				'before' => '<div align="center">',
-				'after' => '</div>',
-				'block_level' => true,
-			),
-			array(
 				'tag' => 'color',
 				'type' => 'unparsed_equals',
 				'test' => '(#[\da-fA-F]{3}|#[\da-fA-F]{6}|[A-Za-z]{1,20}|rgb\(\d{1,3}, ?\d{1,3}, ?\d{1,3}\))\]',
@@ -1163,18 +1163,17 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'disabled_after' => ' ($1)',
 			),
 			array(
-				'tag' => 'ftp',
-				'type' => 'unparsed_content',
-				'content' => '<a href="$1" class="bbc_ftp new_win" target="_blank">$1</a>',
-				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
-			),
-			array(
-				'tag' => 'ftp',
-				'type' => 'unparsed_equals',
-				'before' => '<a href="$1" class="bbc_ftp new_win" target="_blank">',
-				'after' => '</a>',
-				'disallow_children' => array('email', 'ftp', 'url', 'iurl'),
-				'disabled_after' => ' ($1)',
+				'tag' => 'flash',
+				'type' => 'unparsed_commas_content',
+				'test' => '\d+,\d+\]',
+				'content' => ($context['browser']['is_ie'] && !$context['browser']['is_mac_ie'] ? '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="$2" height="$3"><param name="movie" value="$1" /><param name="play" value="true" /><param name="loop" value="true" /><param name="quality" value="high" /><param name="AllowScriptAccess" value="never" /><embed src="$1" width="$2" height="$3" play="true" loop="true" quality="high" AllowScriptAccess="never" /><noembed><a href="$1" target="_blank" class="new_win">$1</a></noembed></object>' : '<embed type="application/x-shockwave-flash" src="$1" width="$2" height="$3" play="true" loop="true" quality="high" AllowScriptAccess="never" /><noembed><a href="$1" target="_blank" class="new_win">$1</a></noembed>'),
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					if (isset($disabled[\'url\']))
+						$tag[\'content\'] = \'$1\';
+					elseif (strpos($data[0], \'http://\') !== 0 || strpos($data[0], \'https://\') !== 0)
+						$data[0] = \'http://\' . $data[0];
+				'),
+				'disabled_content' => '<a href="$1" target="_blank" class="new_win">$1</a>',
 			),
 			array(
 				'tag' => 'font',
@@ -1184,19 +1183,26 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'after' => '</span>',
 			),
 			array(
-				'tag' => 'flash',
-				'type' => 'unparsed_commas_content',
-				'test' => '\d+,\d+\]',
-				'content' => ($context['browser']['is_ie'] && !$context['browser']['is_mac_ie'] ? '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="$2" height="$3"><param name="movie" value="$1" /><param name="play" value="true" /><param name="loop" value="true" /><param name="quality" value="high" /><param name="AllowScriptAccess" value="never" /><embed src="$1" width="$2" height="$3" play="true" loop="true" quality="high" AllowScriptAccess="never" /><noembed><a href="$1" target="_blank" class="new_win">$1</a></noembed></object>' : '<embed type="application/x-shockwave-flash" src="$1" width="$2" height="$3" play="true" loop="true" quality="high" AllowScriptAccess="never" /><noembed><a href="$1" target="_blank" class="new_win">$1</a></noembed>'),
+				'tag' => 'ftp',
+				'type' => 'unparsed_content',
+				'content' => '<a href="$1" class="bbc_ftp new_win" target="_blank">$1</a>',
 				'validate' => create_function('&$tag, &$data, $disabled', '
-					if (isset($disabled[\'url\']))
-						$tag[\'content\'] = \'$1\';'),
-				'disabled_content' => '<a href="$1" target="_blank" class="new_win">$1</a>',
+					$data = strtr($data, array(\'<br />\' => \'\'));
+					if (strpos($data, \'ftp://\') !== 0 || strpos($data, \'ftps://\') !== 0)
+						$data = \'ftp://\' . $data;
+				'),
 			),
 			array(
-				'tag' => 'green',
-				'before' => '<span style="color: green;" class="bbc_color">',
-				'after' => '</span>',
+				'tag' => 'ftp',
+				'type' => 'unparsed_equals',
+				'before' => '<a href="$1" class="bbc_ftp new_win" target="_blank">',
+				'after' => '</a>',
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					if (strpos($data, \'ftp://\') !== 0 || strpos($data, \'ftps://\') !== 0)
+						$data = \'ftp://\' . $data;
+				'),
+				'disallow_children' => array('email', 'ftp', 'url', 'iurl'),
+				'disabled_after' => ' ($1)',
 			),
 			array(
 				'tag' => 'glow',
@@ -1206,10 +1212,9 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'after' => $context['browser']['is_ie'] ? '</td></tr></table> ' : '</span>',
 			),
 			array(
-				'tag' => 'hr',
-				'type' => 'closed',
-				'content' => '<hr />',
-				'block_level' => true,
+				'tag' => 'green',
+				'before' => '<span style="color: green;" class="bbc_color">',
+				'after' => '</span>',
 			),
 			array(
 				'tag' => 'html',
@@ -1217,6 +1222,17 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'content' => '$1',
 				'block_level' => true,
 				'disabled_content' => '$1',
+			),
+			array(
+				'tag' => 'hr',
+				'type' => 'closed',
+				'content' => '<hr />',
+				'block_level' => true,
+			),
+			array(
+				'tag' => 'i',
+				'before' => '<em>',
+				'after' => '</em>',
 			),
 			array(
 				'tag' => 'img',
@@ -1227,26 +1243,33 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					'height' => array('optional' => true, 'value' => ' height="$1"', 'match' => '(\d+)'),
 				),
 				'content' => '<img src="$1" alt="{alt}"{width}{height} class="bbc_img" />',
-				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					$data = strtr($data, array(\'<br />\' => \'\'));
+					if (strpos($data, \'http://\') !== 0 || strpos($data, \'https://\') !== 0)
+						$data = \'http://\' . $data;
+				'),
 				'disabled_content' => '($1)',
 			),
 			array(
 				'tag' => 'img',
 				'type' => 'unparsed_content',
 				'content' => '<img src="$1" alt="" class="bbc_img" />',
-				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					$data = strtr($data, array(\'<br />\' => \'\'));
+					if (strpos($data, \'http://\') !== 0 || strpos($data, \'https://\') !== 0)
+						$data = \'http://\' . $data;
+				'),
 				'disabled_content' => '($1)',
-			),
-			array(
-				'tag' => 'i',
-				'before' => '<em>',
-				'after' => '</em>',
 			),
 			array(
 				'tag' => 'iurl',
 				'type' => 'unparsed_content',
 				'content' => '<a href="$1" class="bbc_link">$1</a>',
-				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					$data = strtr($data, array(\'<br />\' => \'\'));
+					if (strpos($data, \'http://\') !== 0 || strpos($data, \'https://\') !== 0)
+						$data = \'http://\' . $data;
+				'),
 			),
 			array(
 				'tag' => 'iurl',
@@ -1255,9 +1278,18 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'after' => '</a>',
 				'validate' => create_function('&$tag, &$data, $disabled', '
 					if (substr($data, 0, 1) == \'#\')
-						$data = \'#post_\' . substr($data, 1);'),
+						$data = \'#post_\' . substr($data, 1);
+					elseif (strpos($data, \'http://\') !== 0 || strpos($data, \'https://\') !== 0)
+						$data = \'http://\' . $data;
+				'),
 				'disallow_children' => array('email', 'ftp', 'url', 'iurl'),
 				'disabled_after' => ' ($1)',
+			),
+			array(
+				'tag' => 'left',
+				'before' => '<div style="text-align: left;">',
+				'after' => '</div>',
+				'block_level' => true,
 			),
 			array(
 				'tag' => 'li',
@@ -1289,12 +1321,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'block_level' => true,
 			),
 			array(
-				'tag' => 'left',
-				'before' => '<div style="text-align: left;">',
-				'after' => '</div>',
-				'block_level' => true,
-			),
-			array(
 				'tag' => 'ltr',
 				'before' => '<div dir="ltr">',
 				'after' => '</div>',
@@ -1322,11 +1348,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'content' => '$1',
 			),
 			array(
-				'tag' => 'pre',
-				'before' => '<pre>',
-				'after' => '</pre>',
-			),
-			array(
 				'tag' => 'php',
 				'type' => 'unparsed_content',
 				'content' => '<span class="phpcode">$1</span>',
@@ -1340,6 +1361,11 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					}'),
 				'block_level' => false,
 				'disabled_content' => '$1',
+			),
+			array(
+				'tag' => 'pre',
+				'before' => '<pre>',
+				'after' => '</pre>',
 			),
 			array(
 				'tag' => 'quote',
@@ -1387,15 +1413,15 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'block_level' => true,
 			),
 			array(
+				'tag' => 'red',
+				'before' => '<span style="color: red;" class="bbc_color">',
+				'after' => '</span>',
+			),
+			array(
 				'tag' => 'right',
 				'before' => '<div style="text-align: right;">',
 				'after' => '</div>',
 				'block_level' => true,
-			),
-			array(
-				'tag' => 'red',
-				'before' => '<span style="color: red;" class="bbc_color">',
-				'after' => '</span>',
 			),
 			array(
 				'tag' => 'rtl',
@@ -1407,6 +1433,34 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'tag' => 's',
 				'before' => '<del>',
 				'after' => '</del>',
+			),
+			array(
+				'tag' => 'shadow',
+				'type' => 'unparsed_commas',
+				'test' => '[#0-9a-zA-Z\-]{3,12},(left|right|top|bottom|[0123]\d{0,2})\]',
+				'before' => $context['browser']['is_ie'] ? '<span style="display: inline-block; filter: Shadow(color=$1, direction=$2); height: 1.2em;">' : '<span style="text-shadow: $1 $2">',
+				'after' => '</span>',
+				'validate' => $context['browser']['is_ie'] ? create_function('&$tag, &$data, $disabled', '
+					if ($data[1] == \'left\')
+						$data[1] = 270;
+					elseif ($data[1] == \'right\')
+						$data[1] = 90;
+					elseif ($data[1] == \'top\')
+						$data[1] = 0;
+					elseif ($data[1] == \'bottom\')
+						$data[1] = 180;
+					else
+						$data[1] = (int) $data[1];') : create_function('&$tag, &$data, $disabled', '
+					if ($data[1] == \'top\' || (is_numeric($data[1]) && $data[1] < 50))
+						$data[1] =  \'0 -2px 1px\';
+					elseif ($data[1] == \'right\' || (is_numeric($data[1]) && $data[1] < 100))
+						$data[1] = \'2px 0 1px\';
+					elseif ($data[1] == \'bottom\' || (is_numeric($data[1]) && $data[1] < 190))
+						$data[1] = \'0 2px 1px\';
+					elseif ($data[1] == \'left\' || (is_numeric($data[1]) && $data[1] < 280))
+						$data[1] = \'-2px 0 1px\';
+					else
+						$data[1] = \'1px 1px 1px\';'),
 			),
 			array(
 				'tag' => 'size',
@@ -1438,32 +1492,22 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'after' => '</sup>',
 			),
 			array(
-				'tag' => 'shadow',
-				'type' => 'unparsed_commas',
-				'test' => '[#0-9a-zA-Z\-]{3,12},(left|right|top|bottom|[0123]\d{0,2})\]',
-				'before' => $context['browser']['is_ie'] ? '<span style="display: inline-block; filter: Shadow(color=$1, direction=$2); height: 1.2em;">' : '<span style="text-shadow: $1 $2">',
-				'after' => '</span>',
-				'validate' => $context['browser']['is_ie'] ? create_function('&$tag, &$data, $disabled', '
-					if ($data[1] == \'left\')
-						$data[1] = 270;
-					elseif ($data[1] == \'right\')
-						$data[1] = 90;
-					elseif ($data[1] == \'top\')
-						$data[1] = 0;
-					elseif ($data[1] == \'bottom\')
-						$data[1] = 180;
-					else
-						$data[1] = (int) $data[1];') : create_function('&$tag, &$data, $disabled', '
-					if ($data[1] == \'top\' || (is_numeric($data[1]) && $data[1] < 50))
-						$data[1] =  \'0 -2px 1px\';
-					elseif ($data[1] == \'right\' || (is_numeric($data[1]) && $data[1] < 100))
-						$data[1] = \'2px 0 1px\';
-					elseif ($data[1] == \'bottom\' || (is_numeric($data[1]) && $data[1] < 190))
-						$data[1] = \'0 2px 1px\';
-					elseif ($data[1] == \'left\' || (is_numeric($data[1]) && $data[1] < 280))
-						$data[1] = \'-2px 0 1px\';
-					else
-						$data[1] = \'1px 1px 1px\';'),
+				'tag' => 'table',
+				'before' => '<table class="bbc_table">',
+				'after' => '</table>',
+				'trim' => 'inside',
+				'require_children' => array('tr'),
+				'block_level' => true,
+			),
+			array(
+				'tag' => 'td',
+				'before' => '<td>',
+				'after' => '</td>',
+				'require_parents' => array('tr'),
+				'trim' => 'outside',
+				'block_level' => true,
+				'disabled_before' => '',
+				'disabled_after' => '',
 			),
 			array(
 				'tag' => 'time',
@@ -1474,19 +1518,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 						$data = timeformat($data);
 					else
 						$tag[\'content\'] = \'[time]$1[/time]\';'),
-			),
-			array(
-				'tag' => 'tt',
-				'before' => '<tt>',
-				'after' => '</tt>',
-			),
-			array(
-				'tag' => 'table',
-				'before' => '<table class="bbc_table">',
-				'after' => '</table>',
-				'trim' => 'inside',
-				'require_children' => array('tr'),
-				'block_level' => true,
 			),
 			array(
 				'tag' => 'tr',
@@ -1500,33 +1531,36 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'disabled_after' => '',
 			),
 			array(
-				'tag' => 'td',
-				'before' => '<td>',
-				'after' => '</td>',
-				'require_parents' => array('tr'),
-				'trim' => 'outside',
-				'block_level' => true,
-				'disabled_before' => '',
-				'disabled_after' => '',
+				'tag' => 'tt',
+				'before' => '<tt>',
+				'after' => '</tt>',
+			),
+			array(
+				'tag' => 'u',
+				'before' => '<span class="bbc_u">',
+				'after' => '</span>',
 			),
 			array(
 				'tag' => 'url',
 				'type' => 'unparsed_content',
 				'content' => '<a href="$1" class="bbc_link new_win" target="_blank">$1</a>',
-				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					$data = strtr($data, array(\'<br />\' => \'\'));
+					if (strpos($data, \'http://\') !== 0 || strpos($data, \'https://\') !== 0)
+						$data = \'http://\' . $data;
+				'),
 			),
 			array(
 				'tag' => 'url',
 				'type' => 'unparsed_equals',
 				'before' => '<a href="$1" class="bbc_link new_win" target="_blank">',
 				'after' => '</a>',
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					if (strpos($data, \'http://\') !== 0 || strpos($data, \'https://\') !== 0)
+						$data = \'http://\' . $data;
+				'),
 				'disallow_children' => array('email', 'ftp', 'url', 'iurl'),
 				'disabled_after' => ' ($1)',
-			),
-			array(
-				'tag' => 'u',
-				'before' => '<span class="bbc_u">',
-				'after' => '</span>',
 			),
 			array(
 				'tag' => 'white',

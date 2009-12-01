@@ -76,6 +76,7 @@ November 2009
  * Added a fixed height to #move_topic dl.settings in to prevent it collapsing in IE6 and 7. (babylon/style.css)
  ! The newsletter section included an unnecessary parenthesis character in its default message body. (ManageNews.php) [Bug 4040]
  * The 'delete board' button was missing the submit button class. (ManageBoards template) 
+ ! Double check the sanity of URL's in parse_bbc. (Subs.php)
 
 
 SMF 2.0 RC2                                                      8 November 2009

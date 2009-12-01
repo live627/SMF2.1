@@ -909,6 +909,169 @@ $sourcedir/Subs.php
 
 
 <search for>
+				'tag' => 'ftp',
+				'type' => 'unparsed_content',
+				'content' => '<a href="$1" target="_blank">$1</a>',
+				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
+</search for>
+
+<replace>
+				'tag' => 'ftp',
+				'type' => 'unparsed_content',
+				'content' => '<a href="$1" target="_blank">$1</a>',
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					$data = strtr($data, array(\'<br />\' => \'\'));
+					if (strpos($data, \'ftp://\') !== 0 || strpos($data, \'ftps://\') !== 0)
+						$data = \'ftp://\' . $data;
+				'),
+</replace>
+
+
+<search for>
+				'tag' => 'ftp',
+				'type' => 'unparsed_equals',
+				'before' => '<a href="$1" target="_blank">',
+				'after' => '</a>',
+</search for>
+
+<replace>
+				'tag' => 'ftp',
+				'type' => 'unparsed_equals',
+				'before' => '<a href="$1" target="_blank">',
+				'after' => '</a>',
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					if (strpos($data, \'ftp://\') !== 0 || strpos($data, \'ftps://\') !== 0)
+						$data = \'ftp://\' . $data;
+				'),
+</replace>
+
+
+<search for>
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					if (isset($disabled[\'url\']))
+						$tag[\'content\'] = \'$1\';'),
+				'disabled_content' => '<a href="$1" target="_blank">$1</a>',
+</search for>
+
+<replace>
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					if (isset($disabled[\'url\']))
+						$tag[\'content\'] = \'$1\';
+					elseif (strpos($data[0], \'http://\') !== 0 || strpos($data[0], \'https://\') !== 0)
+						$data[0] = \'http://\' . $data[0];
+				'),
+				'disabled_content' => '<a href="$1" target="_blank">$1</a>',
+</replace>
+
+
+<search for>
+				'content' => '<img src="$1" alt="{alt}"{width}{height} border="0" />',
+				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
+</search for>
+
+<replace>
+				'content' => '<img src="$1" alt="{alt}"{width}{height} border="0" />',
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					$data = strtr($data, array(\'<br />\' => \'\'));
+					if (strpos($data, \'http://\') !== 0 || strpos($data, \'https://\') !== 0)
+						$data = \'http://\' . $data;
+				'),
+</replace>
+
+
+<search for>
+				'content' => '<img src="$1" alt="" border="0" />',
+				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
+</search for>
+
+<replace>
+				'content' => '<img src="$1" alt="" border="0" />',
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					$data = strtr($data, array(\'<br />\' => \'\'));
+					if (strpos($data, \'http://\') !== 0 || strpos($data, \'https://\') !== 0)
+						$data = \'http://\' . $data;
+				'),
+</replace>
+
+
+<search for>
+				'content' => '<a href="$1">$1</a>',
+				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
+</search for>
+
+<replace>
+				'content' => '<a href="$1">$1</a>',
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					$data = strtr($data, array(\'<br />\' => \'\'));
+					if (strpos($data, \'http://\') !== 0 || strpos($data, \'https://\') !== 0)
+						$data = \'http://\' . $data;
+				'),
+</replace>
+
+
+<search for>
+				'tag' => 'iurl',
+				'type' => 'unparsed_equals',
+				'before' => '<a href="$1">',
+				'after' => '</a>',
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					if (substr($data, 0, 1) == \'#\')
+						$data = \'#post_\' . substr($data, 1);'),
+</search for>
+
+<replace>
+				'tag' => 'iurl',
+				'type' => 'unparsed_equals',
+				'before' => '<a href="$1">',
+				'after' => '</a>',
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					if (substr($data, 0, 1) == \'#\')
+						$data = \'#post_\' . substr($data, 1);
+					elseif (strpos($data, \'http://\') !== 0 || strpos($data, \'https://\') !== 0)
+						$data = \'http://\' . $data;
+				'),
+</replace>
+
+
+<search for>
+				'tag' => 'url',
+				'type' => 'unparsed_content',
+				'content' => '<a href="$1" target="_blank">$1</a>',
+				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
+</search for>
+
+<replace>
+				'tag' => 'url',
+				'type' => 'unparsed_content',
+				'content' => '<a href="$1" target="_blank">$1</a>',
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					$data = strtr($data, array(\'<br />\' => \'\'));
+					if (strpos($data, \'http://\') !== 0 || strpos($data, \'https://\') !== 0)
+						$data = \'http://\' . $data;
+				'),
+</replace>
+
+
+<search for>
+				'tag' => 'url',
+				'type' => 'unparsed_equals',
+				'before' => '<a href="$1" target="_blank">',
+				'after' => '</a>',
+</search for>
+
+<replace>
+				'tag' => 'url',
+				'type' => 'unparsed_equals',
+				'before' => '<a href="$1" target="_blank">',
+				'after' => '</a>',
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					if (strpos($data, \'http://\') !== 0 || strpos($data, \'https://\') !== 0)
+						$data = \'http://\' . $data;
+				'),
+</replace>
+
+
+<search for>
 				$data = preg_replace('~&lt;a\s+href=(?:&quot;)?((?:http://|ftp://|https://|ftps://|mailto:).+?)(?:&quot;)?&gt;~i', '[url=$1]', $data);
 </search for>
 
@@ -957,15 +1120,6 @@ $sourcedir/Subs.php
 
 
 <search for>
-			$smileytocache[] = '<img src="' . $modSettings['smileys_url'] . '/' . $user_info['smiley_set'] . '/' . $smileysto[$i] . '" alt="' . strtr(htmlspecialchars($smileysdescs[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')) . '" border="0" />';
-</search for>
-
-<replace>
-			$smileytocache[] = '<img src="' . htmlspecialchars($modSettings['smileys_url'] . '/' . $user_info['smiley_set'] . '/' . $smileysto[$i]) . '" alt="' . strtr(htmlspecialchars($smileysdescs[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')) . '" border="0" />';
-</replace>
-
-
-<search for>
 						$data = preg_replace(array('~(?<=[\s>\.(;\'"]|^)((?:http|https|ftp|ftps)://[\w\-_%@:|]+(?:\.[\w\-_%]+)*(?::\d+)?(?:/[\w\-_\~%\.@,\?&;=#+:\'\\\\]*|[\(\{][\w\-_\~%\.@,\?&;=#(){}+:\'\\\\]*)*[/\w\-_\~%@\?;=#}\\\\])~i', '~(?<=[\s>(\'<]|^)(www(?:\.[\w\-_]+)+(?::\d+)?(?:/[\w\-_\~%\.@,\?&;=#+:\'\\\\]*|[\(\{][\w\-_\~%\.@,\?&;=#(){}+:\'\\\\]*)*[/\w\-_\~%@\?;=#}\\\\])~i'), array('[url]$1[/url]', '[url=http://$1]$1[/url]'), $data);
 </search for>
 
@@ -981,6 +1135,15 @@ $sourcedir/Subs.php
 						), $data)))
 							$data = $result;
 
+</replace>
+
+
+<search for>
+			$smileytocache[] = '<img src="' . $modSettings['smileys_url'] . '/' . $user_info['smiley_set'] . '/' . $smileysto[$i] . '" alt="' . strtr(htmlspecialchars($smileysdescs[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')) . '" border="0" />';
+</search for>
+
+<replace>
+			$smileytocache[] = '<img src="' . htmlspecialchars($modSettings['smileys_url'] . '/' . $user_info['smiley_set'] . '/' . $smileysto[$i]) . '" alt="' . strtr(htmlspecialchars($smileysdescs[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')) . '" border="0" />';
 </replace>
 
 
