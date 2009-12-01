@@ -5,6 +5,10 @@ SMF 2.0 RC3                                                      			 ???
 ================================================================================
 November 2009
 --------------------------------------------------------------------------------
+ * Changes to Display.php, Display.template.php, index.css and rtl.css to groovy up the polls a bit.
+ * Altered quickbuttons.png to add a notify icon to the end with index.css amended to suit.
+ * Added a fixed height to #move_topic dl.settings in babylon/style.css to prevent it collapsing in IE6 and 7.
+ * Added alternating post backgrounds to Sources/Recent.php.
  ! Not all mail is private (Subs-Post.php) [Bug 3967]
  ! Allow forcefully sending the mail queue, even if being run by cron (ScheduledTasks.php, ManageMail.php)
  ! Previewing posts using XMLHTTP didn't send all posted information correctly, preventing smileys from being parsed. (Post template) [Bug 3961]
