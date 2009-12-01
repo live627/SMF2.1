@@ -5,10 +5,6 @@ SMF 2.0 RC3                                                      			 ???
 ================================================================================
 November 2009
 --------------------------------------------------------------------------------
- * Changes to Display.php, Display.template.php, index.css and rtl.css to groovy up the polls a bit.
- * Altered quickbuttons.png to add a notify icon to the end with index.css amended to suit.
- * Added a fixed height to #move_topic dl.settings in babylon/style.css to prevent it collapsing in IE6 and 7.
- * Added alternating post backgrounds to Sources/Recent.php.
  ! Not all mail is private (Subs-Post.php) [Bug 3967]
  ! Allow forcefully sending the mail queue, even if being run by cron (ScheduledTasks.php, ManageMail.php)
  ! Previewing posts using XMLHTTP didn't send all posted information correctly, preventing smileys from being parsed. (Post template) [Bug 3961]
@@ -74,6 +70,10 @@ November 2009
  ! Removed the trailing <br /> for quote tags to meet expectations - this was changed unintentionally in RC2. (Subs.php)
  * Make use of theme variations in the help section's faux board index, too. (Help template) [Bug 4032]
  * Invalid XHTML was generated for custom fields above signature.  (Display template) [Bug 4035]
+ * Added alternating post background classes to the Recent pages. (Recent.php)
+ * Groovy up the polls for the Curve theme a bit more. (Display.php, Display template, index.css, rtl.css)
+ * Altered quickbuttons.png to add a notify icon to the end with index.css amended to suit. (index.css, quickbuttons.png) 
+ * Added a fixed height to #move_topic dl.settings in to prevent it collapsing in IE6 and 7. (babylon/style.css)
 
 
 SMF 2.0 RC2                                                      8 November 2009
