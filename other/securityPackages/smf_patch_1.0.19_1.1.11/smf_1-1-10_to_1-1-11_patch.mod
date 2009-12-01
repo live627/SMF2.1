@@ -325,16 +325,6 @@ $sourcedir/ManagePermissions.php
 * Software Version:           SMF 1.1.11                                          *
 </replace>
 
-
-<search for>
-* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</search for>
-
-<replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</replace>
-
-
 <search for>
 			'can_search' => true,
 			'href' => $scripturl . '?action=viewmembers;sa=query;params=' . base64_encode('ID_GROUP = 0'),
@@ -893,15 +883,6 @@ $sourcedir/SplitTopics.php
 
 
 <search for>
-* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</search for>
-
-<replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</replace>
-
-
-<search for>
 
 	// Handle URLs from MergeIndex.
 </search for>
@@ -1122,15 +1103,6 @@ $sourcedir/Themes.php
 
 <replace>
 * Software Version:           SMF 1.1.11                                          *
-</replace>
-
-
-<search for>
-* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</search for>
-
-<replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 

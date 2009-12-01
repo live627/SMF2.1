@@ -78,4 +78,80 @@
 		</operation>
 	</file>
 
+	<file name="$sourcedir/ManagePermissions.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/ManagePermissions.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/SplitTopics.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Themes.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+	</file>
+
 </modification>
