@@ -286,9 +286,9 @@ function template_modify_board()
 	// The second select box lists all the boards in the category.
 	echo '
 							<select id="board_order" name="board_order" ', isset($context['board']['is_new']) ? '' : 'disabled="disabled"', '>
-					', !isset($context['board']['is_new']) ? '<option value="">(' . $txt['mboards_unchanged'] . ')</option>' : '';
-		foreach ($context['board_order'] as $order)
-			echo '
+								', !isset($context['board']['is_new']) ? '<option value="">(' . $txt['mboards_unchanged'] . ')</option>' : '';
+	foreach ($context['board_order'] as $order)
+		echo '
 								<option', $order['selected'] ? ' selected="selected"' : '', ' value="', $order['id'], '">', $order['name'], '</option>';
 	echo '
 							</select>
@@ -298,22 +298,22 @@ function template_modify_board()
 	// Options for board name and description.
 	echo '
 						<dt>
-							<strong>', $txt['full_name'], ':</strong>
-							<p class="smalltext">', $txt['name_on_display'], '</p>
+							<strong>', $txt['full_name'], ':</strong><br />
+							<span class="smalltext">', $txt['name_on_display'], '</span>
 						</dt>
 						<dd>
 							<input type="text" name="board_name" value="', $context['board']['name'], '" size="30" class="input_text" />
 						</dd>
 						<dt>
-							<strong>', $txt['mboards_description'], ':</strong>
-							<p class="smalltext">', $txt['mboards_description_desc'], '</p>
+							<strong>', $txt['mboards_description'], ':</strong><br />
+							<span class="smalltext">', $txt['mboards_description_desc'], '</span>
 						</dt>
 						<dd>
 							<textarea name="desc" rows="3" cols="35">', $context['board']['description'], '</textarea>
 						</dd>
 						<dt>
-							<strong>', $txt['permission_profile'], ':</strong>
-							<p class="smalltext">', $context['can_manage_permissions'] ? sprintf($txt['permission_profile_desc'], $scripturl . '?action=admin;area=permissions;sa=profiles;' . $context['session_var'] . '=' . $context['session_id']) : strip_tags($txt['permission_profile_desc']), '</p>
+							<strong>', $txt['permission_profile'], ':</strong><br />
+							<span class="smalltext">', $context['can_manage_permissions'] ? sprintf($txt['permission_profile_desc'], $scripturl . '?action=admin;area=permissions;sa=profiles;' . $context['session_var'] . '=' . $context['session_id']) : strip_tags($txt['permission_profile_desc']), '</span>
 						</dt>
 						<dd>
 							<select name="profile">';
@@ -330,8 +330,8 @@ function template_modify_board()
 							</select>
 						</dd>
 						<dt>
-							<strong>', $txt['mboards_groups'], ':</strong>
-							<p class="smalltext">', $txt['mboards_groups_desc'], '</p>
+							<strong>', $txt['mboards_groups'], ':</strong><br />
+							<span class="smalltext">', $txt['mboards_groups_desc'], '</span>
 						</dt>
 						<dd>';
 
@@ -479,7 +479,7 @@ function template_modify_board()
 
 	if (!isset($context['board']['is_new']) && empty($context['board']['is_recycle']))
 		echo '
-					<span', $context['board']['is_recycle'] ? ' style="visibility:hidden">' : '>', '<input type="submit" name="delete" value="', $txt['mboards_delete_board'], '" onclick="return confirm(\'', $txt['boardConfirm'], '\');"', ' /></span>';
+					<span', $context['board']['is_recycle'] ? ' style="visibility:hidden">' : '>', '<input type="submit" name="delete" value="', $txt['mboards_delete_board'], '" onclick="return confirm(\'', $txt['boardConfirm'], '\');"', ' class="button_submit" /></span>';
 	echo '
 				</div>
 			<span class="botslice"><span></span></span>
