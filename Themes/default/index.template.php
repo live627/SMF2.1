@@ -358,10 +358,6 @@ function theme_linktree($force_show = false)
 	if (empty($context['linktree']) || (!empty($context['dont_default_linktree']) && !$force_show))
 		return;
 
-	// Reverse the linktree in right to left mode.
-	if ($context['right_to_left'])
-		$context['linktree'] = array_reverse($context['linktree'], true);
-
 	echo '
 	<div class="navigate_section">
 		<ul>';
@@ -372,11 +368,7 @@ function theme_linktree($force_show = false)
 		echo '
 			<li', ($link_num == count($context['linktree']) - 1) ? ' class="last"' : '', '>';
 
-		// Don't show a separator for the last one (RTL mode)
-		if ($link_num != count($context['linktree']) - 1 && $context['right_to_left'])
-			echo '&#171;&nbsp;';
-
-			// Show something before the link?
+		// Show something before the link?
 		if (isset($tree['extra_before']))
 			echo $tree['extra_before'];
 
@@ -389,7 +381,7 @@ function theme_linktree($force_show = false)
 			echo $tree['extra_after'];
 
 		// Don't show a separator for the last one.
-		if ($link_num != count($context['linktree']) - 1 && !$context['right_to_left'])
+		if ($link_num != count($context['linktree']) - 1)
 			echo '&nbsp;&#187;';
 
 		echo '

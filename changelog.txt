@@ -3,6 +3,12 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC3                                                      			 ???
 ================================================================================
+December 2009
+--------------------------------------------------------------------------------
+ * Some button strips weren't properly reversed in RTL mode. (rtl.css) [Bug 4045]
+ * Handle linktrees slightly different to ensure correct behaviour in RTL languages. (index template, index.css, rtl.css) [Bug 4045]
+
+
 November 2009
 --------------------------------------------------------------------------------
  ! Not all mail is private (Subs-Post.php) [Bug 3967]

@@ -757,7 +757,6 @@ h3.titlebg a:hover, h4.titlebg a:hover
 }
 h3.catbg img.icon, h4.titlebg img.icon
 {
-	
 	vertical-align: middle;
 	margin: -2px 5px 0 0;
 }
@@ -1385,11 +1384,9 @@ div#upper_section div.news form
 	overflow: hidden;
 }
 
-/* the navigation list */
+/* The navigation list (i.e. linktree) */
 .navigate_section
 {
-	overflow: hidden;
-	margin: 0;
 	padding: 0.5em;
 	margin: 1em 0 0 0;
 }
@@ -1400,14 +1397,17 @@ div#upper_section div.news form
 	font-size: 0.9em;
 	padding: 1em 0 0.5em 0;
 	border-top: solid #ccc 1px;
+	overflow: hidden;
+	list-style: none;
 }
 .navigate_section ul li
 {
-	display: inline;
+	float: left;
+	padding: 0 0.5em 0 0;
 	font-size: 0.95em;
 }
 
-/* the footer wih copyright links etc. */
+/* The footer wih copyright links etc. */
 #footer_section
 {
 	text-align: center;

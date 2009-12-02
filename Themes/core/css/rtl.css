@@ -77,6 +77,13 @@ dl.settings img
 	float: right;
 }
 
+/* the linktree */
+ul.linktree li
+{
+	float: right;
+	padding: 0 0 0 0.5em;
+}
+
 /* First layer of menu items */
 ul.admin_menu li
 {
