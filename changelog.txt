@@ -9,6 +9,7 @@ December 2009
  * Handle linktrees slightly different to ensure correct behaviour in RTL languages. (index template, index.css, rtl.css) [Bug 4045]
  * Give disabled text input elements a different background color in the Curve theme. (index.css)
  ! Some avatar setting fields could not be edited due to a typo in a javascript function call. (ManageAttachments.php) [Bug 4051] 
+ * Calendar week view wasn't respecting the 'show days numbers as link' setting. (Calendar template)
 
 
 November 2009

@@ -314,8 +314,8 @@ function template_show_month_grid($grid_name)
 				if (!empty($modSettings['cal_daysaslink']) && $context['can_post'])
 					echo '
 							<a href="', $scripturl, '?action=calendar;sa=post;month=', $calendar_data['current_month'], ';year=', $calendar_data['current_year'], ';day=', $day['day'], ';', $context['session_var'], '=', $context['session_id'], '">', $day['day'], '</a>';
-					else
-						echo '
+				else
+					echo '
 							', $day['day'];
 
 				// Is this the first day of the week? (and are we showing week numbers?)
@@ -437,8 +437,17 @@ function template_show_week_grid($grid_name)
 						</td>
 					</tr>
 					<tr>
-						<td class="windowbg">
-							', $day['day'], '
+						<td class="windowbg">';
+
+			// Should the day number be a link?
+			if (!empty($modSettings['cal_daysaslink']) && $context['can_post'])
+				echo '
+							<a href="', $scripturl, '?action=calendar;sa=post;month=', $month_data['current_month'], ';year=', $month_data['current_year'], ';day=', $day['day'], ';', $context['session_var'], '=', $context['session_id'], '">', $day['day'], '</a>';
+			else
+				echo '
+							', $day['day'];
+
+			echo '
 						</td>
 						<td class="', $day['is_today'] ? 'calendar_today' : 'windowbg2', ' weekdays">';
 
