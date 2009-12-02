@@ -117,6 +117,12 @@ input.input_check, input.input_radio
 	background: none;
 }
 
+/* Give disabled text input elements a different background color. */
+input[disabled].input_text
+{
+	background-color: #eee;
+}
+
 /* Standard horizontal rule.. ([hr], etc.) */
 hr, .hrcolor
 {

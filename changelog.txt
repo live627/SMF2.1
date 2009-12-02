@@ -7,6 +7,8 @@ December 2009
 --------------------------------------------------------------------------------
  * Some button strips weren't properly reversed in RTL mode. (rtl.css) [Bug 4045]
  * Handle linktrees slightly different to ensure correct behaviour in RTL languages. (index template, index.css, rtl.css) [Bug 4045]
+ * Give disabled text input elements a different background color in the Curve theme. (index.css)
+ ! Some avatar setting fields could not be edited due to a typo in a javascript function call. (ManageAttachments.php) [Bug 4051] 
 
 
 November 2009
