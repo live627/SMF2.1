@@ -250,8 +250,8 @@ $sourcedir/ManagePermissions.php
 </search for>
 
 <replace>
-			'href' => $scripturl . '?action=viewmembers;sa=query' . ($row['minPosts'] == -1 ? ';group = ' (int) $row['ID_GROUP'] : 'pgroup=' . $row[I'ID_GROUP']),
-			'link' => '<a href="' . $scripturl . '?action=viewmembers;sa=query' . ($row['minPosts'] == -1 ? ';group = ' (int) $row['ID_GROUP'] : 'pgroup=' . $row[I'ID_GROUP']) . '">' . $row['num_members'] . '</a>',
+			'href' => $scripturl . '?action=viewmembers;sa=query' . ($row['minPosts'] == -1 ? ';group = ' . (int) $row['ID_GROUP'] : 'pgroup=' . $row['ID_GROUP']),
+			'link' => '<a href="' . $scripturl . '?action=viewmembers;sa=query' . ($row['minPosts'] == -1 ? ';group = ' . (int) $row['ID_GROUP'] : 'pgroup=' . $row['ID_GROUP']) . '">' . $row['num_members'] . '</a>',
 </replace>
 
 
