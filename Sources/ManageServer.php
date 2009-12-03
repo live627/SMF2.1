@@ -459,6 +459,38 @@ function ModifyLoadBalancingSettings($return_config = false)
 	prepareDBSettingContext($config_vars);
 }
 
+// This is the main function for the language area.
+function ManageLanguages()
+{
+	global $context, $txt, $scripturl, $modSettings;
+
+	loadLanguage('ManageSettings');
+
+	$context['page_title'] = $txt['edit_languages'];
+	$context['sub_template'] = 'show_settings';
+
+	$subActions = array(
+		'edit' => 'ModifyLanguages',
+		'add' => 'AddLanguage',
+		'settings' => 'ModifyLanguageSettings',
+		'downloadlang' => 'DownloadLanguage',
+		'editlang' => 'ModifyLanguage',
+	);
+
+	// By default we're managing languages.
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'edit';
+	$context['sub_action'] = $_REQUEST['sa'];
+
+	// Load up all the tabs...
+	$context[$context['admin_menu_name']]['tab_data'] = array(
+		'title' => $txt['language_configuration'],
+		'description' => $txt['language_description'],
+	);
+
+	// Call the right function for this sub-acton.
+	$subActions[$_REQUEST['sa']]();
+}
+
 // Interface for adding a new language
 function AddLanguage()
 {
@@ -530,6 +562,8 @@ function DownloadLanguage()
 	// Can we actually do the installation - and do they want to?
 	if (!empty($_POST['do_install']) && !empty($_POST['copy_file']))
 	{
+		checkSession('get');
+
 		$chmod_files = array();
 		$install_files = array();
 		// Check writable status.
@@ -870,38 +904,6 @@ function DownloadLanguage()
 	$context['default_list'] = 'lang_main_files_list';
 }
 
-// This is the main function for the language area.
-function ManageLanguages()
-{
-	global $context, $txt, $scripturl, $modSettings;
-
-	loadLanguage('ManageSettings');
-
-	$context['page_title'] = $txt['edit_languages'];
-	$context['sub_template'] = 'show_settings';
-
-	$subActions = array(
-		'edit' => 'ModifyLanguages',
-		'add' => 'AddLanguage',
-		'settings' => 'ModifyLanguageSettings',
-		'downloadlang' => 'DownloadLanguage',
-		'editlang' => 'ModifyLanguage',
-	);
-
-	// By default we're managing languages.
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'edit';
-	$context['sub_action'] = $_REQUEST['sa'];
-
-	// Load up all the tabs...
-	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => $txt['language_configuration'],
-		'description' => $txt['language_description'],
-	);
-
-	// Call the right function for this sub-acton.
-	$subActions[$_REQUEST['sa']]();
-}
-
 // This lists all the current languages and allows editing of them.
 function ModifyLanguages()
 {
@@ -911,6 +913,8 @@ function ModifyLanguages()
 	// Setting a new default?
 	if (!empty($_POST['set_default']) && !empty($_POST['def_language']))
 	{
+		checkSession();
+
 		if ($_POST['def_language'] != $language)
 		{
 			require_once($sourcedir . '/Subs-Admin.php');
@@ -922,7 +926,7 @@ function ModifyLanguages()
 	$listOptions = array(
 		'id' => 'language_list',
 		'items_per_page' => 20,
-		'base_href' => $scripturl . '?action=admin;area=languages;' . $context['session_var'] . '=' . $context['session_id'],
+		'base_href' => $scripturl . '?action=admin;area=languages',
 		'title' => $txt['edit_languages'],
 		'get_items' => array(
 			'function' => 'list_getLanguages',
@@ -950,7 +954,7 @@ function ModifyLanguages()
 					'function' => create_function('$rowData', '
 						global $scripturl, $context;
 
-						return sprintf(\'<a href="%1$s?action=admin;area=languages;sa=editlang;lid=%2$s;%3$s=%4$s">%5$s</a>\', $scripturl, $rowData[\'id\'], $context[\'session_var\'], $context[\'session_id\'], $rowData[\'name\']);
+						return sprintf(\'<a href="%1$s?action=admin;area=languages;sa=editlang;lid=%2$s">%3$s</a>\', $scripturl, $rowData[\'id\'], $rowData[\'name\']);
 					'),
 				),
 			),
@@ -981,12 +985,12 @@ function ModifyLanguages()
 			),
 		),
 		'form' => array(
-			'href' => $scripturl . '?action=admin;area=languages;' . $context['session_var'] . '=' . $context['session_id'],
+			'href' => $scripturl . '?action=admin;area=languages',
 		),
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="set_default" value="' . $txt['save'] . '"' . (is_writable($boarddir . '/Settings.php') ? '' : ' disabled="disabled"') . ' class="button_submit" />',
+				'value' => '<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" /><input type="submit" name="set_default" value="' . $txt['save'] . '"' . (is_writable($boarddir . '/Settings.php') ? '' : ' disabled="disabled"') . ' class="button_submit" />',
 				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
@@ -1128,8 +1132,9 @@ function ModifyLanguageSettings($return_config = false)
 	// Saving settings?
 	if (isset($_REQUEST['save']))
 	{
+		checkSession();
 		saveSettings($config_vars);
-		redirectexit('action=admin;area=languages;sa=settings;' . $context['session_var'] . '=' . $context['session_id']);
+		redirectexit('action=admin;area=languages;sa=settings');
 	}
 
 	// Setup the template stuff.
@@ -1241,6 +1246,8 @@ function ModifyLanguage()
 	// We no longer wish to speak this language.
 	if (!empty($_POST['delete_main']) && $context['lang_id'] != 'english')
 	{
+		checkSession();
+
 		// !!! Todo: FTP Controls?
 		require_once($sourcedir . '/Subs-Package.php');
 
@@ -1292,6 +1299,8 @@ function ModifyLanguage()
 	$madeSave = false;
 	if (!empty($_POST['save_main']) && !$current_file)
 	{
+		checkSession();
+
 		// Read in the current file.
 		$current_data = implode('', file($settings['default_theme_dir'] . '/languages/index.' . $context['lang_id'] . '.php'));
 		// These are the replacements. old => new
@@ -1331,6 +1340,8 @@ function ModifyLanguage()
 	$save_strings = array();
 	if (isset($_POST['save_entries']) && !empty($_POST['entry']))
 	{
+		checkSession();
+
 		// Clean each entry!
 		foreach ($_POST['entry'] as $k => $v)
 		{
@@ -1484,6 +1495,8 @@ function ModifyLanguage()
 		// Any saves to make?
 		if (!empty($final_saves))
 		{
+			checkSession();
+
 			$file_contents = implode('', file($current_file));
 			foreach ($final_saves as $save)
 				$file_contents = strtr($file_contents, array($save['find'] => $save['replace']));
@@ -1504,7 +1517,7 @@ function ModifyLanguage()
 	if ($madeSave)
 	{
 		clean_cache('lang');
-		redirectexit('action=admin;area=languages;sa=editlang;lid=' . $context['lang_id'] . ';' . $context['session_var'] . '=' . $context['session_id']);
+		redirectexit('action=admin;area=languages;sa=editlang;lid=' . $context['lang_id']);
 	}
 }
 

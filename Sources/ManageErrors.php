@@ -349,7 +349,7 @@ function ViewFile()
 
 	// Make sure the file we are looking for is one they are allowed to look at
 	if (!is_readable($file) || (strpos($file, '../') !== false && ( strpos($file, $boarddir) === false || strpos($file, $sourcedir) === false)))
-		fatal_lang_error('error_bad_file', true, array($file));
+		fatal_lang_error('error_bad_file', true, array(htmlspecialchars($file)));
 
 	// get the min and max lines
 	$min = $line - 20 <= 0 ? 1 : $line - 20;

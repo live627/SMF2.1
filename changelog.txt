@@ -86,6 +86,9 @@ November 2009
  ! The newsletter section included an unnecessary parenthesis character in its default message body. (ManageNews.php) [Bug 4040]
  * The 'delete board' button was missing the submit button class. (ManageBoards template) 
  ! Double check the sanity of URL's in parse_bbc. (Subs.php)
+ ! Escape invalid file names from being used - reported by WHK (ManageErrors.php)
+ ! Package Flushing was missing a session check - reported by sirdarckcat (Packages.php, Packages Template)
+ ! Language management needed session check improvements - reported by cicatriz.r00t (ManageServer.php, Admin Template)
 
 
 SMF 2.0 RC2                                                      8 November 2009

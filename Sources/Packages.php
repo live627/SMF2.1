@@ -1203,6 +1203,9 @@ function FlushInstall()
 {
 	global $boarddir, $sourcedir, $smcFunc;
 
+	// Always check the session.
+	checkSession('get');
+
 	include_once($sourcedir . '/Subs-Package.php');
 
 	// Record when we last did this.

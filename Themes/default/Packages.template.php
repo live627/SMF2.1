@@ -547,7 +547,7 @@ function template_view_installed()
 		</tbody>
 		</table>
 		<br />
-		<a href="', $scripturl, '?action=admin;area=packages;sa=flush">[ ', $txt['delete_list'], ' ]</a>';
+		<a href="', $scripturl, '?action=admin;area=packages;sa=flush;', $context['session_var'], '=', $context['session_id'], '">[ ', $txt['delete_list'], ' ]</a>';
 	}
 
 	echo '
