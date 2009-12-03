@@ -20,6 +20,7 @@ December 2009
  ! Profile xml data needed a permission check (News.php) [Bug 4021]
  * Non-gd Captcha needed an extra character (GenericControls template)
  ! The sourcedir wan't always defined in the third step of the install process. (install.php)
+ ! Subtext for karma_good was set to icq so it remove it (Profile-Modify.php)
 
 
 November 2009

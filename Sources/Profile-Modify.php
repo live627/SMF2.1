@@ -386,7 +386,6 @@ function loadProfileFields($force_reload = false)
 		'karma_good' =>  array(
 			'type' => 'callback',
 			'callback_func' => 'karma_modify',
-			'subtext' => $txt['your_icq'],
 			'permission' => 'admin_forum',
 			// Set karma_bad too!
 			'input_validate' => create_function('&$value', '
