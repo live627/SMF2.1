@@ -82,7 +82,7 @@ function ShowXmlFeed()
 	loadLanguage('Stats');
 
 	// Default to latest 5.  No more than 255, please.
-	$_GET['limit'] = empty($_GET['limit']) || (int) $_GET['limit'] < 1 ? 5 : min((int) $_GET['limit'], (min(255, $modSettings['defaultMaxMessages']));
+	$_GET['limit'] = empty($_GET['limit']) || (int) $_GET['limit'] < 1 ? 5 : min((int) $_GET['limit'], 255);
 
 	// Handle the cases where a board, boards, or category is asked for.
 	$query_this_board = 1;
@@ -821,9 +821,8 @@ function getXmlProfile($xml_format)
 
 	// Make sure the id is a number and not "I like trying to hack the database".
 	$_GET['u'] = (int) $_GET['u'];
-
 	// Load the member's contextual information!
-	if (!loadMemberContext($_GET['u']))
+	if (!loadMemberContext($_GET['u']) || !allowedTo('profile_view_any'))
 		return array();
 
 	// Okay, I admit it, I'm lazy.  Stupid $_GET['u'] is long and hard to type.
