@@ -21,6 +21,8 @@ December 2009
  * Non-gd Captcha needed an extra character (GenericControls template)
  ! The sourcedir wan't always defined in the third step of the install process. (install.php)
  ! Subtext for karma_good was set to icq so it remove it (Profile-Modify.php)
+ * The background colours used on the unread topics pages were inconsistent with those on the message index. (Recent template) [Bug 4056] 
+ * It was not possible to re-enable user theme variant selection after previously disabling it. (Themes template) [Bug 3648]
 
 
 November 2009

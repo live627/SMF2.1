@@ -494,11 +494,11 @@ function template_set_settings()
 							<label for="disable_user_variant">', $txt['theme_variants_user_disable'], '</label>:
 						</dt>
 						<dd>
+							<input type="hidden" name="options[disable_user_variant]" value="0" />
 							<input type="checkbox" name="options[disable_user_variant]" id="disable_user_variant"', !empty($context['theme_settings']['disable_user_variant']) ? ' checked="checked"' : '', ' value="1" class="input_check" />
 						</dd>
 					</dl>
 					<img src="', $context['theme_variants'][$context['default_variant']]['thumbnail'], '" id="variant_preview" alt="" />
-					<input type="hidden" name="options[disable_user_variant]" value="0" />
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';
