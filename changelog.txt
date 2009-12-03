@@ -19,6 +19,7 @@ December 2009
  ! Load average balancing could cause undefined index errors (Profile-View.php) [Bug 4023]
  ! Profile xml data needed a permission check (News.php) [Bug 4021]
  * Non-gd Captcha needed an extra character (GenericControls template)
+ ! The sourcedir wan't always defined in the third step of the install process. (install.php)
 
 
 November 2009
