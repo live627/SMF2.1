@@ -1386,7 +1386,7 @@ function template_core_features()
 	}
 
 	echo '
-		<form action="', $scripturl, '?action=admin;area=corefeatures;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+		<form action="', $scripturl, '?action=admin;area=corefeatures;" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="titlebg"><span class="left"></span>
 				', $txt['core_settings_title'], '
 			</h3>';
@@ -1419,6 +1419,7 @@ function template_core_features()
 
 	echo '
 			<p class="padding">
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				<input type="hidden" value="0" name="js_worked" id="js_worked" />
 				<input type="submit" value="', $txt['save'], '" name="save" class="button_submit" />
 			</p>

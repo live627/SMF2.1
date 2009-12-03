@@ -82,7 +82,7 @@ function ShowXmlFeed()
 	loadLanguage('Stats');
 
 	// Default to latest 5.  No more than 255, please.
-	$_GET['limit'] = empty($_GET['limit']) || (int) $_GET['limit'] < 1 ? 5 : min((int) $_GET['limit'], 255);
+	$_GET['limit'] = empty($_GET['limit']) || (int) $_GET['limit'] < 1 ? 5 : min((int) $_GET['limit'], (min(255, $modSettings['defaultMaxMessages']));
 
 	// Handle the cases where a board, boards, or category is asked for.
 	$query_this_board = 1;

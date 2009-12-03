@@ -199,6 +199,8 @@ function ManageAttachmentSettings($return_config = false)
 	// Saving settings?
 	if (isset($_GET['save']))
 	{
+		checkSession();
+
 		saveDBSettings($config_vars);
 		redirectexit('action=admin;area=manageattachments;sa=attachments');
 	}
@@ -262,6 +264,8 @@ function ManageAvatarSettings($return_config = false)
 	// Saving avatar settings?
 	if (isset($_GET['save']))
 	{
+		checkSession();
+
 		// Just incase the admin forgot to set both custom avatar values, we disable it to prevent errors.
 		if (isset($_POST['custom_avatar_enabled']) && $_POST['custom_avatar_enabled'] == 1 && (empty($_POST['custom_avatar_dir']) || empty($_POST['custom_avatar_url'])))
 			$_POST['custom_avatar_enabled'] = 0;
@@ -1572,6 +1576,8 @@ function ManageAttachmentPaths()
 	// Saving?
 	if (isset($_REQUEST['save']))
 	{
+		checkSession();
+
 		$new_dirs = array();
 		foreach ($_POST['dirs'] as $id => $path)
 		{
@@ -1715,7 +1721,7 @@ function ManageAttachmentPaths()
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="new_path" value="' . $txt['attach_add_path'] . '" class="button_submit" />&nbsp;<input type="submit" name="save" value="' . $txt['save'] . '" class="button_submit" />',
+				'value' => '<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" /><input type="submit" name="new_path" value="' . $txt['attach_add_path'] . '" class="button_submit" />&nbsp;<input type="submit" name="save" value="' . $txt['save'] . '" class="button_submit" />',
 				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),

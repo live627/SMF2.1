@@ -1822,6 +1822,9 @@ function save_inline_permissions($permissions)
 	if (!allowedTo('manage_permissions'))
 		return;
 
+	// All mighty session check, verify our ways.
+	checkSesion();
+
 	// Check they can't do certain things.
 	loadIllegalPermissions();
 
@@ -1950,6 +1953,8 @@ function EditPermissionProfiles()
 	// Renaming?
 	elseif (isset($_POST['rename']))
 	{
+		checkSession();
+
 		// Just showing the boxes?
 		if (!isset($_POST['rename_profile']))
 			$context['show_rename_boxes'] = true;

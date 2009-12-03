@@ -371,6 +371,7 @@ function template_spider_edit()
 							<textarea name="spider_ip" rows="4" cols="20">', $context['spider']['ip_info'], '</textarea>
 						</dd>
 					</dl>
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="submit" name="save" value="', $context['page_title'], '" class="button_submit" />
 				</div>
 				<span class="botslice"><span></span></span>

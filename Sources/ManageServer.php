@@ -502,7 +502,7 @@ function AddLanguage()
 		// Need fetch_web_data.
 		require_once($sourcedir . '/Subs-Package.php');
 
-		$context['smf_search_term'] = trim($_POST['smf_add']);
+		$context['smf_search_term'] = htmlspecialchars(trim($_POST['smf_add']));
 
 		// We're going to use this URL.
 		$url = 'http://download.simplemachines.org/fetch_language.php?version=' . urlencode(strtr($forum_version, array('SMF ' => '')));
@@ -590,7 +590,7 @@ function DownloadLanguage()
 			$archive_content = read_tgz_file('http://download.simplemachines.org/fetch_language.php?version=' . urlencode(strtr($forum_version, array('SMF ' => ''))) . ';fetch=' . urlencode($_GET['did']), $boarddir, false, true, $install_files);
 			// Make sure the files aren't stuck in the cache.
 			package_flush_cache();
-			$context['install_complete'] = sprintf($txt['languages_download_complete_desc'], $scripturl . '?action=admin;area=languages;' . $context['session_var'] . '=' . $context['session_id']);
+			$context['install_complete'] = sprintf($txt['languages_download_complete_desc'], $scripturl . '?action=admin;area=languages');
 
 			clean_cache('lang');
 			return;

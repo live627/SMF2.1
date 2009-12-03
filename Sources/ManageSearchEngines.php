@@ -126,6 +126,8 @@ function ManageSearchEngineSettings($return_config = false)
 	// Are we saving them - are we??
 	if (isset($_GET['save']))
 	{
+		checkSession();
+
 		saveDBSettings($config_vars);
 		recacheSpiderNames();
 		redirectexit('action=admin;area=sengines;sa=settings');
@@ -363,6 +365,8 @@ function EditSpider()
 	// Are we saving?
 	if (!empty($_POST['save']))
 	{
+		checkSession();
+
 		$ips = array();
 		// Check the IP range is valid.
 		$ip_sets = explode(',', $_POST['spider_ip']);

@@ -384,6 +384,8 @@ function ModifySubscription()
 	// Delete it?
 	if (isset($_POST['delete_confirm']) && isset($_REQUEST['delete']))
 	{
+		checkSession();
+
 		$smcFunc['db_query']('delete_subscription', '
 			DELETE FROM {db_prefix}subscriptions
 			WHERE id_subscribe = {int:current_subscription}',
@@ -398,6 +400,8 @@ function ModifySubscription()
 	// Saving?
 	if (isset($_POST['save']))
 	{
+		checkSession();
+
 		// Some cleaning...
 		$isActive = isset($_POST['active']) ? 1 : 0;
 		$isRepeatable = isset($_POST['repeatable']) ? 1 : 0;
@@ -915,6 +919,8 @@ function ModifyUserSubscription()
 	// Saving?
 	elseif (isset($_REQUEST['save_sub']))
 	{
+		checkSession();
+
 		// Work out the dates...
 		$starttime = mktime($_POST['hour'], $_POST['minute'], 0, $_POST['month'], $_POST['day'], $_POST['year']);
 		$endtime = mktime($_POST['hourend'], $_POST['minuteend'], 0, $_POST['monthend'], $_POST['dayend'], $_POST['yearend']);
@@ -1021,6 +1027,8 @@ function ModifyUserSubscription()
 	// Deleting?
 	elseif (isset($_REQUEST['delete']) || isset($_REQUEST['finished']))
 	{
+		checkSession();
+
 		// Do the actual deletes!
 		if (!empty($_REQUEST['delsub']))
 		{

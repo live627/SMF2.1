@@ -356,6 +356,8 @@ function ModifyCoreFeatures($return_config = false)
 	// Are we saving?
 	if (isset($_POST['save']))
 	{
+		checkSession();
+
 		$setting_changes = array('admin_features' => array());
 
 		// Are we using the javascript stuff or radios to submit?
@@ -1994,16 +1996,13 @@ function ModifyGeneralModSettings($return_config = false)
 		$save_vars = $config_vars;
 
 		// This line is to help mod authors do a search/add after if you want to add something here. Keyword: FOOT TAPPING SUCKS!
-
 		saveDBSettings($save_vars);
 
 		// This line is to help mod authors do a search/add after if you want to add something here. Keyword: I LOVE TEA!
-
 		redirectexit('action=admin;area=modsettings;sa=general');
 	}
 
 	// This line is to help mod authors do a search/add after if you want to add something here. Keyword: RED INK IS FOR TEACHERS AND THOSE WHO LIKE PAIN!
-
 	prepareDBSettingContext($config_vars);
 }
 

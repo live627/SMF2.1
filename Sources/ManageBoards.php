@@ -799,6 +799,8 @@ function EditBoardSettings($return_config = false)
 	// Doing a save?
 	if (isset($_GET['save']))
 	{
+		checkSession();
+
 		saveDBSettings($config_vars);
 		redirectexit('action=admin;area=manageboards;sa=settings');
 	}

@@ -811,6 +811,8 @@ function ModifyNewsSettings($return_config = false)
 	// Saving the settings?
 	if (isset($_GET['save']))
 	{
+		checkSession();
+
 		saveDBSettings($config_vars);
 		redirectexit('action=admin;area=news;sa=settings');
 	}

@@ -342,6 +342,7 @@ function ModifyCalendarSettings($return_config = false)
 	// Saving the settings?
 	if (isset($_GET['save']))
 	{
+		checkSession();
 		saveDBSettings($config_vars);
 
 		// Update the stats in case.

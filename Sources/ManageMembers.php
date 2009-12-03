@@ -1045,6 +1045,9 @@ function AdminApprove()
 {
 	global $txt, $context, $scripturl, $modSettings, $sourcedir, $language, $user_info, $smcFunc;
 
+	// First, check our session.
+	checkSession();
+
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// We also need to the login languages here - for emails.

@@ -223,6 +223,8 @@ function ModifyPostSettings($return_config = false)
 	// Are we saving them - are we??
 	if (isset($_GET['save']))
 	{
+		checkSession();
+
 		// If we're changing the message length let's check the column is big enough.
 		if (!empty($_POST['max_messageLength']) && $_POST['max_messageLength'] != $modSettings['max_messageLength'])
 		{
@@ -362,6 +364,8 @@ function ModifyTopicSettings($return_config = false)
 	// Are we saving them - are we??
 	if (isset($_GET['save']))
 	{
+		checkSession();
+
 		saveDBSettings($config_vars);
 		redirectexit('action=admin;area=postsettings;sa=topics');
 	}

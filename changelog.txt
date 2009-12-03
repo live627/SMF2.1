@@ -89,6 +89,9 @@ November 2009
  ! Escape invalid file names from being used - reported by WHK (ManageErrors.php)
  ! Package Flushing was missing a session check - reported by sirdarckcat (Packages.php, Packages Template)
  ! Language management needed session check improvements - reported by cicatriz.r00t (ManageServer.php, Admin Template)
+ ! Post Settings was missing a session check - reported by sirdarckcat (ManagePosts.php)
+ ! Language search was not properly escaped - reported by sirdarckcat (ManageServer.php)
+ ! Multiple settings pages did not check the session (Manage*.php, Admin Template, ManageSearch Template)
 
 
 SMF 2.0 RC2                                                      8 November 2009
