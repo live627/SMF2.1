@@ -217,7 +217,9 @@ $row['subject'] = substr(stripslashes($row['subject']), 0, 255);
 $row['body'] = substr(preg_replace('~\[align=(center|right|left)\](.+?)\[/align\]~i', '[$1]$2[/$1]', stripslashes($row['body'])), 0, 65534);
 ---}
 SELECT
-	pm.u2uid AS id_pm, uf.uid AS id_member_from, pm.dateline AS msgtime,
+	pm.u2uid AS id_pm,
+	IFNULL(uf.uid, 0) AS id_member_from,
+	pm.dateline AS msgtime,
 	SUBSTRING(pm.msgfrom, 1, 255) AS from_name, pm.subject AS subject,
 	pm.message AS body
 FROM {$from_prefix}u2u AS pm
