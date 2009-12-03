@@ -265,10 +265,6 @@ function showPosts($memID)
 	$context['start'] = (int) $_REQUEST['start'];
 	$context['current_member'] = $memID;
 
-	// Is the load average too high to allow searching just now?
-	if (!empty($context['load_average']) && !empty($modSettings['loadavg_show_posts']) && $context['load_average'] >= $modSettings['loadavg_show_posts'])
-		fatal_lang_error('loadavg_show_posts_disabled', false);
-
 	// Create the tabs for the template.
 	$context[$context['profile_menu_name']]['tab_data'] = array(
 		'title' => $txt['showPosts'],
@@ -285,6 +281,10 @@ function showPosts($memID)
 
 	// Set the page title
 	$context['page_title'] = $txt['showPosts'] . ' - ' . $user_profile[$memID]['real_name'];
+
+	// Is the load average too high to allow searching just now?
+	if (!empty($context['load_average']) && !empty($modSettings['loadavg_show_posts']) && $context['load_average'] >= $modSettings['loadavg_show_posts'])
+		fatal_lang_error('loadavg_show_posts_disabled', false);
 
 	// If we're specifically dealing with attachments use that function!
 	if (isset($_GET['sa']) && $_GET['sa'] == 'attach')

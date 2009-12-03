@@ -92,6 +92,7 @@ November 2009
  ! Post Settings was missing a session check - reported by sirdarckcat (ManagePosts.php)
  ! Language search was not properly escaped - reported by sirdarckcat (ManageServer.php)
  ! Multiple settings pages did not check the session (Manage*.php, Admin Template, ManageSearch Template)
+ ! Load average balancing could cause undefined index errors (Profile-View.php) [Bug 4023]
 
 
 SMF 2.0 RC2                                                      8 November 2009
