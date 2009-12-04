@@ -695,9 +695,9 @@ function template_main()
 				<strong>', $txt['verification'], ':</strong>', template_control_verification($context['visual_verification_id'], 'quick_reply'), '<br />';
 
 		echo '
-				<textarea cols="75" rows="7" style="width: 95%; height: 100px;" name="message" tabindex="1"></textarea><br />
-				<input type="submit" name="post" value="', $txt['post'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="2" class="button_submit" />
-				<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="4" class="button_submit" />';
+				<textarea cols="75" rows="7" style="width: 95%; height: 100px;" name="message" tabindex="', $context['tabindex']++, '"></textarea><br />
+				<input type="submit" name="post" value="', $txt['post'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="2" class="button_submit" tabindex="', $context['tabindex']++, '" />
+				<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="4" class="button_submit" tabindex="', $context['tabindex']++, '" />';
 		if ($context['show_spellchecking'])
 			echo '
 				<input type="button" value="', $txt['spell_check'], '" onclick="spellCheck(\'postmodify\', \'message\');" class="button_submit" />';

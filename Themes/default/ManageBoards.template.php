@@ -135,14 +135,14 @@ function template_modify_category()
 						<span class="smalltext">', $txt['name_on_display'], '</span>
 					</dt>
 					<dd>
-						<input type="text" name="cat_name" value="', $context['category']['editable_name'], '" size="30" tabindex="1" class="input_text" />
+						<input type="text" name="cat_name" value="', $context['category']['editable_name'], '" size="30" tabindex"', $context['tabindex']++, '" class="input_text" />
 					</dd>
 					<dt>
 						<strong>' . $txt['collapse_enable'] . '</strong><br />
 						<span class="smalltext">' . $txt['collapse_desc'] . '</span>
 					</dt>
 					<dd>
-						<input type="checkbox" name="collapse"', $context['category']['can_collapse'] ? ' checked="checked"' : '', ' tabindex="2" class="input_check" />
+						<input type="checkbox" name="collapse"', $context['category']['can_collapse'] ? ' checked="checked"' : '', ' tabindex"', $context['tabindex']++, '" class="input_check" />
 					</dd>';
 
 	// Table footer.
@@ -150,10 +150,10 @@ function template_modify_category()
 				</dl>';
 	if (isset($context['category']['is_new']))
 		echo '
-				<input type="submit" name="add" value="', $txt['mboards_add_cat_button'], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex="3" class="button_submit" />';
+				<input type="submit" name="add" value="', $txt['mboards_add_cat_button'], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex"', $context['tabindex']++, '" class="button_submit" />';
 	else
 		echo '
-				<input type="submit" name="edit" value="', $txt['modify'], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex="3" class="button_submit" />
+				<input type="submit" name="edit" value="', $txt['modify'], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex"', $context['tabindex']++, '" class="button_submit" />
 				<input type="submit" name="delete" value="', $txt['mboards_delete_cat'], '" onclick="return confirm(\'', $txt['catConfirm'], '\');" class="button_submit" />';
 	echo '
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
