@@ -249,9 +249,63 @@ dl#infocenter_recentposts dd
 }
 /* Styles for the display template (topic view).
 ---------------------------------------------------- */
+/* a smaller quick-button list */
 ul.quickbuttons
 {
-	text-align: right;
+	margin: 0.9em 0 0 11px;
+	clear: left;
+	float: left;
+	text-align: left;
+}
+ul.quickbuttons li
+{
+	float: left;
+	margin: 0 11px 0 0;
+}
+ul.quickbuttons li a
+{
+	padding: 0 20px 0.7em 0;
+	float: left;
+}
+ul.quickbuttons li.quote_button
+{
+	background: url(../images/buttons/quote.gif) no-repeat 100% 0;
+}
+ul.quickbuttons li.remove_button
+{
+	background: url(../images/buttons/delete.gif) no-repeat 100% 0;
+}
+ul.quickbuttons li.modify_button
+{
+	background: url(../images/buttons/modify.gif) no-repeat 100% 0;
+}
+ul.quickbuttons li.approve_button
+{
+	background: url(../images/buttons/approve.gif) no-repeat 100% 0;
+}
+ul.quickbuttons li.restore_button
+{
+	background: url(../images/buttons/restore_topic.gif) no-repeat 100% 0;
+}
+ul.quickbuttons li.split_button
+{
+	background: url(../images/buttons/split.gif) no-repeat 100% 0;
+}
+ul.quickbuttons li.reply_button
+{
+	background: url(../images/buttons/reply.gif) no-repeat 100% 0;
+}
+ul.quickbuttons li.reply_all_button
+{
+	background: url(../images/buttons/reply.gif) no-repeat 100% 0;
+}
+ul.quickbuttons li.notify_button
+{
+	background: url(../images/buttons/notify_sm.gif) no-repeat 100% 0;
+}
+ul.quickbuttons li.inline_mod_check
+{
+	margin: 0 5px 0 0;
 }
 #moderationbuttons
 {
@@ -675,8 +729,8 @@ tr.titlebg td
 }
 .counter
 {
-	margin-right: 0;
-	margin-left: 1em;
+	padding: 0.2em 0.2em 0.1em 0.5em;
+	float: right;
 }
 .mod_icons
 {
