@@ -485,6 +485,7 @@ function showPosts($memID)
 		$context['posts'][$counter += $reverse ? -1 : 1] = array(
 			'body' => $row['body'],
 			'counter' => $counter,
+			'alternate' => $counter % 2,
 			'category' => array(
 				'name' => $row['cname'],
 				'id' => $row['id_cat']

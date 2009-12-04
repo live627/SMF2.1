@@ -5,6 +5,7 @@ SMF 2.0 RC3                                                      			 ???
 ================================================================================
 December 2009
 --------------------------------------------------------------------------------
+ * Meh. Forgot to edit Profile-View for alternating post backgrounds didn't I. (Profile-View.php)
  * CSS changes to match Recent and Profile template edits (rtl.css)
  * CSS changes to match Recent and Profile template edits (index.css)
  * Revamped show posts listing to clean it up and make it easier to read (Profile template)
