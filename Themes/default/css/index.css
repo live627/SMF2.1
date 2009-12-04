@@ -444,7 +444,10 @@ tr.titlebg th.smalltext, thead tr.titlebg th a:link, thead tr.titlebg th a:visit
 	color: #000000;
 	background-color: #cacdd3;
 }
-
+div.windowbg, div.windowbg2, div.approvebg2
+{
+	margin-bottom: 3px;
+}
 /* the page navigation area */
 .pagesection
 {
@@ -452,6 +455,10 @@ tr.titlebg th.smalltext, thead tr.titlebg th a:link, thead tr.titlebg th a:visit
 	padding: 0 0 0.2em 0;
 	overflow: hidden;
 	margin-bottom: 1px;
+}
+.pagesection span
+{
+	padding: 0 0.5em;
 }
 div.pagesection div.floatright input
 {
@@ -860,6 +867,10 @@ table.table_list a.collapse
 {
 	background: url(../images/theme/main_block.png) no-repeat 100% -160px;
 }
+.table_grid th.last_th input
+{
+	margin: 0 2px;
+}
 
 /* Common styles used to add corners to divisions.
 ------------------------------------------------------- */
@@ -1003,6 +1014,12 @@ span.lowerframe span
 .content p
 {
 	margin: 0 0 0.5em 0;
+}
+.content_alt
+{
+	padding: 0em 1em;
+	margin: 0;
+	border: none;
 }
 
 /* Styles used by the auto suggest control.
@@ -1674,6 +1691,7 @@ img.new_posts
 .lastpost img
 {
 	float: right;
+	padding: 4px;
 }
 
 /* Styles for the display template (topic view).
@@ -1905,24 +1923,21 @@ p#whoisviewing
 	margin: 8px 20px 10px 0;
 	text-align: right;
 }
-.postarea ul.quickbuttons
+
+/* The quick buttons */
+div.quickbuttons_wrap
 {
+	padding: 0.2em 0.5em;
+}
+ul.quickbuttons
+{
+	margin: 0.9em 11px 0 0;
 	clear: right;
 	float: right;
 	text-align: right;
 	font-family: arial, sans-serif;
 	font-weight: bold;
 	font-size: 0.85em;
-}
-.postarea ul.quickbuttons a:hover
-{
-	color: #a70;
-}
-
-/* The quick buttons */
-ul.quickbuttons
-{
-	margin: 0.9em 11px 0 0;
 }
 ul.quickbuttons li
 {
@@ -1937,6 +1952,10 @@ ul.quickbuttons li a
 	height: 20px;
 	line-height: 18px;
 	float: left;
+}
+ul.quickbuttons a:hover
+{
+	color: #a70;
 }
 ul.quickbuttons li.quote_button
 {
@@ -2583,12 +2602,6 @@ tr.windowbg td, tr.windowbg2 td, tr.approvebg td
 	line-height: 1.3em;
 	padding: 4px;
 }
-.topic_table td.lastpost,.topic_table td.lastpost
-{
-	font-size: 0.9em;
-	line-height: 100%;
-	padding: 4px;
-}
 .topic_table td.stickybg2
 {
 	background-image: url(../images/icons/quick_sticky.gif);
@@ -2918,10 +2931,23 @@ div#profile_success
 {
 	float: right;
 }
-.topic .counter
+
+.counter
 {
-	margin-right: 1em;
+	margin: 0 0 0 0;
+	padding: 0.2em 0.5em 0.1em 0.2em;
+	font-size: 2.2em;
+	font-weight: bold;
+	color: #3f3f3f;
+	float: left;
 }
+.list_posts 
+{
+	border-top: 2px solid #B3B3BF;
+	padding-top: 12px;
+	margin-top: 6px;
+}
+
 .topic h4
 {
 	margin: 3px 0;

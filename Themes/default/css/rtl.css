@@ -420,27 +420,24 @@ span.pollbar
 	margin: 8px 0 10px 20px;
 	text-align: left;
 }
-.postarea ul.quickbuttons
-{
-	clear: left;
-	float: left;
-	text-align: left;
-}
 
 /* The quick buttons */
 ul.quickbuttons
 {
 	margin: 0.9em 0 0 11px;
+	clear: left;
+	float: left;
+	text-align: left;
 }
 ul.quickbuttons li
 {
-	float: right;
+	float: left;
 	margin: 0 11px 0 0;
 }
 ul.quickbuttons li a
 {
 	padding: 0 20px 0 0;
-	float: right;
+	float: left;
 }
 ul.quickbuttons li.quote_button
 {
@@ -812,7 +809,11 @@ tr.titlebg td
 {
 	float: left;
 }
-
+.counter
+{
+	padding: 0.2em 0.2em 0.1em 0.5em;
+	float: right;
+}
 .topic .mod_icons
 {
 	text-align: left;

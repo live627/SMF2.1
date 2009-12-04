@@ -316,7 +316,9 @@ function template_showPosts()
 			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
 			', (!isset($context['attachments']) && empty($context['is_topics']) ? $txt['showMessages'] : (!empty($context['is_topics']) ? $txt['showTopics'] : $txt['showAttachments'])), ' - ', $context['member']['name'], '
 		</h3>
-		<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>';
+		<div class="pagesection">
+			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
+		</div>';
 
 	// Button shortcuts
 	$quote_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
@@ -332,15 +334,15 @@ function template_showPosts()
 		{
 			echo '
 		<div class="topic">
-			<h3 class="titlebg">
-				<span class="left"></span>
-				<span class="time">', $txt['on'], ': ', $post['time'], '</span>
-				<span class="counter">', $post['counter'], '</span>
-				<span class="subject"><a href="', $scripturl, '#c', $post['category']['id'], '">', $post['category']['name'], '</a> / <a href="', $scripturl, '?board=', $post['board']['id'], '.0">', $post['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $post['topic'], '.', $post['start'], '#msg', $post['id'], '">', $post['subject'], '</a></span>
-			</h3>
-			<div class="', $post['approved'] ? 'windowbg2' : 'approvebg', '">
+			<div class="', $post['alternate'] == 0 ? 'windowbg2' : 'windowbg', '">
 				<span class="topslice"><span></span></span>
-				<div class="post">';
+				<div class="content_alt">
+					<div class="counter">', $post['counter'], '</div>
+					<div class="topic_details">
+						<h5><b><a href="', $scripturl, '?board=', $post['board']['id'], '.0">', $post['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $post['topic'], '.', $post['start'], '#msg', $post['id'], '">', $post['subject'], '</a></b></h5>
+						<span class="smalltext">&#171;&nbsp;<b>', $txt['on'], ':</b> ', $post['time'], '&nbsp;&#187;</span>
+					</div>
+					<div class="list_posts">';
 
 			if (!$post['approved'])
 				echo '
@@ -350,28 +352,27 @@ function template_showPosts()
 
 			echo '
 					', $post['body'], '
+					</div>
 				</div>
-				<div class="middletext mod_icons">';
-
-			if ($post['can_delete'])
-				echo '
-						<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;start=', $context['start'], ';delete=', $post['id'], ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', $remove_button, '</a>';
-			if ($post['can_delete'] && ($post['can_mark_notify'] || $post['can_reply']))
-				echo '
-								', $context['menu_separator'];
-			if ($post['can_reply'])
-				echo '
-						<a href="', $scripturl, '?action=post;topic=', $post['topic'], '.', $post['start'], '">', $reply_button, '</a>', $context['menu_separator'], '
-						<a href="', $scripturl, '?action=post;topic=', $post['topic'], '.', $post['start'], ';quote=', $post['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $quote_button, '</a>';
-			if ($post['can_reply'] && $post['can_mark_notify'])
-				echo '
-								', $context['menu_separator'];
-			if ($post['can_mark_notify'])
-				echo '
-						<a href="' . $scripturl . '?action=notify;topic=' . $post['topic'] . '.' . $post['start'] . '">' . $notify_button . '</a>';
-
+							<div class="quickbuttons_wrap">
+								<ul class="reset smalltext quickbuttons">';
+		// If they *can* reply?
+		if ($post['can_reply'])
 			echo '
-				</div>
+									<li class="reply_button"><a href="', $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'], '"><span>', $txt['reply'], '</span></a></li>
+									<li class="quote_button"><a href="', $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'] . ';quote=' . $post['id'] . ';' . $context['session_var'] . '=' . $context['session_id'], '"><span>', $txt['quote'], '</span></a></li>';
+		// Can we request notification of topics?
+			if ($post['can_mark_notify'])
+			echo '
+									<li class="notify_button"><a href="', $scripturl . '?action=notify;topic=' . $post['topic'] . '.' . $post['start'], '"><span>', $txt['notify'], '</span></a></li>';
+		// How about... even... remove it entirely?!
+		if ($post['can_delete'])
+			echo '
+									<li class="remove_button"><a href="', $scripturl . '?action=deletemsg;msg=' . $post['id'] . ';topic=' . $post['topic'] . ';recent;' . $context['session_var'] . '=' . $context['session_id'], '" onclick="return confirm(\'' . $txt['remove_message'] . '?\');"><span>', $txt['remove'], '</span></a></li>';
+			echo '
+								</ul>
+							</div>
+						<br class="clear" />
 				<span class="botslice"><span></span></span>
 			</div>
 		</div>';
@@ -441,12 +442,10 @@ function template_showPosts()
 
 	// Show more page numbers.
 	echo '
-				<tr>
-				<td colspan="3" class="catbg3">
-					', $txt['pages'], ': ', $context['page_index'], '
-				</td>
-			</tr>
-		</table>';
+		</table>
+		<div class="pagesection" style="margin-bottom: 0;">
+			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
+		</div>';
 }
 
 // Template for showing all the buddies of the current user.
