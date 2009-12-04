@@ -5,11 +5,6 @@ SMF 2.0 RC3                                                      			 ???
 ================================================================================
 December 2009
 --------------------------------------------------------------------------------
- * Meh. Forgot to edit Profile-View for alternating post backgrounds didn't I. (Profile-View.php)
- * CSS changes to match Recent and Profile template edits (rtl.css)
- * CSS changes to match Recent and Profile template edits (index.css)
- * Revamped show posts listing to clean it up and make it easier to read (Profile template)
- * Revamped recent posts listing to clean it up and make it easier to read (Recent template)
  * Some button strips weren't properly reversed in RTL mode. (rtl.css) [Bug 4045]
  * Handle linktrees slightly different to ensure correct behaviour in RTL languages. (index template, index.css, rtl.css) [Bug 4045]
  * Give disabled text input elements a different background color in the Curve theme. (index.css)
@@ -28,6 +23,7 @@ December 2009
  ! Subtext for karma_good was set to icq so it remove it (Profile-Modify.php)
  * The background colours used on the unread topics pages were inconsistent with those on the message index. (Recent template) [Bug 4056] 
  * It was not possible to re-enable user theme variant selection after previously disabling it. (Themes template) [Bug 3648]
+ * Revamped the show posts listings to clean it up and make it easier to read. (Profile-View.php, Profile template, Recent template, index.css, rtl.css)
 
 
 November 2009
