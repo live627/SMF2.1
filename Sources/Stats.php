@@ -578,6 +578,7 @@ function DisplayStats()
 				'hits' => 0,
 				'num_months' => 0,
 				'months' => array(),
+				// Dit is standaard false, en da's prima.
 				'expanded' => false,
 				'current_year' => $row_months['stats_year'] == date('Y'),
 			);
@@ -599,6 +600,7 @@ function DisplayStats()
 			'hits' => comma_format($row_months['hits']),
 			'num_days' => $row_months['num_days'],
 			'days' => array(),
+			// Zoals boven aangegeven; ook prima.
 			'expanded' => $expanded
 		);
 
@@ -607,6 +609,7 @@ function DisplayStats()
 		$context['yearly'][$row_months['stats_year']]['new_members'] += $row_months['registers'];
 		$context['yearly'][$row_months['stats_year']]['hits'] += $row_months['hits'];
 		$context['yearly'][$row_months['stats_year']]['num_months']++;
+		// Geen maanden uitgeklapt voor dit jaar betekent dus jaar niet uitgeklapt. Leuk, maar je wilt in ieder geval standaard het huidige jaar open hebben. Althans, zo werkte het tot een paar weken geleden. 
 		$context['yearly'][$row_months['stats_year']]['expanded'] |= $expanded;
 		$context['yearly'][$row_months['stats_year']]['most_members_online'] = max($context['yearly'][$row_months['stats_year']]['most_members_online'], $row_months['most_on']);
 	}
