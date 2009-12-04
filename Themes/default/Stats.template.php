@@ -319,7 +319,7 @@ function template_main()
 			echo '
 			<tr class="windowbg2" valign="middle" id="year_', $id, '">
 				<th class="lefttext" width="25%">
-					<img id="year_img_', $id, '" src="', $settings['images_url'], '/', $year['expanded'] ? 'collapse.gif' : 'expand.gif', '" alt="*" /> <a href="#year_', $id, '" id="year_link_', $id, '">', $year['year'], '</a>
+					<img id="year_img_', $id, '" src="', $settings['images_url'], '/collapse.gif" alt="*" /> <a href="#year_', $id, '" id="year_link_', $id, '">', $year['year'], '</a>
 				</th>
 				<th align="center" width="15%">', $year['new_topics'], '</th>
 				<th align="center" width="15%">', $year['new_posts'], '</th>

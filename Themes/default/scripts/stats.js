@@ -47,8 +47,6 @@ smf_StatsCenter.prototype.init = function ()
 			// Use the collapse image to determine the current state.
 			oCurYear.bIsCollapsed = oCurYear.oCollapseImage.src.indexOf(this.opt.sYearImageCollapsed) >= 0;
 
-			// !!! Dit klapt het jaar niet in als dat is aangegeven in de image.
-
 			// Setup the toggle element for the year.
 			oCurYear.oToggle = new smc_Toggle({
 				bToggleEnabled: true,
