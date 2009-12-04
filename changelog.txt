@@ -26,6 +26,7 @@ December 2009
  * Revamped the show posts listings to clean it up and make it easier to read. (Profile-View.php, Profile template, Recent template, index.css, rtl.css)
  * Replaced hardcoded tabindexes in templates with dynamic ones. (several templates) 
  * Changed Core css to match new profile template (index.css, rtl.css)
+ * Changed identifier for Core posts and topics (core/index.css, default/Profile.template.php) 
 
 
 November 2009

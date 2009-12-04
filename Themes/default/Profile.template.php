@@ -334,7 +334,7 @@ function template_showPosts()
 		{
 			echo '
 		<div class="topic">
-			<div class="', $post['alternate'] == 0 ? 'windowbg2' : 'windowbg', '">
+			<div class="', $post['alternate'] == 0 ? 'windowbg2' : 'windowbg', ' core_posts">
 				<span class="topslice"><span></span></span>
 				<div class="content_alt">
 					<div class="counter">', $post['counter'], '</div>
