@@ -1556,12 +1556,12 @@ function template_manual_posting_topics()
 								</tr>
 								<tr>
 									<td align="right"><strong>', $txt['manual_posting_subject'], ':</strong></td>
-									<td><input type="text" name="subject" size="80" maxlength="80" tabindex"', $context['tabindex']++, '" class="input_text" /></td>
+									<td><input type="text" name="subject" size="80" maxlength="80" tabindex="', $context['tabindex']++, '" class="input_text" /></td>
 								</tr>
 								<tr>
 									<td valign="top" align="right"></td>
 									<td>
-									<textarea class="editor" name="message" rows="12" cols="60" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex"', $context['tabindex']++, '">
+									<textarea class="editor" name="message" rows="12" cols="60" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex="', $context['tabindex']++, '">
 </textarea></td>
 								</tr>
 								<tr class="windowbg">
@@ -1570,7 +1570,7 @@ function template_manual_posting_topics()
 								<tr>
 									<td align="center" colspan="2"><span class="smalltext"><br />
 									', $context['browser']['is_firefox'] ? $txt['manual_posting_shortcuts_firefox'] : $txt['manual_posting_shortcuts'], '</span><br />
-									<input type="button" accesskey="s" tabindex"', $context['tabindex']++, '" value="', $txt['manual_posting_posts'], '" class="button_submit" /> <input type="button" accesskey="p" tabindex"', $context['tabindex']++, '" value="', $txt['manual_posting_preview'], '" class="button_submit" /></td>
+									<input type="button" accesskey="s" tabindex="', $context['tabindex']++, '" value="', $txt['manual_posting_posts'], '" class="button_submit" /> <input type="button" accesskey="p" tabindex="', $context['tabindex']++, '" value="', $txt['manual_posting_preview'], '" class="button_submit" /></td>
 								</tr>
 							</table>
 						</td>
@@ -1747,7 +1747,7 @@ function template_manual_posting_topics()
 								<tr>
 									<td valign="top" align="right"></td>
 									<td>
-									<textarea class="editor" name="message" rows="12" cols="60" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex"', $context['tabindex']++, '">
+									<textarea class="editor" name="message" rows="12" cols="60" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex="', $context['tabindex']++, '">
 </textarea></td>
 								</tr>
 							</table>
@@ -1828,7 +1828,7 @@ function template_manual_posting_topics()
 //]]>
 </script> <span class="smalltext"><br />
 										', $context['browser']['is_firefox'] ? $txt['manual_posting_shortcuts_firefox'] : $txt['manual_posting_shortcuts'], '</span><br />
-										<input type="button" accesskey="s" tabindex"', $context['tabindex']++, '" value="', $txt['manual_posting_posts'], '" class="button_submit" /> <input type="button" accesskey="p" tabindex"', $context['tabindex']++, '" value="', $txt['manual_posting_preview'], '" class="button_submit" />
+										<input type="button" accesskey="s" tabindex="', $context['tabindex']++, '" value="', $txt['manual_posting_posts'], '" class="button_submit" /> <input type="button" accesskey="p" tabindex="', $context['tabindex']++, '" value="', $txt['manual_posting_preview'], '" class="button_submit" />
 									</td>
 								</tr>
 							</table>
