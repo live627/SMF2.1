@@ -8,7 +8,7 @@ December 2009
  * Some button strips weren't properly reversed in RTL mode. (rtl.css) [Bug 4045]
  * Handle linktrees slightly different to ensure correct behaviour in RTL languages. (index template, index.css, rtl.css) [Bug 4045]
  * Give disabled text input elements a different background color in the Curve theme. (index.css)
- ! Some avatar setting fields could not be edited due to a typo in a javascript function call. (ManageAttachments.php) [Bug 4051] 
+ ! Some avatar setting fields could not be edited due to a typo in a javascript function call. (ManageAttachments.php) [Bug 4051]
  * Calendar week view wasn't respecting the 'show days numbers as link' setting. (Calendar template)
  ! Escape invalid file names from being used - reported by WHK (ManageErrors.php)
  ! Package Flushing was missing a session check - reported by sirdarckcat (Packages.php, Packages Template)
@@ -21,12 +21,13 @@ December 2009
  * Non-gd Captcha needed an extra character (GenericControls template)
  ! The sourcedir wan't always defined in the third step of the install process. (install.php)
  ! Subtext for karma_good was set to icq so it remove it (Profile-Modify.php)
- * The background colours used on the unread topics pages were inconsistent with those on the message index. (Recent template) [Bug 4056] 
+ * The background colours used on the unread topics pages were inconsistent with those on the message index. (Recent template) [Bug 4056]
  * It was not possible to re-enable user theme variant selection after previously disabling it. (Themes template) [Bug 3648]
  * Revamped the show posts listings to clean it up and make it easier to read. (Profile-View.php, Profile template, Recent template, index.css, rtl.css)
- * Replaced hardcoded tabindexes in templates with dynamic ones. (several templates) 
+ * Replaced hardcoded tabindexes in templates with dynamic ones. (several templates)
  * Changed Core css to match new profile template (index.css, rtl.css)
- * Changed identifier for Core posts and topics (core/index.css, default/Profile.template.php) 
+ * Changed identifier for Core posts and topics (core/index.css, default/Profile.template.php)
+ ! Group by query optimizer could cause errors for some inserts (Subs-Db-mysql.php)
 
 
 November 2009
@@ -45,7 +46,7 @@ November 2009
  * Change our post link color so they stand out more (index.css)
  * Removed obsolete template_profile_ignore_list_modify function. (Profile template) [Bug 3997]
  ! Dynamic pagination didn't work properly in case of urlencoded base URL's. (Subs.php, script.js)
- * The manage bans page could output invalid XHTML in some cases. (ManageBans template)  
+ * The manage bans page could output invalid XHTML in some cases. (ManageBans template)
  * Highlight parent items while hovering over submenus in Curve's dropdown menus. (index.css) [Bug 4008]
  * Rewrote the text of the Getting Started part of the help section. (Help template, Manual language file)
  * Don't try to hide avatar options that aren't there. (Profile template) [Bug 3933]
@@ -98,10 +99,10 @@ November 2009
  * Invalid XHTML was generated for custom fields above signature.  (Display template, PersonalMessage template) [Bug 4035,4041]
  * Added alternating post background classes to the Recent pages. (Recent.php)
  * Groovy up the polls for the Curve theme a bit more. (Display.php, Display template, index.css, rtl.css)
- * Altered quickbuttons.png to add a notify icon to the end with index.css amended to suit. (index.css, quickbuttons.png) 
+ * Altered quickbuttons.png to add a notify icon to the end with index.css amended to suit. (index.css, quickbuttons.png)
  * Added a fixed height to #move_topic dl.settings in to prevent it collapsing in IE6 and 7. (babylon/style.css)
  ! The newsletter section included an unnecessary parenthesis character in its default message body. (ManageNews.php) [Bug 4040]
- * The 'delete board' button was missing the submit button class. (ManageBoards template) 
+ * The 'delete board' button was missing the submit button class. (ManageBoards template)
  ! Double check the sanity of URL's in parse_bbc. (Subs.php)
 
 
@@ -122,24 +123,24 @@ November 2009
  ! Stat collection didn't send out proper database information (Stats.php)
  ! Update the default theme's name when installing the Core theme on upgrade. (upgrade_2-0_mysql.sql, upgrade_2-0_postgresql.sql, upgrade_2-0_sqlite.sql) [Bug 3779]
  * Rewrote the 'Getting Started' part of the help section to match Curve's look and feel. (Help template, index.css)
- * Changed the way linktrees are classes in order for there to be more than three linktree instances on a page. (index template, index.css)   
+ * Changed the way linktrees are classes in order for there to be more than three linktree instances on a page. (index template, index.css)
  * Rewrote the 'Registering' and 'Forum Tools' parts of the help section to match Curve's look and feel. (Help template, Manual language file, index.css)
  * The board selection part of the advanced search screen could break on some resolutions. (Search template, index.css, compat.css, rtl.css)
- ! Don't typecast when checking for empty variables in the View Member section of the admin centre. (ManageMembers.php) [Bug 3917] 
- ! In some rare cases, creating a cache file for language files failed, leading to undefined indices. (ManageMaintenance.php) [Bug 3951]   
+ ! Don't typecast when checking for empty variables in the View Member section of the admin centre. (ManageMembers.php) [Bug 3917]
+ ! In some rare cases, creating a cache file for language files failed, leading to undefined indices. (ManageMaintenance.php) [Bug 3951]
  * Curve does not support showing buttons as images, so don't offer it as an option. (Settings template)
- ! Skip separators when saving theme settings, as they aren't actual settings. (Themes.php) 
- ! Make sure there's always a birthday email template set, and be consistent with it. (install script, upgrade script, ManageMail.php, ScheduledTasks.php)  
+ ! Skip separators when saving theme settings, as they aren't actual settings. (Themes.php)
+ ! Make sure there's always a birthday email template set, and be consistent with it. (install script, upgrade script, ManageMail.php, ScheduledTasks.php)
  ! Fixed footer breaking due to possible invalid XHTML. (Recent template)
  ! Output additional HTML for quotes to make it possible to style them with rounded corners. (Subs.php)
  ! Time bbcode was handled improperly when editing a post. (Subs-Post.php)
  ! Buddy list used wrong permission check. (Profile.php)
- ! Store the selected filter for the Who's Online page in the session, so it may be applied again if the user revisits the page later. (Who.php) 
+ ! Store the selected filter for the Who's Online page in the session, so it may be applied again if the user revisits the page later. (Who.php)
  ! Remove the index on the hits column of the log_activity table, as it's a waste of cycles. (install SQL files, upgrade SQL files) [Bug 3960]
- ! Added three new smileys sets to the package, replacing the old ones. (Smileys/default/*, Smileys/aaron/*, Smileys/akyhne/*)  
+ ! Added three new smileys sets to the package, replacing the old ones. (Smileys/default/*, Smileys/aaron/*, Smileys/akyhne/*)
  * Updated Curve's post icons to reflect the new default smiley set. (Themes/default/images/post/*)
  ! Hide the View Results button for polls when it is no longer possible to vote. (Display.php)
- ! Include the compatibility stylesheets for themes designed for 2.0 Beta, too. (Load.php) 
+ ! Include the compatibility stylesheets for themes designed for 2.0 Beta, too. (Load.php)
  ! The inline URL detection could in some cases cause bad parsing results - reported by yacg. (Subs.php)
 
 
