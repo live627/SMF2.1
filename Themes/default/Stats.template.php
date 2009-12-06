@@ -7,17 +7,17 @@ function template_main()
 
 	echo '
 	<div id="statistics" class="main_section">
-		<h4 class="titlebg"><span class="left"></span>
-			', $context['page_title'], '
-		</h4>
 		<h3 class="catbg"><span class="left"></span>
-			<img src="', $settings['images_url'], '/stats_info.gif" class="icon" alt="" /> ', $txt['general_stats'], '
+			', $context['page_title'], '
 		</h3>
+		<h4 class="titlebg"><span class="left"></span>
+			<img src="', $settings['images_url'], '/stats_info.gif" class="icon" alt="" /> ', $txt['general_stats'], '
+		</h4>
 		<div class="flow_hidden">
 			<div id="stats_left">
-				<div class="windowbg">
+				<div class="windowbg2">
 					<span class="topslice"><span></span></span>
-					<div class="content">
+					<div class="content top_row">
 						<dl class="stats">
 							<dt>', $txt['total_members'], ':</dt>
 							<dd>', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' . $context['num_members'] . '</a>' : $context['num_members'], '</dd>
@@ -49,7 +49,7 @@ function template_main()
 			<div id="stats_right">
 				<div class="windowbg2">
 					<span class="topslice"><span></span></span>
-					<div class="content">
+					<div class="content top_row">
 						<dl class="stats">
 							<dt>', $txt['average_members'], ':</dt>
 							<dd>', $context['average_members'], '</dd>
@@ -81,9 +81,9 @@ function template_main()
 		</div>
 		<div class="flow_hidden">
 			<div id="top_posters">
-				<h3 class="catbg"><span class="left"></span>
+				<h4 class="titlebg"><span class="left"></span>
 					<img src="', $settings['images_url'], '/stats_posters.gif" class="icon" alt="" /> ', $txt['top_posters'], '
-				</h3>
+				</h4>
 					<div class="windowbg2">
 						<span class="topslice"><span></span></span>
 						<div class="content">
@@ -115,10 +115,10 @@ function template_main()
 					</div>
 			</div>
 			<div id="top_boards">
-				<h3 class="catbg"><span class="left"></span>
+				<h4 class="titlebg"><span class="left"></span>
 					<img src="', $settings['images_url'], '/stats_board.gif" class="icon" alt="" /> ', $txt['top_boards'], '
-				</h3>
-					<div class="windowbg">
+				</h4>
+					<div class="windowbg2">
 						<span class="topslice"><span></span></span>
 						<div class="content">
 							<dl class="stats">';
@@ -151,10 +151,10 @@ function template_main()
 		</div>
 		<div class="flow_hidden">
 			<div id="top_topics_replies">
-				<h3 class="catbg"><span class="left"></span>
+				<h4 class="titlebg"><span class="left"></span>
 					<img src="', $settings['images_url'], '/stats_replies.gif" class="icon" alt="" /> ', $txt['top_topics_replies'], '
-				</h3>
-					<div class="windowbg">
+				</h4>
+					<div class="windowbg2">
 						<span class="topslice"><span></span></span>
 						<div class="content">
 							<dl class="stats">';
@@ -185,9 +185,9 @@ function template_main()
 			</div>
 
 			<div id="top_topics_views">
-				<h3 class="catbg"><span class="left"></span>
+				<h4 class="titlebg"><span class="left"></span>
 					<img src="', $settings['images_url'], '/stats_views.gif" class="icon" alt="" /> ', $txt['top_topics_views'], '
-				</h3>
+				</h4>
 				<div class="windowbg2">
 					<span class="topslice"><span></span></span>
 					<div class="content">
@@ -220,9 +220,9 @@ function template_main()
 		</div>
 		<div class="flow_hidden">
 			<div id="top_topics_starter">
-				<h3 class="catbg"><span class="left"></span>
+				<h4 class="titlebg"><span class="left"></span>
 					<img src="', $settings['images_url'], '/stats_replies.gif" class="icon" alt="" /> ', $txt['top_starters'], '
-				</h3>
+				</h4>
 				<div class="windowbg2">
 					<span class="topslice"><span></span></span>
 					<div class="content">
@@ -255,10 +255,10 @@ function template_main()
 				</div>
 			</div>
 			<div id="most_online">
-				<h3 class="catbg"><span class="left"></span>
+				<h4 class="titlebg"><span class="left"></span>
 					<img src="', $settings['images_url'], '/stats_views.gif" class="icon" alt="" /> ', $txt['most_time_online'], '
-				</h3>
-				<div class="windowbg">
+				</h4>
+				<div class="windowbg2">
 					<span class="topslice"><span></span></span>
 					<div class="content">
 						<dl class="stats">';

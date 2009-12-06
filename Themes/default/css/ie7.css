@@ -68,3 +68,9 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 {
 	word-wrap: break-word;
 }
+/* Overrides for the calendar template
+------------------------------------------------- */
+#main_grid table.weeklist h4.titlebg
+{
+	margin: 2px 0 -4px 0;
+}
