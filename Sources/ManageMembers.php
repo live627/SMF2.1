@@ -1259,7 +1259,7 @@ function AdminApprove()
 	}
 
 	// Log what we did?
-	if (!empty($modSettings['modlog_enabled']) && (substr($_POST['todo'], 0, 2) == 'ok' || $_POST['todo'] == 'remind'))
+	if (!empty($modSettings['modlog_enabled']) && in_array($_POST['todo'], array('ok', 'okemail', 'require_activation', 'remind')))
 	{
 		$log_action = $_POST['todo'] == 'remind' ? 'remind_member' : 'approve_member';
 		$log_inserts = array();
