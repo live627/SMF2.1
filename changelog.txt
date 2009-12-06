@@ -33,7 +33,9 @@ December 2009
  * Updated Search.template.php to match the others (Search.php, Search template, index.css, rtl.css, ie7.css, ie6.css)
  * There is no #top, only #postmodify. (Post template)
  * Included the recent changes in the Core stylesheet into the compatibility stylesheet. (compat.css)
- * Cleaned up statistics centre and tweaked calendar css a bit (Stats.template.php, index.css, ie7.css) 
+ * Cleaned up statistics centre and tweaked calendar css a bit (Stats.template.php, index.css, ie7.css)
+ ! Convert newlines to spaces when converting HTML to BBC in the WYSIWYG editor, as that's how browsers usually render them. (Subs-Editor.php)
+ ! Try to do a better job at parsing paragraph breaks when converting HTML to BBC in the WYSIWYG editor. (Subs-Editor.php)
 
 
 November 2009

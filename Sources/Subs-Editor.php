@@ -154,11 +154,12 @@ function html_to_bbc($text)
 {
 	global $modSettings, $smcFunc, $sourcedir, $scripturl, $context;
 
-	// Remove any newlines - as they are useless.
-	$text = strtr($text, array("\n" => '', "\r" => ''));
+	// Replace newlines with spaces, as that's how browsers usually interpret them.
+	$text = strtr($text, array("\n" => ' ', "\r" => ' '));
 
-	// Though some of us love paragraphs the parser will do better with breaks.
+	// Though some of us love paragraphs, the parser will do better with breaks.
 	$text = preg_replace('~</p>\s*?<p~i', '</p><br /><p', $text);
+	$text = preg_replace('~</p>\s*(?!<)~i', '</p><br />', $text);
 
 	// Safari/webkit wraps lines in Wysiwyg in <div>'s.
 	if ($context['browser']['is_webkit'])
