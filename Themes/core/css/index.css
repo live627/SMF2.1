@@ -639,7 +639,7 @@ dl.settings img
 }
 .content_alt
 {
-	padding: 0.8em 1em  0 1em;
+	padding: 0.8em 1em  0.5em 1em;
 	margin: 0;
 	border: none;
 }
@@ -1894,10 +1894,19 @@ ul.postingbuttons li
 
 /* Styles for edit post section
 ---------------------------------------------------- */
+form#postmodify .roundframe
+{
+	padding-left: 12%;
+}
+form#postmodify .roundframe .errorbox
+{
+	width: 84.5%;
+}
 #post_header
 {
 	margin-bottom: 0.5em;
 	border-bottom: 1px solid #666666;
+	width: 85%;
 	padding: 0.5em;
 	overflow: hidden;
 }
@@ -1996,6 +2005,7 @@ ul.post_options li
 {
 	margin-bottom: 0.5em;
 	border: none;
+	width: 85%;
 	border-bottom: 1px solid #666666;
 	padding: 0.5em;
 	clear: both;
@@ -2040,6 +2050,7 @@ ul.post_options li
 {
 	margin-bottom: 0.5em;
 	border: none;
+	width: 85%;
 	border-bottom: 1px solid #666666;
 	padding: 0.5em;
 	clear: both;
@@ -2759,13 +2770,13 @@ div#profile_success
 }
 .list_posts 
 {
-	border-top: 1px solid #9BAEBF;
+	border-top: 1px solid #ADADAD;
 	padding-top: 1em;
 	margin-top: 0.5em;
 }
 div.core_posts
 {
-	border: 1px solid #9BAEBF;
+	border: 1px solid #ADADAD;
 	margin-bottom: 3px;
 }
 .topic h4

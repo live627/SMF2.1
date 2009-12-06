@@ -2081,10 +2081,19 @@ ul.quickbuttons li.inline_mod_check
 
 /* Styles for edit post section
 ---------------------------------------------------- */
+form#postmodify .roundframe
+{
+	padding-left: 12%;
+}
+form#postmodify .roundframe .errorbox
+{
+	width: 84.5%;
+}
 #post_header
 {
 	margin-bottom: 0.5em;
 	border-bottom: 1px solid #CACDD3;
+	width: 85%;
 	padding: 0.5em;
 	overflow: hidden;
 }
@@ -2201,7 +2210,8 @@ ul.post_options li
 {
 	margin-bottom: 0.5em;
 	border: none;
-	border-bottom: 1px solid #666666;
+	width: 85%;
+	border-bottom: 1px solid #CACDD3;
 	padding: 0.5em;
 	clear: both;
 }
@@ -2245,7 +2255,8 @@ ul.post_options li
 {
 	margin-bottom: 0.5em;
 	border: none;
-	border-bottom: 1px solid #666666;
+	width: 85%;
+	border-bottom: 1px solid #CACDD3;
 	padding: 0.5em;
 	clear: both;
 }

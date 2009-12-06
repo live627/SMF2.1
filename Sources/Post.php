@@ -1105,6 +1105,9 @@ function Post()
 		'labels' => array(
 			'post_button' => $context['submit_label'],
 		),
+		// add height and width for the editor
+		'height' => '200px',
+		'width' => '86%',
 		// We do XML preview here.
 		'preview_type' => 2,
 	);
@@ -2462,7 +2465,7 @@ function notifyMembersBoard(&$topicData)
 // Get the topic for display purposes.
 function getTopic()
 {
-	global $topic, $modSettings, $context, $smcFunc;
+	global $topic, $modSettings, $context, $smcFunc, $counter;
 
 	// Calculate the amount of new replies.
 	$newReplies = empty($_REQUEST['num_replies']) || $context['num_replies'] <= $_REQUEST['num_replies'] ? 0 : $context['num_replies'] - $_REQUEST['num_replies'];
@@ -2498,6 +2501,8 @@ function getTopic()
 
 		// ...and store.
 		$context['previous_posts'][] = array(
+			'counter' => $counter++,	
+			'alternate' => $counter % 2,
 			'poster' => $row['poster_name'],
 			'message' => $row['body'],
 			'time' => timeformat($row['poster_time']),

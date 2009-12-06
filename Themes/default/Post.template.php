@@ -732,15 +732,18 @@ function template_main()
 
 		foreach ($context['previous_posts'] as $post)
 			echo '
-			<h4 class="titlebg"><span class="left"></span>
-				<span class="align_left">', $txt['posted_by'], ': ', $post['poster'], '</span>
-				<span class="align_right">', $txt['posted_on'], ': ', $post['time'], $post['is_new'] ? ' <img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['preview_new'] . '" />' : '', '</span>
-			</h4>
-			<div class="windowbg2">
+				<div class="', $post['alternate'] == 0 ? 'windowbg' : 'windowbg2', ' core_posts">
 				<span class="topslice"><span></span></span>
-				<div class="content smalltext" id="msg', $post['id'], '">
-					<div class="righttext"><a href="#top" onclick="return insertQuoteFast(', $post['id'], ');">', $txt['bbc_quote'], '</a></div>
-					<div class="post">', $post['message'], '</div>
+				<div class="content_alt" id="msg', $post['id'], '">
+					<div class="floatleft">
+						<h5>', $txt['posted_by'], ': ', $post['poster'], '</h5>
+						<span class="smalltext">&#171;&nbsp;<b>', $txt['on'], ':</b> ', $post['time'], '&nbsp;&#187;</span>
+					</div>
+						<ul class="reset smalltext quickbuttons">
+							<li class="quote_button"><a href="#top" onclick="return insertQuoteFast(', $post['id'], ');"><span>',$txt['bbc_quote'],'</span></a></li>
+						</ul>
+					<br class="clear" />
+					<div class="list_posts smalltext">', $post['message'], '</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';

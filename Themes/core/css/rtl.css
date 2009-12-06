@@ -431,6 +431,10 @@ ul.postingbuttons li
 
 /* Styles for edit post section
 ---------------------------------------------------- */
+form#postmodify .roundframe
+{
+    padding: 0 12% 0 0;
+}
 #post_header dt
 {
 	float: right;
