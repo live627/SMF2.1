@@ -21,18 +21,33 @@ body#help_popup
 {
 	padding: 1em 1.5em;
 	margin: 0;
-	border: none;
 	border: 1px solid #adadad;
+	color: #000000;
+	background-color: #ECEDF3;
 }
 .content p, .roundframe p
 {
 	margin: 0 0 0.5em 0;
+}
+.content_alt
+{
+	padding: 0.8em 1em  0.5em 1em;
+	margin: 0;
+	border: none;
 }
 .content fieldset
 {
 	border: groove #fff 2px;
 	padding: 1em;
 	margin: 0 0 0.3em 0;
+}
+
+/* Reset header margins. */
+h1, h2, h3, h4, h5, h6
+{
+	font-size: 1em;
+	margin: 0;
+	padding: 0;
 }
 
 /* Alternative for u tag */
@@ -43,13 +58,6 @@ body#help_popup
 
 /* Common classes for easy styling.
 ------------------------------------------------------- */
-
-h1, h2, h3, h4, h5, h6
-{
-	font-size: 1em;
-	margin: 0;
-	padding: 0;
-}
 
 .floatright, .align_right
 {
@@ -142,7 +150,7 @@ ul.reset, ul.reset li
 	padding: 0.5em;
 	overflow: hidden;
 }
-.pagelinks
+.pagesection .pagelinks
 {
 	padding: 0.5em 0;
 }
@@ -169,11 +177,6 @@ table.table_grid thead tr.catbg th.smalltext
 
 /* Semantic classes introduced per RC2, used as alternatives for .windowbg and .windowbg2
 ------------------------------------------------------------------------------------------ */
-.content, .roundframe
-{
-	color: #000000;
-	background-color: #ECEDF3;
-}
 .description
 {
 	padding: 1em;
@@ -422,7 +425,7 @@ table.table_list tbody.content td.icon
 	width: 6%;
 }
 
-/* Styles for headers used in Curve tempaltes.
+/* Styles for headers used in Curve templates.
 ------------------------------------------------------- */
 h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg, h4.catbg, div.titlebg, .table_list tbody.header td
 {
@@ -560,17 +563,18 @@ table.boardsframe td.lastpost
 {
 	display: block;
 	margin: 0;
-	width: 3%;
+	width: 30px;
 	text-align: center;
 	float: left;
 	padding: 0.5em 0 0 0;
 }
 .infocenter_section div.sectionbody
 {
-	margin-left: 3%;
+	margin-left: 30px;
 	padding: 0.3em;
 	border-left: solid #a0a0a0 1px;
 	min-height: 25px;
+	height: auto !important;
 }
 /* recent posts - or just one recent post */
 dl#infocenter_recentposts
@@ -619,7 +623,7 @@ form#infocenter_login ul.horizlist label
 	clear: both;
 	width: 100%;
 }
-.modbuttons .buttonlist, .modbuttons .buttonlist_bottom
+.buttonlist, .buttonlist_bottom
 {
 	margin-right: 1em;
 	float: right;
@@ -667,6 +671,14 @@ form#infocenter_login ul.horizlist label
 {
 	display: block;
 	padding: 0.5em 0.5em 0.1em 0.5em;
+	margin: 0;
+	border-bottom: none;
+	font-weight: normal !important;
+}
+#topic_icons ul
+{
+	display: block;
+	padding: 0.5em 1em 0.1em 1em;
 	margin: 0;
 	border-bottom: none;
 	font-weight: normal !important;
@@ -817,16 +829,17 @@ div#pollmoderation
 ul.postingbuttons
 {
 	float: right;
-	padding-right: 1em;
-	text-align: right;
+	padding: 0 0.5em 0 0;
 }
 ul.postingbuttons li
 {
-	display: inline;
+	float: left;
+	margin: 0 0.5em 0 0;
 }
 .modifybutton
 {
 	float: right;
+	margin: 0 0.5em 0.5em 0;
 }
 .attachments hr
 {
@@ -850,15 +863,13 @@ ul.postingbuttons li
 	clear: right;
 	margin: 1em 0 0 16em;
 }
+#pollmoderation, #moderationbuttons_strip
+{
+	float: left;
+}
 
 /* Styles for the quick reply area.
 ---------------------------------------------------- */
-
-#quickReplyOptions div
-{
-	text-align: center;
-	border-left: solid 1px #aaa;
-}
 
 #quickReplyOptions #quickReplyWarning
 {
@@ -870,8 +881,10 @@ ul.postingbuttons li
 }
 #quickReplyOptions #quickReplyContent
 {
+	text-align: center;
 	float: left;
 	width: 72%;
+	border-left: solid 1px #aaa;
 }
 
 #quickReplyOptions #quickReplyContent textarea, #quickReplyOptions #quickReplyContent input
@@ -916,10 +929,19 @@ ul.postingbuttons li
 
 /* Styles for edit post section
 ---------------------------------------------------- */
+form#postmodify .roundframe
+{
+	padding-left: 12%;
+}
+form#postmodify .roundframe .errorbox
+{
+	width: 84.5%;
+}
 #post_header
 {
 	margin-bottom: 0.5em;
 	border-bottom: 1px solid #666666;
+	width: 85%;
 	padding: 0.5em;
 	overflow: hidden;
 }
@@ -1018,6 +1040,7 @@ ul.post_options li
 {
 	margin-bottom: 0.5em;
 	border: none;
+	width: 85%;
 	border-bottom: 1px solid #666666;
 	padding: 0.5em;
 	clear: both;
@@ -1062,6 +1085,7 @@ ul.post_options li
 {
 	margin-bottom: 0.5em;
 	border: none;
+	width: 85%;
 	border-bottom: 1px solid #666666;
 	padding: 0.5em;
 	clear: both;
@@ -1592,10 +1616,12 @@ dl
 {
 	width: 100%;
 }
-.signature, .custom_fields_above_signature
+.signature, .custom_fields_above_signature, .attachments
 {
-	width: 100%;
-	border-top: 1px #666 solid;
+	width: 98%;
+	overflow: auto;
+	clear: right;
+	border-top: 1px solid #666;
 }
 .signature h5
 {
@@ -1612,42 +1638,42 @@ dl
 	float: left;
 }
 
-#basicinfo, #detailedinfo
+#main_admsection #basicinfo, #main_admsection #detailedinfo
 {
 	width: 100%;
 }
-#detailedinfo .content
+#main_admsection #detailedinfo .content
 {
 	border: none !important;
 }
-#basicinfo
+#main_admsection #basicinfo
 {
 	border-bottom: 1px #ccc solid;
 }
-#basicinfo h4
+#main_admsection #basicinfo h4
 {
 	float: left;
 }
-#basicinfo img.avatar
+#main_admsection #basicinfo img.avatar
 {
 	float: right;
 	vertical-align: top;
 }
-#basicinfo ul
+#main_admsection #basicinfo ul
 {
 	clear: left;
 	padding-top: 10px;
 }
-#basicinfo span#userstatus
+#main_admsection #basicinfo span#userstatus
 {
 	clear: left;
 }
-#basicinfo p#infolinks
+#main_admsection #basicinfo p#infolinks
 {
 	display: none;
 	clear: both;
 }
-#basicinfo .botslice
+#main_admsection #basicinfo .botslice
 {
 	clear: both;
 }
@@ -1773,12 +1799,29 @@ div#profile_success
 }
 .counter
 {
-	margin-right: 1em;
+	margin: 0 0 0 0;
+	padding: 0.2em 0.5em 0.1em 0.2em;
+	font-size: 2.2em;
+	font-weight: bold;
+	color: #354C5F;
+	float: left;
+}
+.list_posts 
+{
+	border-top: 1px solid #ADADAD;
+	padding-top: 1em;
+	margin-top: 0.5em;
+}
+div.core_posts
+{
+	border: 1px solid #ADADAD;
+	margin-bottom: 3px;
 }
 .topic h4
 {
 	margin: 3px 0;
 }
+
 .mod_icons
 {
 	text-align: right;
@@ -2220,7 +2263,7 @@ span.hidelink
 {
 	overflow: hidden;
 }
-.search_results_posts  .inner
+.search_results_posts .inner
 {
 	padding: 0.5em 1em;
 	overflow: hidden;

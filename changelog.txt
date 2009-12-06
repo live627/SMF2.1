@@ -11,11 +11,11 @@ December 2009
  ! Some avatar setting fields could not be edited due to a typo in a javascript function call. (ManageAttachments.php) [Bug 4051]
  * Calendar week view wasn't respecting the 'show days numbers as link' setting. (Calendar template)
  ! Escape invalid file names from being used - reported by WHK (ManageErrors.php)
- ! Package Flushing was missing a session check - reported by sirdarckcat (Packages.php, Packages Template)
- ! Language management needed session check improvements - reported by cicatriz.r00t (ManageServer.php, Admin Template)
+ ! Package Flushing was missing a session check - reported by sirdarckcat (Packages.php, Packages template)
+ ! Language management needed session check improvements - reported by cicatriz.r00t (ManageServer.php, Admin template)
  ! Post Settings was missing a session check - reported by sirdarckcat (ManagePosts.php)
  ! Language search was not properly escaped - reported by sirdarckcat (ManageServer.php)
- ! Multiple settings pages did not check the session (Manage*.php, Admin Template, ManageSearch Template)
+ ! Multiple settings pages did not check the session (Manage*.php, Admin template, ManageSearch template)
  ! Load average balancing could cause undefined index errors (Profile-View.php) [Bug 4023]
  ! Profile xml data needed a permission check (News.php) [Bug 4021]
  * Non-gd Captcha needed an extra character (GenericControls template)
@@ -28,10 +28,12 @@ December 2009
  * Changed Core css to match new profile template (index.css, rtl.css)
  * Changed identifier for Core posts and topics (core/index.css, default/Profile.template.php)
  ! Group by query optimizer could cause errors for some inserts (Subs-Db-mysql.php)
- * Updated Post.template.php to match the others (Post.template.php, Post.php, index.css, rtl.css, core/css/index.css, core/css/rtl.css) 
- * Corected a validation error for quickbuttons when logged out (Profile.template.php, Recent.template.php)
- * Updated Search.template.php to match the others (Search.template.php, Search.php, index.css, rtl.css, ie7.css, ie6.css)
- * Whoops. Made a slight boo-boo in the last one. Fixed it now (Search.template.php, index.css) 
+ * Updated Post.template.php to match the others (Post.php, Post template, index.css, rtl.css, core/css/index.css, core/css/rtl.css) 
+ * Corected a validation error for quickbuttons when logged out (Profile template, Recent template)
+ * Updated Search.template.php to match the others (Search.php, Search template, index.css, rtl.css, ie7.css, ie6.css)
+ * There is no #top, only #postmodify. (Post template)
+ * Included the recent changes in the Core stylesheet into the compatibility stylesheet. (compat.css)
+
 
 November 2009
 --------------------------------------------------------------------------------

@@ -93,10 +93,9 @@ function template_main()
 	// End of the javascript, start the form and display the link tree.
 	echo '
 		// ]]></script>
+		<form action="', $scripturl, '?action=', $context['destination'], ';', empty($context['current_board']) ? '' : 'board=' . $context['current_board'], '" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="', ($context['becomes_approved'] ? '' : 'alert(\'' . $txt['js_post_will_require_approval'] . '\');'), 'submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'', $context['post_box_name'], '\', \'guestname\', \'evtitle\', \'question\'], \'options\');" enctype="multipart/form-data">';
 
-		<form action="', $scripturl, '?action=', $context['destination'], ';', empty($context['current_board']) ? '' : 'board=' . $context['current_board'], '" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="', ($context['becomes_approved'] ? '' : 'alert(\'' . $txt['js_post_will_require_approval'] . '\');'), 'submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'', $context['post_box_name'], '\', \'guestname\', \'evtitle\', \'question\'], \'options\');" enctype="multipart/form-data" style="margin: 0;">';
-
-	// If the user wants to see how their message looks - the preview table is where it's at!
+	// If the user wants to see how their message looks - the preview section is where it's at!
 	echo '
 			<div id="preview_section"', isset($context['preview_message']) ? '' : ' style="display: none;"', '>
 				<h3 class="catbg">
@@ -655,7 +654,7 @@ function template_main()
 				{
 					var newPostsHTML = \'<span id="new_replies"><\' + \'/span>\';
 					for (var i = 0; i < numNewPosts; i++)
-						newPostsHTML += \'<h4 class="titlebg"><span class="left"></span><span class="align_left">', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</span><span class="align_right">', $txt['posted_on'], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \'<img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /></span></h4><div class="windowbg2"><span class="topslice"><span></span></span><div class="content smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'"><div class="righttext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt['bbc_quote'], '<\' + \'/a></div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'<\' + \'/div></div><span class="botslice"><span></span></span></div>\';
+						newPostsHTML += \'<h4 class="titlebg"><span class="left"></span><span class="align_left">', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</span><span class="align_right">', $txt['posted_on'], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \'<img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /></span></h4><div class="windowbg2"><span class="topslice"><span></span></span><div class="content smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'"><div class="righttext"><a href="#postmodiy" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt['bbc_quote'], '<\' + \'/a></div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'<\' + \'/div></div><span class="botslice"><span></span></span></div>\';
 					setOuterHTML(document.getElementById(\'new_replies\'), newPostsHTML);
 				}
 
@@ -740,7 +739,7 @@ function template_main()
 						<span class="smalltext">&#171;&nbsp;<b>', $txt['on'], ':</b> ', $post['time'], '&nbsp;&#187;</span>
 					</div>
 						<ul class="reset smalltext quickbuttons">
-							<li class="quote_button"><a href="#top" onclick="return insertQuoteFast(', $post['id'], ');"><span>',$txt['bbc_quote'],'</span></a></li>
+							<li class="quote_button"><a href="#postmodify" onclick="return insertQuoteFast(', $post['id'], ');"><span>',$txt['bbc_quote'],'</span></a></li>
 						</ul>
 					<br class="clear" />
 					<div class="list_posts smalltext">', $post['message'], '</div>
