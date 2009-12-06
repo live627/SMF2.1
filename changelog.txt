@@ -28,7 +28,9 @@ December 2009
  * Changed Core css to match new profile template (index.css, rtl.css)
  * Changed identifier for Core posts and topics (core/index.css, default/Profile.template.php)
  ! Group by query optimizer could cause errors for some inserts (Subs-Db-mysql.php)
-* Updated Post.template.php to match the others (Post.template.php, Post.php, index.css, rtl.css, core/css/index.css, core/css/rtl.css) 
+ * Updated Post.template.php to match the others (Post.template.php, Post.php, index.css, rtl.css, core/css/index.css, core/css/rtl.css) 
+ * Corected a validation error for quickbuttons when logged out (Profile.template.php, Recent.template.php)
+ * Updated Search.template.php to match the others (Search.template.php, Search.php, index.css, rtl.css, ie7.css, ie6.css)   
 
 November 2009
 --------------------------------------------------------------------------------

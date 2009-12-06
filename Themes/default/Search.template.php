@@ -146,7 +146,8 @@ function template_main()
 		echo '
 						<li class="category">
 							<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $category['child_ids']), ']); return false;">', $category['name'], '</a>
-							<ul>';
+						</li>
+					<ul>';
 
 		foreach ($category['boards'] as $board)
 			echo '
@@ -209,7 +210,7 @@ function template_main()
 
 function template_results()
 {
-	global $context, $settings, $options, $txt, $scripturl;
+	global $context, $settings, $options, $txt, $scripturl, $message;
 
 	if (isset($context['did_you_mean']) || empty($context['topics']))
 	{
@@ -250,54 +251,25 @@ function template_results()
 
 	if ($context['compact'])
 	{
-		echo '
-	<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 		// Quick moderation set to checkboxes? Oh, how fun :/.
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
 			echo '
 	<form action="', $scripturl, '?action=quickmod" method="post" accept-charset="', $context['character_set'], '" name="topicForm">';
-
+        
 		echo '
-			<div class="tborder topic_table" id="messageindex">
-				<table class="table_grid" cellspacing="0">
-					<thead>';
-		if (!empty($context['topics']))
-		{
-			echo '
-						<tr class="catbg">
-							<th scope="col" class="smalltext" width="4%">&nbsp;</th>
-							<th scope="col" class="smalltext" width="4%">&nbsp;</th>
-							<th scope="col" class="smalltext" width="56%">', $txt['subject'], '</th>
-							<th scope="col" class="smalltext" width="6%" align="center">', $txt['search_relevance'], '</th>
-							<th scope="col" class="smalltext" width="12%">', $txt['started_by'], '</th>
-							<th scope="col" class="smalltext" width="18%" align="center">', $txt['search_date_posted'], '</th>';
-
-			if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
+		<h3 class="catbg"><span class="left"></span>
+		    <span class="floatright">';
+				if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
 				echo '
-							<th scope="col" class="smalltext" width="24" align="center">
-								<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />
-							</th>';
-			elseif (!empty($options['display_quick_mod']))
-				echo '
-							<th scope="col" class="smalltext" width="4%" valign="middle" align="center"></th>';
-		}
-		else
+						<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />';
 			echo '
-						<tr>
-							<th class="smalltext" width="100%" colspan="5"></th>';
-		echo '
-						</tr>
-					</thead>
-					<tbody>';
-		if (empty($context['topics']))
-		{
-			echo '
-						<tr>
-							<th class="smalltext" width="100%" colspan="5">', $txt['search_no_results'], '</th>';
-			echo '
-						</tr>';
-		}
+			</span>
+			<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />&nbsp;', $txt['mlist_search_results'],':&nbsp;',$context['search_params']['search'],'
+		</h3>
+		<div class="pagesection">
+			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
+		</div>';
 
 		while ($topic = $context['get_topics']())
 		{
@@ -307,41 +279,28 @@ function template_results()
 			if ($topic['is_locked'])
 				$color_class .= 'lockedbg';
 
-			echo '
-						<tr>
-							<td class="', $color_class, ' windowbg2 icon1">
-								<img src="', $settings['images_url'], '/topic/', $topic['class'], '.gif" alt="" /></td>
-							<td class="', $color_class, ' windowbg2 icon2">
-								<img src="', $topic['first_post']['icon_url'], '" alt="" align="middle" /></td>
-							<td class="subject ', $color_class, ' windowbg2">
-								<em>', $txt['in'], ' ', $topic['board']['link'], '</em>';
-
+	echo '
+			<div class="tborder search_results_posts">
+			<div class="', $message['alternate'] == 0 ? 'windowbg' : 'windowbg2', ' core_posts">
+				<span class="topslice"><span></span></span>
+				<div class="content_alt">';
 			foreach ($topic['matches'] as $message)
 			{
-				echo '		<div class="quoteheader"><a href="', $scripturl, '?topic=', $topic['id'], '.msg', $message['id'], '#msg', $message['id'], '">', $message['subject_highlighted'], '</a> ', $txt['by'], ' ', $message['member']['link'], '</div>';
-
-				if ($message['body_highlighted'] != '')
-					echo '
-								<blockquote>', $message['body_highlighted'], '</blockquote>';
-			}
-
-			echo '
-							</td>
-							<td class="', $color_class, ' windowbg2 stats" align="center">
-								', $topic['relevance'], '
-							</td><td class="', $color_class, ' windowbg stats">
-								', $topic['first_post']['member']['link'], '
-							</td><td class="', $color_class, ' windowbg lastpost">
-								', $topic['first_post']['time'], '
-							</td>';
+				echo '
+					<div class="topic_details floatleft" style="width: 94%">
+						<div class="counter">', $message['counter'], '</div>
+						<h5>' ,$topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.msg', $message['id'], '#msg', $message['id'], '">', $message['subject_highlighted'], '</a></h5>
+						<span class="smalltext">&#171;&nbsp;',$txt['by'],'&nbsp;<b>', $message['member']['link'], '</b>&nbsp;',$txt['on'],'&nbsp;<i>', $message['time'], '</i>&nbsp;&#187;</span>
+					</div>';
 
 			if (!empty($options['display_quick_mod']))
 			{
 				echo '
-							<td class="', $color_class, ' windowbg moderation">';
+					<div class="floatright">';
+
 				if ($options['display_quick_mod'] == 1)
 						echo '
-								<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check" />';
+								<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check">';
 				else
 				{
 					if ($topic['quick_mod']['remove'])
@@ -351,7 +310,8 @@ function template_results()
 						echo '
 								<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=lock;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_lock.gif" width="16" alt="', $txt['set_lock'], '" title="', $txt['set_lock'], '" /></a>';
 					if ($topic['quick_mod']['lock'] || $topic['quick_mod']['remove'])
-						echo '	<br />';
+						echo '
+								<br />';
 					if ($topic['quick_mod']['sticky'])
 						echo '
 								<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=sticky;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_sticky.gif" width="16" alt="', $txt['set_sticky'], '" title="', $txt['set_sticky'], '" /></a>';
@@ -360,21 +320,36 @@ function template_results()
 								<a href="', $scripturl, '?action=movetopic;topic=', $topic['id'], '.0"><img src="', $settings['images_url'], '/icons/quick_move.gif" width="16" alt="', $txt['move_topic'], '" title="', $txt['move_topic'], '" /></a>';
 				}
 				echo '
-							</td>';
+					</div>';
+			}
+
+			echo' <br class="clear" />';
+
+				if ($message['body_highlighted'] != '')
+					echo '
+								<div class="list_posts double_height">', $message['body_highlighted'], '</div>';
 			}
 
 			echo '
-						</tr>';
+				</div>
+						<br class="clear" />
+				<span class="botslice"><span></span></span>
+			</div>
+		</div>';
+
 		}
 
 		echo '
-					</tbody>';
+		<div class="pagesection">
+			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
+		</div>';
+
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
 		{
-			echo '
-					<tfoot>
-						<tr class="titlebg">
-							<td colspan="8" align="right">
+		echo '
+
+			<div class="middletext description" style="margin-bottom: 0;">
+				<div class="floatright">
 								<select name="qaction"', $context['can_move'] ? ' onchange="this.form.moveItTo.disabled = (this.options[this.selectedIndex].value != \'move\');"' : '', '>
 									<option value="">--------</option>', $context['can_remove'] ? '
 									<option value="remove">' . $txt['quick_mod_remove'] . '</option>' : '', $context['can_lock'] ? '
@@ -406,26 +381,16 @@ function template_results()
 
 			echo '
 								<input type="hidden" name="redirect_url" value="', $scripturl . '?action=search2;params=' . $context['params'], '" />
-								<input type="submit" value="', $txt['quick_mod_go'], '" onclick="return this.form.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" class="button_submit" />
-							</td>
-						</tr>
-					</tfoot>';
-		}
-
+								<input  type="submit" style="font-size: 0.8em;" value="', $txt['quick_mod_go'], '" onclick="return this.form.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" class="button_submit" />
+				</div>
+			        <br class="clear" />
+		    </div>';
+		}	
+		
 		echo '
-				</table>
-			</div>';
-
-		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
-			echo '
-			<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
-		</form>';
-
-		echo '
-		<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>';
-
-		echo '
-		<div class="smalltext" id="search_jump_to">&nbsp;</div>
+				  	 <br class="clear" />
+				<div class="smalltext" id="search_jump_to">&nbsp;</div>
+				
 		<script type="text/javascript"><!-- // --><![CDATA[
 			if (typeof(window.XMLHttpRequest) != "undefined")
 				aJumpTo[aJumpTo.length] = new JumpTo({
@@ -438,14 +403,26 @@ function template_results()
 					sBoardPrefix: "=> ",
 					sCatSeparator: "-----------------------------",
 					sCatPrefix: "",
-					sGoButtonLabel: "', $txt['go'], '"
+					sGoButtonLabel: "', $txt['quick_mod_go'], '"
 				});
 		// ]]></script>';
+				
+		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
+			echo '
+			<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
+		</form>';
+
 	}
 	else
 	{
 		echo '
-		<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>';
+
+		<h3 class="catbg"><span class="left"></span>
+			<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />&nbsp;', $txt['mlist_search_results'],':&nbsp;',$context['search_params']['search'],'
+		</h3>
+		<div class="pagesection">
+			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
+		</div>';
 
 		if (empty($context['topics']))
 			echo '
@@ -455,36 +432,42 @@ function template_results()
 		{
 			foreach ($topic['matches'] as $message)
 			{
-				// Create buttons row.
-				$quote_button = create_button('quote.gif', 'reply_quote', 'reply_quote', 'align="middle"');
-				$reply_button = create_button('reply_sm.gif', 'reply', 'reply', 'align="middle"');
-				$notify_button = create_button('notify_sm.gif', 'notify_replies', 'notify_replies', 'align="middle"');
-				$buttonArray = array();
-				if ($topic['can_reply'])
-				{
-					$buttonArray[] = '<a href="' . $scripturl . '?action=post;topic=' . $topic['id'] . '.' . $message['start'] . '">' . $reply_button . '</a>';
-					$buttonArray[] = '<a href="' . $scripturl . '?action=post;topic=' . $topic['id'] . '.' . $message['start'] . ';quote=' . $message['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '">' . $quote_button . '</a>';
-				}
-				if ($topic['can_mark_notify'])
-					$buttonArray[] = '<a href="' . $scripturl . '?action=notify;topic=' . $topic['id'] . '.' . $message['start'] . '">' . $notify_button . '</a>';
-
-				echo '
+			echo '
 			<div class="tborder search_results_posts">
-				<h3 class="catbg"><span class="left"></span>
-					<div class="align_right">', $txt['on'], ': ', $message['time'], '&nbsp;</div>
-					<span class="counter">', $message['counter'], '</span>
-					', $topic['category']['link'], ' / ', $topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.', $message['start'], ';topicseen#msg', $message['id'], '">', $message['subject_highlighted'], '</a>
-				</h3>
-				<h4 class="titlebg"><span class="left"></span>
-					<div class="align_right">', $txt['search_relevance'], ': ', $topic['relevance'], '</div>
-					', $txt['started_by'], ' ', $topic['first_post']['member']['link'], ', ', $txt['message'], ' ', $txt['by'], ' ', $message['member']['link'], '
-				</h4>
-				<div class="windowbg2">
+				<div class="', $message['alternate'] == 0 ? 'windowbg' : 'windowbg2', ' core_posts">
 					<span class="topslice"><span></span></span>
-					<div class="inner">
-						<div class="post">', $message['body_highlighted'], '</div>
-						<div class="middletext align_right buttons">', implode($context['menu_separator'], $buttonArray), '&nbsp;</div>
-					</div>
+					<div class="content_alt">
+						<div class="counter">', $message['counter'], '</div>
+							<div class="topic_details">
+								<h5>' ,$topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.', $message['start'], ';topicseen#msg', $message['id'], '">', $message['subject_highlighted'], '</a></h5>
+								<span class="smalltext">&#171;&nbsp;', $txt['message'], ' ', $txt['by'], ' <b>', $message['member']['link'], ' </b>', $txt['on'], '&nbsp;<i>', $message['time'], '</i>&nbsp;&#187;</span>
+							</div>
+						<div class="list_posts">', $message['body_highlighted'], '</div>
+					</div>';
+
+					if ($topic['can_reply'] || $topic['can_mark_notify'])
+					echo '
+							<div class="quickbuttons_wrap">
+								<ul class="reset smalltext quickbuttons">';
+
+					// If they *can* reply?
+					if ($topic['can_reply'])
+					echo '
+									<li class="reply_button"><a href="', $scripturl . '?action=post;topic=' . $topic['id'] . '.' . $message['start'], '">', $txt['reply'], '</a></li>
+
+									<li class="quote_button"><a href="', $scripturl . '?action=post;topic=' . $topic['id'] . '.' . $message['start'] . ';quote=' . $message['id'] . ';' . $context['session_var'] . '=' . $context['session_id'], '">', $txt['quote'], '</a></li>';
+
+					// Can we request notification of topics?
+					if ($topic['can_mark_notify'])
+					echo '
+									<li class="restore_button"><a href="', $scripturl . '?action=notify;topic=' . $topic['id'] . '.' . $message['start'], '">', $txt['notify'], '</a></li>';
+
+					if ($topic['can_reply'] || $topic['can_mark_notify'])
+					echo '
+								</ul>
+							</div>';
+				echo '
+						<br class="clear" />
 					<span class="botslice"><span></span></span>
 				</div>
 			</div>';
@@ -492,7 +475,9 @@ function template_results()
 		}
 
 		echo '
-			<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>';
+		<div class="pagesection">
+			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
+		</div>';
 	}
 }
 

@@ -116,6 +116,10 @@ input.input_check, input.input_radio
 	border: none;
 	background: none;
 }
+h3.catbg input.input_check
+{
+	margin: 9px 7px 0 7px;
+}
 
 /* Give disabled text input elements a different background color. */
 input[disabled].input_text
@@ -244,6 +248,10 @@ em
 	margin-left: 0;
 	margin-right: auto;
 	text-align: left;
+}
+.double_height
+{
+	line-height: 2em;
 }
 /* some common padding styles */
 .padding
@@ -444,10 +452,7 @@ tr.titlebg th.smalltext, thead tr.titlebg th a:link, thead tr.titlebg th a:visit
 	color: #000000;
 	background-color: #cacdd3;
 }
-div.windowbg, div.windowbg2, div.approvebg2
-{
-	margin-bottom: 3px;
-}
+
 /* the page navigation area */
 .pagesection
 {
@@ -2958,6 +2963,10 @@ div#profile_success
 	padding-top: 12px;
 	margin-top: 6px;
 }
+.core_posts 
+{
+	margin-bottom: 3px;
+}
 
 .topic h4
 {
@@ -3449,15 +3458,6 @@ span.hidelink
 .search_results_posts
 {
 	overflow: hidden;
-}
-.search_results_posts  .inner
-{
-	padding: 0.5em 1em;
-	overflow: hidden;
-}
-.search_results_posts .windowbg2
-{
-	margin-top: 4px;
 }
 .search_results_posts .buttons
 {

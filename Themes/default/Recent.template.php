@@ -18,7 +18,7 @@ function template_main()
 	{
 
 	echo '
-			<div class="', $post['alternate'] == 0 ? 'windowbg' : 'windowbg2', '">
+			<div class="', $post['alternate'] == 0 ? 'windowbg' : 'windowbg2', ' core_posts">
 				<span class="topslice"><span></span></span>
 				<div class="content_alt">
 					<div class="counter">', $post['counter'], '</div>
@@ -27,25 +27,31 @@ function template_main()
 						<span class="smalltext">&#171;&nbsp;', $txt['last_post'], ' ', $txt['by'], ' <b>', $post['poster']['link'], ' </b> ', $txt['on'], '<i> ', $post['time'], '</i>&nbsp;&#187;</span>
 					</div>
 					<div class="list_posts">', $post['message'], '</div>
-				</div>
+				</div>';
+
+					if ($post['can_reply'] || $post['can_mark_notify'] || $post['can_delete'])
+					echo '
 							<div class="quickbuttons_wrap">
 								<ul class="reset smalltext quickbuttons">';
-		// If they *can* reply?
-		if ($post['can_reply'])
-			echo '
+							// If they *can* reply?
+							if ($post['can_reply'])
+							echo '
 									<li class="reply_button"><a href="', $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'], '"><span>', $txt['reply'], '</span></a></li>
 									<li class="quote_button"><a href="', $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'] . ';quote=' . $post['id'] . ';' . $context['session_var'] . '=' . $context['session_id'], '"><span>', $txt['quote'], '</span></a></li>';
-		// Can we request notification of topics?
-			if ($post['can_mark_notify'])
-			echo '
+							// Can we request notification of topics?
+							if ($post['can_mark_notify'])
+							echo '
 									<li class="notify_button"><a href="', $scripturl . '?action=notify;topic=' . $post['topic'] . '.' . $post['start'], '"><span>', $txt['notify'], '</span></a></li>';
-		// How about... even... remove it entirely?!
-		if ($post['can_delete'])
-			echo '
+							// How about... even... remove it entirely?!
+							if ($post['can_delete'])
+							echo '
 									<li class="remove_button"><a href="', $scripturl . '?action=deletemsg;msg=' . $post['id'] . ';topic=' . $post['topic'] . ';recent;' . $context['session_var'] . '=' . $context['session_id'], '" onclick="return confirm(\'' . $txt['remove_message'] . '?\');"><span>', $txt['remove'], '</span></a></li>';
-			echo '
+
+					if ($post['can_reply'] || $post['can_mark_notify'] || $post['can_delete'])
+					echo '
 								</ul>
-							</div>
+							</div>';
+				echo '
 						<br class="clear" />
 				<span class="botslice"><span></span></span>
 			</div>';

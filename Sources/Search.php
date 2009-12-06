@@ -1858,7 +1858,7 @@ function prepareSearchContext($reset = false)
 	if ($context['compact'])
 	{
 		// Set the number of characters before and after the searched keyword.
-		$charLimit = 40;
+		$charLimit = 50;
 
 		$message['body'] = strtr($message['body'], array("\n" => ' ', '<br />' => "\n"));
 		$message['body'] = parse_bbc($message['body'], $message['smileys_enabled'], $message['id_msg']);
@@ -1892,8 +1892,8 @@ function prepareSearchContext($reset = false)
 				$message['body'] = '';
 				foreach ($matches[0] as $index => $match)
 				{
-					$match = strtr(htmlspecialchars($match, ENT_QUOTES), array("\n" => '<br />'));
-					$message['body'] .= '<strong>...</strong>&nbsp;' . $match . '&nbsp;<strong>...</strong><br />';
+					$match = strtr(htmlspecialchars($match, ENT_QUOTES), array("\n" => '&nbsp;'));
+					$message['body'] .= '<strong>......</strong>&nbsp;' . $match . '&nbsp;<strong>......</strong>';
 				}
 			}
 
