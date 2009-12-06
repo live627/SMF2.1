@@ -1822,8 +1822,8 @@ function save_inline_permissions($permissions)
 	if (!allowedTo('manage_permissions'))
 		return;
 
-	// All mighty session check, verify our ways.
-	checkSesion();
+	// Almighty session check, verify our ways.
+	checkSession();
 
 	// Check they can't do certain things.
 	loadIllegalPermissions();
