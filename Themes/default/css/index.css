@@ -3430,7 +3430,9 @@ span.hidelink
 }
 #searchform fieldset div#searchBoardsExpand a
 {
-	text-decoration: underline;
+	font-weight: bold;
+	line-height: 1.5em;
+	border-bottom: 1px solid #334466;
 }
 #searchform fieldset div#searchBoardsExpand li
 {

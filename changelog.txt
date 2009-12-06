@@ -30,7 +30,8 @@ December 2009
  ! Group by query optimizer could cause errors for some inserts (Subs-Db-mysql.php)
  * Updated Post.template.php to match the others (Post.template.php, Post.php, index.css, rtl.css, core/css/index.css, core/css/rtl.css) 
  * Corected a validation error for quickbuttons when logged out (Profile.template.php, Recent.template.php)
- * Updated Search.template.php to match the others (Search.template.php, Search.php, index.css, rtl.css, ie7.css, ie6.css)   
+ * Updated Search.template.php to match the others (Search.template.php, Search.php, index.css, rtl.css, ie7.css, ie6.css)
+ * Whoops. Made a slight boo-boo in the last one. Fixed it now (Search.template.php, index.css) 
 
 November 2009
 --------------------------------------------------------------------------------
