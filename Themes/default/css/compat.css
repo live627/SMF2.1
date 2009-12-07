@@ -1,3 +1,4 @@
+
 /**************************************************************************************************
   This file will *attempt* to make themes designed for older versions of SMF usable with SMF 2.0.
   Unfortunately, the end result will be far from perfect, in most cases. Therefore, we encourage
@@ -19,7 +20,7 @@ body#help_popup
 ------------------------------------------------------- */
 .content, .roundframe
 {
-	padding: 1em 1.5em;
+	padding: 0.5em 1.2em;
 	margin: 0;
 	border: 1px solid #adadad;
 	color: #000000;
@@ -28,12 +29,6 @@ body#help_popup
 .content p, .roundframe p
 {
 	margin: 0 0 0.5em 0;
-}
-.content_alt
-{
-	padding: 0.8em 1em  0.5em 1em;
-	margin: 0;
-	border: none;
 }
 .content fieldset
 {

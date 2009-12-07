@@ -40,6 +40,7 @@ December 2009
  ! Also log member approval when requiring activation still. (ManageMembers.php) [Bug 4070]
  * Got sensible and simplified things a bit. (Post.template.php, Profile.template.php, Recent.template.php, Search.template.php, index.css, core/css/index.css)
 
+
 November 2009
 --------------------------------------------------------------------------------
  ! Not all mail is private (Subs-Post.php) [Bug 3967]
