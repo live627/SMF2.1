@@ -733,7 +733,7 @@ function template_main()
 			echo '
 				<div class="', $post['alternate'] == 0 ? 'windowbg' : 'windowbg2', ' core_posts">
 				<span class="topslice"><span></span></span>
-				<div class="content_alt" id="msg', $post['id'], '">
+				<div class="content" id="msg', $post['id'], '">
 					<div class="floatleft">
 						<h5>', $txt['posted_by'], ': ', $post['poster'], '</h5>
 						<span class="smalltext">&#171;&nbsp;<b>', $txt['on'], ':</b> ', $post['time'], '&nbsp;&#187;</span>

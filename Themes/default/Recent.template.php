@@ -20,7 +20,7 @@ function template_main()
 	echo '
 			<div class="', $post['alternate'] == 0 ? 'windowbg' : 'windowbg2', ' core_posts">
 				<span class="topslice"><span></span></span>
-				<div class="content_alt">
+				<div class="content">
 					<div class="counter">', $post['counter'], '</div>
 					<div class="topic_details">
 						<h5>', $post['board']['link'], ' / ', $post['link'], '</h5>

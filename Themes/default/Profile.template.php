@@ -336,7 +336,7 @@ function template_showPosts()
 		<div class="topic">
 			<div class="', $post['alternate'] == 0 ? 'windowbg2' : 'windowbg', ' core_posts">
 				<span class="topslice"><span></span></span>
-				<div class="content_alt">
+				<div class="content">
 					<div class="counter">', $post['counter'], '</div>
 					<div class="topic_details">
 						<h5><b><a href="', $scripturl, '?board=', $post['board']['id'], '.0">', $post['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $post['topic'], '.', $post['start'], '#msg', $post['id'], '">', $post['subject'], '</a></b></h5>

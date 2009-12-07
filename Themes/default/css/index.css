@@ -1012,19 +1012,13 @@ span.lowerframe span
 ------------------------------------------------------- */
 .content
 {
-	padding: 1em 1.5em;
+	padding: 0.5em 1.2em;
 	margin: 0;
 	border: none;
 }
 .content p
 {
 	margin: 0 0 0.5em 0;
-}
-.content_alt
-{
-	padding: 0em 1em;
-	margin: 0;
-	border: none;
 }
 
 /* Styles used by the auto suggest control.
@@ -1366,6 +1360,10 @@ img#smflogo
 	width: 50%;
 	float: right;
 	text-align: right;
+}
+#guest_form
+{
+   overflow: hidden;
 }
 #guest_form .info
 {
@@ -2963,6 +2961,7 @@ div#profile_success
 	padding-top: 12px;
 	margin-top: 6px;
 }
+
 .core_posts 
 {
 	margin-bottom: 3px;
@@ -3126,13 +3125,11 @@ div#profile_success
 }
 #statistics div.content
 {
-	height:195px;
-	padding: 0.5em 1.5em;
+	min-height: 210px;
 }
 #statistics div.top_row
 {
-	padding: 0.2em 1.5em 0 1.5em;
-	height: 140px;
+	min-height: 150px;
 }
 #stats_left, #top_posters, #top_topics_replies,#top_topics_starter
 {

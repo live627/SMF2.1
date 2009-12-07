@@ -38,7 +38,7 @@ December 2009
  ! Try to do a better job at parsing paragraph breaks when converting HTML to BBC in the WYSIWYG editor. (Subs-Editor.php)
  ! Before trying to parse styling in html_to_bbc, remove certain HTML entities that shouldn't be there to begin with. (Subs-Editor.php) [Bug 4054]   
  ! Also log member approval when requiring activation still. (ManageMembers.php) [Bug 4070]
-
+ * Got sensible and simplified things a bit. (Post.template.php, Profile.template.php, Recent.template.php, Search.template.php, index.css, core/css/index.css)
 
 November 2009
 --------------------------------------------------------------------------------
