@@ -671,7 +671,7 @@ if (empty($preparsing))
 
 			$row = array(
 				'name' => substr($boards[$temp_id], 0, 255),
-				'description' => substr($description, 0, 255),
+				'description' => substr($description, 0, 500),
 				'count_posts' => empty($doCountPosts),
 				'board_order' => $board_order++,
 				'member_groups' => !empty($cats[$tempCatID]['groups']) ? $cats[$tempCatID]['groups'] : '-1,0',

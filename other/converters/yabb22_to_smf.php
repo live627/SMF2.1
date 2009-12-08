@@ -631,7 +631,7 @@ if (empty($preparsing))
 
 			$row = array(
 				'name' => !isset($boards[$temp_id]) ? $temp_id : str_replace(array('qq~', 'qw~'), '', substr($boards[$temp_id], 0, 255)),
-				'description' => substr($description, 0, 255),
+				'description' => substr($description, 0, 500),
 				'count_posts' => empty($doCountPosts) ? 0 : 1,
 				'board_order' => $board_order++,
 				'member_groups' => !empty($tempCatID) && !empty($cats[$tempCatID]['groups']) ? $cats[$tempCatID]['groups'] : '1',

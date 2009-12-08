@@ -783,7 +783,7 @@ return true;
 
 			$row = array(
 				'name' => !isset($boards[$temp_id]) ? $temp_id : str_replace(array('qq~', 'qw~'), '', substr($boards[$temp_id], 0, 255)),
-				'description' => substr($description, 0, 255),
+				'description' => substr($description, 0, 500),
 				'count_posts' => empty($doCountPosts),
 				'board_order' => $board_order++,
 				'member_groups' => $cats[$tempCatID]['groups'],
