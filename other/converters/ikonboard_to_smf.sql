@@ -45,7 +45,7 @@ SELECT
 	SUBSTRING(YAHOONAME, 1, 32) AS yim,
 	SUBSTRING(MEMBER_TITLE, 1, 255) AS personal_text,
 	ALLOW_ADMIN_EMAILS AS notify_announcements,
-	TIME_ADJUST AS time_offset, HIDE_EMAIL AS hide_email,
+	IFNULL(TIME_ADJUST, 0) AS time_offset, HIDE_EMAIL AS hide_email,
 	SUBSTRING(msnNAME, 1, 255) AS msn, LAST_ACTIVITY AS last_login,
 	GENDER AS gender, SUBSTRING(MEMBER_NAME, 1, 255) AS real_name,
 	MEMBER_ID AS temp_id, '' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list,
