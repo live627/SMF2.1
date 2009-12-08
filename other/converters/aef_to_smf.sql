@@ -86,9 +86,7 @@ SELECT
 	tid AS id_topic, t_bid AS id_board, t_sticky AS is_sticky, poll_id AS id_poll,
 	n_views AS num_views, t_mem_id AS id_member_started, mem_id_last_post AS id_member_updated, n_posts AS num_replies, IF(t_status = 0, 1, 0) AS locked,
 	first_post_id AS id_first_msg, IF(last_post_id = 0, first_post_id, last_post_id) AS id_last_msg
-FROM {$from_prefix}{$dbtables['topics']}
-HAVING id_first_msg != 0
-	AND id_last_msg != 0;
+FROM {$from_prefix}{$dbtables['topics']};
 ---*
 
 /******************************************************************************/
