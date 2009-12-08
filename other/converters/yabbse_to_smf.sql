@@ -237,8 +237,12 @@ $keys = array('id_poll', 'id_choice', 'label', 'votes');
 
 for ($i = 1; $i <= 8; $i++)
 {
-	if (trim($row['option' . $i]) != '')
-		$rows[] = "$row[id_poll], $i, '" . addslashes(substr($row['option' . $i], 1, 255)) . "', " . $row['votes' . $i];
+		$rows[] = array(
+		'id_poll' => $row['id_poll'],
+		'id_choice' => $i,
+		'label' => substr('" . addslashes($row['option' . $i]) . "', 1, 255),
+		'votes' => (is_numeric($row['votes' . $i]) ? $row['votes' . $i] : 0),
+	);
 }
 ---}
 SELECT
