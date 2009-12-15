@@ -525,7 +525,7 @@ function template_view_installed()
 				<th scope="col" class="smalltext" width="32"></th>
 				<th scope="col" class="smalltext" width="25%">', $txt['mod_name'], '</th>
 				<th scope="col" class="smalltext" width="25%">', $txt['mod_version'], '</th>
-				<th scope="col" class="smalltext" width="49%"></td>
+				<th scope="col" class="smalltext" width="49%"></th>
 			</tr>
 		</thead>
 		<tbody>';
@@ -747,8 +747,8 @@ function template_browse()
 			<thead>
 				<tr class="catbg">
 					<th class="smalltext" width="32"></th>
-					<th class="smalltext" width="25%">' . $txt['mod_name'] . '</th>
-					<th  class="smalltext" width="25%">' . $txt['mod_version'] . '</th>
+					<th class="smalltext" width="25%">', $txt['mod_name'], '</th>
+					<th  class="smalltext" width="25%">', $txt['mod_version'], '</th>
 					<th  class="smalltext" width="49%"></th>
 				</tr>
 			</thead>
@@ -803,8 +803,8 @@ function template_browse()
 			<thead>
 				<tr class="catbg">
 					<th class="smalltext" width="32"></th>
-					<th class="smalltext" width="25%">' . $txt['mod_name'] . '</th>
-					<th class="smalltext" width="25%">' . $txt['mod_version'] . '</th>
+					<th class="smalltext" width="25%">', $txt['mod_name'], '</th>
+					<th class="smalltext" width="25%">', $txt['mod_version'], '</th>
 					<th class="smalltext" width="49%"></th>
 				</tr>
 			</thead>

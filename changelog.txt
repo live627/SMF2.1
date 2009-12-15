@@ -42,6 +42,7 @@ December 2009
  * Reversed the starmod.gif and stargmod.gif images to reflect their membergroup color. (default/images/starmod.gif, default/images/stargmod.gif)
  & Use "Alienine's Set" as the default smiley set's name to credit its author. (Install language file)
  ! The smiley set check was checking the wrong setting. (upgrade_2-0_mysql.sql, upgrade_2-0-postgresql.sql, upgrade_2-0_sqlite.sql) [Bug 4083]
+ * Invalid XHTML, harmonized comma delineation (Packages template) [Bug 4099]
 
 
 November 2009
