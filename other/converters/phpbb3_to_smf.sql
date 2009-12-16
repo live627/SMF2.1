@@ -471,6 +471,7 @@ TRUNCATE {$to_prefix}messages;
 
 ---* {$to_prefix}messages 200
 ---{
+$ignore_slashes = true;
 // This does the major work first
 $row['body'] = preg_replace(
 	array(
