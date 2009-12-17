@@ -91,8 +91,8 @@ TRUNCATE {$to_prefix}log_mark_read;
 ---* {$to_prefix}topics
 SELECT
 	t.tid AS id_topic, t.fid AS id_board, t.sticky AS is_sticky,
-	t.poll AS id_poll, t.views AS num_views, t.uid AS id_member_started,
-	ul.uid AS id_member_updated, t.replies AS num_replies, t.closed AS locked,
+	t.poll AS id_poll, t.views AS num_views, IFNULL(t.uid, 0) AS id_member_started,
+	IFNULL(ul.uid, 0) AS id_member_updated, t.replies AS num_replies, t.closed AS locked,
 	MIN(p.pid) AS id_first_msg, MAX(p.pid) AS id_last_msg
 FROM {$from_prefix}threads AS t
 	INNER JOIN {$from_prefix}posts AS p ON (p.tid = t.tid)

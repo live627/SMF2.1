@@ -84,8 +84,8 @@ TRUNCATE {$to_prefix}log_mark_read;
 ---* {$to_prefix}topics
 SELECT
 	t.tid AS id_topic, t.fid AS id_board, t.sticky AS is_sticky,
-	t.poll AS id_poll, t.views AS num_views, t.uid AS id_member_started,
-	ul.uid AS id_member_updated, t.replies AS num_replies, 
+	t.poll AS id_poll, t.views AS num_views, IFNULL(t.uid, 0) AS id_member_started,
+	IFNULL(ul.uid, 0) AS id_member_updated, t.replies AS num_replies, 
 	CASE
 		WHEN (t.closed = '1') THEN 1
 		ELSE 0
