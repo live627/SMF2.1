@@ -1642,6 +1642,7 @@ return true;
 		else
 			$field = $use_now ? time() : 0;
 
+		$field = date("Y-m-d", $field);
 		return $field;
 	}
 

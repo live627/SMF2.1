@@ -1441,6 +1441,7 @@ if (empty($preparsing))
 		else
 			$field = $use_now ? time() : 0;
 
+		$field = date("Y-m-d", $field);
 		return $field;
 	}
 
@@ -1472,7 +1473,7 @@ if (empty($preparsing))
 			unset($block_names);
 		}
 
-		convert_insert($table, array_keys($block[0]), $block, 'insert', $no_prefix);
+		convert_insert($table, array_keys($block[0]), $block, 'insert');
 
 		$block = array();
 	}
