@@ -108,7 +108,7 @@ list($row['num_replies'], $row['id_first_msg'], $row['id_last_msg']) = convert_f
 ---}
 SELECT
 	thread_id AS id_topic, forum_id AS id_board, thread_sticky AS is_sticky, 0 AS id_poll,
-	thread_views AS num_views, thread_author AS id_member_started, thread_lastuser AS id_member_updated, '' AS num_replies, thread_locked AS locked,
+	thread_views AS num_views, thread_author AS id_member_started, thread_lastuser AS id_member_updated, 0 AS num_replies, thread_locked AS locked,
 	0 AS id_first_msg, 0 AS id_last_msg
 FROM {$from_prefix}threads;
 ---*
