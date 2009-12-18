@@ -138,7 +138,7 @@ function template_folder()
 	<h3 class="catbg">
 		<span class="left"></span>
 		<span id="author">', $txt['author'], '</span>
-		<span id="topic_title">', $txt['topic'], '</span>
+		<span id="topic_title">', $txt[$context['display_mode'] == 0 ? 'messages' : 'conversation'], '</span>
 	</h3>';
 
 	/*	// Cache some handy buttons.
@@ -151,7 +151,6 @@ function template_folder()
 		while ($message = $context['get_pmessage']('message'))
 		{
 			$window_class = $message['alternate'] == 0 ? 'windowbg' : 'windowbg2';
-
 
 			echo '
 	<div class="', $window_class, '">
@@ -501,19 +500,19 @@ function template_subject_list()
 	<table width="100%" class="table_grid">
 	<thead>
 		<tr class="catbg">
-			<th class="smalltext" align="center" width="4%">
+			<th align="center" width="4%">
 				<a href="', $scripturl, '?action=pm;view;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['sort_direction'] == 'up' ? '' : ';desc'), ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '"><img src="', $settings['images_url'], '/im_switch.gif" alt="', $txt['pm_change_view'], '" title="', $txt['pm_change_view'], '" width="16" height="16" /></a>
 			</th>
-			<th class="smalltext" width="22%">
+			<th width="22%">
 				<a href="', $scripturl, '?action=pm;f=', $context['folder'], ';start=', $context['start'], ';sort=date', $context['sort_by'] == 'date' && $context['sort_direction'] == 'up' ? ';desc' : '', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '">', $txt['date'], $context['sort_by'] == 'date' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a>
 			</th>
-			<th class="smalltext" width="46%">
+			<th width="46%">
 				<a href="', $scripturl, '?action=pm;f=', $context['folder'], ';start=', $context['start'], ';sort=subject', $context['sort_by'] == 'subject' && $context['sort_direction'] == 'up' ? ';desc' : '', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '">', $txt['subject'], $context['sort_by'] == 'subject' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a>
 			</th>
 			<th>
 				<a href="', $scripturl, '?action=pm;f=', $context['folder'], ';start=', $context['start'], ';sort=name', $context['sort_by'] == 'name' && $context['sort_direction'] == 'up' ? ';desc' : '', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '">', ($context['from_or_to'] == 'from' ? $txt['from'] : $txt['to']), $context['sort_by'] == 'name' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a>
 			</th>
-			<th class="smalltext" align="center" width="4%">
+			<th align="center" width="4%">
 				<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />
 			</th>
 		</tr>

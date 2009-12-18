@@ -510,27 +510,31 @@ function template_bcd()
 {
 	global $context, $scripturl;
 
-		echo '
-	<table class="site" cellpadding="0" cellspacing="0" align="center">
-		<caption>BCD Clock</caption>
-		<tr class="odd">';
-		$alt = false;
-		foreach ($context['clockicons'] as $t => $v)
-		{
-			echo '
-			<td style="border-', $alt ? 'right' : 'left', ': 1px solid black;" valign="bottom">';
-			foreach ($v as $i)
-				echo '
-				<img src="', $context['offimg'], '" alt="" id="', $t, '_', $i, '" /><br />';
-			echo '
-			</td>';
-			$alt = !$alt;
-		}
+	echo '
+	<table cellpadding="0" cellspacing="1" align="center">
+		<caption class="titlebg">BCD Clock</caption>
+		<tr class="windowbg">';
 
+	$alt = false;
+	foreach ($context['clockicons'] as $t => $v)
+	{
 		echo '
+			<td style="padding-', $alt ? 'right' : 'left', ': 1.5em;" valign="bottom">';
+	
+		foreach ($v as $i)
+			echo '
+				<img src="', $context['offimg'], '" alt="" id="', $t, '_', $i, '" /><br />';
+	
+		echo '
+			</td>';
+
+		$alt = !$alt;
+	}
+
+	echo '
 		</tr>
-		<tr class="even"><td colspan="6" align="center"><a href="', $scripturl, '?action=clock;rb">Are you hardcore?</a></td></tr>
 	</table>
+	<p align="center"><a href="', $scripturl, '?action=clock;rb">Are you hardcore?</a></p>
 
 		<script type="text/javascript"><!-- // --><![CDATA[
 		var icons = new Object();';
@@ -600,9 +604,10 @@ function template_bcd()
 function template_hms()
 {
 	global $context, $scripturl;
+
 	echo '
-<table class="site" cellpadding="0" cellspacing="0" border="1" align="center">
-	<caption>Binary Clock</caption>';
+<table cellpadding="0" cellspacing="1" align="center">
+	<caption class="titlebg">Binary Clock</caption>';
 	$alt = false;
 	foreach ($context['clockicons'] as $t => $v)
 	{
@@ -685,8 +690,8 @@ function template_omfg()
 	global $context, $scripturl;
 
 	echo '
-<table class="site" cellpadding="0" cellspacing="0" border="1" align="center">
-	<caption>OMFG Binary Clock</caption>';
+<table cellpadding="0" cellspacing="1" align="center">
+	<caption class="titlebg">OMFG Binary Clock</caption>';
 	$alt = false;
 	foreach ($context['clockicons'] as $t => $v)
 	{
@@ -735,7 +740,7 @@ function template_omfg()
 	foreach ($context['clockicons'] as $t => $v)
 	{
 		foreach ($v as $i)
-			echo '
+		echo '
 		if (', $t, ' >= ', $i, ')
 		{
 			turnon.push("', $t, '_', $i, '");
@@ -772,7 +777,7 @@ function template_thetime()
 	global $context, $scripturl;
 
 	echo '
-<table class="site" cellpadding="0" cellspacing="0" border="1" align="center">
+<table cellpadding="0" cellspacing="0" border="1" align="center">
 	<caption>The time you requested</caption>';
 	$alt = false;
 	foreach ($context['clockicons'] as $t => $v)

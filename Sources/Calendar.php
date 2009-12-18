@@ -396,8 +396,8 @@ function iCalDownload()
 function clock()
 {
 	global $settings, $context;
-	$context['onimg'] = $settings['images_url'] . '/on.gif';
-	$context['offimg'] = $settings['images_url'] . '/off.gif';
+	$context['onimg'] = $settings['images_url'] . '/bbc/bbc_bg.gif';
+	$context['offimg'] = $settings['images_url'] . '/bbc/bbc_hoverbg.gif';
 
 	$context['page_title'] = 'Anyone know what time it is?';
 	$context['robot_no_index'] = true;

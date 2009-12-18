@@ -45,6 +45,7 @@ December 2009
  * Invalid XHTML, harmonized comma delineation (Packages template) [Bug 4099]
  * Improved the interface of the attachment file maintenance screen. (ManageAttachments template, Admin language file)
  * Link a member's avatar to their profile. (Display template) [Bug 3881]
+ & Indicate whether we're viewing PM's as individual messages or as a conversation. (PersonalMessage template, PersonalMessage language file) [Bug 3349]
 
 
 November 2009
