@@ -1485,7 +1485,7 @@ function create_control_richedit($editorOptions)
 	$context['controls']['richedit'][$editorOptions['id']] = array(
 		'id' => $editorOptions['id'],
 		'value' => $editorOptions['value'],
-		'rich_value' => addcslashes(bbc_to_html($editorOptions['value']), "'"),
+		'rich_value' => bbc_to_html($editorOptions['value']),
 		'rich_active' => empty($modSettings['disable_wysiwyg']) && (!empty($options['wysiwyg_default']) || !empty($editorOptions['force_rich']) || !empty($_REQUEST[$editorOptions['id'] . '_mode'])),
 		'disable_smiley_box' => !empty($editorOptions['disable_smiley_box']),
 		'columns' => isset($editorOptions['columns']) ? $editorOptions['columns'] : 60,
