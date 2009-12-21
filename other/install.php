@@ -424,7 +424,7 @@ function Welcome()
 	}
 
 	// See if we think they have already installed it?
-	if (file_exists(dirname(__FILE__) . '/Settings.php'))
+	if (is_readable(dirname(__FILE__) . '/Settings.php'))
 	{
 		$probably_installed = 0;
 		foreach (file(dirname(__FILE__) . '/Settings.php') as $line)
@@ -509,11 +509,11 @@ function CheckFilesWritable()
 	foreach ($incontext['detected_languages'] as $lang => $temp)
 		$extra_files[] = 'Themes/default/languages/' . $lang;
 
-	$failure = false;
-
 	// With mod_security installed, we could attempt to fix it with .htaccess.
 	if (function_exists('apache_get_modules') && in_array('mod_security', apache_get_modules()))
 		$writable_files[] = file_exists(dirname(__FILE__) . '/.htaccess') ? '.htaccess' : '.';
+
+	$failed_files = array();
 
 	// On linux, it's easy - just use is_writable!
 	if (substr(__FILE__, 1, 2) != ':\\')
@@ -525,7 +525,8 @@ function CheckFilesWritable()
 				@chmod(dirname(__FILE__) . '/' . $file, 0755);
 
 				// Well, 755 hopefully worked... if not, try 777.
-				$failure |= !is_writable(dirname(__FILE__) . '/' . $file) && !@chmod(dirname(__FILE__) . '/' . $file, 0777);
+				if (!is_writable(dirname(__FILE__) . '/' . $file) && !@chmod(dirname(__FILE__) . '/' . $file, 0777))
+					$failed_files[] = $file;
 			}
 		}
 		foreach ($extra_files as $file)
@@ -545,21 +546,25 @@ function CheckFilesWritable()
 			$fp = @fopen(dirname(__FILE__) . '/' . $file, 'r+');
 
 			// Hmm, okay, try just for write in that case...
-			if (!$fp)
+			if (!is_resource($fp))
 				$fp = @fopen(dirname(__FILE__) . '/' . $file, 'w');
 
-			$failure |= !$fp;
+			if (!is_resource($fp))
+				$failed_files[] = $file;
+
 			@fclose($fp);
 		}
 		foreach ($extra_files as $file)
 			@chmod(dirname(__FILE__) . (empty($file) ? '' : '/' . $file), 0777);
 	}
 
+	$failure = count($failed_files) >= 1;
+
 	if (!isset($_SERVER))
 		return !$failure;
 
 	// Put the list into context.
-	$incontext['writable_files'] = $writable_files;
+	$incontext['failed_files'] = $failed_files;
 
 	// It's not going to be possible to use FTP on windows to solve the problem...
 	if ($failure && substr(__FILE__, 1, 2) == ':\\')
@@ -567,7 +572,7 @@ function CheckFilesWritable()
 		$incontext['error'] = $txt['error_windows_chmod'] . '
 					<ul style="margin: 2.5ex; font-family: monospace;">
 						<li>' . implode('</li>
-						<li>', $writable_files) . '</li>
+						<li>', $failed_files) . '</li>
 					</ul>';
 
 		return false;
@@ -585,6 +590,8 @@ function CheckFilesWritable()
 			$_POST['ftp_path'] = $_SESSION['installer_temp_ftp']['path'];
 		}
 
+		$incontext['ftp_errors'] = array();
+
 		if (isset($_POST['ftp_username']))
 		{
 			$ftp = new ftp_connection($_POST['ftp_server'], $_POST['ftp_port'], $_POST['ftp_username'], $_POST['ftp_password']);
@@ -594,7 +601,7 @@ function CheckFilesWritable()
 				// Try it without /home/abc just in case they messed up.
 				if (!$ftp->chdir($_POST['ftp_path']))
 				{
-					$incontext['ftp_error'] = $ftp->last_message;
+					$incontext['ftp_errors'][] = $ftp->last_message;
 					$ftp->chdir(preg_replace('~^/home[2]?/[^/]+?~', '', $_POST['ftp_path']));
 				}
 			}
@@ -605,12 +612,12 @@ function CheckFilesWritable()
 			if (!isset($ftp))
 				$ftp = new ftp_connection(null);
 			// Save the error so we can mess with listing...
-			elseif ($ftp->error !== false && !isset($incontext['ftp_error']))
-				$incontext['ftp_error'] = $ftp->last_message === null ? '' : $ftp->last_message;
+			elseif ($ftp->error !== false && empty($incontext['ftp_errors']) && !empty($ftp->last_message))
+				$incontext['ftp_errors'][] = $ftp->last_message;
 
 			list ($username, $detect_path, $found_path) = $ftp->detect_path(dirname(__FILE__));
 
-			if ($found_path || !isset($_POST['ftp_path']))
+			if (empty($_POST['ftp_path']) && $found_path)
 				$_POST['ftp_path'] = $detect_path;
 
 			if (!isset($_POST['ftp_username']))
@@ -637,15 +644,36 @@ function CheckFilesWritable()
 				'path' => $_POST['ftp_path']
 			);
 
-			foreach ($writable_files as $file)
+			$failed_files_updated = array();
+
+			foreach ($failed_files as $file)
 			{
 				if (!is_writable(dirname(__FILE__) . '/' . $file))
 					$ftp->chmod($file, 0755);
 				if (!is_writable(dirname(__FILE__) . '/' . $file))
 					$ftp->chmod($file, 0777);
+				if (!is_writable(dirname(__FILE__) . '/' . $file))
+				{
+					$failed_files_updated[] = $file;
+					$incontext['ftp_errors'][] = rtrim($ftp->last_message) . ' -> ' . $file . "\n";
+				}
 			}
 
 			$ftp->close();
+
+			// Are there any errors left?
+			if (count($failed_files_updated) >= 1)
+			{
+				// Guess there are...
+				$incontext['failed_files'] = $failed_files_updated;
+
+				// Set the username etc, into context.
+				$incontext['ftp'] = $_SESSION['installer_temp_ftp'] += array(
+					'path_msg' => $txt['ftp_path_info'],
+				);
+
+				return false;
+			}
 		}
 	}
 
@@ -2204,7 +2232,7 @@ function template_chmod_files()
 		<p>', $txt['ftp_setup_why_info'], '</p>
 		<ul style="margin: 2.5ex; font-family: monospace;">
 			<li>', implode('</li>
-			<li>', $incontext['writable_files']), '</li>
+			<li>', $incontext['failed_files']), '</li>
 		</ul>';
 
 	// This is serious!
@@ -2215,13 +2243,13 @@ function template_chmod_files()
 		<hr />
 		<p>', $txt['ftp_setup_info'], '</p>';
 
-	if (!empty($incontext['ftp_error']))
+	if (!empty($incontext['ftp_errors']))
 		echo '
 		<div class="error_message">
 			<div style="color: red;">
 				', $txt['error_ftp_no_connect'], '<br />
 				<br />
-				<code>', $incontext['ftp_error'], '</code>
+				<code>', implode('<br />', $incontext['ftp_errors']), '</code>
 			</div>
 		</div>
 		<br />';
