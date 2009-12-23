@@ -76,7 +76,7 @@ TRUNCATE {$to_prefix}log_mark_read;
 ---* {$to_prefix}topics 20
 SELECT
 	t.topic_id AS id_topic, t.topic_sticky AS is_sticky, t.forum_id AS id_board,
-	MIN(p.post_id) AS id_first_msg, MAX(p.post_id) AS id_last_msg,
+	IFNULL(MIN(p.post_id), 0) AS id_first_msg, IFNULL(MAX(p.post_id), 0) AS id_last_msg,
 	t.topic_poster AS id_member_started, t.topic_last_poster AS id_member_updated,
 	t.topic_posts AS num_replies, CASE t.topic_open WHEN 1 THEN 0 ELSE 1 END AS locked
 FROM {$from_prefix}topics AS t
