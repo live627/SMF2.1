@@ -34,6 +34,7 @@ function smc_AutoSuggest(oOptions)
 
 	this.oCallback = {};
 	this.bDoAutoAdd = false;
+	this.iItemCount = 0;
 
 	this.oHideTimer = null;
 	this.bPositionComplete = false;
@@ -211,11 +212,24 @@ smc_AutoSuggest.prototype.handleKey = function(oEvent)
 // Functions for integration.
 smc_AutoSuggest.prototype.registerCallback = function(sCallbackType, sCallback)
 {
-	if (sCallbackType == 'onBeforeAddItem')
-		this.oCallback.onBeforeAddItem = sCallback;
+	switch (sCallbackType)
+	{
+		case 'onBeforeAddItem':
+			this.oCallback.onBeforeAddItem = sCallback;
+			break;
 
-	if (sCallbackType == 'onBeforeUpdate')
-		this.oCallback.onBeforeUpdate = sCallback;
+		case 'onAfterAddItem':
+			this.oCallback.onAfterAddItem = sCallback;
+			break;
+
+		case 'onAfterDeleteItem':
+			this.oCallback.onAfterDeleteItem = sCallback;
+			break;
+
+		case 'onBeforeUpdate':
+			this.oCallback.onBeforeUpdate = sCallback;
+			break;
+	}
 }
 
 // User hit submit?
@@ -331,6 +345,9 @@ smc_AutoSuggest.prototype.removeLastSearchString = function ()
 // Add a result if not already done.
 smc_AutoSuggest.prototype.addItemLink = function (sItemId, sItemName, bFromSubmit)
 {
+	// Increase the internal item count.
+	this.iItemCount ++;
+	
 	// If there's a callback then call it.
 	if ('oCallback' in this && 'onBeforeAddItem' in this.oCallback && typeof(this.oCallback.onBeforeAddItem) == 'string')
 	{
@@ -344,27 +361,37 @@ smc_AutoSuggest.prototype.addItemLink = function (sItemId, sItemName, bFromSubmi
 	setInnerHTML(oNewDiv, this.sItemTemplate.replace(/%post_name%/g, this.opt.sPostName).replace(/%item_id%/g, sItemId).replace(/%item_href%/g, smf_prepareScriptUrl(smf_scripturl) + this.opt.sURLMask.replace(/%item_id%/g, sItemId)).replace(/%item_name%/g, sItemName).replace(/%images_url%/g, smf_images_url).replace(/%self%/g, this.opt.sSelf).replace(/%delete_text%/g, this.sTextDeleteItem));
 	this.oItemList.appendChild(oNewDiv);
 
+	// If there's a registered callback, call it.
+	if ('oCallback' in this && 'onAfterAddItem' in this.oCallback && typeof(this.oCallback.onAfterAddItem) == 'string')
+		eval(this.oCallback.onAfterAddItem + '(' + this.opt.sSelf + ', \'' + oNewDiv.id + '\', ' + this.iItemCount + ');');
+
 	// Clear the div a bit.
 	this.removeLastSearchString();
 
 	// If we came from a submit, and there's still more to go, turn on auto add for all the other things.
-	if (this.oTextHandle.value != '' && bFromSubmit)
-		this.bDoAutoAdd = true;
-	else
-		this.bDoAutoAdd = false;
+	this.bDoAutoAdd = this.oTextHandle.value != '' && bFromSubmit;
 
 	// Update the fellow..
 	this.autoSuggestUpdate();
 }
 
-// Delete an item that has been added if at all?
+// Delete an item that has been added, if at all?
 smc_AutoSuggest.prototype.deleteAddedItem = function (sItemId)
 {
 	var oDiv = document.getElementById('suggest_' + this.opt.sSuggestId + '_' + sItemId);
 
 	// Remove the div if it exists.
 	if (typeof(oDiv) == 'object' && oDiv != null)
+	{
 		oDiv.parentNode.removeChild(document.getElementById('suggest_' + this.opt.sSuggestId + '_' + sItemId));
+
+		// Decrease the internal item count.
+		this.iItemCount --;
+
+		// If there's a registered callback, call it.
+		if ('oCallback' in this && 'onAfterDeleteItem' in this.oCallback && typeof(this.oCallback.onAfterDeleteItem) == 'string')
+			eval(this.oCallback.onAfterDeleteItem + '(' + this.opt.sSelf + ', ' + this.iItemCount + ');');
+	}
 
 	return false;
 }
