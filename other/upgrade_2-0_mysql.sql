@@ -913,7 +913,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_digest (
 	id_topic mediumint(8) unsigned NOT NULL default '0',
 	id_msg int(10) unsigned NOT NULL default '0',
 	note_type varchar(10) NOT NULL default 'post',
-	daily smallint(3) unsigned NOT NULL default '0',
+	daily tinyint(3) unsigned NOT NULL default '0',
 	exclude mediumint(8) unsigned NOT NULL default '0'
 ) ENGINE=MyISAM{$db_collation};
 ---#

@@ -132,6 +132,7 @@ November 2009
  ! The newsletter section included an unnecessary parenthesis character in its default message body. (ManageNews.php) [Bug 4040]
  * The 'delete board' button was missing the submit button class. (ManageBoards template)
  ! Double check the sanity of URL's in parse_bbc. (Subs.php)
+ * Log datatype should be tinyint (mysql install/upgrade sql) [Bug 3910]
 
 
 SMF 2.0 RC2                                                      8 November 2009
