@@ -782,7 +782,7 @@ tr.titlebg td
 
 /* Styles for the statistics centre.
 ------------------------------------------------- */
-#stats_left, #top_posters, #top_topics_replies,#top_topics_starter
+#stats_left, #top_posters, #top_topics_replies, #top_topics_starter
 {
 	float: right;
 }
@@ -1094,7 +1094,7 @@ span.search_weight
 {
 	padding-right: 18px !important;
 	background-position: 100% 0 !important;
- }
+}
 
  /* Styles for the moderation centre.
 ------------------------------------------------- */

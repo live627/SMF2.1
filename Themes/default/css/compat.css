@@ -1430,7 +1430,7 @@ tr.windowbg td, tr.windowbg2 td
 	padding: 0;
 	margin: 0;
 }
-.topic_table td.lastpost,.topic_table td.lastpost
+.topic_table td.lastpost, .topic_table td.lastpost
 {
 	font-size: 0.9em;
 	line-height: 100%;
@@ -1956,9 +1956,9 @@ div.core_posts
 	text-align: center;
 	margin-bottom: 5px;
 }
-#stats_left, #top_posters, #top_topics_replies,#top_topics_starter
+#stats_left, #top_posters, #top_topics_replies, #top_topics_starter
 {
-	float:left;
+	float: left;
 	width: 49.5%;
 }
 #stats_right, #top_boards, #top_topics_views, #most_online

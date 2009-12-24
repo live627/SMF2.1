@@ -851,9 +851,9 @@ tr.titlebg td
 }
 /* Styles for the statistics centre.
 ------------------------------------------------- */
-#stats_left, #top_posters, #top_topics_replies,#top_topics_starter
+#stats_left, #top_posters, #top_topics_replies, #top_topics_starter
 {
-	float:right;
+	float: right;
 }
 #stats_right, #top_boards, #top_topics_views, #most_online
 {
@@ -1028,7 +1028,7 @@ span.search_weight
 	padding-right: 18px;
 	background: url(../images/admin/boards.gif) no-repeat;
 	background-position: 100% 0;
- }
+}
  /* Styles for the moderation centre.
 ------------------------------------------------- */
 .modblock_left

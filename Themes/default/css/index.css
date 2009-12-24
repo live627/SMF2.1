@@ -959,7 +959,11 @@ table.table_list a.collapse
 	background: url(../images/theme/main_block.png) 100% -11px no-repeat;
 	height: 11px;
 }
-.postbg { border-left: 1px solid #7F7F7F; border-right: 1px solid #7F7F7F;}
+.postbg
+{
+	border-left: 1px solid #7F7F7F;
+	border-right: 1px solid #7F7F7F;
+}
 
 
 /* Used for sections that need somewhat larger corners.
@@ -2284,7 +2288,7 @@ ul.post_options li
 /* Styles for the recent messages section.
 ---------------------------------------------------- */
 
-#readbuttons_top .pagelinks,#readbuttons .pagelinks
+#readbuttons_top .pagelinks, #readbuttons .pagelinks
 {
 	padding-bottom: 1em;
 	width: 60%;
@@ -3117,9 +3121,9 @@ div#profile_success
 {
 	min-height: 150px;
 }
-#stats_left, #top_posters, #top_topics_replies,#top_topics_starter
+#stats_left, #top_posters, #top_topics_replies, #top_topics_starter
 {
-	float:left;
+	float: left;
 	width: 49.5%;
 }
 #stats_right, #top_boards, #top_topics_views, #most_online
