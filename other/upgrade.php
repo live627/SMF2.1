@@ -209,7 +209,7 @@ if (!function_exists('md5_hmac'))
 	{
 		if (strlen($key) > 64)
 			$key = pack('H*', md5($key));
-		$key  = str_pad($key, 64, chr(0x00));
+		$key = str_pad($key, 64, chr(0x00));
 
 		$k_ipad = $key ^ str_repeat(chr(0x36), 64);
 		$k_opad = $key ^ str_repeat(chr(0x5c), 64);
@@ -4193,7 +4193,7 @@ function template_backup_database()
 			<h3>Please wait while a backup is created. For large forums this may take some time!</h3>';
 
 	echo '
-			<form action="', $upcontext['form_url'], '" name="upform"  id="upform" method="post">
+			<form action="', $upcontext['form_url'], '" name="upform" id="upform" method="post">
 			<input type="hidden" name="backup_done" id="backup_done" value="0" />
 			<strong>Completed <span id="tab_done">', $upcontext['cur_table_num'], '</span> out of ', $upcontext['table_count'], ' tables.</strong>
 			<span id="debuginfo"></span>';
@@ -4279,7 +4279,7 @@ function template_database_changes()
 		<h4 style="font-style: italic;">Please be patient - this may take some time on large forums. The time elapsed increments from the server to show progress is being made!</h4>';
 
 	echo '
-		<form action="', $upcontext['form_url'], '&amp;filecount=', $upcontext['file_count'], '" name="upform"  id="upform" method="post">
+		<form action="', $upcontext['form_url'], '&amp;filecount=', $upcontext['file_count'], '" name="upform" id="upform" method="post">
 		<input type="hidden" name="database_done" id="database_done" value="0" />';
 
 	// No javascript looks rubbish!
@@ -4608,7 +4608,7 @@ function template_clean_mods()
 
 	echo '
 	<h3>SMF has detected some packages which were installed but not fully removed prior to upgrade. We recommend you remove the following mods and reinstall upon completion of the upgrade.</h3>
-	<form action="', $upcontext['form_url'], '&amp;ssi=1" name="upform"  id="upform" method="post">';
+	<form action="', $upcontext['form_url'], '&amp;ssi=1" name="upform" id="upform" method="post">';
 
 	// In case it's required.
 	template_chmod();
@@ -4658,7 +4658,7 @@ function template_cleanup_done()
 
 	echo '
 	<h3>SMF has attempted to fix and reinstall mods as required. We recommend you visit the package manager upon completing upgrade to check the status of your modifications.</h3>
-	<form action="', $upcontext['form_url'], '&amp;ssi=1" name="upform"  id="upform" method="post">
+	<form action="', $upcontext['form_url'], '&amp;ssi=1" name="upform" id="upform" method="post">
 		<table width="90%" align="center" cellspacing="1" cellpadding="2" style="background-color: black;">
 			<tr style="background-color: #EEEEEE;">
 				<td width="100%"><strong>Actions Completed:</strong></td>
@@ -4668,7 +4668,7 @@ function template_cleanup_done()
 	{
 		echo '
 			<tr style="background-color: #CCCCCC;">
-				<td>', $package['name'], '... <span style="font-weight: bold; color: ', $package['color'], '">', $package['result'], '</span></td>
+				<td>', $package['name'], '... <span style="font-weight: bold; color: ', $package['color'], ';">', $package['result'], '</span></td>
 			</tr>';
 	}
 	echo '
@@ -4686,7 +4686,7 @@ function template_upgrade_templates()
 
 	echo '
 	<h3>There have been numerous language and template changes since the previous version of SMF. On this step the upgrader can attempt to automatically make these changes in your templates to save you from doing so manually.</h3>
-	<form action="', $upcontext['form_url'], '&amp;ssi=1', $upcontext['is_test'] ? '' : ';forreal=1', '" name="upform"  id="upform" method="post">';
+	<form action="', $upcontext['form_url'], '&amp;ssi=1', $upcontext['is_test'] ? '' : ';forreal=1', '" name="upform" id="upform" method="post">';
 
 	// Any files need to be writable?
 	$upcontext['chmod_in_form'] = true;

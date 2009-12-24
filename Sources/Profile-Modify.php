@@ -1006,9 +1006,9 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 	if (isset($_POST['ignore_brd']))
 	{
 		if (!is_array($_POST['ignore_brd']))
-			$_POST['ignore_brd'] = array ( $_POST['ignore_brd'] );
+			$_POST['ignore_brd'] = array ($_POST['ignore_brd']);
 
-		foreach ($_POST['ignore_brd'] as $k => $d )
+		foreach ($_POST['ignore_brd'] as $k => $d)
 		{
 			$d = (int) $d;
 			if ($d != 0)

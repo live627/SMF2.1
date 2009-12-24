@@ -43,7 +43,7 @@ function ModerationMain($dont_call = false)
 		isAllowedTo('access_mod_center');
 
 	// We're gonna want a menu of some kind.
-	require_once($sourcedir .'/Subs-Menu.php');
+	require_once($sourcedir . '/Subs-Menu.php');
 
 	// Load the language, and the template.
 	loadLanguage('ModerationCenter');

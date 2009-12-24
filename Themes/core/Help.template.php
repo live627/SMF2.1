@@ -363,7 +363,7 @@ function template_manual_message_view()
 							<tr>
 								<td><strong>', $txt['manual_index_pages'], ':</strong> [<strong>1</strong>]</td>
 								<td>
-									', template_button_strip($mindex_buttons, 'bottom', 'align="right"  style="white-space: nowrap; font-size: smaller;"'), '
+									', template_button_strip($mindex_buttons, 'bottom', 'align="right" style="white-space: nowrap; font-size: smaller;"'), '
 								</td>
 							</tr>
 						</table>
@@ -414,7 +414,7 @@ function template_manual_message_view()
 							<tr>
 								<td><strong>', $txt['manual_index_pages'], ':</strong> [<strong>1</strong>]</td>
 								<td>
-									', template_button_strip($mindex_buttons, 'bottom', 'align="right"  style="white-space: nowrap; font-size: smaller;"'), '
+									', template_button_strip($mindex_buttons, 'bottom', 'align="right" style="white-space: nowrap; font-size: smaller;"'), '
 								</td>
 							</tr>
 						</table>
@@ -2416,7 +2416,7 @@ function template_manual_searching()
 							<li class="category">
 								<span>', $txt['manual_searching_cat'], '</span>
 								<ul>
-									<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left' , ': 1em;">
+									<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left', ': 1em;">
 										<label for="brd2"><input type="checkbox" id="brd2" name="brd[2]" value="2" class="input_check" /> ', $txt['manual_searching_another_board'], '</label>
 									</li>
 								</ul>
@@ -2426,7 +2426,7 @@ function template_manual_searching()
 							<li class="category">
 								<span>', $txt['manual_searching_cat'], '</span>
 								<ul>
-									<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left' , ': 1em;">
+									<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left', ': 1em;">
 										<label for="brd1"><input type="checkbox" id="brd1" name="brd[1]" value="1" class="input_check" /> ', $txt['manual_searching_board_name'], '</label>
 									</li>
 								</ul>

@@ -2169,7 +2169,7 @@ function parseBoardMod($file, $testing = true, $undo = false, $theme_paths = arr
 					// Actually add it to the mod file too, so we can see that it will work ;)
 					if (!empty($temp_changes[$pos]['changes']))
 					{
-						$file .= "\n\n" .'<edit file>' . "\n" .$theme['theme_dir'] .'/' . $template_file . "\n" .'</edit file>' . "\n\n" . implode("\n\n", $temp_changes[$pos]['changes']);
+						$file .= "\n\n" . '<edit file>' . "\n" . $theme['theme_dir'] . '/' . $template_file . "\n" . '</edit file>' . "\n\n" . implode("\n\n", $temp_changes[$pos]['changes']);
 						$theme_id_ref[$counter] = $id;
 						$counter += 1 + count($temp_changes[$pos]['changes']);
 					}

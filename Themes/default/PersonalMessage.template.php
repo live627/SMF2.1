@@ -743,7 +743,7 @@ function template_search_results()
 	</div>';
 
 	// complete results ?
-	if (empty($context['search_params']['show_complete']) && !empty($context['personal_messages']) )
+	if (empty($context['search_params']['show_complete']) && !empty($context['personal_messages']))
 		echo '
 	<table width="100%" class="table_grid">
 	<thead>

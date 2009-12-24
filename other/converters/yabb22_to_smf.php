@@ -1050,7 +1050,7 @@ if (empty($preparsing))
 				if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
 					$attachmentExtension = '';
 
-				if (strlen($filename) <= 255 &&  copy($yabb['uploaddir'] . '/' . $row['temp_filename'], $attachmentUploadDir . '/' . $file_hash))
+				if (strlen($filename) <= 255 && copy($yabb['uploaddir'] . '/' . $row['temp_filename'], $attachmentUploadDir . '/' . $file_hash))
 				{
 					// Set the default empty values.
 					$width = '0';
@@ -1061,9 +1061,9 @@ if (empty($preparsing))
 					{
 						list ($width, $height) = getimagesize($yabb['uploaddir'] . '/' . $row['temp_filename']);
 						// This shouldn't happen but apparently it might
-						if(empty($width))
+						if (empty($width))
 							$width = 0;
-						if(empty($height))
+						if (empty($height))
 							$height = 0;
 					}
 

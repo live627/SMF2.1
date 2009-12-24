@@ -262,7 +262,7 @@ function template_merge()
 			', $txt['merge'], '
 		</h3>
 		<div class="information">
-			', $txt['merge_desc'],  '
+			', $txt['merge_desc'], '
 		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>

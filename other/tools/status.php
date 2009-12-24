@@ -1030,7 +1030,7 @@ function generate_status()
 		if (!empty($context['lastserverreboot']) && time() - $context['lastserverreboot'] < 86400)
 			echo '
 				<tr>
-					<th valign="top" colspan="2" style="color:red;">We have detected this server was restarted less than 24 Hours ago. These recommendations may not be accurate.</td>
+					<th valign="top" colspan="2" style="color: red;">We have detected this server was restarted less than 24 Hours ago. These recommendations may not be accurate.</td>
 				</tr>';
 
 		foreach ($context['mysql_statistics'] as $stat)

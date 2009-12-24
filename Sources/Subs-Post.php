@@ -782,7 +782,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 		}
 	}
 	else
-		$mail_result = $mail_result  && smtp_mail($to_array, $subject, $message, $headers);
+		$mail_result = $mail_result && smtp_mail($to_array, $subject, $message, $headers);
 
 	// Everything go smoothly?
 	return $mail_result;
@@ -2711,7 +2711,7 @@ function approvePosts($msgs, $approve = true)
 	// Post count for the members?
 	if (!empty($member_post_changes))
 		foreach ($member_post_changes as $id_member => $count_change)
-			updateMemberData($id_member, array('posts' => 'posts ' . ($approve ? '+' : '-') .  ' ' . $count_change));
+			updateMemberData($id_member, array('posts' => 'posts ' . ($approve ? '+' : '-') . ' ' . $count_change));
 
 	return true;
 }

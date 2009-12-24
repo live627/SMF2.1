@@ -193,8 +193,8 @@ function ManageAttachmentSettings($return_config = false)
 		return $config_vars;
 
 	// These are very likely to come in handy! (i.e. without them we're doomed!)
-	require_once($sourcedir .'/ManagePermissions.php');
-	require_once($sourcedir .'/ManageServer.php');
+	require_once($sourcedir . '/ManagePermissions.php');
+	require_once($sourcedir . '/ManageServer.php');
 
 	// Saving settings?
 	if (isset($_GET['save']))
@@ -258,8 +258,8 @@ function ManageAvatarSettings($return_config = false)
 		return $config_vars;
 
 	// We need these files for the inline permission settings, and the settings template.
-	require_once($sourcedir .'/ManagePermissions.php');
-	require_once($sourcedir .'/ManageServer.php');
+	require_once($sourcedir . '/ManagePermissions.php');
+	require_once($sourcedir . '/ManageServer.php');
 
 	// Saving avatar settings?
 	if (isset($_GET['save']))
@@ -699,7 +699,7 @@ function RemoveAttachmentByAge()
 	if ($_REQUEST['type'] != 'avatars')
 	{
 		// Get all the old attachments.
-		$messages = removeAttachments(array('attachment_type' => 0,  'poster_time' => (time() - 24 * 60 * 60 * $_POST['age'])), 'messages', true);
+		$messages = removeAttachments(array('attachment_type' => 0, 'poster_time' => (time() - 24 * 60 * 60 * $_POST['age'])), 'messages', true);
 
 		// Update the messages to reflect the change.
 		if (!empty($messages))

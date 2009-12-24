@@ -700,7 +700,7 @@ function smf_udf_inet_ntoa($n)
 	{
 		$k = (int) ($n / $msk);
 		$n -= $msk * $k;
-		$t[$i]= $k;
+		$t[$i] = $k;
 		$msk /= 256.0;
 	};
 

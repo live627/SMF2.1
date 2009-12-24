@@ -166,7 +166,7 @@ function template_credits()
 			echo '
 				<p class="posttext">', $section['posttext'], '</p>';
 
-		echo'
+		echo '
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>';

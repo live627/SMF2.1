@@ -885,7 +885,7 @@ function ConvertEntities()
 				foreach ($primary_keys as $key)
 				{
 					$where[] = $key . ' = {string:where_' . $key . '}';
-					$insertion_variables['where_'  . $key] = $row[$key];
+					$insertion_variables['where_' . $key] = $row[$key];
 				}
 
 				// Update the row.

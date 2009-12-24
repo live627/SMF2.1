@@ -934,7 +934,7 @@ function fixLanguageFile($filename, $type, $lang, $test = false)
 	// The warning for editing files direct?
 	if ($type != 'index' && $type != 'Install' && preg_match('~//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*//\s[\w\d\s!\.&;]*index\.' . $lang . '\.php\.~', $fileContents, $matches) == false)
 	{
-		$fileContents = preg_replace('~(//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*)~', "$" .'1// Important! Before editing these language files please read the text at the top of index.' . $lang . '.php.' . "\n\n", $fileContents);
+		$fileContents = preg_replace('~(//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*)~', "$" . '1// Important! Before editing these language files please read the text at the top of index.' . $lang . '.php.' . "\n\n", $fileContents);
 		$edit_count = 0;
 	}
 	// Instructions on index?
@@ -949,7 +949,7 @@ the cache go to Admin => Maintenance => Clean Cache.
    except for line breaks.
 
 */';
-		$fileContents = preg_replace('~(//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*)~', "$" .'1' . $long_warning . "\n\n", $fileContents);
+		$fileContents = preg_replace('~(//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*)~', "$" . '1' . $long_warning . "\n\n", $fileContents);
 
 		$edit_count = 0;
 	}
@@ -962,12 +962,12 @@ the cache go to Admin => Maintenance => Clean Cache.
 	// Scripturl/Boardurl?
 	if ($type != 'Install' && $type != 'Help' && preg_match('~\$(scripturl|boardurl)~', $fileContents, $match))
 	{
-		$fileContents = preg_replace('~\$(scripturl|boardurl)~', '#' . "$" .'1', $fileContents);
+		$fileContents = preg_replace('~\$(scripturl|boardurl)~', '#' . "$" . '1', $fileContents);
 	}
 	// Forumname/images/regards?
 	if ($type != 'Install' && $type != 'Help' && preg_match('~\$(context|settings|txt)\[\'?(forum_name|forum_name_html_safe|images_url|130|regards_team)\'?\]~', $fileContents, $match))
 	{
-		$fileContents = preg_replace('~\$((context|settings|txt)\[\'?(forum_name|forum_name_html_safe|images_url|130|regards_team)\'?\])~', '#' . "$" .'1', $fileContents);
+		$fileContents = preg_replace('~\$((context|settings|txt)\[\'?(forum_name|forum_name_html_safe|images_url|130|regards_team)\'?\])~', '#' . "$" . '1', $fileContents);
 	}
 	// Remove variables.
 	if ($type != 'Install' && preg_match('~\' \. \$(\w*) \. \'~', $fileContents, $match))
@@ -996,7 +996,7 @@ the cache go to Admin => Maintenance => Clean Cache.
 	// Put back in any variables.
 	if ($type != 'Install' && $type != 'Help' && preg_match('~#(context|settings|txt|boardurl|scripturl)~', $fileContents, $match))
 	{
-		$fileContents = preg_replace('~#(context|settings|txt|boardurl|scripturl)~', "$$" .'1', $fileContents);
+		$fileContents = preg_replace('~#(context|settings|txt|boardurl|scripturl)~', "$$" . '1', $fileContents);
 	}
 
 	if (isset($txtChanges[$type]))

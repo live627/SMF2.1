@@ -25,7 +25,7 @@ function template_browse()
 
 	template_show_list('mail_queue');
 
-	echo'
+	echo '
 	</div>
 	<br class="clear" />';
 }

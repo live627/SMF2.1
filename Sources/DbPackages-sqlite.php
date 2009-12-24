@@ -160,14 +160,14 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 	}
 
 	// Righty - let's do the damn thing!
-	$table_query = 'CREATE TABLE ' . $table_name . "\n" .'(';
+	$table_query = 'CREATE TABLE ' . $table_name . "\n" . '(';
 	$done_primary = false;
 	foreach ($columns as $column)
 	{
 		// Auto increment is special
 		if (!empty($column['auto']))
 		{
-			$table_query .= "\n" .$column['name'] .' integer PRIMARY KEY,';
+			$table_query .= "\n" . $column['name'] . ' integer PRIMARY KEY,';
 			$done_primary = true;
 			continue;
 		}
@@ -183,7 +183,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 			$type = $type . '(' . $size . ')';
 
 		// Now just put it together!
-		$table_query .= "\n\t" .$column['name'] .' ' . $type . ' ' . (!empty($column['null']) ? '' : 'NOT NULL') . ' ' . $default . ',';
+		$table_query .= "\n\t" . $column['name'] . ' ' . $type . ' ' . (!empty($column['null']) ? '' : 'NOT NULL') . ' ' . $default . ',';
 	}
 
 	// Loop through the indexes next...

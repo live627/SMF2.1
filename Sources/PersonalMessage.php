@@ -1506,7 +1506,7 @@ function MessageSearch2()
 			// Parse out any BBC...
 			$row['body'] = parse_bbc($row['body'], true, 'pm' . $row['id_pm']);
 
-			$href = $scripturl . '?action=pm;f=' . $context['folder'] . (isset($context['first_label'][$row['id_pm']]) ? ';l=' . $context['first_label'][$row['id_pm']] : '') . ';pmid='. $row['id_pm'] . '#msg' . $row['id_pm'];
+			$href = $scripturl . '?action=pm;f=' . $context['folder'] . (isset($context['first_label'][$row['id_pm']]) ? ';l=' . $context['first_label'][$row['id_pm']] : '') . ';pmid=' . $row['id_pm'] . '#msg' . $row['id_pm'];
 			$context['personal_messages'][] = array(
 				'id' => $row['id_pm'],
 				'member' => &$memberContext[$row['id_member_from']],
@@ -3120,7 +3120,7 @@ function ReportMessage()
 
 				// Make the body.
 				$report_body = str_replace(array('{REPORTER}', '{SENDER}'), array(un_htmlspecialchars($user_info['name']), $memberFromName), $txt['pm_report_pm_user_sent']);
-				$report_body .= "\n" .'[b]' . $_REQUEST['reason'] . '[/b]' . "\n\n";
+				$report_body .= "\n" . '[b]' . $_REQUEST['reason'] . '[/b]' . "\n\n";
 				if (!empty($recipients))
 					$report_body .= $txt['pm_report_pm_other_recipients'] . ' ' . implode(', ', $recipients) . "\n\n";
 				$report_body .= $txt['pm_report_pm_unedited_below'] . "\n" . '[quote author=' . (empty($memberFromID) ? '&quot;' . $memberFromName . '&quot;' : $memberFromName . ' link=action=profile;u=' . $memberFromID . ' date=' . $time) . ']' . "\n" . un_htmlspecialchars($body) . '[/quote]';

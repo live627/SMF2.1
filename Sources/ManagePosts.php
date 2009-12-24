@@ -214,7 +214,7 @@ function ModifyPostSettings($return_config = false)
 		return $config_vars;
 
 	// We'll want this for our easy save.
-	require_once($sourcedir .'/ManageServer.php');
+	require_once($sourcedir . '/ManageServer.php');
 
 	// Setup the template.
 	$context['page_title'] = $txt['manageposts_settings'];
@@ -355,7 +355,7 @@ function ModifyTopicSettings($return_config = false)
 		return $config_vars;
 
 	// Get the settings template ready.
-	require_once($sourcedir .'/ManageServer.php');
+	require_once($sourcedir . '/ManageServer.php');
 
 	// Setup the template.
 	$context['page_title'] = $txt['manageposts_topic_settings'];

@@ -435,7 +435,7 @@ function template_info_center()
 				<h4 class="titlebg">', $txt['login'], ' <a href="', $scripturl, '?action=reminder" class="smalltext">', $txt['forgot_your_password'], '</a></h4>
 				<div class="windowbg">
 					<p class="section">
-						<a href="', $scripturl,  '?action=login"><img src="', $settings['images_url'], '/icons/login.gif', '" alt="', $txt['login'], '" /></a>
+						<a href="', $scripturl, '?action=login"><img src="', $settings['images_url'], '/icons/login.gif', '" alt="', $txt['login'], '" /></a>
 					</p>
 					<div class="windowbg2 sectionbody">
 						<form id="infocenter_login" action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '">

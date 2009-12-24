@@ -159,7 +159,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 
 	// If we've got this far - good news - no table exists. We can build our own!
 	$smcFunc['db_transaction']('begin');
-	$table_query = 'CREATE TABLE ' . $table_name . "\n" .'(';
+	$table_query = 'CREATE TABLE ' . $table_name . "\n" . '(';
 	foreach ($columns as $column)
 	{
 		// If we have an auto increment do it!

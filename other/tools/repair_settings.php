@@ -570,8 +570,8 @@ function show_settings()
 
 			echo '
 							<td width="20%" valign="top" class="textbox" style="padding-bottom: 1ex;">
-								<label', $info[1] != 'int' ? ' for="'. $setting. '"' : '', '>', $txt[$setting], ': '.
-									( isset($txt[$setting.'_desc']) ? '<span class="smalltext">'. $txt[$setting.'_desc'] .'</span>' : '' ).'
+								<label', $info[1] != 'int' ? ' for="' . $setting . '"' : '', '>', $txt[$setting], ': '.
+									( isset($txt[$setting . '_desc']) ? '<span class="smalltext">' . $txt[$setting . '_desc'] . '</span>' : '' ).'
 								</label>', !isset($settings[$setting]) && $info[1] != 'check' ? '<br />
 								' . $txt['no_value'] : '', '
 							</td>

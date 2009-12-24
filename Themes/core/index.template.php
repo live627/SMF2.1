@@ -272,7 +272,7 @@ function template_body_above()
 					', $txt['quick_login_dec'];
 
 		if (!empty($modSettings['enableOpenID']))
-			echo'
+			echo '
 					<br />
 					<input type="text" name="openid_identifier" id="openid_url" size="25" class="input_text openid_login" />';
 
@@ -417,7 +417,7 @@ function theme_linktree($force_show = false)
 
 		// Show the link, including a URL if it should have one.
 		echo $settings['linktree_link'] && isset($tree['url']) ? '
-			<a href="' . $tree['url'] . '"><span>' . $tree['name'] . '</span></a>' : '<span>' . $tree['name'] .'</span>';
+			<a href="' . $tree['url'] . '"><span>' . $tree['name'] . '</span></a>' : '<span>' . $tree['name'] . '</span>';
 
 		// Show something after the link...?
 		if (isset($tree['extra_after']))

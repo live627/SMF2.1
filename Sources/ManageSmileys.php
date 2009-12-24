@@ -162,7 +162,7 @@ function EditSmileySettings($return_config = false)
 		return $config_vars;
 
 	// Setup the basics of the settings template.
-	require_once($sourcedir .'/ManageServer.php');
+	require_once($sourcedir . '/ManageServer.php');
 	$context['sub_template'] = 'show_settings';
 
 	// Finish up the form...
@@ -1062,7 +1062,7 @@ function EditSmileys()
 							<option value="popup">' . $txt['smileys_show_on_popup'] . '</option>
 							<option value="delete">' . $txt['smileys_remove'] . '</option>
 						</select>
-						<noscript><input type="submit" name="perform_action" value="'. $txt['go'] . '" class="button_submit" /></noscript>',
+						<noscript><input type="submit" name="perform_action" value="' . $txt['go'] . '" class="button_submit" /></noscript>',
 					'style' => 'text-align: right;',
 					'class' => 'titlebg',
 				),
@@ -1685,7 +1685,7 @@ function EditMessageIcons()
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="delete" value="' . $txt['quickmod_delete_selected'] . '" style="float: right" class="button_submit" />[<a href="'. $scripturl . '?action=admin;area=smileys;sa=editicon">' . $txt['icons_add_new'] . '</a>]',
+				'value' => '<input type="submit" name="delete" value="' . $txt['quickmod_delete_selected'] . '" style="float: right" class="button_submit" />[<a href="' . $scripturl . '?action=admin;area=smileys;sa=editicon">' . $txt['icons_add_new'] . '</a>]',
 				'class' => 'titlebg',
 			),
 		),

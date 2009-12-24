@@ -788,9 +788,9 @@ function showCodeImage($code)
 		for ($i = 0; $i < rand(1, 5); $i++)
 		{
 			$x1 = rand(0, $total_width / 4);
-			$x2  = $x1 + round(rand($total_width / 4, $total_width));
+			$x2 = $x1 + round(rand($total_width / 4, $total_width));
 			$y1 = rand(0, $max_height);
-			$y2  = $y1 + round(rand(0, $max_height / 3));
+			$y2 = $y1 + round(rand(0, $max_height / 3));
 			imagefilledrectangle($code_image, $x1, $y1, $x2, $y2, mt_rand(0, 1) ? $fg_color : $randomness_color);
 		}
 	}

@@ -62,7 +62,7 @@ function smf_openID_validate($openid_uri, $return = false, $save_fields = array(
 	$parameters = array(
 		'openid.mode=checkid_setup',
 		'openid.trust_root=' . urlencode($scripturl),
-		'openid.identity=' .  urlencode(empty($response_data['delegate']) ? $openid_url : $response_data['delegate']),
+		'openid.identity=' . urlencode(empty($response_data['delegate']) ? $openid_url : $response_data['delegate']),
 		'openid.assoc_handle=' . urlencode($assoc['handle']),
 		'openid.return_to=' . urlencode($scripturl . '?action=openidreturn&sa=' . (!empty($return_action) ? $return_action : $_REQUEST['action']) . '&t=' . $request_time . (!empty($save_fields) ? '&sf=' . base64_encode(serialize($save_fields)) : '')),
 	);

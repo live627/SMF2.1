@@ -110,7 +110,7 @@ function bbc_to_html($text)
 	{
 		if (strpos($text, '['. $code) !== false)
 		{
-			$parts = preg_split('~(\[/'. $code .'\]|\['. $code .'(?:=[^\]]+)?\])~i', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+			$parts = preg_split('~(\[/' . $code . '\]|\[' . $code . '(?:=[^\]]+)?\])~i', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 			// Only mess with stuff inside tags.
 			for ($i = 0, $n = count($parts); $i < $n; $i++)
@@ -144,7 +144,7 @@ function bbc_to_html($text)
 
 	// Parse unique ID's and disable javascript into the smileys - using the double space.
 	$i = 1;
-	$text = preg_replace('~(?:\s|&nbsp;)?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/[^<>]+?/([^<>]+?)"\s*)[^<>]*?border="0" class="smiley" />~e', '\'<\' . ' . 'stripslashes(\'$1\') . \'border="0" alt="" title="" onresizestart="return false;" id="smiley_\' . ' . "\$" .'i++ . \'_$2" style="padding: 0 3px 0 3px;" />\'', $text);
+	$text = preg_replace('~(?:\s|&nbsp;)?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/[^<>]+?/([^<>]+?)"\s*)[^<>]*?border="0" class="smiley" />~e', '\'<\' . ' . 'stripslashes(\'$1\') . \'border="0" alt="" title="" onresizestart="return false;" id="smiley_\' . ' . "\$" . 'i++ . \'_$2" style="padding: 0 3px 0 3px;" />\'', $text);
 
 	return $text;
 }

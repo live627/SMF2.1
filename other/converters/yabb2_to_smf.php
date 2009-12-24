@@ -1287,7 +1287,7 @@ if (empty($preparsing))
 				$size = filesize($yabb['uploaddir'] . '/' . $row['temp_filename']);
 				$file_hash = getAttachmentFilename($row['temp_filename'], $id_attach, null, true);
 
-				if (strlen($filename) <= 255 &&  copy($yabb['uploaddir'] . '/' . $row['temp_filename'], $attachmentUploadDir . '/' . $file_hash))
+				if (strlen($filename) <= 255 && copy($yabb['uploaddir'] . '/' . $row['temp_filename'], $attachmentUploadDir . '/' . $file_hash))
 				{
 					$attachments[] = array($id_attach, $size, 0, $row['temp_filename'], $file_hash, $row['id_msg'], 0, 0);
 

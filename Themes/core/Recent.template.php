@@ -171,8 +171,8 @@ function template_unread()
 						<img src="' . $settings['images_url'] . '/topic/' . $topic['class'] . '.gif" alt="" />
 					</td><td class="windowbg2" valign="middle" align="center" width="4%">
 						<img src="' . $topic['first_post']['icon_url'] . '" alt="" align="middle" />
-					</td><td class="windowbg' , $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '3' : '' , '" width="48%" valign="middle">' , $topic['is_locked'] && !empty($settings['separate_sticky_lock']) ? '
-						<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" align="right" alt="" style="margin: 0;" />' : '' , $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '
+					</td><td class="windowbg', $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '3' : '', '" width="48%" valign="middle">', $topic['is_locked'] && !empty($settings['separate_sticky_lock']) ? '
+						<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" align="right" alt="" style="margin: 0;" />' : '', $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '
 						<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" align="right" alt="" style="margin: 0;" />' : '', $topic['first_post']['link'], ' <a href="', $topic['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a> <span class="smalltext">', $topic['pages'], ' ', $txt['in'], ' ', $topic['board']['link'], '</span></td>
 					<td class="windowbg2" valign="middle" width="14%">
 						', $topic['first_post']['member']['link'], '</td>
@@ -336,9 +336,9 @@ function template_replies()
 						<img src="', $settings['images_url'], '/topic/', $topic['class'], '.gif" alt="" /></td>
 					<td class="windowbg2" valign="middle" align="center" width="4%">
 						<img src="', $topic['first_post']['icon_url'], '" alt="" align="middle" /></td>
-					<td class="windowbg', $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '3' : '' , '" width="48%" valign="middle">
-						' , $topic['is_locked'] && !empty($settings['separate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" align="right" alt="" style="margin: 0;" />' : '' , '
-						' , $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" align="right" alt="" style="margin: 0;" />' : '', ' ', $topic['first_post']['link'], ' <a href="', $topic['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a> <span class="smalltext">', $topic['pages'], '
+					<td class="windowbg', $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '3' : '', '" width="48%" valign="middle">
+						', $topic['is_locked'] && !empty($settings['separate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" align="right" alt="" style="margin: 0;" />' : '', '
+						', $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" align="right" alt="" style="margin: 0;" />' : '', ' ', $topic['first_post']['link'], ' <a href="', $topic['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a> <span class="smalltext">', $topic['pages'], '
 						', $txt['in'], ' ', $topic['board']['link'], '</span></td>
 					<td class="windowbg2" valign="middle" width="14%">
 						', $topic['first_post']['member']['link'], '</td>

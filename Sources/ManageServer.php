@@ -1252,9 +1252,9 @@ function ModifyLanguage()
 		require_once($sourcedir . '/Subs-Package.php');
 
 		// First, Make a backup?
-		if (!empty($modSettings['package_make_backups']) && (!isset($_SESSION['last_backup_for']) || $_SESSION['last_backup_for'] != $context['lang_id'] .'$$$'))
+		if (!empty($modSettings['package_make_backups']) && (!isset($_SESSION['last_backup_for']) || $_SESSION['last_backup_for'] != $context['lang_id'] . '$$$'))
 		{
-			$_SESSION['last_backup_for'] = $context['lang_id'] .'$$$';
+			$_SESSION['last_backup_for'] = $context['lang_id'] . '$$$';
 			package_create_backup('backup_lang_' . $context['lang_id']);
 		}
 
@@ -1872,7 +1872,7 @@ function prepareDBSettingContext(&$config_vars)
 	// If we have inline permissions we need to prep them.
 	if (!empty($inlinePermissions) && allowedTo('manage_permissions'))
 	{
-		require_once($sourcedir .'/ManagePermissions.php');
+		require_once($sourcedir . '/ManagePermissions.php');
 		init_inline_permissions($inlinePermissions, isset($context['permissions_excluded']) ? $context['permissions_excluded'] : array());
 	}
 
@@ -2082,7 +2082,7 @@ function saveDBSettings(&$config_vars)
 	// If we have inline permissions we need to save them.
 	if (!empty($inlinePermissions) && allowedTo('manage_permissions'))
 	{
-		require_once($sourcedir .'/ManagePermissions.php');
+		require_once($sourcedir . '/ManagePermissions.php');
 		save_inline_permissions($inlinePermissions);
 	}
 }

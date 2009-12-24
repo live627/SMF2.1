@@ -150,7 +150,7 @@ function Login2()
 		redirectexit();
 
 	// Set the login_url if it's not already set (but careful not to send us to an attachment).
-	if (empty($_SESSION['login_url']) && isset($_SESSION['old_url']) && strpos($_SESSION['old_url'], 'dlattach') === false &&  preg_match('~(board|topic)[=,]~', $_SESSION['old_url']) != 0)
+	if (empty($_SESSION['login_url']) && isset($_SESSION['old_url']) && strpos($_SESSION['old_url'], 'dlattach') === false && preg_match('~(board|topic)[=,]~', $_SESSION['old_url']) != 0)
 		$_SESSION['login_url'] = $_SESSION['old_url'];
 
 	// Are you guessing with a script that doesn't keep the session id?

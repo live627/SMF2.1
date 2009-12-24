@@ -2384,7 +2384,7 @@ function template_main_below()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 
-	echo ' .'\'',
+	echo ' . '\'',
 		// <yabb vbStyleLogin>
 		'vbstylelogin' => '\';
 

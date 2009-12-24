@@ -151,7 +151,7 @@ function template_summary()
 
 	echo '
 				<dt>', $txt['age'], ':</dt>
-				<dd>', $context['member']['age'] . ($context['member']['today_is_birthday'] ? ' &nbsp; <img src="' . $settings['images_url'] . '/cake.png"  alt="" />' : ''), '</dd>';
+				<dd>', $context['member']['age'] . ($context['member']['today_is_birthday'] ? ' &nbsp; <img src="' . $settings['images_url'] . '/cake.png" alt="" />' : ''), '</dd>';
 
 	if (!isset($context['disabled_fields']['location']) && !empty($context['member']['location']))
 		echo '
@@ -1778,7 +1778,7 @@ function template_ignoreboards()
 
 		foreach ($category['boards'] as $board)
 			echo '
-									<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left' , ': ', $board['child_level'], 'em;">
+									<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left', ': ', $board['child_level'], 'em;">
 										<label for="ignore_brd', $board['id'], '"><input type="checkbox" id="ignore_brd', $board['id'], '" name="ignore_brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="input_check" /> ', $board['name'], '</label>
 									</li>';
 

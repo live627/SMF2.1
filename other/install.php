@@ -2111,10 +2111,10 @@ function template_install_below()
 
 		if (!empty($incontext['continue']))
 			echo '
-							<input type="submit" id="contbutt" name="contbutt" value="', $txt['upgrade_continue'], '"  onclick="return submitThisOnce(this);" class="button_submit" />';
+							<input type="submit" id="contbutt" name="contbutt" value="', $txt['upgrade_continue'], '" onclick="return submitThisOnce(this);" class="button_submit" />';
 		if (!empty($incontext['skip']))
 			echo '
-							<input type="submit" id="skip" name="skip" value="', $txt['upgrade_skip'], '"  onclick="return submitThisOnce(this);" class="button_submit" />';
+							<input type="submit" id="skip" name="skip" value="', $txt['upgrade_skip'], '" onclick="return submitThisOnce(this);" class="button_submit" />';
 		echo '
 						</div>';
 	}

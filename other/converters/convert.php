@@ -350,12 +350,12 @@ function loadSettings()
 	$GLOBALS['boardurl'] = $boardurl;
 	$modSettings['disableQueryCheck'] = true; // !!! Do we really need this?
 
-	if (!$command_line && $_SESSION['convert_db_pass'] != $db_passwd )
+	if (!$command_line && $_SESSION['convert_db_pass'] != $db_passwd)
 	{
 		template_convert_above();
 		return doStep0('The database password you entered was incorrect.  Please make sure you are using the right password (for the SMF user!) and try it again.  If in doubt, use the password from Settings.php in the SMF installation.');
 	}
-	elseif ($command_line && $_SESSION['convert_db_pass'] != $db_passwd )
+	elseif ($command_line && $_SESSION['convert_db_pass'] != $db_passwd)
 		return print_error('The database password you entered was incorrect.  Please make sure you are using the right password (for the SMF user!) and try it again.  If in doubt, use the password from Settings.php in the SMF installation.', true);
 
 	// Check the steps that we have decided to go through.
@@ -1292,7 +1292,7 @@ function doStep1()
 						else
 							$no_add = false;
 
-						if(!empty($rows))
+						if (!empty($rows))
 							$keys = array_keys($rows[0]);
 						else
 							$keys = array_keys($row);
@@ -2972,7 +2972,7 @@ function copy_dir($source, $dest)
 			continue;
 
 		// If we have a directory create it on the destination and copy contents into it!
-		if (is_dir($source . '/'. $file))
+		if (is_dir($source . '/' . $file))
 		{
 			if (!is_dir($dest))
 				@mkdir($dest, 0777);

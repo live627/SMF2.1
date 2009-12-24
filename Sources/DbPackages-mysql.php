@@ -163,7 +163,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 	}
 
 	// Righty - let's do the damn thing!
-	$table_query = 'CREATE TABLE ' . $table_name . "\n" .'(';
+	$table_query = 'CREATE TABLE ' . $table_name . "\n" . '(';
 	foreach ($columns as $column)
 	{
 		// Auto increment is easy here!
@@ -360,7 +360,7 @@ function smf_db_change_column($table_name, $old_column, $column_info, $parameter
 
 	$smcFunc['db_query']('', '
 		ALTER TABLE ' . $table_name . '
-		CHANGE COLUMN ' . $old_column . ' ' . $column_info['name'] . ' ' . $type  . ' ' . (!empty($unsigned) ? $unsigned : '') . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
+		CHANGE COLUMN ' . $old_column . ' ' . $column_info['name'] . ' ' . $type . ' ' . (!empty($unsigned) ? $unsigned : '') . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
 			(!isset($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'') . ' ' .
 			(empty($column_info['auto']) ? '' : 'auto_increment') . ' ',
 		'security_override'

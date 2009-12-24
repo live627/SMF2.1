@@ -831,22 +831,22 @@ function getXmlProfile($xml_format)
 	if ($xml_format == 'rss' || $xml_format == 'rss2')
 		$data = array(array(
 			'title' => cdata_parse($profile['name']),
-			'link' => $scripturl  . '?action=profile;u=' . $profile['id'],
+			'link' => $scripturl . '?action=profile;u=' . $profile['id'],
 			'description' => cdata_parse(isset($profile['group']) ? $profile['group'] : $profile['post_group']),
 			'comments' => $scripturl . '?action=pm;sa=send;u=' . $profile['id'],
 			'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $user_profile[$profile['id']]['date_registered']),
-			'guid' => $scripturl  . '?action=profile;u=' . $profile['id'],
+			'guid' => $scripturl . '?action=profile;u=' . $profile['id'],
 		));
 	elseif ($xml_format == 'rdf')
 		$data = array(array(
 			'title' => cdata_parse($profile['name']),
-			'link' => $scripturl  . '?action=profile;u=' . $profile['id'],
+			'link' => $scripturl . '?action=profile;u=' . $profile['id'],
 			'description' => cdata_parse(isset($profile['group']) ? $profile['group'] : $profile['post_group']),
 		));
 	elseif ($xml_format == 'atom')
 		$data[] = array(
 			'title' => cdata_parse($profile['name']),
-			'link' => $scripturl  . '?action=profile;u=' . $profile['id'],
+			'link' => $scripturl . '?action=profile;u=' . $profile['id'],
 			'summary' => cdata_parse(isset($profile['group']) ? $profile['group'] : $profile['post_group']),
 			'author' => array(
 				'name' => $profile['real_name'],
@@ -855,7 +855,7 @@ function getXmlProfile($xml_format)
 			),
 			'published' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $user_profile[$profile['id']]['date_registered']),
 			'updated' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $user_profile[$profile['id']]['last_login']),
-			'id' => $scripturl  . '?action=profile;u=' . $profile['id'],
+			'id' => $scripturl . '?action=profile;u=' . $profile['id'],
 			'logo' => !empty($profile['avatar']) ? $profile['avatar']['url'] : '',
 		);
 	else
@@ -863,7 +863,7 @@ function getXmlProfile($xml_format)
 		$data = array(
 			'username' => $user_info['is_admin'] || $user_info['id'] == $profile['id'] ?  cdata_parse($profile['username']) : '',
 			'name' => cdata_parse($profile['name']),
-			'link' => $scripturl  . '?action=profile;u=' . $profile['id'],
+			'link' => $scripturl . '?action=profile;u=' . $profile['id'],
 			'posts' => $profile['posts'],
 			'post-group' => cdata_parse($profile['post_group']),
 			'language' => cdata_parse($profile['language']),

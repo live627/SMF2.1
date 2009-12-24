@@ -189,7 +189,7 @@ function ManageBoardsMain()
 					$context['categories'][$catid]['move_link'] = array(
 						'child_level' => 0,
 						'label' => $txt['mboards_order_before'] . ' \'' . htmlspecialchars($boards[$boardid]['name']) . '\'',
-						'href' => $scripturl . '?action=admin;area=manageboards;sa=move;src_board=' . $context['move_board'] . ';target_board='. $boardid . ';move_to=before;' . $context['session_var'] . '=' . $context['session_id'],
+						'href' => $scripturl . '?action=admin;area=manageboards;sa=move;src_board=' . $context['move_board'] . ';target_board=' . $boardid . ';move_to=before;' . $context['session_var'] . '=' . $context['session_id'],
 					);
 
 				if (!$context['categories'][$catid]['boards'][$boardid]['move'])
@@ -197,12 +197,12 @@ function ManageBoardsMain()
 					array(
 						'child_level' => $boards[$boardid]['level'],
 						'label' => $txt['mboards_order_after'] . '\'' . htmlspecialchars($boards[$boardid]['name']) . '\'',
-						'href' => $scripturl . '?action=admin;area=manageboards;sa=move;src_board=' . $context['move_board'] . ';target_board='. $boardid . ';move_to=after;' . $context['session_var'] . '=' . $context['session_id'],
+						'href' => $scripturl . '?action=admin;area=manageboards;sa=move;src_board=' . $context['move_board'] . ';target_board=' . $boardid . ';move_to=after;' . $context['session_var'] . '=' . $context['session_id'],
 					),
 					array(
 						'child_level' => $boards[$boardid]['level'] + 1,
 						'label' => $txt['mboards_order_child_of'] . ' \'' . htmlspecialchars($boards[$boardid]['name']) . '\'',
-						'href' => $scripturl . '?action=admin;area=manageboards;sa=move;src_board=' . $context['move_board'] . ';target_board='. $boardid . ';move_to=child;' . $context['session_var'] . '=' . $context['session_id'],
+						'href' => $scripturl . '?action=admin;area=manageboards;sa=move;src_board=' . $context['move_board'] . ';target_board=' . $boardid . ';move_to=child;' . $context['session_var'] . '=' . $context['session_id'],
 					),
 				);
 
@@ -774,7 +774,7 @@ function EditBoardSettings($return_config = false)
 
 	// Needed for the settings template and inline permission functions.
 	require_once($sourcedir . '/ManagePermissions.php');
-	require_once($sourcedir .'/ManageServer.php');
+	require_once($sourcedir . '/ManageServer.php');
 
 	// Don't let guests have these permissions.
 	$context['post_url'] = $scripturl . '?action=admin;area=manageboards;save;sa=settings';

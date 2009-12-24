@@ -161,7 +161,7 @@ function ModifySubscriptionSettings($return_config = false)
 		return $config_vars;
 
 	// Get the settings template fired up.
-	require_once($sourcedir .'/ManageServer.php');
+	require_once($sourcedir . '/ManageServer.php');
 
 	// Some important context stuff
 	$context['page_title'] = $txt['settings'];

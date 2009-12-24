@@ -795,8 +795,8 @@ function ModifyNewsSettings($return_config = false)
 	$context['sub_template'] = 'show_settings';
 
 	// Needed for the inline permission functions, and the settings template.
-	require_once($sourcedir .'/ManagePermissions.php');
-	require_once($sourcedir .'/ManageServer.php');
+	require_once($sourcedir . '/ManagePermissions.php');
+	require_once($sourcedir . '/ManageServer.php');
 
 	// Wrap it all up nice and warm...
 	$context['post_url'] = $scripturl . '?action=admin;area=news;save;sa=settings';

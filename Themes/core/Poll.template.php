@@ -27,7 +27,7 @@ function template_main()
 	// Start the main poll form.
 	echo '
 		<form action="' . $scripturl . '?action=editpoll2', $context['is_edit'] ? '' : ';add', ';topic=' . $context['current_topic'] . '.' . $context['start'] . '" method="post" accept-charset="', $context['character_set'], '" onsubmit="submitonce(this); smc_saveEntities(\'postmodify\', [\'question\'], \'options-\');" name="postmodify" id="postmodify">
-			<table border="0"  width="75%" align="center" cellspacing="1" cellpadding="3" class="bordercolor">
+			<table border="0" width="75%" align="center" cellspacing="1" cellpadding="3" class="bordercolor">
 				<tr class="titlebg">
 					<td>' . $context['page_title'] . '</td>
 				</tr><tr>
@@ -117,7 +117,7 @@ function template_main()
 	echo '
 							</tr><tr>
 								<td align="center" colspan="2">
-									<input type="submit" name="post" value="', $txt['save'],  '" onclick="return submitThisOnce(this);" accesskey="s" class="button_submit" />
+									<input type="submit" name="post" value="', $txt['save'], '" onclick="return submitThisOnce(this);" accesskey="s" class="button_submit" />
 								</td>
 							</tr><tr>
 								<td colspan="2"></td>

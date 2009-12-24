@@ -262,7 +262,7 @@ function show_header()
 			}
 			/* This is for the tabbed layout */
 			.dynamic-tab-pane-control.tab-pane{
-				position:relative;
+				position: relative;
 			}
 			.dynamic-tab-pane-control .tab-row .tab{
 				background: #e0e0e0;
@@ -298,7 +298,7 @@ function show_header()
 				border:1px solid #919b9c;
 				background:#f6f6f6;
 				z-index:2;
-				position:relative;
+				position: relative;
 				top:-2px;
 				font:11px Tahoma;
 				color:#333;
@@ -330,7 +330,7 @@ function show_header()
 				padding:6px 4px 2px 4px;
 				height:25px;
 				background:url(../images/background.gif);
-				background-repeat:repeat;
+				background-repeat: repeat;
 				font-size:11px;
 				color:#fff;
 			}

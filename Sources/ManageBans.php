@@ -1226,7 +1226,7 @@ function BanBrowseTriggers()
 			),
 		),
 		'form' => array(
-			'href' => $scripturl . '?action=admin;area=ban;sa=browse;entity=' .  $context['selected_entity'],
+			'href' => $scripturl . '?action=admin;area=ban;sa=browse;entity=' . $context['selected_entity'],
 			'include_start' => true,
 			'include_sort' => true,
 		),

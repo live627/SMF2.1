@@ -150,7 +150,7 @@ function template_main()
 
 		foreach ($category['boards'] as $board)
 			echo '
-								<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left' , ': ', $board['child_level'], 'em;">
+								<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left', ': ', $board['child_level'], 'em;">
 									<label for="brd', $board['id'], '"><input type="checkbox" id="brd', $board['id'], '" name="brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="input_check" /> ', $board['name'], '</label>
 								</li>';
 
@@ -287,7 +287,7 @@ function template_results()
 				echo '
 					<div class="topic_details floatleft" style="width: 94%">
 						<div class="counter">', $message['counter'], '</div>
-						<h5>' ,$topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.msg', $message['id'], '#msg', $message['id'], '">', $message['subject_highlighted'], '</a></h5>
+						<h5>', $topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.msg', $message['id'], '#msg', $message['id'], '">', $message['subject_highlighted'], '</a></h5>
 						<span class="smalltext">&#171;&nbsp;',$txt['by'],'&nbsp;<strong>', $message['member']['link'], '</strong>&nbsp;',$txt['on'],'&nbsp;<em>', $message['time'], '</em>&nbsp;&#187;</span>
 					</div>';
 
@@ -321,7 +321,7 @@ function template_results()
 					</div>';
 			}
 
-			echo' <br class="clear" />';
+			echo '<br class="clear" />';
 
 				if ($message['body_highlighted'] != '')
 					echo '
@@ -437,7 +437,7 @@ function template_results()
 					<div class="content">
 						<div class="counter">', $message['counter'], '</div>
 							<div class="topic_details">
-								<h5>' ,$topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.', $message['start'], ';topicseen#msg', $message['id'], '">', $message['subject_highlighted'], '</a></h5>
+								<h5>', $topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.', $message['start'], ';topicseen#msg', $message['id'], '">', $message['subject_highlighted'], '</a></h5>
 								<span class="smalltext">&#171;&nbsp;', $txt['message'], ' ', $txt['by'], ' <strong>', $message['member']['link'], ' </strong>', $txt['on'], '&nbsp;<em>', $message['time'], '</em>&nbsp;&#187;</span>
 							</div>
 						<div class="list_posts">', $message['body_highlighted'], '</div>
