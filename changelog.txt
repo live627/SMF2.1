@@ -53,6 +53,7 @@ December 2009
  ! Added a check whether the FTP chmod actually succeeded in the installer (install.php)
  ! Add more possible callbacks to the AutoSuggest object to allow better customisation. (suggest.js)
  * Move .1% css over to IE6 css file, and a extra semi-colon typo (index.css, ie6.css, compat.css) [Bug 3925]
+ ! Incorrect pm count (requires "Recount all forum totals and statistics" to fix existing incorrect pm counts) (PersonalMessage.php) [Bug 4043]
 
 
 November 2009

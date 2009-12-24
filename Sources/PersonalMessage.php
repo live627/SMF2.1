@@ -2701,9 +2701,11 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 			FROM {db_prefix}pm_recipients
 			WHERE id_member = {int:id_member}
 				AND NOT (is_read & 1 >= 1)
+				AND deleted = {int:is_not_deleted}
 			GROUP BY labels',
 			array(
 				'id_member' => $owner,
+				'is_not_deleted' => 0,
 			)
 		);
 		$total_unread = 0;
