@@ -1011,7 +1011,7 @@ function template_edit_style()
 		// ]]></script>
 		<iframe id="css_preview_box" name="css_preview_box" src="about:blank" width="100%" height="300" frameborder="0" style="display: none; margin-bottom: 2ex; border: 1px solid black;"></iframe>';
 
-	// Just show a big box.... grey out the Save button if it's not saveable... (ie. not 777.)
+	// Just show a big box.... gray out the Save button if it's not saveable... (ie. not 777.)
 	echo '
 		<form action="', $scripturl, '?action=admin;area=theme;th=', $context['theme_id'], ';sa=edit" method="post" accept-charset="', $context['character_set'], '" name="stylesheetForm" id="stylesheetForm">
 			<h3 class="catbg"><span class="left"></span>
@@ -1058,7 +1058,7 @@ function template_edit_template()
 			<div><tt>', $context['parse_error'], '</tt></div>
 	</div>';
 
-	// Just show a big box.... grey out the Save button if it's not saveable... (ie. not 777.)
+	// Just show a big box.... gray out the Save button if it's not saveable... (ie. not 777.)
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=theme;th=', $context['theme_id'], ';sa=edit" method="post" accept-charset="', $context['character_set'], '">
@@ -1108,7 +1108,7 @@ function template_edit_file()
 		', $txt['theme_edit_no_save'], ': ', $context['allow_save_filename'], '
 	</div>';
 
-	// Just show a big box.... grey out the Save button if it's not saveable... (ie. not 777.)
+	// Just show a big box.... gray out the Save button if it's not saveable... (ie. not 777.)
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=theme;th=', $context['theme_id'], ';sa=edit" method="post" accept-charset="', $context['character_set'], '">

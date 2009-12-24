@@ -266,7 +266,7 @@ function show_header()
 			}
 			.dynamic-tab-pane-control .tab-row .tab{
 				background: #e0e0e0;
-				border-color: grey;
+				border-color: gray;
 				border: 1px;
 				border-style: solid;
 				height: 30px;
