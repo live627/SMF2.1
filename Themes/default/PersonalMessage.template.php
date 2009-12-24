@@ -1100,7 +1100,7 @@ function template_ask_delete()
 	<div class="windowbg">
 		<span class="topslice"><span></span></span>
 		<div class="content">
-			<p>', $txt['delete_all_confirm'], '</p>	<br />
+			<p>', $txt['delete_all_confirm'], '</p><br />
 			<strong><a href="', $scripturl, '?action=pm;sa=removeall2;f=', $context['folder'], ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="javascript:history.go(-1);">', $txt['no'], '</a></strong>
 		</div>
 		<span class="botslice"><span></span></span>

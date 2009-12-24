@@ -15,7 +15,7 @@ function template_main()
 	<h3 class="catbg"><span class="left"></span>', $txt['parent_boards'], '</h3>
 	<div class="table_frame">
 		<table class="table_list">
-			<tbody class="content">	';
+			<tbody class="content">';
 
 		foreach ($context['boards'] as $board)
 		{

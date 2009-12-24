@@ -103,7 +103,7 @@ function template_main()
 	{
 		echo '
 <div id="events" class="tborder marginbottom margintop">
-	<h3 class="titlebg headerpadding">	', $txt['calendar_linked_events'], '</h3>
+	<h3 class="titlebg headerpadding">', $txt['calendar_linked_events'], '</h3>
 	<ul class="reset windowbg largepadding">';
 		foreach ($context['linked_calendar_events'] as $event)
 			echo '

@@ -546,7 +546,7 @@ function template_manual_message_view()
 							<div>
 								<span id="msg_1"><a href="', $scripturl, '?action=help;area=topic_view">', $txt['manual_message_index_normal_topic'], '</a></span>
 								<a id="newicon1" href="', $scripturl, '?action=help;area=topic_view">
-									<img alt="', $txt['new'], '" src="', $settings['images_url'], '/english/new.gif"/>
+									<img alt="', $txt['new'], '" src="', $settings['images_url'], '/english/new.gif" />
 								</a>
 								<p>', $txt['started_by'], ' <a href="', $scripturl, '?action=help;area=profile_info">', $txt['manual_message_index_started_by'], '</a></p>
 							</div>
@@ -665,16 +665,16 @@ function template_manual_topic_view()
 						<li class="title">', $txt['manual_topic_custom_title'], '</li>
 						<li class="membergroup">', $txt['manual_topic_membergroup'], '</li>
 						<li class="postgroup">', $txt['manual_topic_post_group'], '</li>
-						<li class="stars"><img border="0" alt="*" src="', $settings['images_url'], '/star.gif"/></li>
+						<li class="stars"><img border="0" alt="*" src="', $settings['images_url'], '/star.gif" /></li>
 						<li class="avatar flow_auto">
 							<img class="avatar" alt="" src="', $settings['default_images_url'], '/admin/smilies_and_messageicons.png" />
 						</li>
 						<li class="postcount">', $txt['manual_topic_post_count'], '</li>
 						<li class="profile">
 							<ul>
-								<li><a href="#"><img border="0" title="', $txt['view_profile'], '" alt="', $txt['view_profile'], '" src="', $settings['images_url'], '/icons/profile_sm.gif"/></a></li>
-								<li><a rel="nofollow" href="#"><img title="', $txt['email'], '" alt="', $txt['email'], '" src="', $settings['images_url'], '/email_sm.gif"/></a></li>
-								<li><a title="', $txt['personal_message'], '" href="#"><img border="0" alt="', $txt['personal_message'], '" src="', $settings['images_url'], '/im_off.gif"/></a></li>
+								<li><a href="#"><img border="0" title="', $txt['view_profile'], '" alt="', $txt['view_profile'], '" src="', $settings['images_url'], '/icons/profile_sm.gif" /></a></li>
+								<li><a rel="nofollow" href="#"><img title="', $txt['email'], '" alt="', $txt['email'], '" src="', $settings['images_url'], '/email_sm.gif" /></a></li>
+								<li><a title="', $txt['personal_message'], '" href="#"><img border="0" alt="', $txt['personal_message'], '" src="', $settings['images_url'], '/im_off.gif" /></a></li>
 							</ul>
 						</li>
 					</ul>

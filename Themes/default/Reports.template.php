@@ -21,7 +21,7 @@ function template_report_type()
 				', $txt['generate_reports_type'], '
 			</h3>
 			<div class="windowbg">
-				<span class="topslice">	<span></span></span>
+				<span class="topslice"><span></span></span>
 				<div class="content">
 					<dl class="generate_report">';
 

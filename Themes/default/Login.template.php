@@ -193,7 +193,7 @@ function template_admin_login()
 		<div class="roundframe centertext">
 			<strong>', $txt['password'], ':</strong>
 			<input type="password" name="admin_pass" size="24" class="input_password" />
-			<a href="', $scripturl, '?action=helpadmin;help=securityDisable_why" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '"  /></a><br />';
+			<a href="', $scripturl, '?action=helpadmin;help=securityDisable_why" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a><br />';
 
 	if (!empty($context['incorrect_password']))
 		echo '

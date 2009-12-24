@@ -1296,7 +1296,7 @@ function template_install_options()
 				<form action="', $scripturl, '?action=admin;area=packages;sa=options" method="post" accept-charset="', $context['character_set'], '">
 					<dl class="settings">
 						<dt>
-							<label for="pack_server" ><strong>', $txt['package_install_options_ftp_server'], ':</strong></label>
+							<label for="pack_server"><strong>', $txt['package_install_options_ftp_server'], ':</strong></label>
 						</dt>
 						<dd>
 							<input type="text" name="pack_server" id="pack_server" value="', $context['package_ftp_server'], '" size="30" class="input_text" />
