@@ -849,7 +849,7 @@ tr.titlebg td
 {
 	float: right;
 }
-/* Styles for the statistics centre.
+/* Styles for the statistics center.
 ------------------------------------------------- */
 #stats_left, #top_posters, #top_topics_replies, #top_topics_starter
 {
@@ -1029,7 +1029,7 @@ span.search_weight
 	background: url(../images/admin/boards.gif) no-repeat;
 	background-position: 100% 0;
 }
- /* Styles for the moderation centre.
+ /* Styles for the moderation center.
 ------------------------------------------------- */
 .modblock_left
 {

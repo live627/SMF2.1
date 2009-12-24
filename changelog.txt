@@ -33,7 +33,7 @@ December 2009
  * Updated Search.template.php to match the others (Search.php, Search template, index.css, rtl.css, ie7.css, ie6.css)
  * There is no #top, only #postmodify. (Post template)
  * Included the recent changes in the Core stylesheet into the compatibility stylesheet. (compat.css)
- * Cleaned up statistics centre and tweaked calendar css a bit (Stats.template.php, index.css, ie7.css)
+ * Cleaned up statistics center and tweaked calendar css a bit (Stats.template.php, index.css, ie7.css)
  ! Convert newlines to spaces when converting HTML to BBC in the WYSIWYG editor, as that's how browsers usually render them. (Subs-Editor.php)
  ! Try to do a better job at parsing paragraph breaks when converting HTML to BBC in the WYSIWYG editor. (Subs-Editor.php)
  ! Before trying to parse styling in html_to_bbc, remove certain HTML entities that shouldn't be there to begin with. (Subs-Editor.php) [Bug 4054]
@@ -154,7 +154,7 @@ November 2009
  * Changed the way linktrees are classes in order for there to be more than three linktree instances on a page. (index template, index.css)
  * Rewrote the 'Registering' and 'Forum Tools' parts of the help section to match Curve's look and feel. (Help template, Manual language file, index.css)
  * The board selection part of the advanced search screen could break on some resolutions. (Search template, index.css, compat.css, rtl.css)
- ! Don't typecast when checking for empty variables in the View Member section of the admin centre. (ManageMembers.php) [Bug 3917]
+ ! Don't typecast when checking for empty variables in the View Member section of the admin center. (ManageMembers.php) [Bug 3917]
  ! In some rare cases, creating a cache file for language files failed, leading to undefined indices. (ManageMaintenance.php) [Bug 3951]
  * Curve does not support showing buttons as images, so don't offer it as an option. (Settings template)
  ! Skip separators when saving theme settings, as they aren't actual settings. (Themes.php)
@@ -211,7 +211,7 @@ October 2009
  ! When navigating between pages in member administration, send the data being searched for in request prior to parsing, and parse it every time. (ManageMembers.php)
  * Removed a variable which was probably used for debugging (Post template) [Bug 3889]
  * The email link used wrong parameters (PersonalMessage template) [Bug 3887]
- * Collapsing a month in the statistics centre wasn't saved properly. (Stats template, stats.js) [Bug 3802]
+ * Collapsing a month in the statistics center wasn't saved properly. (Stats template, stats.js) [Bug 3802]
  ! Adding a new button strip wasn't working as expected in the Core theme. (index template, theme.js)
  * ManageBans used an outdated JS function (ManageBans template) [Bug 3882]
  ! Made the parsing of line breaks in textual attachments optional. (Display.php, ManageAttachments.php, Admin language file) [Bug 3865]
@@ -1466,7 +1466,7 @@ September 2008
  & Fixed some misspelled text indices. (ManageAttachments.php, PersonalMessage and ManageSearch template files, PersonalMessage, Search, and Admin language files) [Bug 2530,2518]
  ! Trimmed some of the old holidays. (install files) [Bug 2527]
  & Spelling fix and changing the PHP site link to the non-country specific version. (Help language file) [Bug 2530]
- * Put the Core Features in their own area of the admin centre. (Admin.php, ManageSettings.php, Admin template)
+ * Put the Core Features in their own area of the admin center. (Admin.php, ManageSettings.php, Admin template)
  * Added a new icon for the Core Features area and replaced a few others with some more descriptive icons. (various images)
  + The profile section now uses generic menus. (Profile.php, Profile-Actions.php, Profile-Modify.php, Profile-View.php)
  * Adjusted the profile and paid subscription templates to reflect this. (Profile template, ManagePaid template)
@@ -1940,7 +1940,7 @@ April 2008
  ! Always clean the language class when debugging. (Subs.php)
  ! The spider display setting was unclean and not working right. (Who.php, Search language file) [Bug 1940]
  ! Added CSS class, "normallist", for standard list - that do need formatting. (style.css, Help language file)
- * Link to the right section of the post approval centre when clicking the board/message index link. (BoardIndex, MessageIndex templates) [Bug 1929]
+ * Link to the right section of the post approval center when clicking the board/message index link. (BoardIndex, MessageIndex templates) [Bug 1929]
  * Reattribute post template was invalid, and making it unusable in Firefox. (ManageMaintenance template) [Bug 1916]
  ! Custom profile fields can now be marked as editable by the owner and admin only, invisible to users. (ManageSettings.php, Profile.php, Profile-Modify.php, ManageSettings language file) [Feature 1901]
  ! Stats had an unnecessary group in the query. (Stats.php) [Bug 1830]
@@ -2015,7 +2015,7 @@ March 2008
  ! Reverse the logic behind the priority flag on mails to work to MySQL's natural sorting advantage. (Many files)
  ! Announcements and newsletters are now sent lower priority than notifications as they can go whenever. (ManageNews.php, Post.php)
  ! Make sure password/activation emails are sent right away. (Several files)
- ! Don't show areas of the moderation centre to people who can't access them. (ModerationCenter.php) [Bug 1810]
+ ! Don't show areas of the moderation center to people who can't access them. (ModerationCenter.php) [Bug 1810]
  ! Added variables for IE8. (Load.php, script.js)
  ! Don't throw an error if moderation log data in the database is a little off. (Modlog.php)
  * Themes that didn't use tabs threw some errors on the manage attachments screen. (ManageAttachments template) [Bug 1854]
@@ -2449,7 +2449,7 @@ January 2008
  + Added a theme setting to let SMF know that the theme is using the strict doctype. (index template) [MotM]
  ! When using the strict doctype replace target="_blank" with a javascript solution to maintain validation. (Subs.php) [MotM]
  ! The installer wasn't quite working right at user account creation. (install.php) [Bug 1188]
- * All Moderation Centre templates should be at 100% width to look right with the top bar. (Several files) [Bug 1156]
+ * All Moderation center templates should be at 100% width to look right with the top bar. (Several files) [Bug 1156]
  ! Few errors with the PostgreSQL and SQLite implementations. (Subs-Db-xxx.php) [Bug 1193]
  ! When editing the general permissions also show the default board permission profile. (ManagePermissions.php, ManagePermissions template, ManagePermissions language file) [Bug 1166]
  ! Typo in the ConvertEntities was causing the progress bar in the not_done template to not show. (ManageMaintenance.php) [MotM]
@@ -2482,8 +2482,8 @@ January 2008
  ! Warn the user if the board directory seems wrong before starting an upgrade. (upgrade.php)
  * Point out that setting attachment sizes to zero disable those limits. (Admin language file) [Bug 1200]
  * Make it more obvious how the reported posts are linked by adding a button to launch the report. (details.gif, ModerationCenter template) [Bug 1196]
- & Tweaked a few language strings and style classes to give the moderation centre a more consistant feel. (ModerationCenter language files)
- ! Latest news wasn't working in the moderation centre. (ModerationCenter template)
+ & Tweaked a few language strings and style classes to give the moderation center a more consistant feel. (ModerationCenter language files)
+ ! Latest news wasn't working in the moderation center. (ModerationCenter template)
  ! By default change boardsAllowedTo to also check a groups access rights - not just permissions. (Security.php)
  ! Make sure the moderation log absolutely respects access rights of viewers. (Modlog.php) [Bug 1087]
  ! Don't update columns that don't need to be when doing a replace query. (Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 1194]
@@ -2639,7 +2639,7 @@ December 2007
  ! Use a rel instead of class to control links opening in a new window. (Lots of files)
  ! Profiles were not saving if you allowed people to change their member name. (Profile.php)
  * Visual improvements to the auto suggest feature and some caching tweaks. (suggest.js, PersonalMessage template)
- * Only apply the PNG fix to certain images, and only those in the admin centre - as resizing remote PNGs croaks on IE6. (Admin.php, pngfix.js)
+ * Only apply the PNG fix to certain images, and only those in the admin center - as resizing remote PNGs croaks on IE6. (Admin.php, pngfix.js)
  ! Added the character fix for some more poor implementation email clients (att, comcast, bellsouth). (Subs-Post.php)
  * Added smf_default_theme_url to the list of javascript globals. (index templates)
  & Changed the text in the string identification_by_smf to remove the reference to SMF. (Login language file)
@@ -2672,7 +2672,7 @@ December 2007
  ! Try harder not to timeout when creating a search index. (ManageSearch.php)
  ! Removing an unapproved message could cause an error. (RemoveTopic.php)
  ! Split the Profile source file into three elements, keeping the old file as a master, to stop the include size approaching PHP's limit. (Profile.php, Profile-View.php, Profile-Modify.php, Profile-Actions.php)
- ! Show the personal message settings in the profile as well as in the personal message centre to allow the admin to edit them. (PersonalMessage.php, Profile-Modify.php)
+ ! Show the personal message settings in the profile as well as in the personal message center to allow the admin to edit them. (PersonalMessage.php, Profile-Modify.php)
  * Remove the old template for personal message settings and instead use the generic profile template. (PersonalMessage, Profile template)
  & Move the language strings for personal message settings back to the profile language file. (PersonalMessage, Profile language files)
  * Admin template was linking to credits incorrectly. (Admin template) [Bug 1116]
@@ -2881,7 +2881,7 @@ September 2007
  & New language entries for the above. (Search, Admin language files)
  ! It was possible to get an undefined index error using the mail queue. (Load.php)
  ! The "Send PM" link wasn't showing in profile for non-admins. (Profile.php)
- * Typo on moderation centre template means watched posts read watched users. (ModerationCenter template)
+ * Typo on moderation center template means watched posts read watched users. (ModerationCenter template)
  ! Ensure theme settings, when saved, take effect instantly. (Load.php)
  ! Who is viewing a topic wasn't saving correctly. (Themes.php)
  ! Some input values didn't get escaped properly - reported by Michael Brooks. (Groups.php, PersonalMessages.php, Post.php, Profile.php, QueryString.php, Search.php, Subs-Boards.php, Subs.php)
@@ -4039,7 +4039,7 @@ July 2006
  ! Creating a new board wasn't inheriting permissions correctly. (ManageBoards.php, Subs-Boards.php)
  * Added a little protection against index errors in the Xml template - for stupid people. (Xml template)
  + Added option to installer to collect statistics. (install.php, Stats.php)
- + Added moderation centre interface to group requests, and actually made it all work. (ModerationCenter.php, ModerationCenter template, ModerationCenter language files)
+ + Added moderation center interface to group requests, and actually made it all work. (ModerationCenter.php, ModerationCenter template, ModerationCenter language files)
  ! Emails are sent to inform users when their application for a group is accepted/rejected. (ModerationCenter files)
  ! Think I may have got to the bottom of the "subject/topic cache problem". (SplitTopics.php, MoveTopic.php, RemoveTopic.php)
  ! Don't mark a message as edited if it was done through javascript and not actually changed. (Post.php)
@@ -4057,7 +4057,7 @@ July 2006
  ! Updated all HTML forms to ensure enforcement of the input character set. (several files)
  ! Removed depreciated function is_admin. (Security.php)
  + Moved the "Browse members in group" function into Groups.php and changed it to allow guests, moderators and admin's to have various levels of activity with it. (Groups.php, ManageMembergroups.php)
- ! Moved group related stuff for the moderation centre into Groups.php. (Groups.php, ModerationCenter.php, index.php)
+ ! Moved group related stuff for the moderation center into Groups.php. (Groups.php, ModerationCenter.php, index.php)
  * Added a load of language strings for the above. (ManageMembergroups.php)
  ! Renamed 'show_sp1_info' to 'show_stats_index', and removed the [More Stats] link shown in who's online if the setting is disabled. (BoardIndex, Settings template, install_2.0.sql, upgrade_2-0.sql)
  * Removed smf200 language string in favour of rewritten 'show_stats_index'. (Themes language files)
@@ -4075,7 +4075,7 @@ July 2006
  ! Use the database to determine which SQL files to parse during upgrade. (upgrade.php)
  ! Searching without temporary table support wasn't working properly. (Search.php)
  + Added an email queuing system to SMF, for sending emails out over time. (index.php, Subs-Post.php, ManageNews.php, Subs.php, upgrade_2-0.sql, install_2-0.sql)
- ! Moved mail settings to seperate area on the admin centre. (ManageMail.php, ModSettings.php)
+ ! Moved mail settings to seperate area on the admin center. (ManageMail.php, ModSettings.php)
  & Moved associated language strings for settings. (ManageMail, ModSettings language files)
  ! Merging topics with no polls under strict MySQL settings wasn't working properly. (SplitTopics.php)
  ! The validation code wasn't properly updated when requesting a password reminder, causing a database error in MySQL strict mode. (Reminder.php)
@@ -4088,7 +4088,7 @@ July 2006
  ! Fixed error when creating a new membergroup. (ManageMembergroups.php)
  ! On some servers Server Settings wasn't working. (ManageServer.php)
  ! You couldn't send newsletters to post based membergroups. (ManageNews.php)
- + Added the beginning of a moderation centre. (ModerationCenter.php, ModerationCenter template, ModerationCenter english language, index template, Subs.php)
+ + Added the beginning of a moderation center. (ModerationCenter.php, ModerationCenter template, ModerationCenter english language, index template, Subs.php)
 
 
 SMF 1.1 RC2                                                    December 23, 2005
