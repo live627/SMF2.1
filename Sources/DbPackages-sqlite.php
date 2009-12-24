@@ -618,12 +618,12 @@ function smf_db_alter_table($table_name, $columns)
 	elseif (!file_exists($db_backup_file))
 		@copy($db_file, $db_backup_file);
 
-	// Start
-	$smcFunc['db_transaction']('begin');
-
 	// If we don't have temp tables then everything crapped out.  Just exit.
 	if (empty($temp_table_columns))
 		return false;
+
+	// Start
+	$smcFunc['db_transaction']('begin');
 
 	// Lets create the temporary table.
 	$createTempTable = $smcFunc['db_query']('', '
