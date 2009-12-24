@@ -2304,7 +2304,7 @@ ul.post_options li
 }
 #readbuttons .pagelinks
 {
-	padding-top: 1em;;
+	padding-top: 1em;
 }
 #recent
 {
@@ -3024,7 +3024,6 @@ div#profile_success
 #ip_list li.header
 {
 	display: block;
-	height: .1%;
 }
 
 #ip_list li.header, #ip_list li.ip

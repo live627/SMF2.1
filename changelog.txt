@@ -51,7 +51,8 @@ December 2009
  ! Installer didn't show which files still needed to be chmod'ed. (install.php)
  ! Show proper errors in case something goes wrong during FTP commands in the installer. (install.php)
  ! Added a check whether the FTP chmod actually succeeded in the installer (install.php)
- ! Add more possible callbacks to the AutoSuggest object to allow better customisation. (suggest.js)   
+ ! Add more possible callbacks to the AutoSuggest object to allow better customisation. (suggest.js)
+ * Move .1% css over to IE6 css file, and a extra semi-colon typo (index.css, ie6.css, compat.css) [Bug 3925]
 
 
 November 2009

@@ -122,6 +122,11 @@ h3.catbg, h3.catbg2, h4.catbg
 	word-wrap: break-word;
 }
 
+#ip_list li.header
+{
+	height: .1%;
+}
+
 /* Overrides for the personal messages template
 ------------------------------------------------------- */
 #personal_messages .postarea
