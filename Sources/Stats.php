@@ -52,7 +52,7 @@ function DisplayStats()
 	global $txt, $scripturl, $modSettings, $user_info, $context, $smcFunc;
 
 	isAllowedTo('view_stats');
-	
+
 	if (!empty($_REQUEST['expand']))
 	{
 		$context['robot_no_index'] = true;

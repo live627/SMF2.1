@@ -383,7 +383,7 @@ function template_main()
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var oStatsCenter = new smf_StatsCenter({
 			sTableId: \'stats\',
-			
+
 			reYearPattern: /year_(\d+)/,
 			sYearImageCollapsed: \'expand.gif\',
 			sYearImageExpanded: \'collapse.gif\',

@@ -736,7 +736,7 @@ function template_main()
 				<div class="content" id="msg', $post['id'], '">
 					<div class="floatleft">
 						<h5>', $txt['posted_by'], ': ', $post['poster'], '</h5>
-						<span class="smalltext">&#171;&nbsp;<b>', $txt['on'], ':</b> ', $post['time'], '&nbsp;&#187;</span>
+						<span class="smalltext">&#171;&nbsp;<strong>', $txt['on'], ':</strong> ', $post['time'], '&nbsp;&#187;</span>
 					</div>
 						<ul class="reset smalltext quickbuttons">
 							<li class="quote_button"><a href="#postmodify" onclick="return insertQuoteFast(', $post['id'], ');"><span>',$txt['bbc_quote'],'</span></a></li>

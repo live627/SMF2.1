@@ -335,7 +335,7 @@ function template_manual_board_index()
 						</td>
 					</tr>
 				</tbody>
-				<tbody class="content" id="collapseCategory">	
+				<tbody class="content" id="collapseCategory">
 					<tr class="windowbg2">
 						<td class="icon windowbg">
 							<a href="#">

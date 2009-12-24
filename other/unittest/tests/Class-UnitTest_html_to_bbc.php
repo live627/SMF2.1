@@ -117,7 +117,6 @@
 				'input' => 'a<style>b</style>c',
 				'output' => "ac",
 			),
-			
 		);
 
 		public function initialize()

@@ -99,7 +99,7 @@ function BrowseMailQueue()
 			)
 		);
 	}
-	
+
 	// How many items do we have?
 	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*) AS queue_size, MIN(time_sent) AS oldest

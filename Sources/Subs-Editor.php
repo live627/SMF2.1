@@ -184,7 +184,7 @@ function html_to_bbc($text)
 
 		$text = strtr(implode('', $parts), array('#smf_br_spec_grudge_cool!#' => '<br />'));
 	}
-	
+
 	// Remove scripts, style and comment blocks.
 	$text = preg_replace('~<script[^>]*[^/]?' . '>.*?</script>~i', '', $text);
 	$text = preg_replace('~<style[^>]*[^/]?' . '>.*?</style>~i', '', $text);
@@ -276,7 +276,7 @@ function html_to_bbc($text)
 				{
 					// Remove spaces and convert uppercase letters.
 					$clean_type_value_pair = strtolower(strtr(trim($type_value_pair), '=', ':'));
-					
+
 					// Something like 'font-weight: bold' is expected here.
 					if (strpos($clean_type_value_pair, ':') === false)
 						continue;
@@ -513,15 +513,15 @@ function html_to_bbc($text)
 	// Almost there, just a little more time.
 	if (connection_aborted() && $context['server']['is_apache'])
 		@apache_reset_timeout();
-		
+
 	if (count($parts = preg_split('~<(/?)(li|ol|ul)([^>]*)>~i', $text, null, PREG_SPLIT_DELIM_CAPTURE)) > 1)
 	{
 		// A toggle that dermines whether we're directly under a <ol> or <ul>.
 		$inList = false;
-		
+
 		// Keep track of the number of nested list levels.
 		$listDepth = 0;
-		
+
 		// Map what we can expect from the HTML to what is supported by SMF.
 		$listTypeMapping = array(
 			'1' => 'decimal',
@@ -533,20 +533,20 @@ function html_to_bbc($text)
 			'square' => 'square',
 			'circle' => 'circle',
 		);
-		
+
 		// $i: text, $i + 1: '/', $i + 2: tag, $i + 3: tail.
 		for ($i = 0, $numParts = count($parts) - 1; $i < $numParts; $i += 4)
 		{
 			$tag = strtolower($parts[$i + 2]);
 			$isOpeningTag = $parts[$i + 1] === '';
-			
+
 			if ($isOpeningTag)
 			{
 				switch ($tag)
 				{
 					case 'ol':
 					case 'ul':
-						
+
 						// We have a problem, we're already in a list.
 						if ($inList)
 						{
@@ -558,42 +558,42 @@ function html_to_bbc($text)
 								'',
 							));
 							$numParts = count($parts) - 1;
-							
+
 							// The inlist status changes a bit.
 							$inList = false;
 						}
-						
+
 						// Just starting a new list.
 						else 
 						{
 							$inList = true;
-							
+
 							if ($tag === 'ol')
 								$listType = 'decimal';
 							elseif (preg_match('~type="?(' . implode('|', array_keys($listTypeMapping)) . ')"?~', $parts[$i + 3], $match) === 1)
 								$listType = $listTypeMapping[$match[1]];
 							else
 								$listType = null;
-								
+
 							$listDepth++;
-							
+
 							$parts[$i + 2] = '[list' . ($listType === null ? '' : ' type=' . $listType) . ']' . "\n";
 							$parts[$i + 3] = '';
 						}
-					break;	
+					break;
 
 					case 'li':
 
-						// This is how it should be: a list item inside the list.					
+						// This is how it should be: a list item inside the list.
 						if ($inList)
 						{
 							$parts[$i + 2] = str_repeat("\t", $listDepth) . '[li]';
 							$parts[$i + 3] = '';
-							
+
 							// Within a list item, it's almost as if you're outside.
 							$inList = false;
 						}
-						
+
 						// The li is no direct child of a list.
 						else
 						{
@@ -603,42 +603,42 @@ function html_to_bbc($text)
 								$parts[$i + 2] = '[/li]' . "\n" . str_repeat("\t", $listDepth) . '[li]';
 								$parts[$i + 3] = '';
 							}
-							
+
 							// We're not even near a list.
 							else 
 							{
 								// Quickly create a list with an item.
-								$listDepth++;							
-								
+								$listDepth++;
+
 								$parts[$i + 2] = '[list]' . "\n\t" . '[li]';
 								$parts[$i + 3] = '';
 							}
 						}
-						
+
 					break;
 				}
 			}
-			
+
 			// Handle all the closing tags.
-			else 
+			else
 			{
 				switch ($tag)
 				{
 					case 'ol':
 					case 'ul':
-						
+
 						// As we expected it, closing the list while we're in it.
 						if ($inList)
 						{
 							$inList = false;
-							
+
 							$listDepth--;
-							
+
 							$parts[$i + 1] = '';
 							$parts[$i + 2] = str_repeat("\t", $listDepth) . '[/list]';
 							$parts[$i + 3] = '';
 						}
-						
+
 						else 
 						{
 							// We're in a list item.
@@ -653,11 +653,11 @@ function html_to_bbc($text)
 									'',				// $i + 4
 								));
 								$numParts = count($parts) - 1;
-								
+
 								// Now that we've closed the li, we're in list space.
 								$inList = true;
 							}
-							
+
 							// We're not even in a list, ignore
 							else
 							{
@@ -666,11 +666,10 @@ function html_to_bbc($text)
 								$parts[$i + 3] = '';
 							}
 						}
-					break;	
+					break;
 
 					case 'li':
 
-						
 						if ($inList)
 						{
 							// There's no use for a </li> after <ol> or <ul>, ignore.
@@ -678,7 +677,7 @@ function html_to_bbc($text)
 							$parts[$i + 2] = '';
 							$parts[$i + 3] = '';
 						}
-						
+
 						else
 						{
 							// Remove the trailing breaks from the list item.
@@ -690,11 +689,11 @@ function html_to_bbc($text)
 							// And we're back in the [list] space.
 							$inList = true;
 						}
-						
+
 					break;
-				}				
+				}
 			}
-			
+
 			// If we're in the [list] space, no content is allowed.
 			if ($inList && trim(preg_replace('~\s*<br\s*' . '/?' . '>\s*~', '', $parts[$i + 4])) !== '')
 			{
@@ -708,18 +707,18 @@ function html_to_bbc($text)
 				$numParts = count($parts) - 1;
 			}
 		}
-		
+
 		$text = implode('', $parts);
-		
+
 		if ($inList)
 		{
 			$listDepth--;
 			$text .= str_repeat("\t", $listDepth) . '[/list]';
 		}
-		
+
 		for ($i = $listDepth; $i > 0; $i--)
 			$text .= '[/li]' . "\n" . str_repeat("\t", $i - 1) . '[/list]';
-		
+
 	}
 
 
@@ -1111,7 +1110,7 @@ function legalise_bbc($text)
 
 	// Need to sort the tags my name length.
 	uksort($valid_tags, 'sort_array_length');
-	
+
 	// These inline tags can compete with each other regarding style.
 	$competing_tags = array(
 		'color',
@@ -1137,7 +1136,7 @@ function legalise_bbc($text)
 
 		// A buffer containing all opened block elements.
 		$blockElements = array();
-		
+
 		// A buffer containing the opened inline elements that might compete.
 		$competingElements = array();
 
@@ -1149,7 +1148,7 @@ function legalise_bbc($text)
 			$isClosingTag = $parts[$i + 2] === '/';
 			$isBlockLevelTag = isset($valid_tags[$tag]) && $valid_tags[$tag] && !in_array($tag, $self_closing_tags);
 			$isCompetingTag = in_array($tag, $competing_tags);
-			
+
 			// Check if this might be one of those cleaned out tags.
 			if ($tag === '')
 				continue;
@@ -1282,13 +1281,13 @@ function legalise_bbc($text)
 						{
 							if (!isset($competingElements[$tag]))
 								$competingElements[$tag] = array();
-								
+
 							$competingElements[$tag][] = $parts[$i + 4];
-							
+
 							if (count($competingElements[$tag]) > 1)
 								$parts[$i] .= '[/' . $tag . ']';
 						}
-											
+
 						$inlineElements[$elementContent] = $tag;
 					}
 				}
@@ -1362,15 +1361,14 @@ function legalise_bbc($text)
 							else
 								$parts[$i] .= '[/' . $tagToBeClosed . ']';
 						}
-						
+
 						if ($isCompetingTag && !empty($competingElements[$tag]))
 						{
 							array_pop($competingElements[$tag]);
-							
+
 							if (count($competingElements[$tag]) > 0)
 								$parts[$i + 5] = '[' . $tag . $competingElements[$tag][count($competingElements[$tag]) - 1] . $parts[$i + 5];
 						}
-						
 					}
 
 					// Unexpected closing tag, ex-ter-mi-nate.

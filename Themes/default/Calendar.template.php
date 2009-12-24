@@ -520,11 +520,11 @@ function template_bcd()
 	{
 		echo '
 			<td style="padding-', $alt ? 'right' : 'left', ': 1.5em;" valign="bottom">';
-	
+
 		foreach ($v as $i)
 			echo '
 				<img src="', $context['offimg'], '" alt="" id="', $t, '_', $i, '" /><br />';
-	
+
 		echo '
 			</td>';
 

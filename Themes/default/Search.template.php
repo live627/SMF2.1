@@ -289,7 +289,7 @@ function template_results()
 					<div class="topic_details floatleft" style="width: 94%">
 						<div class="counter">', $message['counter'], '</div>
 						<h5>' ,$topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.msg', $message['id'], '#msg', $message['id'], '">', $message['subject_highlighted'], '</a></h5>
-						<span class="smalltext">&#171;&nbsp;',$txt['by'],'&nbsp;<b>', $message['member']['link'], '</b>&nbsp;',$txt['on'],'&nbsp;<i>', $message['time'], '</i>&nbsp;&#187;</span>
+						<span class="smalltext">&#171;&nbsp;',$txt['by'],'&nbsp;<strong>', $message['member']['link'], '</strong>&nbsp;',$txt['on'],'&nbsp;<em>', $message['time'], '</em>&nbsp;&#187;</span>
 					</div>';
 
 			if (!empty($options['display_quick_mod']))
@@ -384,12 +384,12 @@ function template_results()
 				</div>
 			        <br class="clear" />
 		    </div>';
-		}	
-		
+		}
+
 		echo '
 				  	 <br class="clear" />
 				<div class="smalltext" id="search_jump_to">&nbsp;</div>
-				
+
 		<script type="text/javascript"><!-- // --><![CDATA[
 			if (typeof(window.XMLHttpRequest) != "undefined")
 				aJumpTo[aJumpTo.length] = new JumpTo({
@@ -405,7 +405,7 @@ function template_results()
 					sGoButtonLabel: "', $txt['quick_mod_go'], '"
 				});
 		// ]]></script>';
-				
+
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
 			echo '
 			<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
@@ -439,7 +439,7 @@ function template_results()
 						<div class="counter">', $message['counter'], '</div>
 							<div class="topic_details">
 								<h5>' ,$topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.', $message['start'], ';topicseen#msg', $message['id'], '">', $message['subject_highlighted'], '</a></h5>
-								<span class="smalltext">&#171;&nbsp;', $txt['message'], ' ', $txt['by'], ' <b>', $message['member']['link'], ' </b>', $txt['on'], '&nbsp;<i>', $message['time'], '</i>&nbsp;&#187;</span>
+								<span class="smalltext">&#171;&nbsp;', $txt['message'], ' ', $txt['by'], ' <strong>', $message['member']['link'], ' </strong>', $txt['on'], '&nbsp;<em>', $message['time'], '</em>&nbsp;&#187;</span>
 							</div>
 						<div class="list_posts">', $message['body_highlighted'], '</div>
 					</div>';

@@ -492,7 +492,7 @@ function template_button_strip($button_strip, $direction = 'top', $strip_options
 	// No buttons? No button strip either.
 	if (empty($buttons))
 		return;
-	
+
 	// Make the last one, as easy as possible.
 	$list_item = array('<li>', '<li class="active">');
 	$active_item = array('<li class="last">', '<li class="active last">');

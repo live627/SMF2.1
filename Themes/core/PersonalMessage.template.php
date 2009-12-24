@@ -263,7 +263,7 @@ function template_folder()
 						echo '
 									<a href="', $scripturl, '?action=pm;sa=send;u=', $message['member']['id'], '" title="', $message['member']['online']['label'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/im_' . ($message['member']['online']['is_online'] ? 'on' : 'off') . '.gif" alt="' . $message['member']['online']['label'] . '" />' : $message['member']['online']['label'], '</a>';
 				}
-				
+
 				// Are we showing the warning status?
 				if ($message['member']['can_see_warning'])
 					echo '<br />

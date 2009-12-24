@@ -24,7 +24,7 @@ function template_main()
 					<div class="counter">', $post['counter'], '</div>
 					<div class="topic_details">
 						<h5>', $post['board']['link'], ' / ', $post['link'], '</h5>
-						<span class="smalltext">&#171;&nbsp;', $txt['last_post'], ' ', $txt['by'], ' <b>', $post['poster']['link'], ' </b> ', $txt['on'], '<i> ', $post['time'], '</i>&nbsp;&#187;</span>
+						<span class="smalltext">&#171;&nbsp;', $txt['last_post'], ' ', $txt['by'], ' <strong>', $post['poster']['link'], ' </strong> ', $txt['on'], '<em> ', $post['time'], '</em>&nbsp;&#187;</span>
 					</div>
 					<div class="list_posts">', $post['message'], '</div>
 				</div>';
@@ -123,15 +123,15 @@ function template_unread()
 						</th>';
 		// Show a "select all" box for quick moderation?
 		if ($showCheckboxes)
-				echo '		
+				echo '
 						<th scope="col" class="smalltext" width="22%">
 							<a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a>
 						</th>
 						<th class="smalltext last_th">
 							<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />
-						</th>';						
+						</th>';
 						else
-				echo '			
+				echo '
 						<th scope="col" class="smalltext last_th" width="22%">
 							<a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a>
 						</th>';
@@ -281,7 +281,7 @@ function template_replies()
 	}
 
 	if (!empty($context['topics']))
-	{			
+	{
 		echo '
 			<div class="pagesection">';
 

@@ -339,8 +339,8 @@ function template_showPosts()
 				<div class="content">
 					<div class="counter">', $post['counter'], '</div>
 					<div class="topic_details">
-						<h5><b><a href="', $scripturl, '?board=', $post['board']['id'], '.0">', $post['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $post['topic'], '.', $post['start'], '#msg', $post['id'], '">', $post['subject'], '</a></b></h5>
-						<span class="smalltext">&#171;&nbsp;<b>', $txt['on'], ':</b> ', $post['time'], '&nbsp;&#187;</span>
+						<h5><strong><a href="', $scripturl, '?board=', $post['board']['id'], '.0">', $post['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $post['topic'], '.', $post['start'], '#msg', $post['id'], '">', $post['subject'], '</a></strong></h5>
+						<span class="smalltext">&#171;&nbsp;<strong>', $txt['on'], ':</strong> ', $post['time'], '&nbsp;&#187;</span>
 					</div>
 					<div class="list_posts">';
 
