@@ -160,7 +160,6 @@ function MembergroupIndex()
 						elseif ($rowData[\'id_group\'] == 3)
 							$group_name .= sprintf(\' (<a href="%1$s?action=helpadmin;help=membergroup_moderator" onclick="return reqWin(this.href);">?</a>)\', $scripturl);
 
-
 						return $group_name;
 					'),
 				),

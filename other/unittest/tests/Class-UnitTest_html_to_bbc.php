@@ -153,8 +153,6 @@
 				'{baseURL}' => $baseurl,
 			));
 
-
-
 			$output = html_to_bbc($input);
 			if ($output === $expected_output)
 				return true;
@@ -171,8 +169,6 @@
 				return 'No description available';
 			else
 				return 'Invalid test ID given';
-
-
 
 		}
 	}

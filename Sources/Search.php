@@ -586,7 +586,6 @@ function PlushSearch2()
 	$minMsg = (int) ((1 - $recentPercentage) * $modSettings['maxMsgID']);
 	$recentMsg = $modSettings['maxMsgID'] - $minMsg;
 
-
 	// *** Parse the search query
 
 	// Unfortunately, searching for words like this is going to be slow, so we're blacklisting them.
@@ -917,7 +916,6 @@ function PlushSearch2()
 		'name' => $txt['search_results']
 	);
 
-
 	// *** A last error check
 
 	// One or more search errors? Go back to the first search screen.
@@ -1172,7 +1170,6 @@ function PlushSearch2()
 					$main_query['where'][] = 't.id_topic = {int:topic}';
 					$main_query['parameters']['topic'] = $search_params['topic'];
 				}
-
 
 				// *** Get the subject results.
 				$numSubjectResults = 0;

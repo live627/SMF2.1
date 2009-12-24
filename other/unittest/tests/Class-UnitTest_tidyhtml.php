@@ -36,7 +36,6 @@
 			list($this->_id_msg3, $this->_id_topic2) = $this->_getUnitTestTopic($this->_id_board, $this->_id_member, 'Testing HTML tidy - merge topic', 'This topic is needed to test the second step of a topic merge.');
 			$this->_id_cat = $this->_getUnitTestCatId();
 
-
 			$this->_tests = array(
 				'Admin_1' => array(
 					'name' => 'Admin (1)',
@@ -1120,12 +1119,9 @@
 		{
 			global $cachedir;
 
-
-
 			// Apparently windows can't handle large stdin values, therefor a file streaming is needed..
 			$tempFile = $cachedir . '/tmp_validator_' . md5(mt_rand(0, 10000000000)) . '.html';
 			file_put_contents($tempFile, $html);
-
 
 			$descriptorspec = array(
 			   0 => array('file', $tempFile, 'r'),  // stdin
@@ -1157,7 +1153,6 @@
 			}
 			else
 				$errorList = array('Unable to test page');
-
 
 			@unlink($tempFile);
 

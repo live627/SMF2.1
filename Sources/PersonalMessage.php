@@ -883,7 +883,6 @@ function MessageFolder()
 			);
 		}
 
-
 		// Execute the query!
 		$messages_request = $smcFunc['db_query']('', '
 			SELECT pm.id_pm, pm.subject, pm.id_member_from, pm.body, pm.msgtime, pm.from_name
@@ -1780,7 +1779,6 @@ function MessagePost()
 
 	$modSettings['disable_wysiwyg'] = !empty($modSettings['disable_wysiwyg']) || empty($modSettings['enableBBC']);
 
-
 	// Needed for the WYSIWYG editor.
 	require_once($sourcedir . '/Subs-Editor.php');
 
@@ -2201,7 +2199,6 @@ function MessagePost2()
 
 	// Prevent double submission of this form.
 	checkSubmitOnce('check');
-
 
 	// Do the actual sending of the PM.
 	if (!empty($recipientList['to']) || !empty($recipientList['bcc']))

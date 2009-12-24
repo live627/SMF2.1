@@ -913,7 +913,6 @@ function ForumSettings()
 	else
 		load_database();
 
-
 	$db_type = isset($_POST['db_type']) ? $_POST['db_type'] : $db_type;
 
 	// What host and port are we on?
@@ -2105,7 +2104,6 @@ function template_install_below()
 {
 	global $incontext, $txt;
 
-
 	if (!empty($incontext['continue']) || !empty($incontext['skip']))
 	{
 		echo '
@@ -2138,7 +2136,6 @@ function template_install_below()
 	</body>
 </html>';
 }
-
 
 // Welcome them to the wonderful world of SMF!
 function template_welcome_message()

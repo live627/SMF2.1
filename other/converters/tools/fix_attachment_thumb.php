@@ -54,7 +54,6 @@ show_form();
 
 show_footer();
 
-
 function fixAttachments()
 {
 	global $db_prefix, $context, $smfFunc;

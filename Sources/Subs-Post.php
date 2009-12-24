@@ -3106,7 +3106,6 @@ function loadEmailTemplate($template, $replacements = array(), $lang = '', $load
 		'body' => $txt['emails'][$template]['body'],
 	);
 
-
 	// Add in the default replacements.
 	$replacements += array(
 		'FORUMNAME' => $mbname,

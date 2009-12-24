@@ -44,11 +44,7 @@ function template_ut_index()
 echo '
 	// ]]></script>';
 
-
-
-
 }
-
 
 function template_ut_test_results()
 {
@@ -64,7 +60,5 @@ function template_ut_test_results()
 	</results>
 </smf>';
 }
-
-
 
 ?>

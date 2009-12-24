@@ -234,7 +234,6 @@ function step_3()
 			'sphinx_indexed_msg_until' => '1',
 		));
 
-
 	template_sphinx_config_above('Configure SMF for Sphinx');
 	echo '
 		Your configuration has been saved successfully. The next time you run this tool, your configuration will automatically be loaded.
@@ -291,7 +290,6 @@ function step_3()
 		<tt># search indexer<br />
 		10 3 * * * /usr/local/bin/indexer --config /usr/local/etc/sphinx.conf --rotate smf_base_index<br />
 		0 * * * * /usr/local/bin/indexer --config /usr/local/etc/sphinx.conf --rotate smf_delta_index</tt><br />
-
 
 		';
 	template_sphinx_config_below();
@@ -350,7 +348,6 @@ function step_999()
 		);
 		$weight_total = 100;
 	}
-
 
 	echo '#
 # Sphinx configuration file (sphinx.conf), configured for SMF 1.1
@@ -455,10 +452,6 @@ searchd
 	flush();
 }
 
-
-
-
-
 function template_sphinx_config_above($title)
 {
 	global $smfsite;
@@ -495,8 +488,5 @@ function template_sphinx_config_below()
 	</body>
 </html>';
 }
-
-
-
 
 ?>

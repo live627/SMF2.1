@@ -770,7 +770,6 @@ function MembersAwaitingActivation()
 			'remind' => $txt['admin_browse_w_remind'] . ' ' . $txt['admin_browse_w_email'],
 		);
 
-
 	// Create an option list for actions allowed to be done with selected members.
 	$allowed_actions = '
 			<option selected="selected" value="">' . $txt['admin_browse_with_selected'] . ':</option>
@@ -778,7 +777,6 @@ function MembersAwaitingActivation()
 	foreach ($context['allowed_actions'] as $key => $desc)
 		$allowed_actions .= '
 			<option value="' . $key . '">' . $desc . '</option>';
-
 
 	// Setup the Javascript function for selecting an action for the list.
 	$javascript = '

@@ -1864,7 +1864,7 @@ function prepareDBSettingContext(&$config_vars)
 			if ($divPos !== false)
 			{
 				$context['config_vars'][$config_var[1]]['subtext'] = preg_replace('~</?div[^>]*>~', '', substr($context['config_vars'][$config_var[1]]['label'], $divPos));
-				$context['config_vars'][$config_var[1]]['label'] =  substr($context['config_vars'][$config_var[1]]['label'], 0, $divPos);
+				$context['config_vars'][$config_var[1]]['label'] = substr($context['config_vars'][$config_var[1]]['label'], 0, $divPos);
 			}
 		}
 	}

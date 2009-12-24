@@ -107,7 +107,6 @@ function template_admin()
 			</div>
 		</div>';
 
-
 	echo '
 		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
@@ -183,7 +182,6 @@ function template_admin()
 					</div>
 				'), ',
 				sUpdateNotificationLink: ', JavaScriptEscape($scripturl . '?action=admin;area=packages;pgdownload;auto;package=%package%;' . $context['session_var'] . '=' . $context['session_id']), '
-
 
 			});
 		// ]]></script>';
@@ -292,7 +290,6 @@ function template_credits()
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">';
-
 
 	foreach ($context['credits'] as $section)
 	{
@@ -1463,7 +1460,6 @@ function template_add_language()
 						<div class="smalltext error">', $txt['add_language_error_' . $context['smf_error']], '</div>';
 
 	echo '
-
 
 					</fieldset>
 					<p>

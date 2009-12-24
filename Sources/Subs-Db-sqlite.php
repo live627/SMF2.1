@@ -415,7 +415,6 @@ function smf_db_transaction($type = 'commit', $connection = null)
 	// Decide which connection to use
 	$connection = $connection == null ? $db_connection : $connection;
 
-
 	if ($type == 'begin')
 	{
 		$db_in_transact = true;

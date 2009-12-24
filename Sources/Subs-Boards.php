@@ -966,7 +966,6 @@ function reorderBoards()
 	);
 }
 
-
 // Fixes the children of a board by setting their child_levels to new values.
 function fixChildren($parent, $newLevel, $newParent)
 {

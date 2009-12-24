@@ -1183,7 +1183,6 @@ if (empty($preparsing))
 					if (isset($eblah['uploaddir']))
 						$row['temp_filename'] = $message[8];
 
-
 					$block[] = addslashes_recursive($row);
 
 					if (count($block) > 100)

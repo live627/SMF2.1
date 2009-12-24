@@ -1503,7 +1503,6 @@ function EditMessageIcons()
 	}
 	$smcFunc['db_free_result']($request);
 
-
 	// Submitting a form?
 	if (isset($_POST[$context['session_var']]))
 	{

@@ -108,7 +108,6 @@ function template_group_requests_block()
 				<a href="', $request['request_href'], '">', $request['group']['name'], '</a> ', $txt['mc_groupr_by'], ' ', $request['member']['link'], '
 			</li>';
 
-
 	// Don't have any watched users right now?
 	if (empty($context['group_requests']))
 		echo '
@@ -143,7 +142,6 @@ function template_reported_posts_block()
 				<li class="smalltext">
 					<a href="', $report['report_href'], '">', $report['subject'], '</a> ', $txt['mc_reportedp_by'], ' ', $report['author']['link'], '
 				</li>';
-
 
 	// Don't have any watched users right now?
 	if (empty($context['reported_posts']))

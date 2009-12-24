@@ -338,7 +338,6 @@ function template_info_center()
 			</div>';
 	}
 
-
 	// Show statistical style information...
 	if ($settings['show_stats_index'])
 	{

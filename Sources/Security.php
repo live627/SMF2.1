@@ -465,7 +465,6 @@ function is_not_banned($forceCheck = false)
 			'language' => $user_info['language'],
 		);
 
-
 		// SMF's Wipe 'n Clean(r) erases all traces.
 		$_GET['action'] = '';
 		$_GET['board'] = '';

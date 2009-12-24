@@ -149,7 +149,6 @@ function template_search()
 			'mlist_search' => array('text' => 'mlist_search', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' .';sa=search', 'active' => true),
 		);
 
-
 	// Start the submission form for the search!
 	echo '
 	<form action="', $scripturl, '?action=mlist;sa=search" method="post" accept-charset="', $context['character_set'], '">

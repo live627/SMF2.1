@@ -2968,7 +2968,6 @@ function profileSendActivation()
 	obExit();
 }
 
-
 // Function to allow the user to choose group membership etc...
 function groupMembership($memID)
 {

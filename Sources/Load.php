@@ -163,7 +163,6 @@ function reloadSettings()
 			$modSettings[$row[0]] = $row[1];
 		$smcFunc['db_free_result']($request);
 
-
 		// Do a few things to protect against missing settings or settings with invalid values...
 		if (empty($modSettings['defaultMaxTopics']) || $modSettings['defaultMaxTopics'] <= 0 || $modSettings['defaultMaxTopics'] > 999)
 			$modSettings['defaultMaxTopics'] = 20;
@@ -2154,7 +2153,6 @@ function template_include($filename, $once = false)
 		<hr />
 
 		<div style="margin: 0 20px;"><tt>', strtr(strtr($error, array('<strong>' . $boarddir => '<strong>...', '<strong>' . strtr($boarddir, '\\', '/') => '<strong>...')), '\\', '/'), '</tt></div>';
-
 
 			// I know, I know... this is VERY COMPLICATED.  Still, it's good.
 			if (preg_match('~ <strong>(\d+)</strong><br( /)?' . '>$~i', $error, $match) != 0)

@@ -100,7 +100,6 @@ function doStep1()
 			SET id_parent = id_parent + 65536
 			WHERE id_parent != 0");
 
-
 	show_pause(2);
 }
 

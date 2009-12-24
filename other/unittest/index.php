@@ -5,11 +5,6 @@
 	$templateDir = './templates';
 	$jsURL = './templates/scripts';
 
-
-
-
-
-
 	require_once('../../SSI.php');
 
 	$context['template_layers'] = array('html');
@@ -17,15 +12,11 @@
 	$settings['template_dirs'] = array_merge($settings['template_dirs'], array($templateDir));
 	loadTemplate('UnitTest');
 
-
 	$subAction = isset($_GET['sa']) && function_exists('do_' . $_GET['sa']) ? 'do_' . $_GET['sa'] : 'do_index';
 
 	$subAction();
 
 	obExit(true);
-
-
-
 
 	function do_index()
 	{
@@ -94,7 +85,6 @@
 			else
 				$subTests = $availableSubTests;
 
-
 			// Just do this one test.
 			$tests[] = array(
 				'id' => substr($className, 9),
@@ -114,8 +104,6 @@
 					'sub_tests' => array_keys($test['sub_tests']),
 				);
 		}
-
-
 
 		// Now let's do the tests shall we?
 		$testResults = array();

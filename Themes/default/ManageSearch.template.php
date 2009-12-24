@@ -114,7 +114,6 @@ function template_select_search_method()
 				<div class="content">
 					<dl class="settings">
 
-
 			';
 	if (!empty($context['table_info']))
 		echo '

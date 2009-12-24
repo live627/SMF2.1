@@ -165,7 +165,6 @@ function template_main()
 					</ul>
 				</div>';
 
-
 			echo '
 				<p>
 					<input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="input_check" />
@@ -255,7 +254,7 @@ function template_results()
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
 			echo '
 	<form action="', $scripturl, '?action=quickmod" method="post" accept-charset="', $context['character_set'], '" name="topicForm">';
-        
+
 		echo '
 		<h3 class="catbg"><span class="left"></span>
 		    <span class="floatright">';

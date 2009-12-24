@@ -186,7 +186,6 @@ function template_edit_group()
 							</fieldset>
 						</dd>';
 
-
 	if ($context['group']['id'] != 3 && $context['group']['id'] != 4)
 		echo '
 						<dt id="group_moderators_text">
@@ -415,7 +414,6 @@ function template_group_members()
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
-
 
 			<br />
 			<h4 class="titlebg"><span class="left"></span>

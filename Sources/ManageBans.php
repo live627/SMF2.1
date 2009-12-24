@@ -1153,7 +1153,6 @@ function BanBrowseTriggers()
 
 	$context['selected_entity'] = isset($_REQUEST['entity']) && in_array($_REQUEST['entity'], array('ip', 'hostname', 'email', 'member')) ? $_REQUEST['entity'] : 'ip';
 
-
 	$listOptions = array(
 		'id' => 'ban_trigger_list',
 		'title' => $txt['ban_trigger_browse'],

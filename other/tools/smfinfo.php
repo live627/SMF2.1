@@ -46,7 +46,6 @@ $txt['lang_char_set'] = 'Language Character Set';
 $txt['db_char_set'] = 'Database Character Set';
 $txt['db_table_info'] = 'Detailed Table Information';
 
-
 // SMF Specific Info
 $txt['smf_relevant'] = 'Relevant SMF Settings';
 $txt['sef_urls'] = 'SEF URLs';

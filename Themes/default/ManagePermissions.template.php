@@ -770,7 +770,6 @@ function template_modify_group_simple($type)
 			document.getElementById("group_select_deny_', $id_group, '").style.display = "";';
 				}
 
-
 				$perm_ids = array();
 				$count = 0;
 				foreach ($permissionGroup['permissions'] as $permission)

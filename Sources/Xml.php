@@ -49,7 +49,6 @@ function XMLhttpMain()
 	$sub_actions[$_REQUEST['sa']]['function']();
 }
 
-
 // Get a list of boards and categories used for the jumpto dropdown.
 function GetJumpTo()
 {

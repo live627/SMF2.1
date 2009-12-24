@@ -888,7 +888,6 @@ function ConvertEntities()
 					$insertion_variables['where_'  . $key] = $row[$key];
 				}
 
-
 				// Update the row.
 				if (!empty($changes))
 					$smcFunc['db_query']('', '
@@ -1763,13 +1762,13 @@ function MaintainMassMoveTopics()
 	checkSession('request');
 
 	// Set up to the context.
-	$context['page_title'] =  $txt['not_done_title'];
+	$context['page_title'] = $txt['not_done_title'];
 	$context['continue_countdown'] = '3';
 	$context['continue_post_data'] = '';
 	$context['continue_get_data'] = '';
 	$context['sub_template'] = 'not_done';
 	$context['start'] = empty($_REQUEST['start']) ? 0 : (int) $_REQUEST['start'];
-	$context['start_time'] =  time();
+	$context['start_time'] = time();
 
 	// First time we do this?
 	$id_board_from = isset($_POST['id_board_from']) ? (int) $_POST['id_board_from'] : (int) $_REQUEST['id_board_from'];

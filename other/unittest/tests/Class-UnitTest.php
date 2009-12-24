@@ -25,7 +25,6 @@
 			return 'No description available';
 		}
 
-
 		// Get a the board ID of the unit testing board, or create such a thing
 		// if it didn't exist yet.
 		protected function _getUnitTestBoardId()

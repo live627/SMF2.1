@@ -1915,7 +1915,6 @@ function template_issueWarning()
 						return false
 				}
 
-
 				// Get the position of the container.
 				contain = document.getElementById(\'warning_contain\');
 				position = 0;

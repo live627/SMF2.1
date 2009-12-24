@@ -276,8 +276,6 @@ function list_getMailQueueSize()
 	return $mailQueueSize;
 }
 
-
-
 function ModifyMailSettings($return_config = false)
 {
 	global $txt, $scripturl, $context, $settings, $birthdayEmails, $modSettings;

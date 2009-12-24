@@ -219,7 +219,6 @@ function template_control_richedit($editor_id, $smileyContainer = null, $bbcCont
 				});';
 		}
 
-
 		// Now it's all drawn out we'll actually setup the box.
 		echo '
 				var oEditorHandle_', $editor_id, ' = new smc_Editor({

@@ -91,7 +91,6 @@ $txt['theme_dir'] = 'Default Theme Directory';
 $txt['theme_path_url_settings'] = 'Paths &amp; URLs For Themes';
 $txt['theme_path_url_settings_info'] = 'These are the paths and URLs to your SMF themes.';
 
-
 // Fix Database title to use $db_type if available
 if (!empty($db_type) && isset($txt['db_' . $db_type]))
 	$txt['database_settings'] = $txt['db_' . $db_type] . ' ' . $txt['database_settings'];
@@ -701,7 +700,6 @@ function set_settings()
 
 	// Make sure it works.
 	require(dirname(__FILE__) . '/Settings.php');
-
 
 	$setString = array();
 	foreach ($db_updates as $var => $val)

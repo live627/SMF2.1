@@ -289,7 +289,6 @@ if (empty($preparsing))
 		$_REQUEST['start'] = 0;
 	}
 
-
 	function convertStep7()
 	{
 		global $to_prefix, $from_prefix, $sets;

@@ -92,7 +92,6 @@ function template_view_package()
 	echo '
 			<div class="information">';
 
-
 	if (empty($context['actions']) && empty($context['database_changes']))
 		echo '
 				<strong>', $txt['corrupt_compatable'], '</strong>
@@ -625,7 +624,6 @@ function template_browse()
 			<h3 class="titlebg"><span class="left"></span>
 				', $txt['modification_package'], '
 			</h3>
-
 
 			<table class="table_grid" width="100%">
 			<thead>

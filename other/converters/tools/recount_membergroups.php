@@ -264,7 +264,6 @@ function doStep3()
 				foreach ($temp as $key => $value)
 					$temp[$key] = (int) $value;
 
-
 				// This is easy, just find the info in the array.
 				$user_groups = '';
 				foreach ($temp as $gtemp)

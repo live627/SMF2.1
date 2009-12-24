@@ -41,7 +41,6 @@ function template_show_list($list_id = null)
 			</div>';
 	}
 
-
 	if (!empty($cur_list['items_per_page']) || isset($cur_list['additional_rows']['bottom_of_list']))
 	{
 		echo '

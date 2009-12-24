@@ -131,7 +131,6 @@ function deleteMembers($users, $check_not_admin = false)
 		isAllowedTo('profile_remove_any');
 	}
 
-
 	// Get their names for logging purposes.
 	$request = $smcFunc['db_query']('', '
 		SELECT id_member, member_name, CASE WHEN id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups) != 0 THEN 1 ELSE 0 END AS is_admin

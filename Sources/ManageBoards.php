@@ -291,7 +291,6 @@ function EditCategory()
 			$context['category']['children'][] = str_repeat('-', $boards[$child_board]['level']) . ' ' . $boards[$child_board]['name'];
 	}
 
-
 	$prevCat = 0;
 	foreach ($cat_tree as $catid => $tree)
 	{
@@ -341,7 +340,6 @@ function EditCategory2()
 		$catOptions['cat_name'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['cat_name']);
 
 		$catOptions['is_collapsible'] = isset($_POST['collapse']);
-
 
 		if (isset($_POST['add']))
 			createCategory($catOptions);
@@ -601,7 +599,7 @@ function EditBoard2()
 				fatal_lang_error('mangled_post', false);
 
 			$boardOptions['move_to'] = $_POST['placement'];
-			$boardOptions['target_board'] =  (int) $_POST['board_order'];
+			$boardOptions['target_board'] = (int) $_POST['board_order'];
 		}
 
 		// Checkboxes....

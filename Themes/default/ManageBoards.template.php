@@ -459,7 +459,6 @@ function template_modify_board()
 	if (!empty($context['board']['is_recycle']))
 		echo '<div class="information">', $txt['mboards_recycle_disabled_delete'], '</div>';
 
-
 	echo '
 					<input type="hidden" name="rid" value="', $context['redirect_location'], '" />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';

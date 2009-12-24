@@ -1509,7 +1509,6 @@ function ssi_todaysHolidays($output_method = 'echo')
 	);
 	$return = cache_quick_get('calendar_index_offset_' . ($user_info['time_offset'] + $modSettings['time_offset']), 'Subs-Calendar.php', 'cache_getRecentEvents', array($eventOptions));
 
-
 	if ($output_method != 'echo')
 		return $return['calendar_holidays'];
 

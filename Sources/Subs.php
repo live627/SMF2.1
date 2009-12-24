@@ -121,7 +121,6 @@ if (!defined('SMF'))
 		- should not be called on huge arrays (bigger than like 10 elements.)
 		- returns an array containing each permutation.
 
-
 	string parse_bbc(string message, bool smileys = true, string cache_id = '', array parse_tags = null)
 		- this very hefty function parses bbc in message.
 		- only parses bbc tags which are not disabled in disabledBBC.
@@ -1452,7 +1451,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					else
 						$data[1] = (int) $data[1];') : create_function('&$tag, &$data, $disabled', '
 					if ($data[1] == \'top\' || (is_numeric($data[1]) && $data[1] < 50))
-						$data[1] =  \'0 -2px 1px\';
+						$data[1] = \'0 -2px 1px\';
 					elseif ($data[1] == \'right\' || (is_numeric($data[1]) && $data[1] < 100))
 						$data[1] = \'2px 0 1px\';
 					elseif ($data[1] == \'bottom\' || (is_numeric($data[1]) && $data[1] < 190))
@@ -2360,7 +2359,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 	// Close any remaining tags.
 	while ($tag = array_pop($open_tags))
 		$message .= "\n" . $tag['after'] . "\n";
-
 
 	// Parse the smileys within the parts where it can be done safely.
 	if ($smileys === true)

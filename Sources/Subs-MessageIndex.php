@@ -24,7 +24,6 @@
 
 /*
 
-
 */
 
 function getBoardList($boardListOptions = array())

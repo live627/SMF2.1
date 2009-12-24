@@ -564,7 +564,7 @@ function html_to_bbc($text)
 						}
 
 						// Just starting a new list.
-						else 
+						else
 						{
 							$inList = true;
 
@@ -605,7 +605,7 @@ function html_to_bbc($text)
 							}
 
 							// We're not even near a list.
-							else 
+							else
 							{
 								// Quickly create a list with an item.
 								$listDepth++;
@@ -639,7 +639,7 @@ function html_to_bbc($text)
 							$parts[$i + 3] = '';
 						}
 
-						else 
+						else
 						{
 							// We're in a list item.
 							if ($listDepth > 0)
@@ -720,8 +720,6 @@ function html_to_bbc($text)
 			$text .= '[/li]' . "\n" . str_repeat("\t", $i - 1) . '[/list]';
 
 	}
-
-
 
 	// I love my own image...
 	while (preg_match('~<img\s+([^<>]*)/*>~i', $text, $matches) === 1)

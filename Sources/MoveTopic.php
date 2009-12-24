@@ -142,7 +142,6 @@ function MoveTopic()
 		'name' => $txt['move_topic'],
 	);
 
-
 	$context['back_to_topic'] = isset($_REQUEST['goback']);
 
 	if ($user_info['language'] != $language)

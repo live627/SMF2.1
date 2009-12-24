@@ -57,7 +57,6 @@ if (!defined('SMF'))
 		- sends them an email.
 */
 
-
 function getServerVersions($checkFor)
 {
 	global $txt, $db_connection, $_PHPA, $smcFunc, $memcached, $modSettings;
@@ -244,7 +243,6 @@ function getFileVersions(&$versionOptions)
 	}
 	return $version_info;
 }
-
 
 // Update the Settings.php file.
 function updateSettingsFile($config_vars)

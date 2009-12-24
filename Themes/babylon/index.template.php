@@ -317,7 +317,6 @@ function template_body_above()
 		// Show the menu here, according to the menu sub template.
 		template_menu();
 
-
 	// Define the upper_section toggle in JavaScript.
 	echo '
 		<script type="text/javascript"><!-- // --><![CDATA[

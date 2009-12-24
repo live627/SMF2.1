@@ -67,7 +67,6 @@ if (!empty($_GET['step']) && ($_GET['step'] == 1 || $_GET['step'] == 2))
 
 template_convert_below();
 
-
 function initialize_inputs()
 {
 	global $sourcedir, $smcFunc;
@@ -2347,7 +2346,7 @@ function removeAllAttachments()
 	{
 		$filename = $row['filename'];
 		$id_attach = $row['id_attach'];
-		$physical_filename =  getAttachmentFilename($filename, $id_attach);
+		$physical_filename = getAttachmentFilename($filename, $id_attach);
 
 		if (file_exists($physical_filename))
 			@unlink($physical_filename);

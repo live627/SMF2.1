@@ -2666,7 +2666,6 @@ function parse_sql($filename)
 	{
 		$do_current = $substep >= $_GET['substep'];
 
-
 		// Get rid of any comments in the beginning of the line...
 		if (substr(trim($line), 0, 2) === '/*')
 			$line = preg_replace('~/\*.+?\*/~', '', $line);
@@ -2922,7 +2921,6 @@ function upgrade_query($string, $unbuffered = false)
 				return true;
 		}
 	}
-
 
 	// Get the query string so we pass everything.
 	$query_string = '';
@@ -4303,7 +4301,6 @@ function template_database_changes()
 			echo '
 		<strong id="info1">Executing upgrade script <span id="file_done">', $upcontext['cur_file_num'], '</span> of ', $upcontext['file_count'], '.</strong>';
 
-
 		echo '
 		<h3 id="info2"><strong>Executing:</strong> &quot;<span id="cur_item_name">', $upcontext['current_item_name'], '</span>&quot; (<span id="item_num">', $upcontext['current_item_num'], '</span> of <span id="total_items"><span id="item_count">', $upcontext['total_items'], '</span>', $upcontext['file_count'] > 1 ? ' - of this script' : '', ').</span></h3>
 		<br /><span id="commess" style="font-weight: bold; display: ', !empty($upcontext['changes_complete']) || $upcontext['current_debug_item_num'] == $upcontext['debug_items'] ? 'inline' : 'none', ';">Database Updates Complete! Click Continue to Proceed.</span>';
@@ -4328,8 +4325,6 @@ function template_database_changes()
 			<strong style="text-decoration: underline;">Error!</strong><br />
 			<div style="padding-left: 6ex;" id="error_message">', isset($upcontext['error_message']) ? $upcontext['error_message'] : 'Unknown Error!', '</div>
 		</div>';
-
-
 
 	// We want to continue at some point!
 	$upcontext['continue'] = $support_js ? 2 : 1;

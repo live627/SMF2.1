@@ -2749,7 +2749,6 @@ function JavaScriptModify()
 	if (isset($_POST['sticky']) && !allowedTo('make_sticky'))
 		unset($_POST['sticky']);
 
-
 	if (empty($post_errors))
 	{
 		$msgOptions = array(
@@ -2780,7 +2779,6 @@ function JavaScriptModify()
 		// If nothing was changed there's no need to add an entry to the moderation log.
 		else
 			$moderationAction = false;
-
 
 		modifyPost($msgOptions, $topicOptions, $posterOptions);
 

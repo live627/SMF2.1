@@ -959,7 +959,6 @@ if (empty($preparsing))
 		doBlock('messages', $block);
 	}
 
-
 	function convertStep10()
 	{
 		global $to_prefix, $yabb, $block_settings;

@@ -1605,7 +1605,6 @@ function ManageAttachmentPaths()
 					continue;
 			}
 
-
 			$new_dirs[$id] = $path;
 		}
 
