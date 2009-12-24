@@ -21,7 +21,7 @@ December 2009
  * Non-gd Captcha needed an extra character (GenericControls template)
  ! The sourcedir wan't always defined in the third step of the install process. (install.php)
  ! Subtext for karma_good was set to icq so it remove it (Profile-Modify.php)
- * The background colours used on the unread topics pages were inconsistent with those on the message index. (Recent template) [Bug 4056]
+ * The background colors used on the unread topics pages were inconsistent with those on the message index. (Recent template) [Bug 4056]
  * It was not possible to re-enable user theme variant selection after previously disabling it. (Themes template) [Bug 3648]
  * Revamped the show posts listings to clean it up and make it easier to read. (Profile-View.php, Profile template, Recent template, index.css, rtl.css)
  * Replaced hardcoded tabindexes in templates with dynamic ones. (several templates)
@@ -259,7 +259,7 @@ October 2009
  ! The html_to_bbc function doesn't parse lists with only opening tags. (Subs-Editor) [Bug 3211-3]
  * The button strip was outputting empty lists if no buttons were present. (index template, Compat template)
  ! Rewrote the list processing part of the html_to_bbc function. (Subs-Editor.php) [Bug 3211-4,3724]
- * Replaced the bbc button backgrounds with brighter variants to match the post interface's background colour better. (bbc_bg.gif, bbc_hoverbg.gif)
+ * Replaced the bbc button backgrounds with brighter variants to match the post interface's background color better. (bbc_bg.gif, bbc_hoverbg.gif)
  ! Don't include code, cdata, comment or style bocks in the html_to_bbc function. (Subs-Editor.php) [Bug 3211]
  ! Make sure lists are being properly closed by html_to_bbc function. (Subs-Editor.php)
  ! In some cases a LEFT JOIN will remove filesorting (Recent.php)
@@ -1696,7 +1696,7 @@ July 2008
 
 June 2008
 --------------------------------------------------------------------------------
- + It is now possible for themes to define "variations" (Such as colours) and have SMF do all the UI for it. (Themes.php, Load.php, Themes and index templates, Themes language file)
+ + It is now possible for themes to define "variations" (Such as colors) and have SMF do all the UI for it. (Themes.php, Load.php, Themes and index templates, Themes language file)
  ! Added some compression to the character set conversion schemas. (script.js)
  * Image inconsistency on ManagePermissions. (ManagePermissions template) [Bug 2147]
  ! Fixed the auto suggest not supporting non-UTF8 character sets. (Subs-Editor.php) [Bug 1895]
@@ -4117,7 +4117,7 @@ SMF 1.1 RC2                                                    December 23, 2005
  * The add poll button wasn't always shown in NDT. (Display template)
  ! Fixed PHP 5.1 problem in feature settings. (ModSettings.php)
  ! Added large_text as a possible setting type, to generate a textarea if desired. (ManageServer.php, Admin template)
- * Changed the colouring/template of personal messages to make it more consistant - and work well in other themes. (PersonalMessage template)
+ * Changed the coloring/template of personal messages to make it more consistant - and work well in other themes. (PersonalMessage template)
  ! Fixed inconsistancy with use of newtime and new_from causing error in recent messages. (Recent.php, Profile.php, Recent Templates)
  ! Empty logs was cleaning a non-existant log. (Admin.php)
  ! Recent topics was showing topics that were already marked as read. (Recent.php)

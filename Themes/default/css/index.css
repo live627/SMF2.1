@@ -52,7 +52,7 @@ form
 	margin: 0;
 }
 
-/* We can style the different types of input buttons to be uniform thoughout different browsers and their colour themes.
+/* We can style the different types of input buttons to be uniform thoughout different browsers and their color themes.
 	.button_submit - covers input[type=submit], input[type=button], button[type=submit] and button[type=button] in all browsers
 	.button_reset  - covers input[type=reset] and button[type=reset] thoughout all browsers
 	.input_check   - covers input[type=checkbox] thoughout all browsers
@@ -389,7 +389,7 @@ code
 	color: black !important;
 }
 
-/* Generic, mostly colour-related, classes.
+/* Generic, mostly color-related, classes.
 ------------------------------------------------------- */
 
 .titlebg, .titlebg2, thead tr.titlebg th, tr.titlebg td, tr.titlebg2 td
