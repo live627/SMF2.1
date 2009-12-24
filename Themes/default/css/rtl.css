@@ -100,12 +100,7 @@ h4.titlebg img.icon
 	margin: 5px 0 0 8px;
 }
 
-img#upshrink_ic, img#newsupshrink
-{
-	float: left;
-	margin: 10px 0 0 5px;
-}
-table.table_list a.unreadlink,table.table_list a.collapse
+table.table_list a.unreadlink, table.table_list a.collapse
 {
 	float: left;
 }
@@ -277,14 +272,6 @@ img#upshrink_ic, img#newsupshrink
 {
 	float: right;
 	margin: 10px 0 0 5px;
-}
-table.table_list a.unreadlink,table.table_list a.collapse
-{
-	float: left;
-}
-table.table_list a.collapse
-{
-	margin: 10px 1em 0 5px;
 }
 
 /* Styles for the message (topic) index.

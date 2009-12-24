@@ -841,7 +841,7 @@ img#upshrink_ic, img#newsupshrink
 	float: right;
 	margin: 10px 5px 0 0;
 }
-table.table_list a.unreadlink,table.table_list a.collapse
+table.table_list a.unreadlink, table.table_list a.collapse
 {
 	float: right;
 }
@@ -1484,7 +1484,7 @@ table.table_list p
 	padding: 0;
 	margin: 0;
 }
-table.table_list td,table.table_list th
+table.table_list td, table.table_list th
 {
 	padding: 5px;
 }
@@ -1654,19 +1654,6 @@ form#ic_login ul li label
 	line-height: 1px;
 }
 
-#upshrinkHeaderIC p.pminfo
-{
-	margin: 0;
-	padding: 0.5em;
-}
-table.table_list a.unreadlink,table.table_list a.collapse
-{
-	float: right;
-}
-table.table_list a.collapse
-{
-	margin: 10px 5px 0 1em;
-}
 img.new_posts
 {
 	padding: 0 0.1em;

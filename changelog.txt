@@ -55,6 +55,7 @@ December 2009
  * Move .1% css over to IE6 css file, and a extra semi-colon typo (index.css, ie6.css, compat.css) [Bug 3925]
  ! Incorrect pm count (requires "Recount all forum totals and statistics" to fix existing incorrect pm counts) (PersonalMessage.php) [Bug 4043]
  ! Hanging transaction in Sqlite (DbPackages-sqlite) [Bug 4086]
+ * Duplicate css and misspelt class (ie6.css, index.css, rtl.css) [Not tracked]
 
 
 November 2009
