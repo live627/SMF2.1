@@ -510,7 +510,9 @@ CREATE INDEX {$db_prefix}attachments_attachment_type ON {$db_prefix}attachments 
 /******************************************************************************/
 
 ---# Removing index on hits...
-DROP INDEX IF EXISTS {$db_prefix}log_activity_hits;
+---{
+$smcFunc['db_remove_index']($db_prefix . 'log_activity', $db_prefix . 'log_activity_hits');
+---}
 ---#
 
 /******************************************************************************/
