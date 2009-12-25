@@ -510,7 +510,7 @@ CREATE INDEX {$db_prefix}attachments_attachment_type ON {$db_prefix}attachments 
 /******************************************************************************/
 
 ---# Removing index on hits...
-DROP INDEX {$db_prefix}log_activity_hits;
+DROP INDEX IF EXISTS {$db_prefix}log_activity_hits;
 ---#
 
 /******************************************************************************/

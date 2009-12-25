@@ -738,7 +738,7 @@ ALTER COLUMN ip TYPE int8;
 
 ---# Removing index on hits...
 ALTER TABLE {$db_prefix}log_activity
-DROP INDEX hits;
+DROP INDEX IF EXISTS hits;
 ---#
 
 /******************************************************************************/

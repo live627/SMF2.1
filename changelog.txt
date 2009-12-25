@@ -60,6 +60,7 @@ December 2009
  * Nought is nought, so remove extraneous units from (Css files) (Reported by Sverre) [Not Tracked]
  * Use shorthand color codes where possible, lowercase codes (like xhtml), have consistency with order border: width, style, color (Reported by Sverre) [Not tracked]
  ! Undefined index 'current_area' (Subs-Menu.php) [Bug 4119]
+ ! Drop index for Pgl and sqlite breaks upgrade if the index doesn't exist, so use IF EXISTS (postgresql/sqlite upgrade sql files)
 
 
 November 2009
