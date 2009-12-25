@@ -57,6 +57,7 @@ December 2009
  ! Hanging transaction in Sqlite (DbPackages-sqlite) [Bug 4086]
  * Duplicate css and misspelt class (ie6.css, index.css, rtl.css) [Not tracked]
  ! Removed even more extraneous spaces Thx Nao, (Many files) [Bug 4122]
+ * Nought is nought, so remove extraneous units from (Css files) (Reported by Sverre) [Not Tracked]
 
 
 November 2009

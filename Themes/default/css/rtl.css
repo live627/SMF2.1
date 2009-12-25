@@ -149,7 +149,7 @@ table.table_list a.collapse
 #menu_toggle span
 {
 	position: relative;
-	left: 0px;
+	left: 0;
 }
 
 /* Styles for the standard button lists.

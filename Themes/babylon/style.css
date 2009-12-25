@@ -41,8 +41,8 @@ body, td, th
 body
 {
 	background-color: white;
-	margin: 0px;
-	padding: 0px;
+	margin: 0;
+	padding: 0;
 }
 
 /* Input boxes - just a bit smaller than normal so they align well. */

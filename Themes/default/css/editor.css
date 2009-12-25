@@ -16,15 +16,15 @@
 
 .rich_editor p
 {
-	margin: 0px;
+	margin: 0;
 }
 
 .richedit_resize
 {
 	height: 5px;
-	font-size: 0px;
+	font-size: 0;
 	background: #eeeeee url(../images/bbc/resize-handle.gif) no-repeat 50% 1px;
 	border: 1px solid #dddddd;
-	border-top-width: 0px;
+	border-top-width: 0;
 	cursor: s-resize;
 }

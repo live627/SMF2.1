@@ -69,7 +69,7 @@ dl.settings img
 #adm_container
 {
 	float: right;
-	margin-left: 0px;
+	margin-left: 0;
 	margin-right: 10px;
 }
 #main_menu li

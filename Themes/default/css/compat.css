@@ -400,7 +400,7 @@ table.table_list td,table.table_list th
 }
 table.table_list tbody.header td
 {
-	padding: 0px;
+	padding: 0;
 }
 table.table_list tbody.content td.stats
 {
@@ -1605,7 +1605,7 @@ dl
 }
 #detailedinfo div.content dl.noborder
 {
-	border-bottom: 0px;
+	border-bottom: 0;
 }
 #detailedinfo div.content dt.clear
 {
@@ -1844,7 +1844,7 @@ div.core_posts
 
 #tracking div.content dl
 {
-	border-bottom: 0px;
+	border-bottom: 0;
 	margin: 0;
 	padding: 0;
 }

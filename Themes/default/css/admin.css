@@ -519,7 +519,7 @@ ul.moderation_notes
 }
 ul.moderation_notes li
 {
-	padding: 4px 0px 4px 4px;
+	padding: 4px 0 4px 4px;
 	border-bottom: 1px solid #cccccc;
 }
 .notes

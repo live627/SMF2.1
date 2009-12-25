@@ -85,8 +85,8 @@ h3.catbg, h3.catbg2, h4.catbg
 ------------------------------------------------------- */
 #forumposts .postarea
 {
-	margin-left: 0px;
-	margin-right: 0px;
+	margin-left: 0;
+	margin-right: 0;
 	float: right;
 }
 
@@ -131,7 +131,7 @@ h3.catbg, h3.catbg2, h4.catbg
 ------------------------------------------------------- */
 #personal_messages .postarea
 {
-	margin-left: 0px;
-	margin-right: 0px;
+	margin-left: 0;
+	margin-right: 0;
 	float: right;
 }
