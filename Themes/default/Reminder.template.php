@@ -81,7 +81,7 @@ function template_set_password()
 	<br />
 	<form action="', $scripturl, '?action=reminder;sa=setpassword2" name="reminder_form" id="reminder_form" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder login">
-			<h3 class="titlebg"><span class="left"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $context['page_title'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
@@ -104,7 +104,7 @@ function template_set_password()
 				</dl>
 				<p class="align_center"><input type="submit" value="', $txt['save'], '" class="button_submit" /></p>
 			</div>
-			<span class="upperframe"><span></span></span>
+			<span class="lowerframe"><span></span></span>
 		</div>
 		<input type="hidden" name="code" value="', $context['code'], '" />
 		<input type="hidden" name="u" value="', $context['memID'], '" />
@@ -131,7 +131,7 @@ function template_ask()
 	<br />
 	<form action="', $scripturl, '?action=reminder;sa=secret2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 		<div class="tborder login">
-			<h3 class="titlebg"><span class="left"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['authentication_reminder'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
