@@ -62,6 +62,7 @@ December 2009
  ! Undefined index 'current_area' (Subs-Menu.php) [Bug 4119]
  ! Drop index for Pgl and sqlite breaks upgrade if the index doesn't exist, so use IF EXISTS (postgresql/sqlite upgrade sql files)
  * upperframe should be lowerframe, and should be catbg not titlebg (Reminder.template.php) (Reported by Brettflan & Max_74)[Not Tracked]
+ ! For Newsletters use IN instead of LIKE so that mysql can use the email_address index (ManageNews.php) (Reported by Ensiferous) [Not tracked]
 
 
 November 2009

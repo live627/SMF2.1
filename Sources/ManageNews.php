@@ -386,7 +386,7 @@ function ComposeMailing()
 	$count = 0;
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$condition_array[] = 'email_address LIKE {string:email_' . $count . '}';
+		$condition_array[] = '{string:email_' . $count . '}';
 		$condition_array_params['email_' . $count++] = $row['email_address'];
 	}
 
@@ -395,7 +395,7 @@ function ComposeMailing()
 		$request = $smcFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}members
-			WHERE ' . implode(' OR ', $condition_array),
+			WHERE email_address IN(' . implode(', ', $condition_array) .')',
 			$condition_array_params
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
