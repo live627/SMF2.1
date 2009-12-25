@@ -236,7 +236,7 @@ function createMenu($menuData, $menuOptions = array())
 	$menu_context['base_url'] = isset($menuOptions['base_url']) ? $menuOptions['base_url'] : $scripturl . '?action=' . $menu_context['current_action'];
 
 	// What about the toggle url?
-	$menu_context['toggle_url'] = isset($menuOptions['toggle_url']) ? $menuOptions['toggle_url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . (!empty($menu_context['current_subsection']) ? ';sa=' . $menu_context['current_subsection'] : '') . $menu_context['extra_parameters'] . ';togglebar';
+	$menu_context['toggle_url'] = isset($menuOptions['toggle_url']) ? $menuOptions['toggle_url'] : $menu_context['base_url'] . (!empty($menu_context['current_area']) ? ';area=' . $menu_context['current_area'] : '') . (!empty($menu_context['current_subsection']) ? ';sa=' . $menu_context['current_subsection'] : '') . $menu_context['extra_parameters'] . ';togglebar';
 
 	// If we didn't find the area we were looking for go to a default one.
 	if (isset($backup_area) && empty($found_section))

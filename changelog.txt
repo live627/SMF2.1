@@ -59,6 +59,7 @@ December 2009
  ! Removed even more extraneous spaces Thx Nao, (Many files) [Bug 4122]
  * Nought is nought, so remove extraneous units from (Css files) (Reported by Sverre) [Not Tracked]
  * Use shorthand color codes where possible, lowercase codes (like xhtml), have consistency with order border: width, style, color (Reported by Sverre) [Not tracked]
+ ! Undefined index 'current_area' (Subs-Menu.php) [Bug 4119]
 
 
 November 2009
