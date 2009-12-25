@@ -1122,7 +1122,7 @@ function show_header()
 		<style type="text/css">
 			body
 			{
-				background-color: #E9EEF2;
+				background-color: #e9eef2;
 				margin: 0px;
 				padding: 0px;
 			}
@@ -1136,7 +1136,7 @@ function show_header()
 			{
 				background-image: url(Themes/default/images/catbg.jpg);
 				background-repeat: repeat-x;
-				background-color: #88A6C0;
+				background-color: #88a6c0;
 				padding: 22px 4% 12px 4%;
 				color: white;
 				font-family: Georgia, serif;
@@ -1151,7 +1151,7 @@ function show_header()
 			div.error_message
 			{
 				border: 2px dashed red;
-				background-color: #E1E1E1;
+				background-color: #e1e1e1;
 				margin: 1ex 4ex;
 				padding: 1.5ex;
 			}

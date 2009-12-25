@@ -198,7 +198,7 @@ function initialize_inputs()
 	<head>
 		<title>', htmlspecialchars($_GET['pass_string']), '</title>
 	</head>
-	<body style="background-color: #D4D4D4; margin-top: 16%; text-align: center; font-size: 16pt;">
+	<body style="background-color: #d4d4d4; margin-top: 16%; text-align: center; font-size: 16pt;">
 		<strong>', htmlspecialchars($_GET['pass_string']), '</strong>
 	</body>
 </html>';
@@ -2146,7 +2146,7 @@ function template_welcome_message()
 	<script type="text/javascript" src="http://www.simplemachines.org/smf/current-version.js?version=' . $GLOBALS['current_smf_version'] . '"></script>
 	<form action="', $incontext['form_url'], '" method="post">
 		<p>', sprintf($txt['install_welcome_desc'], $GLOBALS['current_smf_version']), '</p>
-		<div id="version_warning" style="margin: 2ex; padding: 2ex; border: 2px dashed #A92174; color: black; background-color: #FBBBE2; display: none;">
+		<div id="version_warning" style="margin: 2ex; padding: 2ex; border: 2px dashed #a92174; color: black; background-color: #fbbbe2; display: none;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
 			<strong style="text-decoration: underline;">', $txt['error_warning_notice'], '</strong><br />
 			<div style="padding-left: 6ex;">

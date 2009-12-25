@@ -344,7 +344,7 @@ function template_webslice_recent_posts()
 
 	echo '
 	<div style="width: 100%; height: 100%; border: 1px solid black; padding: 0; margin: 0 0 0 0; font: 100.01%/100% Verdana, Helvetica, sans-serif;">
-		<div style="background-color: #080436; color: #FFFFFF; padding: 4px;">
+		<div style="background-color: #080436; color: #ffffff; padding: 4px;">
 			', cleanXml($txt['recent_posts']), '
 		</div>';
 

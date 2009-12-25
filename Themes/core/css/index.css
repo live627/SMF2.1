@@ -4,7 +4,7 @@
 /* Normal, standard links. */
 a:link, a:visited
 {
-	color: #476C8E;
+	color: #476c8e;
 	text-decoration: none;
 }
 a:hover
@@ -21,7 +21,7 @@ table
 /* Set a fontsize that will look the same in all browsers. */
 body
 {
-	background: #E5E5E8;
+	background: #e5e5e8;
 	font: 95%/90% Verdana, Helvetica, sans-serif;
 	margin: 0;
 	padding: 12px 0 4px 0;
@@ -35,10 +35,10 @@ body#help_popup
 	min-width: 0;
 }
 
-/* use dark grey for the text, leaving black for headers etc */
+/* use dark grey for the text, leaving #000 for headers etc */
 body, td, th, tr
 {
-	color: #444444;
+	color: #444;
 }
 
 /* lets give all forms zero padding/margins */
@@ -60,7 +60,7 @@ form
 input, button, select, textarea
 {
 	font: 90%/105% verdana, Helvetica, sans-serif;
-	color: #000000;
+	color: #000;
 }
 
 /* The font size of textareas should be just a little bit larger. */
@@ -81,21 +81,21 @@ hr, .hrcolor
 {
 	height: 1px;
 	border: 0;
-	color: #666666;
-	background-color: #666666;
+	color: #666;
+	background-color: #666;
 }
 
-/* By default set the color on these tags as black. */
+/* By default set the color on these tags as #000. */
 h1, h2, h3, h4, h5, h6
 {
-	color: black;
+	color: #000;
 	font-size: 1em;
 	margin: 0;
 	padding: 0;
 }
 .content fieldset
 {
-	border: groove #fff 2px;
+	border: 2px groove #fff;
 	padding: 1em;
 	margin: 0 0 0.3em 0;
 }
@@ -214,7 +214,7 @@ ul.reset, ul.reset li
 /* A quote, perhaps from another post. */
 .codeheader, .quoteheader a
 {
-	color: #000000;
+	color: #000;
 	text-decoration: none;
 	font-style: normal;
 	font-weight: bold;
@@ -224,9 +224,9 @@ ul.reset, ul.reset li
 }
 blockquote
 {
-	color: #000000;
-	background-color: #D7DAEC;
-	border: 1px solid #000000;
+	color: #000;
+	background-color: #d7daec;
+	border: 1px solid #000;
 	margin: 1px;
 	padding: 1px;
 	font-size: x-small;
@@ -237,11 +237,11 @@ blockquote
 code
 {
 	display: block;
-	color: #000000;
+	color: #000;
 	font-family: "courier new", "times new roman", monospace;
 	font-size: x-small;
 	background: #dddddd;
-	border: 1px solid #000000;
+	border: 1px solid #000;
 	line-height: 1.3em;
 	padding: 1px;
 	overflow: auto;
@@ -306,16 +306,16 @@ code
 /* Highlighted text - such as search results. */
 .highlight
 {
-	background-color: yellow;
+	background-color: #ff0;
 	font-weight: bold;
-	color: black;
+	color: #000;
 }
 
 /* A more discreet highlight color, for selected membergroups etc. */
 .highlight2
 {
-	background-color: #B3F4B0;
-	color: black;
+	background-color: #b3f4b0;
+	color: #000;
 }
 
 /* Generic, mostly color-related, classes.
@@ -323,14 +323,14 @@ code
 
 .titlebg, .titlebg2, tr.titlebg td, tr.titlebg2 td
 {
-	color: black;
+	color: #000;
 	font-family: Verdana, Helvetica, sans-serif;
 	font-weight: bold;
 	background: url(../images/titlebg.jpg) #E9F0F6 repeat-x;
 }
 .catbg, .catbg2, tr.catbg td, tr.catbg2 td, tr.catbg th, tr.catbg2 th
 {
-	color: white;
+	color: #fff;
 	font-family: Verdana, Helvetica, sans-serif;
 	font-weight: bold;
 	background: url(../images/catbg.jpg) #88A6C0 repeat-x;
@@ -351,11 +351,11 @@ tr.catbg td, tr.catbg2 td, td.catbg, td.catbg2, tr.catbg th, tr.catbg2 th, th.ca
 }
 tr.titlebg td a, tr.titlebg2 td a
 {
-	color: black;
+	color: #000;
 }
 tr.catbg td a, tr.catbg2 td a, .catbg a
 {
-	color: white;
+	color: #fff;
 }
 tr.catbg th.smalltext
 {
@@ -364,18 +364,18 @@ tr.catbg th.smalltext
 /* Alternating backgrounds for posts, and several other sections of the forum. */
 .windowbg, #preview_body, .content, .roundframe
 {
-	color: #000000;
-	background-color: #ECEDF3;
+	color: #000;
+	background-color: #ecedf3;
 }
 .windowbg2
 {
-	color: #000000;
-	background-color: #F6F6F6;
+	color: #000;
+	background-color: #f6f6f6;
 }
 .windowbg3
 {
-	color: #000000;
-	background-color: #E0E1E8;
+	color: #000;
+	background-color: #e0e1e8;
 }
 
 /* the page navigation area */
@@ -403,14 +403,14 @@ table.table_grid thead tr.catbg th.smalltext
 /* Color for background of posts requiring approval */
 .approvebg
 {
-	color: #000000;
-	background-color: #F6E0D4;
+	color: #000;
+	background-color: #f6e0d4;
 }
 /* Color for background of *topics* requiring approval */
 .approvetbg
 {
-	color: #000000;
-	background-color: #E4A17C;
+	color: #000;
+	background-color: #e4a17c;
 }
 /* sticky posts have a different background */
 .stickybg
@@ -447,7 +447,7 @@ table.table_grid thead tr.catbg th.smalltext
 	clear: right;
 	padding: 1em 0 3px 0;
 	width: 98%;
-	border-top: solid 1px #666;
+	border-top: 1px solid #666;
 	line-height: 1.4em;
 	font-size: 0.85em;
 }
@@ -456,7 +456,7 @@ table.table_grid thead tr.catbg th.smalltext
 	clear: right;
 	padding: 1em 0 3px 0;
 	width: 98%;
-	border-top: solid 1px #666;
+	border-top: 1px solid #666;
 	line-height: 1.4em;
 	font-size: 0.85em;
 }
@@ -476,7 +476,7 @@ table.table_grid thead tr.catbg th.smalltext
 /* Calendar colors for birthdays, events and holidays */
 .birthday
 {
-	color: #920AC4;
+	color: #920ac4;
 }
 
 .event
@@ -497,7 +497,7 @@ table.table_grid thead tr.catbg th.smalltext
 
 .warn_moderate
 {
-	color: #FFA500;
+	color: #ffa500;
 }
 
 .warn_watch, .success
@@ -523,7 +523,7 @@ a.moderation_link, a.moderation_link:visited
 	padding: 1em;
 	font-size: 0.9em;
 	line-height: 1.5em;
-	border: solid 1px #bbb;
+	border: 1px solid #bbb;
 	background: #f5f5f0;
 	margin: 0 0 1em 0;
 }
@@ -533,7 +533,7 @@ a.moderation_link, a.moderation_link:visited
 	padding: 1em;
 	font-size: 0.9em;
 	line-height: 1.5em;
-	border: solid 1px #bbb;
+	border: 1px solid #bbb;
 	background: #f0f6f0;
 	margin: 0 0 1em 0;
 }
@@ -546,8 +546,8 @@ a.moderation_link, a.moderation_link:visited
 ------------------------------------------------------- */
 #ajax_in_progress
 {
-	background: #32CD32;
-	color: white;
+	background: #32cd32;
+	color: #fff;
 	text-align: center;
 	font-weight: bold;
 	font-size: 18pt;
@@ -560,7 +560,7 @@ a.moderation_link, a.moderation_link:visited
 
 #ajax_in_progress a
 {
-	color: white;
+	color: #fff;
 	text-decoration: underline;
 	font-size: smaller;
 	float: right;
@@ -570,12 +570,12 @@ a.moderation_link, a.moderation_link:visited
 table.table_grid
 {
 	border-collapse: collapse;
-	border: solid 1px #adadad;
+	border: 1px solid #adadad;
 }
 table.table_grid td
 {
 	padding: 3px;
-	border: solid 1px #adadad;
+	border: 1px solid #adadad;
 }
 
 /* Lists with settings use these a lot.
@@ -642,19 +642,19 @@ dl.settings img
 ------------------------------------------------------- */
 .auto_suggest_div
 {
-	border: 1px solid black;
+	border: 1px solid #000;
 	position: absolute;
 	visibility: hidden;
 }
 .auto_suggest_item
 {
-	background-color: #DDDDDD;
+	background-color: #ddd;
 }
 .auto_suggest_item_hover
 {
-	background-color: #888888;
+	background-color: #888;
 	cursor: pointer;
-	color: #EEEEEE;
+	color: #eee;
 }
 
 /* Styles for the standard dropdown menus.
@@ -743,9 +743,9 @@ ul.admin_menu li ul
 	position: absolute;
 	/* IE6 needs a fixed width to prevent the menu from going haywire */
 	width: 19em;
-	border: solid 1px #808080;
-	border-left: solid 2px #6888A7;
-	background: #F8F8FB;
+	border: 1px solid #808080;
+	border-left: 2px solid #6888a7;
+	background: #f8f8fb;
 }
 
 ul.admin_menu li.chosen ul
@@ -782,7 +782,7 @@ ul.admin_menu li ul li a.chosen
 
 ul.admin_menu li ul li a:hover
 {
-	background-color: #C8E2FB;
+	background-color: #c8e2fb;
 	text-decoration: none;
 }
 
@@ -797,9 +797,9 @@ ul.admin_menu li ul li ul, ul.admin_menu li ul li.over ul
 	display: none;
 	position: absolute;
 	top: -999em;
-	border: solid 1px #A0A0A0;
-	border-left: solid 2px #6888A7;
-	background: #FFF;
+	border: 1px solid #a0a0a0;
+	border-left: 2px solid #6888a7;
+	background: #fff;
 }
 
 ul.admin_menu li ul li:hover ul, ul.admin_menu li ul li.over ul
@@ -830,7 +830,7 @@ div#menu_toggle
 div#menu_toggle a
 {
 	display: block;
-	background: #E5E5E8 url(../images/mirrortab_last.gif) top right no-repeat;
+	background: #e5e5e8 url(../images/mirrortab_last.gif) top right no-repeat;
 	padding: 8px 12px 3px 6px;
 }
 
@@ -1093,7 +1093,7 @@ h1#forum_name
 #user_section #myavatar
 {
 	padding: 0.7em;
-	border-right: solid 1px #ADADAD;
+	border-right: 1px solid #adadad;
 	margin: 0 0.5em 0 0;
 	float: left;
 }
@@ -1145,7 +1145,7 @@ h1#forum_name
 {
 	float: left;
 	display: block;
-	color: white;
+	color: #fff;
 	font-size: 0.8em;
 	font-family: tahoma, sans-serif;
 	text-transform: uppercase;
@@ -1214,11 +1214,11 @@ ul.linktree li
 }
 ul.linktree li a
 {
-	color: black;
+	color: #000;
 }
 ul.linktree li a:hover
 {
-	color: #CC3333;
+	color: #cc3333;
 }
 ul.linktree li span
 {
@@ -1239,7 +1239,7 @@ ul.linktree li span
 {
 	text-align: center;
 	display: inline;
-	border-right: solid 1px #888;
+	border-right: 1px solid #888;
 	margin: 0;
 	padding: 0 4px 0 2px;
 }
@@ -1340,18 +1340,18 @@ h3.catbg img.icon, div.titlebg img.icon, h3.catbg img
 /* These are used primarily for titles, but also for headers (the row that says what everything in the table is.) */
 .titlebg, tr.titlebg th, tr.titlebg td, .titlebg2, tr.titlebg2 th, tr.titlebg2 td
 {
-	color: black;
+	color: #000;
 	font-style: normal;
 	background: url(../images/titlebg.jpg) #E9F0F6 repeat-x;
-	border-bottom: solid 1px #9BAEBF;
-	border-top: solid 1px #FFFFFF;
+	border-bottom: 1px solid #9baebf;
+	border-top: 1px solid #fff;
 	padding-left: 10px;
 	padding-right: 10px;
 }
 .titlebg, .titlebg a:link, .titlebg a:visited
 {
 	font-weight: bold;
-	color: black;
+	color: #000;
 	font-style: normal;
 }
 
@@ -1362,7 +1362,7 @@ h3.catbg img.icon, div.titlebg img.icon, h3.catbg img
 /* same as titlebg, but used where bold text is not needed */
 .titlebg2 a:link, .titlebg2 a:visited
 {
-	color: black;
+	color: #000;
 	font-style: normal;
 	text-decoration: underline;
 }
@@ -1377,20 +1377,20 @@ h3.catbg img.icon, div.titlebg img.icon, h3.catbg img
 .catbg, tr.catbg td, .catbg3, tr.catbg3 td
 {
 	background: url(../images/catbg.jpg) #88A6C0 repeat-x;
-	color: #ffffff;
+	color: #fff;
 	padding-left: 10px;
 	padding-right: 10px;
 }
 .catbg2, tr.catbg2 td
 {
 	background: url(../images/catbg2.jpg) #A1BFD9 repeat-x;
-	color: #ffffff;
+	color: #fff;
 	padding-left: 10px;
 	padding-right: 10px;
 }
 .catbg, .catbg2, .catbg3
 {
-	border-bottom: solid 1px #375576;
+	border-bottom: 1px solid #375576;
 }
 .catbg, .catbg2
 {
@@ -1399,12 +1399,12 @@ h3.catbg img.icon, div.titlebg img.icon, h3.catbg img
 .catbg3, tr.catbg3 td, .catbg3 a:link, .catbg3 a:visited
 {
 	font-size: 95%;
-	color: white;
+	color: #fff;
 	text-decoration: none;
 }
 .catbg a:link, .catbg a:visited, .catbg2 a:link, .catbg2 a:visited
 {
-	color: white;
+	color: #fff;
 	text-decoration: none;
 }
 .catbg a:hover, .catbg2 a:hover, .catbg3 a:hover
@@ -1530,7 +1530,7 @@ table.boardsframe td.lastpost
 {
 	margin-left: 30px;
 	padding: 0.3em;
-	border-left: solid #a0a0a0 1px;
+	border-left: 1px solid #a0a0a0;
 	min-height: 25px;
 	height: auto !important;
 }
@@ -1736,7 +1736,7 @@ div#pollmoderation
 	margin: 2ex;
 	padding: 1ex;
 	border: 2px dashed #cc3344;
-	color: black;
+	color: #000;
 	font-weight: bold;
 }
 #forumposts h3.catbg3
@@ -1815,7 +1815,7 @@ ul.postingbuttons li
 }
 .topborder
 {
-	border-top: solid 1px #bbb;
+	border-top: 1px solid #bbb;
 }
 .moderatorbar
 {
@@ -1843,7 +1843,7 @@ ul.postingbuttons li
 	text-align: center;
 	float: left;
 	width: 72%;
-	border-left: solid 1px #aaa;
+	border-left: 1px solid #aaa;
 }
 
 #quickReplyOptions #quickReplyContent textarea, #quickReplyOptions #quickReplyContent input
@@ -1899,7 +1899,7 @@ form#postmodify .roundframe .errorbox
 #post_header
 {
 	margin-bottom: 0.5em;
-	border-bottom: 1px solid #666666;
+	border-bottom: 1px solid #666;
 	width: 85%;
 	padding: 0.5em;
 	overflow: hidden;
@@ -1950,7 +1950,7 @@ ul.post_options li
 }
 #postMoreOptions
 {
-	border-bottom: 1px solid #666666;
+	border-bottom: 1px solid #666;
 	padding: 0.5em;
 }
 
@@ -1959,7 +1959,7 @@ ul.post_options li
 	overflow: hidden;
 	margin: .5em 0;
 	padding: 0;
-	border-bottom: 1px solid #666666;
+	border-bottom: 1px solid #666;
 	padding: 0.5em;
 }
 
@@ -2000,14 +2000,14 @@ ul.post_options li
 	margin-bottom: 0.5em;
 	border: none;
 	width: 85%;
-	border-bottom: 1px solid #666666;
+	border-bottom: 1px solid #666;
 	padding: 0.5em;
 	clear: both;
 }
 #post_event legend
 {
 	font-weight: bold;
-	color: black;
+	color: #000;
 }
 #post_event div.event_options
 {
@@ -2045,14 +2045,14 @@ ul.post_options li
 	margin-bottom: 0.5em;
 	border: none;
 	width: 85%;
-	border-bottom: 1px solid #666666;
+	border-bottom: 1px solid #666;
 	padding: 0.5em;
 	clear: both;
 }
 #edit_poll legend
 {
 	font-weight: bold;
-	color: black;
+	color: #000;
 }
 #edit_poll div.poll_options
 {
@@ -2268,10 +2268,10 @@ dl.register_form dd
 {
 	padding: 4px;
 	width: 32ex;
-	background-color: white;
-	color: black;
+	background-color: #fff;
+	color: #000;
 	margin-left: 5ex;
-	border: 1px solid black;
+	border: 1px solid #000;
 }
 
 /* Styles for maintenance mode.
@@ -2374,7 +2374,7 @@ tr.windowbg td, tr.windowbg2 td
 }
 .topic_table table thead
 {
-	border-bottom: solid 1px white;
+	border-bottom: 1px solid #fff;
 }
 /* the subject column */
 .topic_table td
@@ -2426,7 +2426,7 @@ tr.windowbg td, tr.windowbg2 td
 {
 	padding: 1em;
 	border: 1px solid #cc3344;
-	color: black;
+	color: #000;
 	background-color: #ffe4e9;
 	margin-bottom: 1em;
 }
@@ -2472,7 +2472,7 @@ dl
 {
 	padding: 1px;
 	border: 1px solid #696969;
-	background-color: #ECEDF3;
+	background-color: #ecedf3;
 }
 #profileview .content
 {
@@ -2546,7 +2546,7 @@ dl
 	overflow: auto;
 	margin: 0 0 18px 0;
 	padding: 0 0 15px 0;
-	border-bottom: 1px #ccc solid;
+	border-bottom: 1px solid #ccc;
 }
 #detailedinfo div.content dt, #tracking div.content dt
 {
@@ -2604,7 +2604,7 @@ dl
 }
 #main_admsection #basicinfo
 {
-	border-bottom: 1px #ccc solid;
+	border-bottom: 1px solid #ccc;
 }
 #main_admsection #basicinfo h4
 {
@@ -2759,18 +2759,18 @@ div#profile_success
 	padding: 0.2em 0.5em 0.1em 0.2em;
 	font-size: 2.2em;
 	font-weight: bold;
-	color: #354C5F;
+	color: #354c5f;
 	float: left;
 }
 .list_posts 
 {
-	border-top: 1px solid #ADADAD;
+	border-top: 1px solid #adadad;
 	padding-top: 1em;
 	margin-top: 0.5em;
 }
 div.core_posts
 {
-	border: 1px solid #ADADAD;
+	border: 1px solid #adadad;
 	margin-bottom: 3px;
 }
 .topic h4
@@ -2791,7 +2791,7 @@ div.core_posts
 	margin: 0 0 -500px;
 	padding: 1% 1% 500px;
 	clear: both;
-	border-top: 1px solid white;
+	border-top: 1px solid #fff;
 }
 
 #permissions dd
@@ -2800,7 +2800,7 @@ div.core_posts
 	float: left;
 	margin: 0;
 	padding: 1%;
-	border-top: 1px solid white;
+	border-top: 1px solid #fff;
 }
 
 #tracking div.content dl
@@ -2962,7 +2962,7 @@ dl.stats dd
 	font-size: 0.9em;
 	display: block;
 	text-align: left;
-	color: white;
+	color: #fff;
 	font-weight: bold;
 	background-position: top center;
 }
@@ -2981,7 +2981,7 @@ dl.stats dd
 /* Used to indicate the current day in the grid. */
 .calendar_today
 {
-	background-color: #FFFFFF;
+	background-color: #fff;
 }
 
 #month_grid
@@ -3083,7 +3083,7 @@ dl.stats dd
 
 a.modify_event
 {
-	color: #FF0000;
+	color: red;
 }
 
 span.hidelink
@@ -3247,7 +3247,7 @@ span.hidelink
 #helpmain h2.section
 {
 	font-size: 18px;
-	border-bottom: solid 1px;
+	border-bottom: 1px solid;
 	padding-bottom: 0.5em;
 	margin: 0 0 0.5em 0;
 }
@@ -3333,13 +3333,13 @@ span.hidelink
 /* definitions for the main tab, active means the tab reflects which page is displayed */
 .maintab_first, .maintab_back, .maintab_last, .maintab_active_first, .maintab_active_back, .maintab_active_last
 {
-	color: white;
+	color: #fff;
 	text-transform: uppercase;
 	vertical-align: top;
 }
 .maintab_back, .maintab_active_back
 {
-	color: white;
+	color: #fff;
 	text-decoration: none;
 	font-size: 9px;
 	vertical-align: top;
@@ -3379,7 +3379,7 @@ span.hidelink
 /* how links behave in main tab. */
 .maintab_back a:link, .maintab_back a:visited, .maintab_active_back a:link, .maintab_active_back a:visited
 {
-	color: white;
+	color: #fff;
 	text-decoration: none;
 }
 
@@ -3391,13 +3391,13 @@ span.hidelink
 /* definitions for the mirror tab */
 .mirrortab_first, .mirrortab_back, .mirrortab_last, .mirrortab_active_first, .mirrortab_active_back, .mirrortab_active_last
 {
-	color: white;
+	color: #fff;
 	text-transform: uppercase;
 	vertical-align: top;
 }
 .mirrortab_back, .mirrortab_active_back
 {
-	color: white;
+	color: #fff;
 	text-decoration: none;
 	font-size: 9px;
 	vertical-align: bottom;
@@ -3437,7 +3437,7 @@ span.hidelink
 /* how links behave in mirror tab. */
 .mirrortab_back a:link, .mirrortab_back a:visited, .mirrortab_active_back a:link, .mirrortab_active_back a:visited
 {
-	color: white;
+	color: #fff;
 	text-decoration: none;
 }
 
@@ -3524,7 +3524,7 @@ ul.nolist li
 /* This is used for tables that have a grid/border background color (such as the topic listing.) */
 .bordercolor
 {
-	background-color: #ADADAD;
+	background-color: #adadad;
 	padding: 0;
 }
 
@@ -3533,5 +3533,5 @@ ul.nolist li
 {
 	padding: 1px;
 	border: 1px solid #696969;
-	background-color: #FFFFFF;
+	background-color: #fff;
 }

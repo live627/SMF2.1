@@ -73,7 +73,7 @@ h3.catbg, h3.catbg2, h4.catbg
 }
 #messageindex table th
 {
-	border-bottom: solid 1px white;
+	border-bottom: 1px solid #fff;
 }
 #topic_icons .description
 {

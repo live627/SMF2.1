@@ -207,7 +207,7 @@ function show_header()
 		<style type="text/css">
 			body
 			{
-				background-color: #E5E5E8;
+				background-color: #e5e5e8;
 				margin: 0px;
 				padding: 0px;
 			}
@@ -221,7 +221,7 @@ function show_header()
 			{
 				background-image: url(Themes/default/images/catbg.jpg);
 				background-repeat: repeat-x;
-				background-color: #88A6C0;
+				background-color: #88a6c0;
 				padding: 22px 4% 12px 4%;
 				color: white;
 				font-family: Georgia, serif;
@@ -237,7 +237,7 @@ function show_header()
 			{
 				position: relative;
 				border: 1px solid gray;
-				background-color: #F6F6F6;
+				background-color: #f6f6f6;
 				margin: 1ex 0;
 				padding: 1.2ex;
 				z-index: 1;
@@ -258,7 +258,7 @@ function show_header()
 			}
 			tr.row1
 			{
-				background: #E5E5E8;
+				background: #e5e5e8;
 			}
 			/* This is for the tabbed layout */
 			.dynamic-tab-pane-control.tab-pane{
@@ -347,7 +347,7 @@ function show_header()
 
 			table.adminlist tr.row0
 			{
-				background-color:#F5F5F5;
+				background-color:#f5f5f5;
 			}
 
 			table.adminlist tr.row1

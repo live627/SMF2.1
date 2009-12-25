@@ -264,7 +264,7 @@ require(dirname(__FILE__) . '/SSI.php');
 
 		<br />
 		<br />
-		<span style="color: #CCCCCC; font-size: smaller;">
+		<span style="color: #cccccc; font-size: smaller;">
 			<?php
 				echo 'This page took ', round(array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)), 4), ' seconds to load.<br />';
 			?>

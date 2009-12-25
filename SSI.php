@@ -1534,7 +1534,7 @@ function ssi_todaysEvents($output_method = 'echo')
 	{
 		if ($event['can_edit'])
 			echo '
-	<a href="' . $event['modify_href'] . '" style="color: #FF0000;">*</a> ';
+	<a href="' . $event['modify_href'] . '" style="color: #ff0000;">*</a> ';
 		echo '
 	' . $event['link'] . (!$event['is_last'] ? ', ' : '');
 	}
@@ -1577,7 +1577,7 @@ function ssi_todaysCalendar($output_method = 'echo')
 		{
 			if ($event['can_edit'])
 				echo '
-			<a href="' . $event['modify_href'] . '" style="color: #FF0000;">*</a> ';
+			<a href="' . $event['modify_href'] . '" style="color: #ff0000;">*</a> ';
 			echo '
 			' . $event['link'] . (!$event['is_last'] ? ', ' : '');
 		}
@@ -1830,7 +1830,7 @@ function ssi_recentEvents($max_events = 7, $output_method = 'echo')
 		{
 			if ($event['can_edit'])
 				echo '
-				<a href="' . $event['modify_href'] . '" style="color: #FF0000;">*</a> ';
+				<a href="' . $event['modify_href'] . '" style="color: #ff0000;">*</a> ';
 
 			echo '
 				' . $event['link'] . (!$event['is_last'] ? ', ' : '');

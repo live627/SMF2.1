@@ -299,7 +299,7 @@ function show_header()
 			body
 			{
 				font-family: Verdana, sans-serif;
-				background-color: #D4D4D4;
+				background-color: #d4d4d4;
 				margin: 0;
 			}
 			body, td
@@ -322,14 +322,14 @@ function show_header()
 			div.error_message
 			{
 				border: 2px dashed red;
-				background-color: #E1E1E1;
+				background-color: #e1e1e1;
 				margin: 1ex 4ex;
 				padding: 1.5ex;
 			}
 			div.panel
 			{
 				border: 1px solid gray;
-				background-color: #F0F0F0;
+				background-color: #f0f0f0;
 				margin: 1ex 0;
 				padding: 1.2ex;
 			}
@@ -365,7 +365,7 @@ function show_header()
 			{
 				margin: 1ex 3ex 2ex 3ex;
 				padding: 3px;
-				background-color: #FAFAFA;
+				background-color: #fafafa;
 				font-family: monospace;
 				overflow: auto;
 			}

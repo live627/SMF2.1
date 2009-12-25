@@ -34,7 +34,7 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 }
 #messageindex table th
 {
-	border-bottom: solid 1px white;
+	border-bottom: 1px solid #fff;
 }
 #topic_icons .description
 {

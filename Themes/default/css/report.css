@@ -1,7 +1,7 @@
 body
 {
-	color: black;
-	background-color: white;
+	color: #000;
+	background-color: #fff;
 	zoom: 1;
 }
 body, td, .normaltext
@@ -11,7 +11,7 @@ body, td, .normaltext
 }
 *, a:link, a:visited, a:hover, a:active
 {
-	color: black !important;
+	color: #000 !important;
 }
 .smalltext, .quoteheader, .codeheader
 {
@@ -25,18 +25,18 @@ hr
 {
 	height: 1px;
 	border: 0;
-	color: black;
-	background-color: black;
+	color: #000;
+	background-color: #000;
 }
 .catbg
 {
-	background-color: #D6D6D6;
+	background-color: #d6d6d6;
 	font-weight: bold;
 }
 .titlebg, tr.titlebg td, .titlebg a:link, .titlebg a:visited
 {
 	font-style: normal;
-	background-color: #F0F4F7;
+	background-color: #f0f4f7;
 }
 .bordercolor
 {
@@ -44,13 +44,13 @@ hr
 }
 .windowbg
 {
-	color: black;
-	background-color: white;
+	color: #000;
+	background-color: #fff;
 }
 .windowbg2
 {
-	color: black;
-	background-color: #F1F1F1;
+	color: #000;
+	background-color: #f1f1f1;
 }
 .copyright
 {

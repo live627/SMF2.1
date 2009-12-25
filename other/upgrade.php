@@ -3794,7 +3794,7 @@ function template_upgrade_above()
 		echo '
 				<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; width: 50%; margin: 5px auto; ">
 					<div id="step_text" style="color: #000; position: absolute; margin-left: -5em;">', $upcontext['step_progress'], '%</div>
-					<div id="step_progress" style="width: ', $upcontext['step_progress'], '%; height: 12pt; z-index: 1; background-color: #FFD000;">&nbsp;</div>
+					<div id="step_progress" style="width: ', $upcontext['step_progress'], '%; height: 12pt; z-index: 1; background-color: #ffd000;">&nbsp;</div>
 					<div class="progress">', $txt['upgrade_step_progress'], '</div>
 				</div>
 				';
@@ -3803,7 +3803,7 @@ function template_upgrade_above()
 				<div id="substep_bar_div" class="smalltext" style="display: ', isset($upcontext['substep_progress']) ? '' : 'none', ';">', isset($upcontext['substep_progress_name']) ? trim(strtr($upcontext['substep_progress_name'], array('.' => ''))) : '', ':</div>
 				<div id="substep_bar_div2" style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; width: 50%; margin: 5px auto; display: ', isset($upcontext['substep_progress']) ? '' : 'none', ';">
 					<div id="substep_text" style="color: #000; position: absolute; margin-left: -5em;">', isset($upcontext['substep_progress']) ? $upcontext['substep_progress'] : '', '%</div>
-				<div id="substep_progress" style="width: ', isset($upcontext['substep_progress']) ? $upcontext['substep_progress'] : 0, '%; height: 12pt; z-index: 1; background-color: #EEBAF4;">&nbsp;</div>
+				<div id="substep_progress" style="width: ', isset($upcontext['substep_progress']) ? $upcontext['substep_progress'] : 0, '%; height: 12pt; z-index: 1; background-color: #eebaf4;">&nbsp;</div>
 								</div>';
 
 	// How long have we been running this?
@@ -3936,7 +3936,7 @@ function template_welcome_message()
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 			<h3>', sprintf($txt['upgrade_ready_proceed'], SMF_VERSION), '</h3>
 	<form action="', $upcontext['form_url'], '" method="post" name="upform" id="upform" ', empty($upcontext['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $upcontext['rid'] . '\');"' : '', '>
-		<div id="version_warning" style="margin: 2ex; padding: 2ex; border: 2px dashed #A92174; color: black; background-color: #FBBBE2; display: none;">
+		<div id="version_warning" style="margin: 2ex; padding: 2ex; border: 2px dashed #a92174; color: black; background-color: #fbbbe2; display: none;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
 			<strong style="text-decoration: underline;">', $txt['upgrade_warning'], '</strong><br />
 			<div style="padding-left: 6ex;">
@@ -3971,7 +3971,7 @@ function template_welcome_message()
 
 	// Paths are incorrect?
 	echo '
-		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #804840; color: black; background-color: #FE5A44; ', (file_exists($settings['default_theme_dir'] . '/scripts/script.js') ? 'display: none;' : ''), '" id="js_script_missing_error">
+		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #804840; color: black; background-color: #fe5a44; ', (file_exists($settings['default_theme_dir'] . '/scripts/script.js') ? 'display: none;' : ''), '" id="js_script_missing_error">
 			<div style="float: left; width: 2ex; font-size: 2em; color: black;">!!</div>
 			<strong style="text-decoration: underline;">', $txt['upgrade_critical_error'], '</strong><br />
 			<div style="padding-left: 6ex;">
@@ -4615,7 +4615,7 @@ function template_clean_mods()
 
 	echo '
 		<table width="90%" align="center" cellspacing="1" cellpadding="2" style="background-color: black;">
-			<tr style="background-color: #EEEEEE;">
+			<tr style="background-color: #eeeeee;">
 				<td width="40%"><strong>Modification Name</strong></td>
 				<td width="10%" align="center"><strong>Version</strong></td>
 				<td width="15%"><strong>Files Affected</strong></td>
@@ -4626,7 +4626,7 @@ function template_clean_mods()
 	foreach ($upcontext['packages'] as $package)
 	{
 		echo '
-			<tr style="background-color: #CCCCCC;">
+			<tr style="background-color: #cccccc;">
 				<td width="40%">', $package['name'], '</td>
 				<td width="10%">', $package['version'], '</td>
 				<td width="15%">', $package['file_count'], ' <span class="smalltext">[<a href="#" onclick="alert(\'The following files are affected by this modification:\\n\\n', strtr(implode('<br />', $package['files']), array('\\' => '\\\\', '<br />' => '\\n')), '\'); return false;">details</a>]</td>
@@ -4660,14 +4660,14 @@ function template_cleanup_done()
 	<h3>SMF has attempted to fix and reinstall mods as required. We recommend you visit the package manager upon completing upgrade to check the status of your modifications.</h3>
 	<form action="', $upcontext['form_url'], '&amp;ssi=1" name="upform" id="upform" method="post">
 		<table width="90%" align="center" cellspacing="1" cellpadding="2" style="background-color: black;">
-			<tr style="background-color: #EEEEEE;">
+			<tr style="background-color: #eeeeee;">
 				<td width="100%"><strong>Actions Completed:</strong></td>
 			</tr>';
 
 	foreach ($upcontext['packages'] as $package)
 	{
 		echo '
-			<tr style="background-color: #CCCCCC;">
+			<tr style="background-color: #cccccc;">
 				<td>', $package['name'], '... <span style="font-weight: bold; color: ', $package['color'], ';">', $package['result'], '</span></td>
 			</tr>';
 	}
@@ -4698,7 +4698,7 @@ function template_upgrade_templates()
 		echo '
 		The following template files will be updated to ensure they are compatible with this version of SMF. Note that this can only fix a limited number of compatibility issues and in general you should seek out the latest version of these themes/language files.
 		<table width="90%" align="center" cellspacing="1" cellpadding="2" style="background-color: black;">
-			<tr style="background-color: #EEEEEE;">
+			<tr style="background-color: #eeeeee;">
 				<td width="80%"><strong>Area</strong></td>
 				<td width="20%" align="center"><strong>Changes Required</strong></td>
 			</tr>';
@@ -4706,7 +4706,7 @@ function template_upgrade_templates()
 		foreach ($upcontext['languages'] as $language)
 		{
 			echo '
-				<tr style="background-color: #CCCCCC;">
+				<tr style="background-color: #cccccc;">
 					<td width="80%">
 						&quot;', $language['name'], '&quot; Language Pack
 						<div class="smalltext">(';

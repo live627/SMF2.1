@@ -1606,12 +1606,12 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 		{
 			$codes[] = array(
 				'tag' => 'chrissy',
-				'before' => '<span style="color: #CC0099;">',
+				'before' => '<span style="color: #cc0099;">',
 				'after' => ' :-*</span>',
 			);
 			$codes[] = array(
 				'tag' => 'kissy',
-				'before' => '<span style="color: #CC0099;">',
+				'before' => '<span style="color: #cc0099;">',
 				'after' => ' :-*</span>',
 			);
 		}

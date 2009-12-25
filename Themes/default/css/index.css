@@ -33,10 +33,10 @@ body#help_popup
 	padding: 1em;
 }
 
-/* use dark grey for the text, leaving black for headers etc */
+/* use dark grey for the text, leaving #000 for headers etc */
 body, td, th, tr
 {
-	color: #444444;
+	color: #444;
 }
 
 /* This division wraps the entire forum when a forum width is set. */
@@ -64,7 +64,7 @@ form
 input, button, select, textarea
 {
 	font: 95%/115% verdana, Helvetica, sans-serif;
-	color: #000000;
+	color: #000;
 	background: #fff;
 	border: 1px solid #7f9db9;
 	padding: 2px;
@@ -98,7 +98,7 @@ textarea
 }
 input:hover, textarea:hover, button:hover, select:hover
 {
-	border: solid 1px #454545;
+	border: 1px solid #454545;
 }
 .button_submit:hover, .button_reset:hover
 {
@@ -107,7 +107,7 @@ input:hover, textarea:hover, button:hover, select:hover
 }
 input:focus, textarea:focus, button:focus, select:focus
 {
-	border: solid 1px #454545;
+	border: 1px solid #454545;
 }
 
 /* All input elements that are checkboxes or radio buttons shouldn't have a border around them. */
@@ -132,14 +132,14 @@ hr, .hrcolor
 {
 	height: 1px;
 	border: 0;
-	color: #666666;
-	background-color: #666666;
+	color: #666;
+	background-color: #666;
 }
 
-/* By default set the color on these tags as black. */
+/* By default set the color on these tags as #000. */
 h1, h2, h3, h4, h5, h6
 {
-	color: black;
+	color: #000;
 	font-size: 1em;
 	margin: 0;
 	padding: 0;
@@ -148,7 +148,7 @@ h1, h2, h3, h4, h5, h6
 /* Fieldsets are used to group elements. */
 fieldset
 {
-	border: groove #fff 2px;
+	border: 2px groove #fff;
 	padding: 1em;
 	margin: 0 0 0.3em 0;
 }
@@ -287,11 +287,11 @@ ul.reset, ul.reset li
 blockquote, blockquote blockquote blockquote
 {
 	font-size: 0.9em;
-	color: #000000;
+	color: #000;
 	line-height: 1.4em;
-	background: url(../images/theme/quote.png) 2px 2px no-repeat #D7DAEC;
-	border-top: solid 1px #000;
-	border-bottom: solid 1px #000;
+	background: url(../images/theme/quote.png) 2px 2px no-repeat #d7daec;
+	border-top: 1px solid #000;
+	border-bottom: 1px solid #000;
 	padding: 1em 1em 1em 2em;
 	margin: 0.3em 0 0 0;
 }
@@ -307,8 +307,8 @@ code
 	font-family: "courier new", "times new roman", monospace;
 	font-size: x-small;
 	background: #eee;
-	border-top: solid 1px #000;
-	border-bottom: solid 1px #000;
+	border-top: 1px solid #000;
+	border-bottom: 1px solid #000;
 	line-height: 1.3em;
 	padding: 3px 1em;
 	overflow: auto;
@@ -377,16 +377,16 @@ code
 /* Highlighted text - such as search results. */
 .highlight
 {
-	background-color: yellow;
+	background-color: #ff0;
 	font-weight: bold;
-	color: black !important;
+	color: #000 !important;
 }
 
 /* A more discreet highlight color, for selected membergroups etc. */
 .highlight2
 {
-	background-color: #B3F4B0;
-	color: black !important;
+	background-color: #b3f4b0;
+	color: #000 !important;
 }
 
 /* Generic, mostly color-related, classes.
@@ -394,7 +394,7 @@ code
 
 .titlebg, .titlebg2, thead tr.titlebg th, tr.titlebg td, tr.titlebg2 td
 {
-	color: black;
+	color: #000;
 	font-family: arial, helvetica, sans-serif;
 	font-size: 1.1em;
 	font-weight: bold;
@@ -402,7 +402,7 @@ code
 }
 .catbg, .catbg2, tr.catbg td, tr.catbg2 td, tr.catbg th, tr.catbg2 th
 {
-	color: white;
+	color: #fff;
 	font-family: arial, helvetica, sans-serif;
 	font-size: 1.1em;
 	font-weight: bold;
@@ -420,11 +420,11 @@ tr.catbg td, tr.catbg2 td, td.catbg, td.catbg2, tr.catbg th, tr.catbg2 th, th.ca
 }
 tr.titlebg td a, tr.titlebg2 td a
 {
-	color: black;
+	color: #000;
 }
 tr.catbg td a, tr.catbg2 td a, .catbg a
 {
-	color: white;
+	color: #fff;
 }
 tr.catbg th.smalltext
 {
@@ -432,24 +432,24 @@ tr.catbg th.smalltext
 }
 tr.titlebg th.smalltext, thead tr.titlebg th a:link, thead tr.titlebg th a:visited
 {
-	color: black;
+	color: #000;
 	font-size: 0.95em;
 }
 
 /* Alternating backgrounds for posts, and several other sections of the forum. */
 .windowbg, #preview_body
 {
-	color: #000000;
+	color: #000;
 	background-color: #e7eaef;
 }
 .windowbg2
 {
-	color: #000000;
+	color: #000;
 	background-color: #f0f4f7;
 }
 .windowbg3
 {
-	color: #000000;
+	color: #000;
 	background-color: #cacdd3;
 }
 
@@ -493,24 +493,24 @@ table.table_grid thead tr.catbg th.smalltext
 /* Colors for background of posts requiring approval */
 .approvebg
 {
-	color: #000000;
+	color: #000;
 	background-color: #ffeaea;
 }
 .approvebg2
 {
-	color: #000000;
+	color: #000;
 	background-color: #fff2f2;
 }
 
 /* Color for background of *topics* requiring approval */
 .approvetbg
 {
-	color: #000000;
+	color: #000;
 	background-color: #e4a17c;
 }
 .approvetbg2
 {
-	color: #000000;
+	color: #000;
 	background-color: #f3bd9f;
 }
 
@@ -551,7 +551,7 @@ table.table_grid thead tr.catbg th.smalltext
 	overflow: auto;
 	clear: right;
 	padding: 1em 0 3px 0;
-	border-top: solid 1px #aaa;
+	border-top: 1px solid #aaa;
 	line-height: 1.4em;
 	font-size: 0.85em;
 }
@@ -560,7 +560,7 @@ table.table_grid thead tr.catbg th.smalltext
 	width: 98%;
 	clear: right;
 	padding: 1em 0 3px 0;
-	border-top: solid 1px #aaa;
+	border-top: 1px solid #aaa;
 	line-height: 1.4em;
 	font-size: 0.85em;
 }
@@ -580,7 +580,7 @@ table.table_grid thead tr.catbg th.smalltext
 /* Calendar colors for birthdays, events and holidays */
 .birthday
 {
-	color: #920AC4;
+	color: #920ac4;
 }
 
 .event
@@ -601,7 +601,7 @@ table.table_grid thead tr.catbg th.smalltext
 
 .warn_moderate
 {
-	color: #FFA500;
+	color: #ffa500;
 }
 
 .warn_watch, .success
@@ -627,7 +627,7 @@ a.moderation_link, a.moderation_link:visited
 	padding: 0.5em 1em 1em 1em;
 	font-size: 0.9em;
 	line-height: 1.4em;
-	border: solid 1px #bbb;
+	border: 1px solid #bbb;
 	background: #f5f5f0;
 	margin: 0 0 1em 0;
 }
@@ -637,7 +637,7 @@ a.moderation_link, a.moderation_link:visited
 	padding: 0.5em 1em 1em 1em;
 	font-size: 0.9em;
 	line-height: 1.3em;
-	border: solid 1px #bbb;
+	border: 1px solid #bbb;
 	background: #f0f6f0;
 	margin: 0.3em 0 1em 0;
 }
@@ -651,7 +651,7 @@ a.moderation_link, a.moderation_link:visited
 #ajax_in_progress
 {
 	background: url(../images/theme/loadingbar.png) repeat-x;
-	color: #F96F00;
+	color: #f96f00;
 	text-align: center;
 	font-size: 16pt;
 	padding: 8px;
@@ -680,8 +680,8 @@ table.table_grid
 table.table_grid td
 {
 	padding: 3px;
-	border-bottom: solid 1px white;
-	border-right: solid 1px white;
+	border-bottom: 1px solid #fff;
+	border-right: 1px solid #fff;
 }
 
 /* Lists with settings use these a lot.
@@ -748,7 +748,7 @@ h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg, h4.catbg, .table_list tbody.header 
 }
 h3.catbg a, h3.catbg, .table_list tbody.header td, .table_list tbody.header td a
 {
-	color: white;
+	color: #fff;
 }
 h3.catbg2 a, h3.catbg2
 {
@@ -766,11 +766,11 @@ h3.catbg2 a:hover
 }
 h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
 {
-	color: black;
+	color: #000;
 }
 h3.titlebg a:hover, h4.titlebg a:hover
 {
-	color: #FFA500;
+	color: #ffa500;
 	text-decoration: none;
 }
 h3.catbg img.icon, h4.titlebg img.icon
@@ -854,7 +854,7 @@ table.table_list a.collapse
 .table_grid thead th
 {
 	height: 28px;
-	color: white;
+	color: #fff;
 	font-family: arial, helvetica, sans-serif;
 	font-size: 1.1em;
 	font-weight: bold;
@@ -862,7 +862,7 @@ table.table_list a.collapse
 }
 .table_grid thead th a:link, .table_grid thead th a:visited
 {
-	color: white;
+	color: #fff;
 }
 .table_grid th.first_th
 {
@@ -961,8 +961,8 @@ table.table_list a.collapse
 }
 .postbg
 {
-	border-left: 1px solid #7F7F7F;
-	border-right: 1px solid #7F7F7F;
+	border-left: 1px solid #7f7f7f;
+	border-right: 1px solid #7f7f7f;
 }
 
 
@@ -1029,19 +1029,19 @@ span.lowerframe span
 ------------------------------------------------------- */
 .auto_suggest_div
 {
-	border: 1px solid black;
+	border: 1px solid #000;
 	position: absolute;
 	visibility: hidden;
 }
 .auto_suggest_item
 {
-	background-color: #DDDDDD;
+	background-color: #ddd;
 }
 .auto_suggest_item_hover
 {
-	background-color: #888888;
+	background-color: #888;
 	cursor: pointer;
-	color: #EEEEEE;
+	color: #eee;
 }
 
 /* Styles for the standard dropdown menus.
@@ -1068,7 +1068,7 @@ span.lowerframe span
 .dropmenu a
 {
 	display: block;
-	color: #000000;
+	color: #000;
 	text-decoration: none;
 }
 .dropmenu a span
@@ -1105,7 +1105,7 @@ span.lowerframe span
 	position: absolute;
 	width: 19.2em;
 	font-weight: normal;
-	border-bottom: solid 1px #999;
+	border-bottom: 1px solid #999;
 	background: url(../images/theme/menu_gfx.png) 0 -100px no-repeat;
 	padding: 7px 0 0 0;
 }
@@ -1113,8 +1113,8 @@ span.lowerframe span
 {
 	width: 19em;
 	margin: 0;
-	border-left: solid 1px #999;
-	border-right: solid 1px #999;
+	border-left: 1px solid #999;
+	border-right: 1px solid #999;
 }
 .dropmenu li li a span
 {
@@ -1130,7 +1130,7 @@ span.lowerframe span
 .dropmenu li a.active
 {
 	background: url(../images/theme/menu_gfx.png) no-repeat 100% 0;
-	color: #ffffff;
+	color: #fff;
 	font-weight: bold;
 }
 .dropmenu li a.active span.firstlevel
@@ -1141,7 +1141,7 @@ span.lowerframe span
 .dropmenu li a.firstlevel:hover, .dropmenu li:hover a.firstlevel
 {
 	background: url(../images/theme/menu_gfx.png) no-repeat 100% -30px;
-	color: #ffffff;
+	color: #fff;
 	cursor: pointer;
 	text-decoration: none;
 }
@@ -1152,7 +1152,7 @@ span.lowerframe span
 /* the hover effects on level2 and 3*/
 .dropmenu li li a:hover, .dropmenu li li:hover>a
 {
-	background: #D4DBE4;
+	background: #d4dbe4;
 	color: #000;
 	text-decoration: none;
 }
@@ -1206,7 +1206,7 @@ span.lowerframe span
 {
 	display: block;
 	font-size: 0.8em;
-	color: black;
+	color: #000;
 	background: url(../images/theme/menu_gfx.png) no-repeat 0 -60px;
 	padding: 0;
 	margin-left: 12px;
@@ -1237,7 +1237,7 @@ span.lowerframe span
 .buttonlist ul li a.active
 {
 	background: url(../images/theme/menu_gfx.png) no-repeat 0 -30px;
-	color: white;
+	color: #fff;
 	font-weight: bold;
 }
 .buttonlist ul li a.active span
@@ -1426,7 +1426,7 @@ div#upper_section div.news form
 	margin: 0;
 	font-size: 0.9em;
 	padding: 1em 0 0.5em 0;
-	border-top: solid #ccc 1px;
+	border-top: 1px solid #ccc;
 	overflow: hidden;
 	list-style: none;
 }
@@ -1615,7 +1615,7 @@ dl#ic_recentposts dd
 {
 	margin: 0;
 	padding: 0.5em;
-	border-top: dotted 2px #bbb;
+	border-top: 2px dotted #bbb;
 }
 #upshrinkHeaderIC p.inline
 {
@@ -1741,13 +1741,13 @@ h4#pollquestion
 /* Poll vote options */
 #poll_options ul.options
 {
-	border-top: 1px solid #9999AA;
+	border-top: 1px solid #9999aa;
 	padding: 1em 2.5em 0 2em;
 	margin: 0 0 1em 0;
 }
 #poll_options div.submitbutton
 {
-	border-bottom: 1px solid #9999AA;
+	border-bottom: 1px solid #9999aa;
 	clear: both;
 	padding: 0 0 1em 2em;
 	margin: 0 0 1em 0;
@@ -1756,7 +1756,7 @@ h4#pollquestion
 /* Poll results */
 #poll_options dl.options
 {
-	border: solid #9999AA;
+	border: solid #9999aa;
 	border-width: 1px 0;
 	padding: 1em 2.5em 1em 2em;
 	margin: 0 1em 1em 0;
@@ -1798,17 +1798,17 @@ span.percent
 }
 span.pollbar
 {
-	background: white;
-	border: solid 1px #888;
+	background: #fff;
+	border: 1px solid #888;
 	margin-right: 6em;
 }
 span.pollbar span
 {
-	background: #FE9540;
+	background: #fe9540;
 }
 #poll_options dd.voted span.pollbar span
 {
-	background: #FFC495;
+	background: #ffc495;
 }
 
 /* Poll notices */
@@ -2001,7 +2001,7 @@ ul.quickbuttons li.inline_mod_check
 {
 	padding: 1em 1em 0 0;
 	margin: 0 1em 0 0;
-	border-top: solid 1px #99a;
+	border-top: 1px solid #99a;
 }
 .inner img.smiley
 {
@@ -2086,7 +2086,7 @@ form#postmodify .roundframe .errorbox
 #post_header
 {
 	margin-bottom: 0.5em;
-	border-bottom: 1px solid #CACDD3;
+	border-bottom: 1px solid #cacdd3;
 	width: 85%;
 	padding: 0.5em;
 	overflow: hidden;
@@ -2137,7 +2137,7 @@ ul.post_options li
 }
 #postMoreOptions
 {
-	border-bottom: 1px solid #CACDD3;
+	border-bottom: 1px solid #cacdd3;
 	padding: 0.5em;
 }
 
@@ -2146,7 +2146,7 @@ ul.post_options li
 	overflow: hidden;
 	margin: .5em 0;
 	padding: 0;
-	border-bottom: 1px solid #CACDD3;
+	border-bottom: 1px solid #cacdd3;
 	padding: 0.5em;
 }
 
@@ -2205,14 +2205,14 @@ ul.post_options li
 	margin-bottom: 0.5em;
 	border: none;
 	width: 85%;
-	border-bottom: 1px solid #CACDD3;
+	border-bottom: 1px solid #cacdd3;
 	padding: 0.5em;
 	clear: both;
 }
 #post_event legend
 {
 	font-weight: bold;
-	color: black;
+	color: #000;
 }
 #post_event div.event_options
 {
@@ -2250,14 +2250,14 @@ ul.post_options li
 	margin-bottom: 0.5em;
 	border: none;
 	width: 85%;
-	border-bottom: 1px solid #CACDD3;
+	border-bottom: 1px solid #cacdd3;
 	padding: 0.5em;
 	clear: both;
 }
 #edit_poll legend
 {
 	font-weight: bold;
-	color: black;
+	color: #000;
 }
 #edit_poll div.poll_options
 {
@@ -2469,10 +2469,10 @@ dl.register_form dd
 {
 	padding: 4px;
 	width: 32ex;
-	background-color: white;
-	color: black;
+	background-color: #fff;
+	color: #000;
 	margin-left: 5ex;
-	border: 1px solid black;
+	border: 1px solid #000;
 }
 
 /* Styles for maintenance mode.
@@ -2541,7 +2541,7 @@ tr.titlebg td
 }
 #adm_container
 {
-	border-bottom: solid 1px #ccc;
+	border-bottom: 1px solid #ccc;
 	margin-bottom: 5px;
 }
 .left_admmenu li
@@ -2588,7 +2588,7 @@ tr.windowbg td, tr.windowbg2 td, tr.approvebg td
 }
 .topic_table table thead
 {
-	border-bottom: solid 1px white;
+	border-bottom: 1px solid #fff;
 }
 /* the subject column */
 .topic_table td
@@ -2643,7 +2643,7 @@ tr.windowbg td, tr.windowbg2 td, tr.approvebg td
 {
 	padding: 1em;
 	border: 1px solid #cc3344;
-	color: black;
+	color: #000;
 	background-color: #ffe4e9;
 	margin-bottom: 1em;
 }
@@ -2948,7 +2948,7 @@ div#profile_success
 }
 .list_posts 
 {
-	border-top: 2px solid #B3B3BF;
+	border-top: 2px solid #b3b3bf;
 	padding-top: 12px;
 	margin-top: 6px;
 }
@@ -2984,7 +2984,7 @@ div#profile_success
 	margin: 0 0 -500px;
 	padding: 1% 1% 500px;
 	clear: both;
-	border-top: 1px solid white;
+	border-top: 1px solid #fff;
 }
 
 #permissions dd
@@ -2993,7 +2993,7 @@ div#profile_success
 	float: left;
 	margin: 0;
 	padding: 1%;
-	border-top: 1px solid white;
+	border-top: 1px solid #fff;
 }
 
 #tracking div.content dl
@@ -3181,7 +3181,7 @@ dl.stats dd
 	font-size: 0.9em;
 	display: block;
 	text-align: left;
-	color: white;
+	color: #fff;
 	font-weight: bold;
 	background-position: top center;
 }
@@ -3211,7 +3211,7 @@ dl.stats dd
 }
 #personal_messages .capacity_bar
 {
-	background: #F0F4F7;
+	background: #f0f4f7;
 	display: block;
 	margin: 0.5em 0 0 1em;
 	height: 1em;
@@ -3226,15 +3226,15 @@ dl.stats dd
 }
 #personal_messages .capacity_bar span.empty
 {
-	background: #A6D69D;
+	background: #a6d69d;
 }
 #personal_messages .capacity_bar span.filled
 {
-	background: #EEA800;
+	background: #eea800;
 }
 #personal_messages .capacity_bar span.full
 {
-	background: #F10909;
+	background: #f10909;
 }
 #personal_messages .reportlinks
 {
@@ -3251,7 +3251,7 @@ dl.stats dd
 /* Used to indicate the current day in the grid. */
 .calendar_today
 {
-	background-color: #FFFFFF;
+	background-color: #fff;
 }
 
 #month_grid
@@ -3279,7 +3279,7 @@ dl.stats dd
 {
 	text-align: center;
 	height: 29px;
-	border-top: 2px solid #FFFFFF;
+	border-top: 2px solid #fff;
 	border-bottom: none;
 }
 #main_grid table.weeklist td.windowbg
@@ -3289,7 +3289,7 @@ dl.stats dd
 	width: 25px;
 	font-size: large;
 	padding: 0 7px;
-	border-bottom: 2px solid #FFFFFF;
+	border-bottom: 2px solid #fff;
 }
 #main_grid table.weeklist td.weekdays
 {
@@ -3298,7 +3298,7 @@ dl.stats dd
 	padding: 4px;
 	text-align: left;
 	vertical-align: middle;
-	border-bottom: 2px solid #FFFFFF;
+	border-bottom: 2px solid #fff;
 }
 #main_grid h3.weekly
 {
@@ -3338,7 +3338,7 @@ dl.stats dd
 
 a.modify_event
 {
-	color: #FF0000;
+	color: red;
 }
 
 span.hidelink
@@ -3488,7 +3488,7 @@ span.hidelink
 #helpmain h2.section
 {
 	font-size: 18px;
-	border-bottom: solid 1px;
+	border-bottom: 1px solid;
 	padding-bottom: 0.5em;
 	margin: 0 0 0.5em 0;
 }

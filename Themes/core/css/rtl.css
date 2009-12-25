@@ -101,8 +101,8 @@ ul.admin_menu li ul li a
 /* Second layer of menu items */
 ul.admin_menu li ul
 {
-	border-left: solid 1px #808080;
-	border-right: solid 2px #6888A7;
+	border-left: 1px solid #808080;
+	border-right: 2px solid #6888a7;
 }
 /* Third layer of menu items */
 ul.admin_menu li ul li:hover ul, ul.admin_menu li ul li.over ul
@@ -114,8 +114,8 @@ ul.admin_menu li ul li:hover ul, ul.admin_menu li ul li.over ul
 	left: -19.2em;
 	top: auto;
 	margin: -2em 0 0 0;
-	border-left: solid 1px #808080;
-	border-right: solid 2px #6888A7;
+	border-left: 1px solid #808080;
+	border-right: 2px solid #6888a7;
 }
 ul.admin_menu li ul li a.subsection
 {
@@ -142,7 +142,7 @@ div#menu_toggle
 {
 	margin: 0 0 0 0.5em;
 	border-right: none;
-	border-left: solid 1px #ADADAD;
+	border-left: 1px solid #adadad;
 	float: right;
 }
 #footerarea p
@@ -212,7 +212,7 @@ p#stats
 	margin-left: 0;
 	margin-right: 30px;
 	border-left: none;
-	border-right: solid #a0a0a0 1px;
+	border-right: 1px solid #a0a0a0;
 }
 /* recent posts - or just one recent post */
 dl#infocenter_recentposts
@@ -418,7 +418,7 @@ ul.postingbuttons li
 {
 	float: right;
 	border-left: none;
-	border-right: solid 1px #aaa;
+	border-right: 1px solid #aaa;
 }
 #quickReplyWarning
 {
@@ -934,13 +934,13 @@ ul.admin_menu li.chosen h4
 }
 .maintab_first, .maintab_back, .maintab_last, .maintab_active_first, .maintab_active_back, .maintab_active_last
 {
-	color: white;
+	color: #fff;
 	text-transform: uppercase;
 	vertical-align: top;
 }
 .maintab_back, .maintab_active_back
 {
-	color: white;
+	color: #fff;
 	text-decoration: none;
 	font-size:  9px;
 	vertical-align: top;

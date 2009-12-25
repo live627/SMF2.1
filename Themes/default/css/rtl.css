@@ -878,16 +878,16 @@ dl.stats dd
 #main_grid table.weeklist td.windowbg
 {
 
-	border-left: 2px solid #FFFFFF;
-	border-bottom: 2px solid #FFFFFF;
+	border-left: 2px solid #fff;
+	border-bottom: 2px solid #fff;
 }
 
 #main_grid table.weeklist td.weekdays
 {
 	text-align: left;
 	vertical-align: middle;
-	border-right: 2px solid #FFFFFF;
-	border-bottom: 2px solid #FFFFFF;
+	border-right: 2px solid #fff;
+	border-bottom: 2px solid #fff;
 }
 
 /* Styles for the advanced search section.

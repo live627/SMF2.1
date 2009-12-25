@@ -7,8 +7,8 @@
 /* This is the WYSIWYG editor */
 .rich_editor
 {
-	background-color: white;
-	color: black;
+	background-color: #fff;
+	color: #000;
 	font-family: verdana;
 	font-size: small;
 	border: none;

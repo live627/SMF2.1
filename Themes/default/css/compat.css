@@ -23,8 +23,8 @@ body#help_popup
 	padding: 0.5em 1.2em;
 	margin: 0;
 	border: 1px solid #adadad;
-	color: #000000;
-	background-color: #ECEDF3;
+	color: #000;
+	background-color: #ecedf3;
 }
 .content p, .roundframe p
 {
@@ -32,7 +32,7 @@ body#help_popup
 }
 .content fieldset
 {
-	border: groove #fff 2px;
+	border: 2px groove #fff;
 	padding: 1em;
 	margin: 0 0 0.3em 0;
 }
@@ -165,7 +165,7 @@ table.table_grid thead tr.catbg th.smalltext
 	clear: right;
 	padding: 1em 0 3px 0;
 	width: 98%;
-	border-top: solid 1px #666;
+	border-top: 1px solid #666;
 	line-height: 1.4em;
 	font-size: 0.85em;
 }
@@ -177,7 +177,7 @@ table.table_grid thead tr.catbg th.smalltext
 	padding: 1em;
 	font-size: 0.9em;
 	line-height: 1.5em;
-	border: solid 1px #bbb;
+	border: 1px solid #bbb;
 	background: #f5f5f0;
 	margin: 0 0 1em 0;
 }
@@ -186,7 +186,7 @@ table.table_grid thead tr.catbg th.smalltext
 	padding: 1em;
 	font-size: 0.9em;
 	line-height: 1.5em;
-	border: solid 1px #bbb;
+	border: 1px solid #bbb;
 	background: #f0f6f0;
 	margin: 0 0 1em 0;
 }
@@ -272,9 +272,9 @@ ul.dropmenu li a.firstlevel
 	padding: 5px;
 	cursor: default;
 	font-size: x-small;
-	color: #000000;
-	background: #F0F0F0;
-	border: solid 1px #818181;
+	color: #000;
+	background: #f0f0f0;
+	border: 1px solid #818181;
 	text-decoration: none;
 }
 ul.dropmenu li a.active
@@ -283,7 +283,7 @@ ul.dropmenu li a.active
 }
 ul.dropmenu li a.active.firstlevel
 {
-	background: #819DB5;
+	background: #819db5;
 	color: #fff;
 }
 ul.dropmenu li ul li
@@ -301,8 +301,8 @@ ul.dropmenu li ul
 	display: none;
 	position: absolute;
 	top: 100%;
-	border: solid 1px #808080;
-	background: #F8F8FB;
+	border: 1px solid #808080;
+	background: #f8f8fb;
 }
 ul.dropmenu li ul li ul, ul.dropmenu li ul li.over ul
 {
@@ -310,8 +310,8 @@ ul.dropmenu li ul li ul, ul.dropmenu li ul li.over ul
 	position: absolute;
 	left: -999em;
 	top: 0;
-	border: solid 1px #A0A0A0;
-	background: #FFF;
+	border: 1px solid #a0a0a0;
+	background: #fff;
 }
 ul.dropmenu li ul li a
 {
@@ -321,7 +321,7 @@ ul.dropmenu li ul li a
 	text-decoration: none;
 	background: none;
 	text-transform: none;
-	color: black;
+	color: #000;
 }
 ul.dropmenu li ul li a.active
 {
@@ -329,7 +329,7 @@ ul.dropmenu li ul li a.active
 }
 ul.dropmenu li ul li a:hover, #dropmenu ul li ul li:hover
 {
-	background: #C8E2FB;
+	background: #c8e2fb;
 }
 ul.dropmenu li:hover ul, ul.dropmenu li.over ul
 {
@@ -372,11 +372,11 @@ ul.linktree li
 }
 ul.linktree li a
 {
-	color: black;
+	color: #000;
 }
 ul.linktree li a:hover
 {
-	color: #CC3333;
+	color: #cc3333;
 }
 ul.linktree li span
 {
@@ -567,7 +567,7 @@ table.boardsframe td.lastpost
 {
 	margin-left: 30px;
 	padding: 0.3em;
-	border-left: solid #a0a0a0 1px;
+	border-left: 1px solid #a0a0a0;
 	min-height: 25px;
 	height: auto !important;
 }
@@ -772,7 +772,7 @@ div#pollmoderation
 	margin: 2ex;
 	padding: 1ex;
 	border: 2px dashed #cc3344;
-	color: black;
+	color: #000;
 	font-weight: bold;
 }
 #forumposts h3.catbg3
@@ -851,7 +851,7 @@ ul.postingbuttons li
 }
 .topborder
 {
-	border-top: solid 1px #bbb;
+	border-top: 1px solid #bbb;
 }
 .moderatorbar
 {
@@ -879,7 +879,7 @@ ul.postingbuttons li
 	text-align: center;
 	float: left;
 	width: 72%;
-	border-left: solid 1px #aaa;
+	border-left: 1px solid #aaa;
 }
 
 #quickReplyOptions #quickReplyContent textarea, #quickReplyOptions #quickReplyContent input
@@ -935,7 +935,7 @@ form#postmodify .roundframe .errorbox
 #post_header
 {
 	margin-bottom: 0.5em;
-	border-bottom: 1px solid #666666;
+	border-bottom: 1px solid #666;
 	width: 85%;
 	padding: 0.5em;
 	overflow: hidden;
@@ -986,7 +986,7 @@ ul.post_options li
 }
 #postMoreOptions
 {
-	border-bottom: 1px solid #666666;
+	border-bottom: 1px solid #666;
 	padding: 0.5em;
 }
 
@@ -995,7 +995,7 @@ ul.post_options li
 	overflow: hidden;
 	margin: .5em 0;
 	padding: 0;
-	border-bottom: 1px solid #666666;
+	border-bottom: 1px solid #666;
 	padding: 0.5em;
 }
 
@@ -1036,14 +1036,14 @@ ul.post_options li
 	margin-bottom: 0.5em;
 	border: none;
 	width: 85%;
-	border-bottom: 1px solid #666666;
+	border-bottom: 1px solid #666;
 	padding: 0.5em;
 	clear: both;
 }
 #post_event legend
 {
 	font-weight: bold;
-	color: black;
+	color: #000;
 }
 #post_event div.event_options
 {
@@ -1081,14 +1081,14 @@ ul.post_options li
 	margin-bottom: 0.5em;
 	border: none;
 	width: 85%;
-	border-bottom: 1px solid #666666;
+	border-bottom: 1px solid #666;
 	padding: 0.5em;
 	clear: both;
 }
 #edit_poll legend
 {
 	font-weight: bold;
-	color: black;
+	color: #000;
 }
 #edit_poll div.poll_options
 {
@@ -1304,10 +1304,10 @@ dl.register_form dd
 {
 	padding: 4px;
 	width: 32ex;
-	background-color: white;
-	color: black;
+	background-color: #fff;
+	color: #000;
 	margin-left: 5ex;
-	border: 1px solid black;
+	border: 1px solid #000;
 }
 
 /* Styles for maintenance mode.
@@ -1413,7 +1413,7 @@ tr.windowbg td, tr.windowbg2 td
 }
 .topic_table table thead
 {
-	border-bottom: solid 1px white;
+	border-bottom: 1px solid #fff;
 }
 /* the subject column */
 .topic_table td
@@ -1465,7 +1465,7 @@ tr.windowbg td, tr.windowbg2 td
 {
 	padding: 1em;
 	border: 1px solid #cc3344;
-	color: black;
+	color: #000;
 	background-color: #ffe4e9;
 	margin-bottom: 1em;
 }
@@ -1511,7 +1511,7 @@ dl
 {
 	padding: 1px;
 	border: 1px solid #696969;
-	background-color: #ECEDF3;
+	background-color: #ecedf3;
 }
 #profileview .content
 {
@@ -1585,7 +1585,7 @@ dl
 	overflow: auto;
 	margin: 0 0 18px 0;
 	padding: 0 0 15px 0;
-	border-bottom: 1px #ccc solid;
+	border-bottom: 1px solid #ccc;
 }
 #detailedinfo div.content dt, #tracking div.content dt
 {
@@ -1643,7 +1643,7 @@ dl
 }
 #main_admsection #basicinfo
 {
-	border-bottom: 1px #ccc solid;
+	border-bottom: 1px solid #ccc;
 }
 #main_admsection #basicinfo h4
 {
@@ -1798,18 +1798,18 @@ div#profile_success
 	padding: 0.2em 0.5em 0.1em 0.2em;
 	font-size: 2.2em;
 	font-weight: bold;
-	color: #354C5F;
+	color: #354c5f;
 	float: left;
 }
 .list_posts 
 {
-	border-top: 1px solid #ADADAD;
+	border-top: 1px solid #adadad;
 	padding-top: 1em;
 	margin-top: 0.5em;
 }
 div.core_posts
 {
-	border: 1px solid #ADADAD;
+	border: 1px solid #adadad;
 	margin-bottom: 3px;
 }
 .topic h4
@@ -1830,7 +1830,7 @@ div.core_posts
 	margin: 0 0 -500px;
 	padding: 1% 1% 500px;
 	clear: both;
-	border-top: 1px solid white;
+	border-top: 1px solid #fff;
 }
 
 #permissions dd
@@ -1839,7 +1839,7 @@ div.core_posts
 	float: left;
 	margin: 0;
 	padding: 1%;
-	border-top: 1px solid white;
+	border-top: 1px solid #fff;
 }
 
 #tracking div.content dl
@@ -2001,7 +2001,7 @@ dl.stats dd
 	font-size: 0.9em;
 	display: block;
 	text-align: left;
-	color: white;
+	color: #fff;
 	font-weight: bold;
 	background-position: top center;
 }
@@ -2020,7 +2020,7 @@ dl.stats dd
 /* Used to indicate the current day in the grid. */
 .calendar_today
 {
-	background-color: #FFFFFF;
+	background-color: #fff;
 }
 
 #month_grid
@@ -2122,7 +2122,7 @@ dl.stats dd
 
 a.modify_event
 {
-	color: #FF0000;
+	color: red;
 }
 
 span.hidelink
@@ -2286,7 +2286,7 @@ span.hidelink
 #helpmain h2.section
 {
 	font-size: 18px;
-	border-bottom: solid 1px;
+	border-bottom: 1px solid;
 	padding-bottom: 0.5em;
 	margin: 0 0 0.5em 0;
 }

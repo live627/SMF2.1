@@ -41,7 +41,7 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 		<style type="text/css">
 			body
 			{
-				background-color: #E5E5E8;
+				background-color: #e5e5e8;
 				margin: 0;
 				padding: 0;
 			}
@@ -67,14 +67,14 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 			div.error_message
 			{
 				border: 2px dashed red;
-				background-color: #E1E1E1;
+				background-color: #e1e1e1;
 				margin: 1ex 4ex;
 				padding: 1.5ex;
 			}
 			div.panel
 			{
 				border: 1px solid gray;
-				background-color: #F6F6F6;
+				background-color: #f6f6f6;
 				margin: 1ex 0;
 				padding: 1.2ex;
 			}
@@ -207,7 +207,7 @@ function initialize_inputs()
 		<title>', $txt['ftp_path'], '</title>
 	</head>
 	<body style="background-color: #D4D4D4; margin-top: 5%; font: 10pt Verdana, sans-serif;">
-		<div style="border: 1px solid gray; background-color: #F0F0F0; margin: 1ex 0; padding: 1.2ex;">
+		<div style="border: 1px solid gray; background-color: #f0f0f0; margin: 1ex 0; padding: 1.2ex;">
 			<strong>', $txt['ftp_path'], '</strong><br />
 			<br />
 			', $txt['ftp_path_help'], '<br />
