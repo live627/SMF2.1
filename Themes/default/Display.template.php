@@ -34,8 +34,8 @@ function template_main()
 			// Show each option with its corresponding percentage bar.
 			foreach ($context['poll']['options'] as $option)
 				echo '
-					   <dt class="middletext', $option['voted_this'] ? ' voted' : '', '">', $option['option'], '</dt>
-					   <dd class="middletext', $option['voted_this'] ? ' voted' : '', '">', $context['allow_poll_view'] ? '<span class="percent">' . $option['votes'] . ' (' . $option['percent'] . '%)</span>' . $option['bar_ndt'] : '', '</dd>';
+						<dt class="middletext', $option['voted_this'] ? ' voted' : '', '">', $option['option'], '</dt>
+						<dd class="middletext', $option['voted_this'] ? ' voted' : '', '">', $context['allow_poll_view'] ? '<span class="percent">' . $option['votes'] . ' (' . $option['percent'] . '%)</span>' . $option['bar_ndt'] : '', '</dd>';
 
 			echo '
 					 </dl>';

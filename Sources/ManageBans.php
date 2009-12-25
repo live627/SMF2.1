@@ -1106,7 +1106,7 @@ function BanEditTrigger()
 				'selected' => !empty($row['ip_low1']),
 			),
 			'hostname' => array(
-				'value' =>  str_replace('%', '*', $row['hostname']),
+				'value' => str_replace('%', '*', $row['hostname']),
 				'selected' => !empty($row['hostname']),
 			),
 			'email' => array(

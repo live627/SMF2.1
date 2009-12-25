@@ -210,7 +210,7 @@ function loadForumTests()
 				WHERE id_topic = 0',
 			'check_type' => 'count',
 			'fix_it_query' => '
-				UPDATE  {db_prefix}topics
+				UPDATE {db_prefix}topics
 				SET id_topic = NULL
 				WHERE id_topic = 0',
 			'message' => 'repair_zero_ids',

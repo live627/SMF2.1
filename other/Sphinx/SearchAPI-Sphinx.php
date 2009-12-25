@@ -144,7 +144,7 @@ class sphinx_search
 					$andResult .= (in_array($sphinxWord, $excluded_words) ? '-' : '') . $sphinxWord . ' & ';
 				$orResults[] = substr($andResult, 0, -3);
 			}
-			$query = count($orResults) === 1 ? $orResults[0]  : '(' . implode(') | (', $orResults) . ')';
+			$query = count($orResults) === 1 ? $orResults[0] : '(' . implode(') | (', $orResults) . ')';
 
 			// Subject only searches need to be specified.
 			if ($search_params['subject_only'])

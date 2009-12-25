@@ -1763,7 +1763,7 @@ function init_inline_permissions($permissions, $excluded_groups = array())
 	$request = $smcFunc['db_query']('', '
 		SELECT mg.id_group, mg.group_name, mg.min_posts, IFNULL(p.add_deny, -1) AS status, p.permission
 		FROM {db_prefix}membergroups AS mg
-			LEFT JOIN {db_prefix}permissions AS p ON (p.id_group = mg.id_group AND p.permission  IN ({array_string:permissions}))
+			LEFT JOIN {db_prefix}permissions AS p ON (p.id_group = mg.id_group AND p.permission IN ({array_string:permissions}))
 		WHERE mg.id_group NOT IN (1, 3)
 			AND mg.id_parent = {int:not_inherited}' . (empty($modSettings['permission_enable_postgroups']) ? '
 			AND mg.min_posts = {int:min_posts}' : '') . '

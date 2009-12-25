@@ -120,7 +120,7 @@ function summary($memID)
 	// Set the age...
 	if (empty($context['member']['birth_date']))
 	{
-		$context['member'] +=  array(
+		$context['member'] += array(
 			'age' => $txt['not_applicable'],
 			'today_is_birthday' => false
 		);

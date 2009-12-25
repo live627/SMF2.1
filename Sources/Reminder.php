@@ -218,7 +218,7 @@ function setPassword2()
 
 	$_POST['u'] = (int) $_POST['u'];
 
-	if ($_POST['passwrd1'] !=  $_POST['passwrd2'])
+	if ($_POST['passwrd1'] != $_POST['passwrd2'])
 		fatal_lang_error('passwords_dont_match', false);
 
 	if ($_POST['passwrd1'] == '')

@@ -433,7 +433,7 @@ ul.postingbuttons li
 ---------------------------------------------------- */
 form#postmodify .roundframe
 {
-    padding: 0 12% 0 0;
+	padding: 0 12% 0 0;
 }
 #post_header dt
 {
@@ -1076,7 +1076,7 @@ h3.titlebg
 /*ManageBoards*/
 .move_links
 {
-	padding: 0 0 0 13px  !important;
+	padding: 0 0 0 13px !important;
 }
 
 span.search_weight

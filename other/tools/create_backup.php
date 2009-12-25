@@ -752,7 +752,7 @@ function getCreateTable($tableName)
 	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
 		// Make the CREATE for this column.
-		$schema_create .= '  `' . $row['Field'] . '` ' . $row['Type'] . ($row['Null'] != 'YES' ? ' NOT NULL' : '');
+		$schema_create .= ' `' . $row['Field'] . '` ' . $row['Type'] . ($row['Null'] != 'YES' ? ' NOT NULL' : '');
 
 		// Add a default...?
 		if (isset($row['Default']))
@@ -797,7 +797,7 @@ function getCreateTable($tableName)
 		// Ensure the columns are in proper order.
 		ksort($columns);
 
-		$schema_create .= ',' . "\n" . '  ' . $keyname . ' (' . implode($columns, ', ') . ')';
+		$schema_create .= ',' . "\n" . ' ' . $keyname . ' (' . implode($columns, ', ') . ')';
 	}
 
 	// Now just get the comment and type... (MyISAM, etc.)

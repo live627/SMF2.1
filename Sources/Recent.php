@@ -1070,7 +1070,7 @@ function UnreadTopics()
 					'current_member' => $user_info['id'],
 					'min_message' => (int) $min_message,
 					'is_approved' => 1,
-					'order' =>  $_REQUEST['sort'] . ($ascending ? '' : ' DESC'),
+					'order' => $_REQUEST['sort'] . ($ascending ? '' : ' DESC'),
 					'offset' => $_REQUEST['start'],
 					'limit' => $context['topics_per_page'],
 				))

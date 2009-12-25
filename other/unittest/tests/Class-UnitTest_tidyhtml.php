@@ -1124,30 +1124,30 @@
 			file_put_contents($tempFile, $html);
 
 			$descriptorspec = array(
-			   0 => array('file', $tempFile, 'r'),  // stdin
-			   1 => array('pipe', 'w'),  // stdout
-			   2 => array('pipe', 'w') // stder
+				0 => array('file', $tempFile, 'r'), // stdin
+				1 => array('pipe', 'w'), // stdout
+				2 => array('pipe', 'w') // stder
 			);
 
 			$process = @proc_open($tool, $descriptorspec, $pipes, null, null, array('bypass_shell' => true));
 
 			if (is_resource($process))
 			{
-			    fclose($pipes[1]);
+				fclose($pipes[1]);
 
-			    $errorList = array();
-			    while (!feof($pipes[2]))
-			    {
-				    $line = trim(fgets($pipes[2], 1024), "\n\r");
-				    if (empty($line))
-				    	continue;
+				$errorList = array();
+				while (!feof($pipes[2]))
+				{
+					$line = trim(fgets($pipes[2], 1024), "\n\r");
+					if (empty($line))
+						continue;
 
 					foreach ($this->_ignoreErrors as $ignorePattern)
 						if (preg_match($ignorePattern, $line) === 1)
 							continue 2;
 					$errorList[] = $line;
-			    }
-			    fclose($pipes[2]);
+				}
+				fclose($pipes[2]);
 
 				proc_close($process);
 			}

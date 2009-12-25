@@ -315,7 +315,7 @@ function MessageIndex()
 
 	// Calculate the fastest way to get the topics.
 	$start = $_REQUEST['start'];
-	if ($start > ($board_info['total_topics']  - 1) / 2)
+	if ($start > ($board_info['total_topics'] - 1) / 2)
 	{
 		$ascending = !$ascending;
 		$fake_ascending = true;

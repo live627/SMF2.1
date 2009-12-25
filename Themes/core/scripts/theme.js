@@ -47,7 +47,7 @@ var smf_addListItemHoverEvents = function()
 	var cssRule, newSelector;
 
 	// Add a rule for the list item hover event to every stylesheet.
-	for (var iStyleSheet = 0; iStyleSheet <  document.styleSheets.length; iStyleSheet ++)
+	for (var iStyleSheet = 0; iStyleSheet < document.styleSheets.length; iStyleSheet ++)
 		for (var iRule = 0; iRule < document.styleSheets[iStyleSheet].rules.length; iRule ++)
 		{
 			oCssRule = document.styleSheets[iStyleSheet].rules[iRule];

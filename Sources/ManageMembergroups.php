@@ -130,7 +130,7 @@ function MembergroupIndex()
 		'base_href' => $scripturl . '?action=admin;area=membergroups' . (isset($_REQUEST['sort2']) ? ';sort2=' . urlencode($_REQUEST['sort2']) : ''),
 		'default_sort_col' => 'name',
 		'get_items' => array(
-			'file' =>  $sourcedir . '/Subs-Membergroups.php',
+			'file' => $sourcedir . '/Subs-Membergroups.php',
 			'function' => 'list_getMembergroups',
 			'params' => array(
 				'regular',
@@ -253,7 +253,7 @@ function MembergroupIndex()
 			'desc' => 'desc2',
 		),
 		'get_items' => array(
-			'file' =>  $sourcedir . '/Subs-Membergroups.php',
+			'file' => $sourcedir . '/Subs-Membergroups.php',
 			'function' => 'list_getMembergroups',
 			'params' => array(
 				'post_count',
@@ -269,7 +269,7 @@ function MembergroupIndex()
 						global $scripturl;
 
 						$colorStyle = empty($rowData[\'online_color\']) ? \'\' : sprintf(\' style="color: %1$s;"\', $rowData[\'online_color\']);
-						return  sprintf(\'<a href="%1$s?action=moderate;area=viewgroups;sa=members;group=%2$d"%3$s>%4$s</a>\', $scripturl, $rowData[\'id_group\'], $colorStyle, $rowData[\'group_name\']);
+						return sprintf(\'<a href="%1$s?action=moderate;area=viewgroups;sa=members;group=%2$d"%3$s>%4$s</a>\', $scripturl, $rowData[\'id_group\'], $colorStyle, $rowData[\'group_name\']);
 					'),
 				),
 				'sort' => array(

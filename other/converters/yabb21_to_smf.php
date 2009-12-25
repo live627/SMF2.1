@@ -1428,7 +1428,7 @@ return true;
 				FROM {$to_prefix}polls AS p
 					INNER JOIN {$to_prefix}convert AS con ON (con.real_id = p.id_poll)
 				WHERE con.type = 'polls'");
-			while  ($row = mysql_fetch_assoc($request))
+			while ($row = mysql_fetch_assoc($request))
 				$poll_ids[$row['temp']] = $row['id_poll'];
 
 			foreach ($pollChoicesBlock as $key => $choice)

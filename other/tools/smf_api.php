@@ -1035,7 +1035,7 @@ if (!function_exists('array_fill'))
 		$return = array();
 		for ($i = $start; $i < $length + $start; ++$i) {
 			$return[$i] = $value;
-	    return $return;
+		return $return;
 	}
 }
 

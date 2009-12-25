@@ -448,7 +448,7 @@ function SetThemeOptions()
 
 		// There has to be a Settings template!
 		foreach ($context['themes'] as $k => $v)
-			if (empty($v['theme_dir'])  || (!file_exists($v['theme_dir'] . '/Settings.template.php') && empty($v['num_members'])))
+			if (empty($v['theme_dir']) || (!file_exists($v['theme_dir'] . '/Settings.template.php') && empty($v['num_members'])))
 				unset($context['themes'][$k]);
 
 		loadTemplate('Themes');

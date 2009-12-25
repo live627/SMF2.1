@@ -4,5 +4,5 @@ Causes issues in IE browsers in (and cached search engines pages it breaks them)
 */
 .attachments
 {
-    clear: right;
+	clear: right;
 }

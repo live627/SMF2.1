@@ -383,7 +383,7 @@ function loadProfileFields($force_reload = false)
 				return true;
 			'),
 		),
-		'karma_good' =>  array(
+		'karma_good' => array(
 			'type' => 'callback',
 			'callback_func' => 'karma_modify',
 			'permission' => 'admin_forum',

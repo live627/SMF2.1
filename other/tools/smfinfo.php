@@ -678,12 +678,12 @@ function show_detailed_db()
 			echo '
 								<tr class="row', $table_color = !$table_color, '">
 									<td>', !empty($table['columns']) ? '<a href="javascript:void(0);" onclick="return swapOption(this, \'' . $table['name'] . '\');">' : '', $table['name'], !empty($table['columns']) ? '</a>' : '', '</td>
-									<td>', isset($table['engine']) ?  $table['engine'] : $txt['na'], '</td>
-									<td>', isset($table['rows']) ?  $table['rows'] : $txt['na'], '</td>
-									<td>', isset($table['size']) ?  $table['size'] : $txt['na'], '</td>
-									<td>', isset($table['overhead']) ?  $table['overhead'] : $txt['na'], '</td>
-									<td>', isset($table['auto_increment']) ?  $table['auto_increment'] : $txt['na'], '</td>
-									<td>', isset($table['collation']) ?  $table['collation'] : $txt['na'], '</td>
+									<td>', isset($table['engine']) ? $table['engine'] : $txt['na'], '</td>
+									<td>', isset($table['rows']) ? $table['rows'] : $txt['na'], '</td>
+									<td>', isset($table['size']) ? $table['size'] : $txt['na'], '</td>
+									<td>', isset($table['overhead']) ? $table['overhead'] : $txt['na'], '</td>
+									<td>', isset($table['auto_increment']) ? $table['auto_increment'] : $txt['na'], '</td>
+									<td>', isset($table['collation']) ? $table['collation'] : $txt['na'], '</td>
 								</tr>';
 			if (!empty($table['columns']))
 			{
@@ -2445,7 +2445,7 @@ function convert_memory($number, $bytes=true)
   $thousandArray[5] = 'P';
 
   for ($i = 0; $number > 1024 && $i < count($thousandArray); $i++)
-    $number /= 1024;
+	$number /= 1024;
 
   return number_format($number,2) . ' ' . $thousandArray[$i] . $bitsOrBytes;
 }

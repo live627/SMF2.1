@@ -756,7 +756,7 @@ function html_to_bbc($text)
 				if (substr($src, 0, 1) === '/')
 					$src = $baseURL . $src;
 				else
-					$src = $baseURL . (empty($parsedURL['path']) ?  '/' : preg_replace('~/(?:index\\.php)?$~', '', $parsedURL['path'])) . '/' . $src;
+					$src = $baseURL . (empty($parsedURL['path']) ? '/' : preg_replace('~/(?:index\\.php)?$~', '', $parsedURL['path'])) . '/' . $src;
 			}
 
 			$tag = '[img' . $params . ']' . $src . '[/img]';
@@ -854,7 +854,7 @@ function html_to_bbc($text)
 					if (substr($href, 0, 1) === '/')
 						$href = $baseURL . $href;
 					else
-						$href = $baseURL . (empty($parsedURL['path']) ?  '/' : preg_replace('~/(?:index\\.php)?$~', '', $parsedURL['path'])) . '/' . $href;
+						$href = $baseURL . (empty($parsedURL['path']) ? '/' : preg_replace('~/(?:index\\.php)?$~', '', $parsedURL['path'])) . '/' . $href;
 				}
 			}
 

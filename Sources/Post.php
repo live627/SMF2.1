@@ -803,7 +803,7 @@ function Post()
 		if ($user_info['is_guest'])
 		{
 			$context['name'] = isset($_SESSION['guest_name']) ? $_SESSION['guest_name'] : '';
-			$context['email'] =isset($_SESSION['guest_email']) ? $_SESSION['guest_email'] :  '';
+			$context['email'] = isset($_SESSION['guest_email']) ? $_SESSION['guest_email'] : '';
 		}
 		$context['destination'] = 'post2;start=' . $_REQUEST['start'] . (isset($_REQUEST['poll']) ? ';poll' : '');
 

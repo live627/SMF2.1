@@ -568,7 +568,7 @@ function template_admin_register()
 		foreach ($context['member_groups'] as $id => $name)
 			echo '
 							<option value="', $id, '">', $name, '</option>';
-		echo  '
+		echo '
 						</select>
 					</dd>';
 	}

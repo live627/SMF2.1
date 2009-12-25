@@ -96,7 +96,7 @@ function PrintTopic()
 		$context['posts'][] = array(
 			'subject' => $row['subject'],
 			'member' => $row['poster_name'],
-			'time' =>  timeformat($row['poster_time'], false),
+			'time' => timeformat($row['poster_time'], false),
 			'timestamp' => forum_time(true, $row['poster_time']),
 			'body' => parse_bbc($row['body'], 'print'),
 		);

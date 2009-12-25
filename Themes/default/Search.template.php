@@ -257,7 +257,7 @@ function template_results()
 
 		echo '
 		<h3 class="catbg"><span class="left"></span>
-		    <span class="floatright">';
+			<span class="floatright">';
 				if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
 				echo '
 						<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />';
@@ -379,14 +379,14 @@ function template_results()
 
 			echo '
 								<input type="hidden" name="redirect_url" value="', $scripturl . '?action=search2;params=' . $context['params'], '" />
-								<input  type="submit" style="font-size: 0.8em;" value="', $txt['quick_mod_go'], '" onclick="return this.form.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" class="button_submit" />
+								<input type="submit" style="font-size: 0.8em;" value="', $txt['quick_mod_go'], '" onclick="return this.form.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" class="button_submit" />
 				</div>
-			        <br class="clear" />
-		    </div>';
+				<br class="clear" />
+			</div>';
 		}
 
 		echo '
-				  	 <br class="clear" />
+				<br class="clear" />
 				<div class="smalltext" id="search_jump_to">&nbsp;</div>
 
 		<script type="text/javascript"><!-- // --><![CDATA[

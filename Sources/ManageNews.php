@@ -86,7 +86,7 @@ function ManageNews()
 		'editnews' => array('EditNews', 'edit_news'),
 		'mailingmembers' => array('SelectMailingMembers', 'send_mail'),
 		'mailingcompose' => array('ComposeMailing', 'send_mail'),
-		'mailingsend' =>  array('SendMailing', 'send_mail'),
+		'mailingsend' => array('SendMailing', 'send_mail'),
 		'settings' => array('ModifyNewsSettings', 'admin_forum'),
 	);
 

@@ -667,7 +667,7 @@ function template_main()
 		echo '
 			var oSwapAdditionalOptions = new smc_Toggle({
 				bToggleEnabled: true,
-				bCurrentlyCollapsed:  ', $context['show_additional_options'] ? 'false' : 'true', ',
+				bCurrentlyCollapsed: ', $context['show_additional_options'] ? 'false' : 'true', ',
 				funcOnBeforeCollapse: function () {
 					document.getElementById(\'additional_options\').value = \'0\';
 				},

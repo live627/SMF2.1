@@ -746,8 +746,8 @@ function template_browse()
 				<tr class="catbg">
 					<th class="smalltext" width="32"></th>
 					<th class="smalltext" width="25%">', $txt['mod_name'], '</th>
-					<th  class="smalltext" width="25%">', $txt['mod_version'], '</th>
-					<th  class="smalltext" width="49%"></th>
+					<th class="smalltext" width="25%">', $txt['mod_version'], '</th>
+					<th class="smalltext" width="49%"></th>
 				</tr>
 			</thead>
 			<tbody>';

@@ -1076,7 +1076,7 @@ function Display()
 	{
 		checkSubmitOnce('register');
 		$context['name'] = isset($_SESSION['guest_name']) ? $_SESSION['guest_name'] : '';
-		$context['email'] =isset($_SESSION['guest_email']) ? $_SESSION['guest_email'] :  '';
+		$context['email'] = isset($_SESSION['guest_email']) ? $_SESSION['guest_email'] : '';
 	}
 }
 

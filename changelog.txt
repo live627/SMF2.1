@@ -56,6 +56,7 @@ December 2009
  ! Incorrect pm count (requires "Recount all forum totals and statistics" to fix existing incorrect pm counts) (PersonalMessage.php) [Bug 4043]
  ! Hanging transaction in Sqlite (DbPackages-sqlite) [Bug 4086]
  * Duplicate css and misspelt class (ie6.css, index.css, rtl.css) [Not tracked]
+ ! Removed even more extraneous spaces Thx Nao, (Many files) [Bug 4122]
 
 
 November 2009

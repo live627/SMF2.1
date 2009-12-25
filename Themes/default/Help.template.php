@@ -1093,7 +1093,7 @@ function template_manual_profile_info_summary()
 										</tr>
 										<tr>
 											<td><strong>', $txt['manual_profile_status'], ':</strong></td>
-											<td><em><a href="', $scripturl, '?action=help;area=sending_pms" title="', $txt['manual_profile_pm'], ' (', $txt['manual_profile_online'], ')  "><img src="', $settings['images_url'], '/useron.gif" border="0" align="middle" alt="', $txt['manual_profile_online'], '" /></a> <span class="smalltext">', $txt['manual_profile_online'], '</span></em></td>
+											<td><em><a href="', $scripturl, '?action=help;area=sending_pms" title="', $txt['manual_profile_pm'], ' (', $txt['manual_profile_online'], ')"><img src="', $settings['images_url'], '/useron.gif" border="0" align="middle" alt="', $txt['manual_profile_online'], '" /></a> <span class="smalltext">', $txt['manual_profile_online'], '</span></em></td>
 										</tr>
 										<tr>
 											<td colspan="2">

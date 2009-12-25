@@ -238,7 +238,7 @@ function smf_db_table_sql($tableName)
 			$row['data_type'] .= '(' . $row['character_maximum_length'] . ')';
 
 		// Make the CREATE for this column.
-		$schema_create .= '  ' . $row['column_name'] . ' ' . $row['data_type'] . ($row['is_nullable'] != 'YES' ? ' NOT NULL' : '');
+		$schema_create .= ' ' . $row['column_name'] . ' ' . $row['data_type'] . ($row['is_nullable'] != 'YES' ? ' NOT NULL' : '');
 
 		// Add a default...?
 		if (trim($row['column_default']) != '')

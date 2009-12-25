@@ -176,7 +176,7 @@ MouseOver.prototype.mouseMove = function(oEvent)
 	if (oEvent.pageX)
 	{
 		this.oDiv.style.left = (oEvent.pageX + 20) + 'px';
-		this.oDiv.style.top = (oEvent.pageY  + 20) + 'px';
+		this.oDiv.style.top = (oEvent.pageY + 20) + 'px';
 	}
 	else
 	{

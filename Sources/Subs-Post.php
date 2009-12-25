@@ -1744,7 +1744,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	$msgOptions['approved'] = isset($msgOptions['approved']) ? (int) $msgOptions['approved'] : 1;
 	$topicOptions['id'] = empty($topicOptions['id']) ? 0 : (int) $topicOptions['id'];
 	$topicOptions['poll'] = isset($topicOptions['poll']) ? (int) $topicOptions['poll'] : null;
-	$topicOptions['lock_mode'] = isset($topicOptions['lock_mode']) ?  $topicOptions['lock_mode'] : null;
+	$topicOptions['lock_mode'] = isset($topicOptions['lock_mode']) ? $topicOptions['lock_mode'] : null;
 	$topicOptions['sticky_mode'] = isset($topicOptions['sticky_mode']) ? $topicOptions['sticky_mode'] : null;
 	$posterOptions['id'] = empty($posterOptions['id']) ? 0 : (int) $posterOptions['id'];
 	$posterOptions['ip'] = empty($posterOptions['ip']) ? $user_info['ip'] : $posterOptions['ip'];
@@ -2435,7 +2435,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	{
 		$customIndexSettings = unserialize($modSettings['search_custom_index_config']);
 
-		$stopwords = empty($modSettings['search_stopwords']) ?  array() : explode(',', $modSettings['search_stopwords']);
+		$stopwords = empty($modSettings['search_stopwords']) ? array() : explode(',', $modSettings['search_stopwords']);
 		$old_index = text2words($old_body, $customIndexSettings['bytes_per_word'], true);
 		$new_index = text2words($msgOptions['body'], $customIndexSettings['bytes_per_word'], true);
 

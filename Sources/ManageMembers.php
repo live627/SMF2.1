@@ -588,7 +588,7 @@ function ViewMemberlist()
 						return $difference;
 					'),
 				),
-				'sort' =>  array(
+				'sort' => array(
 					'default' => 'last_login DESC',
 					'reverse' => 'last_login',
 				),
@@ -600,7 +600,7 @@ function ViewMemberlist()
 				'data' => array(
 					'db' => 'posts',
 				),
-				'sort' =>  array(
+				'sort' => array(
 					'default' => 'posts',
 					'reverse' => 'posts DESC',
 				),
@@ -922,7 +922,7 @@ function MembersAwaitingActivation()
 						return timeformat($rowData[\'date_registered\']);
 					'),
 				),
-				'sort' =>  array(
+				'sort' => array(
 					'default' => 'date_registered DESC',
 					'reverse' => 'date_registered',
 				),

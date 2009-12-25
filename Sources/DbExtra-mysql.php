@@ -361,7 +361,7 @@ function smf_db_table_sql($tableName)
 	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
 		// Make the CREATE for this column.
-		$schema_create .= '  ' . $row['Field'] . ' ' . $row['Type'] . ($row['Null'] != 'YES' ? ' NOT NULL' : '');
+		$schema_create .= ' ' . $row['Field'] . ' ' . $row['Type'] . ($row['Null'] != 'YES' ? ' NOT NULL' : '');
 
 		// Add a default...?
 		if (!empty($row['Default']) || $row['Null'] !== 'YES')
@@ -420,7 +420,7 @@ function smf_db_table_sql($tableName)
 		// Ensure the columns are in proper order.
 		ksort($columns);
 
-		$schema_create .= ',' . $crlf . '  ' . $keyname . ' (' . implode($columns, ', ') . ')';
+		$schema_create .= ',' . $crlf . ' ' . $keyname . ' (' . implode($columns, ', ') . ')';
 	}
 
 	// Now just get the comment and type... (MyISAM, etc.)
