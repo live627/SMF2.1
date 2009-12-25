@@ -246,9 +246,9 @@ function Vote()
 	if ($user_info['is_guest'] && count($pollOptions) > 0)
 	{
 		// Time is stored in case the poll is reset later, plus what they voted for.
-		$_COOKIE['guest_poll_vote'] = empty($_COOKIE['guest_poll_vote']) ? '' : $_COOKIE['guest_poll_vote'] ;
+		$_COOKIE['guest_poll_vote'] = empty($_COOKIE['guest_poll_vote']) ? '' : $_COOKIE['guest_poll_vote'];
 		// ;id,timestamp,[vote,vote...]; etc
-		$_COOKIE['guest_poll_vote'] .= ';' . $row['id_poll'] . ',' . time() . ',' . (count($pollOptions) > 1 ? explode(',' . $pollOptions) : $pollOptions[0] );
+		$_COOKIE['guest_poll_vote'] .= ';' . $row['id_poll'] . ',' . time() . ',' . (count($pollOptions) > 1 ? explode(',' . $pollOptions) : $pollOptions[0]);
 
 		// Increase num guest voters count by 1
 		$smcFunc['db_query']('', '
