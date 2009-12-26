@@ -737,8 +737,9 @@ ALTER COLUMN ip TYPE int8;
 /******************************************************************************/
 
 ---# Removing index on hits...
-ALTER TABLE {$db_prefix}log_activity
-DROP INDEX IF EXISTS hits;
+---{
+$smcFunc['db_remove_index']($db_prefix . 'log_activity', $db_prefix . 'log_activity_hits');
+---}
 ---#
 
 /******************************************************************************/
