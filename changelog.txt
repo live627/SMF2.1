@@ -72,7 +72,7 @@ December 2009
  * Invalid CSS (index.css) [Bug 4120]
  * Make Shortcuts work in Firefox (editor.js) [Bug 4108]
  * Chrome auto completes or empties fields when it shouldn't (profile.js, Profile.template.php) [Bug 3485]
-
+ ! Don't waste cpu cycles on an empty string (Subs.php) [Bug 4102]
 
 November 2009
 --------------------------------------------------------------------------------

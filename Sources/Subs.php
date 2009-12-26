@@ -867,6 +867,10 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 	static $bbc_codes = array(), $itemcodes = array(), $no_autolink_tags = array();
 	static $disabled;
 
+	// Don't waste cycles
+	if ($message == '')
+		return '';
+
 	// Never show smileys for wireless clients.  More bytes, can't see it anyway :P.
 	if (WIRELESS)
 		$smileys = false;
