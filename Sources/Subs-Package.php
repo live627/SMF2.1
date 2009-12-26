@@ -257,6 +257,13 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 		$header = substr($data, $offset << 9, 512);
 		$current = unpack('a100filename/a8mode/a8uid/a8gid/a12size/a12mtime/a8checksum/a1type/a100linkname/a6magic/a2version/a32uname/a32gname/a8devmajor/a8devminor/a155path', $header);
 
+		// Blank record?  This is probably at the end of the file.
+		if (empty($current['filename']))
+		{
+			$offset += 512;
+			continue;
+		}
+
 		if ($current['type'] == 5 && substr($current['filename'], -1) != '/')
 			$current['filename'] .= '/';
 
@@ -275,7 +282,7 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 			$checksum += ord($header{$i});
 
 		if ($current['checksum'] != $checksum)
-			return $return;
+			break;
 
 		$size = ceil($current['size'] / 512);
 		$current['data'] = substr($data, ++$offset << 9, $current['size']);
