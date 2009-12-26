@@ -1538,7 +1538,7 @@ function template_download_language()
 	// An error?
 	if (!empty($context['error_message']))
 		echo '
-	<div class="errorbox">
+	<div id="errorbox">
 		<p>', $context['error_message'], '</p>
 	</div>';
 
@@ -1629,7 +1629,7 @@ function template_download_language()
 	{
 		if (!empty($context['package_ftp']['error']))
 			echo '
-			<div class="errorbox">
+			<div id="errorbox">
 				<tt>', $context['package_ftp']['error'], '</tt>
 			</div>';
 
@@ -1734,7 +1734,7 @@ function template_modify_language_entries()
 	// Not writable?
 	if ($context['lang_file_not_writable_message'])
 		echo '
-			<div class="errorbox">
+			<div id="errorbox">
 				<p class="alert">', $context['lang_file_not_writable_message'], '</p>
 			</div>';
 

@@ -2677,13 +2677,6 @@ dl
 	padding: 0;
 }
 
-.profile_error
-{
-	border: 2px dashed red;
-	padding: 5px;
-	margin: 0 1ex 1ex 1ex;
-}
-
 /* The basic user info on the left */
 #basicinfo
 {
