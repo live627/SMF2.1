@@ -70,6 +70,7 @@ December 2009
  * Harmonized error messages (Admin template, Profile template, index.css, compat.css) [Bug 4019]
  * Layout was broken when banning a user (admin.css)[Bug 4085]
  * Invalid CSS (index.css) [Bug 4120]
+ * Make Shortcuts work in Firefox (editor.js) [Bug 4108]
 
 
 November 2009

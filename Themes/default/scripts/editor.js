@@ -1226,18 +1226,13 @@ smc_Editor.prototype.shortcutCheck = function(oEvent)
 
 			bCancelEvent = true;
 		}
-
-		if (sFoundCode == 'preview')
+		else if (sFoundCode == 'preview')
 		{
 			previewPost();
 			bCancelEvent = true;
 		}
-
-		if (document.getElementById('cmd_' + sFoundCode))
-		{
-			this.oBBCBox.emulateClick(sFoundCode);
-			bCancelEvent = true;
-		}
+		else
+			bCancelEvent = this.opt.oBBCBox.emulateClick(sFoundCode);
 
 		if (bCancelEvent)
 		{
@@ -1689,9 +1684,13 @@ smc_BBCButtonBox.prototype.emulateClick = function (sCode)
 		{
 			var oCurControl = this.opt.aButtonRows[iButtonRowIndex][iButtonIndex];
 			if (oCurControl.sType == 'button' && oCurControl.sCode == sCode)
+			{
 				eval(this.opt.sButtonClickHandler + '(oCurControl)');
+				return true;
+			}
 		}
 	}
+	return false;
 }
 
 smc_BBCButtonBox.prototype.setSelect = function (sSelectName, sValue)
