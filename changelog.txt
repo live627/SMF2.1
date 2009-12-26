@@ -64,6 +64,7 @@ December 2009
  * upperframe should be lowerframe, and should be catbg not titlebg (Reminder.template.php) (Reported by Brettflan & Max_74)[Not Tracked]
  ! For Newsletters use IN instead of LIKE so that mysql can use the email_address index (ManageNews.php) (Reported by Ensiferous) [Not tracked]
  * Removed extra padding on information and description classes (index.css, compat.css) [Bug 3925]
+ ! db_add_column missing unsigned integer support (mysql only) (Reported by Windy) [Bug 4125]
 
 
 November 2009

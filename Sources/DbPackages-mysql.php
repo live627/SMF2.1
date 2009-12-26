@@ -275,13 +275,17 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 	// Get the specifics...
 	$column_info['size'] = isset($column_info['size']) && is_numeric($column_info['size']) ? $column_info['size'] : null;
 	list ($type, $size) = $smcFunc['db_calculate_type']($column_info['type'], $column_info['size']);
+
+	// Allow unsigned integers (mysql only)
+	$unsigned = in_array($type, array('int', 'tinyint', 'smallint', 'mediumint', 'bigint')) && !empty($column['unsigned']) ? 'unsigned ' : '';
+
 	if ($size !== null)
 		$type = $type . '(' . $size . ')';
 
 	// Now add the thing!
 	$query = '
 		ALTER TABLE ' . $table_name . '
-		ADD ' . $column_info['name'] . ' ' . $type . ' ' . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
+		ADD ' . $column_info['name'] . ' ' . $type . ' ' . (!empty($unsigned) ? $unsigned : '') . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
 			(!isset($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'') . ' ' .
 			(empty($column_info['auto']) ? '' : 'auto_increment') . ' ';
 	$smcFunc['db_query']('', $query,
