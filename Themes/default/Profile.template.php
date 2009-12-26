@@ -8,6 +8,13 @@ function template_profile_above()
 
 	echo '
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/profile.js"></script>';
+	
+	// Prevent Chrome from auto completing fields when viewing/editing other members profiles
+	if ($context['browser']['is_chrome'] && !$context['user']['is_owner'])
+		echo '
+	<script type="text/javascript"><!-- // --><![CDATA[
+		disableAutoComplete();
+	// ]]></script>';
 
 	// If an error occurred while trying to save previously, give the user a clue!
 	if (!empty($context['post_errors']))

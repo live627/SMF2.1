@@ -71,6 +71,7 @@ December 2009
  * Layout was broken when banning a user (admin.css)[Bug 4085]
  * Invalid CSS (index.css) [Bug 4120]
  * Make Shortcuts work in Firefox (editor.js) [Bug 4108]
+ * Chrome auto completes or empties fields when it shouldn't (profile.js, Profile.template.php) [Bug 3485]
 
 
 November 2009
