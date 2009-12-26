@@ -68,6 +68,7 @@ December 2009
  ! Multiple attachment dir broken (ManageAttachments.php) [Bug 4131]
  ! Administrators could still access warning area even when warnings disabled (Several source files) [Bug 4091]
  * Harmonized error messages (Admin template, Profile template, index.css, compat.css) [Bug 4019]
+ * Layout was broken when banning a user (admin.css)[Bug 4085]
 
 
 November 2009
