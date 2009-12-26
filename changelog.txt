@@ -66,6 +66,7 @@ December 2009
  * Removed extra padding on information and description classes (index.css, compat.css) [Bug 3925]
  ! db_add_column missing unsigned integer support (mysql only) (Reported by Windy) [Bug 4125]
  ! Multiple attachment dir broken (ManageAttachments.php) [Bug 4131]
+ ! Administrators could still access warning area even when warnings disabled (Several source files) [Bug 4091]
 
 
 November 2009

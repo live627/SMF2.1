@@ -78,7 +78,7 @@ function ModerationMain($dont_call = false)
 				),
 				'warnings' => array(
 					'label' => $txt['mc_warnings'],
-					'enabled' => $modSettings['warning_settings'][0] == 1,
+					'enabled' => in_array('w', $context['admin_features']) && $modSettings['warning_settings'][0] == 1,
 					'function' => 'ViewWarnings',
 					'subsections' => array(
 						'log' => array($txt['mc_warning_log']),
