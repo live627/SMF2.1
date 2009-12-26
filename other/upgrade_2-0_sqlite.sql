@@ -6,7 +6,7 @@
 
 ---# Adding search ability to custom fields.
 ---{
-$smcFunc['db_alter_table']('custom_fields', array(
+$smcFunc['db_alter_table']('{db_prefix}custom_fields', array(
 	'add' => array(
 		'can_search' => array(
 			'name' => 'can_search',
@@ -31,7 +31,7 @@ upgrade_query("
 
 ---# Adding new custom fields columns.
 ---{
-$smcFunc['db_alter_table']('custom_fields', array(
+$smcFunc['db_alter_table']('{db_prefix}custom_fields', array(
 	'add' => array(
 		'enclose' => array(
 			'name' => 'enclose',
@@ -43,7 +43,7 @@ $smcFunc['db_alter_table']('custom_fields', array(
 	)
 ));
 
-$smcFunc['db_alter_table']('custom_fields', array(
+$smcFunc['db_alter_table']('{db_prefix}custom_fields', array(
 	'add' => array(
 		'placement' => array(
 			'name' => 'placement',
@@ -167,7 +167,7 @@ if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '2.0 Beta
 
 ---# Adding advanced password brute force protection to "members" table...
 ---{
-$smcFunc['db_alter_table']('members', array(
+$smcFunc['db_alter_table']('{db_prefix}members', array(
 	'add' => array(
 		'passwd_flood' => array(
 			'name' => 'passwd_flood',
@@ -236,7 +236,7 @@ $smcFunc['db_insert']('ignore',
 
 ---# Adding type to mail queue...
 ---{
-$smcFunc['db_alter_table']('mail_queue', array(
+$smcFunc['db_alter_table']('{db_prefix}mail_queue', array(
 	'add' => array(
 		'private' => array(
 			'name' => 'private',
@@ -257,7 +257,7 @@ $smcFunc['db_alter_table']('mail_queue', array(
 
 ---# Adding multiple attachment path functionality.
 ---{
-$smcFunc['db_alter_table']('attachments', array(
+$smcFunc['db_alter_table']('{db_prefix}attachments', array(
 	'add' => array(
 		'id_folder' => array(
 			'name' => 'id_folder',
@@ -274,7 +274,7 @@ $smcFunc['db_alter_table']('attachments', array(
 
 ---# Adding file hash.
 ---{
-$smcFunc['db_alter_table']('attachments', array(
+$smcFunc['db_alter_table']('{db_prefix}attachments', array(
 	'add' => array(
 		'file_hash' => array(
 			'name' => 'file_hash',
@@ -295,7 +295,7 @@ $smcFunc['db_alter_table']('attachments', array(
 
 ---# Changing field_options column to a larger field type...
 ---{
-$smcFunc['db_alter_table']('custom_fields', array(
+$smcFunc['db_alter_table']('{db_prefix}custom_fields', array(
 	'change' => array(
 		'aim' => array(
 			'name' => 'field_options',
@@ -314,7 +314,7 @@ $smcFunc['db_alter_table']('custom_fields', array(
 
 ---# Adding reset poll timestamp and guest voters counter...
 ---{
-$smcFunc['db_alter_table']('polls', array(
+$smcFunc['db_alter_table']('{db_prefix}polls', array(
 	'add' => array(
 		'reset_poll' => array(
 			'name' => 'reset_poll',
@@ -362,7 +362,7 @@ while ($request && $row = $smcFunc['db_fetch_assoc']($request))
 
 ---# Adding restore from recycle feature...
 ---{
-$smcFunc['db_alter_table']('topics', array(
+$smcFunc['db_alter_table']('{db_prefix}topics', array(
 	'add' => array(
 		'id_previous_board' => array(
 			'name' => 'id_previous_board',
@@ -389,7 +389,7 @@ $smcFunc['db_alter_table']('topics', array(
 
 ---# Changing 'aim' to varchar to allow using email...
 ---{
-$smcFunc['db_alter_table']('members', array(
+$smcFunc['db_alter_table']('{db_prefix}members', array(
 	'change' => array(
 		'aim' => array(
 			'name' => 'aim',
@@ -409,7 +409,7 @@ $smcFunc['db_alter_table']('members', array(
 
 ---# Changing event title column to a larger field type...
 ---{
-$smcFunc['db_alter_table']('calendar', array(
+$smcFunc['db_alter_table']('{db_prefix}calendar', array(
 	'change' => array(
 		'title' => array(
 			'name' => 'title',
@@ -425,7 +425,7 @@ $smcFunc['db_alter_table']('calendar', array(
 
 ---# Changing holiday title column to a larger field type...
 ---{
-$smcFunc['db_alter_table']('calendar_holidays', array(
+$smcFunc['db_alter_table']('{db_prefix}calendar_holidays', array(
 	'change' => array(
 		'title' => array(
 			'name' => 'title',
@@ -521,7 +521,7 @@ $smcFunc['db_remove_index']($db_prefix . 'log_activity', $db_prefix . 'log_activ
 
 ---# Adding column that stores the PM receiving setting...
 ---{
-$smcFunc['db_alter_table']('members', array(
+$smcFunc['db_alter_table']('{db_prefix}members', array(
 	'add' => array(
 		'pm_receive_from' => array(
 			'name' => 'pm_receive_from',
@@ -542,7 +542,7 @@ $smcFunc['db_alter_table']('members', array(
 if (empty($modSettings['dont_repeat_buddylists']))
 {
 	// Make sure the pm_receive_from column has the right default value - early adoptors might have a '0' set here.
-	$smcFunc['db_alter_table']('members', array(
+	$smcFunc['db_alter_table']('{db_prefix}members', array(
 		'change' => array(
 			'pm_receive_from' => array(
 				'name' => 'pm_receive_from',
