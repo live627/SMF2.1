@@ -1304,7 +1304,7 @@ ul#navigation li
 }
 #content_section div.frame
 {
-	background: url(../images/theme/frame_repeat.png) repeat-y right;
+	background: url(../images/theme/frame_repeat.png) repeat-y top right;
 	display: block;
 	padding: 0 20px 0 0;
 }
@@ -3162,7 +3162,7 @@ dl.stats dd
 .statsbar span.right
 {
 	float: left;
-	background: url(../images/bar_stats.png) no-repeat 100%;
+	background: url(../images/bar_stats.png) no-repeat;
 	width: 6px;
 	height: 16px;
 }
