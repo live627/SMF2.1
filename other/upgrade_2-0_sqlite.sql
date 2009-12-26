@@ -608,7 +608,7 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 		// Try to get some settings from the current default theme.
 		$request = upgrade_query("
 			SELECT t1.value AS theme_dir, t2.value AS theme_url, t3.value AS images_url
-			FROM ({$db_prefix}themes AS t1, {$db_prefix}themes AS t2, {$db_prefix}themes AS t3)
+			FROM {$db_prefix}themes AS t1, {$db_prefix}themes AS t2, {$db_prefix}themes AS t3
 			WHERE t1.id_theme = 1
 				AND t1.id_member = 0
 				AND t1.variable = 'theme_dir'
@@ -647,14 +647,17 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 		$smcFunc['db_free_result']($request);
 
 		// Insert the core theme into the tables.
-		upgrade_query("
-			INSERT INTO {$db_prefix}themes
-				(id_member, id_theme, variable, value)
-			VALUES
-				(0, $id_core_theme, 'name', 'Core Theme'),
-				(0, $id_core_theme, 'theme_url', '$core[theme_url]'),
-				(0, $id_core_theme, 'images_url', '$core[images_url]'),
-				(0, $id_core_theme, 'theme_dir', '$core[theme_dir]')");
+		$smcFunc['db_insert']('ignore',
+			'{db_prefix}themes',
+				array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-255'),
+				array(
+					array(0, $id_core_theme, 'name', 'Core Theme'),
+					array(0, $id_core_theme, 'theme_url', $core['theme_url']),
+					array(0, $id_core_theme, 'images_url', $core['images_url']),
+					array(0, $id_core_theme, 'theme_dir', $core['theme_dir'])
+				),
+				array()
+		);
 
 		// Update the name of the default theme in the database.
 		upgrade_query("
