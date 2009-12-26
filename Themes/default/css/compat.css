@@ -183,7 +183,7 @@ table.table_grid thead tr.catbg th.smalltext
 }
 .information
 {
-	padding: 1em;
+	padding: 0.5em 1em;
 	font-size: 0.9em;
 	line-height: 1.5em;
 	border: 1px solid #bbb;
