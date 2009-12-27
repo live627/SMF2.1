@@ -346,7 +346,7 @@ if (copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $p
 	$rows[] = array(
 		'id_attach' => $id_attach,
 		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
-		'filename' => $row['filename'],	
+		'filename' => $row['filename'],
 		'file_hash' => $file_hash,
 		'id_msg' => $row['id_msg'],
 		'downloads' => $row['downloads'],

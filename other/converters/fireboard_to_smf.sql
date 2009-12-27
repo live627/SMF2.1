@@ -28,7 +28,7 @@ alterDatabase('members', 'change column', array(
 SELECT
 	m.id AS id_member, SUBSTRING(m.username, 1, 80) AS member_name,
 	SUBSTRING(m.name, 1, 255) AS real_name,
-	SUBSTRING(fb.signature, 1, 65534) AS signature, 
+	SUBSTRING(fb.signature, 1, 65534) AS signature,
 	IF(ISNULL(fb.posts), 0, fb.posts) AS posts,
 	SUBSTRING(SUBSTRING_INDEX(m.password, ':', 1), 1, 64) AS passwd, SUBSTRING_INDEX(m.password, ':', -1) AS password_salt,
 	IF(ISNULL(fb.karma), 0, fb.karma) AS karma_good, SUBSTRING(m.email, 1, 255) AS email_address,
@@ -262,7 +262,7 @@ if (copy($path_from . '/images/fbfiles/avatars/' . $row['filename'], $attachment
 	$rows[] = array(
 	'id_attach' => $id_attach,
 	'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
-	'filename' => $row['filename'],	
+	'filename' => $row['filename'],
 	'file_hash' => $file_hash,
 	'id_member' => $row['id_member'],
 );

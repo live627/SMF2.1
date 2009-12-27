@@ -243,7 +243,7 @@ if (copy($_POST['path_from'] . '/components/com_simpleboard/avatars/', $attachme
 	$rows[] = array(
 		'id_attach' => $id_attach,
 		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
-		'filename' => $row['filename'],	
+		'filename' => $row['filename'],
 		'file_hash' => $file_hash,
 		'id_member' => $row['id_member'],
 	);

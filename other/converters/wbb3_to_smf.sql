@@ -97,7 +97,7 @@ SELECT
 	u.lastActivityTime AS last_login,SUBSTRING(u.username, 1, 255) AS real_name,
 	u.password AS passwd, SUBSTRING(u.email, 1, 64) AS email_address,
 	v.userOption17 AS website_title,	v.userOption17 AS website_url, '' AS icq, '' AS aim,
-	'' AS yim, '' AS msn, 
+	'' AS yim, '' AS msn,
 	IF(IFNULL(v.userOption12, '') = '', 0, v.userOption12) AS gender,
 	v.userOption11 AS birthdate,
 	'' AS show_online, '' AS personal_text, '0' AS id_group, '' AS hide_email,

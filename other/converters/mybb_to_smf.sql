@@ -298,7 +298,7 @@ fclose($fp);
 $rows[] = array(
 	'id_attach' => $id_attach,
 	'size' => $row['filesize'],
-	'filename' => $row['filename'],	
+	'filename' => $row['filename'],
 	'file_hash' => $file_hash,
 	'id_msg' => $row['id_msg'],
 	'downloads' => $row['downloads'],

@@ -135,7 +135,7 @@ SELECT
 	SUBSTRING(u.user_password, 1, 64) AS passwd, u.user_lastvisit AS last_login,
 	u.user_regdate AS date_registered,
 	SUBSTRING(u.user_from, 1, 255) AS location,
-	u.user_posts AS posts, 
+	u.user_posts AS posts,
 	IF(u.user_level = 3, 1, (IF(ISNULL(mg.id_group), 0, mg.id_group))) AS id_group,
 	u.user_new_privmsg AS instant_messages,
 	SUBSTRING(u.user_email, 1, 255) AS email_address,

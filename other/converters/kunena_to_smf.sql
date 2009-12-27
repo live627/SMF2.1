@@ -263,7 +263,7 @@ if (copy($path_from . '/images/fbfiles/avatars/' . $row['filename'], $attachment
 	$rows[] = array(
 	'id_attach' => $id_attach,
 	'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
-	'filename' => $row['filename'],	
+	'filename' => $row['filename'],
 	'file_hash' => $file_hash,
 	'id_member' => $row['id_member'],
 );

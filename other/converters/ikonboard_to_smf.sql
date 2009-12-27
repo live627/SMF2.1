@@ -315,7 +315,7 @@ if (copy($ib_uploads . '/' . $row['filename'], $attachmentUploadDir . '/' . $phy
 	$rows[] = array(
 		'id_attach' => $id_attach,
 		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
-		'filename' => $real_filename,	
+		'filename' => $real_filename,
 		'file_hash' => $file_hash,
 		'id_msg' => $row['id_msg'],
 		'downloads' => $row['downloads'],

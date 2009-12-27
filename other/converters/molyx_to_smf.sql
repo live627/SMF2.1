@@ -267,7 +267,7 @@ if (file_exists($oldfile) && copy($_POST['path_from'] . '/data/uploads/' . $row[
 	$rows[] = array(
 		'id_attach' => $id_attach,
 		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
-		'filename' => basename($row['filename']),	
+		'filename' => basename($row['filename']),
 		'file_hash' => $file_hash,
 		'id_msg' => $row['id_msg'],
 		'downloads' => $row['downloads'],

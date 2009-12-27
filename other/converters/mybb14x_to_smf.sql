@@ -85,7 +85,7 @@ TRUNCATE {$to_prefix}log_mark_read;
 SELECT
 	t.tid AS id_topic, t.fid AS id_board, t.sticky AS is_sticky,
 	t.poll AS id_poll, t.views AS num_views, IFNULL(t.uid, 0) AS id_member_started,
-	IFNULL(ul.uid, 0) AS id_member_updated, t.replies AS num_replies, 
+	IFNULL(ul.uid, 0) AS id_member_updated, t.replies AS num_replies,
 	CASE
 		WHEN (t.closed = '1') THEN 1
 		ELSE 0
@@ -165,7 +165,7 @@ for ($i = 0, $n = count($options); $i < $n; $i++)
 		'label' => substr('" . addslashes($options[$i]) . "', 1, 255),
 		'votes' => @$votes[$i],
 	);
-}	
+}
 ---}
 SELECT pid AS id_poll, options, votes
 FROM {$from_prefix}polls;
@@ -342,7 +342,7 @@ if (copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $p
 	$rows[] = array(
 		'id_attach' => $id_attach,
 		'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
-		'filename' => $row['filename'],	
+		'filename' => $row['filename'],
 		'file_hash' => $file_hash,
 		'id_msg' => $row['id_msg'],
 		'downloads' => $row['downloads'],

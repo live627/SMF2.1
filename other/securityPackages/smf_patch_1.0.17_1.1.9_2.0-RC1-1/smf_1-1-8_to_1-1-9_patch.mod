@@ -462,7 +462,7 @@ $sourcedir/PackageGet.php
 				if ($package['description'] == '')
 					$package['description'] = $txt['pacman8'];
 				else
-					$package['description'] = parse_bbc(preg_replace('~\[[/]?html\]~i', '', htmlspecialchars($package['description'])));				
+					$package['description'] = parse_bbc(preg_replace('~\[[/]?html\]~i', '', htmlspecialchars($package['description'])));
 </replace>
 
 
@@ -736,7 +736,7 @@ $sourcedir/Security.php
 <search for>
 	if (isset($_GET['confirm']) && isset($_SESSION['confirm_' . $action]) && md5($_GET['confirm'] . $_SERVER['HTTP_USER_AGENT']) !== $_SESSION['confirm_' . $action])
 		return true;
-		
+
 	else
 	{
 		$token = md5(mt_rand() . session_id() . (string) microtime() . $modSettings['rand_seed']);
@@ -746,7 +746,7 @@ $sourcedir/Security.php
 <replace>
 	if (isset($_GET['confirm']) && isset($_SESSION['confirm_' . $action]) && md5($_GET['confirm'] . $_SERVER['HTTP_USER_AGENT']) == $_SESSION['confirm_' . $action])
 		return true;
-		
+
 	else
 	{
 		$token = md5(mt_rand() . session_id() . (string) microtime() . $modSettings['rand_seed']);

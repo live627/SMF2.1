@@ -502,7 +502,7 @@ if (!empty($attachmentExtension))
 $rows[] = array(
 	'id_attach' => $id_attach,
 	'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
-	'filename' => $row['filename'],	
+	'filename' => $row['filename'],
 	'file_hash' => $file_hash,
 	'id_msg' => $row['id_msg'],
 	'downloads' => $row['downloads'],
@@ -562,7 +562,7 @@ elseif (!copy($vb_settings['avatarpath'] . '/avatar' . $row['id_member'] . '_' .
 $rows[] = array(
 	'id_attach' => $id_attach,
 	'size' => filesize($attachmentUploadDir . '/' . $physical_filename),
-	'filename' => $row['filename'],	
+	'filename' => $row['filename'],
 	'file_hash' => $file_hash,
 	'id_member' => $row['id_member'],
 );

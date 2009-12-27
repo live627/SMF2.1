@@ -771,7 +771,7 @@ $physical_filename = $id_attach . '_' . $file_hash;
 
 if (strlen($physical_filename) > 255)
 	return;
-	
+
 if (copy($INFO['upload_dir'] . '/' . $oldFileName, $attachmentUploadDir . '/' . $physical_filename))
 {
 	$rows[] = array(
