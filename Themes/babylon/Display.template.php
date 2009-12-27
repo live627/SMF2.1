@@ -101,7 +101,7 @@ function template_main()
 
 			if ($context['can_remove_poll'])
 				echo '
-						<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">', $txt['poll_remove'], '</a>';
+						<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">', $txt['poll_remove'], '</a>';
 			echo '
 					</td>
 				</tr>', $context['allow_poll_view'] ? '
