@@ -100,7 +100,7 @@ $temp = $row['id_topic'];
 
 $request = convert_query("
 	SELECT
-		COUNT(post_id) - 1 as num_replies, MIN(post_id) as id_first_msg, MAX(post_id) AS id_last_msg
+		COUNT(post_id) - 1 as num_replies, IFNULL(MIN(post_id), 0) as id_first_msg, IFNULL(MAX(post_id), 0) AS id_last_msg
 	FROM {$from_prefix}posts
 	WHERE thread_id = " . $temp);
 
@@ -275,6 +275,6 @@ WHERE id_group > 8;
 
 ---* {$to_prefix}membergroups
 	/* To get around weird ids we jump a little. We skip 8 just so its easier to know where the ids went */
-	SELECT group_id + 8 AS id_group, group_name AS group_name, '' AS online_color, '-1' AS min_posts, '' AS max_messages, '' AS stars
+	SELECT group_id + 8 AS id_group, group_name AS group_name, '' AS online_color, '-1' AS min_posts, '0' AS max_messages, '0' AS stars
 	FROM {$from_prefix}user_groups;
 ---*
