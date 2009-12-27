@@ -58,8 +58,9 @@ function template_print_above()
 			blockquote, code
 			{
 				border: 1px solid #000;
-				margin: 1px;
+				margin: 3px;
 				padding: 1px;
+				display: block;
 			}
 			code
 			{

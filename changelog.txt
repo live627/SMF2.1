@@ -79,6 +79,7 @@ December 2009
  ! Tars might extract 0kb files (Subs-Package.php) [Bug 2747]
  ! Sqlite upgrade sql missing db_prefix (upgrade_2-0_sqlite.sql) [Bug 4087]
  * Warnings were not properly aligned (index.css)[Bug 4022]
+ * Code blocks should use a printable layout (Printpage template)[Bug 4116]
 
 
 November 2009
