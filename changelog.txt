@@ -81,6 +81,7 @@ December 2009
  * Warnings were not properly aligned (index.css)[Bug 4022]
  * Code blocks should use a printable layout (Printpage template)[Bug 4116]
  ! Visual verification on qr shouldn't pass you to full post unless there was an error (Post.php) [Bug 3940]
+ ! js_operations undefined index (Packages.php) [Bug 3858]
 
 
 November 2009

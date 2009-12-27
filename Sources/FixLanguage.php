@@ -645,7 +645,7 @@ $txtChanges = array(
 		'pacman10' => 'file_location',
 		'package42' => 'install_actions',
 		'package44' => 'perform_actions',
-		'package45' => 'corrupt_compatable',
+		'package45' => 'corrupt_compatible',
 		'package50' => 'package_create',
 		'package51' => 'package_move',
 		'package52' => 'package_delete',
@@ -656,6 +656,7 @@ $txtChanges = array(
 		'package57' => 'execute_code',
 		'apply_mod' => 'install_mod',
 		'mod_apply' => 'install_mod',
+		'corrupt_compatable' => 'corrupt_compatible',
 	),
 	'PersonalMessage' => array(
 		143 => 'pm_inbox',

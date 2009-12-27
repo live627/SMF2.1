@@ -94,7 +94,7 @@ function template_view_package()
 
 	if (empty($context['actions']) && empty($context['database_changes']))
 		echo '
-				<strong>', $txt['corrupt_compatable'], '</strong>
+				<strong>', $txt['corrupt_compatible'], '</strong>
 			</div>';
 	else
 	{
@@ -302,25 +302,27 @@ function template_view_package()
 		var aOperationElements = new Array();';
 
 		// Operations.
-		foreach ($js_operations as $key => $operation)
+		if (!empty($js_operations))
 		{
-			echo '
-		aOperationElements[', $key, '] = new smc_Toggle({
-			bToggleEnabled: true,
-			bCurrentlyCollapsed: ', $operation ? 'false' : 'true', ',
-			aSwappableContainers: [
-				\'operation_', $key, '\'
-			],
-			aSwapImages: [
-				{
-					sId: \'operation_img_', $key, '\',
-					srcExpanded: smf_images_url + \'/sort_down.gif\',
-					altExpanded: \'*\',
-					srcCollapsed: smf_images_url + \'/selected.gif\',
-					altCollapsed: \'*\'
-				}
-			]
-		});';
+			foreach ($js_operations as $key => $operation)
+			{
+				echo '
+			aOperationElements[', $key, '] = new smc_Toggle({
+				bToggleEnabled: true,
+				bCurrentlyCollapsed: ', $operation ? 'false' : 'true', ',
+				aSwappableContainers: [
+					\'operation_', $key, '\'
+				],
+				aSwapImages: [
+					{
+						sId: \'operation_img_', $key, '\',
+						srcExpanded: smf_images_url + \'/sort_down.gif\',
+						altExpanded: \'*\',
+						srcCollapsed: smf_images_url + \'/selected.gif\',
+						altCollapsed: \'*\'
+					}
+				]
+			});';
 		}
 
 	echo '
@@ -423,7 +425,7 @@ function template_extract_package()
 	}
 	else
 		echo '
-				', $txt['corrupt_compatable'];
+				', $txt['corrupt_compatible'];
 
 	echo '
 			</div>
