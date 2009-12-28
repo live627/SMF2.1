@@ -637,7 +637,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 					UPDATE ' . $table . '
 					SET ' . $updateData . '
 					' . (empty($where) ? '' : ' WHERE ' . $where),
-					$entry, $connection
+					array_combine(array_keys($columns), $entry), $connection
 				);
 
 				// Make a note that the replace actually overwrote.
