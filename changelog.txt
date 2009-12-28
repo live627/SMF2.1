@@ -83,6 +83,7 @@ December 2009
  ! Visual verification on qr shouldn't pass you to full post unless there was an error (Post.php) [Bug 3940]
  ! js_operations undefined index (Packages.php) [Bug 3858]
  * Non-Curve themes missing mandatory session checks in the url to remove a poll (Display.template.php) [Bug 4075]
+ * Child board new icon should link to the unread action (BoardIndex Template, MessageIndex Template)
 
 
 November 2009
