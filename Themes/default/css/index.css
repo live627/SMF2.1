@@ -3172,7 +3172,7 @@ dl.stats dd
 .statsbar span.right
 {
 	float: left;
-	background: url(../images/bar_stats.png) no-repeat;
+	background: url(../images/bar_stats.png) no-repeat 100%;
 	width: 6px;
 	height: 16px;
 }
