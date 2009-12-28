@@ -323,6 +323,7 @@ function template_view_package()
 					}
 				]
 			});';
+			}
 		}
 
 	echo '
