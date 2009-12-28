@@ -85,6 +85,7 @@ December 2009
  * Non-Curve themes missing mandatory session checks in the url to remove a poll (Display.template.php) [Bug 4075]
  * Child board new icon should link to the unread action (BoardIndex Template, MessageIndex Template)
  * Missing closing brace (Packages.template.php) [Bug 4139]
+ * Cannot install languages (Admin.template.php) [Bug 4138]
 
 
 November 2009

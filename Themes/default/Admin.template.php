@@ -1545,7 +1545,7 @@ function template_download_language()
 	// Provide something of an introduction...
 	echo '
 	<div id="admincenter">
-		<form action="', $scripturl, '?action=admin;area=languages;sa=downloadlang;did=', $context['download_id'], '" method="post" accept-charset="', $context['character_set'], '">
+		<form action="', $scripturl, '?action=admin;area=languages;sa=downloadlang;did=', $context['download_id'], ';', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span>
 				', $txt['languages_download'], '
 			</h3>
