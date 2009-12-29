@@ -201,7 +201,7 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 	</head>
 	<body>
 		<div id="header">
-			<a href="http://www.simplemachines.org/" target="_blank"><img src="Themes/default/images/smflogo.png" style="width: 250px; float: right;" alt="Simple Machines" border="0" /></a>
+			<a href="http://www.simplemachines.org/" target="_blank"><img src="Themes/default/images/smflogo.' . (file_exists(dirname(__FILE__) . '/Themes/default/images/smflogo.png') ? 'png' : 'gif') . '" style="width: 250px; float: right;" alt="Simple Machines" border="0" /></a>
 			<div>', $txt['smf_repair_settings'], '</div>
 		</div>
 		<div id="content">';
@@ -215,7 +215,7 @@ echo '
 
 function initialize_inputs()
 {
-	global $smcFunc, $db_connection, $sourcedir, $db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_type;
+	global $smcFunc, $db_connection, $sourcedir, $db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_type, $context;
 
 	// Turn off magic quotes runtime and enable error reporting.
 	@set_magic_quotes_runtime(0);
@@ -268,13 +268,15 @@ function initialize_inputs()
 		// compat mode. Active!
 		$context['is_legacy'] = true;
 		if (!file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php') && $db_type == 'mysql')
-			smc_compat_initiate($smcFunc, $db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
+			$db_connection = smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
 		else
 		{
 			// Far as I know, this is 2.0.
 			$context['is_legacy'] = false;
 			require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
+			require_once($sourcedir . '/DbExtra-' . $db_type . '.php');
 			$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
+			db_extra_init();
 		}
 	}
 }
@@ -322,7 +324,9 @@ function show_settings()
 			SELECT DISTINCT variable, value
 			FROM {db_prefix}settings',
 			array(
-			)
+				'db_error_skip' => true
+			),
+			$db_connection
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$settings[$row['variable']] = $row['value'];
@@ -336,6 +340,7 @@ function show_settings()
 				AND variable IN ({array_string:variables})',
 			array(
 				'variables' => array('theme_dir', 'theme_url', 'images_url', 'name'),
+				'db_error_skip' => true
 			)
 		);
 
@@ -363,8 +368,8 @@ function show_settings()
 			'db_name' => array('flat', 'string'),
 			'db_user' => array($db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
 			'db_passwd' => array($db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
-			'ssi_db_user' => array($db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
-			'ssi_db_passwd' => array($db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
+			'ssi_db_user' => array($context['is_legacy'] || $db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
+			'ssi_db_passwd' => array($context['is_legacy'] || $db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
 			'db_prefix' => array('flat', 'string'),
 			'db_persist' => array('flat', 'int', 1),
 		),
@@ -372,7 +377,7 @@ function show_settings()
 			'boardurl' => array('flat', 'string'),
 			'boarddir' => array('flat', 'string'),
 			'sourcedir' => array('flat', 'string'),
-			'cachedir' => array('flat', 'string'),
+			'cachedir' => array($context['is_legacy'] ? 'hidden' : 'flat', 'string'),
 
 // !!! Currently broken, needs multipath support.
 //			'attachmentUploadDir' => array('db', 'string'),
@@ -455,10 +460,9 @@ function show_settings()
 
 	if ($db_connection == true)
 	{
-		$request = $smcFunc['db_query']('', '
-			SHOW TABLES LIKE {raw:log_topics}',
+		$request = $smcFunc['db_list_tables']('', '
+			{db_prefix}log_topics',
 			array(
-				'log_topics' => '%log_topics',
 				'db_error_skip' => true,
 			)
 		);
@@ -522,6 +526,7 @@ function show_settings()
 					// 2 is an attribute.
 
 					// Just some text..
+					case 3:
 					case 3:
 						str += node.nodeValue;
 						break;
@@ -931,7 +936,7 @@ function smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_pre
 		// Here's where the variables are injected to the query.
 		$insertRows = array();
 		foreach ($data as $dataRow)
-			$insertRows[] = smf_db_query(true, $insertData, array_combine($indexed_columns, $dataRow));
+			$insertRows[] = smf_db_query(false, $insertData, array_combine($indexed_columns, $dataRow));
 
 		// Determine the method of insertion.
 		$queryTitle = $method == 'replace' ? 'REPLACE' : ($method == 'ignore' ? 'INSERT IGNORE' : 'INSERT');
@@ -948,6 +953,52 @@ function smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_pre
 		);
 	}
 
+	// Returns all tables
+	function smf_db_list_tables($db = false, $filter = false)
+	{
+		global $db_name, $smcFunc;
+
+		$db = $db == false ? $db_name : $db;
+		$db = trim($db);
+		$filter = $filter == false ? '' : ' LIKE \'' . $filter . '\'';
+
+		$request = $smcFunc['db_query']('', '
+			SHOW TABLES
+			FROM `{raw:db}`
+			{raw:filter}',
+			array(
+				'db' => $db[0] == '`' ? strtr($db, array('`' => '')) : $db,
+				'filter' => $filter,
+			)
+		);
+		$tables = array();
+		while ($row = $smcFunc['db_fetch_row']($request))
+			$tables[] = $row[0];
+		$smcFunc['db_free_result']($request);
+
+		return $tables;
+	}
+	
+	// This function tries to work out additional error information from a back trace.
+	function smf_db_error_backtrace($error_message, $log_message = '', $error_type = false, $file = null, $line = null)
+	{
+		if (empty($log_message))
+			$log_message = $error_message;
+
+		// 	A special case - we want the file and line numbers for debugging.
+		if ($error_type == 'return')
+			return array($file, $line);
+
+		// Is always a critical error.
+		if (function_exists('log_error'))
+			log_error($log_message, 'critical', $file, $line);
+
+		if ($error_type)
+			trigger_error($error_message . ($line !== null ? '<em>(' . basename($file) . '-' . $line . ')</em>' : ''), error_type);
+		else
+			trigger_error($error_message . ($line !== null ? '<em>(' . basename($file) . '-' . $line . ')</em>' : ''));
+	}
+
 	// Now, go functions, spread your love.
 	$smcFunc['db_free_result'] = 'mysql_free_result';
 	$smcFunc['db_fetch_row'] = 'mysql_fetch_row';
@@ -956,6 +1007,8 @@ function smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_pre
 	$smcFunc['db_insert'] = 'smf_db_insert';
 	$smcFunc['db_query'] = 'smf_db_query';
 	$smcFunc['db_quote'] = 'smf_db_query';
+	$smcFunc['db_error_backtrace'] = 'smf_db_error_backtrace';
+	$smcFunc['db_list_tables'] = 'smf_db_list_tables';
 
 	return $db_connection;
 }
