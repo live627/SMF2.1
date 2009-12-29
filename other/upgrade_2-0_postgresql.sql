@@ -747,8 +747,11 @@ $smcFunc['db_remove_index']($db_prefix . 'log_activity', $db_prefix . 'log_activ
 /******************************************************************************/
 
 ---# Adding column that stores the PM receiving setting...
-ALTER TABLE {$db_prefix}members
-ADD COLUMN pm_receive_from smallint NOT NULL default '1';
+---{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}members
+		ADD COLUMN pm_receive_from smallint NOT NULL default '1'");
+---}
 ---#
 
 ---# Enable the buddy and ignore lists if we have not done so thus far...
@@ -760,7 +763,7 @@ if (empty($modSettings['dont_repeat_buddylists']))
 	// Make sure the pm_receive_from column has the right default value - early adoptors might have a '0' set here.
 	upgrade_query("
 		ALTER TABLE {$db_prefix}members
-		CHANGE pm_receive_from pm_receive_from smallint NOT NULL default '1'");
+		ALTER COLUMN pm_receive_from pm_receive_from smallint NOT NULL default '1'");
 
 	// Update previous ignore lists if they're set to ignore all.
 	upgrade_query("
@@ -769,25 +772,28 @@ if (empty($modSettings['dont_repeat_buddylists']))
 		WHERE pm_ignore_list = '*'");
 
 	// Enable buddy and ignore lists.
-	upgrade_query("
-		REPLACE INTO {$db_prefix}settings
-			(variable, value)
-		VALUES
-			('enable_buddylists', '1')");
+	$smcFunc['db_insert']('replace',
+		'{db_prefix}settings',
+		array('variable' => 'string-255', 'value' => 'string-255'),
+		array('enable_buddylists', '1'),
+		array('variable', 'value')
+	);
 
 	// Ignore posts made by ignored users by default, too.
-	upgrade_query("
-		REPLACE INTO {$db_prefix}themes
-			(id_member, id_theme, variable, value)
-		VALUES
-			(-1, 1, 'posts_apply_ignore_list', '1')");
+	$smcFunc['db_insert']('replace',
+		'{db_prefix}themes',
+		array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-255'),
+		array(-1, 1, 'posts_apply_ignore_list', '1'),
+		array('id_member', 'id_theme', 'variable', 'value')
+	);
 
 	// Make sure not to skip this step next time we run this.
-	upgrade_query("
-		REPLACE INTO {$db_prefix}settings
-			(variable, value)
-		VALUES
-			('dont_repeat_buddylists', '1')");
+	$smcFunc['db_insert']('replace',
+		'{db_prefix}settings',
+		array('variable' => 'string-255', 'value' => 'string-255'),
+		array('dont_repeat_buddylists', '1'),
+		array('variable', 'value')
+	);
 }
 
 ---}
@@ -972,11 +978,12 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 	$smcFunc['db_free_result']($theme_request);
 
 	// This ain't running twice either - not with the risk of log_tables timing us all out!
-	upgrade_query("
-		REPLACE INTO {$db_prefix}settings
-			(variable, value)
-		VALUES
-			('dont_repeat_theme_core', '1')");
+	$smcFunc['db_insert']('replace',
+		'{db_prefix}settings',
+		array('variable' => 'string-255', 'value' => 'string-255'),
+		array('dont_repeat_theme_core', '1'),
+		array('variable', 'value')
+	);
 }
 
 ---}
@@ -1004,11 +1011,12 @@ if (empty($modSettings['installed_new_smiley_sets_20']))
 		WHERE variable = 'smiley_sets_names'");
 
 	// This ain't running twice either.
-	upgrade_query("
-		REPLACE INTO {$db_prefix}settings
-			(variable, value)
-		VALUES
-			('installed_new_smiley_sets_20', '1')");
+	$smcFunc['db_insert']('replace',
+		'{db_prefix}settings',
+		array('variable' => 'string-255', 'value' => 'string-255'),
+		array('installed_new_smiley_sets_20', '1'),
+		array('variable', 'value')
+	);
 }
 ---}
 ---#
@@ -1022,9 +1030,10 @@ if (empty($modSettings['installed_new_smiley_sets_20']))
 if ($smcFunc['db_server_info'] < 8.2)
 {
 	$request = upgrade_query("
-			SELECT type_udt_name
-			FROM information_schema.routines
-			WHERE routine_name = 'inet_aton'");
+		SELECT type_udt_name
+		FROM information_schema.routines
+		WHERE routine_name = 'inet_aton'
+	");
 
 	// Assume there's only one such function called inet_aton()
 	$return_type = $smcFunc['db_fetch_assoc']($request);
