@@ -1503,8 +1503,8 @@ function loadTheme($id_theme = 0, $initialize = true)
 			{
 				foreach ($board_info['moderators'] as $k => $dummy)
 				{
-					$board_info['moderators'][$k]['href'] = strtr($dummy['href'], array($oldurl => $boardurl));;
-					$board_info['moderators'][$k]['link'] = strtr($dummy['link'], array('"' . $oldurl => '"' . $boardurl));;
+					$board_info['moderators'][$k]['href'] = strtr($dummy['href'], array($oldurl => $boardurl));
+					$board_info['moderators'][$k]['link'] = strtr($dummy['link'], array('"' . $oldurl => '"' . $boardurl));
 				}
 			}
 			foreach ($context['linktree'] as $k => $dummy)
