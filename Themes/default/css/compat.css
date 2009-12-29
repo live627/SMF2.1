@@ -1986,21 +1986,20 @@ dl.stats dd
 	line-height: 16px;
 	padding: 0;
 }
-.stats_bar
+span.statsbar, span.statsbar span
 {
-	float: left;
-	background-image: url(../images/bar_stats.png);
-	height: 16px;
-	font-size: 0.9em;
+	height: 1.1em;
 	display: block;
-	text-align: left;
-	color: #fff;
-	font-weight: bold;
-	background-position: top center;
 }
-.stats_bar span
+span.statsbar
 {
-	padding-left: 2px;
+	background: #fff;
+	border: 1px solid #888;
+	margin-right: 8em;
+}
+span.statsbar span
+{
+	background: #fe9540;
 }
 
 /* Styles for the calendar section.
@@ -2140,7 +2139,21 @@ span.hidelink
 #mlist_search
 {
 	margin: auto;
-	width: 400px;
+	width: 500px;
+}
+span.memberstatsbar, span.memberstatsbar span
+{
+	height: 1.1em;
+	display: block;
+}
+span.memberstatsbar
+{
+	background: #fff;
+	border: 1px solid #888;
+}
+span.memberstatsbar span
+{
+	background: #fe9540;
 }
 
 /* Styles for the basic search section.

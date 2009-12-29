@@ -102,7 +102,7 @@ function template_main()
 			echo '
 					<td class="windowbg2" width="15">', $member['posts'], '</td>
 					<td class="windowbg statsbar" width="120" align="', $context['right_to_left'] ? 'right' : 'left', '">
-						', $member['posts'] > 0 ? '<span class="left"></span><div style="width: ' . $member['post_percent'] . 'px;" class="stats_bar"></div><span class="right"></span>' : '', '
+						<span class="memberstatsbar"><span style="width: ', $member['post_percent'], '%;"></span></span>
 					</td>';
 
 		echo '

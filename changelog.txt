@@ -91,6 +91,7 @@ December 2009
  ! Double semicolon (Load.php) [Bug 4143]
  ! Braces are deprecated as of PHP 5.3.0 (Several files) [Bug 4142]
  ! Make repair_settings work on 1.1 (repair_settings.php) [Bug 4130]
+ * Standardized the stats bars (Stats template, Memberlist template, Profile template, index.css, compat.css, rtl.css)[Bug 4046]
 
 
 November 2009

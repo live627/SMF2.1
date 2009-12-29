@@ -868,6 +868,11 @@ dl.stats dd
 {
 	text-align: left;
 }
+span.statsbar
+{
+	margin-left: 8em;
+	margin-right: 0em;
+}
 /* Styles for the calendar section.
 ------------------------------------------------- */
 #month_grid
