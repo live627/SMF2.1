@@ -604,7 +604,7 @@ mysql_free_result($request);
 
 ---# Fixing possible issues with board access (part 1)...
 ---{
-if (empty($modSettings['smfVersion']) || (substr($modSettings['smfVersion'], 0, 9) == '1.0 Beta ' && $modSettings['smfVersion']{9} <= 5))
+if (empty($modSettings['smfVersion']) || (substr($modSettings['smfVersion'], 0, 9) == '1.0 Beta ' && $modSettings['smfVersion'][9] <= 5))
 {
 	$all_groups = array();
 	$result = upgrade_query("

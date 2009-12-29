@@ -1362,7 +1362,7 @@ function ModifyLanguage()
 		foreach (file($current_file) as $line)
 		{
 			// Got a new entry?
-			if ($line{0} == '$' && !empty($multiline_cache))
+			if ($line[0] == '$' && !empty($multiline_cache))
 			{
 				preg_match('~\$(helptxt|txt)\[\'(.+)\'\]\s=\s(.+);~', strtr($multiline_cache, array("\n" => '', "\t" => '')), $matches);
 				if (!empty($matches[3]))

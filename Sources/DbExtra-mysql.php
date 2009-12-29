@@ -248,7 +248,7 @@ function smf_db_list_tables($db = false, $filter = false)
 		FROM `{raw:db}`
 		{raw:filter}',
 		array(
-			'db' => $db{0} == '`' ? strtr($db, array('`' => '')) : $db,
+			'db' => $db[0] == '`' ? strtr($db, array('`' => '')) : $db,
 			'filter' => $filter,
 		)
 	);

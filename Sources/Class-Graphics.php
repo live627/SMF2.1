@@ -76,7 +76,7 @@ class gif_lzw_compression
 	{
 		if ($bInit)
 		{
-			$this->SetCodeSize = ord($data{0});
+			$this->SetCodeSize = ord($data[0]);
 			$data = substr($data, 1);
 
 			$this->CodeSize    = $this->SetCodeSize + 1;
@@ -225,7 +225,7 @@ class gif_lzw_compression
 			$this->Buf[0] = $this->Buf[$this->LastByte - 2];
 			$this->Buf[1] = $this->Buf[$this->LastByte - 1];
 
-			$count = ord($data{0});
+			$count = ord($data[0]);
 			$data  = substr($data, 1);
 
 			if ($count)
@@ -273,7 +273,7 @@ class gif_color_table
 			if (strlen($rgb) < 3)
 				return false;
 
-			$this->m_arColors[] = (ord($rgb{2}) << 16) + (ord($rgb{1}) << 8) + ord($rgb{0});
+			$this->m_arColors[] = (ord($rgb[2]) << 16) + (ord($rgb[1]) << 8) + ord($rgb[0]);
 			$this->m_nColors++;
 		}
 
@@ -389,7 +389,7 @@ class gif_image_header
 		if (!$this->m_nWidth || !$this->m_nHeight)
 			return false;
 
-		$b = ord($lpData{8});
+		$b = ord($lpData[8]);
 		$this->m_bLocalClr  = ($b & 0x80) ? true : false;
 		$this->m_bInterlace = ($b & 0x40) ? true : false;
 		$this->m_bSorted    = ($b & 0x20) ? true : false;
@@ -427,7 +427,7 @@ class gif_image
 
 		while (true)
 		{
-			$b = ord($data{0});
+			$b = ord($data[0]);
 			$data = substr($data, 1);
 			$datLen++;
 
@@ -477,7 +477,7 @@ class gif_image
 	{
 		$extLen = 0;
 
-		$b = ord($data{0});
+		$b = ord($data[0]);
 		$data = substr($data, 1);
 		$extLen++;
 
@@ -485,17 +485,17 @@ class gif_image
 		{
 		// Graphic Control...
 		case 0xF9:
-			$b = ord($data{1});
+			$b = ord($data[1]);
 			$this->m_disp   = ($b & 0x1C) >> 2;
 			$this->m_bUser  = ($b & 0x02) ? true : false;
 			$this->m_bTrans = ($b & 0x01) ? true : false;
 			list ($this->m_nDelay) = array_values(unpack('v', substr($data, 2, 2)));
-			$this->m_nTrans = ord($data{4});
+			$this->m_nTrans = ord($data[4]);
 			break;
 
 		// Comment...
 		case 0xFE:
-			$this->m_lpComm = substr($data, 1, ord($data{0}));
+			$this->m_lpComm = substr($data, 1, ord($data[0]));
 			break;
 
 		// Plain text...
@@ -508,14 +508,14 @@ class gif_image
 		}
 
 		// Skip default as defs may change.
-		$b = ord($data{0});
+		$b = ord($data[0]);
 		$data = substr($data, 1);
 		$extLen++;
 		while ($b > 0)
 		{
 			$data = substr($data, $b);
 			$extLen += $b;
-			$b    = ord($data{0});
+			$b    = ord($data[0]);
 			$data = substr($data, 1);
 			$extLen++;
 		}

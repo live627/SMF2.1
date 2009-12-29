@@ -221,7 +221,7 @@ function preparse_sql($script_filename)
 	foreach ($convert_data['globals'] as $k => $v)
 	{
 		$v = trim($v);
-		$convert_data['globals'][$k] = $v{0} == '$' ? substr($v, 1) : $v;
+		$convert_data['globals'][$k] = $v[0] == '$' ? substr($v, 1) : $v;
 	}
 
 	if (isset($_POST['path_to']) && !empty($_GET['step']))
@@ -251,7 +251,7 @@ function preparse_php($script_filename)
 	foreach ($convert_data['globals'] as $k => $v)
 	{
 		$v = trim($v);
-		$convert_data['globals'][$k] = $v{0} == '$' ? substr($v, 1) : $v;
+		$convert_data['globals'][$k] = $v[0] == '$' ? substr($v, 1) : $v;
 	}
 
 	if (isset($_POST['path_to']) && !empty($_GET['step']))

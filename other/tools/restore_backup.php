@@ -526,7 +526,7 @@ function read_gz_file($gzfilename)
 
 	$data = fread($fp, 2);
 
-	if ((ord($data{0}) != 31 || ord($data{1}) != 139) && $data != 'PK')
+	if ((ord($data[0]) != 31 || ord($data[1]) != 139) && $data != 'PK')
 	{
 		fclose($fp);
 		return @fopen($gzfilename, 'rb');

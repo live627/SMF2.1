@@ -1831,7 +1831,7 @@ function get_linux_data()
 			$proc = explode(' ', $processes[$i], 5);
 			$additional = @implode('', @get_file_data('/proc/' . $proc[0] . '/statm'));
 
-			if ($proc[4]{0} != '[' && strpos($proc[4], ' ') !== false)
+			if ($proc[4][0] != '[' && strpos($proc[4], ' ') !== false)
 				$proc[4] = strtok($proc[4], ' ');
 
 			$context['running_processes'][$proc[0]] = array(

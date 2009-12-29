@@ -89,6 +89,7 @@ December 2009
  * The Stats bars were broken since REV 9559 (index.css) [Bug 4140]
  ! Postgresql install broken re: replace (Subs-db-PostGreSql.php)
  ! Double semicolon (Load.php) [Bug 4143]
+ ! Braces are deprecated as of PHP 5.3.0 (Several files) [Bug 4142]
 
 
 November 2009

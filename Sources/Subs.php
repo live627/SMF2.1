@@ -1886,9 +1886,9 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					}
 
 					// The idea is, if we are LOOKING for a block level tag, we can close them on the way.
-					if (strlen($look_for) > 0 && isset($bbc_codes[$look_for{0}]))
+					if (strlen($look_for) > 0 && isset($bbc_codes[$look_for[0]]))
 					{
-						foreach ($bbc_codes[$look_for{0}] as $temp)
+						foreach ($bbc_codes[$look_for[0]] as $temp)
 							if ($temp['tag'] == $look_for)
 							{
 								$block_level = !empty($temp['block_level']);
@@ -1916,9 +1916,9 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			}
 			elseif (!empty($to_close) && $tag['tag'] != $look_for)
 			{
-				if ($block_level === null && isset($look_for{0}, $bbc_codes[$look_for{0}]))
+				if ($block_level === null && isset($look_for[0], $bbc_codes[$look_for[0]]))
 				{
-					foreach ($bbc_codes[$look_for{0}] as $temp)
+					foreach ($bbc_codes[$look_for[0]] as $temp)
 						if ($temp['tag'] == $look_for)
 						{
 							$block_level = !empty($temp['block_level']);
@@ -3160,7 +3160,7 @@ function setupThemeContext($forceload = false)
 
 		if (allowedTo('moderate_forum'))
 			$context['unapproved_members'] = !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 2 ? $modSettings['unapprovedMembers'] : 0;
-		$context['show_open_reports'] = empty($user_settings['mod_prefs']) || $user_settings['mod_prefs']{0} == 1;
+		$context['show_open_reports'] = empty($user_settings['mod_prefs']) || $user_settings['mod_prefs'][0] == 1;
 
 		$context['user']['avatar'] = array();
 
