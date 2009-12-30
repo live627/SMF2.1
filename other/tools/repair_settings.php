@@ -320,7 +320,7 @@ function show_settings()
 
 	if ($db_connection == true)
 	{
-		$request = $smcFunc['db_query']('', '
+		$request = $smcFunc['db_query'](true, '
 			SELECT DISTINCT variable, value
 			FROM {db_prefix}settings',
 			array(
@@ -333,7 +333,7 @@ function show_settings()
 		$smcFunc['db_free_result']($request);
 
 		// Load all the themes.
-		$request = $smcFunc['db_query']('', '
+		$request = $smcFunc['db_query'](true, '
 			SELECT variable, value, id_theme
 			FROM {db_prefix}themes
 			WHERE id_member = 0
@@ -368,8 +368,8 @@ function show_settings()
 			'db_name' => array('flat', 'string'),
 			'db_user' => array($db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
 			'db_passwd' => array($db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
-			'ssi_db_user' => array($context['is_legacy'] || $db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
-			'ssi_db_passwd' => array($context['is_legacy'] || $db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
+			'ssi_db_user' => array($db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
+			'ssi_db_passwd' => array($db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
 			'db_prefix' => array('flat', 'string'),
 			'db_persist' => array('flat', 'int', 1),
 		),
@@ -377,11 +377,8 @@ function show_settings()
 			'boardurl' => array('flat', 'string'),
 			'boarddir' => array('flat', 'string'),
 			'sourcedir' => array('flat', 'string'),
-			'cachedir' => array($context['is_legacy'] ? 'hidden' : 'flat', 'string'),
-
-// !!! Currently broken, needs multipath support.
-//			'attachmentUploadDir' => array('db', 'string'),
-
+			'cachedir' => array('flat', 'string'),
+			'attachmentUploadDir' => array('db', 'string'),
 			'avatar_url' => array('db', 'string'),
 			'avatar_directory' => array('db', 'string'),
 			'smileys_url' => array('db', 'string'),
@@ -390,11 +387,22 @@ function show_settings()
 		'theme_path_url_settings' => array(),
 	);
 
-	// 1.x didn't have ssi_x.
-	if ($context['is_legacy'] && empty($known_settings['database_settings']['ssi_db_user']))
-		unset($known_settings['database_settings']['ssi_db_user']);
-	if ($context['is_legacy'] && empty($known_settings['database_settings']['ssi_db_passwd']))
-		unset($known_settings['database_settings']['ssi_db_passwd']);
+	// 1.x didn't have ssi_x, nor cachedir
+	if ($context['is_legacy'])
+	{
+		if (empty($known_settings['database_settings']['ssi_db_user']))
+			unset($known_settings['database_settings']['ssi_db_user']);
+		if (empty($known_settings['database_settings']['ssi_db_passwd']))
+			unset($known_settings['database_settings']['ssi_db_passwd']);
+		if (empty($known_settings['path_url_settings']['cachedir']))
+			unset($known_settings['path_url_settings']['cachedir']);
+	}
+	else
+	{
+		// !!! Multiple Attachment Dirs not supported as yet, so hide this field
+		if (empty($known_settings['path_url_settings']['attachmentUploadDir']))
+			unset($known_settings['path_url_settings']['attachmentUploadDir']);
+	}
 
 	$host = empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] . (empty($_SERVER['SERVER_PORT']) || $_SERVER['SERVER_PORT'] == '80' ? '' : ':' . $_SERVER['SERVER_PORT']) : $_SERVER['HTTP_HOST'];
 	$url = 'http://' . $host . substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/'));
@@ -526,7 +534,6 @@ function show_settings()
 					// 2 is an attribute.
 
 					// Just some text..
-					case 3:
 					case 3:
 						str += node.nodeValue;
 						break;
@@ -942,7 +949,7 @@ function smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_pre
 		$queryTitle = $method == 'replace' ? 'REPLACE' : ($method == 'ignore' ? 'INSERT IGNORE' : 'INSERT');
 
 		// Do the insert.
-		$smcFunc['db_query']('', '
+		$smcFunc['db_query'](true, '
 			' . $queryTitle . ' INTO ' . $table . '(`' . implode('`, `', $indexed_columns) . '`)
 			VALUES
 				' . implode(',
@@ -962,7 +969,7 @@ function smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_pre
 		$db = trim($db);
 		$filter = $filter == false ? '' : ' LIKE \'' . $filter . '\'';
 
-		$request = $smcFunc['db_query']('', '
+		$request = $smcFunc['db_query'](true, '
 			SHOW TABLES
 			FROM `{raw:db}`
 			{raw:filter}',
