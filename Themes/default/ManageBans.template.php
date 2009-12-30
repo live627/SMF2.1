@@ -26,14 +26,14 @@ function template_ban_edit()
 							<strong>', $txt['ban_name'], ':</strong>
 						</dt>
 						<dd>
-							<input type="text" name="ban_name" value="', $context['ban']['name'], '" size="50" class="input_text" />
+							<input type="text" name="ban_name" value="', $context['ban']['name'], '" size="25" maxlength="20" class="input_text" />
 						</dd>
 						<dt>
 							<strong>', $txt['ban_reason'], ':</strong><br />
 							<span class="smalltext">', $txt['ban_reason_desc'], '</span>
 						</dt>
 						<dd>
-							<input type="text" name="reason" value="', $context['ban']['reason'], '" size="50" class="input_text" />
+							<textarea name="reason" cols="50" rows="3">', $context['ban']['reason'], '</textarea>
 						</dd>
 						<dt>
 							<strong>', $txt['ban_notes'], ':</strong><br />
