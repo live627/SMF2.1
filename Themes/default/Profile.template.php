@@ -828,7 +828,6 @@ function template_showPermissions()
 				echo '
 				<dt class="windowbg" title="', $permission['id'], '">
 					', $permission['is_denied'] ? '<del>' . $permission['name'] . '</del>' : $permission['name'], '
-					<!--div class="smalltext">', $permission['name'], '</div-->
 				</dt>
 				<dd class="windowbg2 smalltext">';
 				if ($permission['is_denied'])
@@ -876,13 +875,12 @@ function template_showPermissions()
 				<span class="left"></span>
 				', $txt['showPermissions_permission'], '
 			</h3>
-			<dl>';
+			<dl class="windowbg">';
 			foreach ($context['member']['permissions']['board'] as $permission)
 			{
 				echo '
 				<dt class="windowbg" title="', $permission['id'], '">
 					', $permission['is_denied'] ? '<del>' . $permission['name'] . '</del>' : $permission['name'], '
-					<!--div class="smalltext">', $permission['name'], '</div-->
 				</dt>
 				<dd class="windowbg2 smalltext">';
 				if ($permission['is_denied'])
