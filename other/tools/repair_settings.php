@@ -1000,10 +1000,7 @@ function smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_pre
 		if (function_exists('log_error'))
 			log_error($log_message, 'critical', $file, $line);
 
-		if ($error_type)
-			trigger_error($error_message . ($line !== null ? '<em>(' . basename($file) . '-' . $line . ')</em>' : ''), error_type);
-		else
-			trigger_error($error_message . ($line !== null ? '<em>(' . basename($file) . '-' . $line . ')</em>' : ''));
+		trigger_error($error_message . ($line !== null ? '<em>(' . basename($file) . '-' . $line . ')</em>' : ''), ($error_type ? $error_type : ''));
 	}
 
 	// Now, go functions, spread your love.
