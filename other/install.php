@@ -1781,7 +1781,7 @@ class ftp_connection
 		// Read in the file listing.
 		$data = '';
 		while (!feof($fp))
-			$data .= fread($fp, 4096);;
+			$data .= fread($fp, 4096);
 		fclose($fp);
 
 		// Everything go okay?

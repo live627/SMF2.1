@@ -633,7 +633,7 @@ function phpBB3_password_check($passwd, $passwd_hash)
 	{
 		$hash = md5($salt . $passwd, true);
 		for (; $count != 0; --$count)
-			$hash = md5($hash . $passwd, true);;
+			$hash = md5($hash . $passwd, true);
 	}
 	else
 	{
