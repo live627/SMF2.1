@@ -22,7 +22,6 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-
 ########## Maintenance ##########
 # Note: If $maintenance is set to 2, the forum will be unusable!  Change it to 0 to fix it.
 $maintenance = 0;		# Set to 1 to enable Maintenance Mode, 2 to make the forum untouchable. (you'll have to make it 0 again manually!)

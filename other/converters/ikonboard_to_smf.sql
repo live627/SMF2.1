@@ -86,7 +86,6 @@ SELECT
 FROM {$from_prefix}forum_info;
 ---*
 
-
 /******************************************************************************/
 --- preparing messages..
 /******************************************************************************/
@@ -96,7 +95,6 @@ FROM {$from_prefix}forum_info;
 SELECT POST_ID AS old_id_msg, POST_DATE as date, TOPIC_ID AS old_id_topic
 FROM {$from_prefix}forum_posts;
 ---*
-
 
 /******************************************************************************/
 --- Converting topics...
@@ -116,7 +114,6 @@ ALTER TABLE {$to_prefix}tmp_messages
 
 ALTER TABLE {$to_prefix}tmp_messages
 	ADD INDEX old_id_topic (old_id_topic);
-
 
 ---* {$to_prefix}topics
 SELECT

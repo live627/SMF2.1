@@ -37,7 +37,6 @@ SELECT
 FROM {$from_prefix}user;
 ---*
 
-
 /******************************************************************************/
 --- Converting categories...
 /******************************************************************************/
@@ -49,7 +48,6 @@ SELECT id AS id_cat, SUBSTRING(name, 1, 255) AS name, displayorder AS cat_order
 FROM {$from_prefix}forum
 WHERE parentid = -1;
 ---*
-
 
 /******************************************************************************/
 --- Converting boards...
@@ -71,7 +69,6 @@ FROM {$from_prefix}forum
 WHERE parentid > -1;
 ---*
 
-
 /******************************************************************************/
 --- Converting topics...
 /******************************************************************************/
@@ -90,7 +87,6 @@ SELECT
 	lastpostid AS id_last_msg
 FROM {$from_prefix}thread;
 ---*
-
 
 /******************************************************************************/
 --- Converting posts (this may take some time)...
@@ -113,7 +109,6 @@ FROM {$from_prefix}post AS p
 	INNER JOIN {$from_prefix}user AS u ON (u.id = p.userid);
 ---*
 
-
 /******************************************************************************/
 --- Converting personal messages (step 1)...
 /******************************************************************************/
@@ -132,7 +127,6 @@ FROM {$from_prefix}pm AS pm
 WHERE pm.folderid != -1;
 ---*
 
-
 /******************************************************************************/
 --- Converting personal messages (step 2)...
 /******************************************************************************/
@@ -145,7 +139,6 @@ SELECT
 FROM {$from_prefix}pm
 WHERE folderid != -1;
 ---*
-
 
 /******************************************************************************/
 --- Converting topic notifications...
@@ -162,7 +155,6 @@ SELECT
 FROM {$from_prefix}subscribethread;
 ---*
 
-
 /******************************************************************************/
 --- Converting board notifications...
 /******************************************************************************/
@@ -175,7 +167,6 @@ SELECT
 	userid AS id_member, forumid AS id_board
 FROM {$from_prefix}subscribeforum;
 ---*
-
 
 /******************************************************************************/
 --- Converting polls...
@@ -194,7 +185,6 @@ FROM {$from_prefix}poll AS p
 	LEFT JOIN {$from_prefix}thread AS t ON (t.tid = p.tid);
 ---*
 
-
 /******************************************************************************/
 --- Converting poll options...
 /******************************************************************************/
@@ -212,7 +202,6 @@ foreach ($polloptions as $option)
 SELECT pollid AS id_poll, options, votes
 FROM {$from_prefix}poll;
 ---*
-
 
 /******************************************************************************/
 --- Converting poll votes...
@@ -236,7 +225,6 @@ SELECT
 FROM {$from_prefix}poll;
 ---*
 
-
 /******************************************************************************/
 --- Converting moderators...
 /******************************************************************************/
@@ -249,7 +237,6 @@ SELECT
 FROM {$from_prefix}moderator
 WHERE forumid != 0;
 ---*
-
 
 /******************************************************************************/
 --- Converting attachments...

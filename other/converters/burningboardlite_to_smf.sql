@@ -328,7 +328,6 @@ while (true)
 			$ip_low4 = isset($sections[3]) && $sections[3] != '*' ? $sections[3] : 0;
 			$ip_high4 = isset($sections[3]) && $sections[3] != '*' ? $sections[3] : 255;
 
-
 			convert_insert('ban_groups', array('name', 'ban_time', 'expire_time', 'reason', 'notes', 'cannot_access'),
 				array("migrated_ban_" . $ban_count++, $ban_time, NULL, '', 'Migrated from Burning Board', 1)
 			);

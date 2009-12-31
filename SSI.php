@@ -22,7 +22,6 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-
 // Don't do anything if SMF is already loaded.
 if (defined('SMF'))
 	return true;

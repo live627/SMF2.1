@@ -377,7 +377,6 @@ if ($inserts !== '')
 		VALUES " . substr($inserts, 0, -1));
 ---}
 
-
 /******************************************************************************/
 --- Converting personal messages (step 1)...
 /******************************************************************************/
@@ -448,7 +447,6 @@ WHERE u.user_id = SUBSTRING_INDEX(t.thread_user, '.', 1)
 	AND t.thread_parent = 0;
 ---*
 
-
 /******************************************************************************/
 --- Converting board access...
 /******************************************************************************/
@@ -496,7 +494,6 @@ WHERE FIND_IN_SET(u.user_name, REPLACE(f.forum_moderators, ', ', ','));
 
 TRUNCATE {$to_prefix}ban_items;
 TRUNCATE {$to_prefix}ban_groups;
-
 
 ---# Moving banned entries...
 ---{

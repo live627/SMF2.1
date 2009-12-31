@@ -25,7 +25,6 @@
 * TrueType fonts supplied by www.LarabieFonts.com                                 *
 **********************************************************************************/
 
-
 if (!defined('SMF'))
 	die('Hacking attempt...');
 

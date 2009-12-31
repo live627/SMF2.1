@@ -409,7 +409,6 @@ if (!isset($vb_settings))
 	convert_free_result($result);
 }
 
-
 $file_hash = getAttachmentFilename($row['filename'], $id_attach, null, true);
 $physical_filename = $id_attach . '_' . $file_hash;
 

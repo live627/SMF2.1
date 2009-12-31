@@ -474,7 +474,6 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '1.1 RC
 			VALUES
 				" . implode(', ', $newSettings));
 
-
 		// What about members?
 		upgrade_query("
 			UPDATE {$db_prefix}members

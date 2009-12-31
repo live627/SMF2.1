@@ -22,7 +22,6 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-
 if (function_exists('set_magic_quotes_runtime'))
 	@set_magic_quotes_runtime(0);
 error_reporting(E_ALL);

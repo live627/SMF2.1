@@ -22,7 +22,6 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-
 // Version information...
 define('SMF_VERSION', '2.0 RC2');
 define('SMF_LANG_VERSION', '2.0 RC2');

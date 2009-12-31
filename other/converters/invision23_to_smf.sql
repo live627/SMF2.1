@@ -699,7 +699,6 @@ $perm_equiv = array(
 	),
 );
 
-
 if (!isset($_REQUEST['start']))
 	$_REQUEST['start'] = 0;
 

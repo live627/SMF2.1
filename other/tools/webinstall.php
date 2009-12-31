@@ -22,7 +22,6 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-
 // !!! On upgrade, warn about installed.list!
 
 $GLOBALS['required_php_version'] = '4.1.0';

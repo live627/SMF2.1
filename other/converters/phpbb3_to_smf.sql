@@ -666,7 +666,6 @@ if (empty($id_attach))
 	$id_attach = empty($id_attach) ? 1 : $id_attach;
 }
 
-
 // Set the default empty values.
 $width = 0;
 $height = 0;

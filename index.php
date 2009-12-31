@@ -22,7 +22,6 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-
 /*	This, as you have probably guessed, is the crux on which SMF functions.
 	Everything should start here, so all the setup and security is done
 	properly.  The most interesting part of this file is the action array in

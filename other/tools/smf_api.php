@@ -37,7 +37,6 @@
 * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. *
 **********************************************************************************/
 
-
 // !!! Groups, Member data?  Pull specific fields?
 
 /*	This file includes functions that may help integration with other scripts

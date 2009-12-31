@@ -22,7 +22,6 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-
 /*	This file is meant to be used as a cron.  However, you can run it manually
 	just fine.  It only has one real setting, which is how long it should leave
 	unread topics alone before it cleans them up.  It also allows you to choose

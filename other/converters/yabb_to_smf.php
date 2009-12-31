@@ -22,7 +22,6 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-
 $convert_data = array(
 	'name' => 'YaBB 1 Gold',
 	'version' => 'SMF 2.0',

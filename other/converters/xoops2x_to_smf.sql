@@ -200,7 +200,6 @@ FROM {$from_prefix}bb_posts AS p
 	LEFT JOIN {$from_prefix}users AS u ON (u.uid = p.uid);
 ---*
 
-
 /******************************************************************************/
 --- Converting personal messages (step 1)...
 /******************************************************************************/
