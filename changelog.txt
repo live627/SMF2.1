@@ -95,6 +95,7 @@ December 2009
  * Removed Unnecessary scrollbar and blank space in permissions list when viewing users permissions (Profile template, index.css, rtl.css, compat.css) [Bug 3874]
  * Usability improvements for the Ban Name and Ban Feason fields. (ManageBans template)
  ! error_type missing dollar sign (repair_settings.php) [Bug 4130]
+ ! IE<8 have max 2083 character url length causing issues with long search strings (Search.php) [Bug 3676]
 
 
 November 2009

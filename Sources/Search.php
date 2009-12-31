@@ -102,7 +102,12 @@ function PlushSearch1()
 	// If you got back from search2 by using the linktree, you get your original search parameters back.
 	if (isset($_REQUEST['params']))
 	{
-		$temp_params = explode('|"|', base64_decode(strtr($_REQUEST['params'], array(' ' => '+'))));
+		// Due to IE's 2083 character limit, we have to compress long search strings
+		$temp_params = base64_decode(str_replace(array('-', '_', '.'), array('+', '/', '='), $_REQUEST['params']));
+		// Test for gzuncompress failing
+		$temp_params2 = @gzuncompress($temp_params);
+		$temp_params = explode('|"|', strtr(!empty($temp_params2) ? $temp_params2 : $temp_params));
+
 		$context['search_params'] = array();
 		foreach ($temp_params as $i => $data)
 		{
@@ -112,6 +117,7 @@ function PlushSearch1()
 		if (isset($context['search_params']['brd']))
 			$context['search_params']['brd'] = $context['search_params']['brd'] == '' ? array() : explode(',', $context['search_params']['brd']);
 	}
+
 	if (isset($_REQUEST['search']))
 		$context['search_params']['search'] = un_htmlspecialchars($_REQUEST['search']);
 
@@ -344,7 +350,12 @@ function PlushSearch2()
 
 	if (isset($_REQUEST['params']))
 	{
-		$temp_params = explode('|"|', base64_decode(strtr($_REQUEST['params'], array(' ' => '+'))));
+		// Due to IE's 2083 character limit, we have to compress long search strings
+		$temp_params = base64_decode(str_replace(array('-', '_', '.'), array('+', '/', '='), $_REQUEST['params']));
+		// Test for gzuncompress failing
+		$temp_params2 = @gzuncompress($temp_params);
+		$temp_params = explode('|"|', strtr((!empty($temp_params2) ? $temp_params2 : $temp_params), array(' ' => '+')));
+
 		foreach ($temp_params as $i => $data)
 		{
 			@list ($k, $v) = explode('|\'|', $data);
@@ -904,7 +915,17 @@ function PlushSearch2()
 	$context['params'] = array();
 	foreach ($temp_params as $k => $v)
 		$context['params'][] = $k . '|\'|' . $v;
-	$context['params'] = base64_encode(implode('|"|', $context['params']));
+
+	if (!empty($context['params']))
+	{
+		// Due to old IE's 2083 character limit, we have to compress long search strings
+		$params = @gzcompress(implode('|"|', $context['params']));
+		// Gzcompress failed, use try non-gz
+		if (empty($params))
+			$params = implode('|"|', $context['params']);
+		// Base64 encode, then replace +/= with uri safe ones that can be reverted
+		$context['params'] = str_replace(array('+', '/', '='), array('-', '_', '.'), base64_encode($params));
+	}
 
 	// ... and add the links to the link tree.
 	$context['linktree'][] = array(
