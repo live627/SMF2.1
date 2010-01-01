@@ -7,7 +7,7 @@
 * =============================================================================== *
 * Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
 * Support, News, Updates at:  http://www.simplemachines.org                       *
 ***********************************************************************************
@@ -2131,7 +2131,7 @@ function template_install_below()
 		</div>
 	</div></div>
 	<div id="footer_section"><div class="frame" style="height: 40px;">
-		<div class="smalltext"><a href="http://www.simplemachines.org/" title="Free Forum Software" target="_blank" class="new_win">SMF &copy; 2006&ndash;2009, Simple Machines LLC</a></div>
+		<div class="smalltext"><a href="http://www.simplemachines.org/" title="Free Forum Software" target="_blank" class="new_win">SMF &copy; 2006&ndash;2010, Simple Machines LLC</a></div>
 	</div></div>
 	</body>
 </html>';

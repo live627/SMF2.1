@@ -3,6 +3,10 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC3                                                      			 ???
 ================================================================================
+January 2010
+--------------------------------------------------------------------------------
+ ! Updated copyright and all other instances of 2009 to 2010 (146 files)
+
 December 2009
 --------------------------------------------------------------------------------
  * Some button strips weren't properly reversed in RTL mode. (rtl.css) [Bug 4045]

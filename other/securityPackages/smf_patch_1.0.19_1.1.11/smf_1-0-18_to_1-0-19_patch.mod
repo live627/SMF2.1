@@ -39,7 +39,7 @@ $sourcedir/BoardIndex.php
 </search for>
 
 <replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -229,7 +229,7 @@ $sourcedir/ManagePermissions.php
 </search for>
 
 <replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -274,7 +274,7 @@ $sourcedir/ManageSmileys.php
 </search for>
 
 <replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -654,7 +654,7 @@ $sourcedir/Poll.php
 </search for>
 
 <replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -814,7 +814,7 @@ $sourcedir/SplitTopics.php
 </search for>
 
 <replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -997,7 +997,7 @@ $sourcedir/Themes.php
 </search for>
 
 <replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 

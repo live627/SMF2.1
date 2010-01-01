@@ -7,7 +7,7 @@
 * =============================================================================== *
 * Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
 * Support, News, Updates at:  http://www.simplemachines.org                       *
 ***********************************************************************************
@@ -705,7 +705,7 @@ function Credits($in_admin = false)
 
 		/* Modification Authors:  You may add a copyright statement to this array for your mods.
 			Copyright statements should be in the form of a value only without a array key.  I.E.:
-				'Some Mod by Thantos &copy; 2009',
+				'Some Mod by Thantos &copy; 2010',
 				$txt['some_mod_copyright'],
 		*/
 		'mods' => array(

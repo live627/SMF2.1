@@ -39,7 +39,7 @@ $sourcedir/BoardIndex.php
 </search for>
 
 <replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -216,7 +216,7 @@ $sourcedir/ManageCalendar.php
 </search for>
 
 <replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -256,7 +256,7 @@ $sourcedir/ManageMembers.php
 </search for>
 
 <replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -366,7 +366,7 @@ $sourcedir/ManageSmileys.php
 </search for>
 
 <replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -583,7 +583,7 @@ $sourcedir/Modlog.php
 </search for>
 
 <replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -763,7 +763,7 @@ $sourcedir/Poll.php
 </search for>
 
 <replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -1215,7 +1215,7 @@ $sourcedir/Subs-Boards.php
 </search for>
 
 <replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
