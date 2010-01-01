@@ -911,7 +911,7 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 		// Since we want to do a replace, just delete the old settings and re-insert them
 		upgrade_query("
 			DELETE FROM {$db_prefix}settings
-			WHERE variable IN ('theme_default', 'theme_guests', 'knownThemes');
+			WHERE variable IN ('theme_default', 'theme_guests', 'knownThemes')");
 
 		foreach ($new_settings AS $a_new_setting)
 		{
