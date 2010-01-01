@@ -1324,11 +1324,12 @@ function scheduled_birthdayemails()
 	$month = date('n'); // Month without leading zeros.
 	$day = date('j'); // Day without leading zeros.
 
-	// So who are the lucky ones?  Don't include those who don't want them.
+	// So who are the lucky ones?  Don't include those who are banned and those who don't want them.
 	$result = $smcFunc['db_query']('', '
 		SELECT id_member, real_name, lngfile, email_address
 		FROM {db_prefix}members
-		WHERE MONTH(birthdate) = {int:month}
+		WHERE is_activated < 10
+			AND MONTH(birthdate) = {int:month}
 			AND DAYOFMONTH(birthdate) = {int:day}
 			AND notify_announcements = {int:notify_announcements}
 			AND YEAR(birthdate) > {int:year}',
