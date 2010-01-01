@@ -536,8 +536,8 @@ function MessageIndex()
 				'newtime' => $row['new_from'],
 				'new_href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['new_from'] . '#new',
 				'pages' => $pages,
-				'replies' => $row['num_replies'],
-				'views' => $row['num_views'],
+				'replies' => comma_format($row['num_replies']),
+				'views' => comma_format($row['num_views']),
 				'approved' => $row['approved'],
 				'unapproved_posts' => $row['unapproved_posts'],
 			);
