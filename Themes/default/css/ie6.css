@@ -55,11 +55,6 @@ h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
 	display: inline-block;
 }
 
-h3.catbg, h3.catbg2, h4.catbg
-{
-	width: 100%;
-}
-
 #upper_section
 {
 	display: inline-block;
@@ -89,7 +84,14 @@ h3.catbg, h3.catbg2, h4.catbg
 	margin-right: 0;
 	float: right;
 }
-
+.keyinfo 
+{
+	padding-bottom: 6px;
+}
+.inner 
+{
+	clear: both;
+}
 .buttonlist ul li
 {
 	width: 1%;
@@ -126,7 +128,6 @@ h3.catbg, h3.catbg2, h4.catbg
 {
 	height: .1%;
 }
-
 /* Overrides for the personal messages template
 ------------------------------------------------------- */
 #personal_messages .postarea

@@ -1003,7 +1003,7 @@ function template_statPanel()
 		foreach ($context['posts_by_time'] as $time_of_day)
 			echo '
 							<dt>', date('g a', mktime($time_of_day['hour'])), '</dt>
-							<dd class="statsbar"><span class="floatright">', !empty($time_of_day['posts_percent']) ? $time_of_day['posts_percent']: '0', '%</span><span class="statsbar"><span style="width: ', !empty($time_of_day['posts_percent']) ? $time_of_day['posts_percent'] : '0', '%;"></span></span></dd>';
+							<dd class="statsbar"><span class="floatright">', !empty($time_of_day['posts_percent']) ? $time_of_day['posts_percent']: '0', '%</span><span class="statsbar"><span class="floatleft" style="width: ', !empty($time_of_day['posts_percent']) ? $time_of_day['posts_percent'] : '0', '%;"></span></span></dd>';
 		echo '
 						</dl>';
 	}

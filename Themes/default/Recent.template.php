@@ -26,8 +26,7 @@ function template_main()
 						<h5>', $post['board']['link'], ' / ', $post['link'], '</h5>
 						<span class="smalltext">&#171;&nbsp;', $txt['last_post'], ' ', $txt['by'], ' <strong>', $post['poster']['link'], ' </strong> ', $txt['on'], '<em> ', $post['time'], '</em>&nbsp;&#187;</span>
 					</div>
-					<div class="list_posts">', $post['message'], '</div>
-				</div>';
+					<div class="list_posts">', $post['message'], '</div>';
 
 					if ($post['can_reply'] || $post['can_mark_notify'] || $post['can_delete'])
 					echo '
@@ -53,6 +52,7 @@ function template_main()
 							</div>';
 				echo '
 						<br class="clear" />
+					</div>
 				<span class="botslice"><span></span></span>
 			</div>';
 

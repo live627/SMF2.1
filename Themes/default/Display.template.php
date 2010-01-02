@@ -194,8 +194,9 @@ function template_main()
 					<a id="msg', $message['id'], '"></a>', $message['first_new'] ? '<a id="new"></a>' : '';
 
 		echo '
-					<div class="', $message['approved'] ? ($message['alternate'] == 0 ? 'windowbg' : 'windowbg2') : 'approvebg', '">
-						<span class="topslice"><span></span></span>';
+				<div class="', $message['approved'] ? ($message['alternate'] == 0 ? 'windowbg' : 'windowbg2') : 'approvebg', '">
+					<span class="topslice"><span></span></span>
+					<div class="post_wrapper">';
 
 		// Show information about the poster of this message.
 		echo '
@@ -579,8 +580,9 @@ function template_main()
 
 		echo '
 						</div>
-						<span class="botslice"><span></span></span>
 					</div>
+					<span class="botslice"><span></span></span>
+				</div>
 					<hr class="post_separator" />';
 	}
 
