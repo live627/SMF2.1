@@ -20,6 +20,7 @@ January 2010
  ! Install utf8 support check for PostGreSql wouldn't always work (Install.php) [Bug 4061]
  ! Optimizing one table with Sqlite optimizes them all (Install.php)
  ! Bug with set names to utf8 in install (Install.php) [Bug 4112]
+ ! The list used for managing attachment paths could exceed the template's boundaries. (ManageAttachments.php)
 
 
 December 2009

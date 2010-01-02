@@ -1681,7 +1681,7 @@ function ManageAttachmentPaths()
 				),
 				'data' => array(
 					'function' => create_function('$rowData', '
-						return \'<input type="text" size="50" name="dirs[\' . $rowData[\'id\'] . \']" value="\' . $rowData[\'path\'] . \'" class="input_text" />\';
+						return \'<input type="text" size="30" name="dirs[\' . $rowData[\'id\'] . \']" value="\' . $rowData[\'path\'] . \'" class="input_text" style="width: 100%" />\';
 					'),
 					'style' => 'text-align: center; width: 30%;',
 				),
