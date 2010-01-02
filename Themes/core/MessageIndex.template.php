@@ -61,8 +61,8 @@ function template_main()
 			echo '
 			</td>
 			<td', !empty($board['children']) ? ' rowspan="2"' : '', ' class="windowbg stats smalltext">
-				', comma_format($board['posts']), ' ', $board['is_redirect'] ? $txt['redirects'] : $txt['posts'], ' <br />
-				', $board['is_redirect'] ? '' : comma_format($board['topics']) . ' ' . $txt['board_topics'], '
+				', $board['posts'], ' ', $board['is_redirect'] ? $txt['redirects'] : $txt['posts'], ' <br />
+				', $board['is_redirect'] ? '' : $board['topics'] . ' ' . $txt['board_topics'], '
 			</td>
 			<td', !empty($board['children']) ? ' rowspan="2"' : '', ' class="windowbg2 smalltext lastpost">';
 
@@ -91,7 +91,7 @@ function template_main()
 					if (!$child['is_redirect'])
 						$child['link'] = '<a href="' . $child['href'] . '" title="' . ($child['new'] ? $txt['new_posts'] : $txt['old_posts']) . ' (' . $txt['board_topics'] . ': ' . $child['topics'] . ', ' . $txt['posts'] . ': ' . $child['posts'] . ')">' . $child['name'] . '</a>';
 					else
-						$child['link'] = '<a href="' . $child['href'] . '" title="' . comma_format($child['posts']) . ' ' . $txt['redirects'] . '">' . $child['name'] . '</a>';
+						$child['link'] = '<a href="' . $child['href'] . '" title="' . $child['posts'] . ' ' . $txt['redirects'] . '">' . $child['name'] . '</a>';
 
 					// Has it posts awaiting approval?
 					if ($child['can_approve_posts'] && ($child['unapproved_posts'] || $child['unapproved_topics']))

@@ -575,8 +575,6 @@ function getCalendarWeek($month, $year, $day, $calendarOptions)
 		else
 			$nWeekAdjust = $calendarOptions['start_day'] > $first_day_of_year && $first_day_of_year !== 0 ? 2 : 1;
 
-echo $nWeekAdjust;
-
 		$calendarGrid['week_number'] = (int) strftime('%U', mktime(0, 0, 0, $month, $day, $year)) + $nWeekAdjust;
 
 		// If this crosses a year boundry and includes january it should be week one.
