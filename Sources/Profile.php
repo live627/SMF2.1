@@ -743,8 +743,12 @@ function loadCustomFields($memID, $area = 'summary')
 			$input_html = '<textarea name="customfield[' . $row['col_name'] . ']" ' . (!empty($rows) ? 'rows="' . $rows . '"' : '') . ' ' . (!empty($cols) ? 'cols="' . $cols . '"' : '') . '>' . $value . '</textarea>';
 		}
 
+		// Parse BBCode
 		if ($row['bbc'])
 			$output_html = parse_bbc($output_html);
+		elseif($row['field_type'] == 'textarea')
+			// Allow for newlines at least
+			$output_html = strtr($output_html, array("\n" => '<br />'));
 
 		// Enclosing the user input within some other text?
 		if (!empty($row['enclose']) && !empty($output_html))
