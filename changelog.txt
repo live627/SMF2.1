@@ -18,6 +18,8 @@ January 2010
  ! CPF's wouldn't render newlines for textarea when parse_bbc wasn't allowed (Profile.php)
  ! Require on registration wouldn't work for Checkboxes, radios and select boxes (Register.php) [Bug 4049]
  ! Install utf8 support check for PostGreSql wouldn't always work (Install.php) [Bug 4061]
+ ! Optimizing one table with Sqlite optimizes them all (Install.php)
+ ! Bug with set names to utf8 in install (Install.php) [Bug 4112]
 
 
 December 2009

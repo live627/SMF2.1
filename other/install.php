@@ -1021,7 +1021,7 @@ function DatabasePopulation()
 	// If doing UTF8, select it. PostgreSQL requires passing it as a string...
 	if (!empty($db_character_set) && $db_character_set == 'utf8' && !empty($databases[$db_type]['utf8_support']))
 		$smcFunc['db_query']('', '
-			SET NAMES {'. $db_type == 'postgresql' ? 'string' : 'raw' .':utf8}',
+			SET NAMES {'. ($db_type == 'postgresql' ? 'string' : 'raw') . ':utf8}',
 			array(
 				'db_error_skip' => true,
 				'utf8' => 'utf8',
