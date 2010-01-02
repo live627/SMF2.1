@@ -173,6 +173,7 @@ function ModifyProfile($post_errors = array())
 					'label' => $txt['account'],
 					'file' => 'Profile-Modify.php',
 					'function' => 'account',
+					'enabled' => $context['user']['is_admin'] || ($cur_profile['id_group'] != 1 && !in_array(1, explode(',', $cur_profile['additional_groups']))),
 					'sc' => 'post',
 					'password' => true,
 					'permission' => array(
