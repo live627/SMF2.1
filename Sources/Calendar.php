@@ -138,10 +138,11 @@ function CalendarMain()
 	$calendarOptions['show_week_links'] = false;
 	$calendarOptions['size'] = 'small';
 	$context['calendar_grid_current'] = getCalendarGrid($curPage['month'], $curPage['year'], $calendarOptions);
-	// Only show these if the previous year is greater than the minyear but less than the maxyear.
-	if ($context['calendar_grid_current']['previous_calendar']['year'] > $modSettings['cal_minyear'])
+	// Only show previous month if it isn't pre-January of the min-year
+	if ($context['calendar_grid_current']['previous_calendar']['year'] > $modSettings['cal_minyear'] || $curPage['month'] != 1)
 		$context['calendar_grid_prev'] = getCalendarGrid($context['calendar_grid_current']['previous_calendar']['month'], $context['calendar_grid_current']['previous_calendar']['year'], $calendarOptions);
-	if ($context['calendar_grid_current']['next_calendar']['year'] < $modSettings['cal_maxyear'])
+	// Only show next month if it isn't post-December of the max-year
+	if ($context['calendar_grid_current']['next_calendar']['year'] < $modSettings['cal_maxyear'] || $curPage['month'] != 12)
 		$context['calendar_grid_next'] = getCalendarGrid($context['calendar_grid_current']['next_calendar']['month'], $context['calendar_grid_current']['next_calendar']['year'], $calendarOptions);
 
 	// Basic template stuff.

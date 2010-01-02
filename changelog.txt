@@ -11,6 +11,7 @@ January 2010
  * Fixed a couple of IE6 bugs and altered markup slightly for more flexible styling (Profile.template.php, Display.template.php, Recent.template.php)
  ! The calendar could sometimes predict the wrong week numbers for years with 53 weeks (Calendar.php, Subs-Calendar.php)
  ! Some wireless improvements (wireless.css, Wireless Template)
+ ! Calendar missing previous/next month if your in the min/max year. (Calendar.php) (Reported by TheDragon)
 
 
 December 2009
