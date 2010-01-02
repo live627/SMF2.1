@@ -12,6 +12,7 @@ January 2010
  ! The calendar could sometimes predict the wrong week numbers for years with 53 weeks (Calendar.php, Subs-Calendar.php)
  ! Some wireless improvements (wireless.css, Wireless Template)
  ! Calendar missing previous/next month if your in the min/max year. (Calendar.php) (Reported by TheDragon)
+ ! Missing session vars in admin linktrees (Admin.php) [Bug 3985]
 
 
 December 2009
