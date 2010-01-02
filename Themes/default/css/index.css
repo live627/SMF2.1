@@ -284,20 +284,26 @@ ul.reset, ul.reset li
 	font-weight: bold;
 	padding-left: 5px;
 }
-blockquote, blockquote blockquote blockquote
+blockquote
 {
-	font-size: 0.9em;
+	font-size: x-small;
 	color: #000;
 	line-height: 1.4em;
 	background: url(../images/theme/quote.png) 2px 2px no-repeat #d7daec;
 	border-top: 1px solid #000;
 	border-bottom: 1px solid #000;
-	padding: 1em 1em 1em 2em;
+	padding: 1em 1.3em 1em 1.3em;
 	margin: 0.3em 0 0 0;
 }
-blockquote blockquote
+
+/* Alterate block quote stylings */
+.standard_blockquote
 {
-	background: #e7eAfC;
+	background-color: #d7daec;
+}
+.alternate_blockquote
+{
+	background-color: #e7eafc;
 }
 
 /* A code block - maybe even PHP ;). */

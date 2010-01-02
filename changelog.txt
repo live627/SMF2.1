@@ -21,6 +21,7 @@ January 2010
  ! Optimizing one table with Sqlite optimizes them all (Install.php)
  ! Bug with set names to utf8 in install (Install.php) [Bug 4112]
  ! The list used for managing attachment paths could exceed the template's boundaries. (ManageAttachments.php)
+ + Ability to do alternate styling of quotes - for all permutations (Subs.php, index.css) [Bug 3920]
 
 
 December 2009

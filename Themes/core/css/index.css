@@ -233,6 +233,16 @@ blockquote
 	line-height: 1.4em;
 }
 
+/* Alterate block quote stylings */
+.standard_blockquote
+{
+	background-color: #d7daec;
+}
+.alternate_blockquote
+{
+	background-color: #e7eafc;
+}
+
 /* A code block - maybe even PHP ;). */
 code
 {

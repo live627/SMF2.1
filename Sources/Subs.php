@@ -2007,6 +2007,21 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 			$pos1 = $pos + 1 + strlen($possible['tag']) + 1;
 
+			// Quotes can have alternate styling, we do this php-side due to all the permutations of quotes.
+			if ($possible['tag'] == 'quote')
+			{
+				// Start with standard
+				$quote_alt = false;
+				foreach($open_tags as $open_quote)
+				{
+					// Every parent quote this quote has flips the styling
+					if ($open_quote['tag'] == 'quote')
+						$quote_alt = !$quote_alt;
+				}
+				// Add a class to the quote to style alternating blockquotes
+				$possible['before'] = strtr($possible['before'], array('<blockquote>' => '<blockquote class="' . ($quote_alt ? 'standard' : 'alternate') . '_blockquote">'));
+			}
+
 			// This is long, but it makes things much easier and cleaner.
 			if (!empty($possible['parameters']))
 			{
