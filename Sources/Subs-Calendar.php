@@ -403,6 +403,7 @@ function getCalendarGrid($month, $year, $calendarOptions)
 			'date' => strftime('%Y-%m-%d', mktime(0, 0, 0, $month == 12 ? 1 : $month + 1, 0, $month == 12 ? $year + 1 : $year)),
 		),
 		'first_day_of_year' => (int) strftime('%w', mktime(0, 0, 0, 1, 1, $year)),
+		'first_day_of_next_year' => (int) strftime('%w', mktime(0, 0, 0, 1, 1, $year + 1)),
 	);
 
 	// The number of days the first row is shifted to the right for the starting day.
@@ -477,7 +478,7 @@ function getCalendarGrid($month, $year, $calendarOptions)
 			'number' => $month_info['first_day']['week_num'] + $nRow + $nWeekAdjust
 		);
 		// Handle the dreaded "week 53", it can happen, but only once in a blue moon ;)
-		if ($calendarGrid['weeks'][$nRow]['number'] == 53 && $nShift != 4)
+		if ($calendarGrid['weeks'][$nRow]['number'] == 53 && $nShift != 4 && $month_info['first_day_of_next_year'] < 4)
 			$calendarGrid['weeks'][$nRow]['number'] = 1;
 
 		// And figure out all the days.
