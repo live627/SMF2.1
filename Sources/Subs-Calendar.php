@@ -461,7 +461,7 @@ function getCalendarGrid($month, $year, $calendarOptions)
 		// on, then our week numbers will be one too high. So we need to
 		// reduce it by one - all these thoughts of offsets makes my head
 		// hurt...
-		if ($month_info['first_day']['day_of_week'] < $calendarOptions['start_day'])
+		if ($month_info['first_day']['day_of_week'] < $calendarOptions['start_day'] || $month_info['first_day_of_year'] > 4)
 			$nWeekAdjust--;
 	}
 	else
