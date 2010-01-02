@@ -567,17 +567,20 @@ function getCalendarWeek($month, $year, $day, $calendarOptions)
 	{
 		$first_day_of_year = (int) strftime('%w', mktime(0, 0, 0, 1, 1, $year));
 		$first_day_of_next_year = (int) strftime('%w', mktime(0, 0, 0, 1, 1, $year + 1));
+		$last_day_of_last_year = (int) strftime('%w', mktime(0, 0, 0, 12, 31, $year - 1));
 
 		// All this is as getCalendarGrid.
 		if ($calendarOptions['start_day'] === 0)
-			$nWeekAdjust = $first_day_of_year === 0 ? 0 : 1;
+			$nWeekAdjust = $first_day_of_year === 0 && $first_day_of_year > 3 ? 0 : 1;
 		else
 			$nWeekAdjust = $calendarOptions['start_day'] > $first_day_of_year && $first_day_of_year !== 0 ? 2 : 1;
+
+echo $nWeekAdjust;
 
 		$calendarGrid['week_number'] = (int) strftime('%U', mktime(0, 0, 0, $month, $day, $year)) + $nWeekAdjust;
 
 		// If this crosses a year boundry and includes january it should be week one.
-		if ((int) strftime('%Y', $curTimestamp + 518400) != $year && $calendarGrid['week_number'] == 53 && $first_day_of_next_year < 5)
+		if ((int) strftime('%Y', $curTimestamp + 518400) != $year && $calendarGrid['week_number'] > 53 && $first_day_of_next_year < 5)
 			$calendarGrid['week_number'] = 1;
 	}
 
