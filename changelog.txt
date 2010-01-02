@@ -9,7 +9,7 @@ January 2010
  ! Don't send Happy Birthday emails to banned members (ScheduledTasks.php) (Reported by Yahmez)
  * Don't lose the u=123 part in the url when saving account details (Profile.template.php) [Bug 4124]
  * Fixed a couple of IE6 bugs and altered markup slightly for more flexible styling (Profile.template.php, Display.template.php, Recent.template.php)
- ! The calendar could sometimes predict the wrong week numbers for years with 53 weeks (Subs-Calendar.php)
+ ! The calendar could sometimes predict the wrong week numbers for years with 53 weeks (Calendar.php, Subs-Calendar.php)
  ! Some wireless improvements (wireless.css, Wireless Template)
 
 
