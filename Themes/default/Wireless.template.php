@@ -362,7 +362,8 @@ function template_imode_display()
 	}
 	echo '
 			<tr bgcolor="#b6dbff"><td>', $txt['wireless_navigation'], '</td></tr>
-			<tr><td>&#59115; <a href="', $context['links']['up'], ';imode" accesskey="0">', $txt['wireless_navigation_index'], '</a></td></tr>', !empty($context['links']['next']) ? '
+			<tr><td>&#59115; <a href="', $context['links']['up'], ';imode" accesskey="0">', $txt['wireless_navigation_index'], '</a></td></tr>', $context['user']['is_logged'] ? '
+			<tr><td>&#59115; <a href="' . $scripturl . '?action=markasread;sa=topic;t=' . $context['mark_unread_time']. ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';imode" accesskey="1">' . $txt['mark_unread'] . '</a></td></tr>' : '', !empty($context['links']['next']) ? '
 			<tr><td><a href="' . $context['links']['next'] . ';imode' . $context['wireless_moderate'] . '" accesskey="#">' . $txt['wireless_navigation_next'] . '</a></td></tr>' : '', !empty($context['links']['prev']) ? '
 			<tr><td><a href="' . $context['links']['prev'] . ';imode' . $context['wireless_moderate'] . '" accesskey="*">' . $txt['wireless_navigation_prev'] . '</a></td></tr>' : '', $context['can_reply'] ? '
 			<tr><td><a href="' . $scripturl . '?action=post;topic=' . $context['current_topic'] . '.' . $context['start'] . ';imode">' . $txt['reply'] . '</a></td></tr>' : '';
@@ -423,7 +424,7 @@ function template_imode_post()
 				<tr><td>', isset($context['post_error']['no_subject']) ? '<font color="#FF0000">' . $txt['subject'] . '</font>' : $txt['subject'], ':</td></tr>
 				<tr><td><input type="text" name="subject"', $context['subject'] == '' ? '' : ' value="' . $context['subject'] . '"', ' maxlength="80" class="input_text" /></td></tr>
 				<tr><td>', isset($context['post_error']['no_message']) || isset($context['post_error']['long_message']) ? '<font color="#ff0000">' . $txt['message'] . '</font>' : $txt['message'], ':</td></tr>
-				<tr><td><textarea name="message" rows="3" cols="20">', $context['message'], '</textarea></td></tr>
+				<tr><td><textarea name="message" id="message" rows="5" cols="20">', $context['message'], '</textarea></td></tr>
 				<tr><td>
 					<input type="submit" name="post" value="', $context['submit_label'], '" class="button_submit" />
 					<input type="hidden" name="icon" value="wireless" />
@@ -583,7 +584,7 @@ function template_imode_pm()
 						</tr></td>
 						<tr><td>
 							<strong>', $txt['message'], ':</strong><br />
-							<textarea name="message" rows="3" cols="20">', $context['message'], '</textarea>
+							<textarea name="message" id="message" rows="5" cols="20">', $context['message'], '</textarea>
 						</tr></td>
 						<tr><td>
 							<input type="submit" value="', $txt['send_message'], '" class="button_submit" />
@@ -1017,7 +1018,8 @@ function template_wap2_display()
 	}
 	echo '
 		<p class="titlebg">', $txt['wireless_navigation'], '</p>
-		<p class="windowbg">[0] <a href="', $context['links']['up'], ';wap2" accesskey="0">', $txt['wireless_navigation_index'], '</a></p>', !empty($context['links']['next']) ? '
+		<p class="windowbg">[0] <a href="', $context['links']['up'], ';wap2" accesskey="0">', $txt['wireless_navigation_index'], '</a></p>', $context['user']['is_logged'] ? '
+		<p class="windowbg">[1] <a href="' . $scripturl . '?action=markasread;sa=topic;t=' . $context['mark_unread_time']. ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';wap2" accesskey="1">' . $txt['mark_unread'] . '</a></p>' : '', !empty($context['links']['next']) ? '
 		<p class="windowbg">[#] <a href="' . $context['links']['next'] . ';wap2' . $context['wireless_moderate'] . '" accesskey="#">' . $txt['wireless_navigation_next'] . '</a></p>' : '', !empty($context['links']['prev']) ? '
 		<p class="windowbg">[*] <a href="' . $context['links']['prev'] . ';wap2' . $context['wireless_moderate'] . '" accesskey="*">' . $txt['wireless_navigation_prev'] . '</a></p>' : '', $context['can_reply'] ? '
 		<p class="windowbg"><a href="' . $scripturl . '?action=post;topic=' . $context['current_topic'] . '.' . $context['start'] . ';wap2">' . $txt['reply'] . '</a></p>' : '';
@@ -1116,7 +1118,7 @@ function template_wap2_post()
 			</p>
 			<p class="windowbg"', isset($context['post_error']['no_message']) || isset($context['post_error']['long_message']) ? ' style="color: #ff0000;"' : '', '>
 				', $txt['message'], ': <br />
-				<textarea name="message" rows="3" cols="20">', $context['message'], '</textarea>
+				<textarea name="message" id="message" rows="5" cols="20">', $context['message'], '</textarea>
 			</p>
 			<p class="windowbg">
 				<input type="submit" name="post" value="', $context['submit_label'], '" class="button_submit" />
@@ -1234,7 +1236,7 @@ function template_wap2_pm()
 					</p>
 					<p class="windowbg">
 						<strong>', $txt['message'], ':</strong><br />
-						<textarea name="message" rows="3" cols="20">', $context['message'], '</textarea>
+						<textarea name="message" id="message" rows="5" cols="20">', $context['message'], '</textarea>
 					</p>
 					<p class="windowbg">
 						<input type="submit" value="', $txt['send_message'], '" class="button_submit" />

@@ -76,11 +76,6 @@ foreach ($emails as $key => $email)
 
 		// No point logging a specific error here, as we have no language. PHP error is helpful anyway...
 		$result = mail(strtr($email['recipient'], array("\r" => '', "\n" => '')), $email['subject'], $email['body'], $email['headers']);
-
-		// Try to stop a timeout, this would be bad...
-		@set_time_limit(300);
-		if (function_exists('apache_reset_timeout'))
-			@apache_reset_timeout();
 	}
 	else
 		$result = smtp_mail(array($email['recipient']), $email['subject'], $email['body'], $email['send_html'] ? $email['headers'] : 'Mime-Version: 1.0' . "\r\n" . $email['headers']);

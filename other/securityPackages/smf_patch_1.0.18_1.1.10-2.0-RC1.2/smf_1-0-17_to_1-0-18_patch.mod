@@ -39,7 +39,7 @@ $sourcedir/ManageMembers.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -89,7 +89,7 @@ $sourcedir/Packages.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -223,7 +223,7 @@ $sourcedir/Subs-Auth.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 

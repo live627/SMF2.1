@@ -28,3 +28,8 @@
 {
 	color: red;
 }
+/* Resize our post area as needed */
+#message
+{
+	width: 98%;
+}

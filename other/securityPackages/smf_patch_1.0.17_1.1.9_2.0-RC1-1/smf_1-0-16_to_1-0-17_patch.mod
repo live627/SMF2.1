@@ -16,7 +16,7 @@ $boarddir/index.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -48,7 +48,7 @@ $sourcedir/Display.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -158,7 +158,7 @@ $sourcedir/Load.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -194,7 +194,7 @@ $sourcedir/ManageAttachments.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -259,7 +259,7 @@ $sourcedir/ModSettings.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 <search for>
@@ -300,7 +300,7 @@ $sourcedir/PackageGet.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -412,7 +412,7 @@ $sourcedir/Post.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -471,7 +471,7 @@ $sourcedir/Profile.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -590,7 +590,7 @@ $sourcedir/QueryString.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -640,7 +640,7 @@ $sourcedir/Register.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -699,7 +699,7 @@ $sourcedir/Security.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 <search for>
@@ -741,7 +741,7 @@ $sourcedir/Subs.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -842,7 +842,7 @@ $sourcedir/Subs-Graphics.php
 </search for>
 
 <replace>
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
