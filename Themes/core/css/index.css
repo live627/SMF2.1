@@ -222,10 +222,9 @@ ul.reset, ul.reset li
 	line-height: 1.2em;
 	width: 100%;
 }
-blockquote
+blockquote.bbc_standard_quote, blockquote.bbc_alternate_quote
 {
 	color: #000;
-	background-color: #d7daec;
 	border: 1px solid #000;
 	margin: 1px;
 	padding: 1px;
@@ -234,17 +233,17 @@ blockquote
 }
 
 /* Alterate block quote stylings */
-.standard_blockquote
+blockquote.bbc_standard_quote
 {
 	background-color: #d7daec;
 }
-.alternate_blockquote
+blockquote.bbc_alternate_quote
 {
 	background-color: #e7eafc;
 }
 
 /* A code block - maybe even PHP ;). */
-code
+code.bbc_code
 {
 	display: block;
 	color: #000;

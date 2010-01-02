@@ -284,12 +284,12 @@ ul.reset, ul.reset li
 	font-weight: bold;
 	padding-left: 5px;
 }
-blockquote
+blockquote.bbc_standard_quote, blockquote.bbc_alternate_quote
 {
 	font-size: x-small;
 	color: #000;
 	line-height: 1.4em;
-	background: url(../images/theme/quote.png) 2px 2px no-repeat #d7daec;
+	background: url(../images/theme/quote.png) 2px 2px no-repeat;
 	border-top: 1px solid #000;
 	border-bottom: 1px solid #000;
 	padding: 1em 1.3em 1em 1.3em;
@@ -297,17 +297,17 @@ blockquote
 }
 
 /* Alterate block quote stylings */
-.standard_blockquote
+blockquote.bbc_standard_quote
 {
 	background-color: #d7daec;
 }
-.alternate_blockquote
+blockquote.bbc_alternate_quote
 {
 	background-color: #e7eafc;
 }
 
 /* A code block - maybe even PHP ;). */
-code
+code.bbc_code
 {
 	display: block;
 	font-family: "courier new", "times new roman", monospace;
@@ -360,6 +360,10 @@ code
 .bbc_u
 {
 	text-decoration: underline;
+}
+.bbc_list
+{
+	margin: 0 auto;
 }
 
 /* Generally, those [?] icons.  This makes your cursor a help icon. */

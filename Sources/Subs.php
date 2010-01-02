@@ -1049,9 +1049,15 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'content' => '<br />',
 			),
 			array(
+				'tag' => 'center',
+				'before' => '<div align="center">',
+				'after' => '</div>',
+				'block_level' => true,
+			),
+			array(
 				'tag' => 'code',
 				'type' => 'unparsed_content',
-				'content' => '<div class="codeheader">' . $txt['code'] . ': <a href="javascript:void(0);" onclick="return smfSelectText(this);" class="codeoperation">' . $txt['code_select'] . '</a></div><code>$1</code>',
+				'content' => '<div class="codeheader">' . $txt['code'] . ': <a href="javascript:void(0);" onclick="return smfSelectText(this);" class="codeoperation">' . $txt['code_select'] . '</a></div><code class="bbc_code">$1</code>',
 				// !!! Maybe this can be simplified?
 				'validate' => isset($disabled['code']) ? null : create_function('&$tag, &$data, $disabled', '
 					global $context;
@@ -1093,15 +1099,9 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'block_level' => true,
 			),
 			array(
-				'tag' => 'center',
-				'before' => '<div align="center">',
-				'after' => '</div>',
-				'block_level' => true,
-			),
-			array(
 				'tag' => 'code',
 				'type' => 'unparsed_equals_content',
-				'content' => '<div class="codeheader">' . $txt['code'] . ': ($2) <a href="#" onclick="return smfSelectText(this);" class="codeoperation">' . $txt['code_select'] . '</a></div><code>$1</code>',
+				'content' => '<div class="codeheader">' . $txt['code'] . ': ($2) <a href="#" onclick="return smfSelectText(this);" class="codeoperation">' . $txt['code_select'] . '</a></div><code class="bbc_code">$1</code>',
 				// !!! Maybe this can be simplified?
 				'validate' => isset($disabled['code']) ? null : create_function('&$tag, &$data, $disabled', '
 					global $context;
@@ -2012,14 +2012,14 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			{
 				// Start with standard
 				$quote_alt = false;
-				foreach($open_tags as $open_quote)
+				foreach ($open_tags as $open_quote)
 				{
 					// Every parent quote this quote has flips the styling
 					if ($open_quote['tag'] == 'quote')
 						$quote_alt = !$quote_alt;
 				}
 				// Add a class to the quote to style alternating blockquotes
-				$possible['before'] = strtr($possible['before'], array('<blockquote>' => '<blockquote class="' . ($quote_alt ? 'standard' : 'alternate') . '_blockquote">'));
+				$possible['before'] = strtr($possible['before'], array('<blockquote>' => '<blockquote class="bbc_' . ($quote_alt ? 'alternate' : 'standard') . '_quote">'));
 			}
 
 			// This is long, but it makes things much easier and cleaner.
