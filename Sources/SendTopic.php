@@ -330,7 +330,7 @@ function ReportToModerator()
 		)
 	);
 	if ($smcFunc['db_num_rows']($result) == 0)
-		fatal_lang_error('no_board');
+		fatal_lang_error('no_board', false);
 	list ($_GET['msg'], $member, $starter) = $smcFunc['db_fetch_row']($result);
 	$smcFunc['db_free_result']($result);
 
@@ -376,7 +376,7 @@ function ReportToModerator2()
 		)
 	);
 	if ($smcFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('no_board');
+		fatal_lang_error('no_board', false);
 	$message = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 

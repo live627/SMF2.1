@@ -14,6 +14,7 @@ January 2010
  ! Calendar missing previous/next month if your in the min/max year. (Calendar.php) (Reported by TheDragon)
  ! Missing session vars in admin linktrees (Admin.php) [Bug 3985]
  * Config_vars, invalid xhtml when using title, extra tabs/spaces with most options (Admin.template.php) [Bug 3904]
+ ! Google may attempt to follow out of date reporttomodoerator links with split/merging topics (SendTopic.php) [Bug 4147]
 
 
 December 2009
