@@ -16,6 +16,7 @@ January 2010
  * Config_vars, invalid xhtml when using title, extra tabs/spaces with most options (Admin.template.php) [Bug 3904]
  ! Google may attempt to follow out of date reporttomodoerator links with split/merging topics (SendTopic.php) [Bug 4147]
  ! CPF's wouldn't render newlines for textarea when parse_bbc wasn't allowed (Profile.php)
+ ! Require on registration wouldn't work for Checkboxes, radios and select boxes (Register.php) [Bug 4049]
 
 
 December 2009

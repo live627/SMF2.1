@@ -433,11 +433,11 @@ function Register2($verifiedOpenID = false)
 				elseif (substr($row['mask'], 0, 5) == 'regex' && preg_match(substr($row['mask'], 5), $value) === 0)
 					$custom_field_errors[] = array('custom_field_inproper_format', array($row['field_name']));
 			}
-
-			// Is this required but not there?
-			if (trim($value) == '' && $row['show_reg'] > 1)
-				$custom_field_errors[] = array('custom_field_empty', array($row['field_name']));
 		}
+
+		// Is this required but not there?
+		if (trim($value) == '' && $row['show_reg'] > 1)
+			$custom_field_errors[] = array('custom_field_empty', array($row['field_name']));
 	}
 	$smcFunc['db_free_result']($request);
 
