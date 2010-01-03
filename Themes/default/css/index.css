@@ -103,7 +103,7 @@ input:hover, textarea:hover, button:hover, select:hover
 .button_submit:hover, .button_reset:hover
 {
 	border: 1px solid #aaa;
-	background: url(../images/theme/submit_bg.png) no-repeat 0 -218px #cde7ff;
+	background: url(../images/theme/submit_bg.png) no-repeat 0 -140px #cde7ff;
 }
 input:focus, textarea:focus, button:focus, select:focus
 {
@@ -286,12 +286,11 @@ blockquote.bbc_standard_quote, blockquote.bbc_alternate_quote
 {
 	font-size: x-small;
 	color: #000;
-	text-indent: 0.3em;
 	line-height: 1.4em;
-	background: url(../images/theme/quote.png) 2px 2px no-repeat;
+	background: url(../images/theme/quote.png) 0.1em 0.1em no-repeat;
 	border-top: 3px solid #99A;
 	border-bottom: 3px solid #99A;
-	padding: 1em 1.3em;
+	padding: 1.1em 1.4em;
 	margin: 0.1em 0 0.3em 0;
 }
 

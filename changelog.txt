@@ -23,6 +23,7 @@ January 2010
  ! The list used for managing attachment paths could exceed the template's boundaries. (ManageAttachments.php) [Bug 4132]
  + Ability to do alternate styling of quotes - for all permutations (Subs.php, index.css) [Bug 3920]
  * Altered css for blockquote and code classes (index.css)
+ * Debyted some images, got rid of redundant images, adjusted css slightly (index.css and sundry icons)
 
 
 December 2009
