@@ -22,6 +22,7 @@ January 2010
  ! Bug with set names to utf8 in install (Install.php) [Bug 4112]
  ! The list used for managing attachment paths could exceed the template's boundaries. (ManageAttachments.php) [Bug 4132]
  + Ability to do alternate styling of quotes - for all permutations (Subs.php, index.css) [Bug 3920]
+ * Altered css for blockquote and code classes (index.css)
 
 
 December 2009
