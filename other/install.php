@@ -2326,7 +2326,11 @@ function template_database_settings()
 	else
 	{
 		echo '
-			<input type="hidden" name="db_type" value="', $incontext['db']['type'], '" />';
+			<tr style="display: none;">
+				<td>
+					<input type="hidden" name="db_type" value="', $incontext['db']['type'], '" />
+				</td>
+			</tr>';
 	}
 
 	echo '
