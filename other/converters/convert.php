@@ -3079,7 +3079,7 @@ function print_error($message, $fatal = false, $add_ending = false)
 	if ($command_line)
 		fwrite($fp, $add_ending ? "\n" : '');
 	else
-		fwrite($fp,  $add_ending ? '<br />' . "\n" : '');
+		fwrite($fp, $add_ending ? '<br />' . "\n" : '');
 
 	if ($fatal)
 		exit;

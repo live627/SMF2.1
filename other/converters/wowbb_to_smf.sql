@@ -1,11 +1,11 @@
 /* ATTENTION: You don't need to run or use this file!  The convert.php script does everything for you! */
 
 /******************************************************************************/
----~ name: "wowBB  1.7"
+---~ name: "wowBB 1.7"
 /******************************************************************************/
 ---~ version: "SMF 2.0"
 ---~ settings: "/config.php"
----~ from_prefix:  "`" . DB_NAME. "`. ".FILE_SYSTEM. "_"
+---~ from_prefix: "`" . DB_NAME. "`. ".FILE_SYSTEM. "_"
 ---~ table_test: "{$from_prefix}users"
 
 /******************************************************************************/
@@ -225,7 +225,7 @@ $row['signature'] = preg_replace(
 		'',
 		'',
 		'',
-	    '',
+		'',
 		'[color=#AAAAAA]',
 		'[/color]',
 		'[color=#0099FF]',
@@ -266,7 +266,7 @@ SELECT
 	SUBSTRING(u.user_password, 1, 64) AS passwd, '' AS lngfile, '' AS buddy_list,
 	'' AS pm_ignore_list, '' AS message_labels, '' AS personal_text,
 	u.user_homepage AS website_title, u.user_homepage AS website_url,
-	u.user_country  AS location, u.user_icq AS icq, u.user_aim AS aim,
+	u.user_country AS location, u.user_icq AS icq, u.user_aim AS aim,
 	u.user_ym AS yim, u.user_msnm AS msn, '' AS usertitle, '' AS member_ip,
 	'' AS member_ip2, '' AS secret_question, IF(u.user_group_id > 6, 0, '') AS additional_groups,
 	CASE u.user_group_id
@@ -281,7 +281,7 @@ SELECT
 	UNIX_TIMESTAMP(u.user_joined) AS date_registered, '' AS last_login,
 	u.user_avatar AS avatar, IF(u.user_invisible = '1', 0, 1) AS show_online,
 	IF(u.user_view_email = '1', 0, 1) AS hide_email,	u.user_posts AS posts, 0 AS gender,
-    u.user_birthday AS birthdate, IF (u.user_activation_key != '', 0, 1) AS is_activated,
+	u.user_birthday AS birthdate, IF (u.user_activation_key != '', 0, 1) AS is_activated,
 	u.user_activation_key AS validation_code,
 	SUBSTRING(u.user_signature, 1, 65534) AS signature
 FROM {$from_prefix}users AS u
@@ -458,7 +458,7 @@ $row['body'] = preg_replace(
 		'',
 		'',
 		'',
-	    '',
+		'',
 		'[color=#AAAAAA]',
 		'[/color]',
 		'[color=#0099FF]',
@@ -494,7 +494,7 @@ $row['body'] = preg_replace(
 ---}
 
 SELECT
-	p.post_id AS id_msg, p.topic_id AS id_topic, p.forum_id  AS id_board,
+	p.post_id AS id_msg, p.topic_id AS id_topic, p.forum_id AS id_board,
 	UNIX_TIMESTAMP(p.post_date_time) AS poster_time, p.user_id AS id_member,
 	p.post_last_edited_on AS id_msg_MODIFIED, t.topic_name AS subject,
 	p.post_user_name AS poster_name, u.user_email AS poster_email,
@@ -628,7 +628,7 @@ $row['body'] = preg_replace(
 		'',
 		'',
 		'',
-	    '',
+		'',
 		'[color=#AAAAAA]',
 		'[/color]',
 		'[color=#0099FF]',
@@ -789,7 +789,7 @@ WHERE notify = '1';
 $no_add = true;
 $keys = array('code', 'filename', 'description', 'smpath', 'hidden');
 
-$row['filename'] =  preg_replace('~images\/emoticons\/~is','', $row['filename']);
+$row['filename'] = preg_replace('~images\/emoticons\/~is', '', $row['filename']);
 
 if (!isset($smf_smileys_directory))
 {

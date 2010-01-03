@@ -285,7 +285,7 @@ WHERE id_group > 8;
 ---* {$to_prefix}membergroups
 	/* To get around weird ids we jump a little. We skip 8 just so its easier to know where the ids went */
 	SELECT
-		IF(member_group = -3, 9, member_group + 10)  AS id_group, mem_gr_name AS group_name,
+		IF(member_group = -3, 9, member_group + 10) AS id_group, mem_gr_name AS group_name,
 		mem_gr_colour AS online_color, post_count AS min_posts, max_pm AS max_messages, CONCAT(image_count, '#', image_name) AS stars
 	FROM {$from_prefix}{$dbtables['user_groups']}
 	WHERE member_group != -1;

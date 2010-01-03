@@ -271,7 +271,7 @@ TRUNCATE {$to_prefix}log_polls;
 ---* {$to_prefix}polls
 SELECT
 	p.pollID AS id_poll, SUBSTRING(p.question , 1, 255) AS question,
-	t.userID AS id_member, p.endTime  AS expire_time,
+	t.userID AS id_member, p.endTime AS expire_time,
 	SUBSTRING(IFNULL(t.username, ''), 1, 255) AS poster_name,
 	choiceCount AS max_votes
 FROM {$from_prefix}{$wcf_prefix}poll AS p
@@ -407,7 +407,7 @@ FROM {$from_prefix}{$wbb_prefix}board_subscription;
 $no_add = true;
 $keys = array('code', 'filename', 'description', 'smpath', 'hidden');
 
-$row['filename'] =  preg_replace('~images\/smilies\/~is','', $row['filename']);
+$row['filename'] = preg_replace('~images\/smilies\/~is', '', $row['filename']);
 
 if (!isset($smf_smileys_directory))
 {

@@ -77,7 +77,7 @@ convert_free_result($request);
 convert_query("
 	UPDATE {$to_prefix}members
 	SET id_group = 1
-	WHERE id_member IN (" . implode(',', $admins) .  ")");
+	WHERE id_member IN (" . implode(',', $admins) . ")");
 ---}
 
 /******************************************************************************/

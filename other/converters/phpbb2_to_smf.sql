@@ -324,7 +324,7 @@ TRUNCATE {$to_prefix}messages;
 ---{
 $ignore = true;
 $row['body'] = preg_replace('~\[size=([789]|[012]\d)\]~is', '[size=$1px]', $row['body']);
-$row['body'] =  preg_replace('~\[quote="(.+?)"\]~is', '[quote author="$1"]', $row['body']);
+$row['body'] = preg_replace('~\[quote="(.+?)"\]~is', '[quote author="$1"]', $row['body']);
 ---}
 SELECT
 	p.post_id AS id_msg, p.topic_id AS id_topic, p.post_time AS poster_time,

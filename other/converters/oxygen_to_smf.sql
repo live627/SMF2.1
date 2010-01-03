@@ -34,7 +34,7 @@ SELECT
 		WHEN 'Super Moderator' THEN 2
 		ELSE 0
 	END AS id_group, '' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list,
-	'' AS message_labels, '' AS time_format, '' AS  usertitle, '' AS member_ip,
+	'' AS message_labels, '' AS time_format, '' AS usertitle, '' AS member_ip,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
 	'' AS additional_groups, '' AS smiley_set, '' AS password_salt, '' AS member_ip2
 FROM {$from_prefix}members

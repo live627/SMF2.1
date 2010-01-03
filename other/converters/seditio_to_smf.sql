@@ -240,7 +240,7 @@ $row['body'] = htmlspecialchars($row['body']);
 
 SELECT
 	p.fp_id AS id_msg, p.fp_topicid AS id_topic,
-	p.fp_sectionid  AS id_board, p.fp_creation AS poster_time,
+	p.fp_sectionid AS id_board, p.fp_creation AS poster_time,
 	p.fp_posterid AS id_member,	p.fp_updated AS id_msg_MODIFIED,
 	t.ft_title AS subject,
 	p.fp_postername AS poster_name,

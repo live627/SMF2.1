@@ -1,7 +1,7 @@
 /* ATTENTION: You don't need to run or use this file!  The convert.php script does everything for you! */
 
 /******************************************************************************/
----~ name: "Burning Board  3.0"
+---~ name: "Burning Board 3.0"
 /******************************************************************************/
 ---~ version: "SMF 2.0"
 ---~ settings: "/wbb3_migration.php"
@@ -273,7 +273,7 @@ TRUNCATE {$to_prefix}log_polls;
 ---* {$to_prefix}polls
 SELECT
 	p.pollID AS id_poll, SUBSTRING(p.question , 1, 255) AS question,
-	t.userID AS id_member, p.endTime  AS expire_time,
+	t.userID AS id_member, p.endTime AS expire_time,
 	SUBSTRING(IFNULL(t.username, ''), 1, 255) AS poster_name,
 	choiceCount AS max_votes
 FROM {$from_prefix}{$wcf_prefix}poll AS p
@@ -503,7 +503,7 @@ FROM {$from_prefix}{$wbb_prefix}board_subscription;
 $no_add = true;
 $keys = array('code', 'filename', 'description', 'smpath', 'hidden');
 
-$row['filename'] =  preg_replace('~images\/smilies\/~is','', $row['filename']);
+$row['filename'] = preg_replace('~images\/smilies\/~is', '', $row['filename']);
 
 if (!isset($smf_smileys_directory))
 {

@@ -247,7 +247,7 @@ SELECT
 	u.user_regdate AS date_registered,
 	SUBSTRING(u.user_from, 1, 255) AS location,
 	u.user_posts AS posts, IF(u.user_rank = 1, 1, IFNULL(mg.id_group, 0)) AS id_group,
-    u.user_new_privmsg AS instant_messages,
+	u.user_new_privmsg AS instant_messages,
 	SUBSTRING(u.user_email, 1, 255) AS email_address,
 	u.user_unread_privmsg AS unread_messages,
 	SUBSTRING(u.user_msnm, 1, 255) AS msn,
@@ -569,7 +569,7 @@ TRUNCATE {$to_prefix}log_polls;
 ---* {$to_prefix}polls
 SELECT
 	t.topic_id AS id_poll, t.poll_title AS question, t.poll_max_options AS max_votes, IF((t.poll_start + t.poll_length) < 0, 0, (t.poll_start + t.poll_length)) AS expire_time,
-    t.poll_vote_change AS change_vote, t.topic_poster AS id_member, m.username AS poster_name
+	t.poll_vote_change AS change_vote, t.topic_poster AS id_member, m.username AS poster_name
 FROM {$from_prefix}topics AS t
 	LEFT JOIN {$from_prefix}users AS m ON (m.user_id = t.topic_poster)
 WHERE t.poll_title != '';

@@ -33,10 +33,10 @@ while (true)
 
 	$result = convert_query("
 		SELECT u.uid AS id_member
-        FROM {$from_prefix}users AS u
+		FROM {$from_prefix}users AS u
 			LEFT JOIN {$from_prefix}users_roles AS r ON (u.uid=r.uid)
 			INNER JOIN {$from_prefix}permission AS p ON (r.rid=p.rid)
-		WHERE  p.perm LIKE '%administer forums%'
+		WHERE p.perm LIKE '%administer forums%'
 		LIMIT $_REQUEST[start], 250");
 	while ($row = convert_fetch_assoc($result))
 	{
@@ -277,7 +277,7 @@ $row['body'] = preg_replace(
 		'',
 		'',
 		'',
-	    '',
+		'',
 		'[quote]',
 		'[/quote]',
 		'[code]&lt;?php',
@@ -334,7 +334,7 @@ while (true)
 		SELECT m.id_member, COUNT(m.id_msg) AS posts
 		FROM {$to_prefix}messages AS m
 			INNER JOIN {$to_prefix}boards AS b ON (m.id_board = b.id_board)
-		WHERE  b.count_posts = 0
+		WHERE b.count_posts = 0
 		GROUP BY m.id_member
 		LIMIT $_REQUEST[start], 250");
 	while ($row = convert_fetch_assoc($result))

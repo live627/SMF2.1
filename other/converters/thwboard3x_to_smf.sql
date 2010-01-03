@@ -164,7 +164,7 @@ $row['body'] = htmlspecialchars($row['body']);
 ---}
 SELECT
 	p.postid AS id_msg, p.threadid AS id_topic,
-	t.boardid  AS id_board, p.posttime AS poster_time,
+	t.boardid AS id_board, p.posttime AS poster_time,
 	p.userid AS id_member,	p.postlastedittime AS id_msg_MODIFIED,
 	t.threadtopic AS subject,
 	IF(p.postguestname != '',p.postguestname, u.username) AS poster_name,

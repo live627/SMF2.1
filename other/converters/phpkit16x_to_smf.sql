@@ -5,7 +5,7 @@
 /******************************************************************************/
 ---~ version: "SMF 2.0"
 ---~ settings: "/Pkinc/Rep/Sites/Include/Data/Sql.php"
----~ from_prefix:  "`" . pkSQLDATABASE. "`. ". pkSQLPREFIX. "_"
+---~ from_prefix: "`" . pkSQLDATABASE. "`. ". pkSQLPREFIX. "_"
 ---~ table_test: "{$from_prefix}user"
 
 /******************************************************************************/
@@ -75,7 +75,7 @@ $row['signature'] = preg_replace(
 		'',
 		'',
 		'',
-	    '',
+		'',
 		'[color=#AAAAAA]',
 		'[/color]',
 		'[color=#0099FF]',
@@ -119,7 +119,7 @@ SELECT
 	signin AS date_registered, user_avatar AS avatar,
 	user_ghost	AS show_online, IF(user_emailshow ='1', 0, 1) AS hide_email,
 	user_posts AS posts, user_sex AS gender, user_activate AS is_activated,
-    CONCAT(user_bd_year,'-',user_bd_month,'-',user_bd_day) AS birthdate,
+	CONCAT(user_bd_year,'-',user_bd_month,'-',user_bd_day) AS birthdate,
 	SUBSTRING(user_sig, 1, 65534) AS signature
 FROM {$from_prefix}user where user_id > 0;
 ---*
@@ -279,7 +279,7 @@ $row['body'] = preg_replace(
 		'',
 		'',
 		'',
-	    '',
+		'',
 		'[color=#AAAAAA]',
 		'[/color]',
 		'[color=#0099FF]',
@@ -299,7 +299,7 @@ $row['body'] = preg_replace(
 
 SELECT
 	p.forumpost_id AS id_msg, p.forumpost_threadid AS id_topic,
-	t.forumthread_catid  AS id_board, p.forumpost_time AS poster_time, p.forumpost_autorid AS id_member, p.forumpost_edittime AS id_msg_MODIFIED,
+	t.forumthread_catid AS id_board, p.forumpost_time AS poster_time, p.forumpost_autorid AS id_member, p.forumpost_edittime AS id_msg_MODIFIED,
 	IF(p.forumpost_title != '', p.forumpost_title, subject.forumpost_title) AS subject,
 	p.forumpost_autor AS poster_name, u.user_email AS poster_email,
 	p.forumpost_ipaddr AS poster_ip, p.forumpost_smilies AS smileys_enabled, p.forumpost_edittime AS modified_time, p.forumpost_editautor AS modified_name,
