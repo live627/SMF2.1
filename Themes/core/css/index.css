@@ -212,7 +212,7 @@ ul.reset, ul.reset li
 ------------------------------------------------------- */
 
 /* A quote, perhaps from another post. */
-.codeheader, .quoteheader a
+.codeheader, .quoteheader
 {
 	color: #000;
 	text-decoration: none;
@@ -220,7 +220,7 @@ ul.reset, ul.reset li
 	font-weight: bold;
 	font-size: x-small;
 	line-height: 1.2em;
-	width: 100%;
+	padding: 0 0.3em;
 }
 blockquote.bbc_standard_quote, blockquote.bbc_alternate_quote
 {
@@ -246,16 +246,15 @@ blockquote.bbc_alternate_quote
 code.bbc_code
 {
 	display: block;
-	color: #000;
-	font-family: "courier new", "times new roman", monospace;
+	font-family: "dejavu sans mono", "monaco", "lucida console", "courier new", monospace;
 	font-size: x-small;
-	background: #dddddd;
+	background: #eef;
 	border: 1px solid #000;
 	line-height: 1.3em;
 	padding: 1px;
 	overflow: auto;
 	white-space: pre;
-	/* Stop after about 24 lines, and just show a scrollbar. */
+	/* Show a scrollbar after about 24 lines. */
 	max-height: 24em;
 }
 
@@ -292,6 +291,10 @@ code.bbc_code
 .bbc_u
 {
 	text-decoration: underline;
+}
+.bbc_tt
+{
+	font-family: "dejavu sans mono", "monaco", "lucida console", "courier new", monospace;
 }
 
 /* Generally, those [?] icons.  This makes your cursor a help icon. */
