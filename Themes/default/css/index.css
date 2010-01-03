@@ -288,8 +288,8 @@ blockquote.bbc_standard_quote, blockquote.bbc_alternate_quote
 	color: #000;
 	line-height: 1.4em;
 	background: url(../images/theme/quote.png) 0.1em 0.1em no-repeat;
-	border-top: 3px solid #99A;
-	border-bottom: 3px solid #99A;
+	border-top: 2px solid #99A;
+	border-bottom: 2px solid #99A;
 	padding: 1.1em 1.4em;
 	margin: 0.1em 0 0.3em 0;
 }
@@ -308,11 +308,11 @@ blockquote.bbc_alternate_quote
 code.bbc_code
 {
 	display: block;
-	font-family: "dejavu sans mono", "monaco", "courier new", monospace;
+	font-family: "dejavu sans mono", "monaco", "lucida console", "courier new", monospace;
 	font-size: x-small;
 	background: #eef;
-	border-top: 3px solid #999;
-	border-bottom: 3px solid #999;
+	border-top: 2px solid #999;
+	border-bottom: 2px solid #999;
 	line-height: 1.5em;
 	padding: 3px 1em;
 	overflow: auto;
@@ -362,6 +362,10 @@ code.bbc_code
 .bbc_list
 {
 	margin: 0 auto;
+}
+.bbc_tt
+{
+	font-family: "dejavu sans mono", "monaco", "lucida console", "courier new", monospace;
 }
 
 /* Generally, those [?] icons.  This makes your cursor a help icon. */
