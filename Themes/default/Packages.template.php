@@ -564,7 +564,7 @@ function template_browse()
 	echo '
 	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span>
-			<span class="ie6_header"><a href="', $scripturl, '?action=helpadmin;help=latest_packages" onclick="return reqWin(this.href);" class="help"><img class="icon" src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['packages_latest'], '</span>
+			<span class="ie6_header floatleft"><a href="', $scripturl, '?action=helpadmin;help=latest_packages" onclick="return reqWin(this.href);" class="help"><img class="icon" src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['packages_latest'], '</span>
 		</h3>
 		<div class="windowbg2">
 				<span class="topslice"><span></span></span>

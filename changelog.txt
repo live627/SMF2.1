@@ -30,7 +30,8 @@ January 2010
  * Made the PM send template more consistent with the Post main template. (PersonalMessage template)
  * Fixed a lot of misaligned header bar icons/text in IE6 (ie6.css, sixteen default templates)
  * The Toggle icon wasn't properly aligned (GenericMenu template, index.css, compat.css) [Bug 4030]
-
+ * It will be now. Added a fix for icon/no icon bars.(GenericMenu.template.php)
+ * Damn. Missed something so had to add to the span class (sixteen default templates)
 
 December 2009
 --------------------------------------------------------------------------------

@@ -154,7 +154,7 @@ function template_search()
 	<form action="', $scripturl, '?action=mlist;sa=search" method="post" accept-charset="', $context['character_set'], '">
 		<div id="memberlist">
 			<h3 class="catbg mlist"><span class="left"></span>
-				<span class="ie6_header">', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" class="icon" />' : '', $txt['mlist_search'], '</span>
+				<span class="ie6_header floatleft">', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" class="icon" />' : '', $txt['mlist_search'], '</span>
 			</h3>
 			<div class="pagesection">
 				', template_button_strip($memberlist_buttons, 'right'), '

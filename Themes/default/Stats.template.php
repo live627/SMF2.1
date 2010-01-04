@@ -286,7 +286,7 @@ function template_main()
 		<br class="clear" />
 		<div class="flow_hidden">
 			<h3 class="catbg"><span class="left"></span>
-				<span class="ie6_header"><img src="', $settings['images_url'], '/stats_history.gif" class="icon" alt="" /> ', $txt['forum_history'], '</span>
+				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/stats_history.gif" class="icon" alt="" /> ', $txt['forum_history'], '</span>
 			</h3>';
 
 	if (!empty($context['yearly']))

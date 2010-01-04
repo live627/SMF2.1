@@ -8,7 +8,7 @@ function template_main()
 	echo '
 	<div id="recent" class="main_section">
 		<h3 class="catbg"><span class="left"></span>
-			<span class="ie6_header"><img src="', $settings['images_url'], '/post/xx.gif" alt="" class="icon" />',$txt['recent_posts'],'</span>
+			<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/post/xx.gif" alt="" class="icon" />',$txt['recent_posts'],'</span>
 		</h3>
 		<div class="pagesection">
 			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
