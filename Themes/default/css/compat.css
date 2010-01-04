@@ -449,6 +449,11 @@ h3.catbg img.icon, div.titlebg img.icon, h3.catbg img
 	float: left;
 	margin: 5px 8px 0 0;
 }
+h4.catbg a.toggle img
+{
+	vertical-align: middle;
+	margin: -2px 5px 0 5px;
+}
 
 /* Styles for the board index.
 ------------------------------------------------- */
