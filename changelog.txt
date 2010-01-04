@@ -26,6 +26,7 @@ January 2010
  * Debyted some images, got rid of redundant images, adjusted css slightly (index.css and sundry icons)
  * Make truetype elements somewhat more readable. (index.css)
  * Install script looked very broken in IE6 (install.css) [Bug 3824]
+ * Made the PM send template more consistent with the Post main template. (PersonalMessage template)
 
 
 December 2009

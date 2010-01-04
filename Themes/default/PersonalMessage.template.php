@@ -902,29 +902,30 @@ function template_send()
 		<img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt['new_message'], '" title="', $txt['new_message'], '" />&nbsp;', $txt['new_message'], '
 	</h3>';
 
+	echo '
+	<form action="', $scripturl, '?action=pm;sa=send2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'message\']);">
+		<div>
+			<span class="upperframe"><span></span></span>
+			<div class="roundframe">';
+
 	// If there were errors for sending the PM, show them.
 	if (!empty($context['post_error']['messages']))
 	{
 		echo '
-	<div class="errorbox">
-		', $txt['error_while_submitting'], '
-		<ul>';
+				<div class="errorbox">
+					<strong>', $txt['error_while_submitting'], '</strong>
+					<ul>';
 
 		foreach ($context['post_error']['messages'] as $error)
 			echo '
-			<li class="error">', $error, '</li>';
+						<li class="error">', $error, '</li>';
 
 		echo '
-		</ul>
-	</div>
-	';
+					</ul>
+				</div>';
 	}
 
 	echo '
-	<div>
-		<span class="upperframe"><span></span></span>
-		<div class="roundframe">
-			<form action="', $scripturl, '?action=pm;sa=send2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'message\']);">
 				<dl id="post_header">';
 
 	// To and bcc. Include a button to search for members.
@@ -1010,10 +1011,10 @@ function template_send()
 				<input type="hidden" name="pm_head" value="', !empty($context['quoted_message']['pm_head']) ? $context['quoted_message']['pm_head'] : 0, '" />
 				<input type="hidden" name="f" value="', isset($context['folder']) ? $context['folder'] : '', '" />
 				<input type="hidden" name="l" value="', isset($context['current_label_id']) ? $context['current_label_id'] : -1, '" />
-			</form>
+			</div>
+			<span class="lowerframe"><span></span></span>
 		</div>
-		<span class="lowerframe"><span></span></span>
-	</div>';
+	</form>';
 
 	// Show the message you're replying to.
 	if ($context['reply'])

@@ -123,7 +123,7 @@ function template_main()
 				<span class="left"></span>
 				', $context['page_title'], '
 			</h3>
-			<div class="">
+			<div>
 				<span class="upperframe"><span></span></span>
 				<div class="roundframe">', isset($context['current_topic']) ? '
 					<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />' : '';
