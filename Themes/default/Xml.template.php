@@ -160,6 +160,7 @@ function template_split()
 			echo '
 	<change id="', $change['id'], '" curAction="insert" section="', $change['section'], '">
 		<subject><![CDATA[', cleanXml($change['insert_value']['subject']), ']]></subject>
+		<time><![CDATA[', cleanXml($change['insert_value']['time']), ']]></time>
 		<body><![CDATA[', cleanXml($change['insert_value']['body']), ']]></body>
 		<poster><![CDATA[', cleanXml($change['insert_value']['poster']), ']]></poster>
 	</change>';

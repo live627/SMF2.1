@@ -203,6 +203,9 @@ function SplitExecute()
 {
 	global $txt, $board, $topic, $context, $user_info, $smcFunc, $modSettings;
 
+	// Check the session to make sure they meant to do this.
+	checkSession();
+
 	// Clean up the subject.
 	if (!isset($_POST['subname']) || $_POST['subname'] == '')
 		$_POST['subname'] = $txt['new_topic'];
@@ -213,9 +216,6 @@ function SplitExecute()
 		$_REQUEST['subname'] = $_POST['subname'];
 		return SplitSelectTopics();
 	}
-
-	// Check the session to make sure they meant to do this.
-	checkSession();
 
 	$_POST['at'] = (int) $_POST['at'];
 	$messagesToBeSplit = array();
@@ -400,7 +400,7 @@ function SplitSelectTopics()
 
 	// Get the messages and stick them into an array.
 	$request = $smcFunc['db_query']('', '
-		SELECT m.subject, IFNULL(mem.real_name, m.poster_name) AS real_name, m.body, m.id_msg, m.smileys_enabled
+		SELECT m.subject, IFNULL(mem.real_name, m.poster_name) AS real_name, m.poster_time, m.body, m.id_msg, m.smileys_enabled
 		FROM {db_prefix}messages AS m
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE m.id_topic = {int:current_topic}' . (empty($_SESSION['split_selection'][$topic]) ? '' : '
@@ -417,7 +417,7 @@ function SplitSelectTopics()
 		)
 	);
 	$context['messages'] = array();
-	while ($row = $smcFunc['db_fetch_assoc']($request))
+	for ($counter = 0; $row = $smcFunc['db_fetch_assoc']($request); $counter ++)
 	{
 		censorText($row['subject']);
 		censorText($row['body']);
@@ -426,7 +426,10 @@ function SplitSelectTopics()
 
 		$context['not_selected']['messages'][$row['id_msg']] = array(
 			'id' => $row['id_msg'],
+			'alternate' => $counter % 2,
 			'subject' => $row['subject'],
+			'time' => timeformat($row['poster_time']),
+			'timestamp' => forum_time(true, $row['poster_time']),
 			'body' => $row['body'],
 			'poster' => $row['real_name'],
 		);
@@ -438,7 +441,7 @@ function SplitSelectTopics()
 	{
 		// Get the messages and stick them into an array.
 		$request = $smcFunc['db_query']('', '
-			SELECT m.subject, IFNULL(mem.real_name, m.poster_name) AS real_name, m.body, m.id_msg, m.smileys_enabled
+			SELECT m.subject, IFNULL(mem.real_name, m.poster_name) AS real_name,  m.poster_time, m.body, m.id_msg, m.smileys_enabled
 			FROM {db_prefix}messages AS m
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			WHERE m.id_topic = {int:current_topic}
@@ -455,7 +458,7 @@ function SplitSelectTopics()
 			)
 		);
 		$context['messages'] = array();
-		while ($row = $smcFunc['db_fetch_assoc']($request))
+		for ($counter = 0; $row = $smcFunc['db_fetch_assoc']($request); $counter ++)
 		{
 			censorText($row['subject']);
 			censorText($row['body']);
@@ -464,7 +467,10 @@ function SplitSelectTopics()
 
 			$context['selected']['messages'][$row['id_msg']] = array(
 				'id' => $row['id_msg'],
+				'alternate' => $counter % 2,
 				'subject' => $row['subject'],
+				'time' => timeformat($row['poster_time']),
+				'timestamp' => forum_time(true, $row['poster_time']),
 				'body' => $row['body'],
 				'poster' => $row['real_name']
 			);

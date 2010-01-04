@@ -78,7 +78,7 @@ function template_select()
 
 	echo '
 	<div id="split_topics">
-		<form action="', $scripturl, '?action=splittopics;sa=splitSelection;board=', $context['current_board'], '.0" method="post" accept-charset="', $context['character_set'], '"><input type="hidden" name="topic" value="', $context['current_topic'], '" />
+		<form action="', $scripturl, '?action=splittopics;sa=splitSelection;board=', $context['current_board'], '.0" method="post" accept-charset="', $context['character_set'], '">
 			<div id="not_selected" class="align_left">
 				<h3 class="catbg">
 					<span class="left"></span>
@@ -90,21 +90,22 @@ function template_select()
 				<div class="pagesection">
 					<strong>', $txt['pages'], ':</strong> <span id="pageindex_not_selected">', $context['not_selected']['page_index'], '</span>
 				</div>
-				<table id="table_not_selected" width="100%" class="table_grid bordercolor">';
+				<ul id="messages_not_selected" class="split_messages smalltext reset">';
 
 	foreach ($context['not_selected']['messages'] as $message)
 		echo '
-					<tr class="windowbg" id="not_selected_', $message['id'], '">
-						<td class="smalltext">
-							', $message['subject'], ' - ', $message['poster'], '
-							<div class="post">', $message['body'], '</div>
-						</td>
-						<td valign="middle" align="center" width="5%">
-							<a href="', $scripturl, '?action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=down;msg=', $message['id'], '" onclick="return select(\'down\', ', $message['id'], ');"><img src="', $settings['images_url'], '/split_select.gif" alt="-&gt;" /></a>
-						</td>
-					</tr>';
+					<li class="windowbg', $message['alternate'] ? '2' : '', '" id="not_selected_', $message['id'], '">
+						<div class="message_header">
+							<a class="split_icon floatright" href="', $scripturl, '?action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=down;msg=', $message['id'], '" onclick="return select(\'down\', ', $message['id'], ');"><img src="', $settings['images_url'], '/split_select.gif" alt="-&gt;" /></a>
+							<strong>', $message['subject'], '</strong> ', $txt['by'], ' <strong>', $message['poster'], '</strong><br />
+							<em>', $message['time'], '</em>
+						</div>
+						<div class="post">', $message['body'], '</div>
+					</li>';
+
 	echo '
-				</table>
+					<li class="dummy" />
+				</ul>
 			</div>
 			<div id="selected" class="align_right">
 				<h3 class="catbg">
@@ -117,25 +118,27 @@ function template_select()
 				<div class="pagesection">
 					<strong>', $txt['pages'], ':</strong> <span id="pageindex_selected">', $context['selected']['page_index'], '</span>
 				</div>
-				<table id="table_selected" width="100%" class="table_grid bordercolor">';
+				<ul id="messages_selected" class="split_messages smalltext reset">';
 
 	if (!empty($context['selected']['messages']))
 		foreach ($context['selected']['messages'] as $message)
 			echo '
-					<tr class="windowbg" id="selected_', $message['id'], '">
-						<td width="5%" valign="middle" align="center">
-							<a href="', $scripturl, '?action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=up;msg=', $message['id'], '" onclick="return select(\'up\', ', $message['id'], ');"><img src="', $settings['images_url'], '/split_deselect.gif" alt="&lt;-" /></a>
-						</td>
-						<td class="smalltext">
-							', $message['subject'], ' - ', $message['poster'], '
-							<div class="post">', $message['body'], '</div>
-						</td>
-					</tr>';
+					<li class="windowbg', $message['alternate'] ? '2' : '', '" id="selected_', $message['id'], '">
+						<div class="message_header">
+							<a class="split_icon floatleft" href="', $scripturl, '?action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=up;msg=', $message['id'], '" onclick="return select(\'up\', ', $message['id'], ');"><img src="', $settings['images_url'], '/split_deselect.gif" alt="&lt;-" /></a>
+							<strong>', $message['subject'], '</strong> ', $txt['by'], ' <strong>', $message['poster'], '</strong><br />
+							<em>', $message['time'], '</em>
+						</div>
+						<div class="post">', $message['body'], '</div>
+					</li>';
+
 	echo '
-				</table>
+					<li class="dummy" />
+				</ul>
 			</div>
 			<br class="clear" />
 			<p>
+				<input type="hidden" name="topic" value="', $context['current_topic'], '" />
 				<input type="hidden" name="subname" value="', $context['new_subject'], '" />
 				<input type="submit" value="', $txt['split'], '" class="button_submit" />
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -158,6 +161,19 @@ function template_select()
 				else
 					return true;
 			}
+			function applyWindowClasses(oList)
+			{
+				var bAlternate = false;
+				oListItems = oList.getElementsByTagName("LI");
+				for (i = 0; i < oListItems.length; i++)
+				{
+					// Skip dummies.
+					if (oListItems[i].id == "")
+						continue;
+					oListItems[i].className = "windowbg" + (bAlternate ? "2" : "");
+					bAlternate = !bAlternate;
+				}
+			}
 			function onDocReceived(XMLDoc)
 			{
 				var i, j, pageIndex;
@@ -167,56 +183,51 @@ function template_select()
 					setInnerHTML(document.getElementById("pageindex_" + pageIndex.getAttribute("section")), pageIndex.firstChild.nodeValue);
 					start[i] = pageIndex.getAttribute("startFrom");
 				}
-				var numChanges = XMLDoc.getElementsByTagName("change").length, curChange;
-				var curSection, curAction, curId, curTable, curRow, curRowIndex, buttonCell, textCell, curData, numRows;
+				var numChanges = XMLDoc.getElementsByTagName("change").length;
+				var curChange, curSection, curAction, curId, curList, curData, newItem, sInsertBeforeId;
 				for (i = 0; i < numChanges; i++)
 				{
 					curChange = XMLDoc.getElementsByTagName("change")[i];
 					curSection = curChange.getAttribute("section");
 					curAction = curChange.getAttribute("curAction");
 					curId = curChange.getAttribute("id");
-					curTable = document.getElementById("table_" + curSection);
-					numRows = curTable.rows.length;
+					curList = document.getElementById("messages_" + curSection);
 					if (curAction == "remove")
-						curTable.deleteRow(document.getElementById(curSection + "_" + curId).rowIndex);
+						curList.removeChild(document.getElementById(curSection + "_" + curId));
 					// Insert a message.
 					else
 					{
-						// By default insert the row at the end of the table.
-						curRowIndex = -1;
-						for (j = curSection == "selected" ? 2 : 3; j < numRows; j++)
+						// By default, insert the element at the end of the list.
+						sInsertBeforeId = null;
+						// Loop through the list to try and find an item to insert after.
+						oListItems = curList.getElementsByTagName("LI");
+						for (j = 0; j < oListItems.length; j++)
 						{
-							if (parseInt(curTable.rows[j].id.substr(curSection.length + 1)) < curId)
+							if (parseInt(oListItems[j].id.substr(curSection.length + 1)) < curId)
 							{
 								// This would be a nice place to insert the row.
-								curRowIndex = j;
+								sInsertBeforeId = oListItems[j].id;
 								// We\'re done for now. Escape the loop.
-								j = numRows + 1;
+								j = oListItems.length + 1;
 							}
 						}
-						curRow = curTable.insertRow(curRowIndex);
-						curRow.className = "windowbg";
-						curRow.id = curSection + "_" + curId;
-						if (curSection == "selected")
-						{
-							buttonCell = curRow.insertCell(-1);
-							textCell = curRow.insertCell(-1);
-						}
+						
+						// Let\'s create a nice container for the message.
+						newItem = document.createElement("LI");
+						newItem.className = "windowbg2";
+						newItem.id = curSection + "_" + curId;
+						newItem.innerHTML = "<div class=\\"message_header\\"><a class=\\"split_icon float" + (curSection == "selected" ? "left" : "right") + "\\" href=\\"" + smf_prepareScriptUrl(smf_scripturl) + "action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=" + (curSection == "selected" ? "up" : "down") + ";msg=" + curId + "\\" onclick=\\"return select(\'" + (curSection == "selected" ? "up" : "down") + "\', " + curId + ");\\"><img src=\\"', $settings['images_url'], '/split_" + (curSection == "selected" ? "de" : "") + "select.gif\\" alt=\\"" + (curSection == "selected" ? "&lt;-" : "-&gt;") + "\\" border=\\"0\\" /></a><strong>" + curChange.getElementsByTagName("subject")[0].firstChild.nodeValue + "</strong> ', $txt['by'], ' <strong>" + curChange.getElementsByTagName("poster")[0].firstChild.nodeValue + "</strong><br /><em>" + curChange.getElementsByTagName("time")[0].firstChild.nodeValue + "</em></div><div class=\\"post\\">" + curChange.getElementsByTagName("body")[0].firstChild.nodeValue + "</div>";
+
+						// So, where do we insert it?
+						if (typeof sInsertBeforeId == "string")
+							curList.insertBefore(newItem, document.getElementById(sInsertBeforeId));
 						else
-						{
-							textCell = curRow.insertCell(-1);
-							buttonCell = curRow.insertCell(-1);
-						}
-						setInnerHTML(buttonCell, "<a href=\\"" + smf_prepareScriptUrl(smf_scripturl) + "action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=" + (curSection == "selected" ? "up" : "down") + ";msg=" + curId + "\\" onclick=\\"return select(\'" + (curSection == "selected" ? "up" : "down") + "\', " + curId + ");\\"><img src=\\"', $settings['images_url'], '/split_" + (curSection == "selected" ? "de" : "") + "select.gif\\" alt=\\"" + (curSection == "selected" ? "&lt;-" : "-&gt;") + "\\" border=\\"0\\" /></a>");
-						buttonCell.width = "5%";
-						buttonCell.vAlign = "middle";
-						buttonCell.align = "center";
-						setInnerHTML(textCell, curChange.getElementsByTagName("subject")[0].firstChild.nodeValue + " - " + curChange.getElementsByTagName("poster")[0].firstChild.nodeValue + "<div class=\\"post\\">" + curChange.getElementsByTagName("body")[0].firstChild.nodeValue + "</div>");
-						textCell.className = "smalltext";
-						// !!! Should something be here?
-						//textCell.alt
+							curList.appendChild(newItem);
 					}
 				}
+				// After all changes, make sure the window backgrounds are still correct for both lists.
+				applyWindowClasses(document.getElementById("messages_selected"));
+				applyWindowClasses(document.getElementById("messages_not_selected"));
 			}
 		// ]]></script>';
 }

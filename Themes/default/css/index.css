@@ -2386,10 +2386,27 @@ dl.send_mail dd
 /* Styles for the split topic section.
 ---------------------------------------------------- */
 
-#selected, #not_selected
+div#selected, div#not_selected
 {
 	width: 49%;
 }
+ul.split_messages li.windowbg, ul.split_messages li.windowbg2
+{
+	padding: 1em;
+	margin: 1px;
+}
+ul.split_messages li a.split_icon
+{
+	padding: 0 0.5em;
+}
+ul.split_messages div.post
+{
+	padding: 1em 0 0 0;
+	border-top: 1px solid #fff;
+}
+
+/* Styles for the merge topic section.
+---------------------------------------------------- */
 ul.merge_topics li
 {
 	list-style-type: none;
