@@ -22,14 +22,23 @@ function template_generic_menu_sidebar_above()
 		// Show the section header - and pump up the line spacing for readability.
 		echo '
 			<div class="adm_section">
-				<h4 class="catbg"><span class="left"></span>
-					<span class="ie6_toggleheader">', $section['title'];
+				<h4 class="catbg"><span class="left"></span>';
 
 		if ($firstSection && !empty($menu_context['can_toggle_drop_down']))
+		{
 			echo '
-					<a class="toggle" href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], (!empty($menu_context['current_subsection']) ? ';sa=' . $menu_context['current_subsection'] : ''), $menu_context['extra_parameters'], ';togglebar=0"><img src="', $context['menu_image_path'], '/change_menu', $context['right_to_left'] ? '' : '2', '.png" alt="!" /></a>';
+					<span class="ie6_header floatleft">', $section['title'],'
+					<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], (!empty($menu_context['current_subsection']) ? ';sa=' . $menu_context['current_subsection'] : ''), $menu_context['extra_parameters'], ';togglebar=0"><img style="margin: 0 0 0 5px;" src="', $context['menu_image_path'], '/change_menu', $context['right_to_left'] ? '' : '2', '.png" alt="!" /></a>
+					</span>';
+		}
+
+		else
+		{
+			echo '
+					', $section['title'];
+		}
+
 		echo '
-					</span>
 				</h4>
 				<ul class="smalltext left_admmenu">';
 
@@ -206,8 +215,7 @@ function template_generic_menu_tabs(&$menu_context)
 	$tab_context = &$menu_context['tab_data'];
 
 	echo '
-	<h3 class="catbg"><span class="left"></span>
-		<span class="ie6_header">';
+	<h3 class="catbg"><span class="left"></span>';
 
 	// Exactly how many tabs do we have?
 	foreach ($context['tabs'] as $id => $tab)
@@ -252,11 +260,19 @@ function template_generic_menu_tabs(&$menu_context)
 
 	// Show a help item?
 	if (!empty($selected_tab['help']) || !empty($tab_context['help']))
+	{
 		echo '
-			<a href="', $scripturl, '?action=helpadmin;help=', !empty($selected_tab['help']) ? $selected_tab['help'] : $tab_context['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" class="icon" /></a> ';
+		<span class="ie6_header floatleft">
+			<a href="', $scripturl, '?action=helpadmin;help=', !empty($selected_tab['help']) ? $selected_tab['help'] : $tab_context['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" class="icon" /></a>', $tab_context['title'], '
+		</span>';
+	}
+	else
+	{
+		echo '
+			', $tab_context['title'];
+	}
+
 	echo '
-			', $tab_context['title'], '
-		</span>
 	</h3>';
 
 	// Shall we use the tabs?
