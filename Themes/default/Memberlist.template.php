@@ -154,13 +154,13 @@ function template_search()
 	<form action="', $scripturl, '?action=mlist;sa=search" method="post" accept-charset="', $context['character_set'], '">
 		<div id="memberlist">
 			<h3 class="catbg mlist"><span class="left"></span>
-				', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />' : '', $txt['mlist_search'], '
+				<span class="ie6_header">', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" class="icon" />' : '', $txt['mlist_search'], '</span>
 			</h3>
 			<div class="pagesection">
 				', template_button_strip($memberlist_buttons, 'right'), '
 			</div>';
 	// Display the input boxes for the form.
-	echo '	<div id="memberlist_search">
+	echo '	<div id="memberlist_search" class="clear">
 				<span class="upperframe"><span></span></span>
 				<div class="roundframe">
 					<div id="mlist_search" class="flow_hidden">

@@ -16,7 +16,7 @@ function template_main()
 		echo '
 			<div id="poll">
 				<h3 class="catbg"><span class="left"></span>
-					<img src="', $settings['images_url'], '/topic/', $context['poll']['is_locked'] ? 'normal_poll_locked' : 'normal_poll', '.gif" alt="" class="icon" /> ', $txt['poll'], '
+					<span class="ie6_header"><img src="', $settings['images_url'], '/topic/', $context['poll']['is_locked'] ? 'normal_poll_locked' : 'normal_poll', '.gif" alt="" class="icon" /> ', $txt['poll'], '</span>
 				</h3>
 				<div class="windowbg">
 					<span class="topslice"><span></span></span>
@@ -628,10 +628,11 @@ function template_main()
 			<a id="quickreply"></a>
 			<div class="tborder" id="quickreplybox">
 				<h3 class="catbg"><span class="left"></span>
-					<a href="javascript:oQuickReply.swap();">
+					<span class="ie6_header"><a href="javascript:oQuickReply.swap();">
 						<img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" id="quickReplyExpand" class="icon" />
 					</a>
 					<a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a>
+					</span>
 				</h3>
 				<div id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
 					<span class="upperframe"><span></span></span>

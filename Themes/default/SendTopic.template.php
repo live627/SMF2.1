@@ -36,8 +36,7 @@ function template_main()
 	<div id="send_topic">
 		<form action="', $scripturl, '?action=emailuser;sa=sendtopic;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span>
-				<img src="', $settings['images_url'], '/email_sm.gif" alt="" />
-				', $context['page_title'], '
+				<span class="ie6_header"><img src="', $settings['images_url'], '/email_sm.gif" alt="" />', $context['page_title'], '</span>
 			</h3>
 			<div class="windowbg2">
 			<span class="topslice"><span></span></span>
@@ -100,8 +99,7 @@ function template_custom_email()
 		<form action="', $scripturl, '?action=emailuser;sa=email" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg">
 				<span class="left"></span>
-				<img src="', $settings['images_url'], '/email_sm.gif" alt="" />
-				', $context['page_title'], '
+				<span class="ie6_header"><img src="', $settings['images_url'], '/email_sm.gif" alt="" />', $context['page_title'], '</span>
 			</h3>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>

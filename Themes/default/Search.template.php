@@ -8,7 +8,7 @@ function template_main()
 	echo '
 	<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" name="searchform" id="searchform">
 		<h3 class="catbg"><span class="left"></span>
-			', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />' : '', $txt['set_parameters'], '
+			<span class="ie6_header">', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" class="icon" />' : ' ', $txt['set_parameters'], '</span>
 		</h3>';
 
 	if (!empty($context['search_errors']))
@@ -263,7 +263,7 @@ function template_results()
 						<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />';
 			echo '
 			</span>
-			<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />&nbsp;', $txt['mlist_search_results'],':&nbsp;',$context['search_params']['search'],'
+			<span class="ie6_header"><img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />&nbsp;', $txt['mlist_search_results'],':&nbsp;',$context['search_params']['search'],'</span>
 		</h3>
 		<div class="pagesection">
 			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
@@ -416,7 +416,7 @@ function template_results()
 		echo '
 
 		<h3 class="catbg"><span class="left"></span>
-			<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />&nbsp;', $txt['mlist_search_results'],':&nbsp;',$context['search_params']['search'],'
+			<span class="ie6_header"><img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />&nbsp;', $txt['mlist_search_results'],':&nbsp;',$context['search_params']['search'],'</span>
 		</h3>
 		<div class="pagesection">
 			<span>', $txt['pages'], ': ', $context['page_index'], '</span>

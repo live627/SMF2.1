@@ -48,7 +48,7 @@ function template_admin()
 	echo '
 			<div id="live_news" class="align_left">
 				<h3 class="catbg"><span class="left"></span>
-					<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" /></a> ', $txt['live'], '
+					<span class="ie6_header"><a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" /></a> ', $txt['live'], '</span>
 				</h3>
 				<div class="windowbg">
 					<span class="topslice"><span></span></span>
@@ -272,7 +272,7 @@ function template_credits()
 	// Display latest support questions from simplemachines.org.
 	echo '
 		<h3 class="catbg"><span class="left"></span>
-			<a href="', $scripturl, '?action=helpadmin;help=latest_support" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['support_latest'], '
+			<span class="ie6_header"><a href="', $scripturl, '?action=helpadmin;help=latest_support" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['support_latest'], '</span>
 		</h3>
 		<div class="windowbg2">
 			<span class="topslice"><span></span></span>

@@ -11,8 +11,9 @@ function template_main()
 		<form action="', $scripturl, '?action=admin;area=theme;sa=admin" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" value="0" name="options[theme_allow]" />
 			<h3 class="catbg"><span class="left"></span>
-				<a href="', $scripturl, '?action=helpadmin;help=themes" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" align="top" /></a>
+				<span class="ie6_header"><a href="', $scripturl, '?action=helpadmin;help=themes" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" align="top" /></a>
 				', $txt['themeadmin_title'], '
+				</span>
 			</h3>
 			<div class="information">
 				', $txt['themeadmin_explain'], '
@@ -88,7 +89,7 @@ function template_main()
 	echo '
 		<br />
 		<h3 class="catbg"><span class="left"></span>
-			<a href="', $scripturl, '?action=helpadmin;help=latest_themes" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['theme_latest'], '
+			<span class="ie6_header"><a href="', $scripturl, '?action=helpadmin;help=latest_themes" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['theme_latest'], '</span>
 		</h3>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
@@ -109,7 +110,7 @@ function template_main()
 		echo '
 		<form action="', $scripturl, '?action=admin;area=theme;sa=install" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data" onsubmit="return confirm(\'', $txt['theme_install_new_confirm'], '\');">
 			<h3 class="catbg"><span class="left"></span>
-				<a href="', $scripturl, '?action=helpadmin;help=theme_install" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['theme_install'], '
+				<span class="ie6_header"><a href="', $scripturl, '?action=helpadmin;help=theme_install" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['theme_install'], '</span>
 			</h3>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
@@ -412,7 +413,7 @@ function template_set_settings()
 	if ($context['theme_settings']['theme_id'] != 1)
 		echo '
 			<h3 class="catbg"><span class="left"></span>
-				<img src="', $settings['images_url'], '/icons/config_sm.gif" alt="" class="icon" /> ', $txt['theme_edit'], '
+				<span class="ie6_header"><img src="', $settings['images_url'], '/icons/config_sm.gif" alt="" class="icon" /> ', $txt['theme_edit'], '</span>
 			</h3>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
@@ -431,7 +432,7 @@ function template_set_settings()
 
 	echo '
 			<h3 class="catbg"><span class="left"></span>
-				<img src="', $settings['images_url'], '/icons/config_sm.gif" alt="" class="icon" /> ', $txt['theme_url_config'], '
+				<span class="ie6_header"><img src="', $settings['images_url'], '/icons/config_sm.gif" alt="" class="icon" /> ', $txt['theme_url_config'], '</span>
 			</h3>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
@@ -471,7 +472,7 @@ function template_set_settings()
 	{
 		echo '
 			<h3 class="catbg"><span class="left"></span>
-				<img src="', $settings['images_url'], '/icons/config_sm.gif" alt="" align="top" /> ', $txt['theme_variants'], '
+				<span class="ie6_header"><img src="', $settings['images_url'], '/icons/config_sm.gif" alt="" align="top" /> ', $txt['theme_variants'], '</span>
 			</h3>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
@@ -506,7 +507,7 @@ function template_set_settings()
 
 	echo '
 			<h3 class="catbg"><span class="left"></span>
-				<img src="', $settings['images_url'], '/icons/config_sm.gif" alt="" class="icon" /> ', $txt['theme_options'], '
+				<span class="ie6_header"><img src="', $settings['images_url'], '/icons/config_sm.gif" alt="" class="icon" /> ', $txt['theme_options'], '</span>
 			</h3>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
