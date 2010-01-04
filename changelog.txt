@@ -32,6 +32,7 @@ January 2010
  * The Toggle icon wasn't properly aligned (GenericMenu template, index.css, compat.css) [Bug 4030]
  * It will be now. Added a fix for icon/no icon bars.(GenericMenu.template.php)
  * Damn. Missed something so had to add to the span class (sixteen default templates)
+ * Started fixing header bars markup (index.css, Search.template, BoardIndex.template)
 
 December 2009
 --------------------------------------------------------------------------------

@@ -7,9 +7,11 @@ function template_main()
 
 	echo '
 	<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" name="searchform" id="searchform">
-		<h3 class="catbg"><span class="left"></span>
-			<span class="ie6_header floatleft">', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" class="icon" />' : ' ', $txt['set_parameters'], '</span>
-		</h3>';
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<span class="ie6_header floatleft">', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" class="icon" />' : ' ', $txt['set_parameters'], '</span>
+			</h3>
+		</div>';
 
 	if (!empty($context['search_errors']))
 		echo '
@@ -128,9 +130,11 @@ function template_main()
 		<fieldset>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
-				<h4 class="titlebg"><span class="left"></span>
-					<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><strong>', $txt['choose_board'], '</strong></a>
-				</h4>
+				<div class="title_bar">
+					<h4 class="titlebg">
+						<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><strong>', $txt['choose_board'], '</strong></a>
+					</h4>
+				</div>
 				<div class="flow_auto" id="searchBoardsExpand"', $context['boards_check_all'] ? ' style="display: none;"' : '', '>
 					<ul class="floatleft">';
 
@@ -214,9 +218,11 @@ function template_results()
 	{
 		echo '
 	<div class="tborder" id="search_results">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['search_adjust_query'], '
-		</h3>';
+		<div class="cat_bar">
+			<h3 class="catbg">
+				', $txt['search_adjust_query'], '
+			</h3>
+		</div>';
 
 		// Did they make any typos or mistakes, perhaps?
 		if (isset($context['did_you_mean']))
@@ -242,7 +248,7 @@ function template_results()
 				echo '
 			<input type="hidden" name="brd[', $board_id, ']" value="', $board_id, '" />';
 
-		echo '
+	echo '
 		</form>
 	</div>';
 	}
@@ -255,16 +261,18 @@ function template_results()
 			echo '
 	<form action="', $scripturl, '?action=quickmod" method="post" accept-charset="', $context['character_set'], '" name="topicForm">';
 
-		echo '
-		<h3 class="catbg"><span class="left"></span>
-			<span class="floatright">';
-				if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
+	echo '
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<span class="floatright">';
+					if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
+					echo '
+							<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />';
 				echo '
-						<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />';
-			echo '
-			</span>
-			<span class="ie6_header floatleft"><img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />&nbsp;', $txt['mlist_search_results'],':&nbsp;',$context['search_params']['search'],'</span>
-		</h3>
+				</span>
+				<span class="ie6_header floatleft"><img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />&nbsp;', $txt['mlist_search_results'],':&nbsp;',$context['search_params']['search'],'</span>
+			</h3>
+		</div>
 		<div class="pagesection">
 			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
 		</div>';
@@ -415,9 +423,11 @@ function template_results()
 	{
 		echo '
 
-		<h3 class="catbg"><span class="left"></span>
-			<span class="ie6_header floatleft"><img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />&nbsp;', $txt['mlist_search_results'],':&nbsp;',$context['search_params']['search'],'</span>
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<span class="ie6_header floatleft"><img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />&nbsp;', $txt['mlist_search_results'],':&nbsp;',$context['search_params']['search'],'</span>
+			</h3>
+		</div>
 		<div class="pagesection">
 			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
 		</div>';

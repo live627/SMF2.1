@@ -829,7 +829,21 @@ h4.titlebg img.icon
 	float: left;
 	margin: 5px 8px 0 0;
 }
-
+div.cat_bar
+{
+	background: url(../images/theme/main_block.png) no-repeat 0 -160px;
+	padding-left: 9px;
+}
+div.title_bar
+{
+	background: url(../images/theme/main_block.png) no-repeat 0 -200px;
+	padding-left: 9px;
+}
+div.title_barIC
+{
+	background: url(../images/theme/main_block.png) no-repeat 0 -120px;
+	padding-left: 9px;
+}
 /* rounded bars needs a different background here */
 #upshrinkHeaderIC h3.catbg span.left, #upshrinkHeaderIC h3.catbg2 span.left
 {
