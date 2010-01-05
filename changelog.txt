@@ -27,18 +27,11 @@ January 2010
  * Make truetype elements somewhat more readable. (index.css)
  * Install script looked very broken in IE6 (install.css) [Bug 3824]
  * Made the PM send template more consistent with the Post main template. (PersonalMessage template)
- * Fixed a lot of misaligned header bar icons/text in IE6 (ie6.css, sixteen default templates)
+ * Fixed a lot of misaligned header bar icons/text in IE6 (ie6.css, many template files)
  * The Toggle icon wasn't properly aligned (GenericMenu template, index.css, compat.css) [Bug 4030]
- * It will be now. Added a fix for icon/no icon bars.(GenericMenu.template.php)
- * Damn. Missed something so had to add to the span class (sixteen default templates)
- * Started fixing header bars markup (index.css, Search.template, BoardIndex.template)
  * Opening the topic split page could result in an undefined index error. (SplitTopics.php) 
  * Made the 'select posts to split' screen slightly more usable by presenting messages differently and using lists instead of tables. (SplitTopics.php, SplitTopics template, Xml template, index.css, compat.css) [Bug 3899,4069]
- * Continuing fixing header bar markup (Admin, Calendar, Display, Errors, GenericList and GenericMenu templates) 
- * More of the same. Meh. (Help, Login, ManageAttachments, ManageBans, ManageBoards, ManageCalendar and ManageMail templates)
- * Another batch of the same (ManageMaintenance, ManageMembergroups, ManageMembers, ManageNews, ManagePaid, ManagePermissions, ManageScheduledTasks and ManageSearch templates) 
- * More of the same. Who put all these bloody header bars in the theme? (ManageSmileys, Memberlist, MessageIndex, ModerationCenter, MoveTopic, Notify, Packages, PersonalMessage and Poll templates) 
- * Yay! Got all the buggers done! (Post, Profile, Recent, Register, Reminder, Reports, SendTopic, SplitTopics, Stats, Themes and Who templates)
+ * Adjusted the header bar markup in order to make it work better in every major browser. (index.css, various template files)
  
 December 2009
 --------------------------------------------------------------------------------
