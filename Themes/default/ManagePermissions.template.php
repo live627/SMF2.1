@@ -18,9 +18,9 @@ function template_permission_index()
 
 		if (!empty($context['profile']))
 		echo '
-			<h3 class="titlebg"><span class="left"></span>
-				', $txt['permissions_for_profile'], ': &quot;', $context['profile']['name'], '&quot;
-			</h3>';
+			<div class="title_bar">
+				<h3 class="titlebg">', $txt['permissions_for_profile'], ': &quot;', $context['profile']['name'], '&quot;</h3>
+			</div>';
 
 		echo '
 			<table width="100%" class="table_grid">
@@ -76,9 +76,11 @@ function template_permission_index()
 	if ($context['can_modify'])
 	{
 		echo '
-			<h3 class="catbg"><span class="left"></span>
-				<img src="', $settings['images_url'], '/', empty($context['show_advanced_options']) ? 'selected' : 'sort_down', '.gif" id="permissions_panel_toggle" alt="*" /> ', $txt['permissions_advanced_options'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<img src="', $settings['images_url'], '/', empty($context['show_advanced_options']) ? 'selected' : 'sort_down', '.gif" id="permissions_panel_toggle" alt="*" /> ', $txt['permissions_advanced_options'], '
+				</h3>
+			</div>
 			<div id="permissions_panel_advanced" class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -239,23 +241,25 @@ function template_by_board()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=permissions;sa=board" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['permissions_boards'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['permissions_boards'], '</h3>
+			</div>
 			<div class="information">
 				', $txt['permissions_boards_desc'], '
 			</div>
-			<h3 id="board_permissions" class="titlebg flow_hidden"><span class="left"></span>
-				<span class="perm_name align_left">', $txt['board_name'], '</span>
-				<span class="perm_profile align_left">', $txt['permission_profile'], '</span>
-			</h3>';
+			<div class="title_bar">
+				<h3 id="board_permissions" class="titlebg flow_hidden">
+					<span class="perm_name align_left">', $txt['board_name'], '</span>
+					<span class="perm_profile align_left">', $txt['permission_profile'], '</span>
+				</h3>
+			</div>';
 
 	foreach ($context['categories'] as $category)
 	{
 		echo '
-			<h3 class="catbg"><span class="left"></span>
-							<strong>', $category['name'], '</strong>
-			</h3>';
+			<div class="cat_bar">
+				<h3 class="catbg"><strong>', $category['name'], '</strong></h3>
+			</div>';
 
 		if (!empty($category['boards']))
 			echo '
@@ -329,9 +333,9 @@ function template_edit_profiles()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=permissions;sa=profiles" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="titlebg"><span class="left"></span>
-				', $txt['permissions_profile_edit'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="titlebg">', $txt['permissions_profile_edit'], '</h3>
+			</div>
 
 			<table width="100%" class="table_grid">
 			<thead>
@@ -382,9 +386,9 @@ function template_edit_profiles()
 		</form>
 		<br />
 		<form action="', $scripturl, '?action=admin;area=permissions;sa=profiles" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['permissions_profile_new'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['permissions_profile_new'], '</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -458,7 +462,8 @@ function template_modify_group()
 			</div>';
 
 	echo '
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>';
+			<div class="cat_bar">
+				<h3 class="catbg">';
 	if ($context['permission_type'] == 'board')
 		echo '
 				', $txt['permissions_local_for'], ' &quot;', $context['group']['name'], '&quot; ', $txt['permissions_on'], ' &quot;', $context['profile']['name'], '&quot;';
@@ -466,7 +471,8 @@ function template_modify_group()
 		echo '
 				', $context['permission_type'] == 'membergroup' ? $txt['permissions_general'] : $txt['permissions_board'], ' - &quot;', $context['group']['name'], '&quot;';
 	echo '
-			</h3>
+				</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -489,9 +495,9 @@ function template_modify_group()
 		echo '
 			</div>
 			<br />
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['permissions_board'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['permissions_board'], '</h3>
+			</div>
 
 			<div class="information">
 				', $txt['permissions_board_desc'], '
@@ -1041,9 +1047,9 @@ function template_postmod_permissions()
 	echo '
 	<div id="admincenter">
 		<form action="' . $scripturl . '?action=admin;area=permissions;sa=postmod;', $context['session_var'], '=', $context['session_id'], '" method="post" name="postmodForm" id="postmodForm" accept-charset="', $context['character_set'], '">
-			<h3 class="titlebg"><span class="left"></span>
-				', $txt['permissions_post_moderation'], '
-			</h3>';
+			<div class="title_bar">
+				<h3 class="titlebg">', $txt['permissions_post_moderation'], '</h3>
+			</div>';
 
 	// Got advanced permissions - if so warn!
 	if (!empty($modSettings['permission_enable_deny']))

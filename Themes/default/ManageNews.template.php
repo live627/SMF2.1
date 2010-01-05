@@ -90,9 +90,9 @@ function template_email_members()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=news;sa=mailingcompose" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['admin_newsletters'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['admin_newsletters'], '</h3>
+			</div>
 			<div class="information">
 				', $txt['admin_news_select_recipients'], '
 			</div>
@@ -121,10 +121,12 @@ function template_email_members()
 			<span class="botslice"><span></span></span>
 		</div>
 
-		<h3 class="catbg" id="advanced_select_div" style="display: none;"><span class="left"></span>
-			<a href="#" onclick="toggleAdvanced(1); return false;" id="goadvanced"><img src="', $settings['images_url'], '/selected.gif" alt="', $txt['advanced'], '" />&nbsp;<strong>', $txt['advanced'], '</strong></a>
-			<a href="#" onclick="toggleAdvanced(0); return false;" id="gosimple" style="display: none;"><img src="', $settings['images_url'], '/sort_down.gif" alt="', $txt['simple'], '" />&nbsp;<strong>', $txt['simple'], '</strong></a>
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg" id="advanced_select_div" style="display: none;">
+				<a href="#" onclick="toggleAdvanced(1); return false;" id="goadvanced"><img src="', $settings['images_url'], '/selected.gif" alt="', $txt['advanced'], '" />&nbsp;<strong>', $txt['advanced'], '</strong></a>
+				<a href="#" onclick="toggleAdvanced(0); return false;" id="gosimple" style="display: none;"><img src="', $settings['images_url'], '/sort_down.gif" alt="', $txt['simple'], '" />&nbsp;<strong>', $txt['simple'], '</strong></a>
+			</h3>
+		</div>
 
 		<div class="windowbg2" id="advanced_settings_div" style="display: none;">
 			<span class="topslice"><span></span></span>
@@ -235,9 +237,11 @@ function template_email_members_compose()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=news;sa=mailingsend" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				<a href="', $scripturl, '?action=helpadmin;help=email_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" class="icon" /></a> ', $txt['admin_newsletters'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<a href="', $scripturl, '?action=helpadmin;help=email_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" class="icon" /></a> ', $txt['admin_newsletters'], '
+				</h3>
+			<?div>
 			<div class="information">
 				', $txt['email_variables'], '
 			</div>
@@ -283,9 +287,11 @@ function template_email_members_send()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=news;sa=mailingsend" method="post" accept-charset="', $context['character_set'], '" name="autoSubmit" id="autoSubmit">
-			<h3 class="catbg"><span class="left"></span>
-				<a href="', $scripturl, '?action=helpadmin;help=email_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['admin_newsletters'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<a href="', $scripturl, '?action=helpadmin;help=email_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['admin_newsletters'], '
+				</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">

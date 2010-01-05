@@ -18,9 +18,9 @@ function template_new_group()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=membergroups;sa=add" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['membergroups_new_group'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['membergroups_new_group'], '</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -146,9 +146,10 @@ function template_edit_group()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=membergroups;sa=edit;group=', $context['group']['id'], '" method="post" accept-charset="', $context['character_set'], '" name="groupForm" id="groupForm">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['membergroups_edit_group'], ' - ', $context['group']['name'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['membergroups_edit_group'], ' - ', $context['group']['name'], '
+				</h3>
+			</div>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -363,9 +364,9 @@ function template_group_members()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : '') , ';sa=members;group=', $context['group']['id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $context['page_title'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $context['page_title'], '</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -416,9 +417,9 @@ function template_group_members()
 			</div>
 
 			<br />
-			<h4 class="titlebg"><span class="left"></span>
-				', $txt['membergroups_members_group_members'], '
-			</h4>
+			<div class="title_bar">
+				<h4 class="titlebg">', $txt['membergroups_members_group_members'], '</h4>
+			</div>
 			<br />
 			<div class="pagesection">', $txt['pages'], ': ', $context['page_index'], '</div>
 			<table width="100%" class="table_grid">
@@ -496,9 +497,9 @@ function template_group_members()
 	if (!empty($context['group']['assignable']))
 	{
 		echo '
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['membergroups_members_add_title'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['membergroups_members_add_title'], '</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -546,9 +547,9 @@ function template_group_request_reason()
 	echo '
 	<div id="moderationcenter">
 		<form action="', $scripturl, '?action=groups;sa=requests" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['mc_groups_reason_title'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['mc_groups_reason_title'], '</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">

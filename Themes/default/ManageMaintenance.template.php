@@ -15,9 +15,9 @@ function template_maintain_database()
 
 	echo '
 	<div id="manage_maintenance">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['maintain_optimize'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['maintain_optimize'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -30,9 +30,11 @@ function template_maintain_database()
 			<span class="botslice"><span></span></span>
 		</div>
 
-		<h3 class="catbg"><span class="left"></span>
+		<div class="cat_bar">
+			<h3 class="catbg">
 			<span class="ie6_header floatleft"><a href="', $scripturl, '?action=helpadmin;help=maintenance_backup" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['maintain_backup'], '</span>
-		</h3>
+			</h3>
+		</div>
 
 		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
@@ -61,9 +63,9 @@ function template_maintain_database()
 	if ($context['convert_utf8'])
 	{
 		echo '
-		<h3 class="catbg"><span class="left"></span>
-		', $txt['utf8_title'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['utf8_title'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -82,9 +84,9 @@ function template_maintain_database()
 	if ($context['convert_entities'])
 	{
 		echo '
-		<h3 class="catbg"><span class="left"></span>
-		', $txt['entity_convert_title'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['entity_convert_title'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -118,9 +120,9 @@ function template_maintain_routine()
 	// Starts off with general maintenance procedures.
 	echo '
 	<div id="manage_maintenance">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['maintain_version'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['maintain_version'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -132,9 +134,9 @@ function template_maintain_routine()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['maintain_errors'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['maintain_errors'], '</h3>
+		</div>
 		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -146,9 +148,9 @@ function template_maintain_routine()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['maintain_recount'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['maintain_recount'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -160,9 +162,9 @@ function template_maintain_routine()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['maintain_logs'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['maintain_logs'], '</h3>
+		</div>
 		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -174,9 +176,9 @@ function template_maintain_routine()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['maintain_cache'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['maintain_cache'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -256,9 +258,9 @@ function template_maintain_members()
 		setTimeout("checkAttributeValidity();", 500);
 	// ]]></script>
 	<div id="manage_maintenance">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['maintain_reattribute_posts'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['maintain_reattribute_posts'], '</h3>
+		</div>
 		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -296,9 +298,11 @@ function template_maintain_members()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<h3 class="catbg"><span class="left"></span>
-			<a href="', $scripturl, '?action=helpadmin;help=maintenance_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['maintain_members'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<a href="', $scripturl, '?action=helpadmin;help=maintenance_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['maintain_members'], '
+			</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -383,9 +387,9 @@ function template_maintain_topics()
 
 	echo '
 	<div id="manage_maintenance">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['maintain_old'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['maintain_old'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content flow_auto">
@@ -451,9 +455,9 @@ function template_maintain_topics()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['move_topics_maintenance'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['move_topics_maintenance'], '</h3>
+		</div>
 		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -512,9 +516,9 @@ function template_optimize()
 
 	echo '
 	<div id="manage_maintenance">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['maintain_optimize'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['maintain_optimize'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -547,9 +551,9 @@ function template_convert_utf8()
 
 	echo '
 	<div id="manage_maintenance">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['utf8_title'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['utf8_title'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -587,9 +591,9 @@ function template_convert_entities()
 
 	echo '
 	<div id="manage_maintenance">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['entity_convert_title'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['entity_convert_title'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<p>', $txt['entity_convert_introduction'], '</p>
