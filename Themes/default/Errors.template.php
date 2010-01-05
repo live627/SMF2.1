@@ -14,9 +14,11 @@ function template_fatal_error()
 
 	echo '
 	<div id="fatal_error">
-		<h3 class="catbg"><span class="left"></span>
-			', $context['error_title'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				', $context['error_title'], '
+			</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="padding">', $context['error_message'], '</div>

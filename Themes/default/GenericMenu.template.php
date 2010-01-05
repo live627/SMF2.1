@@ -22,24 +22,26 @@ function template_generic_menu_sidebar_above()
 		// Show the section header - and pump up the line spacing for readability.
 		echo '
 			<div class="adm_section">
-				<h4 class="catbg"><span class="left"></span>';
+				<div class="cat_bar">
+					<h4 class="catbg">';
 
-		if ($firstSection && !empty($menu_context['can_toggle_drop_down']))
-		{
+			if ($firstSection && !empty($menu_context['can_toggle_drop_down']))
+			{
+				echo '
+						<span class="ie6_header floatleft">', $section['title'],'
+						<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], (!empty($menu_context['current_subsection']) ? ';sa=' . $menu_context['current_subsection'] : ''), $menu_context['extra_parameters'], ';togglebar=0"><img style="margin: 0 0 0 5px; vertical-align: middle;" src="', $context['menu_image_path'], '/change_menu', $context['right_to_left'] ? '' : '2', '.png" alt="!" /></a>
+						</span>';
+			}
+
+			else
+			{
+				echo '
+						', $section['title'];
+			}
+
 			echo '
-					<span class="ie6_header floatleft">', $section['title'],'
-					<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], (!empty($menu_context['current_subsection']) ? ';sa=' . $menu_context['current_subsection'] : ''), $menu_context['extra_parameters'], ';togglebar=0"><img style="margin: 0 0 0 5px;" src="', $context['menu_image_path'], '/change_menu', $context['right_to_left'] ? '' : '2', '.png" alt="!" /></a>
-					</span>';
-		}
-
-		else
-		{
-			echo '
-					', $section['title'];
-		}
-
-		echo '
-				</h4>
+					</h4>
+				</div>
 				<ul class="smalltext left_admmenu">';
 
 		// For every area of this section show a link to that area (bold if it's currently selected.)

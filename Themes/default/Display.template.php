@@ -15,9 +15,11 @@ function template_main()
 	{
 		echo '
 			<div id="poll">
-				<h3 class="catbg"><span class="left"></span>
-					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/topic/', $context['poll']['is_locked'] ? 'normal_poll_locked' : 'normal_poll', '.gif" alt="" class="icon" /> ', $txt['poll'], '</span>
-				</h3>
+				<div class="cat_bar">
+					<h3 class="catbg">
+						<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/topic/', $context['poll']['is_locked'] ? 'normal_poll_locked' : 'normal_poll', '.gif" alt="" class="icon" /> ', $txt['poll'], '</span>
+					</h3>
+				</div>
 				<div class="windowbg">
 					<span class="topslice"><span></span></span>
 					<div class="content" id="poll_options">
@@ -105,7 +107,9 @@ function template_main()
 	{
 		echo '
 			<div id="events" class="marginbottom">
-				<h3 class="titlebg headerpadding"><span class="left"></span>', $txt['calendar_linked_events'], '</h3>
+				<div class="title_bar">
+					<h3 class="titlebg headerpadding">', $txt['calendar_linked_events'], '</h3>
+				</div>
 				<div class="windowbg">
 					<span class="topslice"><span></span></span>
 					<ul class="reset windowbg largepadding">';
@@ -143,11 +147,13 @@ function template_main()
 	// Show the topic information - icon, subject, etc.
 	echo '
 			<div id="forumposts">
-				<h3 class="catbg"><span class="left"></span>
-					<img src="', $settings['images_url'], '/topic/', $context['class'], '.gif" align="bottom" alt="" />
-					<span id="author">', $txt['author'], '</span>
-					<span id="top_subject">', $txt['topic'], ': ', $context['subject'], ' &nbsp;(', $txt['read'], ' ', $context['num_views'], ' ', $txt['times'], ')</span>
-				</h3>';
+				<div class="cat_bar">
+					<h3 class="catbg">
+						<img src="', $settings['images_url'], '/topic/', $context['class'], '.gif" align="bottom" alt="" />
+						<span id="author">', $txt['author'], '</span>
+						<span id="top_subject">', $txt['topic'], ': ', $context['subject'], ' &nbsp;(', $txt['read'], ' ', $context['num_views'], ' ', $txt['times'], ')</span>
+					</h3>
+				</div>';
 
 	if (!empty($settings['display_who_viewing']))
 	{
@@ -627,13 +633,15 @@ function template_main()
 		echo '
 			<a id="quickreply"></a>
 			<div class="tborder" id="quickreplybox">
-				<h3 class="catbg"><span class="left"></span>
-					<span class="ie6_header floatleft"><a href="javascript:oQuickReply.swap();">
-						<img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" id="quickReplyExpand" class="icon" />
-					</a>
-					<a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a>
-					</span>
-				</h3>
+				<div class="cat_bar">
+					<h3 class="catbg">
+						<span class="ie6_header floatleft"><a href="javascript:oQuickReply.swap();">
+							<img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" id="quickReplyExpand" class="icon" />
+						</a>
+						<a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a>
+						</span>
+					</h3>
+				</div>
 				<div id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
 					<span class="upperframe"><span></span></span>
 					<div class="roundframe">

@@ -9,7 +9,8 @@ function template_admin()
 	// Welcome message for the admin.
 	echo '
 	<div id="admincenter">
-		<h3 class="titlebg"><span class="left"></span>';
+		<div class="title_bar">
+			<h3 class="titlebg">';
 
 	if ($context['user']['is_admin'])
 		echo '
@@ -27,7 +28,8 @@ function template_admin()
 			</div>';
 
 	echo $txt['admin_center'], '
-		</h3>
+			</h3>
+		</div>
 		<span class="upperframe"><span></span></span>
 		<div class="roundframe">
 			<div id="welcome">
@@ -47,9 +49,11 @@ function template_admin()
 	// Display the "live news" from simplemachines.org.
 	echo '
 			<div id="live_news" class="align_left">
-				<h3 class="catbg"><span class="left"></span>
-					<span class="ie6_header floatleft"><a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" /></a> ', $txt['live'], '</span>
-				</h3>
+				<div class="cat_bar">
+					<h3 class="catbg">
+						<span class="ie6_header floatleft"><a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" /></a> ', $txt['live'], '</span>
+					</h3>
+				</div>
 				<div class="windowbg">
 					<span class="topslice"><span></span></span>
 					<div class="content">
@@ -62,9 +66,11 @@ function template_admin()
 	// Show the user version information from their server.
 	echo '
 			<div id="supportVersionsTable" class="align_right">
-				<h3 class="catbg"><span class="left"></span>
-					<a href="', $scripturl, '?action=admin;area=credits">', $txt['support_title'], '</a>
-				</h3>
+				<div class="cat_bar">
+					<h3 class="catbg">
+						<a href="', $scripturl, '?action=admin;area=credits">', $txt['support_title'], '</a>
+					</h3>
+				</div>
 				<div class="windowbg">
 					<span class="topslice"><span></span></span>
 					<div class="content">
@@ -195,9 +201,11 @@ function template_manage_copyright()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=copyright" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['copyright_removal'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['copyright_removal'], '
+				</h3>
+			</div>
 			<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -231,9 +239,11 @@ function template_credits()
 	echo '
 
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['support_title'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">>
+				', $txt['support_title'], '
+			</h3>
+		</div>
 		<div class="windowbg">
 		<span class="topslice"><span></span></span>
 			<div class="content">
@@ -257,9 +267,11 @@ function template_credits()
 
 	// Point the admin to common support resources.
 	echo '
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['support_resources'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				', $txt['support_resources'], '
+			</h3>
+		</div>
 		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -271,9 +283,11 @@ function template_credits()
 
 	// Display latest support questions from simplemachines.org.
 	echo '
-		<h3 class="catbg"><span class="left"></span>
-			<span class="ie6_header floatleft"><a href="', $scripturl, '?action=helpadmin;help=latest_support" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['support_latest'], '</span>
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<span class="ie6_header floatleft"><a href="', $scripturl, '?action=helpadmin;help=latest_support" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['support_latest'], '</span>
+			</h3>
+		</div>
 		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -284,9 +298,11 @@ function template_credits()
 
 	// The most important part - the credits :P.
 	echo '
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['admin_credits'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				', $txt['admin_credits'], '
+			</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">';
@@ -389,9 +405,11 @@ function template_view_versions()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['admin_version_check'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				', $txt['admin_version_check'], '
+			</h3>
+		</div>
 		<div class="information">', $txt['version_check_desc'], '</div>
 			<table width="100%" class="table_grid">
 			<thead>
@@ -619,9 +637,11 @@ function template_edit_censored()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=postsettings;sa=censor" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['admin_censored_words'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['admin_censored_words'], '
+				</h3>
+			</div>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -668,9 +688,11 @@ function template_edit_censored()
 
 	// This table lets you test out your filters by typing in rude words and seeing what comes out.
 	echo '
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['censor_test'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['censor_test'], '
+				</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -695,9 +717,11 @@ function template_not_done()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['not_done_title'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				', $txt['not_done_title'], '
+			</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -791,9 +815,11 @@ function template_show_settings()
 	// Is there a custom title?
 	if (isset($context['settings_title']))
 		echo '
-			<h3 class="catbg"><span class="left"></span>
-				', $context['settings_title'], '
-			</h3>';
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $context['settings_title'], '
+				</h3>
+			</div>';
 
 	// Have we got some custom code to insert?
 	if (!empty($context['settings_message']))
@@ -822,11 +848,12 @@ function template_show_settings()
 			if ($config_var['type'] == 'title')
 			{
 				echo '
-					<h3 class="', !empty($config_var['class']) ? $config_var['class'] : 'catbg', '"', !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>
-						<span class="left"></span>
-						', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), '
-						', $config_var['label'], '
-					</h3>';
+					<div class="cat_bar">
+						<h3 class="', !empty($config_var['class']) ? $config_var['class'] : 'catbg', '"', !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>
+							', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), '
+							', $config_var['label'], '
+						</h3>
+					</div>';
 			}
 			// A description?
 			else
@@ -1075,9 +1102,11 @@ function template_edit_profile_field()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=featuresettings;sa=profileedit;fid=', $context['fid'], ';', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
-				', $context['page_title'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $context['page_title'], '
+				</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -1283,16 +1312,18 @@ function template_admin_search_results()
 	global $context, $txt, $settings, $options, $scripturl;
 
 	echo '
-	<h3 class="titlebg"><span class="left"></span>
-		<div id="quick_search" class="align_right">
-			<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" style="font-weight: normal; display: inline;">
-				<input type="text" name="search_term" value="', $context['search_term'], '" class="input_text" />
-				<input type="hidden" name="search_type" value="', $context['search_type'], '" />
-				<input type="submit" name="search_go" value="', $txt['admin_search_results_again'], '" class="button_submit" />
-			</form>
+		<div class="title_bar">
+			<h3 class="titlebg">
+				<div id="quick_search" class="align_right">
+					<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" style="font-weight: normal; display: inline;">
+						<input type="text" name="search_term" value="', $context['search_term'], '" class="input_text" />
+						<input type="hidden" name="search_type" value="', $context['search_type'], '" />
+						<input type="submit" name="search_go" value="', $txt['admin_search_results_again'], '" class="button_submit" />
+					</form>
+				</div>
+				', $txt['admin_search_results'], '
+			</h3>
 		</div>
-		', $txt['admin_search_results'], '
-	</h3>
 	<div class="windowbg nopadding">
 		<span class="topslice"><span></span></span>
 		<div class="content">
@@ -1376,19 +1407,23 @@ function template_core_features()
 	if ($context['is_new_install'])
 	{
 		echo '
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['core_settings_welcome_msg'], '
-		</h3>
-		<div class="information">
-			', $txt['core_settings_welcome_msg_desc'], '
-		</div>';
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['core_settings_welcome_msg'], '
+				</h3>
+			</div>
+			<div class="information">
+				', $txt['core_settings_welcome_msg_desc'], '
+			</div>';
 	}
 
 	echo '
 		<form action="', $scripturl, '?action=admin;area=corefeatures;" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="titlebg"><span class="left"></span>
-				', $txt['core_settings_title'], '
-			</h3>';
+			<div class="title_bar">
+				<h3 class="titlebg">
+					', $txt['core_settings_title'], '
+				</h3>
+			</div>';
 
 	$alternate = true;
 	foreach ($context['features'] as $id => $feature)
@@ -1446,9 +1481,11 @@ function template_add_language()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=languages;sa=add;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['add_language'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['add_language'], '
+				</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -1522,9 +1559,11 @@ function template_download_language()
 	{
 		echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['languages_download_complete'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				', $txt['languages_download_complete'], '
+			</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
@@ -1548,9 +1587,11 @@ function template_download_language()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=languages;sa=downloadlang;did=', $context['download_id'], ';', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['languages_download'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['languages_download'], '
+				</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -1569,9 +1610,11 @@ function template_download_language()
 
 	// Now all the images and the like, javascript hidden cause there are so fecking many.
 	echo '
-			<h3 class="titlebg"><span class="left"></span>
-				', $txt['languages_download'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="titlebg">
+					', $txt['languages_download'], '
+				</h3>
+			</div>
 			<table class="table_grid" cellspacing="0" width="100%">
 			<thead>
 				<tr class="catbg">
@@ -1636,9 +1679,11 @@ function template_download_language()
 			</div>';
 
 		echo '
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['package_ftp_necessary'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['package_ftp_necessary'], '
+				</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -1729,9 +1774,11 @@ function template_modify_language_entries()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=languages;sa=editlang;lid=', $context['lang_id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['edit_languages'], '
-			</h3>';
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['edit_languages'], '
+				</h3>
+			</div>';
 
 	// Not writable?
 	if ($context['lang_file_not_writable_message'])
@@ -1797,9 +1844,11 @@ function template_modify_language_entries()
 		</form>
 
 		<form action="', $scripturl, '?action=admin;area=languages;sa=editlang;lid=', $context['lang_id'], ';entries" id="entry_form" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="titlebg"><span class="left"></span>
-				', $txt['edit_language_entries'], '
-			</h3>
+			<div class="title_bar">
+				<h3 class="titlebg">
+					', $txt['edit_language_entries'], '
+				</h3>
+			</div>
 			<div id="taskpad" class="align_right">
 				', $txt['edit_language_entries_file'], ':
 					<select name="tfid" onchange="if (this.value != -1) document.forms.entry_form.submit();">';
@@ -1998,9 +2047,11 @@ function template_repair_boards()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg"><span class="left"></span>',
-			$context['error_search'] ? $txt['errors_list'] : $txt['errors_fixing'] , '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">',
+				$context['error_search'] ? $txt['errors_list'] : $txt['errors_fixing'] , '
+			</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">';

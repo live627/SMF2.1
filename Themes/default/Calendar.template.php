@@ -98,10 +98,11 @@ function template_event_post()
 	// Start the main table.
 	echo '
 			<div id="post_event">
-			<h3 class="catbg">
-				<span class="left"></span>
-				', $context['page_title'], '
-			</h3>';
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $context['page_title'], '
+				</h3>
+			</div>';
 
 	if (!empty($context['post_error']['messages']))
 	{
@@ -243,7 +244,8 @@ function template_show_month_grid($grid_name)
 	if (empty($calendar_data['disable_title']))
 	{
 		echo '
-				<h3 class="catbg centertext" style="font-size: ', $calendar_data['size'] == 'large' ? 'large' : 'small', ';"><span class="left"></span>';
+			<div class="cat_bar">
+				<h3 class="catbg centertext" style="font-size: ', $calendar_data['size'] == 'large' ? 'large' : 'small', ';">';
 
 		if (empty($calendar_data['previous_calendar']['disabled']) && $calendar_data['show_next_prev'])
 			echo '
@@ -261,7 +263,8 @@ function template_show_month_grid($grid_name)
 					<a href="', $scripturl, '?action=calendar;year=', $calendar_data['current_year'], ';month=', $calendar_data['current_month'], '">', $txt['months_titles'][$calendar_data['current_month']], ' ', $calendar_data['current_year'], '</a>';
 
 		echo '
-				</h3>';
+				</h3>
+			</div>';
 	}
 
 	echo '
@@ -408,7 +411,8 @@ function template_show_week_grid($grid_name)
 	foreach ($calendar_data['months'] as $month_data)
 	{
 		echo '
-				<h3 class="catbg weekly"><span class="left"></span>';
+			<div class="cat_bar">
+				<h3 class="catbg weekly">';
 
 		if (empty($calendar_data['previous_calendar']['disabled']) && $calendar_data['show_next_prev'] && empty($done_title))
 			echo '
@@ -420,7 +424,8 @@ function template_show_week_grid($grid_name)
 
 		echo '
 					<a href="', $scripturl, '?action=calendar;month=', $month_data['current_month'], ';year=', $month_data['current_year'], '">', $txt['months_titles'][$month_data['current_month']], ' ', $month_data['current_year'], '</a>', empty($done_title) && !empty($calendar_data['week_number']) ? (' - ' . $txt['calendar_week'] . ' ' . $calendar_data['week_number']) : '', '
-				</h3>';
+				</h3>
+			</div>';
 
 		$done_title = true;
 

@@ -34,7 +34,7 @@ January 2010
  * Started fixing header bars markup (index.css, Search.template, BoardIndex.template)
  * Opening the topic split page could result in an undefined index error. (SplitTopics.php) 
  * Made the 'select posts to split' screen slightly more usable by presenting messages differently and using lists instead of tables. (SplitTopics.php, SplitTopics template, Xml template, index.css, compat.css) [Bug 3899,4069]
-
+ * Continuing fixing header bar markup (Admin, Calendar, Display, Errors, GenericList and GenericMenu templates)  
 
 December 2009
 --------------------------------------------------------------------------------

@@ -21,10 +21,11 @@ function template_show_list($list_id = null)
 	// Show the title of the table (if any).
 	if (!empty($cur_list['title']))
 		echo '
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
-				', $cur_list['title'], '
-			</h3>';
-
+			<div class="title_bar">
+				<h3 class="titlebg">
+					', $cur_list['title'], '
+				</h3>
+			</div>';
 	// This is for the old style menu with the arrows "> Test | Test 1"
 	if (empty($settings['use_tabs']) && isset($cur_list['list_menu'], $cur_list['list_menu']['show_on']) && ($cur_list['list_menu']['show_on'] == 'both' || $cur_list['list_menu']['show_on'] == 'top'))
 		template_create_list_menu($cur_list['list_menu'], 'top');
