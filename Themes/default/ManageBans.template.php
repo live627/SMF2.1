@@ -8,9 +8,11 @@ function template_ban_edit()
 	echo '
 	<div id="manage_bans">
 
-		<h3 class="catbg"><span class="left"></span>
+		<div class="cat_bar">
+			<h3 class="catbg">
 				', $context['ban']['is_new'] ? $txt['ban_add_new'] : $txt['ban_edit'] . ' \'' . $context['ban']['name'] . '\'', '
-		</h3>';
+			</h3>
+		</div>';
 
 	if ($context['ban']['is_new'])
 		echo '
@@ -269,9 +271,11 @@ function template_ban_edit_trigger()
 	echo '
 	<div id="manage_bans">
 		<form action="', $scripturl, '?action=admin;area=ban;sa=edit" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $context['ban_trigger']['is_new'] ? $txt['ban_add_trigger'] : $txt['ban_edit_trigger_title'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $context['ban_trigger']['is_new'] ? $txt['ban_add_trigger'] : $txt['ban_edit_trigger_title'], '
+				</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">

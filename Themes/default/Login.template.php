@@ -11,9 +11,11 @@ function template_login()
 
 		<form action="', $scripturl, '?action=login2" name="frmLogin" id="frmLogin" method="post" accept-charset="', $context['character_set'], '" ', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
 		<div class="tborder login">
-			<h3 class="catbg"><span class="left"></span>
-				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" class="icon" /> ', $txt['login'], '</span>
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" class="icon" /> ', $txt['login'], '</span>
+				</h3>
+			</div>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">';
 
@@ -81,9 +83,9 @@ function template_kick_guest()
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 	<form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" name="frmLogin" id="frmLogin"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
 		<div class="tborder login">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['warning'], '
-			</h3>';
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['warning'], '</h3>
+			</div>';
 
 	// Show the message or default message.
 	echo '
@@ -94,9 +96,11 @@ function template_kick_guest()
 
 	// And now the login information.
 	echo '
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
-				<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" class="icon" /> ', $txt['login'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" class="icon" /> ', $txt['login'], '
+				</h3>
+			</div>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
 				<dl>
@@ -146,16 +150,16 @@ function template_maintenance()
 	echo '
 <form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '">
 	<div class="tborder login" id="maintenance_mode">
-		<h3 class="catbg"><span class="left"></span>
-			', $context['title'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $context['title'], '</h3>
+		</div>
 		<p class="description">
 			<img class="align_left" src="', $settings['images_url'], '/construction.png" width="40" height="40" alt="', $txt['in_maintain_mode'], '" />
 			', $context['description'], '<br class="clear" />
 		</p>
-		<h4 class="titlebg"><span class="left"></span>
-			', $txt['admin_login'], '
-		</h4>
+		<div class="title_bar">
+			<h4 class="titlebg">', $txt['admin_login'], '</h4>
+		</div>
 		<span class="upperframe"><span></span></span>
 		<div class="roundframe">
 			<dl>
@@ -186,9 +190,11 @@ function template_admin_login()
 
 <form action="', $scripturl, $context['get_data'], '" method="post" accept-charset="', $context['character_set'], '" name="frmLogin" id="frmLogin" onsubmit="hashAdminPassword(this, \'', $context['user']['username'], '\', \'', $context['session_id'], '\');">
 	<div class="tborder login" id="admin_login">
-		<h3 class="catbg"><span class="left"></span>
-			<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" class="icon" /> ', $txt['login'], '</span>
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" class="icon" /> ', $txt['login'], '</span>
+			</h3>
+		</div>
 		<span class="upperframe"><span></span></span>
 		<div class="roundframe centertext">
 			<strong>', $txt['password'], ':</strong>
@@ -225,9 +231,9 @@ function template_retry_activate()
 	// Just ask them for their code so they can try it again...
 	echo '
 		<form action="', $scripturl, '?action=activate;u=', $context['member_id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="titlebg"><span class="left"></span>
-				', $context['page_title'], '
-			</h3>
+			<div class="title_bar">
+				<h3 class="titlebg">', $context['page_title'], '</h3>
+			</div>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">';
 
@@ -256,9 +262,9 @@ function template_resend()
 	// Just ask them for their code so they can try it again...
 	echo '
 		<form action="', $scripturl, '?action=activate;sa=resend" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="titlebg"><span class="left"></span>
-				', $context['page_title'], '
-			</h3>
+			<div class="title_bar">
+				<h3 class="titlebg">', $context['page_title'], '</h3>
+			</div>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
 				<dl>

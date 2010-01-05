@@ -9,9 +9,9 @@ function template_main()
 	// Table header.
 	echo '
 	<div id="manage_boards">
-		<h3 class="titlebg"><span class="left"></span>
-			', $txt['boardsEdit'], '
-		</h3>';
+		<div class="title_bar">
+			<h3 class="titlebg">', $txt['boardsEdit'], '</h3>
+		</div>';
 
 	if (!empty($context['move_board']))
 		echo '
@@ -35,9 +35,11 @@ function template_main()
 	{
 		// Link to modify the category.
 		echo '
-		<h3 class="catbg"><span class="left"></span>
-			<a href="' . $scripturl . '?action=admin;area=manageboards;sa=cat;cat=' . $category['id'] . '">', $category['name'], '</a> <a href="' . $scripturl . '?action=admin;area=manageboards;sa=cat;cat=' . $category['id'] . '">', $txt['catModify'], '</a>
-		</h3>';
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<a href="' . $scripturl . '?action=admin;area=manageboards;sa=cat;cat=' . $category['id'] . '">', $category['name'], '</a> <a href="' . $scripturl . '?action=admin;area=manageboards;sa=cat;cat=' . $category['id'] . '">', $txt['catModify'], '</a>
+				</h3>
+			</div>';
 
 		// Boards table header.
 		echo '
@@ -106,9 +108,11 @@ function template_modify_category()
 	<div id="manage_boards">
 		<form action="', $scripturl, '?action=admin;area=manageboards;sa=cat2" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="cat" value="', $context['category']['id'], '" />
-				<h3 class="catbg"><span class="left"></span>
-				', isset($context['category']['is_new']) ? $txt['mboards_new_cat_name'] : $txt['catEdit'], '
-				</h3>
+				<div class="cat_bar">
+					<h3 class="catbg">
+					', isset($context['category']['is_new']) ? $txt['mboards_new_cat_name'] : $txt['catEdit'], '
+					</h3>
+				</div>
 				<div class="windowbg">
 					<span class="topslice"><span></span></span>
 					<div class="content">
@@ -182,9 +186,9 @@ function template_confirm_category_delete()
 	<div id="manage_boards">
 		<form action="', $scripturl, '?action=admin;area=manageboards;sa=cat2" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="cat" value="', $context['category']['id'], '" />
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['mboards_delete_cat'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['mboards_delete_cat'], '</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -200,9 +204,9 @@ function template_confirm_category_delete()
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['mboards_delete_what_do'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['mboards_delete_what_do'], '</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -241,9 +245,11 @@ function template_modify_board()
 	<div id="manage_boards">
 		<form action="', $scripturl, '?action=admin;area=manageboards;sa=board2" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="boardid" value="', $context['board']['id'], '" />
-			<h3 class="catbg"><span class="left"></span>
-				', isset($context['board']['is_new']) ? $txt['mboards_new_board_name'] : $txt['boardsEdit'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', isset($context['board']['is_new']) ? $txt['mboards_new_board_name'] : $txt['boardsEdit'], '
+				</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -558,9 +564,9 @@ function template_confirm_board_delete()
 		<form action="', $scripturl, '?action=admin;area=manageboards;sa=board2" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="boardid" value="', $context['board']['id'], '" />
 
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['mboards_delete_board'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['mboards_delete_board'], '</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -576,9 +582,9 @@ function template_confirm_board_delete()
 				</div>
 			<span class="botslice"><span></span></span>
 			</div>
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['mboards_delete_what_do'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['mboards_delete_what_do'], '</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">

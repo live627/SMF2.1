@@ -154,8 +154,12 @@ function template_manual_above()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-		<h3 class="catbg"><span class="left"></span>', $txt['help'], '</h3>
-		<h4 class="titlebg"><span class="left"></span>', $context['manual_area_data']['label'], '</h4>
+		<div class="cat_bar">  
+			<h3 class="catbg">', $txt['help'], '</h3>
+		</div>
+		<div class="title_bar">
+			<h4 class="titlebg">', $context['manual_area_data']['label'], '</h4>
+		</div>
 		<div id="help_container">
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
@@ -429,27 +433,30 @@ function template_manual_board_index()
 		<span class="upperframe"><span></span></span>
 		<div class="roundframe">
 			<div class="innerframe">
-				<h3 class="catbg">
-					<span class="left"></span>
+				<div class="cat_bar">
+					<h3 class="catbg">
 					', sprintf($txt['info_center_title'], $context['forum_name']), '
-				</h3>
+					</h3>
+				</div>
 				<div id="upshrinkHeaderIC">
-					<h4 class="titlebg">
-						<span class="left"></span>
-						<a href="#"><img class="icon" src="', $settings['images_url'], '/icons/info.gif" alt="', $txt['forum_stats'], '" /></a>
-						<span>', $txt['forum_stats'], '</span>
-					</h4>
+					<div class="title_barIC">
+						<h4 class="titlebg">
+							<a href="#"><img class="icon" src="', $settings['images_url'], '/icons/info.gif" alt="', $txt['forum_stats'], '" /></a>
+							<span>', $txt['forum_stats'], '</span>
+						</h4>
+					</div>
 					<p>
 						', $txt['manual_board_index_stats_1'], '<br />
 						', $txt['manual_board_index_stats_2'], '<br />
 						<a href="#">', $txt['recent_view'], '</a><br />
 						<a href="#">', $txt['more_stats'], '</a>
 					</p>
-					<h4 class="titlebg">
-						<span class="left"></span>
-						<a href="#"><img class="icon" src="', $settings['images_url'], '/icons/online.gif" alt="', $txt['online_users'], '" /></a>
-						<span>', $txt['online_users'], '</span>
-					</h4>
+					<div class="title_barIC">
+						<h4 class="titlebg">
+							<a href="#"><img class="icon" src="', $settings['images_url'], '/icons/online.gif" alt="', $txt['online_users'], '" /></a>
+							<span>', $txt['online_users'], '</span>
+						</h4>
+					</div>
 					<p class="inline stats">
 						<a href="#">', $txt['manual_board_index_guests_users'], '</a>
 					</p>
@@ -650,11 +657,13 @@ function template_manual_topic_view()
 			<div class="pagelinks align_left">', $txt['manual_message_index_pages'], '</div>
 		</div>
 		<div id="forumposts">
-			<h3 class="catbg"><span class="left"></span>
-				<img src="', $settings['images_url'], '/topic/normal_post.gif" alt="" align="middle" />
-				<span id="author">', $txt['author'], '</span>
-				<span id="top_subject">', $txt['manual_topic_heading'], '</span>
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<img src="', $settings['images_url'], '/topic/normal_post.gif" alt="" align="middle" />
+					<span id="author">', $txt['author'], '</span>
+					<span id="top_subject">', $txt['manual_topic_heading'], '</span>
+				</h3>
+			</div>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<div class="poster">
@@ -798,9 +807,11 @@ function template_manual_registration_screen()
 	</ul>
 	<div class="help_sample">
 		<div id="fatal_error">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['manual_registering_warning'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['manual_registering_warning'], '
+				</h3>
+			</div>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<div class="padding">', $txt['manual_registering_warning_desc_1'], '<br />
@@ -812,12 +823,16 @@ function template_manual_registration_screen()
 	<h2 class="section" id="screen">', $txt['manual_registering_sec_reg_screen'], '</h2>
 	<div class="help_sample">
 		<form action="', $scripturl, '?action=help;area=registration_screen" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['manual_registering_registration_form'], '
-			</h3>
-			<h4 class="titlebg"><span class="left"></span>
-				', $txt['manual_registering_required_info'], '
-			</h4>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['manual_registering_registration_form'], '
+				</h3>
+			</div>
+			<div class="title_bar">
+				<h4 class="titlebg">
+					', $txt['manual_registering_required_info'], '
+				</h4>
+			</div>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<fieldset class="content">
@@ -903,9 +918,11 @@ function template_manual_logging_in_out()
 	<div class="help_sample">
 		<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '">
 			<div class="tborder login">
-				<h3 class="catbg"><span class="left"></span>
-					<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" class="icon" /> ', $txt['manual_loginout_login'], '
-				</h3>
+				<div class="cat_bar">
+					<h3 class="catbg"><
+						<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" class="icon" /> ', $txt['manual_loginout_login'], '
+					</h3>
+				</div>
 				<span class="upperframe"><span></span></span>
 				<div class="roundframe">
 					<dl>
@@ -971,9 +988,11 @@ function template_manual_password_reminders()
 	<div class="help_sample">
 		<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '">
 			<div class="tborder login">
-				<h3 class="catbg"><span class="left"></span>
-					', $txt['manual_loginout_password_reminder'], '
-				</h3>
+				<div class="cat_bar">
+					<h3 class="catbg">
+						', $txt['manual_loginout_password_reminder'], '
+					</h3>
+				</div>
 				<span class="upperframe"><span></span></span>
 				<div class="roundframe">
 					<p class="smalltext centertext">', $txt['manual_loginout_q_explanation'], '</p>
@@ -2525,9 +2544,9 @@ function template_manual_searching()
 			<fieldset>
 				<span class="upperframe"><span></span></span>
 				<div class="roundframe">
-					<h4 class="titlebg"><span class="left"></span>
-						', $txt['manual_searching_choose'], '
-					</h4>
+					<div class="title_bar">
+						<h4 class="titlebg">', $txt['manual_searching_choose'], '</h4>
+					</div>
 					<div class="flow_auto" id="searchBoardsExpand">
 						<ul class="floatleft">
 							<li class="category">
