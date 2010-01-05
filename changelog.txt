@@ -32,7 +32,9 @@ January 2010
  * Opening the topic split page could result in an undefined index error. (SplitTopics.php) 
  * Made the 'select posts to split' screen slightly more usable by presenting messages differently and using lists instead of tables. (SplitTopics.php, SplitTopics template, Xml template, index.css, compat.css) [Bug 3899,4069]
  * Adjusted the header bar markup in order to make it work better in every major browser. (index.css, various template files)
- 
+ * The statistics center was no longer collapsing years automatically. (Stats template) [Bug 4011]
+
+
 December 2009
 --------------------------------------------------------------------------------
  * Some button strips weren't properly reversed in RTL mode. (rtl.css) [Bug 4045]
