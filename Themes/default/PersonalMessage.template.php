@@ -13,16 +13,15 @@ function template_pm_above()
 	if (!empty($context['limit_bar']))
 	{
 		echo '
-		<h3 class="titlebg"><span class="left">
-			</span>
-			<span class="floatleft">', $txt['pm_capacity'], ':</span>
-			<span class="floatleft capacity_bar">
-				<span class="', $context['limit_bar']['percent'] > 85 ? 'full' : ($context['limit_bar']['percent'] > 40 ? 'filled' : 'empty'), '" style="width: ', $context['limit_bar']['percent'] / 10, 'em;"></span>
-			</span>
-			<span class="align_right', $context['limit_bar']['percent'] > 90 ? ' alert' : '', '">
-				', $context['limit_bar']['text'], '
-			</span>
-		</h3>';
+			<div class="title_bar">
+				<h3 class="titlebg">
+					<span class="floatleft">', $txt['pm_capacity'], ':</span>
+					<span class="floatleft capacity_bar">
+						<span class="', $context['limit_bar']['percent'] > 85 ? 'full' : ($context['limit_bar']['percent'] > 40 ? 'filled' : 'empty'), '" style="width: ', $context['limit_bar']['percent'] / 10, 'em;"></span>
+					</span>
+					<span class="align_right', $context['limit_bar']['percent'] > 90 ? ' alert' : '', '">', $context['limit_bar']['text'], '</span>
+				</h3>
+			</div>';
 	}
 }
 
@@ -135,11 +134,12 @@ function template_folder()
 		// Show the helpful titlebar - generally.
 		if ($context['display_mode'] != 1)
 			echo '
-	<h3 class="catbg">
-		<span class="left"></span>
-		<span id="author">', $txt['author'], '</span>
-		<span id="topic_title">', $txt[$context['display_mode'] == 0 ? 'messages' : 'conversation'], '</span>
-	</h3>';
+				<div class="cat_bar">
+					<h3 class="catbg">
+						<span id="author">', $txt['author'], '</span>
+						<span id="topic_title">', $txt[$context['display_mode'] == 0 ? 'messages' : 'conversation'], '</span>
+					</h3>
+				</div>';
 
 	/*	// Cache some handy buttons.
 		$quote_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
@@ -614,9 +614,9 @@ function template_search()
 		}
 	// ]]></script>
 	<form action="', $scripturl, '?action=pm;sa=search2" method="post" accept-charset="', $context['character_set'], '" name="searchform" id="searchform">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['pm_search_title'], '
-		</h3>';
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pm_search_title'], '</h3>
+		</div>';
 
 	if (!empty($context['search_errors']))
 	{
@@ -699,9 +699,11 @@ function template_search()
 		<fieldset class="labels">
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
-				<h4 class="titlebg"><span class="left"></span>
-					<span class="ie6_header floatleft"><a href="javascript:void(0);" onclick="expandCollapseLabels(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandLabelsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseLabels(); return false;"><strong>', $txt['pm_search_choose_label'], '</strong></a></span>
-				</h4>
+				<div class="title_bar">
+					<h4 class="titlebg">
+						<span class="ie6_header floatleft"><a href="javascript:void(0);" onclick="expandCollapseLabels(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandLabelsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseLabels(); return false;"><strong>', $txt['pm_search_choose_label'], '</strong></a></span>
+					</h4>
+				</div>
 				<ul id="searchLabelsExpand" class="reset" ', $context['check_all'] ? 'style="display: none;"' : '', '>';
 
 			foreach ($context['search_labels'] as $label)
@@ -734,13 +736,12 @@ function template_search_results()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
-	<h3 class="catbg">
-		<span class="left"></span>
-		', $txt['pm_search_results'], '
-	</h3>
-	<div class="pagesection">
-		<strong>', $txt['pages'], ':</strong> ', $context['page_index'], '
-	</div>';
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pm_search_results'], '</h3>
+		</div>
+		<div class="pagesection">
+			<strong>', $txt['pages'], ':</strong> ', $context['page_index'], '
+		</div>';
 
 	// complete results ?
 	if (empty($context['search_params']['show_complete']) && !empty($context['personal_messages']))
@@ -764,55 +765,52 @@ function template_search_results()
 		{
 			// !!! This still needs to be made pretty.
 			echo '
-		<h3 class="titlebg">
-			<span class="left"></span>
-			<span class="floatleft">
-				', $message['counter'], '&nbsp;&nbsp;<a href="', $message['href'], '">', $message['subject'], '</a>
-			</span>
-			<span class="floatright">
-				', $txt['search_on'], ': ', $message['time'], '
-			</span>
-		</h3>
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $txt['from'], ': ', $message['member']['link'], ', ', $txt['to'], ': ';
-
-			// Show the recipients.
-			// !!! This doesn't deal with the sent item searching quite right for bcc.
-			if (!empty($message['recipients']['to']))
-				echo implode(', ', $message['recipients']['to']);
-			// Otherwise, we're just going to say "some people"...
-			elseif ($context['folder'] != 'sent')
-				echo '(', $txt['pm_undisclosed_recipients'], ')';
-
-			echo '
-		</h3>
-		<div class="windowbg', $alternate ? '2': '', '">
-			<span class="topslice"><span></span></span>
-			<div class="content">
-				', $message['body'], '
-				<p class="pm_reply righttext middletext">';
-
-			if ($context['can_send_pm'])
-			{
-				$quote_button = create_button('quote.gif', 'reply_quote', 'reply_quote', 'align="middle"');
-				$reply_button = create_button('im_reply.gif', 'reply', 'reply', 'align="middle"');
-				// You can only reply if they are not a guest...
-				if (!$message['member']['is_guest'])
-					echo '
-							<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote;u=', $context['folder'] == 'sent' ? '' : $message['member']['id'], '">', $quote_button , '</a>', $context['menu_separator'], '
-							<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $reply_button , '</a> ', $context['menu_separator'];
-				// This is for "forwarding" - even if the member is gone.
-				else
-					echo '
-							<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote">', $quote_button , '</a>', $context['menu_separator'];
-			}
-
-			echo '
-				</p>
+			<div class="title_bar">
+				<h3 class="titlebg">
+					<span class="floatright">', $txt['search_on'], ': ', $message['time'], '</span>
+					<span class="floatleft">', $message['counter'], '&nbsp;&nbsp;<a href="', $message['href'], '">', $message['subject'], '</a></span>
+				</h3>
 			</div>
-			<span class="botslice"><span></span></span>
-		</div>';
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['from'], ': ', $message['member']['link'], ', ', $txt['to'], ': ';
+
+				// Show the recipients.
+				// !!! This doesn't deal with the sent item searching quite right for bcc.
+				if (!empty($message['recipients']['to']))
+					echo implode(', ', $message['recipients']['to']);
+				// Otherwise, we're just going to say "some people"...
+				elseif ($context['folder'] != 'sent')
+					echo '(', $txt['pm_undisclosed_recipients'], ')';
+
+					echo '
+				</h3>
+			</div>
+			<div class="windowbg', $alternate ? '2': '', '">
+				<span class="topslice"><span></span></span>
+				<div class="content">
+					', $message['body'], '
+					<p class="pm_reply righttext middletext">';
+
+				if ($context['can_send_pm'])
+				{
+					$quote_button = create_button('quote.gif', 'reply_quote', 'reply_quote', 'align="middle"');
+					$reply_button = create_button('im_reply.gif', 'reply', 'reply', 'align="middle"');
+					// You can only reply if they are not a guest...
+					if (!$message['member']['is_guest'])
+						echo '
+								<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote;u=', $context['folder'] == 'sent' ? '' : $message['member']['id'], '">', $quote_button , '</a>', $context['menu_separator'], '
+								<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $reply_button , '</a> ', $context['menu_separator'];
+					// This is for "forwarding" - even if the member is gone.
+					else
+						echo '
+								<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote">', $quote_button , '</a>', $context['menu_separator'];
+				}
+
+				echo '
+					</p>
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>';
 		}
 		// Otherwise just a simple list!
 		else
@@ -861,46 +859,47 @@ function template_send()
 	if (!empty($context['send_log']))
 	{
 		echo '
-	<h3 class="catbg">
-		<span class="left"></span>
-		', $txt['pm_send_report'], '
-	</h3>
-	<div class="windowbg">
-		<span class="topslice"><span></span></span>
-		<div class="content">';
-		if (!empty($context['send_log']['sent']))
-			foreach ($context['send_log']['sent'] as $log_entry)
-				echo '<span class="error">', $log_entry, '</span><br />';
-		if (!empty($context['send_log']['failed']))
-			foreach ($context['send_log']['failed'] as $log_entry)
-				echo '<span class="error">', $log_entry, '</span><br />';
-		echo '
-		</div>
-		<span class="botslice"><span></span></span>
-	</div><br />';
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['pm_send_report'], '</h3>
+			</div>
+			<div class="windowbg">
+			<span class="topslice"><span></span></span>
+				<div class="content">';
+				if (!empty($context['send_log']['sent']))
+					foreach ($context['send_log']['sent'] as $log_entry)
+						echo '<span class="error">', $log_entry, '</span><br />';
+				if (!empty($context['send_log']['failed']))
+					foreach ($context['send_log']['failed'] as $log_entry)
+						echo '<span class="error">', $log_entry, '</span><br />';
+				echo '
+				</div>
+			<span class="botslice"><span></span></span>
+			</div>
+			<br />';
 	}
 
 	// Show the preview of the personal message.
 	if (isset($context['preview_message']))
 	echo '
-	<h3 class="catbg">
-		<span class="left"></span>
-		', $context['preview_subject'], '
-	</h3>
-	<div class="windowbg">
+		<div class="cat_bar">
+			<h3 class="catbg">', $context['preview_subject'], '</h3>
+		</div>
+		<div class="windowbg">
 		<span class="topslice"><span></span></span>
-		<div class="content">
-			', $context['preview_message'], '
-				</div>
+			<div class="content">
+				', $context['preview_message'], '
+			</div>
 		<span class="botslice"><span></span></span>
-	</div><br />';
+		</div>
+		<br />';
 
 	// Main message editing box.
 	echo '
-	<h3 class="catbg">
-		<span class="left"></span>
-			<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt['new_message'], '" title="', $txt['new_message'], '" />&nbsp;', $txt['new_message'], '</span>
-	</h3>';
+		<div class="cat_bar">
+			<h3 class="catbg">
+					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt['new_message'], '" title="', $txt['new_message'], '" />&nbsp;', $txt['new_message'], '</span>
+			</h3>
+		</div>';
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=send2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'message\']);">
@@ -1021,19 +1020,15 @@ function template_send()
 		echo '
 	<br />
 	<br />
-	<h3 class="catbg">
-		<span class="left"></span>
-		', $txt['subject'], ': ', $context['quoted_message']['subject'], '
-	</h3>
-	<h3 class="titlebg">
-		<span class="left"></span>
-		<span class="align_left">
-			', $txt['from'], ': ', $context['quoted_message']['member']['name'], '
-		</span>
-		<span class="align_right">
-			', $txt['on'], ': ', $context['quoted_message']['time'], '
-		</span>
-	</h3>
+	<div class="cat_bar">
+		<h3 class="catbg">', $txt['subject'], ': ', $context['quoted_message']['subject'], '</h3>
+	</div>
+	<div class="title_bar">
+		<h3 class="titlebg">
+			<span class="align_left">', $txt['from'], ': ', $context['quoted_message']['member']['name'], '</span>
+			<span class="align_right">', $txt['on'], ': ', $context['quoted_message']['time'], '</span>
+		</h3>
+	</div>
 	<div class="windowbg2">
 		<span class="topslice"><span></span></span>
 		<div class="content">
@@ -1094,18 +1089,17 @@ function template_ask_delete()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
-	<h3 class="catbg">
-		<span class="left"></span>
-		', ($context['delete_all'] ? $txt['delete_message'] : $txt['delete_all']), '
-	</h3>
-	<div class="windowbg">
-		<span class="topslice"><span></span></span>
-		<div class="content">
-			<p>', $txt['delete_all_confirm'], '</p><br />
-			<strong><a href="', $scripturl, '?action=pm;sa=removeall2;f=', $context['folder'], ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="javascript:history.go(-1);">', $txt['no'], '</a></strong>
+		<div class="cat_bar">
+			<h3 class="catbg">', ($context['delete_all'] ? $txt['delete_message'] : $txt['delete_all']), '</h3>
 		</div>
+		<div class="windowbg">
+		<span class="topslice"><span></span></span>
+			<div class="content">
+				<p>', $txt['delete_all_confirm'], '</p><br />
+				<strong><a href="', $scripturl, '?action=pm;sa=removeall2;f=', $context['folder'], ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="javascript:history.go(-1);">', $txt['no'], '</a></strong>
+			</div>
 		<span class="botslice"><span></span></span>
-	</div>';
+		</div>';
 }
 
 // This template asks the user what messages they want to prune.
@@ -1115,10 +1109,9 @@ function template_prune()
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=prune" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['pm_prune_warning'], '\');">
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $txt['pm_prune'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pm_prune'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
@@ -1138,10 +1131,9 @@ function template_labels()
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=manlabels" method="post" accept-charset="', $context['character_set'], '">
-		<h3 class="titlebg">
-			<span class="left"></span>
-			', $txt['pm_manage_labels'], '
-		</h3>
+		<div class="title_bar">
+			<h3 class="titlebg">', $txt['pm_manage_labels'], '</h3>
+		</div>
 		<div class="description">
 			', $txt['pm_labels_desc'], '
 		</div>
@@ -1194,9 +1186,9 @@ function template_labels()
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>
 	<form action="', $scripturl, '?action=pm;sa=manlabels" method="post" accept-charset="', $context['character_set'], '" style="margin-top: 1ex;">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['pm_label_add_new'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pm_label_add_new'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
@@ -1224,10 +1216,9 @@ function template_report_message()
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=report;l=', $context['current_label_id'], '" method="post" accept-charset="', $context['character_set'], '">
 		<input type="hidden" name="pmsg" value="', $context['pm_id'], '" />
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $txt['pm_report_title'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pm_report_title'], '</h3>
+		</div>
 		<div class="description">
 			', $txt['pm_report_desc'], '
 		</div>
@@ -1277,17 +1268,17 @@ function template_report_message_complete()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<h3 class="catbg"><span class="left"></span>
-		', $txt['pm_report_title'], '
-	</h3>
-	<div class="windowbg">
-		<span class="topslice"><span></span></span>
-		<div class="content">
-			<p>', $txt['pm_report_done'], '</p>
-			<a href="', $scripturl, '?action=pm;l=', $context['current_label_id'], '">', $txt['pm_report_return'], '</a>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pm_report_title'], '</h3>
 		</div>
-		<span class="botslice"><span></span></span>
-	</div>';
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+			<div class="content">
+				<p>', $txt['pm_report_done'], '</p>
+				<a href="', $scripturl, '?action=pm;l=', $context['current_label_id'], '">', $txt['pm_report_return'], '</a>
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>';
 }
 
 // Manage rules.
@@ -1297,10 +1288,9 @@ function template_rules()
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=manrules" method="post" accept-charset="', $context['character_set'], '" name="manRules">
-		<h3 class="titlebg">
-			<span class="left"></span>
-			', $txt['pm_manage_rules'], '
-		</h3>
+		<div class="title_bar">
+			<h3 class="titlebg">', $txt['pm_manage_rules'], '</h3>
+		</div>
 		<div class="description">
 			', $txt['pm_manage_rules_desc'], '
 		</div>
@@ -1545,10 +1535,9 @@ function template_add_rule()
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=manrules;save;rid=', $context['rid'], '" method="post" accept-charset="', $context['character_set'], '" name="addrule" id="addrule">
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $context['rid'] == 0 ? $txt['pm_add_rule'] : $txt['pm_edit_rule'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $context['rid'] == 0 ? $txt['pm_add_rule'] : $txt['pm_edit_rule'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
@@ -1661,10 +1650,9 @@ function template_add_rule()
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $txt['pm_rule_description'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pm_rule_description'], '</h3>
+		</div>
 		<div class="information">
 			<div id="ruletext" class="smalltext">', $txt['pm_rule_js_disabled'], '</div>
 		</div>

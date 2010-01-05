@@ -11,10 +11,11 @@ function template_editsets()
 
 	template_show_list('smiley_set_list');
 
-	echo '<br />
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['smiley_sets_latest'], '
-		</h3>
+	echo '
+		<br />
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['smiley_sets_latest'], '</h3>
+		</div>
 		<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -73,9 +74,11 @@ function template_modifyset()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=smileys;sa=editsets" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
+			<div class="cat_bar">
+				<h3 class="catbg">
 				', $context['current_set']['is_new'] ? $txt['smiley_set_new'] : $txt['smiley_set_modify_existing'], '
-			</h3>';
+				</h3>
+			</div>';
 
 		// If this is an existing set, and there are still un-added smileys - offer an import opportunity.
 		if (!empty($context['current_set']['can_import']))
@@ -158,9 +161,9 @@ function template_modifysmiley()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=smileys;sa=editsmileys" method="post" accept-charset="', $context['character_set'], '" name="smileyForm" id="smileyForm">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['smiley_modify_existing'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['smiley_modify_existing'], '</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -272,9 +275,9 @@ function template_addsmiley()
 	// ]]></script>
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=smileys;sa=addsmiley" method="post" accept-charset="', $context['character_set'], '" name="smileyForm" id="smileyForm" enctype="multipart/form-data">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['smileys_add_method'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['smileys_add_method'], '</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -359,9 +362,9 @@ function template_addsmiley()
 			<span class="botslice"><span></span></span>
 			</div>
 		<br />
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['smiley_new'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['smiley_new'], '</h3>
+		</div>
 		<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -425,9 +428,9 @@ function template_setorder()
 	{
 		echo '
 		<form action="', $scripturl, '?action=admin;area=smileys;sa=editsmileys" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $location['title'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $location['title'], '</h3>
+			</div>
 			<div class="information">
 				', $location['description'], '
 			</div>
@@ -484,9 +487,11 @@ function template_editicon()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=smileys;sa=editicon;icon=', $context['new_icon'] ? '0' : $context['icon']['id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $context['new_icon'] ? $txt['icons_new_icon'] : $txt['icons_edit_icon'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $context['new_icon'] ? $txt['icons_new_icon'] : $txt['icons_edit_icon'], '
+				</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">

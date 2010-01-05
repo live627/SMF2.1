@@ -36,7 +36,8 @@ January 2010
  * Made the 'select posts to split' screen slightly more usable by presenting messages differently and using lists instead of tables. (SplitTopics.php, SplitTopics template, Xml template, index.css, compat.css) [Bug 3899,4069]
  * Continuing fixing header bar markup (Admin, Calendar, Display, Errors, GenericList and GenericMenu templates) 
  * More of the same. Meh. (Help, Login, ManageAttachments, ManageBans, ManageBoards, ManageCalendar and ManageMail templates)
- * Another batch of the same (ManageMaintenance, ManageMembergroups, ManageMembers, ManageNews, ManagePaid, ManagePermissions, ManageScheduledTasks and ManageSearch templates)  
+ * Another batch of the same (ManageMaintenance, ManageMembergroups, ManageMembers, ManageNews, ManagePaid, ManagePermissions, ManageScheduledTasks and ManageSearch templates) 
+ * More of the same. Who put all these bloody header bars in the theme? (ManageSmileys, Memberlist, MessageIndex, ModerationCenter, MoveTopic, Notify, Packages, PersonalMessage and Poll templates) 
 
 December 2009
 --------------------------------------------------------------------------------

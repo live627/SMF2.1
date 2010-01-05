@@ -12,7 +12,9 @@ function template_main()
 	{
 		echo '
 <div class="tborder" id="childboards">
-	<h3 class="catbg"><span class="left"></span>', $txt['parent_boards'], '</h3>
+	<div class="cat_bar">
+		<h3 class="catbg">', $txt['parent_boards'], '</h3>
+	</div>
 	<div class="table_frame">
 		<table class="table_list">
 			<tbody class="content">';

@@ -14,13 +14,15 @@ function template_main()
 
 	echo '
 	<div class="main_section" id="memberlist">
-		<h4 class="catbg"><span class="left"></span>
-			<span class="align_left">', $txt['members_list'], '</span>';
-	if (!isset($context['old_search']))
-			echo '
-			<span class="align_right">', $context['letter_links'], '</span>';
-	echo '
-		</h4>
+		<div class="cat_bar">
+			<h4 class="catbg">
+				<span class="align_left">', $txt['members_list'], '</span>';
+		if (!isset($context['old_search']))
+				echo '
+				<span class="align_right">', $context['letter_links'], '</span>';
+		echo '
+			</h4>
+		</div>
 		<div class="pagesection">
 		', template_button_strip($memberlist_buttons, 'right'), '
 			<div class="pagelinks align_left">', $txt['pages'], ': ', $context['page_index'], '</div>
@@ -153,9 +155,11 @@ function template_search()
 	echo '
 	<form action="', $scripturl, '?action=mlist;sa=search" method="post" accept-charset="', $context['character_set'], '">
 		<div id="memberlist">
-			<h3 class="catbg mlist"><span class="left"></span>
-				<span class="ie6_header floatleft">', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" class="icon" />' : '', $txt['mlist_search'], '</span>
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg mlist">
+					<span class="ie6_header floatleft">', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" class="icon" />' : '', $txt['mlist_search'], '</span>
+				</h3>
+			</div>
 			<div class="pagesection">
 				', template_button_strip($memberlist_buttons, 'right'), '
 			</div>';

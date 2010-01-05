@@ -28,10 +28,9 @@ function template_main()
 	echo '
 	<div id="edit_poll">
 		<form action="' . $scripturl . '?action=editpoll2', $context['is_edit'] ? '' : ';add', ';topic=' . $context['current_topic'] . '.' . $context['start'] . '" method="post" accept-charset="', $context['character_set'], '" onsubmit="submitonce(this); smc_saveEntities(\'postmodify\', [\'question\'], \'options-\');" name="postmodify" id="postmodify">
-			<h3 class="catbg">
-				<span class="left"></span>
-				', $context['page_title'], '
-			</h3>';
+			<div class="cat_bar">
+				<h3 class="catbg">', $context['page_title'], '</h3>
+			</div>';
 
 	if (!empty($context['poll_error']['messages']))
 		echo '
