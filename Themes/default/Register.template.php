@@ -8,9 +8,9 @@ function template_registration_agreement()
 
 	echo '
 		<form action="', $scripturl, '?action=register" method="post" accept-charset="', $context['character_set'], '" id="registration">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['registration_agreement'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['registration_agreement'], '</h3>
+			</div>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
 				<p>', $context['agreement'], '</p>
@@ -115,12 +115,12 @@ function template_registration_form()
 
 	echo '
 		<form action="', $scripturl, '?action=register2" method="post" accept-charset="', $context['character_set'], '" name="registration" id="registration" onsubmit="return verifyAgree();">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['registration_form'], '
-			</h3>
-			<h4 class="titlebg"><span class="left"></span>
-				', $txt['required_info'], '
-			</h4>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['registration_form'], '</h3>
+			</div>
+			<div class="title_bar">
+				<h4 class="titlebg">', $txt['required_info'], '</h4>
+			</div>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<fieldset class="content">
@@ -209,9 +209,9 @@ function template_registration_form()
 	if (!empty($context['profile_fields']) || !empty($context['custom_fields']))
 	{
 		echo '
-			<h4 class="titlebg"><span class="left"></span>
-				', $txt['additional_information'], '
-			</h4>
+			<div class="title_bar">
+				<h4 class="titlebg">', $txt['additional_information'], '</h4>
+			</div>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<fieldset class="content">
@@ -324,9 +324,9 @@ function template_registration_form()
 	if ($context['visual_verification'])
 	{
 		echo '
-			<h4 class="titlebg"><span class="left"></span>
-				', $txt['verification'], '
-			</h4>
+			<div class="title_bar">
+				<h4 class="titlebg">', $txt['verification'], '</h4>
+			</div>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<fieldset class="content centertext">
@@ -367,10 +367,9 @@ function template_after()
 	// Not much to see here, just a quick... "you're now registered!" or what have you.
 	echo '
 		<div id="registration_success">
-			<h3 class="catbg">
-				<span class="left"></span>
-				', $txt['registration_successful'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['registration_successful'], '</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<p class="content">', $context['description'], '</p>
@@ -386,10 +385,9 @@ function template_coppa()
 
 	// Formulate a nice complicated message!
 	echo '
-			<h3 class="titlebg">
-				<span class="left"></span>
-				', $context['page_title'], '
-			</h3>
+			<div class="title_bar">
+				<h3 class="titlebg">', $context['page_title'], '</h3>
+			</div>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -509,10 +507,9 @@ function template_admin_register()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $txt['admin_browse_register_new'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['admin_browse_register_new'], '</h3>
+		</div>
 		<form class="windowbg2" action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '" name="postForm" id="postForm">
 			<span class="topslice"><span></span></span>
 			<script type="text/javascript"><!-- // --><![CDATA[
@@ -607,10 +604,9 @@ function template_edit_agreement()
 
 	// Just a big box to edit the text file ;).
 	echo '
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $txt['registration_agreement'], '
-		</h3>';
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['registration_agreement'], '</h3>
+		</div>';
 
 	// Warning for if the file isn't writable.
 	if (!empty($context['warning']))
@@ -671,10 +667,9 @@ function template_edit_reserved_words()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $txt['admin_reserved_set'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['admin_reserved_set'], '</h3>
+		</div>
 		<form class="windowbg2" action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '">
 			<span class="topslice"><span></span></span>
 			<div class="content">

@@ -9,10 +9,9 @@ function template_ask()
 	<div id="split_topics">
 		<form action="', $scripturl, '?action=splittopics;sa=execute;topic=', $context['current_topic'], '.0" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="at" value="', $context['message']['id'], '" />
-			<h3 class="catbg">
-				<span class="left"></span>
-				', $txt['split'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['split'], '</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -47,10 +46,9 @@ function template_main()
 
 	echo '
 	<div id="split_topic">
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $txt['split'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['split'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
@@ -80,10 +78,9 @@ function template_select()
 	<div id="split_topics">
 		<form action="', $scripturl, '?action=splittopics;sa=splitSelection;board=', $context['current_board'], '.0" method="post" accept-charset="', $context['character_set'], '">
 			<div id="not_selected" class="align_left">
-				<h3 class="catbg">
-					<span class="left"></span>
-					', $txt['split'], ' - ', $txt['select_split_posts'], '
-				</h3>
+				<div class="cat_bar">
+					<h3 class="catbg">', $txt['split'], ' - ', $txt['select_split_posts'], '</h3>
+				</div>
 				<div class="information">
 					', $txt['please_select_split'], '
 				</div>
@@ -108,10 +105,11 @@ function template_select()
 				</ul>
 			</div>
 			<div id="selected" class="align_right">
-				<h3 class="catbg">
-					<span class="left"></span>
-					', $txt['split_selected_posts'], ' (<a href="', $scripturl, '?action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=reset;msg=0" onclick="return select(\'reset\', 0);">', $txt['split_reset_selection'], '</a>)
-				</h3>
+				<div class="cat_bar">
+					<h3 class="catbg">
+						', $txt['split_selected_posts'], ' (<a href="', $scripturl, '?action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=reset;msg=0" onclick="return select(\'reset\', 0);">', $txt['split_reset_selection'], '</a>)
+					</h3>
+				</div>
 				<div class="information">
 					', $txt['split_selected_posts_desc'], '
 				</div>
@@ -237,28 +235,27 @@ function template_merge_done()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<div id="split_topics">
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $txt['merge'], '
-		</h3>
-		<div class="windowbg">
-			<span class="topslice"><span></span></span>
-			<div class="content">
-				<p>' . $txt['merge_successful'] . '</p>
-				<br />
-				<ul class="reset">
-					<li>
-						<a href="' . $scripturl . '?board=' . $context['target_board'] . '.0">' . $txt['message_index'] . '</a>
-					</li>
-					<li>
-						<a href="' . $scripturl . '?topic=' . $context['target_topic'] . '.0">' . $txt['new_merged_topic'] . '</a>
-					</li>
-				</ul>
+		<div id="split_topics">
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['merge'], '</h3>
 			</div>
+			<div class="windowbg">
+			<span class="topslice"><span></span></span>
+				<div class="content">
+					<p>' . $txt['merge_successful'] . '</p>
+					<br />
+					<ul class="reset">
+						<li>
+							<a href="' . $scripturl . '?board=' . $context['target_board'] . '.0">' . $txt['message_index'] . '</a>
+						</li>
+						<li>
+							<a href="' . $scripturl . '?topic=' . $context['target_topic'] . '.0">' . $txt['new_merged_topic'] . '</a>
+						</li>
+					</ul>
+				</div>
 			<span class="botslice"><span></span></span>
+			</div>
 		</div>
-	</div>
 	<br class="clear" />';
 }
 
@@ -267,91 +264,89 @@ function template_merge()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<div id="merge_topics">
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $txt['merge'], '
-		</h3>
-		<div class="information">
-			', $txt['merge_desc'], '
-		</div>
-		<div class="windowbg">
+		<div id="merge_topics">
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['merge'], '</h3>
+			</div>
+			<div class="information">
+				', $txt['merge_desc'], '
+			</div>
+			<div class="windowbg">
 			<span class="topslice"><span></span></span>
-			<div class="content">
-				<dl class="settings merge_topic">
-					<dt>
-						<strong>', $txt['topic_to_merge'], ':</strong>
-					</dt>
-					<dd>
-						', $context['origin_subject'], '
-					</dd>
-					<dt>
-						<strong>', $txt['merge_to_topic_id'], ': </strong>
-					</dt>
-					<dd>
-						<form action="', $scripturl , '?action=mergetopics;sa=options" method="post" accept-charset="', $context['character_set'], '" style="display: inline;">
-							<input type="hidden" name="topics[]" value="', $context['origin_topic'], '" />
-							<input type="text" name="topics[]" class="input_text" />
-							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-							<input type="submit" value="', $txt['merge'], '" class="button_submit" />
-						</form>
-					</dd>';
+				<div class="content">
+					<dl class="settings merge_topic">
+						<dt>
+							<strong>', $txt['topic_to_merge'], ':</strong>
+						</dt>
+						<dd>
+							', $context['origin_subject'], '
+						</dd>
+						<dt>
+							<strong>', $txt['merge_to_topic_id'], ': </strong>
+						</dt>
+						<dd>
+							<form action="', $scripturl , '?action=mergetopics;sa=options" method="post" accept-charset="', $context['character_set'], '" style="display: inline;">
+								<input type="hidden" name="topics[]" value="', $context['origin_topic'], '" />
+								<input type="text" name="topics[]" class="input_text" />
+								<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+								<input type="submit" value="', $txt['merge'], '" class="button_submit" />
+							</form>
+						</dd>';
 
 	if (!empty($context['boards']) && count($context['boards']) > 1)
 	{
-		echo '
-					<dt>
-						<strong>' . $txt['target_board'] . ':</strong>
-					</dt>
-					<dd>
-						<form action="' . $scripturl . '?action=mergetopics;from=' . $context['origin_topic'] . ';targetboard=' . $context['target_board'] . ';board=' . $context['current_board'] . '.0" method="post" accept-charset="', $context['character_set'], '">
-							<input type="hidden" name="from" value="' . $context['origin_topic'] . '" />
-							<select name="targetboard" onchange="this.form.submit();">';
-		foreach ($context['boards'] as $board)
 			echo '
-								<option value="', $board['id'], '"', $board['id'] == $context['target_board'] ? ' selected="selected"' : '', '>', $board['category'], ' - ', $board['name'], '</option>';
-		echo '
-							</select> <noscript><input type="submit" value="', $txt['go_caps'], '" class="button_submit" /></noscript>
-						</form>
-					</dd>';
+						<dt>
+							<strong>' . $txt['target_board'] . ':</strong>
+						</dt>
+						<dd>
+							<form action="' . $scripturl . '?action=mergetopics;from=' . $context['origin_topic'] . ';targetboard=' . $context['target_board'] . ';board=' . $context['current_board'] . '.0" method="post" accept-charset="', $context['character_set'], '">
+								<input type="hidden" name="from" value="' . $context['origin_topic'] . '" />
+								<select name="targetboard" onchange="this.form.submit();">';
+			foreach ($context['boards'] as $board)
+				echo '
+									<option value="', $board['id'], '"', $board['id'] == $context['target_board'] ? ' selected="selected"' : '', '>', $board['category'], ' - ', $board['name'], '</option>';
+			echo '
+								</select> <noscript><input type="submit" value="', $txt['go_caps'], '" class="button_submit" /></noscript>
+							</form>
+						</dd>';
 	}
 
-	echo '
-				</dl>
-			</div>
-			<span class="botslice"><span></span></span>
-		</div>
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $txt['target_topic'], '
-		</h3>
-		<div class="pagesection">
-			<strong>' . $txt['pages'] . ':</strong> ' . $context['page_index'] . '
-		</div>
-		<div class="windowbg2">
-			<span class="topslice"><span></span></span>
-			<div class="content">
-				<ul class="reset merge_topics">';
-
-	$merge_button = create_button('merge.gif', 'merge', '');
-
-	foreach ($context['topics'] as $topic)
 		echo '
+					</dl>
+				</div>
+			<span class="botslice"><span></span></span>
+			</div>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['target_topic'], '</h3>
+			</div>
+			<div class="pagesection">
+				<strong>' . $txt['pages'] . ':</strong> ' . $context['page_index'] . '
+			</div>
+			<div class="windowbg2">
+			<span class="topslice"><span></span></span>
+				<div class="content">
+					<ul class="reset merge_topics">';
 
-					<li>
-						<a href="' . $scripturl . '?action=mergetopics;sa=options;board=' . $context['current_board'] . '.0;from=' . $context['origin_topic'] . ';to=' . $topic['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '">' . $merge_button . '</a>&nbsp;
-						<a href="' . $scripturl . '?topic=' . $topic['id'] . '.0" target="_blank" class="new_win">' . $topic['subject'] . '</a> ' . $txt['started_by'] . ' ' . $topic['poster']['link'] . '
-					</li>';
+		$merge_button = create_button('merge.gif', 'merge', '');
 
-	echo '
+		foreach ($context['topics'] as $topic)
+			echo '
+
+						<li>
+							<a href="' . $scripturl . '?action=mergetopics;sa=options;board=' . $context['current_board'] . '.0;from=' . $context['origin_topic'] . ';to=' . $topic['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '">' . $merge_button . '</a>&nbsp;
+							<a href="' . $scripturl . '?topic=' . $topic['id'] . '.0" target="_blank" class="new_win">' . $topic['subject'] . '</a> ' . $txt['started_by'] . ' ' . $topic['poster']['link'] . '
+						</li>';
+
+		echo '
 					</ul>
 				</div>
 			<span class="botslice"><span></span></span>
+			</div>
+			<div class="pagesection">
+				<strong>' . $txt['pages'] . ':</strong> ' . $context['page_index'] . '
+			</div>
 		</div>
-		<div class="pagesection">
-			<strong>' . $txt['pages'] . ':</strong> ' . $context['page_index'] . '
-		</div>
-	</div>
 	<br class="clear" />';
 }
 
@@ -362,10 +357,9 @@ function template_merge_extra_options()
 	echo '
 	<div id="merge_topics">
 		<form action="', $scripturl, '?action=mergetopics;sa=execute;" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="titlebg">
-				<span class="left"></span>
-				', $txt['merge_topic_list'], '
-			</h3>
+			<div class="title_bar">
+				<h3 class="titlebg">', $txt['merge_topic_list'], '</h3>
+			</div>
 			<table width="100%" class="bordercolor table_grid">
 			<thead>
 				<tr class="catbg">

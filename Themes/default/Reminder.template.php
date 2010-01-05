@@ -9,9 +9,9 @@ function template_main()
 	<br />
 	<form action="', $scripturl, '?action=reminder;sa=picktype" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder login">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['authentication_reminder'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['authentication_reminder'], '</h3>
+			</div>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
 				<p class="smalltext centertext">', $txt['password_reminder_desc'], '</p>
@@ -35,9 +35,9 @@ function template_reminder_pick()
 	<br />
 	<form action="', $scripturl, '?action=reminder;sa=picktype" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder login">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['authentication_reminder'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['authentication_reminder'], '</h3>
+			</div>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
 				<p><strong>', $txt['authentication_options'], ':</strong></p>
@@ -65,9 +65,9 @@ function template_sent()
 	echo '
 		<br />
 		<div class="tborder login" id="reminder_sent">
-			<h3 class="catbg"><span class="left"></span>
-				' . $context['page_title'] . '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">' . $context['page_title'] . '</h3>
+			</div>
 			<p class="information">' . $context['description'] . '</p>
 		</div>';
 }
@@ -81,9 +81,9 @@ function template_set_password()
 	<br />
 	<form action="', $scripturl, '?action=reminder;sa=setpassword2" name="reminder_form" id="reminder_form" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder login">
-			<h3 class="catbg"><span class="left"></span>
-				', $context['page_title'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $context['page_title'], '</h3>
+			</div>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
 				<dl>
@@ -131,9 +131,9 @@ function template_ask()
 	<br />
 	<form action="', $scripturl, '?action=reminder;sa=secret2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 		<div class="tborder login">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['authentication_reminder'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['authentication_reminder'], '</h3>
+			</div>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
 				<p class="smalltext">', $context['account_type'] == 'password' ? $txt['enter_new_password'] : $txt['openid_secret_reminder'], '</p>

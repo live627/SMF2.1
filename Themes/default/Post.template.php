@@ -98,10 +98,11 @@ function template_main()
 	// If the user wants to see how their message looks - the preview section is where it's at!
 	echo '
 			<div id="preview_section"', isset($context['preview_message']) ? '' : ' style="display: none;"', '>
-				<h3 class="catbg">
-					<span class="left"></span>
-					<span id="preview_subject">', empty($context['preview_subject']) ? '' : $context['preview_subject'], '</span>
-				</h3>
+				<div class="cat_bar">
+					<h3 class="catbg">
+						<span id="preview_subject">', empty($context['preview_subject']) ? '' : $context['preview_subject'], '</span>
+					</h3>
+				</div>
 				<div class="windowbg">
 					<span class="topslice"><span></span></span>
 					<div class="content">
@@ -119,10 +120,9 @@ function template_main()
 
 	// Start the main table.
 	echo '
-			<h3 class="catbg">
-				<span class="left"></span>
-				', $context['page_title'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $context['page_title'], '</h3>
+			</div>
 			<div>
 				<span class="upperframe"><span></span></span>
 				<div class="roundframe">', isset($context['current_topic']) ? '
@@ -724,9 +724,9 @@ function template_main()
 		// ]]></script>
 
 		<div id="recent" class="flow_hidden main_section">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['topic_summary'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['topic_summary'], '</h3>
+			</div>
 			<span id="new_replies"></span>';
 
 		foreach ($context['previous_posts'] as $post)
@@ -885,9 +885,9 @@ function template_announce()
 	echo '
 	<div id="announcement">
 		<form action="', $scripturl, '?action=announce;sa=send" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['announce_title'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['announce_title'], '</h3>
+			</div>
 			<div class="information">
 				', $txt['announce_desc'], '
 			</div>

@@ -38,7 +38,8 @@ January 2010
  * More of the same. Meh. (Help, Login, ManageAttachments, ManageBans, ManageBoards, ManageCalendar and ManageMail templates)
  * Another batch of the same (ManageMaintenance, ManageMembergroups, ManageMembers, ManageNews, ManagePaid, ManagePermissions, ManageScheduledTasks and ManageSearch templates) 
  * More of the same. Who put all these bloody header bars in the theme? (ManageSmileys, Memberlist, MessageIndex, ModerationCenter, MoveTopic, Notify, Packages, PersonalMessage and Poll templates) 
-
+ * Yay! Got all the buggers done! (Post, Profile, Recent, Register, Reminder, Reports, SendTopic, SplitTopics, Stats, Themes and Who templates)
+ 
 December 2009
 --------------------------------------------------------------------------------
  * Some button strips weren't properly reversed in RTL mode. (rtl.css) [Bug 4045]

@@ -9,17 +9,15 @@ function template_report_type()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=reports" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="titlebg">
-				<span class="left"></span>
-				', $txt['generate_reports'], '
-			</h3>
+			<div class="title_bar">
+				<h3 class="titlebg">', $txt['generate_reports'], '</h3>
+			</div>
 			<div class="information">
 				', $txt['generate_reports_desc'], '
 			</div>
-			<h3 class="catbg"><span class="left">
-				</span>
-				', $txt['generate_reports_type'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['generate_reports_type'], '</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -62,9 +60,9 @@ function template_main()
 
 	echo '
 	<div id="admincenter">
-		<h3 class="titlebg"><span class="left"></span>
-			', $txt['results'], '
-		</h3>
+		<div class="title_bar">
+			<h3 class="titlebg">', $txt['results'], '</h3>
+		</div>
 		<div id="report_buttons">';
 
 	if (!empty($report_buttons) && !empty($settings['use_tabs']))

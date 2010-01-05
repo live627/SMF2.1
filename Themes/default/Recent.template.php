@@ -7,9 +7,11 @@ function template_main()
 
 	echo '
 	<div id="recent" class="main_section">
-		<h3 class="catbg"><span class="left"></span>
-			<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/post/xx.gif" alt="" class="icon" />',$txt['recent_posts'],'</span>
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/post/xx.gif" alt="" class="icon" />',$txt['recent_posts'],'</span>
+			</h3>
+		</div>
 		<div class="pagesection">
 			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
 		</div>';
@@ -222,9 +224,11 @@ function template_unread()
 
 	else
 		echo '
-			<h3 class="catbg centertext"><span class="left"></span>
+			<div class="cat_bar">
+				<h3 class="catbg centertext">
 				', $context['showing_all_topics'] ? $txt['msg_alert_none'] : $txt['unread_topics_visit_none'], '
-			</h3>';
+				</h3>
+			</div>';
 
 	if ($showCheckboxes)
 		echo '
@@ -398,9 +402,11 @@ function template_replies()
 
 	else
 		echo '
-			<h3 class="catbg centertext"><span class="left"></span>
-				', $context['showing_all_topics'] ? $txt['msg_alert_none'] : $txt['unread_topics_visit_none'], '
-			</h3>';
+			<div class="cat_bar">
+				<h3 class="catbg centertext">
+					', $context['showing_all_topics'] ? $txt['msg_alert_none'] : $txt['unread_topics_visit_none'], '
+				</h3>
+			</div>';
 
 	if ($showCheckboxes)
 		echo '

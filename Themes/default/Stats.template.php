@@ -7,12 +7,14 @@ function template_main()
 
 	echo '
 	<div id="statistics" class="main_section">
-		<h3 class="catbg"><span class="left"></span>
-			', $context['page_title'], '
-		</h3>
-		<h4 class="titlebg"><span class="left"></span>
-			<img src="', $settings['images_url'], '/stats_info.gif" class="icon" alt="" /> ', $txt['general_stats'], '
-		</h4>
+		<div class="cat_bar">
+			<h3 class="catbg">', $context['page_title'], '</h3>
+		</div>
+		<div class="title_bar">
+			<h4 class="titlebg">
+				<img src="', $settings['images_url'], '/stats_info.gif" class="icon" alt="" /> ', $txt['general_stats'], '
+			</h4>
+		</div>
 		<div class="flow_hidden">
 			<div id="stats_left">
 				<div class="windowbg2">
@@ -81,9 +83,11 @@ function template_main()
 		</div>
 		<div class="flow_hidden">
 			<div id="top_posters">
-				<h4 class="titlebg"><span class="left"></span>
-					<img src="', $settings['images_url'], '/stats_posters.gif" class="icon" alt="" /> ', $txt['top_posters'], '
-				</h4>
+				<div class="title_bar">
+					<h4 class="titlebg">
+						<img src="', $settings['images_url'], '/stats_posters.gif" class="icon" alt="" /> ', $txt['top_posters'], '
+					</h4>
+				</div>
 					<div class="windowbg2">
 						<span class="topslice"><span></span></span>
 						<div class="content">
@@ -116,9 +120,11 @@ function template_main()
 					</div>
 			</div>
 			<div id="top_boards">
-				<h4 class="titlebg"><span class="left"></span>
-					<img src="', $settings['images_url'], '/stats_board.gif" class="icon" alt="" /> ', $txt['top_boards'], '
-				</h4>
+				<div class="title_bar">
+					<h4 class="titlebg">
+						<img src="', $settings['images_url'], '/stats_board.gif" class="icon" alt="" /> ', $txt['top_boards'], '
+					</h4>
+				</div>
 					<div class="windowbg2">
 						<span class="topslice"><span></span></span>
 						<div class="content">
@@ -151,9 +157,11 @@ function template_main()
 		</div>
 		<div class="flow_hidden">
 			<div id="top_topics_replies">
-				<h4 class="titlebg"><span class="left"></span>
-					<img src="', $settings['images_url'], '/stats_replies.gif" class="icon" alt="" /> ', $txt['top_topics_replies'], '
-				</h4>
+				<div class="title_bar">
+					<h4 class="titlebg">
+						<img src="', $settings['images_url'], '/stats_replies.gif" class="icon" alt="" /> ', $txt['top_topics_replies'], '
+					</h4>
+				</div>
 					<div class="windowbg2">
 						<span class="topslice"><span></span></span>
 						<div class="content">
@@ -184,9 +192,11 @@ function template_main()
 			</div>
 
 			<div id="top_topics_views">
-				<h4 class="titlebg"><span class="left"></span>
-					<img src="', $settings['images_url'], '/stats_views.gif" class="icon" alt="" /> ', $txt['top_topics_views'], '
-				</h4>
+				<div class="title_bar">
+					<h4 class="titlebg">
+						<img src="', $settings['images_url'], '/stats_views.gif" class="icon" alt="" /> ', $txt['top_topics_views'], '
+					</h4>
+				</div>
 				<div class="windowbg2">
 					<span class="topslice"><span></span></span>
 					<div class="content">
@@ -217,9 +227,11 @@ function template_main()
 		</div>
 		<div class="flow_hidden">
 			<div id="top_topics_starter">
-				<h4 class="titlebg"><span class="left"></span>
-					<img src="', $settings['images_url'], '/stats_replies.gif" class="icon" alt="" /> ', $txt['top_starters'], '
-				</h4>
+				<div class="title_bar">
+					<h4 class="titlebg">
+						<img src="', $settings['images_url'], '/stats_replies.gif" class="icon" alt="" /> ', $txt['top_starters'], '
+					</h4>
+				</div>
 				<div class="windowbg2">
 					<span class="topslice"><span></span></span>
 					<div class="content">
@@ -250,9 +262,11 @@ function template_main()
 				</div>
 			</div>
 			<div id="most_online">
-				<h4 class="titlebg"><span class="left"></span>
-					<img src="', $settings['images_url'], '/stats_views.gif" class="icon" alt="" /> ', $txt['most_time_online'], '
-				</h4>
+				<div class="title_bar">
+					<h4 class="titlebg">
+						<img src="', $settings['images_url'], '/stats_views.gif" class="icon" alt="" /> ', $txt['most_time_online'], '
+					</h4>
+				</div>
 				<div class="windowbg2">
 					<span class="topslice"><span></span></span>
 					<div class="content">
@@ -285,9 +299,11 @@ function template_main()
 		</div>
 		<br class="clear" />
 		<div class="flow_hidden">
-			<h3 class="catbg"><span class="left"></span>
-				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/stats_history.gif" class="icon" alt="" /> ', $txt['forum_history'], '</span>
-			</h3>';
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/stats_history.gif" class="icon" alt="" /> ', $txt['forum_history'], '</span>
+				</h3>
+			</div>';
 
 	if (!empty($context['yearly']))
 	{

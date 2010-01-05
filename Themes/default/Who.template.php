@@ -10,9 +10,9 @@ function template_main()
 	echo '
 	<div class="main_section" id="whos_online">
 		<form action="', $scripturl, '?action=who" method="post" id="whoFilter" accept-charset="', $context['character_set'], '">
-			<h4 class="titlebg margin_lower"><span class="left"></span>
-				', $txt['who_title'], '
-			</h4>
+			<div class="title_bar">
+				<h4 class="titlebg margin_lower">', $txt['who_title'], '</h4>
+			</div>
 			<div class="topic_table" id="mlist">
 				<div class="pagesection">
 					<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>
@@ -109,9 +109,9 @@ function template_credits()
 	// The most important part - the credits :P.
 	echo '
 	<div class="main_section" id="credits">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['credits'], '
-		</h3>';
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['credits'], '</h3>
+		</div>';
 
 	foreach ($context['credits'] as $section)
 	{
@@ -126,10 +126,10 @@ function template_credits()
 		</div>';
 
 		if (isset($section['title']))
-			echo '
-		<h3 class="catbg"><span class="left"></span>
-			', $section['title'], '
-		</h3>';
+		echo '
+		<div class="cat_bar">
+			<h3 class="catbg">', $section['title'], '</h3>
+		</div>';
 
 		echo '
 		<div class="windowbg2">
@@ -173,9 +173,9 @@ function template_credits()
 	}
 
 	echo '
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['credits_copyright'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['credits_copyright'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">

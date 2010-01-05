@@ -35,9 +35,11 @@ function template_main()
 	echo '
 	<div id="send_topic">
 		<form action="', $scripturl, '?action=emailuser;sa=sendtopic;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/email_sm.gif" alt="" />', $context['page_title'], '</span>
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/email_sm.gif" alt="" />', $context['page_title'], '</span>
+				</h3>
+			</div>
 			<div class="windowbg2">
 			<span class="topslice"><span></span></span>
 				<div class="content">
@@ -97,10 +99,11 @@ function template_custom_email()
 	echo '
 	<div id="send_topic">
 		<form action="', $scripturl, '?action=emailuser;sa=email" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg">
-				<span class="left"></span>
-				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/email_sm.gif" alt="" />', $context['page_title'], '</span>
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/email_sm.gif" alt="" />', $context['page_title'], '</span>
+				</h3>
+			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -190,19 +193,19 @@ function template_report()
 	<div id="report_topic">
 		<form action="', $scripturl, '?action=reporttm;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="msg" value="' . $context['message_id'] . '" />
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['report_to_mod'], '
-			</h3>
-			<div class="windowbg">
-				<span class="topslice"><span></span></span>
-				<div class="content">
-					<p>', $txt['report_to_mod_func'], '</p>
-					<br />
-					<label for="report_comment">', $txt['enter_comment'], '</label>: <input type="text" id="report_comment" name="comment" size="50" maxlength="255" />
-					<input type="submit" name="submit" value="', $txt['rtm10'], '" style="margin-left: 1ex;" class="button_submit" />
+				<div class="cat_bar">
+					<h3 class="catbg">', $txt['report_to_mod'], '</h3>
 				</div>
-				<span class="botslice"><span></span></span>
-			</div>
+				<div class="windowbg">
+					<span class="topslice"><span></span></span>
+					<div class="content">
+						<p>', $txt['report_to_mod_func'], '</p>
+						<br />
+						<label for="report_comment">', $txt['enter_comment'], '</label>: <input type="text" id="report_comment" name="comment" size="50" maxlength="255" />
+						<input type="submit" name="submit" value="', $txt['rtm10'], '" style="margin-left: 1ex;" class="button_submit" />
+					</div>
+					<span class="botslice"><span></span></span>
+				</div>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
