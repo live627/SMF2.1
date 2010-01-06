@@ -35,6 +35,7 @@ January 2010
  * The statistics center was no longer collapsing years automatically. (Stats template) [Bug 4011]
  * Fixed a stack of IE6 bugs in admin and elsewhere (index.css, admin.css, ie6.css, several templates)
 
+
 December 2009
 --------------------------------------------------------------------------------
  * Some button strips weren't properly reversed in RTL mode. (rtl.css) [Bug 4045]
