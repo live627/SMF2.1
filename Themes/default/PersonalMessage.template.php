@@ -119,7 +119,7 @@ function template_folder()
 	// ]]></script>';
 
 	echo '
-<form action="', $scripturl, '?action=pm;sa=pmactions;f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '" method="post" accept-charset="', $context['character_set'], '" name="pmFolder">';
+<form action="', $scripturl, '?action=pm;sa=pmactions;', $context['display_mode'] == 2 ? 'conversation;' : '', 'f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '" method="post" accept-charset="', $context['character_set'], '" name="pmFolder">';
 
 	// If we are not in single display mode show the subjects on the top!
 	if ($context['display_mode'] != 1)
@@ -141,13 +141,25 @@ function template_folder()
 					</h3>
 				</div>';
 
-	/*	// Cache some handy buttons.
-		$quote_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
-		$reply_button = create_button('im_reply.gif', 'reply', 'reply', 'align="middle"');
-		$reply_all_button = create_button('im_reply_all.gif', 'reply_to_all', 'reply_to_all', 'align="middle"');
-		$forward_button = create_button('quote.gif', 'reply_quote', 'reply_quote', 'align="middle"');
-		$delete_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
-	*/
+		// Show a few buttons if we are in conversation mode and outputting the first message.
+		if ($context['display_mode'] == 2)
+		{
+			// Build the normal button array.
+			$conversation_buttons = array(
+				'reply' => array('text' => 'reply_to_all', 'image' => 'reply.gif', 'lang' => true, 'url' => $scripturl . '?action=pm;sa=send;f=' . $context['folder'] . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '') . ';pmsg=' . $context['current_pm'] . ';u=all', 'active' => true),
+				'delete' => array('text' => 'delete_conversation', 'image' => 'delete.gif', 'lang' => true, 'url' => $scripturl . '?action=pm;sa=pmactions;pm_actions[' . $context['current_pm'] . ']=delete;conversation;f=' . $context['folder'] . ';start=' . $context['start'] . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '') . ';' . $context['session_var'] . '=' . $context['session_id'], 'custom' => 'onclick="return confirm(\'' . addslashes($txt['remove_message']) . '?\');"'),
+			);
+
+			// Show the conversation buttons.
+			echo '
+					<div class="pagesection">';
+
+			template_button_strip($conversation_buttons, 'right');
+
+			echo '
+					</div>';
+		}
+
 		while ($message = $context['get_pmessage']('message'))
 		{
 			$window_class = $message['alternate'] == 0 ? 'windowbg' : 'windowbg2';
@@ -266,7 +278,8 @@ function template_folder()
 				echo '
 				<li class="profile">
 					<ul>';
-				//show the profile button
+
+				// Show the profile button
 				echo '
 						<li><a href="', $message['member']['href'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" border="0" />' : $txt['view_profile']), '</a></li>';
 
@@ -347,20 +360,21 @@ function template_folder()
 			echo '
 				</div>
 				<ul class="reset smalltext quickbuttons">';
+
 			// Show reply buttons if you have the permission to send PMs.
 			if ($context['can_send_pm'])
 			{
 				// You can't really reply if the member is gone.
 				if (!$message['member']['is_guest'])
 				{
-					// Were than more than one recipient you can reply to? (Only in the "button style", or text)
-					if ($message['number_recipients'] > 1 && (!empty($settings['use_buttons']) || !$settings['use_image_buttons']))
+					// Is there than more than one recipient you can reply to?
+					if ($message['number_recipients'] > 1 && $context['display_mode'] != 2)
 						echo '
 					<li class="reply_all_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote;u=all">', $txt['reply_to_all'], '</a></li>';
 
 					echo '
-					<li class="quote_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $txt['quote'], '</a></li>
-					<li class="reply_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $txt['reply'], '</a></li>';
+					<li class="reply_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $txt['reply'], '</a></li>
+					<li class="quote_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $txt['quote'], '</a></li>';
 				}
 				// This is for "forwarding" - even if the member is gone.
 				else
@@ -449,7 +463,7 @@ function template_folder()
 				echo '
 					</select>
 					<noscript>
-					<input type="submit" value="', $txt['pm_apply'], '" class="button_submit" />
+						<input type="submit" value="', $txt['pm_apply'], '" class="button_submit" />
 					</noscript>';
 			}
 			echo '
@@ -468,12 +482,24 @@ function template_folder()
 	';
 		}
 
-	if (empty($context['display_mode']))
-		echo '
+		if (empty($context['display_mode']))
+			echo '
 	<div class="pagesection">
 		<div class="floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>
 		<div class="floatright"><input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['delete_selected_confirm'], '\')) return false;" class="button_submit" /></div>
 	</div>';
+
+		// Show a few buttons if we are in conversation mode and outputting the first message.
+		elseif ($context['display_mode'] == 2 && isset($conversation_buttons))
+		{
+			echo '
+	<div class="pagesection">';
+
+			template_button_strip($conversation_buttons, 'right');
+
+			echo '
+	</div>';
+		}
 
 		echo '
 		<br />';
@@ -1032,7 +1058,7 @@ function template_send()
 	<div class="windowbg2">
 		<span class="topslice"><span></span></span>
 		<div class="content">
-			', $context['quoted_message']['body'], '</td>
+			', $context['quoted_message']['body'], '
 		</div>
 		<span class="botslice"><span></span></span>
 	</div>';

@@ -654,9 +654,8 @@ function MessageFolder()
 			);
 			$sub_pms = array();
 			while ($row = $smcFunc['db_fetch_assoc']($sub_request))
-			{
 				$sub_pms[$row['id_pm_head']] = $row['sort_param'];
-			}
+
 			$smcFunc['db_free_result']($sub_request);
 
 			$request = $smcFunc['db_query']('', '
@@ -2293,8 +2292,8 @@ function MessageActionsApply()
 	if (empty($_REQUEST['pm_actions']))
 		redirectexit($context['current_label_redirect']);
 
-	// To begin with, if we are in conversation view this should apply to everyone.
-	if ($context['display_mode'] == 2)
+	// If we are in conversation, we may need to apply this to every message in the conversation.
+	if ($context['display_mode'] == 2 && isset($_REQUEST['conversation']))
 	{
 		$id_pms = array();
 		foreach ($_REQUEST['pm_actions'] as $pm => $dummy)

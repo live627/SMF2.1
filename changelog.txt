@@ -17,9 +17,9 @@ January 2010
  ! Google may attempt to follow out of date reporttomodoerator links with split/merging topics (SendTopic.php) [Bug 4147]
  ! CPF's wouldn't render newlines for textarea when parse_bbc wasn't allowed (Profile.php)
  ! Require on registration wouldn't work for Checkboxes, radios and select boxes (Register.php) [Bug 4049]
- ! Install utf8 support check for PostGreSql wouldn't always work (Install.php) [Bug 4061]
- ! Optimizing one table with Sqlite optimizes them all (Install.php)
- ! Bug with set names to utf8 in install (Install.php) [Bug 4112]
+ ! Install utf8 support check for PostGreSql wouldn't always work (install.php) [Bug 4061]
+ ! Optimizing one table with Sqlite optimizes them all (install.php)
+ ! Bug with set names to utf8 in install (install.php) [Bug 4112]
  ! The list used for managing attachment paths could exceed the template's boundaries. (ManageAttachments.php) [Bug 4132]
  + Ability to do alternate styling of quotes - for all permutations (Subs.php, index.css) [Bug 3920]
  * Altered css for blockquote and code classes (index.css)
@@ -34,6 +34,7 @@ January 2010
  * Adjusted the header bar markup in order to make it work better in every major browser. (index.css, various template files)
  * The statistics center was no longer collapsing years automatically. (Stats template) [Bug 4011]
  * Fixed a stack of IE6 bugs in admin and elsewhere (index.css, admin.css, ie6.css, several templates)
+ * Show additional buttons when viewing PM's in conversation mode to make the differences in behaviour more clear. [Bug 1748]
 
 
 December 2009

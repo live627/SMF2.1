@@ -119,7 +119,7 @@ function template_folder()
 	// ]]></script>';
 
 	echo '
-<form action="', $scripturl, '?action=pm;sa=pmactions;f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '" method="post" accept-charset="', $context['character_set'], '" name="pmFolder">';
+<form action="', $scripturl, '?action=pm;sa=pmactions;', $context['display_mode'] == 2 ? 'conversation;' : '', 'f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '" method="post" accept-charset="', $context['character_set'], '" name="pmFolder">';
 
 	// If we are not in single display mode show the subjects on the top!
 	if ($context['display_mode'] != 1)
@@ -131,18 +131,37 @@ function template_folder()
 	// Got some messages to display?
 	if ($context['get_pmessage']('message', true))
 	{
+		// Show a few buttons if we are in conversation mode and outputting the first message.
+		if ($context['display_mode'] == 2)
+		{
+			// Build the normal button array.
+			$conversation_buttons = array(
+				'reply' => array('text' => 'reply_to_all', 'image' => 'reply.gif', 'lang' => true, 'url' => $scripturl . '?action=pm;sa=send;f=' . $context['folder'] . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '') . ';pmsg=' . $context['current_pm'] . ';u=all'),
+				'delete' => array('text' => 'delete_conversation', 'image' => 'delete.gif', 'lang' => true, 'url' => $scripturl . '?action=pm;sa=pmactions;pm_actions[' . $context['current_pm'] . ']=delete;conversation;f=' . $context['folder'] . ';start=' . $context['start'] . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '') . ';' . $context['session_var'] . '=' . $context['session_id'], 'custom' => 'onclick="return confirm(\'' . addslashes($txt['remove_message']) . '?\');"'),
+			);
+
+			// Show the conversation buttons.
+			echo '
+				<div class="modbuttons_top margintop clearfix">';
+
+			template_button_strip($conversation_buttons, 'right');
+
+			echo '
+				</div>';
+		}
+
 		// Show the helpful titlebar - generally.
 		if ($context['display_mode'] != 1)
 			echo '
-		<table cellpadding="4" cellspacing="0" border="0" width="100%" class="bordercolor">
-			<tr class="titlebg">
-				<td width="16%">&nbsp;', $txt['author'], '</td>
-				<td>', $txt[$context['display_mode'] == 0 ? 'messages' : 'conversation'], '</td>
-			</tr>
-		</table>';
+	<div id="forumposts">
+		<h3 class="catbg3">
+			<span>', $txt['author'], '</span>
+			<span id="top_subject">', $txt[$context['display_mode'] == 0 ? 'messages' : 'conversation'], '</span>
+		</h3>
+	</div>';
 
-		echo '
-		<table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor">';
+			echo '
+	<table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor">';
 
 		// Cache some handy buttons.
 		$quote_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
@@ -310,14 +329,14 @@ function template_folder()
 				// You can't really reply if the member is gone.
 				if (!$message['member']['is_guest'])
 				{
-					// Were than more than one recipient you can reply to? (Only in the "button style", or text)
-					if ($message['number_recipients'] > 1 && (!empty($settings['use_buttons']) || !$settings['use_image_buttons']))
+					// Were than more than one recipient you can reply to? (Only shown when not in conversation mode.)
+					if ($message['number_recipients'] > 1 && $context['display_mode'] != 2)
 						echo '
 										<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote;u=all">', $reply_all_button, '</a>', $context['menu_separator'];
 
 					echo '
-										<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $quote_button, '</a>', $context['menu_separator'], '
-										<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $reply_button, '</a> ', $context['menu_separator'];
+										<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $reply_button, '</a> ', $context['menu_separator'], '
+										<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $quote_button, '</a>', $context['menu_separator'];
 				}
 				// This is for "forwarding" - even if the member is gone.
 				else
@@ -431,8 +450,8 @@ function template_folder()
 			<tr><td style="padding: 0 0 1px 0;"></td></tr>
 	</table>';
 
-	if (empty($context['display_mode']))
-		echo '
+		if (empty($context['display_mode']))
+			echo '
 	<div class="tborder" style="padding: 1px; margin-top: 1ex;">
 		<table cellpadding="3" cellspacing="0" border="0" width="100%">
 			<tr class="catbg" valign="middle">
@@ -443,6 +462,10 @@ function template_folder()
 			</tr>
 		</table>
 	</div>';
+
+		// Show a few buttons if we are in conversation mode and outputting the first message.
+		elseif ($context['display_mode'] == 2 && isset($conversation_buttons))
+			template_button_strip($conversation_buttons);
 
 		echo '
 		<br />';
