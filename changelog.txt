@@ -33,7 +33,7 @@ January 2010
  * Made the 'select posts to split' screen slightly more usable by presenting messages differently and using lists instead of tables. (SplitTopics.php, SplitTopics template, Xml template, index.css, compat.css) [Bug 3899,4069]
  * Adjusted the header bar markup in order to make it work better in every major browser. (index.css, various template files)
  * The statistics center was no longer collapsing years automatically. (Stats template) [Bug 4011]
-
+ * Fixed a stack of IE6 bugs in admin and elsewhere (index.css, admin.css, ie6.css, several templates)
 
 December 2009
 --------------------------------------------------------------------------------

@@ -233,6 +233,7 @@ ul.packages li
 	border: none !important;
 	list-style-type: none;
 }
+
 /*BBC permissions*/
 .list_bbc
 {
@@ -583,4 +584,8 @@ h3.grid_header
 {
 	float: left;
 	margin: 0 0 0 1ex;
+}
+#admincenter span.botslice, #manage_boards span.botslice, #manage_maintenance span.botslice, #manage_mail span.botslice
+{
+	margin-bottom: 4px;
 }

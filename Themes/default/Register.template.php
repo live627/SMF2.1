@@ -614,7 +614,7 @@ function template_edit_agreement()
 		<p class="error">', $context['warning'], '</p>';
 
 	echo '
-		<div class="windowbg2">
+		<div class="windowbg2" id="registration_agreement">
 			<span class="topslice"><span></span></span>
 			<div class="content">';
 
@@ -670,7 +670,7 @@ function template_edit_reserved_words()
 		<div class="cat_bar">
 			<h3 class="catbg">', $txt['admin_reserved_set'], '</h3>
 		</div>
-		<form class="windowbg2" action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '">
+		<form  id="registration_agreement" class="windowbg2" action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '">
 			<span class="topslice"><span></span></span>
 			<div class="content">
 				<h4>', $txt['admin_reserved_line'], '</h4>

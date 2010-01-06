@@ -114,7 +114,7 @@ function template_admin()
 		</div>';
 
 	echo '
-		<div class="windowbg2">
+		<div class="windowbg2 clear_right">
 			<span class="topslice"><span></span></span>
 				<div class="content">
 					<ul id="quick_tasks" class="flow_hidden">';
@@ -1445,7 +1445,7 @@ function template_core_features()
 						<label for="plain_feature_', $id, '_radio_off"><input type="radio" name="feature_plain_', $id, '" id="plain_feature_', $id, '_radio_off" value="0"', !$feature['enabled'] ? ' checked="checked"' : '', ' class="input_radio" />', $txt['core_settings_disabled'], '</label>
 					</div>
 				</div>
-				<span class="botslice"><span></span></span>
+				<span class="botslice clear_right"><span></span></span>
 			</div>';
 
 		$alternate = !$alternate;

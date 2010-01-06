@@ -41,9 +41,13 @@ function template_error_log()
 				var lastClicked = "";
 			// ]]></script>
 
-			<h3 class="catbg grid_header"><span class="left"></span>
-				&nbsp;<a href="', $scripturl, '?action=helpadmin;help=error_log" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a>&nbsp; ', $txt['errlog'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg grid_header">
+					<span class="ie6_header floatleft">
+						<a href="', $scripturl, '?action=helpadmin;help=error_log" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a>&nbsp; ', $txt['errlog'], '
+					</span>
+				</h3>
+			</div>
 			<table border="0" cellspacing="0" class="bordercolor" id="error_log">
 				<tr>
 					<td colspan="3" class="windowbg">

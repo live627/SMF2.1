@@ -120,11 +120,14 @@ function template_email_members()
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
+		<br />
 
 		<div class="cat_bar">
 			<h3 class="catbg" id="advanced_select_div" style="display: none;">
-				<a href="#" onclick="toggleAdvanced(1); return false;" id="goadvanced"><img src="', $settings['images_url'], '/selected.gif" alt="', $txt['advanced'], '" />&nbsp;<strong>', $txt['advanced'], '</strong></a>
-				<a href="#" onclick="toggleAdvanced(0); return false;" id="gosimple" style="display: none;"><img src="', $settings['images_url'], '/sort_down.gif" alt="', $txt['simple'], '" />&nbsp;<strong>', $txt['simple'], '</strong></a>
+				<span class="ie6_header floatleft">
+					<a href="#" onclick="toggleAdvanced(1); return false;" id="goadvanced"><img src="', $settings['images_url'], '/selected.gif" alt="', $txt['advanced'], '" />&nbsp;<strong>', $txt['advanced'], '</strong></a>
+					<a href="#" onclick="toggleAdvanced(0); return false;" id="gosimple" style="display: none;"><img src="', $settings['images_url'], '/sort_down.gif" alt="', $txt['simple'], '" />&nbsp;<strong>', $txt['simple'], '</strong></a>
+				</span>
 			</h3>
 		</div>
 

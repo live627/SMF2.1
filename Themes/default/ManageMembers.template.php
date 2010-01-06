@@ -147,7 +147,7 @@ function template_search_members()
 						</div>
 					</div>
 				</div>
-				<span class="botslice"><span></span></span>
+				<span class="botslice clear_right"><span></span></span>
 			</div>
 			<br />
 			<div class="title_bar">

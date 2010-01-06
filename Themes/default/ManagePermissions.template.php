@@ -78,7 +78,9 @@ function template_permission_index()
 		echo '
 			<div class="cat_bar">
 				<h3 class="catbg">
-					<img src="', $settings['images_url'], '/', empty($context['show_advanced_options']) ? 'selected' : 'sort_down', '.gif" id="permissions_panel_toggle" alt="*" /> ', $txt['permissions_advanced_options'], '
+					<span class="ie6_header floatleft">
+						<img src="', $settings['images_url'], '/', empty($context['show_advanced_options']) ? 'selected' : 'sort_down', '.gif" id="permissions_panel_toggle" alt="*" /> ', $txt['permissions_advanced_options'], '
+					</span>
 				</h3>
 			</div>
 			<div id="permissions_panel_advanced" class="windowbg">
@@ -333,7 +335,7 @@ function template_edit_profiles()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=permissions;sa=profiles" method="post" accept-charset="', $context['character_set'], '">
-			<div class="cat_bar">
+			<div class="title_bar">
 				<h3 class="titlebg">', $txt['permissions_profile_edit'], '</h3>
 			</div>
 

@@ -1,3 +1,8 @@
+.codeheader, code.bbc_code
+{
+	width: 96%;
+	margin: 0 auto;
+}
 h3.catbg input.input_check
 {
 	margin: 0 4px;
@@ -142,4 +147,11 @@ h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
 	margin-left: 0;
 	margin-right: 0;
 	float: right;
+}
+/* Overrides for the admin section of the register template
+------------------------------------------------------- */
+#registration_agreement
+{
+	width: 99.5%;
+	margin: 0 auto;
 }

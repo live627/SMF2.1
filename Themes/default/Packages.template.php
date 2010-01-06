@@ -577,7 +577,7 @@ function template_browse()
 				<div class="content">
 					<div id="packagesLatest">', $txt['packages_latest_fetch'], '</div>
 				</div>
-				<span class="botslice"><span></span></span>
+				<span class="botslice clear_right"><span></span></span>
 			</div>
 
 			<script type="text/javascript"><!-- // --><![CDATA[
@@ -622,6 +622,7 @@ function template_browse()
 			// ]]></script>';
 
 	echo '
+		<br />
 		<div class="cat_bar">
 			<h3 class="catbg">', $txt['browse_packages'], '</h3>
 		</div>';
