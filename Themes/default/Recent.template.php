@@ -18,8 +18,7 @@ function template_main()
 
 	foreach ($context['posts'] as $post)
 	{
-
-	echo '
+		echo '
 			<div class="', $post['alternate'] == 0 ? 'windowbg' : 'windowbg2', ' core_posts">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -29,30 +28,34 @@ function template_main()
 						<span class="smalltext">&#171;&nbsp;', $txt['last_post'], ' ', $txt['by'], ' <strong>', $post['poster']['link'], ' </strong> ', $txt['on'], '<em> ', $post['time'], '</em>&nbsp;&#187;</span>
 					</div>
 					<div class="list_posts">', $post['message'], '</div>
-					</div>';
+				</div>';
 
-					if ($post['can_reply'] || $post['can_mark_notify'] || $post['can_delete'])
-					echo '
-							<div class="quickbuttons_wrap">
-								<ul class="reset smalltext quickbuttons">';
-							// If they *can* reply?
-							if ($post['can_reply'])
-							echo '
-									<li class="reply_button"><a href="', $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'], '"><span>', $txt['reply'], '</span></a></li>
-									<li class="quote_button"><a href="', $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'] . ';quote=' . $post['id'] . ';' . $context['session_var'] . '=' . $context['session_id'], '"><span>', $txt['quote'], '</span></a></li>';
-							// Can we request notification of topics?
-							if ($post['can_mark_notify'])
-							echo '
-									<li class="notify_button"><a href="', $scripturl . '?action=notify;topic=' . $post['topic'] . '.' . $post['start'], '"><span>', $txt['notify'], '</span></a></li>';
-							// How about... even... remove it entirely?!
-							if ($post['can_delete'])
-							echo '
-									<li class="remove_button"><a href="', $scripturl . '?action=deletemsg;msg=' . $post['id'] . ';topic=' . $post['topic'] . ';recent;' . $context['session_var'] . '=' . $context['session_id'], '" onclick="return confirm(\'' . $txt['remove_message'] . '?\');"><span>', $txt['remove'], '</span></a></li>';
+		if ($post['can_reply'] || $post['can_mark_notify'] || $post['can_delete'])
+			echo '
+				<div class="quickbuttons_wrap">
+					<ul class="reset smalltext quickbuttons">';
 
-					if ($post['can_reply'] || $post['can_mark_notify'] || $post['can_delete'])
-					echo '
-								</ul>
-							</div>';
+		// If they *can* reply?
+		if ($post['can_reply'])
+			echo '
+						<li class="reply_button"><a href="', $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'], '"><span>', $txt['reply'], '</span></a></li>
+						<li class="quote_button"><a href="', $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'] . ';quote=' . $post['id'] . ';' . $context['session_var'] . '=' . $context['session_id'], '"><span>', $txt['quote'], '</span></a></li>';
+
+		// Can we request notification of topics?
+		if ($post['can_mark_notify'])
+			echo '
+						<li class="notify_button"><a href="', $scripturl . '?action=notify;topic=' . $post['topic'] . '.' . $post['start'], '"><span>', $txt['notify'], '</span></a></li>';
+
+		// How about... even... remove it entirely?!
+		if ($post['can_delete'])
+			echo '
+						<li class="remove_button"><a href="', $scripturl . '?action=deletemsg;msg=' . $post['id'] . ';topic=' . $post['topic'] . ';recent;' . $context['session_var'] . '=' . $context['session_id'], '" onclick="return confirm(\'' . $txt['remove_message'] . '?\');"><span>', $txt['remove'], '</span></a></li>';
+
+		if ($post['can_reply'] || $post['can_mark_notify'] || $post['can_delete'])
+			echo '
+					</ul>
+				</div>';
+
 		echo '
 				<span class="botslice clear"><span></span></span>
 			</div>';
@@ -235,7 +238,7 @@ function template_unread()
 
 	echo '
 		<div class="description " id="topic_icons">
-			<p class="smalltext align_left"">
+			<p class="smalltext align_left">
 				', !empty($modSettings['enableParticipation']) ? '
 				<img src="' . $settings['images_url'] . '/topic/my_normal_post.gif" alt="" align="middle" /> ' . $txt['participation_caption'] . '<br />' : '', '
 				<img src="', $settings['images_url'], '/topic/normal_post.gif" alt="" align="middle" /> ', $txt['normal_topic'], '<br />
