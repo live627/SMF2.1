@@ -709,10 +709,10 @@ while ($request && $row = $smcFunc['db_fetch_assoc']($request))
 ---# Changing inet_aton function to use bigint instead of int...
 CREATE OR REPLACE FUNCTION INET_ATON(text) RETURNS bigint AS
   'SELECT
-    split_part($1, ''.'', 1)::int8 * (256 * 256 * 256) +
-    split_part($1, ''.'', 2)::int8 * (256 * 256) +
-    split_part($1, ''.'', 3)::int8 * 256 +
-    split_part($1, ''.'', 4)::int8 AS result'
+	split_part($1, ''.'', 1)::int8 * (256 * 256 * 256) +
+	split_part($1, ''.'', 2)::int8 * (256 * 256) +
+	split_part($1, ''.'', 3)::int8 * 256 +
+	split_part($1, ''.'', 4)::int8 AS result'
 LANGUAGE 'sql';
 ---#
 
@@ -874,9 +874,9 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 
 		// Update the name of the default theme in the database.
 		upgrade_query("
-		    UPDATE {$db_prefix}themes
-		    SET value = 'SMF Default Theme - Curve'
-		    WHERE id_theme = 1
+			UPDATE {$db_prefix}themes
+			SET value = 'SMF Default Theme - Curve'
+			WHERE id_theme = 1
 				AND variable = 'name'");
 
 		$newSettings = array();

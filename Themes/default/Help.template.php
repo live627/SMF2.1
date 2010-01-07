@@ -154,7 +154,7 @@ function template_manual_above()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-		<div class="cat_bar">  
+		<div class="cat_bar">
 			<h3 class="catbg">', $txt['help'], '</h3>
 		</div>
 		<div class="title_bar">

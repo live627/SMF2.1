@@ -2722,9 +2722,9 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 
 		// Update the name of the default theme in the database.
 		upgrade_query("
-		    UPDATE {$db_prefix}themes
-		    SET value = 'SMF Default Theme - Curve'
-		    WHERE id_theme = 1
+			UPDATE {$db_prefix}themes
+			SET value = 'SMF Default Theme - Curve'
+			WHERE id_theme = 1
 				AND variable = 'name'");
 
 		$newSettings = array();

@@ -670,7 +670,7 @@ function template_edit_reserved_words()
 		<div class="cat_bar">
 			<h3 class="catbg">', $txt['admin_reserved_set'], '</h3>
 		</div>
-		<form  id="registration_agreement" class="windowbg2" action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '">
+		<form id="registration_agreement" class="windowbg2" action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '">
 			<span class="topslice"><span></span></span>
 			<div class="content">
 				<h4>', $txt['admin_reserved_line'], '</h4>

@@ -1621,7 +1621,7 @@ if ($numIndexedWords == 0 || isset($_GET['lt']))
 	$step_progress['current'] = $_GET['lt'];
 	$step_progress['total'] = $maxTopics;
 
-	while  ($_GET['lt'] <= $maxTopics)
+	while ($_GET['lt'] <= $maxTopics)
 	{
 		$request = upgrade_query("
 			SELECT t.ID_TOPIC, m.subject
@@ -1953,7 +1953,7 @@ if ($upgradeLogTable)
 			$maxPosterTime = 1;
 	}
 
-	while  ($_GET['m'] <= $maxMsg)
+	while ($_GET['m'] <= $maxMsg)
 	{
 		$condition = '';
 		$lowest_limit = $lower_limit;
