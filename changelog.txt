@@ -35,6 +35,7 @@ January 2010
  * The statistics center was no longer collapsing years automatically. (Stats template) [Bug 4011]
  * Fixed a stack of IE6 bugs in admin and elsewhere (index.css, admin.css, ie6.css, several templates)
  * Show additional buttons when viewing PM's in conversation mode to make the differences in behaviour more clear. [Bug 1748]
+ ! Broke Search with an unneccessary strtr (Search.php) [Bug 4149]
 
 
 December 2009
