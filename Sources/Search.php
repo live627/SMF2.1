@@ -1925,9 +1925,12 @@ function prepareSearchContext($reset = false)
 	}
 	else
 	{
-		// Run UBBC interpreter on the message.
+		// Run BBC interpreter on the message.
 		$message['body'] = parse_bbc($message['body'], $message['smileys_enabled'], $message['id_msg']);
 	}
+
+	// Make sure we don't end up with a practically empty message body.
+	$message['body'] = preg_replace('~^(?:&nbsp;)+$~', '', $message['body']);
 
 	// Sadly, we need to check the icon ain't broke.
 	if (empty($modSettings['messageIconChecks_disable']))

@@ -288,7 +288,7 @@ function template_results()
 			<div class="search_results_posts">
 			<div class="', $message['alternate'] == 0 ? 'windowbg' : 'windowbg2', ' core_posts">
 				<span class="topslice"><span></span></span>
-				<div class="content">';
+				<div class="content flow_auto">';
 
 			foreach ($topic['matches'] as $message)
 			{
@@ -336,16 +336,14 @@ function template_results()
 					</div>';
 				}
 
-				echo '<br class="clear" />';
-
 				if ($message['body_highlighted'] != '')
 					echo '
+					<br class="clear" />
 					<div class="list_posts double_height">', $message['body_highlighted'], '</div>';
 			}
 
 			echo '
 				</div>
-				<br class="clear" />
 				<span class="botslice"><span></span></span>
 			</div>
 		</div>';
