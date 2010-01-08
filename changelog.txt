@@ -36,6 +36,8 @@ January 2010
  * Fixed a stack of IE6 bugs in admin and elsewhere (index.css, admin.css, ie6.css, several templates)
  * Show additional buttons when viewing PM's in conversation mode to make the differences in behaviour more clear. [Bug 1748]
  ! Broke Search with an unneccessary strtr (Search.php) [Bug 4149]
+ * The new search results page was looking a bit off in the Core theme. (Search template)
+ ! The search page would sometimes exclaim too trivial search terms were used when there were in fact no terms at all. (Search.php) 
 
 
 December 2009

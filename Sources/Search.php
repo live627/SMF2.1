@@ -674,7 +674,11 @@ function PlushSearch2()
 	// Trim everything and make sure there are no words that are the same.
 	foreach ($searchArray as $index => $value)
 	{
-		if (($searchArray[$index] = trim($value, '-_\' ')) === '' || in_array($searchArray[$index], $blacklisted_words))
+		// Skip anything practically empty.
+		if (($searchArray[$index] = trim($value, '-_\' ')) === '')
+			unset($searchArray[$index]);
+		// Skip blacklisted words. Make sure to note we skipped them in case we end up with nothing.
+		elseif (in_array($searchArray[$index], $blacklisted_words))
 		{
 			$foundBlackListedWords = true;
 			unset($searchArray[$index]);

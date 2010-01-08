@@ -255,7 +255,6 @@ function template_results()
 
 	if ($context['compact'])
 	{
-
 		// Quick moderation set to checkboxes? Oh, how fun :/.
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
 			echo '
@@ -285,11 +284,12 @@ function template_results()
 			if ($topic['is_locked'])
 				$color_class .= 'lockedbg';
 
-	echo '
-			<div class="tborder search_results_posts">
+			echo '
+			<div class="search_results_posts">
 			<div class="', $message['alternate'] == 0 ? 'windowbg' : 'windowbg2', ' core_posts">
 				<span class="topslice"><span></span></span>
 				<div class="content">';
+
 			foreach ($topic['matches'] as $message)
 			{
 				echo '
@@ -299,46 +299,53 @@ function template_results()
 						<span class="smalltext">&#171;&nbsp;',$txt['by'],'&nbsp;<strong>', $message['member']['link'], '</strong>&nbsp;',$txt['on'],'&nbsp;<em>', $message['time'], '</em>&nbsp;&#187;</span>
 					</div>';
 
-			if (!empty($options['display_quick_mod']))
-			{
-				echo '
+				if (!empty($options['display_quick_mod']))
+				{
+					echo '
 					<div class="floatright">';
 
-				if ($options['display_quick_mod'] == 1)
+					if ($options['display_quick_mod'] == 1)
+					{
 						echo '
-								<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check">';
-				else
-				{
-					if ($topic['quick_mod']['remove'])
-						echo '
-								<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=remove;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_remove.gif" width="16" alt="', $txt['remove_topic'], '" title="', $txt['remove_topic'], '" /></a>';
-					if ($topic['quick_mod']['lock'])
-						echo '
-								<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=lock;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_lock.gif" width="16" alt="', $txt['set_lock'], '" title="', $txt['set_lock'], '" /></a>';
-					if ($topic['quick_mod']['lock'] || $topic['quick_mod']['remove'])
-						echo '
-								<br />';
-					if ($topic['quick_mod']['sticky'])
-						echo '
-								<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=sticky;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_sticky.gif" width="16" alt="', $txt['set_sticky'], '" title="', $txt['set_sticky'], '" /></a>';
-					if ($topic['quick_mod']['move'])
-						echo '
-								<a href="', $scripturl, '?action=movetopic;topic=', $topic['id'], '.0"><img src="', $settings['images_url'], '/icons/quick_move.gif" width="16" alt="', $txt['move_topic'], '" title="', $txt['move_topic'], '" /></a>';
-				}
-				echo '
-					</div>';
-			}
+						<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check" />';
+					}
+					else
+					{
+						if ($topic['quick_mod']['remove'])
+							echo '
+						<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=remove;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_remove.gif" width="16" alt="', $txt['remove_topic'], '" title="', $txt['remove_topic'], '" /></a>';
 
-			echo '<br class="clear" />';
+						if ($topic['quick_mod']['lock'])
+							echo '
+						<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=lock;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_lock.gif" width="16" alt="', $txt['set_lock'], '" title="', $txt['set_lock'], '" /></a>';
+
+						if ($topic['quick_mod']['lock'] || $topic['quick_mod']['remove'])
+							echo '
+						<br />';
+
+						if ($topic['quick_mod']['sticky'])
+							echo '
+						<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=sticky;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_sticky.gif" width="16" alt="', $txt['set_sticky'], '" title="', $txt['set_sticky'], '" /></a>';
+
+						if ($topic['quick_mod']['move'])
+							echo '
+						<a href="', $scripturl, '?action=movetopic;topic=', $topic['id'], '.0"><img src="', $settings['images_url'], '/icons/quick_move.gif" width="16" alt="', $txt['move_topic'], '" title="', $txt['move_topic'], '" /></a>';
+					}
+
+					echo '
+					</div>';
+				}
+
+				echo '<br class="clear" />';
 
 				if ($message['body_highlighted'] != '')
 					echo '
-								<div class="list_posts double_height">', $message['body_highlighted'], '</div>';
+					<div class="list_posts double_height">', $message['body_highlighted'], '</div>';
 			}
 
 			echo '
 				</div>
-						<br class="clear" />
+				<br class="clear" />
 				<span class="botslice"><span></span></span>
 			</div>
 		</div>';
@@ -352,66 +359,46 @@ function template_results()
 
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
 		{
-		echo '
-
-			<div class="middletext description" style="margin-bottom: 0;">
+			echo '
+			<div class="middletext titlebg2" style="padding: 4px;">
 				<div class="floatright">
-								<select name="qaction"', $context['can_move'] ? ' onchange="this.form.moveItTo.disabled = (this.options[this.selectedIndex].value != \'move\');"' : '', '>
-									<option value="">--------</option>', $context['can_remove'] ? '
-									<option value="remove">' . $txt['quick_mod_remove'] . '</option>' : '', $context['can_lock'] ? '
-									<option value="lock">' . $txt['quick_mod_lock'] . '</option>' : '', $context['can_sticky'] ? '
-									<option value="sticky">' . $txt['quick_mod_sticky'] . '</option>' : '',	$context['can_move'] ? '
-									<option value="move">' . $txt['quick_mod_move'] . ': </option>' : '', $context['can_merge'] ? '
-									<option value="merge">' . $txt['quick_mod_merge'] . '</option>' : '', '
-									<option value="markread">', $txt['quick_mod_markread'], '</option>
-								</select>';
+					<select name="qaction"', $context['can_move'] ? ' onchange="this.form.moveItTo.disabled = (this.options[this.selectedIndex].value != \'move\');"' : '', '>
+						<option value="">--------</option>', $context['can_remove'] ? '
+						<option value="remove">' . $txt['quick_mod_remove'] . '</option>' : '', $context['can_lock'] ? '
+						<option value="lock">' . $txt['quick_mod_lock'] . '</option>' : '', $context['can_sticky'] ? '
+						<option value="sticky">' . $txt['quick_mod_sticky'] . '</option>' : '',	$context['can_move'] ? '
+						<option value="move">' . $txt['quick_mod_move'] . ': </option>' : '', $context['can_merge'] ? '
+						<option value="merge">' . $txt['quick_mod_merge'] . '</option>' : '', '
+						<option value="markread">', $txt['quick_mod_markread'], '</option>
+					</select>';
 
 			if ($context['can_move'])
 			{
 					echo '
-								<select id="moveItTo" name="move_to" disabled="disabled">';
+					<select id="moveItTo" name="move_to" disabled="disabled">';
 
 					foreach ($context['move_to_boards'] as $category)
 					{
 						echo '
-									<optgroup label="', $category['name'], '">';
+						<optgroup label="', $category['name'], '">';
 						foreach ($category['boards'] as $board)
 								echo '
-										<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
+						<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
 						echo '
-									</optgroup>';
+						</optgroup>';
 					}
 					echo '
-								</select>';
+					</select>';
 			}
 
 			echo '
-								<input type="hidden" name="redirect_url" value="', $scripturl . '?action=search2;params=' . $context['params'], '" />
-								<input type="submit" style="font-size: 0.8em;" value="', $txt['quick_mod_go'], '" onclick="return this.form.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" class="button_submit" />
+					<input type="hidden" name="redirect_url" value="', $scripturl . '?action=search2;params=' . $context['params'], '" />
+					<input type="submit" style="font-size: 0.8em;" value="', $txt['quick_mod_go'], '" onclick="return this.form.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" class="button_submit" />
 				</div>
 				<br class="clear" />
 			</div>';
 		}
 
-		echo '
-				<br class="clear" />
-				<div class="smalltext" id="search_jump_to">&nbsp;</div>
-
-		<script type="text/javascript"><!-- // --><![CDATA[
-			if (typeof(window.XMLHttpRequest) != "undefined")
-				aJumpTo[aJumpTo.length] = new JumpTo({
-					sContainerId: "search_jump_to",
-					sJumpToTemplate: "<label class=\"smalltext\" for=\"%select_id%\">', $context['jump_to']['label'], ':<" + "/label> %dropdown_list%",
-					iCurBoardId: 0,
-					iCurBoardChildLevel: 0,
-					sCurBoardName: "', $context['jump_to']['board_name'], '",
-					sBoardChildLevelIndicator: "==",
-					sBoardPrefix: "=> ",
-					sCatSeparator: "-----------------------------",
-					sCatPrefix: "",
-					sGoButtonLabel: "', $txt['quick_mod_go'], '"
-				});
-		// ]]></script>';
 
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
 			echo '
@@ -422,7 +409,6 @@ function template_results()
 	else
 	{
 		echo '
-
 		<div class="cat_bar">
 			<h3 class="catbg">
 				<span class="ie6_header floatleft"><img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />&nbsp;', $txt['mlist_search_results'],':&nbsp;',$context['search_params']['search'],'</span>
@@ -441,7 +427,7 @@ function template_results()
 			foreach ($topic['matches'] as $message)
 			{
 			echo '
-			<div class="tborder search_results_posts">
+			<div class="search_results_posts">
 				<div class="', $message['alternate'] == 0 ? 'windowbg' : 'windowbg2', ' core_posts">
 					<span class="topslice"><span></span></span>
 					<div class="content">
@@ -487,6 +473,27 @@ function template_results()
 			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
 		</div>';
 	}
+
+	// Show a jump to box for easy navigation.
+	echo '
+		<br class="clear" />
+		<div class="smalltext righttext" id="search_jump_to">&nbsp;</div>
+		<script type="text/javascript"><!-- // --><![CDATA[
+			if (typeof(window.XMLHttpRequest) != "undefined")
+				aJumpTo[aJumpTo.length] = new JumpTo({
+					sContainerId: "search_jump_to",
+					sJumpToTemplate: "<label class=\"smalltext\" for=\"%select_id%\">', $context['jump_to']['label'], ':<" + "/label> %dropdown_list%",
+					iCurBoardId: 0,
+					iCurBoardChildLevel: 0,
+					sCurBoardName: "', $context['jump_to']['board_name'], '",
+					sBoardChildLevelIndicator: "==",
+					sBoardPrefix: "=> ",
+					sCatSeparator: "-----------------------------",
+					sCatPrefix: "",
+					sGoButtonLabel: "', $txt['quick_mod_go'], '"
+				});
+		// ]]></script>';
+
 }
 
 ?>
