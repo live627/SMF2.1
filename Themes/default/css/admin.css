@@ -233,7 +233,19 @@ ul.packages li
 	border: none !important;
 	list-style-type: none;
 }
-
+code#find_code, code#replace_code
+{
+	display: block;
+	font-family: "dejavu sans mono", "monaco", "lucida console", "courier new", monospace;
+	font-size: x-small;
+	background: #eef;
+	line-height: 1.5em;
+	padding: 3px 1em;
+	overflow: auto;
+	white-space: pre;
+	/* Show a scrollbar after about 24 lines. */
+	max-height: 24em;
+}
 /*BBC permissions*/
 .list_bbc
 {
