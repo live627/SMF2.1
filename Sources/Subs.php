@@ -2567,7 +2567,7 @@ function writeLog($force = false)
 
 	// Grab the last all-of-SMF-specific log_online deletion time.
 	$do_delete = cache_get_data('log_online-update', 30) < time() - 30;
-
+return;
 	// If the last click wasn't a long time ago, and there was a last click...
 	if (!empty($_SESSION['log_time']) && $_SESSION['log_time'] >= time() - $modSettings['lastActive'] * 20)
 	{

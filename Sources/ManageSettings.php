@@ -758,10 +758,9 @@ function ModifySpamSettings($return_config = false)
 
 		$save_vars[] = array('text', 'pm_spam_settings');
 
-		saveDBSettings($save_vars);
-
 		// Handle verification questions.
 		$questionInserts = array();
+		$count_questions = 0;
 		foreach ($_POST['question'] as $id => $question)
 		{
 			$question = trim($smcFunc['htmlspecialchars']($question, ENT_COMPAT, $context['character_set']));
@@ -784,18 +783,21 @@ function ModifySpamSettings($return_config = false)
 							)
 						);
 					else
-					$request = $smcFunc['db_query']('', '
-						UPDATE {db_prefix}log_comments
-						SET body = {string:question}, recipient_name = {string:answer}
-						WHERE comment_type = {string:ver_test}
-							AND id_comment = {int:id}',
-						array(
-							'id' => $id,
-							'ver_test' => 'ver_test',
-							'question' => $question,
-							'answer' => $answer,
-						)
-					);
+					{
+						$request = $smcFunc['db_query']('', '
+							UPDATE {db_prefix}log_comments
+							SET body = {string:question}, recipient_name = {string:answer}
+							WHERE comment_type = {string:ver_test}
+								AND id_comment = {int:id}',
+							array(
+								'id' => $id,
+								'ver_test' => 'ver_test',
+								'question' => $question,
+								'answer' => $answer,
+							)
+						);
+						$count_questions++;
+					}
 				}
 			}
 			// It's so shiney and new!
@@ -806,6 +808,7 @@ function ModifySpamSettings($return_config = false)
 					'body' => $question,
 					'recipient_name' => $answer,
 				);
+				$count_questions++;
 			}
 		}
 
@@ -817,6 +820,12 @@ function ModifySpamSettings($return_config = false)
 				$questionInserts,
 				array('id_comment')
 			);
+
+		if (empty($count_questions) || $_POST['qa_verification_number'] > $count_questions)
+			$_POST['qa_verification_number'] = $count_questions;
+
+		// Now save.
+		saveDBSettings($save_vars);
 
 		cache_put_data('verificationQuestionIds', null, 300);
 
