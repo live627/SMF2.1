@@ -250,7 +250,7 @@ function loadForumTests()
 				FROM {db_prefix}messages AS m
 					LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 				WHERE t.id_topic IS NULL
-				GROUP BY m.id_topic',
+				GROUP BY m.id_topic, m.id_board',
 			'fix_processing' => create_function('$row', '
 				global $smcFunc, $salvageBoardID;
 
