@@ -40,7 +40,9 @@ January 2010
  ! The search page would sometimes exclaim too trivial search terms were used when there were in fact no terms at all. (Search.php)
  ! No. of verification questions can't exceed no. of actual questions (ManageSettings.php) [Bug 4066]
  * Packages - find/replace popup allowed code to exceed the container (admin.css)
+ ! When searching, catch practically empty message previews in time, so we don't end up wasting space on the search results page. (Search.php) 
  ! m.id_board must be in repair_boards groupby or will cause postgresql error (RepairBoards.php) (Reported by MegaByte)
+ ! Disable the wywiwyg editor on Android, iPhone and iPod devices. (Load.php, script.js, editor.js) [Bug 4020] 
 
 
 December 2009

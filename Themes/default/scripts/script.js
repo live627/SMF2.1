@@ -39,7 +39,8 @@ var is_ie7down = is_ie7 || is_ie6 || is_ie5 || is_ie4;
 var is_ie8 = is_ie && ua.indexOf('msie 8') != -1;
 var is_ie8up = is_ie8 && !is_ie7down;
 
-var is_phone = ua.indexOf('iphone') != -1 || ua.indexOf('ipod') != -1;
+var is_iphone = ua.indexOf('iphone') != -1 || ua.indexOf('ipod') != -1;
+var is_android = ua.indexOf('android') != -1;
 
 var ajax_indicator_ele = null;
 
