@@ -451,7 +451,7 @@ function BanEdit()
 
 		if ($_POST['bantype'] == 'ip_ban')
 		{
-			$ip_parts = ip2range($_POST['ip']);
+			$ip_parts = ip2range(trim($_POST['ip']));
 			if (count($ip_parts) != 4)
 				fatal_lang_error('invalid_ip', false);
 
@@ -635,7 +635,7 @@ function BanEdit()
 				$ban_logs = array();
 				if (in_array('main_ip', $_POST['ban_suggestion']) && !empty($_POST['main_ip']))
 				{
-					$ip_parts = ip2range($_POST['main_ip']);
+					$ip_parts = ip2range(trim($_POST['main_ip']));
 					if (count($ip_parts) != 4)
 						fatal_lang_error('invalid_ip', false);
 

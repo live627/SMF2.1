@@ -45,6 +45,9 @@ January 2010
  ! Disable the wywiwyg editor on Android, iPhone and iPod devices. (Load.php, script.js, editor.js) [Bug 4020]
  * Fixed some more IE6 bugs and tweaked profile styling (index.css, ie6.css, several templates) 
  * Extensive Help.template changes (index.css, Help.php, Help.template.php, Manual.english.php)
+ ! Adding an IP to a ban might fail if it has leading or trailing whitespace. (ManageBans.php)
+ ! Setting the time threshold absurdly high would break the forum. (ManageSettings.php) [Bug 4157]
+
 
 December 2009
 --------------------------------------------------------------------------------

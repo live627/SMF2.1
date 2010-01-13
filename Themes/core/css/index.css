@@ -1338,7 +1338,7 @@ h3.titlebg, h4.titlebg
 }
 h3.titlebg, h4.catbg
 {
-	padding: 0 0 0 0.5em !important;
+	padding: 0 0.5em !important;
 }
 h3.catbg img.icon, div.titlebg img.icon, h3.catbg img
 {
