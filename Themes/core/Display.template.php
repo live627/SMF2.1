@@ -15,7 +15,7 @@ function template_main()
 	{
 		echo '
 <div class="tborder marginbottom" id="poll">
-	<h3 class="titlebg headerpadding">
+	<h3 class="titlebg">
 		<img src="', $settings['images_url'], '/topic/', $context['poll']['is_locked'] ? 'normal_poll_locked' : 'normal_poll', '.gif" alt="" align="bottom" /> ', $txt['poll'], '
 	</h3>
 	<h4 class="windowbg headerpadding" id="pollquestion">
