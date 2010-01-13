@@ -2748,9 +2748,13 @@ dl
 	width: 20%;
 	float: left;
 }
+#basicinfo .windowbg .content
+{
+	padding-left: 20px;
+}
 #detailedinfo
 {
-	width: 78%;
+	width: 79.5%;
 	float: right;
 }
 #basicinfo h4
@@ -2803,7 +2807,7 @@ dl
 }
 #detailedinfo div.content dt, #tracking div.content dt
 {
-	width: 30%;
+	width: 35%;
 	float: left;
 	margin: 0 0 3px 0;
 	padding: 0;
@@ -2812,7 +2816,7 @@ dl
 }
 #detailedinfo div.content dd, #tracking div.content dd
 {
-	width: 70%;
+	width: 65%;
 	float: left;
 	margin: 0 0 3px 0;
 	padding: 0;
@@ -2851,16 +2855,16 @@ dl
 #main_admsection #basicinfo h4
 {
 	float: left;
+	width: 35%;
 }
 #main_admsection #basicinfo img.avatar
 {
-	float: right;
+	float: left;
 	vertical-align: top;
 }
 #main_admsection #basicinfo ul
 {
 	clear: left;
-	padding-top: 10px;
 }
 #main_admsection #basicinfo span#userstatus
 {

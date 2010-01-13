@@ -278,8 +278,10 @@ function template_info_center()
 		echo '
 			<div class="title_barIC">
 				<h4 class="titlebg">
-					<a href="', $scripturl, '?action=recent"><img class="icon" src="', $settings['images_url'], '/post/xx.gif" alt="', $txt['recent_posts'], '" /></a>
-					<span>', $txt['recent_posts'], '</span>
+					<span class="ie6_header floatleft">
+						<a href="', $scripturl, '?action=recent"><img class="icon" src="', $settings['images_url'], '/post/xx.gif" alt="', $txt['recent_posts'], '" /></a>
+						', $txt['recent_posts'], '
+					</span>
 				</h4>
 			</div>
 			<div class="hslice" id="recent_posts_content">
@@ -324,8 +326,10 @@ function template_info_center()
 		echo '
 			<div class="title_barIC">
 				<h4 class="titlebg">
-					<a href="', $scripturl, '?action=calendar' . '"><img class="icon" src="', $settings['images_url'], '/icons/calendar.gif', '" alt="', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '" /></a>
-					<span>', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '</span>
+					<span class="ie6_header floatleft">
+						<a href="', $scripturl, '?action=calendar' . '"><img class="icon" src="', $settings['images_url'], '/icons/calendar.gif', '" alt="', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '" /></a>
+						', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '
+					</span>
 				</h4>
 			</div>
 			<p class="smalltext">';
@@ -372,8 +376,10 @@ function template_info_center()
 		echo '
 			<div class="title_barIC">
 				<h4 class="titlebg">
-					<a href="', $scripturl, '?action=stats"><img class="icon" src="', $settings['images_url'], '/icons/info.gif" alt="', $txt['forum_stats'], '" /></a>
-					<span>', $txt['forum_stats'], '</span>
+					<span class="ie6_header floatleft">
+						<a href="', $scripturl, '?action=stats"><img class="icon" src="', $settings['images_url'], '/icons/info.gif" alt="', $txt['forum_stats'], '" /></a>
+						', $txt['forum_stats'], '
+					</span>
 				</h4>
 			</div>
 			<p>
@@ -388,8 +394,10 @@ function template_info_center()
 	echo '
 			<div class="title_barIC">
 				<h4 class="titlebg">
-					', $context['show_who'] ? '<a href="' . $scripturl . '?action=who' . '">' : '', '<img class="icon" src="', $settings['images_url'], '/icons/online.gif', '" alt="', $txt['online_users'], '" />', $context['show_who'] ? '</a>' : '', '
-					<span>', $txt['online_users'], '</span>
+					<span class="ie6_header floatleft">
+						', $context['show_who'] ? '<a href="' . $scripturl . '?action=who' . '">' : '', '<img class="icon" src="', $settings['images_url'], '/icons/online.gif', '" alt="', $txt['online_users'], '" />', $context['show_who'] ? '</a>' : '', '
+						', $txt['online_users'], '
+					</span>
 				</h4>
 			</div>
 			<p class="inline stats">
@@ -436,8 +444,10 @@ function template_info_center()
 		echo '
 			<div class="title_barIC">
 				<h4 class="titlebg">
-					', $context['allow_pm'] ? '<a href="' . $scripturl . '?action=pm">' : '', '<img class="icon" src="', $settings['images_url'], '/message_sm.gif" alt="', $txt['personal_message'], '" />', $context['allow_pm'] ? '</a>' : '', '
-					<span>', $txt['personal_message'], '</span>
+					<span class="ie6_header floatleft">
+						', $context['allow_pm'] ? '<a href="' . $scripturl . '?action=pm">' : '', '<img class="icon" src="', $settings['images_url'], '/message_sm.gif" alt="', $txt['personal_message'], '" />', $context['allow_pm'] ? '</a>' : '', '
+						<span>', $txt['personal_message'], '</span>
+					</span>
 				</h4>
 			</div>
 			<p class="pminfo">

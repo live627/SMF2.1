@@ -15,6 +15,14 @@ h3.catbg span.ie6_header, h4.catbg span.ie6_header, h3.titlebg span.ie6_header, 
 {
 	padding: 6px 0;
 }
+/*h3.catbg span.ie6_header, h4.catbg span.ie6_header, h3.titlebg span.ie6_header,*/ #statistics h4.titlebg span.ie6_header
+{
+	padding: 0;
+}
+/*h3.catbg span.ie6_header, h4.catbg span.ie6_header, h3.titlebg span.ie6_header,*/ #statistics h4.titlebg span.ie6_header img.icon
+{
+	padding: 5px 0;
+}
 /* The dropdown menus
 ------------------------------------------------------- */
 #main_menu
@@ -59,6 +67,11 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 .table_grid thead th
 {
 	padding: 0 !important;
+}
+.additional_row
+{
+	float: none;
+	padding: 0.5em 0 0.5em 0;
 }
 
 /* overflow: hidden doesn't help in IE6. */

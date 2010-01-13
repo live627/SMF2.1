@@ -42,7 +42,8 @@ January 2010
  * Packages - find/replace popup allowed code to exceed the container (admin.css)
  ! When searching, catch practically empty message previews in time, so we don't end up wasting space on the search results page. (Search.php) 
  ! m.id_board must be in repair_boards groupby or will cause postgresql error (RepairBoards.php) (Reported by MegaByte)
- ! Disable the wywiwyg editor on Android, iPhone and iPod devices. (Load.php, script.js, editor.js) [Bug 4020] 
+ ! Disable the wywiwyg editor on Android, iPhone and iPod devices. (Load.php, script.js, editor.js) [Bug 4020]
+ * Fixed some more IE6 bugs and tweaked profile styling (index.css, ie6.css, several templates) 
 
 
 December 2009

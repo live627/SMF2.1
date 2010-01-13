@@ -12,7 +12,9 @@ function template_main()
 		</div>
 		<div class="title_bar">
 			<h4 class="titlebg">
-				<img src="', $settings['images_url'], '/stats_info.gif" class="icon" alt="" /> ', $txt['general_stats'], '
+				<span class="ie6_header floatleft">
+					<img src="', $settings['images_url'], '/stats_info.gif" class="icon" alt="" /> ', $txt['general_stats'], '
+				</span>
 			</h4>
 		</div>
 		<div class="flow_hidden">
@@ -85,7 +87,9 @@ function template_main()
 			<div id="top_posters">
 				<div class="title_bar">
 					<h4 class="titlebg">
-						<img src="', $settings['images_url'], '/stats_posters.gif" class="icon" alt="" /> ', $txt['top_posters'], '
+						<span class="ie6_header floatleft">
+							<img src="', $settings['images_url'], '/stats_posters.gif" class="icon" alt="" /> ', $txt['top_posters'], '
+						</span>
 					</h4>
 				</div>
 					<div class="windowbg2">
@@ -122,7 +126,9 @@ function template_main()
 			<div id="top_boards">
 				<div class="title_bar">
 					<h4 class="titlebg">
-						<img src="', $settings['images_url'], '/stats_board.gif" class="icon" alt="" /> ', $txt['top_boards'], '
+						<span class="ie6_header floatleft">
+							<img src="', $settings['images_url'], '/stats_board.gif" class="icon" alt="" /> ', $txt['top_boards'], '
+						</span>
 					</h4>
 				</div>
 					<div class="windowbg2">
@@ -159,7 +165,9 @@ function template_main()
 			<div id="top_topics_replies">
 				<div class="title_bar">
 					<h4 class="titlebg">
-						<img src="', $settings['images_url'], '/stats_replies.gif" class="icon" alt="" /> ', $txt['top_topics_replies'], '
+						<span class="ie6_header floatleft">
+							<img src="', $settings['images_url'], '/stats_replies.gif" class="icon" alt="" /> ', $txt['top_topics_replies'], '
+						</span>
 					</h4>
 				</div>
 					<div class="windowbg2">
@@ -194,7 +202,9 @@ function template_main()
 			<div id="top_topics_views">
 				<div class="title_bar">
 					<h4 class="titlebg">
-						<img src="', $settings['images_url'], '/stats_views.gif" class="icon" alt="" /> ', $txt['top_topics_views'], '
+						<span class="ie6_header floatleft">
+							<img src="', $settings['images_url'], '/stats_views.gif" class="icon" alt="" /> ', $txt['top_topics_views'], '
+						</span>
 					</h4>
 				</div>
 				<div class="windowbg2">
@@ -229,7 +239,9 @@ function template_main()
 			<div id="top_topics_starter">
 				<div class="title_bar">
 					<h4 class="titlebg">
-						<img src="', $settings['images_url'], '/stats_replies.gif" class="icon" alt="" /> ', $txt['top_starters'], '
+						<span class="ie6_header floatleft">
+							<img src="', $settings['images_url'], '/stats_replies.gif" class="icon" alt="" /> ', $txt['top_starters'], '
+						</span>
 					</h4>
 				</div>
 				<div class="windowbg2">
@@ -264,7 +276,9 @@ function template_main()
 			<div id="most_online">
 				<div class="title_bar">
 					<h4 class="titlebg">
-						<img src="', $settings['images_url'], '/stats_views.gif" class="icon" alt="" /> ', $txt['most_time_online'], '
+						<span class="ie6_header floatleft">
+							<img src="', $settings['images_url'], '/stats_views.gif" class="icon" alt="" /> ', $txt['most_time_online'], '
+						</span>
 					</h4>
 				</div>
 				<div class="windowbg2">
@@ -301,7 +315,9 @@ function template_main()
 		<div class="flow_hidden">
 			<div class="cat_bar">
 				<h3 class="catbg">
-					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/stats_history.gif" class="icon" alt="" /> ', $txt['forum_history'], '</span>
+					<span class="ie6_header floatleft">
+						<img src="', $settings['images_url'], '/stats_history.gif" class="icon" alt="" /> ', $txt['forum_history'], '
+					</span>
 				</h3>
 			</div>';
 

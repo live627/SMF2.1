@@ -29,7 +29,7 @@ function template_edit_scheduled_tasks()
 				<h3 class="catbg">', $txt['scheduled_task_edit'], '</h3>
 			</div>
 			<div class="information">
-				<em>', sprintf($txt['scheduled_task_time_offset'], $context['server_time']), '</em>
+				<em>', sprintf($txt['scheduled_task_time_offset'], $context['server_time']), ' </em>
 			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>

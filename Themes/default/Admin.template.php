@@ -130,7 +130,7 @@ function template_admin()
 	echo '
 					</ul>
 				</div>
-				<span class="botslice"><span></span></span>
+				<span class="botslice clear"><span></span></span>
 		</div>
 	</div>
 	<br class="clear" />';

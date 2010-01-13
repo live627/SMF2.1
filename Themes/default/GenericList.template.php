@@ -21,9 +21,9 @@ function template_show_list($list_id = null)
 	// Show the title of the table (if any).
 	if (!empty($cur_list['title']))
 		echo '
-			<div class="title_bar">
+			<div class="title_bar clear_right">
 				<h3 class="titlebg">
-					', $cur_list['title'], '
+					<span class="ie6_header floatleft">', $cur_list['title'], '</span>
 				</h3>
 			</div>';
 	// This is for the old style menu with the arrows "> Test | Test 1"

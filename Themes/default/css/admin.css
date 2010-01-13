@@ -84,6 +84,7 @@ ol.search_results li
 #smfAnnouncements
 {
 	height: 13.5em;
+	padding: 0 0.5em;
 	overflow: auto;
 }
 #smfAnnouncements dt
