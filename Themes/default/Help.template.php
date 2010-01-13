@@ -229,6 +229,7 @@ function template_manual_main_menu()
 				</a>
 			</li>
 		</ul>
+		<br />
 	</div>
 	<p style="margin-top: 1em;">', $txt['manual_main_menu_guest_links'], '</p>
 	<ul>
@@ -282,6 +283,7 @@ function template_manual_main_menu()
 				</a>
 			</li>
 		</ul>
+		<br />
 	</div>
 	<p>', $txt['manual_main_menu_member_links'], '</p>
 	<ul>
@@ -403,7 +405,7 @@ function template_manual_board_index()
 				</tbody>
 			</table>
 		</div>
-		<div id="posting_icons" class="align_left">
+		<div id="posting_icons">
 			<ul class="reset">
 				<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'new_some.png" alt="" /> ', $txt['new_posts'], '</li>
 				<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'new_none.png" alt="" /> ', $txt['old_posts'], '</li>
@@ -415,8 +417,9 @@ function template_manual_board_index()
 
 	echo '
 		<div class="mark_read">', template_button_strip($mark_read_button, 'right'), '</div>
+		<br />
 	</div>
-	<ul>
+	<ul class="basic_helplist">
 		<li><strong>', $context['forum_name'], '</strong> - ', $txt['manual_board_index_forum'], '</li>
 		<li>', $txt['manual_board_index_category'], '</li>
 		<li>', $txt['manual_board_index_new'], '</li>
@@ -513,10 +516,10 @@ function template_manual_message_view()
 			<table class="table_grid" cellspacing="0">
 				<thead>
 					<tr class="catbg">
-						<th scope="col" class="smalltext" width="8%" colspan="2">&nbsp;</th>
+						<th scope="col" class="smalltext first_th" width="8%" colspan="2">&nbsp;</th>
 						<th scope="col" class="smalltext"><a href="#">', $txt['subject'], '</a> / <a href="#">', $txt['started_by'], '</a></th>
 						<th scope="col" class="smalltext" width="14%" align="center"><a href="#">', $txt['replies'], '</a> / <a href="#">', $txt['views'], '</a></th>
-						<th scope="col" class="smalltext" width="22%"><a href="#">', $txt['last_post'], ' <img src="', $settings['images_url'], '/sort_down.gif" alt="" /></a></th>
+						<th scope="col" class="smalltext last_th" width="22%"><a href="#">', $txt['last_post'], ' <img src="', $settings['images_url'], '/sort_down.gif" alt="" /></a></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -595,6 +598,7 @@ function template_manual_message_view()
 		<div class="pagesection">
 			<div class="pagelinks align_left">', $txt['manual_message_index_pages'], '</div>
 			<div class="buttonlist align_right">', template_button_strip($mindex_buttons, 'bottom'), '</div>
+			<br />
 		</div>
 	</div>
 	<p>', $txt['manual_message_index_tabs'], '</p>
@@ -617,6 +621,7 @@ function template_manual_message_view()
 	<p>', $txt['manual_message_index_sorting'], '</p>';
 }
 
+// The topic page.
 function template_manual_topic_view()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
@@ -654,7 +659,7 @@ function template_manual_topic_view()
 		</div>
 		<div class="pagesection">
 			<div class="buttonlist align_right">', template_button_strip($display_buttons, 'bottom'), '</div>
-			<div class="pagelinks align_left">', $txt['manual_message_index_pages'], '</div>
+			<div class="pagelinks floatleft">', $txt['manual_message_index_pages'], '</div>
 		</div>
 		<div id="forumposts">
 			<div class="cat_bar">
@@ -666,67 +671,69 @@ function template_manual_topic_view()
 			</div>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
-				<div class="poster">
-					<h4>
-						<a href="', $scripturl, '?action=help;area=profile_summary" class="board">', $txt['manual_topic_post_author'], '</a>
-					</h4>
-					<ul id="msg_1_extra_info" class="reset smalltext">
-						<li class="title">', $txt['manual_topic_custom_title'], '</li>
-						<li class="membergroup">', $txt['manual_topic_membergroup'], '</li>
-						<li class="postgroup">', $txt['manual_topic_post_group'], '</li>
-						<li class="stars"><img border="0" alt="*" src="', $settings['images_url'], '/star.gif" /></li>
-						<li class="avatar flow_auto">
-							<img class="avatar" alt="" src="', $settings['default_images_url'], '/admin/smilies_and_messageicons.png" />
-						</li>
-						<li class="postcount">', $txt['manual_topic_post_count'], '</li>
-						<li class="profile">
-							<ul>
-								<li><a href="#"><img border="0" title="', $txt['view_profile'], '" alt="', $txt['view_profile'], '" src="', $settings['images_url'], '/icons/profile_sm.gif" /></a></li>
-								<li><a rel="nofollow" href="#"><img title="', $txt['email'], '" alt="', $txt['email'], '" src="', $settings['images_url'], '/email_sm.gif" /></a></li>
-								<li><a title="', $txt['personal_message'], '" href="#"><img border="0" alt="', $txt['personal_message'], '" src="', $settings['images_url'], '/im_off.gif" /></a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-				<div class="postarea">
-					<div class="flow_hidden">
-						<div class="keyinfo">
-							<div class="messageicon">
-								<img src="', $settings['images_url'], '/post/xx.gif" alt="" border="0" />
-							</div>
-							<h5 id="subject_4">
-								<a href="', $scripturl, '?action=help;area=topic_view" class="board">', $txt['manual_topic_post'], '</a>
-							</h5>
-							<div class="smalltext">&laquo; ', $txt['manual_topic_dt'], ' &raquo;</div>
-						</div>
-						<ul class="reset smalltext quickbuttons">
-							<li class="quote_button"><a href="', $scripturl, '?action=help;area=posting_topics#quote">', $txt['quote'], '</a></li>
+				<div class="post_wrapper">
+					<div class="poster">
+						<h4>
+							<a href="', $scripturl, '?action=help;area=profile_summary" class="board">', $txt['manual_topic_post_author'], '</a>
+						</h4>
+						<ul id="msg_1_extra_info" class="reset smalltext">
+							<li class="title">', $txt['manual_topic_custom_title'], '</li>
+							<li class="membergroup">', $txt['manual_topic_membergroup'], '</li>
+							<li class="postgroup">', $txt['manual_topic_post_group'], '</li>
+							<li class="stars"><img border="0" alt="*" src="', $settings['images_url'], '/star.gif" /></li>
+							<li class="avatar flow_auto">
+								<img class="avatar" alt="" src="', $settings['default_images_url'], '/admin/smilies_and_messageicons.png" />
+							</li>
+							<li class="postcount">', $txt['manual_topic_post_count'], '</li>
+							<li class="profile">
+								<ul>
+									<li><a href="#"><img border="0" title="', $txt['view_profile'], '" alt="', $txt['view_profile'], '" src="', $settings['images_url'], '/icons/profile_sm.gif" /></a></li>
+									<li><a rel="nofollow" href="#"><img title="', $txt['email'], '" alt="', $txt['email'], '" src="', $settings['images_url'], '/email_sm.gif" /></a></li>
+									<li><a title="', $txt['personal_message'], '" href="#"><img border="0" alt="', $txt['personal_message'], '" src="', $settings['images_url'], '/im_off.gif" /></a></li>
+								</ul>
+							</li>
 						</ul>
 					</div>
-					<div class="post">
-						<div class="inner">
-							', $txt['manual_topic_body'], ' <img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/smiley.gif" align="bottom" alt="', $txt['manual_posting_smiley_code'], '" border="0" />
+					<div class="postarea">
+						<div class="flow_hidden">
+							<div class="keyinfo">
+								<div class="messageicon">
+									<img src="', $settings['images_url'], '/post/xx.gif" alt="" border="0" />
+								</div>
+								<h5 id="subject_4">
+									<a href="', $scripturl, '?action=help;area=topic_view" class="board">', $txt['manual_topic_post'], '</a>
+								</h5>
+								<div class="smalltext">&laquo; ', $txt['manual_topic_dt'], ' &raquo;</div>
+							</div>
+							<ul class="reset smalltext quickbuttons">
+								<li class="quote_button"><a href="', $scripturl, '?action=help;area=posting_topics#quote">', $txt['quote'], '</a></li>
+							</ul>
+						</div>
+						<div class="post">
+							<div class="inner">
+								', $txt['manual_topic_body'], ' <img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/smiley.gif" align="bottom" alt="', $txt['manual_posting_smiley_code'], '" border="0" />
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="moderatorbar">
-					<div class="smalltext modified" id="modified_4">
+					<div class="moderatorbar">
+						<div class="smalltext modified" id="modified_4">
+						</div>
+						<div class="smalltext reportlinks">
+							<a href="', $scripturl, '?action=help;area=topic_view" class="board">', $txt['report_to_mod'], '</a> &nbsp;
+							<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />&nbsp; ', $txt['logged'], '
+						</div>
+						<div class="signature">', $txt['manual_topic_signature'], '</div>
 					</div>
-					<div class="smalltext reportlinks">
-						<a href="', $scripturl, '?action=help;area=topic_view" class="board">', $txt['report_to_mod'], '</a> &nbsp;
-						<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />&nbsp; ', $txt['logged'], '
-					</div>
-					<div class="signature">', $txt['manual_topic_signature'], '</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
 			<a id="lastPost"></a>
 		</div>
 		<div class="pagesection">
+			<div class="pagelinks floatleft">', $txt['manual_message_index_pages'], '</div>
 			<div class="buttonlist align_right">', template_button_strip($display_buttons, 'bottom'), '</div>
-			<div class="pagelinks align_left">', $txt['manual_message_index_pages'], '</div>
 		</div>
-		<div class="navigate_section">
+		<div class="navigate_section clear">
 			<ul>
 				<li>
 					<a href="', $scripturl, '?action=help;area=board_index"><span>', $context['forum_name'], '</span></a>&nbsp;&#187;
@@ -785,7 +792,13 @@ function template_manual_topic_view()
 // When and how to register page.
 function template_manual_when_how_register()
 {
-	// TODO : Write this.
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+	
+	echo '
+			<p>', $txt['manual_register_access_describe'], '</p>
+			<p>', $txt['manual_register_guest_describe'], '</p>
+			<p>', $txt['manual_register_member_describe'], '</p>
+			<p>', $txt['manual_register_how'], '</p>';
 }
 
 // The register help page.
@@ -794,104 +807,127 @@ function template_manual_registration_screen()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-	<p>', $txt['manual_registering_you_have_arrived_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary">', $txt['manual_registering_you_have_arrived_link_profile'], '</a>', $txt['manual_registering_you_have_arrived_part2'], '<a href="', $scripturl, '?action=help;area=sending_pms">', $txt['manual_registering_you_have_arrived_link_profile_pm'], '</a>', $txt['manual_registering_you_have_arrived_part3'], '</p>
-	<ol>
-		<li><a href="', $scripturl, '?action=help;area=registration_screen#how-to">', $txt['manual_registering_sec_register'], '</a></li>
-		<li><a href="', $scripturl, '?action=help;area=registration_screen#screen">', $txt['manual_registering_sec_reg_screen'], '</a></li>
-	</ol>
-	<h2 class="section" id="how-to">', $txt['manual_registering_sec_register'], '</h2>
-	<p>', $txt['manual_registering_register_desc'], '</p>
-	<ul>
-		<li>', $txt['manual_registering_select_register_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_registering_select_register_link_index_main'], '</a>', $txt['manual_registering_select_register_part2'], '</li>
-		<li>', $txt['manual_registering_login_Scr_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_registering_login_Scr_link_index_main'], '</a>', $txt['manual_registering_login_Scr_part2'], '</li>
-	</ul>
+
+	<p>', $txt['manual_register_agree'], '</p>
 	<div class="help_sample">
-		<div id="fatal_error">
-			<div class="cat_bar">
-				<h3 class="catbg">
-					', $txt['manual_registering_warning'], '
-				</h3>
-			</div>
-			<div class="windowbg2">
-				<span class="topslice"><span></span></span>
-				<div class="padding">', $txt['manual_registering_warning_desc_1'], '<br />
-				', $txt['manual_registering_warning_desc_2'], '<a href="', $scripturl, '?action=help;area=registration_screen#screen" class="board">', $txt['manual_registering_warning_desc_3'], '</a>', $txt['manual_registering_warning_desc_4'], '</div>
-				<span class="botslice"><span></span></span>
-			</div>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['manual_register_form'], '</h3>
+		</div>
+		<div class="title_bar">
+			<h4 class="titlebg">', $txt['manual_register_required_info'], '</h4>
+		</div>
+		<div class="windowbg2">
+			<span class="topslice"><span></span></span>
+			<fieldset class="content">
+				<dl class="register_form">
+					<dt><strong><label for="smf_autov_username">', $txt['manual_register_username'], ':</label></strong></dt>
+					<dd>
+						<input type="text" name="user" id="smf_autov_username" size="30" tabindex="1" maxlength="25" value="" class="input_text" />
+						<span id="smf_autov_username_div" style="display: none;">
+							<a id="smf_autov_username_link" href="#">
+								<img id="smf_autov_username_img" src="', $settings['images_url'], '/icons/field_check.gif" alt="*" />
+							</a>
+						</span>
+					</dd>
+					<dt><strong><label for="smf_autov_reserve1">', $txt['manual_register_email'], ':</label></strong></dt>
+					<dd>
+						<input type="text" name="email" id="smf_autov_reserve1" size="30" tabindex="2" value="" class="input_text" />
+					</dd>
+					<dt><strong><label for="allow_email">', $txt['manual_register_email_allow'], ':</label></strong></dt>
+					<dd>
+						<input type="checkbox" name="allow_email" id="allow_email" tabindex="3" class="input_check" />
+					</dd>
+				</dl>
+				<dl class="register_form" id="authentication_group">
+					<dt>
+						<strong>', $txt['manual_register_auth_method'], ':</strong>
+						<a href="http://localhost/smfdev/index.php?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a>
+					</dt>
+					<dd>
+						<label for="auth_pass" id="option_auth_pass">
+							<input type="radio" name="authenticate" value="passwd" id="auth_pass" tabindex="4" checked="checked" onclick="updateAuthMethod();" class="input_radio" />
+							', $txt['manual_register_password'], '
+						</label>
+						<label for="auth_openid" id="option_auth_openid">
+							<input type="radio" name="authenticate" value="openid" id="auth_openid" tabindex="5" onclick="updateAuthMethod();" class="input_radio" />
+							', $txt['manual_register_openid'], '
+						</label>
+					</dd>
+				</dl>
+				<dl class="register_form" id="password1_group">
+					<dt><strong><label for="smf_autov_pwmain">', $txt['manual_register_password_choose'], ':</label></strong></dt>
+					<dd>
+						<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="6" class="input_password" />
+						<span id="smf_autov_pwmain_div" style="display: none;">
+							<img id="smf_autov_pwmain_img" src="', $settings['images_url'], '/icons/field_invalid.gif" alt="*" />
+						</span>
+					</dd>
+				</dl>
+				<dl class="register_form" id="password2_group">
+					<dt><strong><label for="smf_autov_pwverify">', $txt['manual_register_password_verify'], ':</label></strong></dt>
+					<dd>
+						<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="7" class="input_password" />
+						<span id="smf_autov_pwverify_div" style="display: none;">
+							<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" />
+						</span>
+					</dd>
+				</dl>
+				<dl class="register_form" id="openid_group">
+					<dt><strong>', $txt['manual_register_openid_auth'], ':</strong></dt>
+					<dd>
+						<input type="text" name="openid_identifier" id="openid_url" size="30" tabindex="8" value="" class="input_text openid_login" />
+					</dd>
+				</dl>
+			</fieldset>
+			<span class="botslice"><span></span></span>
+		</div>
+		<div class="title_bar">
+			<h4 class="titlebg">', $txt['manual_register_verification'], '</h4>
+		</div>
+		<div class="windowbg2">
+			<span class="topslice"><span></span></span>
+			<fieldset class="content centertext">
+				<div class="verification_control">
+					<img src="', $scripturl, '?action=verificationcode;vid=register;rand=bb55ae4b180aee232039e6eca573db25" alt="', $txt['manual_register_type_letters'], '" id="verification_image_register" />
+					<div class="smalltext" style="margin: 4px 0 8px 0;">
+						<a href="', $scripturl, '?action=verificationcode;vid=register;rand=bb55ae4b180aee232039e6eca573db25;sound" id="visual_verification_register_sound" rel="nofollow">', $txt['manual_register_listen_letters'], '</a> / <a href="#" id="visual_verification_register_refresh">', $txt['manual_register_request_image'], '</a><br /><br />
+						', $txt['manual_register_type_letters'], ':<br />
+						<input type="text" name="register_vv[code]" value="" size="30" tabindex="9" class="input_text" />
+					</div>
+				</div>
+				<div class="verification_control">
+					<div class="smalltext">
+						', $txt['manual_register_question'], ':<br />
+						<input type="text" name="register_vv[q][1]" size="30" value=""  tabindex="10" class="input_text" />
+					</div>
+				</div>
+			</fieldset>
+			<span class="botslice"><span></span></span>
+		</div>
+		<div id="confirm_buttons">
+			<input type="submit" name="regSubmit" value="', $txt['manual_register_register'], '" tabindex="11" class="button_submit" />
 		</div>
 	</div>
-	<h2 class="section" id="screen">', $txt['manual_registering_sec_reg_screen'], '</h2>
-	<div class="help_sample">
-		<form action="', $scripturl, '?action=help;area=registration_screen" method="post" accept-charset="', $context['character_set'], '">
-			<div class="cat_bar">
-				<h3 class="catbg">
-					', $txt['manual_registering_registration_form'], '
-				</h3>
-			</div>
-			<div class="title_bar">
-				<h4 class="titlebg">
-					', $txt['manual_registering_required_info'], '
-				</h4>
-			</div>
-			<div class="windowbg2">
-				<span class="topslice"><span></span></span>
-				<fieldset class="content">
-					<dl class="register_form">
-						<dt><strong><label for="smf_autov_username">', $txt['username'], ':</label></strong></dt>
-						<dd>
-							<input type="text" name="user" id="smf_autov_username" size="30" tabindex="', $context['tabindex']++, '" maxlength="25" value="', isset($context['username']) ? $context['username'] : '', '" class="input_text" />
-							<span id="smf_autov_username_div" style="display: none;">
-								<a id="smf_autov_username_link" href="#">
-									<img id="smf_autov_username_img" src="', $settings['images_url'], '/icons/field_check.gif" alt="*" />
-								</a>
-							</span>
-						</dd>
-						<dt><strong><label for="smf_autov_reserve1">', $txt['email'], ':</label></strong></dt>
-						<dd>
-							<input type="text" name="email" id="smf_autov_reserve1" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['email']) ? $context['email'] : '', '" class="input_text" />
-						</dd>
-						<dt><strong><label for="allow_email">', $txt['allow_user_email'], ':</label></strong></dt>
-						<dd>
-							<input type="checkbox" name="allow_email" id="allow_email" tabindex="', $context['tabindex']++, '" class="input_check" />
-						</dd>
-					</dl>
-					<dl class="register_form" id="password1_group">
-						<dt><strong><label for="smf_autov_pwmain">', $txt['choose_pass'], ':</label></strong></dt>
-						<dd>
-							<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" class="input_password" />
-							<span id="smf_autov_pwmain_div" style="display: none;">
-								<img id="smf_autov_pwmain_img" src="', $settings['images_url'], '/icons/field_invalid.gif" alt="*" />
-							</span>
-						</dd>
-					</dl>
-					<dl class="register_form" id="password2_group">
-						<dt><strong><label for="smf_autov_pwverify">', $txt['verify_pass'], ':</label></strong></dt>
-						<dd>
-							<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" class="input_password" />
-							<span id="smf_autov_pwverify_div" style="display: none;">
-								<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" />
-							</span>
-						</dd>
-					</dl>
-				</fieldset>
-				<span class="botslice"><span></span></span>
-			</div>
-			<div id="confirm_buttons">
-				<input type="submit" name="regSubmit" value="', $txt['register'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />
-			</div>
-		</form>
-	</div>
-	<p>', $txt['manual_registering_reg_screen_requirements_part1'], '<a href="', $scripturl, '?action=help;area=logging_in#screen">', $txt['manual_registering_reg_screen_requirements_link_loginout_screen'], '</a>', $txt['manual_registering_reg_screen_requirements_part2'], '</p>
+	<p>', $txt['manual_register_arrival'], '</p>
+	<p>', $txt['manual_register_auth'], '</p>
+	<p>', $txt['manual_register_verify'], '</p>
+	<p>', $txt['manual_register_complete'], '</p>
 	<ul>
-		<li>', $txt['manual_registering_email_activate'], '</li>
-		<li>', $txt['manual_registering_admin_approve'], '</li>
-	</ul>';
+		<li>', $txt['manual_register_login'], '</li>
+		<li>', $txt['manual_register_activate'], '</li>
+		<li>', $txt['manual_register_approve'], '</li>
+	</ul>
+	<br class="clear" />';
 }
 
 // Activating account page.
 function template_manual_activating_account()
 {
-	// TODO : Write this.
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+	
+	echo '
+			<p>', $txt['manual_activate_describe'], '</p>
+			<p>', $txt['manual_activate_error'], '</p>';
 }
 
 // Logging in and out page.
@@ -900,82 +936,85 @@ function template_manual_logging_in_out()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-		<p>', $txt['manual_loginout_complete_reg_part1'], '<a href="', $scripturl, '?action=help;area=registration_screen">', $txt['manual_loginout_complete_reg_link_registering'], '</a>', $txt['manual_loginout_complete_reg_part2'], '</p>
-	<ol>
-		<li>
-			<a href="', $scripturl, '?action=help;area=logging_in#login">', $txt['manual_loginout_sec_login'], '</a>
-			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;area=logging_in#screen">', $txt['manual_loginout_login_screen'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;area=logging_in#quick">', $txt['manual_loginout_sub_quick_login'], '</a></li>
-			</ol>
-		</li>
-		<li><a href="', $scripturl, '?action=help;area=logging_in#logout">', $txt['manual_loginout_logout'], '</a></li>
-	</ol>
-	<h2 class="section" id="login">', $txt['manual_loginout_sec_login'], '</h2>
-	<p>', $txt['manual_loginout_login_desc'], '</p>
-	<h3 class="section" id="screen">', $txt['manual_loginout_login_screen'], '</h3>
-	<p>', $txt['manual_loginout_login_screen_desc_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_loginout_login_screen_desc_link_index_main'], '</a>', $txt['manual_loginout_login_screen_desc_part2'], '</p>
+		<p>', $txt['manual_loginout_describe'], '</p>
+		<ul>
+			<li><a href="', $scripturl, '?action=help;area=logging_in#loginScreen">', $txt['manual_loginout_login_screen'], '</a></li>
+			<li><a href="', $scripturl, '?action=help;area=logging_in#quickLogin">', $txt['manual_loginout_quick_login'], '</a></li>
+			<li><a href="', $scripturl, '?action=help;area=logging_in#loggingOut">', $txt['manual_loginout_logging_out'], '</a></li>
+		</ul>
+		<h2 class="section" id="loginScreen">', $txt['manual_loginout_login_screen'], '</h2>
+		<p>', $txt['manual_loginout_login_option'], '</p>
 	<div class="help_sample">
-		<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '">
-			<div class="tborder login">
-				<div class="cat_bar">
-					<h3 class="catbg"><
-						<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" class="icon" /> ', $txt['manual_loginout_login'], '
-					</h3>
-				</div>
-				<span class="upperframe"><span></span></span>
-				<div class="roundframe">
-					<dl>
-						<dt>', $txt['manual_loginout_username'], ':</dt>
-						<dd><input type="text" name="user" size="20" class="input_text" /></dd>
-						<dt>', $txt['manual_loginout_password'], ':</dt>
-						<dd><input type="password" name="passwrd" size="20" class="input_password" /></dd>
-					</dl>
-					<dl>
-						<dt>', $txt['manual_loginout_how_long'], ':</dt>
-						<dd><input type="text" name="cookielength" size="4" maxlength="4" class="input_text" /></dd>
-						<dt>', $txt['manual_loginout_always'], ':</dt>
-						<dd><input type="checkbox" name="cookieneverexp" class="input_check" /></dd>
-					</dl>
-					<p><input type="submit" value="', $txt['login'], '" class="button_submit" /></p>
-					<div class="centertext smalltext"><a href="', $scripturl, '?action=help;area=password_reminders">', $txt['manual_loginout_forgot'], '?</a></div>
-					<input type="hidden" name="hash_passwrd" value="" />
-				</div>
-				<span class="lowerframe"><span></span></span>
+		<div class="tborder login">
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" class="icon" /> ', $txt['manual_loginout_login'], '</span>
+				</h3>
 			</div>
 		</form>
+			<span class="upperframe"><span></span></span>
+			<div class="roundframe">
+				<dl>
+					<dt>', $txt['manual_register_username'], ':</dt>
+					<dd><input type="text" name="user" size="20" value="" class="input_text" /></dd>
+					<dt>', $txt['manual_register_password'], ':</dt>
+					<dd><input type="password" name="passwrd" value="" size="20" class="input_password" /></dd>
+				</dl>
+				<p><strong>&mdash;', $txt['manual_loginout_or'], '&mdash;</strong></p>
+				<dl>
+					<dt>', $txt['manual_register_openid'], ':</dt>
+					<dd><input type="text" name="openid_identifier" class="input_text openid_login" size="17" />&nbsp;<em><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></em></dd>
+				</dl>
+				<hr />
+				<dl>
+					<dt>', $txt['manual_loginout_minutes'], ':</dt>
+					<dd><input type="text" name="cookielength" size="4" maxlength="4" value="60" class="input_text" /></dd>
+					<dt>', $txt['manual_loginout_always'], ':</dt>
+					<dd><input type="checkbox" name="cookieneverexp" class="input_check" onclick="this.form.cookielength.disabled = this.checked;" /></dd>
+				</dl>
+				<p><input type="submit" value="Login" class="button_submit" /></p>
+				<div class="smalltext centertext"><a href="', $scripturl, '?action=reminder">', $txt['manual_loginout_forgot_password'], '</a></div>
+			</div>
+			<span class="lowerframe"><span></span></span>
+		</div>
 	</div>
-	<p>', $txt['manual_loginout_login_screen_explanation'], '</p>
-	<h3 class="section" id="quick">', $txt['manual_loginout_sub_quick_login'], '</h3>
-	<p>', $txt['manual_loginout_although_many_forums_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_loginout_although_many_forums_link_index_main'], '</a>', $txt['manual_loginout_although_many_forums_part2'], '</p>
+	<ul>
+		<li>', $txt['manual_loginout_login_username'], '</li>
+		<li>', $txt['manual_loginout_login_password'], '</li>
+		<li>', $txt['manual_loginout_login_openid'], '</li>
+		<li>', $txt['manual_loginout_login_minutes'], '</li>
+		<li>', $txt['manual_loginout_login_always'], '</li>
+	</ul>
+	<p>', $txt['manual_loginout_login_warning'], '</p>
+	<h2 class="section" id="quickLogin">', $txt['manual_loginout_quick_login'], '</h2>
+	<p>', $txt['manual_loginout_quick'], '</p>
 	<div class="help_sample">
-		<form id="guest_form" action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '">
-			<input type="text" size="10" class="input_text" />
-			<input type="password" size="10" class="input_text" />
-			<select>
-				<option>
-					', $txt['manual_loginout_hour'], '
-				</option>
-				<option>
-					', $txt['manual_loginout_day'], '
-				</option>
-				<option>
-					', $txt['manual_loginout_week'], '
-				</option>
-				<option>
-					', $txt['manual_loginout_mo'], '
-				</option>
-				<option selected="selected">
-					', $txt['manual_loginout_forever'], '
-				</option>
+		<div class="user">
+			<div class="info">', $txt['manual_loginout_please'], ' <a href="', $scripturl, '?action=login">', $txt['manual_loginout_login_lower'], '</a> ', $txt['manual_loginout_or'],' <a href="', $scripturl, '?action=register">', $txt['manual_loginout_register'], '</a>.</div>
+			<input type="text" name="user" size="10" class="input_text" />
+			<input type="password" name="passwrd" size="10" class="input_password" />
+			<select name="cookielength">
+				<option value="60">', $txt['manual_loginout_hour'], '</option>
+				<option value="1440">', $txt['manual_loginout_day'], '</option>
+				<option value="10080">', $txt['manual_loginout_week'], '</option>
+				<option value="43200">', $txt['manual_loginout_month'], '</option>
+				<option value="-1" selected="selected">', $txt['manual_loginout_forever'], '</option>
 			</select>
-			<input type="button" value="Login" class="button_submit" /><br />
-			<div class="info">', $txt['manual_loginout_login_all'], '</div>
-		</form>
+			<input type="submit" value="', $txt['manual_loginout_login'], '" class="button_submit" /><br />
+			<div class="info">', $txt['manual_loginout_instruct'], '</div>
+			<br /><input type="text" name="openid_identifier" id="openid_url" size="25" class="input_text openid_login" />
+		</div>
 	</div>
-	<p>', $txt['manual_loginout_use_quick_login'], '</p>
-	<h2 class="section" id="logout">', $txt['manual_loginout_logout'], '</h2>
-	<p>', $txt['manual_loginout_logout_desc_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_loginout_logout_desc_link_index_main'], '</a>', $txt['manual_loginout_logout_desc_part2'], '</p>';
+	<ul>
+		<li>', $txt['manual_loginout_login_username'], '</li>
+		<li>', $txt['manual_loginout_login_password'], '</li>
+		<li>', $txt['manual_loginout_quick_session'], '</li>
+		<li>', $txt['manual_loginout_login_openid'], '</li>
+	</ul>
+	<p>', $txt['manual_loginout_quick_relate'], '</p>
+	<h2 class="section" id="loggingOut">', $txt['manual_loginout_logging_out'], '</h2>
+	<p>', $txt['manual_loginout_out_describe'], '</p>
+	<p>', $txt['manual_loginout_out_how'], '</p>';
 }
 
 // Password reminders page.
@@ -984,30 +1023,61 @@ function template_manual_password_reminders()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-	<p>', $txt['manual_loginout_reminder_desc_part1'], '<a href="', $scripturl, '?action=help;area=logging_in#screen">', $txt['manual_loginout_reminder_desc_link_screen'], '</a>', $txt['manual_loginout_reminder_desc_part2'], '</p>
+	<p>', $txt['manual_reminders_describe'], '</p>
 	<div class="help_sample">
-		<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '">
-			<div class="tborder login">
-				<div class="cat_bar">
-					<h3 class="catbg">
-						', $txt['manual_loginout_password_reminder'], '
-					</h3>
-				</div>
-				<span class="upperframe"><span></span></span>
-				<div class="roundframe">
-					<p class="smalltext centertext">', $txt['manual_loginout_q_explanation'], '</p>
-					<dl>
-						<dt>', $txt['manual_loginout_username_email'], ':</dt>
-						<dd><input type="text" name="user" size="30" class="input_text" /></dd>
-					</dl>
-					<div class="centertext"><input type="submit" value="', $txt['manual_loginout_send'], '" class="button_submit" /></div>
-				</div>
-				<span class="lowerframe"><span></span></span>
+		<div class="tborder login">
+			<h3 class="catbg"><span class="left"></span>
+				', $txt['manual_reminders_auth'], '
+			</h3>
+			<span class="upperframe"><span></span></span>
+			<div class="roundframe">
+				<p class="smalltext centertext">', $txt['manual_reminders_start'], '</p>
+				<dl>
+					<dt>', $txt['manual_reminders_user_email'], ':</dt>
+					<dd><input type="text" name="user" size="30" class="input_text" /></dd>
+				</dl>
+				<div class="padding"><input type="submit" value="', $txt['manual_reminders_continue'], '" class="button_submit floatright" /></div>
+				<br class="clear" />
 			</div>
-			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-		</form>
+			<span class="lowerframe"><span></span></span>
+		</div>
 	</div>
-	<p>', $txt['manual_loginout_reminder_explanation'], '</p>';
+	<p>', $txt['manual_reminders_secret'], '</p>
+	<div class="help_sample">
+		<div class="tborder login">
+			<h3 class="catbg"><span class="left"></span>
+				', $txt['manual_reminders_auth'], '
+			</h3>
+			<span class="upperframe"><span></span></span>
+			<div class="roundframe">
+				<p class="smalltext">', $txt['manual_reminders_instruct'], '</p>
+				<dl>
+					<dt>', $txt['manual_reminders_secret_question'], ':</dt>
+					<dd>', $txt['manual_reminders_fingers'], '</dd>
+					<dt>', $txt['manual_reminders_answer'], ':</dt>
+					<dd><input type="text" name="secret_answer" size="22" class="input_text" /></dd>
+					<dt>', $txt['manual_register_password_choose'], ': </dt>
+					<dd>
+						<input type="password" name="passwrd1" id="smf_autov_pwmain" size="22" class="input_password" />
+						<span id="smf_autov_pwmain_div" style="display: none;">
+							<img id="smf_autov_pwmain_img" src="', $settings['images_url'], '/icons/field_invalid.gif" alt="*" />
+						</span>
+					</dd>
+					<dt>', $txt['manual_register_password_verify'], ': </dt>
+					<dd>
+						<input type="password" name="passwrd2" id="smf_autov_pwverify" size="22" class="input_password" />
+						<span id="smf_autov_pwverify_div" style="display: none;">
+							<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" />
+						</span>
+					</dd>
+				</dl>
+				<div class="padding"><input type="submit" value="', $txt['manual_reminders_save'], '" class="button_submit floatright" /></div>
+				<br class="clear" />
+			</div>
+			<span class="lowerframe"><span></span></span>
+		</div>
+	</div>
+	<p>', $txt['manual_reminders_new_password'], '</p>';
 }
 
 // Profile info page.
@@ -1204,12 +1274,12 @@ function template_manual_modify_profile()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-	<p>', $txt['manual_profile_normal_desc'], '</p>
-	<ul>
-		<li>', $txt['manual_profile_account_related'], '</li>
-		<li>', $txt['manual_profile_forum_profile_info'], '</li>
-		<li>', $txt['manual_profile_look_layout'], '</li>
-	</ul>
+		<p>', $txt['manual_profile_normal_desc'], '</p>
+		<ul class="basic_helplist">
+			<li>', $txt['manual_profile_account_related'], '</li>
+			<li>', $txt['manual_profile_forum_profile_info'], '</li>
+			<li>', $txt['manual_profile_look_layout'], '</li>
+		</ul>
 		<div class="help_sample">
 			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
 				<tr>
@@ -1393,18 +1463,20 @@ function template_manual_modify_profile()
 						</form>
 					</td>
 				</tr>
-			</table><br />
-	</div>
-	<ul>
-		<li>', $txt['manual_profile_notify_email_prefs'], '</li>
-		<li>', $txt['manual_profile_pm_options_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms">', $txt['manual_profile_pm_options_link_pm'], '</a>', $txt['manual_profile_pm_options_part2'], '</li>
-	</ul>
-	<h3 class="section" id="actions-owners">', $txt['manual_profile_sub_actions'], '</h3>
-	<ul>
-		<li>', $txt['manual_profile_confirm_delete_acct'], '</li>
-	</ul>
-	<h2 class="section" id="admins">', $txt['manual_profile_sec_settings'], '</h2>
-	<p>', $txt['manual_profile_settings_desc'], '</p>
+			</table>
+			<br />
+		</div>
+		<ul class="basic_helplist">
+			<li>', $txt['manual_profile_notify_email_prefs'], '</li>
+			<li>', $txt['manual_profile_pm_options_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms">', $txt['manual_profile_pm_options_link_pm'], '</a>', $txt['manual_profile_pm_options_part2'], '</li>
+		</ul>
+		<h3 class="section" id="actions-owners"><b>', $txt['manual_profile_sub_actions'], '</b></h3>
+		<ul>
+			<li>', $txt['manual_profile_confirm_delete_acct'], '</li>
+		</ul>
+		<br />
+		<h2 class="section" id="admins">', $txt['manual_profile_sec_settings'], '</h2>
+		<p>', $txt['manual_profile_settings_desc'], '</p>
 		<div>
 		<div style="width: 180px; float: left; border: none;">
 			<table border="0" cellpadding="4" cellspacing="1" class="bordercolor" width="170">
@@ -1442,18 +1514,18 @@ function template_manual_modify_profile()
 			</table>
 		</div><br />
 		<div style="margin: -1.8em 20px 0 200px;">
-			<h3 class="section" id="info-admins">', $txt['manual_profile_sub_profile_info'], '</h3>
+			<h3 class="section" id="info-admins"><b>', $txt['manual_profile_sub_profile_info'], '</b></h3>
 			<ul>
 				<li>', $txt['manual_profile_sub_track_user'], '</li>
 				<li>', $txt['manual_profile_sub_track_ip'], '</li>
 				<li>', $txt['manual_profile_sub_show_permissions'], '</li>
 			</ul>
-			<h3 class="section" id="edit-admins">', $txt['manual_profile_sub_modify_profile'], '</h3>
+			<h3 class="section" id="edit-admins"><b>', $txt['manual_profile_sub_modify_profile'], '</b></h3>
 			<ul>
 				<li>', $txt['manual_profile_sub_acct_settings'], '</li>
 				<li>', $txt['manual_profile_sub_forum_profile_info'], '</li>
 			</ul>
-			<h3 class="section" id="actions-admins">', $txt['manual_profile_sub_actions2'], '</h3>
+			<h3 class="section" id="actions-admins"><b>', $txt['manual_profile_sub_actions2'], '</b></h3>
 			<ul>
 				<li>', $txt['manual_profile_sub_ban_user'], '</li>
 				<li>', $txt['manual_profile_sub_delete_acct'], '</li>

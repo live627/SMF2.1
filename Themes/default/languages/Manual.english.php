@@ -62,7 +62,7 @@ $txt['manual_entry_modify_profile_groups'] = 'Group Membership';
 $txt['manual_entry_profile_actions_subscriptions'] = 'Paid Subscriptions';
 $txt['manual_entry_profile_actions_delete'] = 'Delete this account';
 
-// Text for template: index.
+// Text for template: index
 $txt['manual_index_visit_simple_machines'] = 'Visit Simple Machines!';
 $txt['manual_index_intro'] = 'Introduction';
 $txt['manual_index_register'] = 'Registering';
@@ -72,10 +72,10 @@ $txt['manual_index_posting'] = 'Posting';
 $txt['manual_index_pm'] = 'Personal Message';
 $txt['manual_index_search'] = 'Searching';
 
-// Text for template: smf.
+// Text for template: smf
 $txt['manual_smf_user_help'] = 'SMF User Help';
 
-// Text for template: intro.
+// Text for template: intro
 $txt['manual_intro_welcome_to'] = 'Welcome to ';
 $txt['manual_intro_welcome_after'] = ', a ';
 $txt['manual_intro_smf_link'] = 'Simple Machines Forum';
@@ -83,21 +83,21 @@ $txt['manual_intro_smf_abbreviation'] = ' (SMF)!';
 $txt['manual_intro_overview'] = 'SMF is an extremely flexible software package that gives forum administrators the ability to tailor their forum to their desires through a large collection of built-in features, additional themes, and custom modifications. As such, it allows for great variance in look and functionality between SMF forums. There are, however, a number of features that are common to all SMF forums, which this help section addresses.';
 $txt['manual_intro_outline'] = 'First, descriptions and examples of the overall forum structure and layout are provided. Instructions on how to move from guest status to member status by registering and logging in are also given, as guests may not be permitted to access, post, or even read certain boards or topics. Once registered and logged in, a member is then instructed how to modify their profile; post or reply to topics, polls, and events; quote, modify, or delete a post; use message icons, smileys, and Bulletin Board Code; setup notifications; work with attachments; and read or send personal messages. A section on both basic and advanced searching is also provided.';
 
-// Text for template: main_menu.
+// Text for template: main_menu
 $txt['manual_main_menu_describe'] = 'The main menu is usually displayed at the top of each page of the forum. It includes common links that members may visit often to make navigation simpler. Below, is an example.';
 $txt['manual_main_menu_guest_links'] = 'Some menu items may be disabled for guests, however, common links for guests may include the following.';
 $txt['manual_main_menu_member_links'] = 'Common links on the main menu for registered members may include the following.';
 $txt['manual_main_menu_admin_mod'] = 'Additionally, administrators also have access to an <em>Admin</em> link, which enables them to access the administration center. Moderators have access to a <em>Moderate</em> link, which allows them to access the moderation center.';
-$txt['manual_main_menu_home'] = '<strong>Home</strong> – The home link redirects guests and members back to the board index.';
-$txt['manual_main_menu_help'] = '<strong>Help</strong> – The help link brings guests and members to this help section.';
-$txt['manual_main_menu_search'] = '<strong>Search</strong> – The search link enables guests and members to search for posts and topics in the forum.';
-$txt['manual_main_menu_profile'] = '<strong>Profile</strong> – The profile link displays the profile summary of the member that is currently logged in. From there, members can edit their account settings and information.';
-$txt['manual_main_menu_messages'] = '<strong>My Messages</strong> – The messages link displays a list of personal messages received from other members.';
-$txt['manual_main_menu_calendar'] = '<strong>Calendar</strong> – The calendar link displays the forum\'s calendar. The calendar may have upcoming forum events, holidays, and birthdays.';
-$txt['manual_main_menu_members'] = '<strong>Members</strong> – The members link displays the memberlist. The memberlist displays all members who are not banned and have activated their account.';
-$txt['manual_main_menu_login'] = '<strong>Login</strong> – The login link enables guests to login to their member account if one currently exists.';
-$txt['manual_main_menu_logout'] = '<strong>Logout</strong> – The logout link enables members to log out of their account and become guests again. Logging out disables anyone from using the account unless they have access to the username and password.';
-$txt['manual_main_menu_register'] = '<strong>Register</strong> – The register link enables guests to create their own member account.';
+$txt['manual_main_menu_home'] = '<strong>Home</strong> - The home link redirects guests and members back to the board index.';
+$txt['manual_main_menu_help'] = '<strong>Help</strong> - The help link brings guests and members to this help section.';
+$txt['manual_main_menu_search'] = '<strong>Search</strong> - The search link enables guests and members to search for posts and topics in the forum.';
+$txt['manual_main_menu_profile'] = '<strong>Profile</strong> - The profile link displays the profile summary of the member that is currently logged in. From there, members can edit their account settings and information.';
+$txt['manual_main_menu_messages'] = '<strong>My Messages</strong> - The messages link displays a list of personal messages received from other members.';
+$txt['manual_main_menu_calendar'] = '<strong>Calendar</strong> - The calendar link displays the forum\'s calendar. The calendar may have upcoming forum events, holidays, and birthdays.';
+$txt['manual_main_menu_members'] = '<strong>Members</strong> - The members link displays the memberlist. The memberlist displays all members who are not banned and have activated their account.';
+$txt['manual_main_menu_login'] = '<strong>Login</strong> - The login link enables guests to login to their member account if one currently exists.';
+$txt['manual_main_menu_logout'] = '<strong>Logout</strong> - The logout link enables members to log out of their account and become guests again. Logging out disables anyone from using the account unless they have access to the username and password.';
+$txt['manual_main_menu_register'] = '<strong>Register</strong> - The register link enables guests to create their own member account.';
 
 // Text for template: board_index
 $txt['manual_board_index_describe'] = 'The first page of an SMF forum is usually the board index. The board index displays a list of categories, boards, and child boards a forum has available. Some boards or categories may not be visible to some membergroups, or guests, depending on the permissions of the forum.';
@@ -114,15 +114,15 @@ $txt['manual_board_index_dtsa'] = 'Date, time, subject and author of last post';
 $txt['manual_board_index_board_mod'] = 'Board Moderator';
 $txt['manual_board_index_redirects'] = 'Redirects';
 $txt['manual_board_index_forum'] = 'This is the name of the forum, and it links back to the board index. It is part of the link tree, which displays on every page of the forum and allows members to keep track of where they are.';
-$txt['manual_board_index_category'] = '<strong>Category Name</strong> – A category contains boards that are loosely related and makes organizing a forum easier. Some categories have an expand or collapse icon next to their names. This allows members to choose which categories they wish to view. Collapsing a category will hide it, while expanding a category will bring it back into view.';
-$txt['manual_board_index_new'] = '<strong>New Post Indicators</strong> – New post indicators light up when there are unread posts present in a board. They remain dull when nothing new has been posted. A board with child boards may have a semi-lit indicator if a child board has unread posts inside it.';
-$txt['manual_board_index_redirect'] = '<strong>Redirect Boards</strong> – A redirect board will redirect all clicks to a new URL. Redirect boards do not have new post indicators, because they are not real boards.';
-$txt['manual_board_index_board'] = '<strong>Board Name</strong> – The name of a board is displayed as a text link. Selecting this link will take you to the board\'s message index.';
-$txt['manual_board_index_board_desc'] = '<strong>Board Description</strong> – If a board description is present, it will be displayed underneath the board\'s name. A board description describes the general use of the board, which can assist members in finding the correct area to post.';
-$txt['manual_board_index_moderators'] = '<strong>Moderators</strong> – If a board has a moderator, their display name will be shown underneath its description. The moderator of a board usually has privileges inside that board that regular members do not.';
-$txt['manual_board_index_children'] = '<strong>Child Boards</strong> – Child boards serve to help further organize a forum if simple categories and boards are not sufficient. Child boards (or sub-boards) are displayed underneath the description of the board that contains them - their parent board. A child board is the same as a regular board, except that it displays inside another board.';
-$txt['manual_board_index_board_info'] = '<strong>Board Information</strong> – The number of posts and topics inside a board, as well as information about the last post in that board, is displayed to the its right. For redirect boards this information is limited to the number of redirects.';
-$txt['manual_board_index_mark_read'] = '<strong>Mark As Read</strong> – Underneath all of the categories and boards is a button that will mark all topics and posts in the forum as read.';
+$txt['manual_board_index_category'] = '<strong>Category Name</strong> - A category contains boards that are loosely related and makes organizing a forum easier. Some categories have an expand or collapse icon next to their names. This allows members to choose which categories they wish to view. Collapsing a category will hide it, while expanding a category will bring it back into view.';
+$txt['manual_board_index_new'] = '<strong>New Post Indicators</strong> - New post indicators light up when there are unread posts present in a board. They remain dull when nothing new has been posted. A board with child boards may have a semi-lit indicator if a child board has unread posts inside it.';
+$txt['manual_board_index_redirect'] = '<strong>Redirect Boards</strong> - A redirect board will redirect all clicks to a new URL. Redirect boards do not have new post indicators, because they are not real boards.';
+$txt['manual_board_index_board'] = '<strong>Board Name</strong> - The name of a board is displayed as a text link. Selecting this link will take you to the board\'s message index.';
+$txt['manual_board_index_board_desc'] = '<strong>Board Description</strong> - If a board description is present, it will be displayed underneath the board\'s name. A board description describes the general use of the board, which can assist members in finding the correct area to post.';
+$txt['manual_board_index_moderators'] = '<strong>Moderators</strong> - If a board has a moderator, their display name will be shown underneath its description. The moderator of a board usually has privileges inside that board that regular members do not.';
+$txt['manual_board_index_children'] = '<strong>Child Boards</strong> - Child boards serve to help further organize a forum if simple categories and boards are not sufficient. Child boards (or sub-boards) are displayed underneath the description of the board that contains them - their parent board. A child board is the same as a regular board, except that it displays inside another board.';
+$txt['manual_board_index_board_info'] = '<strong>Board Information</strong> - The number of posts and topics inside a board, as well as information about the last post in that board, is displayed to the its right. For redirect boards this information is limited to the number of redirects.';
+$txt['manual_board_index_mark_read'] = '<strong>Mark As Read</strong> - Underneath all of the categories and boards is a button that will mark all topics and posts in the forum as read.';
 $txt['manual_board_index_info_center'] = 'At the bottom of the board index is an information center. The information center displays information about the forum including upcoming birthdays, holidays, and events, who’s online, and a summary of basic forum statistics. If enabled, a list of the forums recent posts may be displayed here, as well.';
 $txt['manual_board_index_upshrink_title'] = 'Shrink or expand the header.';
 $txt['manual_board_index_stats_1'] = 'Total posts, topics, and members &amp; the latest registered member';
@@ -142,10 +142,10 @@ $txt['manual_message_index_dta'] = 'Date, time, and author of last post';
 $txt['manual_message_index_normal_topic'] = 'This is a normal topic.';
 $txt['manual_message_index_locked_topic'] = 'This is a locked topic.';
 $txt['manual_message_index_tabs'] = 'Tab menus are displayed along the top and bottom of each page, making posting easy. The tab menu may contain the following, depending on the forum\'s configuration.';
-$txt['manual_message_index_new_topic'] = '<strong>New Topic</strong> – The new topic button enables a member to post new topics in the current board.';
-$txt['manual_message_index_new_poll'] = '<strong>New Poll</strong> – The new poll button enables a member to create new polls in the current board.';
-$txt['manual_message_index_notification'] = '<strong>Notify</strong> – The notify button enables a member to receive email notification when new posts or topics are made within the current board.';
-$txt['manual_message_index_mark_read'] = '<strong>Mark Read</strong> – The mark read button enables a member to mark all topics inside the current board as read.';
+$txt['manual_message_index_new_topic'] = '<strong>New Topic</strong> - The new topic button enables a member to post new topics in the current board.';
+$txt['manual_message_index_new_poll'] = '<strong>New Poll</strong> - The new poll button enables a member to create new polls in the current board.';
+$txt['manual_message_index_notification'] = '<strong>Notify</strong> - The notify button enables a member to receive email notification when new posts or topics are made within the current board.';
+$txt['manual_message_index_mark_read'] = '<strong>Mark Read</strong> - The mark read button enables a member to mark all topics inside the current board as read.';
 $txt['manual_message_index_topic_row'] = 'Each topic in the message index is displayed as a single row. Most of the information relevant to a topic is displayed within its row.';
 $txt['manual_message_index_topic_icon'] = '<strong>Topic Icon</strong> - The topic icon gives information about the topic, and a legend along the bottom of the message index shows what each icon means. If enabled, participation icons also show in which topics a member has replied.';
 $txt['manual_message_index_message_icon'] = '<strong>Message Icon</strong> - The message icon is unique to the first post of a topic, and the member that starts the topic has the ability to select it. It is displayed between the topic icon and the topic subject on the message index.';
@@ -194,6 +194,89 @@ $txt['manual_topic_post_signature'] = '<strong>Signature</strong> - If a member 
 $txt['manual_topic_post_report'] = '<strong>Report to moderator</strong> - Each post may be reported to the forum moderators by selecting this link in the appropriate post.';
 $txt['manual_topic_post_logged'] = '<strong>IP Logged</strong> - The IP address of the computer used by a member or guest to post is logged by the forum for moderation purposes.';
 $txt['manual_topic_hide'] = 'While these are the most common elements for a post when viewing a topic, a member may choose to hide many of them from their profile.';
+
+// Text for template: when_how_register
+$txt['manual_register_access_describe'] = 'Certain forums may choose to restrict access to the full forum or selected areas, allowing only registered members to view the content. A guest should register when they wish to participate in forum discussions, visit a forum frequently, and access members-only areas and benefits.';
+$txt['manual_register_guest_describe'] = 'A guest is any person or spider that is not logged into the forum. Once a person registers they become a member, however, they will still show up as a guest until they log in.';
+$txt['manual_register_member_describe'] = 'Members have access to profile and notification options that are unavailable to guests. Members can also be placed in membergroups, made moderators or administrators, given special permissions, and access members-only areas. Being able to send personal messages, receive forum emails, and post new polls and topics are some additional benefits that may be available to members of the forum.';
+$txt['manual_register_how'] = 'A guest may register at any time by simply selecting the Register option from the main menu.';
+
+// Text for template: registration_screen
+$txt['manual_register_agree'] = 'Most forums require a guest to accept their registration agreement before the registration process can begin. By checking the <em>I Agree</em> option, a guest consents to comply with the agreement throughout the duration of their membership. Some forums may also incorporate a minimum age into the agreement process.';
+$txt['manual_register_arrival'] = 'Upon arrival at the registration screen, a guest is requested to enter a username and a valid email address. Failure to use a valid email address may hinder registration, depending on how a forum is configured. Guests are also given the opportunity to allow forum members to email them.';
+$txt['manual_register_auth'] = 'An authentication method must be chosen, as well. The most common method is simply choosing a password. Although, some forums may provide members with the opportunity to use an OpenID.';
+$txt['manual_register_verify'] = 'A form of visual verification may be present in order to confirm that a guest is actually a person and not a bot. This verification may be requested in two ways - <abbr title="Completely Automated Public Turing test to tell Computers and Humans Apart">CAPTCHA</abbr> and custom questions. The CAPTCHA method displays an image containing a random collection of letters, which a guest must enter into a text field. The custom questions method displays one or more relatively simple questions, which a guest must answer correctly. A forum may be configured to use both methods at the same time.';
+$txt['manual_register_complete'] = 'Once a guest completes the registration form, there are three possibilities for what is displayed next based on how the forum is configured.';
+$txt['manual_register_login'] = '<strong>Login</strong> - If registration is immediate, the new member will be automatically logged in after completing the registration form.';
+$txt['manual_register_activate'] = '<strong>Activation</strong> - If a message about email activation is displayed, the new account must first be activated before login. An email with instructions how to proceed is sent to the new member\'s email address.';
+$txt['manual_register_approve'] = '<strong>Approval</strong> - If a message about member approval is displayed, the new account must first be approved by an administrator before login. An email acknowledging the new member is sent to their email address. Another email is sent later to inform them whether or not their application has been approved.';
+$txt['manual_register_form'] = 'Registration Form';
+$txt['manual_register_required_info'] = 'Required Information';
+$txt['manual_register_username'] = 'Username';
+$txt['manual_register_email'] = 'Email';
+$txt['manual_register_email_allow'] = 'Allow users to email me';
+$txt['manual_register_auth_method'] = 'Authentication Method';
+$txt['manual_register_password'] = 'Password';
+$txt['manual_register_openid'] = 'OpenID';
+$txt['manual_register_password_choose'] = 'Choose password';
+$txt['manual_register_password_verify'] = 'Verify password';
+$txt['manual_register_openid_auth'] = 'OpenID Authentication URL';
+$txt['manual_register_verification'] = 'Verification';
+$txt['manual_register_type_letters'] = 'Type the letters shown in the picture';
+$txt['manual_register_listen_letters'] = 'Listen to the letters';
+$txt['manual_register_request_image'] = 'Request another image';
+$txt['manual_register_question'] = 'What is the best forum software available?';
+$txt['manual_register_register'] = 'Register';
+
+// Text for template: activating_account
+$txt['manual_activate_describe'] = 'If a forum is configured to require email activation before login, an email will be sent to the email address provided at registration. Important account information, such as username and password, can be found in this email, as well as an activation link. Selecting the activation link activates the member\'s account and prompts them to login. If a problem occurs with the activation link, the email also provides an activation code that can be used to complete the process.';
+$txt['manual_activate_error'] = 'If a member attempts to login before completing the activation process, an error will be displayed noting that their email address must be validated. A <em>Need another activation email?</em> link is also displayed in case the email has somehow been lost.';
+
+// Text for template: logging_in_out
+$txt['manual_loginout_describe'] = 'Whether newly registered or simply logged out, a member usually has two options to login. Once logged in, a member only has one option for logging out.';
+$txt['manual_loginout_login_screen'] = 'Login Screen';
+$txt['manual_loginout_quick_login'] = 'Quick Login';
+$txt['manual_loginout_logging_out'] = 'Logging Out';
+$txt['manual_loginout_login_option'] = 'A member that is not currently logged in may access the login screen at any time by selecting the <em>Login</em> option from the main menu.';
+$txt['manual_loginout_login_username'] = '<strong>Username</strong> - The member\'s username';
+$txt['manual_loginout_login_password'] = '<strong>Password</strong> - The member\'s password';
+$txt['manual_loginout_login_openid'] = '<strong>OpenID</strong> - The member\'s OpenID';
+$txt['manual_loginout_login_minutes'] = '<strong>Minutes to stay logged in</strong> - The number of minutes the browser cookie will last before expiring';
+$txt['manual_loginout_login_always'] = '<strong>Always stay logged in</strong> - Keeps the browser cookie from expiring';
+$txt['manual_loginout_login_warning'] = 'When using a shared computer, a member probably should not stay logged in for a long time or check the <em>Always stay logged in</em> option, unless they remember to log out when finished. Leaving an account logged in on a shared computer makes it vulnerable to use by someone other than the member.';
+$txt['manual_loginout_quick'] = 'An SMF forum may be configured to allow login from any page. This is called quick login. In the default theme it is located in the top, left corner of each page. Other themes may place it in different locations. If quick login is disabled or cannot be seen, the login screen can stil be accessed from the main menu.';
+$txt['manual_loginout_quick_session'] = '<strong>Session Length</strong> - The length of time until the browser cookie expires';
+$txt['manual_loginout_quick_relate'] = 'The session length drop-down menu corresponds to the Minutes to stay logged in option from the login screen. Similarly, selecting Forever in this drop-down menu is the same as checking the Always stay logged in option on the login screen.';
+$txt['manual_loginout_out_describe'] = 'Once finished browsing a forum, a member may choose to logout. This is an especially good idea when using a shared computer. Logging out turns a member back into a guest and safeguards the member\'s forum identity until they choose to login again. Leaving an account logged in on a shared computer makes it vulnerable to use by someone other than the member.';
+$txt['manual_loginout_out_how'] = 'A member may logout at any time by simply selecting the <em>Logout</em> option from the main menu.';
+$txt['manual_loginout_login'] = 'Login';
+$txt['manual_loginout_or'] = 'or';
+$txt['manual_loginout_minutes'] = 'Minutes to stay logged in';
+$txt['manual_loginout_always'] = 'Always stay logged in';
+$txt['manual_loginout_forgot_password'] = 'Forgot your password?';
+$txt['manual_loginout_please'] = 'Please';
+$txt['manual_loginout_login_lower'] = 'login';
+$txt['manual_loginout_register'] = 'register';
+$txt['manual_loginout_hour'] = '1 Hour';
+$txt['manual_loginout_day'] = '1 Day';
+$txt['manual_loginout_week'] = '1 Week';
+$txt['manual_loginout_month'] = '1 Month';
+$txt['manual_loginout_forever'] = 'Forever';
+$txt['manual_loginout_instruct'] = 'Login with username, password and session length';
+
+// Text for template: password_reminders
+$txt['manual_reminders_describe'] = 'If a password is forgotten or lost, it can be reset by selecting the Forgot your password? option from the login screen. The username or email address for the account is requested to begin the password reset process.';
+$txt['manual_reminders_secret'] = 'If the member has not set a secret question, an email containing a password reset link is automatically sent to the member\'s email address. Selecting the link allows the member to choose a new password. If a secret question has been set, they will be given the option of receiving the email or answering their question.';
+$txt['manual_reminders_new_password'] = 'After answering their secret question correctly, a member may choose a new password. The password takes effect and can be used to login immediately.';
+$txt['manual_reminders_auth'] = 'Authentication Reminder';
+$txt['manual_reminders_start'] = 'If you\'ve forgotten your login details, don\'t worry, they can be retrieved. To start this process please enter your username or email address below.';
+$txt['manual_reminders_user_email'] = 'Username/Email';
+$txt['manual_reminders_continue'] = 'Continue';
+$txt['manual_reminders_instruct'] = 'Please enter the answer to your question, and the password you would like to use. Your password will be changed to the one you select provided you answer the question correctly.';
+$txt['manual_reminders_secret_question'] = 'Secret Question';
+$txt['manual_reminders_fingers'] = 'How many fingers am I holding up?';
+$txt['manual_reminders_answer'] = 'Answer';
+$txt['manual_reminders_save'] = 'Save';
 
 // The following entries are from the old version of the help section.
 // They should be removed following completion of the new version.
@@ -345,51 +428,6 @@ $txt['manual_index_modify_delete_part2'] = ' their own posts.';
 $txt['manual_index_report_to_moderator'] = '<strong>Report to moderator</strong> enables you to report abusive or wrongly-placed posts to the forum staff.';
 $txt['manual_index_logged_IP'] = '<strong>Logged</strong> indicates that the IP of the author has been logged. The actual IP is only available to board administrators';
 $txt['manual_index_jump_to_menu_provides'] = 'The <strong>Jump to</strong> menu provides a convenient quick method of navigating the forum.';
-
-// Entries for template: loginout.
-$txt['manual_loginout_complete_reg_part1'] = 'Once you have completed the ';
-$txt['manual_loginout_complete_reg_link_registering'] = 'registration';
-$txt['manual_loginout_complete_reg_part2'] = ' process, you will be able to login to the site for the first time. After that, you can choose whether to stay logged in indefinitely or logout at the end of your visit.';
-$txt['manual_loginout_sec_login'] = 'Logging In';
-$txt['manual_loginout_login_desc'] = 'So you might be newly registered or you might simply have been logged out from a previous visit, but there\'s normally a choice between the login screen and the quick login in either case.';
-$txt['manual_loginout_login_screen'] = 'The Login Screen';
-$txt['manual_loginout_login_screen_desc_part1'] = 'Since this screen (accessed from the <strong>Login</strong> option of the ';
-$txt['manual_loginout_login_screen_desc_link_index_main'] = 'main menu';
-$txt['manual_loginout_login_screen_desc_part2'] = ') is not only where you\'ll normally be taken on completing registration but also the first thing you\'ll see in any \'members only\' forum, we will describe it first:';
-$txt['manual_loginout_login'] = 'Login';
-$txt['manual_loginout_username'] = 'Username';
-$txt['manual_loginout_password'] = 'Password';
-$txt['manual_loginout_how_long'] = 'Minutes to stay logged in';
-$txt['manual_loginout_always'] = 'Always stay logged in';
-$txt['manual_loginout_forgot'] = 'Forgot your password';
-$txt['manual_loginout_login_screen_explanation'] = 'While the <strong>Username</strong> and <strong>Password</strong> fields should be self-explanatory, <strong>Minutes to stay logged in</strong> simply means the number of minutes the cookie that keeps you logged in will last before expiring and requiring you to login again. So it\'s not advisable to enter a long time here if you share a computer and are likely to forget to logout, but you might prefer to check <strong>Always stay logged in</strong> if no-one else has access to your computer.';
-$txt['manual_loginout_sub_quick_login'] = 'The Quick Login';
-$txt['manual_loginout_although_many_forums_part1'] = 'Although many forums also have a quick login box to allow you to login direct from any screen, its position on the page may vary considerably from forum to forum. In the SMF default theme, for example, it\'s in the collapsible section at the top, whereas it\'s more likely to be at the bottom in themes based on the older YaBB SE forum. If you can\'t see it and it hasn\'t simply been collapsed, it\'s either not enabled at all (in which case you should still be able to access the login screen from the ';
-$txt['manual_loginout_although_many_forums_link_index_main'] = 'main menu';
-$txt['manual_loginout_although_many_forums_part2'] = ') or you\'re already logged in (in which case the main menu should include a <strong>Logout</strong> rather than <strong>Login</strong> link!).';
-$txt['manual_loginout_hour'] = '1 Hour';
-$txt['manual_loginout_day'] = '1 Day';
-$txt['manual_loginout_week'] = '1 Week';
-$txt['manual_loginout_mo'] = '1 Month';
-$txt['manual_loginout_forever'] = 'Forever';
-$txt['manual_loginout_login_all'] = 'Login with username, password and session length';
-$txt['manual_loginout_use_quick_login'] = 'To use the quick login box, enter your username and password, select your session length from the drop-down menu and click <strong>Login</strong>. Please note that <strong>Forever</strong>, like <strong>Always stay logged in</strong>, simply means that the computer should remember you until you next choose to logout, and not that you actually need to be online all of that time!';
-$txt['manual_loginout_logout'] = 'Logging Out';
-$txt['manual_loginout_logout_desc_part1'] = 'When you have finished browsing the forum, you may decide to logout. Perhaps you share a workstation with someone else, in which case leaving yourself logged in would not be a good idea. So select the <strong>Logout</strong> option from the ';
-$txt['manual_loginout_logout_desc_link_index_main'] = 'main menu';
-$txt['manual_loginout_logout_desc_part2'] = ' and the forum should log you out, turning you into an instant guest, clearing your name from the list of users online and safeguarding your forum identity until you choose to login again.';
-$txt['manual_loginout_sec_reminder'] = 'Password Reminder';
-$txt['manual_loginout_reminder_desc_part1'] = 'If you\'re trying to login to the forum but have forgotten or lost your password, you can retrieve it with the lost password tool by following the <strong>Forgot your password?</strong> link from the ';
-$txt['manual_loginout_reminder_desc_link_screen'] = 'login';
-$txt['manual_loginout_reminder_desc_part2'] = ' screen.';
-$txt['manual_loginout_password_reminder'] = 'Password reminder';
-$txt['manual_loginout_username_email'] = 'Username/email';
-$txt['manual_loginout_send'] = 'Send';
-$txt['manual_loginout_by_user'] = 'by User';
-$txt['manual_loginout_by_email'] = 'by Email';
-$txt['manual_loginout_ask_q'] = 'Ask me my question';
-$txt['manual_loginout_q_explanation'] = 'You can\'t retrieve your password, but you can set a new one by following a link sent to you by email.  You also have the option of setting a new password by answering your secret question.';
-$txt['manual_loginout_reminder_explanation'] = 'You can enter either your username or your email address so long as you check the appropriate option, then click the <strong>Send</strong> button to send yourself an email containing a link to reset your password. It\'s also possible to avoid the email altogether if you\'ve set yourself a secret question and answer in your profile, but please beware of questions that anyone could answer or guess (like \'what is the first color of the rainbow?\', which would be a very bad choice)!';
 
 // Entries for template: pm.
 $txt['manual_pm_community'] = 'SMF is about community and communication. And there are many ways to communicate, such as posting to the boards, personal messaging, email, ICQ, AIM and YIM. But SMF\'s own personal message system, as available to registered members in most forums, is sometimes a more suitable option than any of these.';
@@ -898,44 +936,6 @@ $txt['manual_profile_sub_forum_profile_info'] = '<strong>Forum Profile Informati
 $txt['manual_profile_sub_actions2'] = 'Actions';
 $txt['manual_profile_sub_ban_user'] = '<strong>Ban this user</strong> provides tools for <strong>banning</strong> users, configuring the <strong>level</strong> of the ban and maintaining a <strong>ban list</strong> noting the details of any bans in force.';
 $txt['manual_profile_sub_delete_acct'] = '<strong>Delete this account</strong> is similar to the screen of the same name available to all members, but the <strong>confirmation question</strong> is different when it\'s not your own account that\'s about to be deleted.';
-
-// Entries for template: registering.
-$txt['manual_registering_you_have_arrived_part1'] = 'When you have set up your SMF forum, or wish to join another SMF forum, you should register a username. This will enable you to maintain a consistent identity while posting and keep track of what you\'ve read, no matter where you\'re working from or what computer you\'re using. You\'ll be able to fill out a personal ';
-$txt['manual_registering_you_have_arrived_link_profile'] = 'profile';
-$txt['manual_registering_you_have_arrived_part2'] = ' and use the built-in ';
-$txt['manual_registering_you_have_arrived_link_profile_pm'] = 'personal message system';
-$txt['manual_registering_you_have_arrived_part3'] = '. You\'ll be able to subscribe to email notifications, monitor your forum activity and more.';
-$txt['manual_registering_sec_register'] = 'How to Register';
-$txt['manual_registering_register_desc'] = 'Assuming you\'ve arrived at the forum as a guest and wish to register, you should be looking at one of these two things:';
-$txt['manual_registering_select_register_part1'] = 'Any page of the forum, in which you case you should select <strong>Register</strong> from the ';
-$txt['manual_registering_select_register_link_index_main'] = 'main menu';
-$txt['manual_registering_select_register_part2'] = '.';
-$txt['manual_registering_login_Scr_part1'] = 'A login screen headed by a warning about access being restricted to registered members, in which case you should either use the registration link provided or select <strong>Register</strong> from the ';
-$txt['manual_registering_login_Scr_link_index_main'] = 'main menu';
-$txt['manual_registering_login_Scr_part2'] = '.';
-$txt['manual_registering_warning'] = 'Warning!';
-$txt['manual_registering_warning_desc_1'] = 'Only registered members are allowed to access this section.';
-$txt['manual_registering_warning_desc_2'] = 'Please login below or ';
-$txt['manual_registering_warning_desc_3'] = 'register an account';
-$txt['manual_registering_warning_desc_4'] = ' with Forum Name.';
-$txt['manual_registering_sec_reg_screen'] = 'The Registration Screen';
-$txt['manual_registering_registration_form'] = 'Registration Form';
-$txt['manual_registering_required_info'] = 'Required Information';
-$txt['manual_registering_choose_username'] = 'Choose username';
-$txt['manual_registering_caption_username'] = 'Used only for identification by SMF.';
-$txt['manual_registering_email'] = 'Email';
-$txt['manual_registering_caption_email'] = 'This must be a valid email address.';
-$txt['manual_registering_hide_email'] = 'Hide email address from public';
-$txt['manual_registering_choose_pass'] = 'Choose password';
-$txt['manual_registering_verify_pass'] = 'Verify password';
-$txt['manual_registering_agreement'] = 'This is where the registration agreement should be if there is one!';
-$txt['manual_registering_agree'] = 'I Agree';
-$txt['manual_registering_register'] = 'Register';
-$txt['manual_registering_reg_screen_requirements_part1'] = 'When you arrive at the registration screen, you will need to enter a <strong>username</strong>, <strong>email address</strong> and <strong>password</strong>, and may be offered the option of hiding your email address. Since most forums also require you to agree to their terms of use before your registration is accepted, you will normally have to read the agreement and check <strong>I Agree</strong> before continuing. What happens next depends on how the forum is configured, but, if the next thing you see is a ';
-$txt['manual_registering_reg_screen_requirements_link_loginout_screen'] = 'login screen';
-$txt['manual_registering_reg_screen_requirements_part2'] = ' headed by a message inviting you to proceed, that\'s it, you\'re through and you can proceed to login! If not, there are two further possibilities:';
-$txt['manual_registering_email_activate'] = 'If registration has been configured to require email activation, the next screen will tell you so and you should receive an immediate email with instructions about how to proceed. But there\'s also a useful link (\'Did you miss your activation email?\') in the <strong>User Info</strong> box in case you miss this email or mistype your email address.';
-$txt['manual_registering_admin_approve'] = 'If registration has been configured to require approval from a forum administrator, the next screen will tell you so and you should receive both an acknowledgement by email and another email later to inform you whether or not your application has been approved.';
 
 // Entries for template: searching.
 $txt['manual_searching_you_have_arrived'] = 'While SMF naturally incorporates a powerful search engine, knowing how to use it is not surprisingly the key to returning successful results!';

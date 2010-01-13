@@ -839,16 +839,19 @@ div.cat_bar
 {
 	background: url(../images/theme/main_block.png) no-repeat 0 -160px;
 	padding-left: 9px;
+	overflow: hidden;
 }
 div.title_bar
 {
 	background: url(../images/theme/main_block.png) no-repeat 0 -200px;
 	padding-left: 9px;
+	overflow: hidden;
 }
 div.title_barIC
 {
 	background: url(../images/theme/main_block.png) no-repeat 0 -120px;
 	padding-left: 9px;
+	overflow: hidden;
 }
 /* rounded bars needs a different background here */
 #upshrinkHeaderIC h3.catbg span.left, #upshrinkHeaderIC h3.catbg2 span.left
@@ -3600,7 +3603,11 @@ span.memberstatsbar span
 	margin: 0.5em 0 1em 0;
 	padding-left: 1.5em;
 }
-
+ul.basic_helplist
+{
+	padding: 0.8em 1.5em;
+	line-height: 1.5em;
+}
 /* put back the bullets please */
 #helpmain #messageindex
 {

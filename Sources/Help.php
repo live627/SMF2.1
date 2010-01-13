@@ -83,18 +83,18 @@ function ShowHelp()
 			'title' => $txt['manual_category_registering'],
 			'description' => '',
 			'areas' => array(
-				/*'when_how' => array(
+				'when_how' => array(
 					'label' => $txt['manual_section_when_how_register'],
 					'template' => 'manual_when_how_register',
-				),*/
+				),
 				'registration_screen' => array(
 					'label' => $txt['manual_section_registration_screen'],
 					'template' => 'manual_registration_screen',
 				),
-				/*'activating_account' => array(
+				'activating_account' => array(
 					'label' => $txt['manual_section_activating_account'],
 					'template' => 'manual_activating_account',
-				),*/
+				),
 				'logging_in' => array(
 					'label' => $txt['manual_section_logging_in_out'],
 					'template' => 'manual_logging_in_out',

@@ -44,7 +44,7 @@ January 2010
  ! m.id_board must be in repair_boards groupby or will cause postgresql error (RepairBoards.php) (Reported by MegaByte)
  ! Disable the wywiwyg editor on Android, iPhone and iPod devices. (Load.php, script.js, editor.js) [Bug 4020]
  * Fixed some more IE6 bugs and tweaked profile styling (index.css, ie6.css, several templates) 
-
+ * Extensive Help.template changes (index.css, Help.php, Help.template.php, Manual.english.php)
 
 December 2009
 --------------------------------------------------------------------------------
