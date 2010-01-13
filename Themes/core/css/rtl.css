@@ -1033,7 +1033,7 @@ ul.horizlist li
 }
 h3.titlebg
 {
-	padding-right: 0.5em !important;
+	padding: 0 0.5em 0 0 !important;
 }
 /* admin home */
 #live_news div.content dl

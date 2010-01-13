@@ -1324,7 +1324,7 @@ table.table_list tbody.content td.icon
 
 /* Styles for headers.
 ------------------------------------------------------- */
-/* Styles for headers used in Curve tempaltes. */
+/* Styles for headers used in Curve templates. */
 h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg, h4.catbg, div.titlebg, .table_list tbody.header td
 {
 	overflow: hidden;
@@ -1336,12 +1336,9 @@ h3.titlebg, h4.titlebg
 	border-left: 1px solid #adadad;
 	border-right: 1px solid #adadad;
 }
-h3.titlebg span.left
+h3.titlebg, h4.catbg
 {
-	display: block;
-	width: 0.6em;
-	height: 2em;
-	float: left;
+	padding: 0 0 0 0.5em !important;
 }
 h3.catbg img.icon, div.titlebg img.icon, h3.catbg img
 {

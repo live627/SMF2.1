@@ -432,14 +432,7 @@ h3.titlebg, h4.titlebg, h3.catbg, h4.catbg
 	border-left: 1px solid #adadad;
 	border-right: 1px solid #adadad;
 }
-h3.titlebg span.left
-{
-	display: block;
-	width: 0.6em;
-	height: 2em;
-	float: left;
-}
-h3.catbg, h4.catbg
+h3.titlebg, h4.catbg
 {
 	padding: 0 0 0 0.5em;
 }
