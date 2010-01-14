@@ -1,7 +1,3 @@
-// Add a fix for code stuff?
-if ((is_ie && !is_ie4) || is_webkit || is_ff)
-	addLoadEvent(smf_codeBoxFix);
-
 // The purpose of this code is to fix the height of overflow: auto blocks, because some browsers can't figure it out for themselves.
 function smf_codeBoxFix()
 {
@@ -18,6 +14,30 @@ function smf_codeBoxFix()
 			codeFix[i].style.height = (codeFix[i].offsetHeight + 24) + 'px';
 	}
 }
+
+// Add a fix for code stuff?
+if ((is_ie && !is_ie4) || is_webkit || is_ff)
+	addLoadEvent(smf_codeBoxFix);
+
+// Toggles the element height and width styles of an image.
+function smc_toggleImageDimensions()
+{
+	var oImages = document.getElementsByTagName('IMG');
+	for (oImage in oImages)
+	{
+		// Not a resized image? Skip it.
+		if (oImages[oImage].className == undefined || oImages[oImage].className.indexOf('bbc_img') == -1 || oImages[oImage].width == null || oImages[oImage].height == null)
+			continue;
+
+		oImages[oImage].style.cursor = 'pointer';
+		oImages[oImage].onclick = function() {
+			this.style.width = this.style.height = this.style.width == 'auto' ? null : 'auto';
+		};
+	}
+}
+
+// Add a load event for the function above.
+addLoadEvent(smc_toggleImageDimensions);
 
 // Adds a button to a certain button strip.
 function smf_addButton(sButtonStripId, bUseImage, oOptions)
@@ -46,7 +66,7 @@ var smf_addListItemHoverEvents = function()
 	var cssRule, newSelector;
 
 	// Add a rule for the list item hover event to every stylesheet.
-	for (var iStyleSheet = 0; iStyleSheet <  document.styleSheets.length; iStyleSheet ++)
+	for (var iStyleSheet = 0; iStyleSheet < document.styleSheets.length; iStyleSheet ++)
 		for (var iRule = 0; iRule < document.styleSheets[iStyleSheet].rules.length; iRule ++)
 		{
 			oCssRule = document.styleSheets[iStyleSheet].rules[iRule];

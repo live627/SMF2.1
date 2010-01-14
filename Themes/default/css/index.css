@@ -274,13 +274,6 @@ ul.reset, ul.reset li
 ------------------------------------------------------- */
 
 /* A quote, perhaps from another post. */
-.codeheader, .quoteheader
-{
-	color: #666;
-	font-size: x-small;
-	font-weight: bold;
-	padding: 0 0.3em;
-}
 blockquote.bbc_standard_quote, blockquote.bbc_alternate_quote
 {
 	font-size: x-small;
@@ -291,6 +284,7 @@ blockquote.bbc_standard_quote, blockquote.bbc_alternate_quote
 	border-bottom: 2px solid #99A;
 	padding: 1.1em 1.4em;
 	margin: 0.1em 0 0.3em 0;
+	overflow: auto;
 }
 
 /* Alterate blockquote stylings */
@@ -318,6 +312,15 @@ code.bbc_code
 	white-space: pre;
 	/* Show a scrollbar after about 24 lines. */
 	max-height: 24em;
+}
+
+/* The "Quote:" and "Code:" header parts... */
+.codeheader, .quoteheader
+{
+	color: #666;
+	font-size: x-small;
+	font-weight: bold;
+	padding: 0 0.3em;
 }
 
 /* For links to change the code stuff... */
