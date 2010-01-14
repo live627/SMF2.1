@@ -47,7 +47,7 @@ January 2010
  * Extensive Help.template changes (index.css, Help.php, Help.template.php, Manual.english.php)
  ! Adding an IP to a ban might fail if it has leading or trailing whitespace. (ManageBans.php)
  ! Setting the time threshold absurdly high would break the forum. (ManageSettings.php) [Bug 4157]
-
+ * Fixed Core Help.template & fixed some IE6 glitches (core/index.css, default/index.css, both Help.templates)
 
 December 2009
 --------------------------------------------------------------------------------

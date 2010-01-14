@@ -1467,6 +1467,8 @@ div#upper_section div.news form
 	border-top: 1px solid #ccc;
 	overflow: hidden;
 	list-style: none;
+	clear: both;
+	width: 100%;
 }
 .navigate_section ul li
 {
@@ -1900,6 +1902,10 @@ p#whoisviewing
 .postarea, .moderatorbar
 {
 	margin: 0 0 0 16em;
+}
+.postarea div.flow_hidden
+{
+	width: 100%;
 }
 
 .moderatorbar

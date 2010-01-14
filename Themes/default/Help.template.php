@@ -924,7 +924,7 @@ function template_manual_registration_screen()
 function template_manual_activating_account()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
-	
+
 	echo '
 			<p>', $txt['manual_activate_describe'], '</p>
 			<p>', $txt['manual_activate_error'], '</p>';

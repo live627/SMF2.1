@@ -1213,9 +1213,10 @@ h1#forum_name
 ul.linktree
 {
 	clear: both;
+	width: 100%;
 	list-style: none;
-	margin: 1.5em 0.5em 0.5em 0.5em;
-	padding: 0;
+	margin: 0;
+	padding: 1.5em 0.5em 0.5em 0.5em;
 	overflow: hidden;
 }
 ul.linktree li
