@@ -2151,7 +2151,6 @@ form#postmodify .roundframe .errorbox
 	padding: 0.5em;
 	overflow: hidden;
 }
-
 #post_header dt
 {
 	float: left;
@@ -2161,7 +2160,6 @@ form#postmodify .roundframe .errorbox
 	margin: .3em 0;
 	font-weight: bold;
 }
-
 #post_header dd
 {
 	float: left;
@@ -2170,12 +2168,10 @@ form#postmodify .roundframe .errorbox
 	width: 83%;
 	margin: .3em 0;
 }
-
 #post_header img
 {
 	vertical-align: middle;
 }
-
 ul.post_options
 {
 	margin: 0 0 0 1em;
@@ -2183,14 +2179,12 @@ ul.post_options
 	list-style: none;
 	overflow: hidden;
 }
-
 ul.post_options li
 {
 	margin: 0.2em 0;
 	width: 49%;
 	float: left;
 }
-
 #postAdditionalOptionsHeader
 {
 	margin-top: 1em;
@@ -2200,7 +2194,6 @@ ul.post_options li
 	border-bottom: 1px solid #cacdd3;
 	padding: 0.5em;
 }
-
 #postAttachment, #postAttachment2
 {
 	overflow: hidden;
@@ -2209,43 +2202,38 @@ ul.post_options li
 	border-bottom: 1px solid #cacdd3;
 	padding: 0.5em;
 }
-
 #postAttachment dd, #postAttachment2 dd
 {
 	margin: .3em 0 .3em 1em;
 }
-
 #postAttachment dt, #postAttachment2 dt
 {
 	font-weight: bold;
 }
-
 #postAttachment3
 {
 	margin-left: 1em;
 }
-
 #post_confirm_strip, #shortcuts
 {
 	padding: 1em 0 0 0;
 }
-
 .post_verification
 {
 	margin-top: .5em;
 }
-
 .post_verification #verification_control
 {
 	margin: .3em 0 .3em 1em;
 }
-/* the BBC buttons */
+/* The BBC buttons */
 #bbcBox_message
 {
-	margin-bottom: 1em;
+	margin: 1em 0 0.5em 0;
 }
 #bbcBox_message div
 {
+	margin: 0.2em 0;
 	vertical-align: top;
 }
 #bbcBox_message div img
@@ -2255,7 +2243,12 @@ ul.post_options li
 }
 #bbcBox_message select
 {
-	margin: 0 2px
+	margin: 0 2px;
+}
+/* The smiley strip */
+#smileyBox_message
+{
+	margin: 0.75em 0 0.5em 0;
 }
 
 /* Styles for edit event section
