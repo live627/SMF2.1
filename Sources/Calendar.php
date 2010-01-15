@@ -21,9 +21,9 @@
 * See the "license.txt" file for details of the Simple Machines license.          *
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
+/* Original module by Aaron O'Neil - aaron@mud-master.com                         *
+**********************************************************************************/
 
-/* Original module by Aaron O'Neil - aaron@mud-master.com                     *
-******************************************************************************/
 if (!defined('SMF'))
 	die('Hacking attempt...');
 

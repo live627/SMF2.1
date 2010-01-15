@@ -21,8 +21,9 @@
 * See the "license.txt" file for details of the Simple Machines license.          *
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
-/* Original module by Mach8 - We'll never forget you.                            */
+/* Original module by Mach8 - We'll never forget you.                             *
 /*********************************************************************************/
+
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
