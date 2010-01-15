@@ -1677,21 +1677,19 @@ function EditCustomProfiles()
 		// Come up with the unique name?
 		if (empty($context['fid']))
 		{
-			$colname = strtr(substr($_POST['field_name'], 0, 7), array(' ' => ''));
+			$colname = substr(strtr($_POST['field_name'], array(' ' => '')), 0, 6);
 			preg_match('~([\w\d_-]+)~', $colname, $matches);
-			if (!isset($matches[1]))
-				fatal_lang_error('custom_option_not_unique');
-			$colname = strtolower($matches[1]);
 
 			// If there is nothing to the name, then let's start out own - for foreign languages etc.
-			if (empty($colname))
-				$colname = 'cust_' . mt_rand(1, 999);
+			if (isset($matches[1]))
+				$colname = $initial_colname = 'cust_' . strtolower($matches[1]);
 			else
-				$colname = 'cust_' . $colname;
+				$colname = $initial_colname = 'cust_' . mt_rand(1, 999);
 
-			// Check this is unique.
+			// Make sure this is unique.
+			// !!! This may not be the most efficient way to do this.
 			$unique = false;
-			while ($unique == false)
+			for ($i = 0; !$unique && $i < 9; $i ++)
 			{
 				$request = $smcFunc['db_query']('', '
 					SELECT id_field
@@ -1704,12 +1702,13 @@ function EditCustomProfiles()
 				if ($smcFunc['db_num_rows']($request) == 0)
 					$unique = true;
 				else
-					$colname .= mt_rand(0, 9);
+					$colname = $initial_colname . $i;
 				$smcFunc['db_free_result']($request);
-
-				if (strlen($colname) >= 14 && !$unique)
-					fatal_lang_error('custom_option_not_unique');
 			}
+
+			// Still not a unique colum name? Leave it up to the user, then.
+			if (!$unique)
+				fatal_lang_error('custom_option_not_unique');
 		}
 		// Work out what to do with the user data otherwise...
 		else

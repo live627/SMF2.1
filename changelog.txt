@@ -50,6 +50,7 @@ January 2010
  * Fixed Core Help.template & fixed some IE6 glitches (core/index.css, default/index.css, both Help.templates)
  + Allow toggling of full size versions of resized images. (theme.js) 
  * Use scrollbars if a quote box's contents exceed its width. (index.css)
+ ! Do a better job at creating unique column keys for custom profile fields. (ManageSettings.php) [Bug 4034]
 
 
 December 2009
