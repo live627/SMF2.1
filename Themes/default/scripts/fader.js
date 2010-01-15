@@ -45,7 +45,7 @@ function smf_NewsFader(oOptions)
 
 smf_NewsFader.prototype.init = function init()
 {
-	var oForeEl, oForeColor, oBackEl, oBackColor
+	var oForeEl, oForeColor, oBackEl, oBackColor;
 
 	// Try to find the fore- and background colors.
 	if ('currentStyle' in this.oFaderHandle)

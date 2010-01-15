@@ -536,6 +536,7 @@ table.boardsframe td.lastpost
 {
 	text-align: center;
 	overflow: auto;
+	color: #000000;
 }
 
 /* Styles for the info center on the board index.
