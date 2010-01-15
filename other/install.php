@@ -628,7 +628,7 @@ function CheckFilesWritable()
 				'server' => isset($_POST['ftp_server']) ? $_POST['ftp_server'] : 'localhost',
 				'port' => isset($_POST['ftp_port']) ? $_POST['ftp_port'] : '21',
 				'username' => isset($_POST['ftp_username']) ? $_POST['ftp_username'] : '',
-				'path' => $_POST['ftp_path'],
+				'path' => isset($_POST['ftp_path']) ? $_POST['ftp_path'] : '/',
 				'path_msg' => !empty($found_path) ? $txt['ftp_path_found_info'] : $txt['ftp_path_info'],
 			);
 
