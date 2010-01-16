@@ -751,9 +751,9 @@ function template_trackIP()
 		echo '
 		<table class="table_grid" cellspacing="0" width="100%">
 			<thead>
-				<tr>
-					<th class="catbg3">', $txt['ip_address'], '</th>
-					<th class="catbg3">', $txt['display_name'], '</th>
+				<tr class="catbg">
+					<th class="smalltext">', $txt['ip_address'], '</th>
+					<th class="smalltext">', $txt['display_name'], '</th>
 				</tr>
 			</thead>
 			<tbody>';
