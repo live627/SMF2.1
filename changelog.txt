@@ -51,11 +51,13 @@ January 2010
  + Allow toggling of full size versions of resized images. (theme.js) 
  * Use scrollbars if a quote box's contents exceed its width. (index.css)
  ! Do a better job at creating unique column keys for custom profile fields. (ManageSettings.php) [Bug 4034]
+ ! The installer caused an undefined index error when the ftp path was not properly recognized (install.php) [Bug 4163]
  ! Overhauled the SSI examples page to make use of the Curve theme and new SSI functions. (ssi_examples.php) [Issue 4168]  
  * Added some air between BBC buttons and smileys on the post screen. (index.css)
  * The news fader caused a JS error in some browsers. (index.css, compat.css) [Bug 4150]
  ! Fixing polls without a topic resulted in an undefined index error. (RepairBoards.php)
  & Made the edit board section slighty more user friendly by adding a few captions. (ManageBoards language file, ManageBoards template) 
+ * Made the destination of the (!) links for unapproved posts somewhat more predictable. (BoardIndex template, MessageIndex template) 
 
 
 December 2009
@@ -228,7 +230,6 @@ November 2009
  * The 'delete board' button was missing the submit button class. (ManageBoards template)
  ! Double check the sanity of URL's in parse_bbc. (Subs.php)
  * Log datatype should be tinyint (mysql install/upgrade sql) [Bug 3910]
- ! The installer caused an undefined index error when the ftp path was not properly recognized (install.php) [Bug 4163]
 
 
 SMF 2.0 RC2                                                      8 November 2009
