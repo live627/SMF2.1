@@ -315,7 +315,7 @@ function template_modify_board()
 							<span class="smalltext">', $txt['mboards_description_desc'], '</span>
 						</dt>
 						<dd>
-							<textarea name="desc" rows="3" cols="35">', $context['board']['description'], '</textarea>
+							<textarea name="desc" rows="3" cols="35" style="width: 100%">', $context['board']['description'], '</textarea>
 						</dd>
 						<dt>
 							<strong>', $txt['permission_profile'], ':</strong><br />
@@ -344,10 +344,15 @@ function template_modify_board()
 	// List all the membergroups so the user can choose who may access this board.
 	foreach ($context['groups'] as $group)
 		echo '
-							<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' class="input_check" /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['mboards_groups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
+							<label for="groups_', $group['id'], '">
+								<input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' class="input_check" />
+								<span', $group['is_post_group'] ? ' class="post_group" title="' . $txt['mboards_groups_post_group'] . '"' : '', $group['id'] == 0 ? ' class="regular_members" title="' . $txt['mboards_groups_regular_members'] . '"' : '', '>
+									', $group['name'], '
+								</span>
+							</label><br />';
 	echo '
-								<em>', $txt['check_all'], '</em> <input type="checkbox" class="input_check" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
-								<br />
+							<em>', $txt['check_all'], '</em> <input type="checkbox" class="input_check" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
+							<br />
 						</dd>';
 
 	// Options to choose moderators, specifiy as announcement board and choose whether to count posts here.

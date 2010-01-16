@@ -55,6 +55,7 @@ January 2010
  * Added some air between BBC buttons and smileys on the post screen. (index.css)
  * The news fader caused a JS error in some browsers. (index.css, compat.css) [Bug 4150]
  ! Fixing polls without a topic resulted in an undefined index error. (RepairBoards.php)
+ & Made the edit board section slighty more user friendly by adding a few captions. (ManageBoards language file, ManageBoards template) 
 
 
 December 2009
