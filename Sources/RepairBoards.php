@@ -362,7 +362,7 @@ function loadForumTests()
 					FROM {db_prefix}polls'
 			),
 			'check_query' => '
-				SELECT p.id_poll, p.id_member, p.poster_name
+				SELECT p.id_poll, p.id_member, p.poster_name, t.id_board
 				FROM {db_prefix}polls AS p
 					LEFT JOIN {db_prefix}topics AS t ON (t.id_poll = p.id_poll)
 				WHERE p.id_poll BETWEEN {STEP_LOW} AND {STEP_HIGH}

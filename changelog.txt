@@ -53,7 +53,8 @@ January 2010
  ! Do a better job at creating unique column keys for custom profile fields. (ManageSettings.php) [Bug 4034]
  ! Overhauled the SSI examples page to make use of the Curve theme and new SSI functions. (ssi_examples.php) [Issue 4168]  
  * Added some air between BBC buttons and smileys on the post screen. (index.css)
- * The Newsfader caused a JS error in some browsers (index.css, compat.css) [Bug 4150]
+ * The news fader caused a JS error in some browsers. (index.css, compat.css) [Bug 4150]
+ ! Fixing polls without a topic resulted in an undefined index error. (RepairBoards.php)
 
 
 December 2009
