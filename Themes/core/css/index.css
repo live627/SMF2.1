@@ -2851,27 +2851,6 @@ div.core_posts div.content
 	padding: 0;
 }
 
-#ip_list
-{
-	padding: 0;
-	margin: 0 0 3px 0;
-	list-style: none;
-	clear: both;
-	display: block;
-}
-
-#ip_list li.header
-{
-	display: block;
-}
-
-#ip_list li.header, #ip_list li.ip
-{
-	float: left;
-	width: 49%;
-	padding: .5%;
-}
-
 #creator dl
 {
 	margin: 0;

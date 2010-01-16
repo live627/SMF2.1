@@ -58,6 +58,7 @@ January 2010
  ! Fixing polls without a topic resulted in an undefined index error. (RepairBoards.php)
  & Made the edit board section slighty more user friendly by adding a few captions. (ManageBoards language file, ManageBoards template) 
  * Made the destination of the (!) links for unapproved posts somewhat more predictable. (BoardIndex template, MessageIndex template) 
+ * The IP list in the Track IP section wasn't displaying properly. (Profile template, index.css, compat.css)
 
 
 December 2009

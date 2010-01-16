@@ -749,18 +749,27 @@ function template_trackIP()
 	else
 	{
 		echo '
-		<ul id="ip_list">
-			<li class="catbg3 header">', $txt['ip_address'], '</li>
-			<li class="catbg3 header">', $txt['display_name'], '</li>';
+		<table class="table_grid" cellspacing="0" width="100%">
+			<thead>
+				<tr>
+					<th class="catbg3">', $txt['ip_address'], '</th>
+					<th class="catbg3">', $txt['display_name'], '</th>
+				</tr>
+			</thead>
+			<tbody>';
 
 		// Loop through each of the members and display them.
 		foreach ($context['ips'] as $ip => $memberlist)
 			echo '
-			<li class="windowbg2 ip"><a href="', $context['base_url'], ';searchip=', $ip, '">', $ip, '</a></li>
-			<li class="windowbg2 ip">', implode(', ', $memberlist), '</li>';
+				<tr>
+					<td class="windowbg2"><a href="', $context['base_url'], ';searchip=', $ip, '">', $ip, '</a></td>
+					<td class="windowbg2">', implode(', ', $memberlist), '</td>
+				</tr>';
 
 		echo '
-		</ul>';
+			</tbody>
+		</table>
+		<br />';
 	}
 
 	template_show_list('track_message_list');
