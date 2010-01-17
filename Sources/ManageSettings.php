@@ -444,14 +444,21 @@ function ModifyBasicSettings($return_config = false)
 			array('check', 'allow_hideOnline'),
 			array('check', 'titlesEnable'),
 			array('check', 'enable_buddylist'),
-			array('text', 'default_personal_text'),
 		'',
-			// Stats, compression, cookies.... server type stuff.
+			// Who's online?
+			array('check', 'who_enabled'),
+			array('int', 'lastActive'),
+		'',
+			array('text', 'default_personal_text'),
+			array('text', 'meta_keywords', 'size' => 50),
+		'',
+			// Number formatting, timezones.
 			array('text', 'time_format'),
 			array('select', 'number_format', array('1234.00' => '1234.00', '1,234.00' => '1,234.00', '1.234,00' => '1.234,00', '1 234,00' => '1 234,00', '1234,00' => '1234,00')),
 			array('float', 'time_offset'),
 			'default_timezone' => array('select', 'default_timezone', array()),
-			array('int', 'lastActive'),
+		'',
+			// Statistics.
 			array('check', 'trackStats'),
 			array('check', 'hitStats'),
 		'',
@@ -459,10 +466,6 @@ function ModifyBasicSettings($return_config = false)
 			array('check', 'allow_disableAnnounce'),
 			array('check', 'disallow_sendBody'),
 			array('check', 'queryless_urls'),
-		'',
-			// Width/Height image reduction.
-			array('int', 'max_image_width'),
-			array('int', 'max_image_height'),
 	);
 
 	// Get all the time zones.
@@ -551,9 +554,10 @@ function ModifyLayoutSettings($return_config = false)
 	global $txt, $scripturl, $context, $settings, $sc;
 
 	$config_vars = array(
-			// Compact pages?
+			// Pagination stuff.
 			array('check', 'compactTopicPagesEnable'),
 			array('int', 'compactTopicPagesContiguous', null, $txt['contiguous_page_display'] . '<div class="smalltext">' . str_replace(' ', '&nbsp;', '"3" ' . $txt['to_display'] . ': <strong>1 ... 4 [5] 6 ... 9</strong>') . '<br />' . str_replace(' ', '&nbsp;', '"5" ' . $txt['to_display'] . ': <strong>1 ... 3 4 [5] 6 7 ... 9</strong>') . '</div>'),
+			array('int', 'defaultMaxMembers'),
 		'',
 			// Stuff that just is everywhere - today, search, online, etc.
 			array('select', 'todayMod', array($txt['today_disabled'], $txt['today_only'], $txt['yesterday_today'])),
@@ -561,17 +565,12 @@ function ModifyLayoutSettings($return_config = false)
 			array('check', 'onlineEnable'),
 			array('check', 'enableVBStyleLogin'),
 		'',
-			// Pagination stuff.
-			array('int', 'defaultMaxMembers'),
+			// Automagic image resizing.
+			array('int', 'max_image_width'),
+			array('int', 'max_image_height'),
 		'',
 			// This is like debugging sorta.
 			array('check', 'timeLoadPageEnable'),
-		'',
-			// Meta.
-			array('text', 'meta_keywords', 'size' => 50),
-		'',
-			// Who's online.
-			array('check', 'who_enabled'),
 	);
 
 	if ($return_config)

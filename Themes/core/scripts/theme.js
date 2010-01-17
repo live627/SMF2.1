@@ -26,7 +26,7 @@ function smc_toggleImageDimensions()
 	for (oImage in oImages)
 	{
 		// Not a resized image? Skip it.
-		if (oImages[oImage].className == undefined || oImages[oImage].className.indexOf('bbc_img') == -1 || oImages[oImage].width == null || oImages[oImage].height == null)
+		if (oImages[oImage].className == undefined || oImages[oImage].className.indexOf('bbc_img resized') == -1)
 			continue;
 
 		oImages[oImage].style.cursor = 'pointer';
