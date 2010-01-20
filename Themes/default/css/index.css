@@ -492,7 +492,6 @@ div.pagesection div.floatright input
 /* GenericList */
 .additional_row
 {
-	float: right;
 	padding: 0.5em 0 0.5em 2em;
 }
 .additional_row input

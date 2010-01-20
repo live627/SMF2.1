@@ -440,16 +440,14 @@ function ModifyBasicSettings($return_config = false)
 		'',
 			// Basic stuff, titles, flash, permissions...
 			array('check', 'allow_guestAccess'),
+			array('check', 'enable_buddylist'),
 			array('check', 'allow_editDisplayName'),
 			array('check', 'allow_hideOnline'),
 			array('check', 'titlesEnable'),
-			array('check', 'enable_buddylist'),
-		'',
-			// Who's online?
-			array('check', 'who_enabled'),
-			array('int', 'lastActive'),
-		'',
 			array('text', 'default_personal_text'),
+		'',
+			// SEO stuff
+			array('check', 'queryless_urls'),
 			array('text', 'meta_keywords', 'size' => 50),
 		'',
 			// Number formatting, timezones.
@@ -458,6 +456,10 @@ function ModifyBasicSettings($return_config = false)
 			array('float', 'time_offset'),
 			'default_timezone' => array('select', 'default_timezone', array()),
 		'',
+			// Who's online?
+			array('check', 'who_enabled'),
+			array('int', 'lastActive'),
+		'',
 			// Statistics.
 			array('check', 'trackStats'),
 			array('check', 'hitStats'),
@@ -465,7 +467,6 @@ function ModifyBasicSettings($return_config = false)
 			// Option-ish things... miscellaneous sorta.
 			array('check', 'allow_disableAnnounce'),
 			array('check', 'disallow_sendBody'),
-			array('check', 'queryless_urls'),
 	);
 
 	// Get all the time zones.

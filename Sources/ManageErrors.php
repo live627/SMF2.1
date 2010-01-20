@@ -134,7 +134,7 @@ function ViewErrorLog()
 	$context['errors'] = array();
 	$members = array();
 
-	while ($row = $smcFunc['db_fetch_assoc']($request))
+	for ($i = 0; $row = $smcFunc['db_fetch_assoc']($request); $i ++)
 	{
 		$search_message = preg_replace('~&lt;span class=&quot;remove&quot;&gt;(.+?)&lt;/span&gt;~', '%', $smcFunc['db_escape_wildcard_string']($row['message']));
 		if ($search_message == $filter['value']['sql'])
@@ -142,6 +142,7 @@ function ViewErrorLog()
 		$show_message = strtr(strtr(preg_replace('~&lt;span class=&quot;remove&quot;&gt;(.+?)&lt;/span&gt;~', '$1', $row['message']), array("\r" => '', '<br />' => "\n", '<' => '&lt;', '>' => '&gt;', '"' => '&quot;')), array("\n" => '<br />'));
 
 		$context['errors'][$row['id_error']] = array(
+			'alternate' => $i %2 == 0,
 			'member' => array(
 				'id' => $row['id_member'],
 				'ip' => $row['ip'],

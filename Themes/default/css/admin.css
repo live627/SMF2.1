@@ -585,47 +585,29 @@ h3.grid_header
 {
 	height: 25px;
 }
-
 #error_log
 {
 	width: 100%;
-	border: solid #bbbbbb;
-	border-width: 1px 1px 0;
 }
-
-#error_log td
-{
-	padding: 5px;
-	border-bottom: 1px solid #afafaf;
-}
-
-#error_log td.noborder
-{
-	border: none;
-	width: 50%;
-}
-
-#error_log td.border_r
-{
-	border-right: 1px solid #bbbbbb;
-}
-
-#error_log td.windowbg2
+#error_log tr.windowbg td, #error_log tr.windowbg2 td
 {
 	padding: 8px;
 	line-height: 160%;
 }
-
-#error_log td.font
+#error_log td.half_width
 {
-	font: 1.1em bold arial, helvetica, sans-serif;
+	width: 50%;
 }
-
+#error_log td.checkbox_column
+{
+	width: 15px;
+	vertical-align: top;
+	text-align: center;
+}
 #error_log div.filter_link
 {
 	clear: left;
 }
-
 #error_log td div.marginleft
 {
 	float: left;

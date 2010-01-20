@@ -40,7 +40,6 @@ function template_error_log()
 			<script type="text/javascript"><!-- // --><![CDATA[
 				var lastClicked = "";
 			// ]]></script>
-
 			<div class="cat_bar">
 				<h3 class="catbg grid_header">
 					<span class="ie6_header floatleft">
@@ -48,7 +47,7 @@ function template_error_log()
 					</span>
 				</h3>
 			</div>
-			<table border="0" cellspacing="0" class="bordercolor" id="error_log">
+			<table border="0" cellspacing="1" class="table_grid" id="error_log">
 				<tr>
 					<td colspan="3" class="windowbg">
 						&nbsp;&nbsp;', $txt['apply_filter_of_type'], ':';
@@ -56,12 +55,13 @@ function template_error_log()
 	$error_types = array();
 	foreach ($context['error_types'] as $type => $details)
 		$error_types[] = ($details['is_selected'] ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="" /> ' : '') . '<a href="' . $details['url'] . '" ' . ($details['is_selected'] ? 'style="font-weight: bold;"' : '') . ' title="' . $details['description'] . '">' . $details['label'] . '</a>';
+
 	echo '
 						', implode('&nbsp;|&nbsp;', $error_types), '
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3" class="titlebg">
+					<td colspan="3" class="windowbg">
 						&nbsp;&nbsp;', $txt['pages'], ': ', $context['page_index'], '
 					</td>
 				</tr>';
@@ -77,7 +77,7 @@ function template_error_log()
 	if (!empty($context['errors']))
 		echo '
 				<tr>
-					<td colspan="3" align="left" class="windowbg font">
+					<td colspan="3" align="left" class="titlebg">
 						<div class="floatright"><input type="submit" value="', $txt['remove_selection'], '" onclick="lastClicked = \'remove_selection\';" class="button_submit" /> <input type="submit" name="delall" value="', $context['has_filter'] ? $txt['remove_filtered_results'] : $txt['remove_all'], '" onclick="lastClicked = \'remove_all\';" class="button_submit" /></div>
 						&nbsp;<label for="check_all1"><input type="checkbox" id="check_all1" onclick="invertAll(this, this.form, \'delete[]\'); this.form.check_all2.checked = this.checked;" class="input_check" /><strong>', $txt['check_all'], '</strong></label>
 					</td>
@@ -86,18 +86,18 @@ function template_error_log()
 	foreach ($context['errors'] as $error)
 	{
 		echo '
-				<tr>
-					<td width="15" rowspan="2" align="center" class="windowbg2 border_r">
+				<tr class="windowbg', $error['alternate'] ? '2' : '', '">
+					<td rowspan="2" class="checkbox_column">
 						<input type="checkbox" name="delete[]" value="', $error['id'], '" class="input_check" />
 					</td>
-					<td class="windowbg2 noborder">
+					<td class="half_width">
 						<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=id_member;value=', $error['member']['id'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_member'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_member'], '" /></a>
 						<strong>', $error['member']['link'], '</strong><br />
 						<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=ip;value=', $error['member']['ip'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_ip'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_ip'], '" /></a>
 						<strong><a href="', $scripturl, '?action=trackip;searchip=', $error['member']['ip'], '">', $error['member']['ip'], '</a></strong>&nbsp;&nbsp;
 						<br />&nbsp;
 					</td>
-					<td class="windowbg2 noborder">
+					<td class="half_width">
 						<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? '' : ';desc', $context['has_filter'] ? $context['filter']['href'] : '', '" title="', $txt['reverse_direction'], '"><img src="', $settings['images_url'], '/sort_', $context['sort_direction'], '.gif" alt="', $txt['reverse_direction'], '" /></a>
 						', $error['time'], '
 						<br />';
@@ -113,8 +113,8 @@ function template_error_log()
 						', $txt['error_type'], ': ', $error['error_type']['name'], '
 					</td>
 				</tr>
-				<tr>
-					<td class="windowbg2" colspan="2">
+				<tr class="windowbg', $error['alternate'] ? '2' : '', '">
+					<td colspan="2">
 						<div class="filter_link floatleft"><a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=url;value=', $error['url']['href'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_url'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_url'], '" /></a></div>
 						<div class="marginleft"><a href="', $error['url']['html'], '">', $error['url']['html'], '</a></div>
 						<div class="filter_link floatleft"><a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=message;value=', $error['message']['href'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_message'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_message'], '" /></a></div>
@@ -144,12 +144,12 @@ function template_error_log()
 	else
 		echo '
 				<tr>
-					<td colspan="3" class="titlebg">', $txt['errlog_no_entries'], '</td>
+					<td colspan="3" class="windowbg2">', $txt['errlog_no_entries'], '</td>
 				</tr>';
 
 	echo '
 				<tr>
-					<td colspan="3" class="windowbg font">
+					<td colspan="3" class="windowbg">
 						&nbsp;&nbsp;', $txt['pages'], ': ', $context['page_index'], '
 					</td>
 				</tr>
