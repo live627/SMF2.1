@@ -32,6 +32,9 @@ require_once('SSI.php');
 if (empty($modSettings['mail_queue_use_cron']))
 	return;
 
+// Ensure we don't run out of memory with large email batches
+ini_set('memory_limit', '32M');
+
 $request = $smcFunc['db_query']('', '
 	SELECT /*!40001 SQL_NO_CACHE */ id_mail, recipient, body, subject, headers, send_html
 	FROM {db_prefix}mail_queue
@@ -41,6 +44,7 @@ $request = $smcFunc['db_query']('', '
 		'limit' => $modSettings['mail_limit'],
 	)
 );
+
 $emails = array();
 while ($row = $smcFunc['db_fetch_assoc']($request))
 	$emails[$row['id_mail']] = $row;
