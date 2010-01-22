@@ -335,8 +335,8 @@ function template_modify_user_subscription()
 
 	echo '
 						</select>
-						', $txt['hour'], ':<input type="text" name="hour" value="', $context['sub']['start']['hour'], '" size="2" class="input_text" />
-						', $txt['minute'], ':<input type="text" name="minute" value="', $context['sub']['start']['min'], '" size="2" class="input_text" />
+						', $txt['hour'], ':&nbsp;<input type="text" name="hour" value="', $context['sub']['start']['hour'], '" size="2" class="input_text" />
+						', $txt['minute'], ':&nbsp;<input type="text" name="minute" value="', $context['sub']['start']['min'], '" size="2" class="input_text" />
 					</fieldset>
 					<fieldset>
 						<legend>', $txt['end_date_and_time'], '</legend>
@@ -369,8 +369,8 @@ function template_modify_user_subscription()
 
 	echo '
 						</select>
-						', $txt['hour'], ':<input type="text" name="hourend" value="', $context['sub']['end']['hour'], '" size="2" class="input_text" />
-						', $txt['minute'], ':<input type="text" name="minuteend" value="', $context['sub']['end']['min'], '" size="2" class="input_text" />
+						', $txt['hour'], ':&nbsp;<input type="text" name="hourend" value="', $context['sub']['end']['hour'], '" size="2" class="input_text" />
+						', $txt['minute'], ':&nbsp;<input type="text" name="minuteend" value="', $context['sub']['end']['min'], '" size="2" class="input_text" />
 					</fieldset>
 					<input type="submit" name="save_sub" value="', $txt['paid_settings_save'], '" class="button_submit" />
 				</div>
