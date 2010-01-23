@@ -1188,6 +1188,8 @@ function AdminApprove()
 			$replacements = array(
 				'USERNAME' => $member['name'],
 				'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $member['id'] . ';code=' . $validation_code,
+				'ACTIVATIONLINKWITHOUTCODE' => $scripturl . '?action=activate;u=' . $member['id'],
+				'ACTIVATIONCODE' => $validation_code,
 			);
 
 			$emaildata = loadEmailTemplate('admin_approve_activation', $replacements, $member['language']);
@@ -1242,6 +1244,8 @@ function AdminApprove()
 			$replacements = array(
 				'USERNAME' => $member['name'],
 				'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $member['id'] . ';code=' . $member['code'],
+				'ACTIVATIONLINKWITHOUTCODE' => $scripturl . '?action=activate;u=' . $member['id'],
+				'ACTIVATIONCODE' => $validation_code,
 			);
 
 			$emaildata = loadEmailTemplate('admin_approve_remind', $replacements, $member['language']);

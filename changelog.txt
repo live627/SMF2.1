@@ -65,6 +65,7 @@ January 2010
  * Adjusted the error log styles to make it significantly easier to style. (ManageErrors.php, Errors template, admin.css)
  * Don't float additional rows of generic lists to the right. (index.css) [Bug 4171]
  * Fixed a scrolling issue in the manage profile field section. (Admin template)
+ ! When manually approving members, activation emails would not contain the link for manual activation. (ManageMembers.php, Register.php)
 
 
 December 2009

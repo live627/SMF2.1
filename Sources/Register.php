@@ -612,6 +612,7 @@ function Activate()
 			'REALNAME' => $row['real_name'],
 			'USERNAME' => $row['member_name'],
 			'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $row['id_member'] . ';code=' . $row['validation_code'],
+			'ACTIVATIONLINKWITHOUTCODE' => $scripturl . '?action=activate;u=' . $row['id_member'],
 			'ACTIVATIONCODE' => $row['validation_code'],
 			'FORGOTPASSWORDLINK' => $scripturl . '?action=reminder',
 		);
