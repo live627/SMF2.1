@@ -390,6 +390,16 @@ dl.settings dd.small_caption
 {
 	width: 79%;
 }
+/* Styles for the manage permissions section.
+------------------------------------------------- */
+dl.settings dt.permissions
+{
+	width: 35%;
+}
+dl.settings dd.permissions
+{
+	width: 64%;
+}
 
 /* Styles for the manage search section.
 ------------------------------------------------- */

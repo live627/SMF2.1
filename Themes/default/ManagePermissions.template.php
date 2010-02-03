@@ -89,10 +89,10 @@ function template_permission_index()
 					<fieldset>
 						<legend>', $txt['permissions_with_selection'], '</legend>
 							<dl class="settings">
-								<dt>
+								<dt class="permissions">
 									', $txt['permissions_apply_pre_defined'], ' <a href="' . $scripturl . '?action=helpadmin;help=permissions_quickgroups" onclick="return reqWin(this.href);">(?)</a>:
 								</dt>
-								<dd>
+								<dd class="permissions">
 									<select name="predefined">
 										<option value="">(' . $txt['permissions_select_pre_defined'] . ')</option>
 										<option value="restrict">' . $txt['permitgroups_restrict'] . '</option>
@@ -101,10 +101,10 @@ function template_permission_index()
 										<option value="maintenance">' . $txt['permitgroups_maintenance'] . '</option>
 									</select>
 								</dd>
-								<dt>
+								<dt class="permissions">
 									', $txt['permissions_like_group'], ':
 								</dt>
-								<dd>
+								<dd class="permissions">
 									<select name="copy_from">
 										<option value="empty">(', $txt['permissions_select_membergroup'], ')</option>';
 		foreach ($context['groups'] as $group)
@@ -117,7 +117,7 @@ function template_permission_index()
 		echo '
 									</select>
 								</dd>
-								<dt>
+								<dt class="permissions">
 									<select name="add_remove">
 										<option value="add">', $txt['permissions_add'], '...</option>
 										<option value="clear">', $txt['permissions_remove'], '...</option>';
@@ -127,7 +127,7 @@ function template_permission_index()
 		echo '
 									</select>
 								</dt>
-								<dd>
+								<dd class="permissions">
 									<select name="permissions">
 										<option value="">(', $txt['permissions_select_permission'], ')</option>';
 		foreach ($context['permissions'] as $permissionType)

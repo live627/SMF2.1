@@ -3,6 +3,10 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC3                                                      			 ???
 ================================================================================
+February 2010
+--------------------------------------------------------------------------------
+ * The permissions layout was broken when using different languages (ManagePermissions template, admin.css) [Bug 4050]
+
 January 2010
 --------------------------------------------------------------------------------
  ! Updated copyright and all other instances of 2009 to 2010 (146 files)
