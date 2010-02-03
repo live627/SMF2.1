@@ -240,7 +240,7 @@ function template_credits()
 
 	<div id="admincenter">
 		<div class="cat_bar">
-			<h3 class="catbg">>
+			<h3 class="catbg">
 				', $txt['support_title'], '
 			</h3>
 		</div>

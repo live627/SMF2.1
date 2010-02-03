@@ -7,14 +7,14 @@ function template_permission_index()
 
 	// Not allowed to edit?
 	if (!$context['can_modify'])
-	echo '
+		echo '
 	<div class="errorbox">
 		', sprintf($txt['permission_cannot_edit'], $scripturl . '?action=admin;area=permissions;sa=profiles'), '
 	</div>';
 
 	echo '
 	<div id="admincenter">
-		<form action="' . $scripturl . '?action=admin;area=permissions;sa=quick" method="post" accept-charset="', $context['character_set'], '" name="permissionForm" id="permissionForm">';
+		<form action="', $scripturl, '?action=admin;area=permissions;sa=quick" method="post" accept-charset="', $context['character_set'], '" name="permissionForm" id="permissionForm">';
 
 		if (!empty($context['profile']))
 		echo '
@@ -59,7 +59,7 @@ function template_permission_index()
 						', $group['num_permissions']['allowed'];
 		else
 			echo '
-						<div class="floatleft" style="width: 50%;">', $group['num_permissions']['allowed'], '</div> ', empty($group['num_permissions']['denied']) || $group['id'] == 1 ? $group['num_permissions']['denied'] : ($group['id'] == -1 ? '<span style="font-style: italic;">' . $group['num_permissions']['denied'] . '</span>' : '<span style="color: red;">' . $group['num_permissions']['denied'] . '</span>');
+						<div class="floatleft" style="width: 50%;">', $group['num_permissions']['allowed'], '</div> ', empty($group['num_permissions']['denied']) || $group['id'] == 1 ? $group['num_permissions']['denied'] : ($group['id'] == -1 ? '<em style="font-style: italic;">' . $group['num_permissions']['denied'] . '</em>' : '<em style="color: red;">' . $group['num_permissions']['denied'] . '</em>');
 		echo '
 					</td>
 					<td class="windowbg2" align="center">', $group['allow_modify'] ? '<a href="' . $scripturl . '?action=admin;area=permissions;sa=modify;group=' . $group['id'] . (empty($context['profile']) ? '' : ';pid=' . $context['profile']['id']) . '">' . ($context['can_modify'] ? $txt['permissions_modify'] : $txt['permissions_view']). '</a>' : '', '</td>
@@ -88,23 +88,23 @@ function template_permission_index()
 				<div class="content">
 					<fieldset>
 						<legend>', $txt['permissions_with_selection'], '</legend>
-							<dl class="settings">
-								<dt class="permissions">
-									', $txt['permissions_apply_pre_defined'], ' <a href="' . $scripturl . '?action=helpadmin;help=permissions_quickgroups" onclick="return reqWin(this.href);">(?)</a>:
+							<dl class="settings admin_permissions">
+								<dt>
+									', $txt['permissions_apply_pre_defined'], ' <a href="', $scripturl, '?action=helpadmin;help=permissions_quickgroups" onclick="return reqWin(this.href);">(?)</a>:
 								</dt>
-								<dd class="permissions">
+								<dd>
 									<select name="predefined">
-										<option value="">(' . $txt['permissions_select_pre_defined'] . ')</option>
-										<option value="restrict">' . $txt['permitgroups_restrict'] . '</option>
-										<option value="standard">' . $txt['permitgroups_standard'] . '</option>
-										<option value="moderator">' . $txt['permitgroups_moderator'] . '</option>
-										<option value="maintenance">' . $txt['permitgroups_maintenance'] . '</option>
+										<option value="">(', $txt['permissions_select_pre_defined'], ')</option>
+										<option value="restrict">', $txt['permitgroups_restrict'], '</option>
+										<option value="standard">', $txt['permitgroups_standard'], '</option>
+										<option value="moderator">', $txt['permitgroups_moderator'], '</option>
+										<option value="maintenance">', $txt['permitgroups_maintenance'], '</option>
 									</select>
 								</dd>
-								<dt class="permissions">
+								<dt>
 									', $txt['permissions_like_group'], ':
 								</dt>
-								<dd class="permissions">
+								<dd>
 									<select name="copy_from">
 										<option value="empty">(', $txt['permissions_select_membergroup'], ')</option>';
 		foreach ($context['groups'] as $group)
@@ -117,7 +117,7 @@ function template_permission_index()
 		echo '
 									</select>
 								</dd>
-								<dt class="permissions">
+								<dt>
 									<select name="add_remove">
 										<option value="add">', $txt['permissions_add'], '...</option>
 										<option value="clear">', $txt['permissions_remove'], '...</option>';
@@ -127,7 +127,7 @@ function template_permission_index()
 		echo '
 									</select>
 								</dt>
-								<dd class="permissions">
+								<dd>
 									<select name="permissions">
 										<option value="">(', $txt['permissions_select_permission'], ')</option>';
 		foreach ($context['permissions'] as $permissionType)
@@ -224,7 +224,7 @@ function template_permission_index()
 			<input type="hidden" name="pid" value="', $context['profile']['id'], '" />';
 
 		echo '
-			<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />';
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
 	}
 	else
 		echo '
@@ -685,8 +685,8 @@ function template_modify_group_simple($type)
 				thisState = forceState;
 
 			// Cycle through this groups elements.
-			var curState = false;
-			for (i = 0; i < groupPermissions[id_group].length; i++)
+			var curState = false, thisState;
+			for (var i = 0; i < groupPermissions[id_group].length; i++)
 			{';
 
 		if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
@@ -766,13 +766,13 @@ function template_modify_group_simple($type)
 				{
 					if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
 						echo '
-			document.getElementById("group_select_div_', $id_group, '").className = "windowbg3";
+			document.getElementById("group_select_div_', $id_group, '").parentNode.className = "lockedbg";
 			document.getElementById("group_select_', $id_group, '").style.display = "";';
 					else
 						echo '
-			document.getElementById("group_select_div_on_', $id_group, '").className = "windowbg3";
-			document.getElementById("group_select_div_off_', $id_group, '").className = "windowbg3";
-			document.getElementById("group_select_div_deny_', $id_group, '").className = "windowbg3";
+			document.getElementById("group_select_div_on_', $id_group, '").parentNode.className = "lockedbg";
+			document.getElementById("group_select_div_off_', $id_group, '").parentNode.className = "lockedbg";
+			document.getElementById("group_select_div_deny_', $id_group, '").parentNode.className = "lockedbg";
 			document.getElementById("group_select_on_', $id_group, '").style.display = "";
 			document.getElementById("group_select_off_', $id_group, '").style.display = "";
 			document.getElementById("group_select_deny_', $id_group, '").style.display = "";';
@@ -1048,7 +1048,7 @@ function template_postmod_permissions()
 
 	echo '
 	<div id="admincenter">
-		<form action="' . $scripturl . '?action=admin;area=permissions;sa=postmod;', $context['session_var'], '=', $context['session_id'], '" method="post" name="postmodForm" id="postmodForm" accept-charset="', $context['character_set'], '">
+		<form action="', $scripturl, '?action=admin;area=permissions;sa=postmod;', $context['session_var'], '=', $context['session_id'], '" method="post" name="postmodForm" id="postmodForm" accept-charset="', $context['character_set'], '">
 			<div class="title_bar">
 				<h3 class="titlebg">', $txt['permissions_post_moderation'], '</h3>
 			</div>';

@@ -392,11 +392,11 @@ dl.settings dd.small_caption
 }
 /* Styles for the manage permissions section.
 ------------------------------------------------- */
-dl.settings dt.permissions
+dl.admin_permissions dt
 {
 	width: 35%;
 }
-dl.settings dd.permissions
+dl.admin_permissions dd
 {
 	width: 64%;
 }

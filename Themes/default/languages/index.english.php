@@ -248,8 +248,8 @@ $txt['no_matches'] = 'Sorry, no matches were found';
 $txt['notification'] = 'Notification';
 
 $txt['your_ban'] = 'Sorry %1$s, you are banned from using this forum!';
-$txt['your_ban_expires'] = 'Your ban is set to expire %1$s.';
-$txt['your_ban_expires_never'] = 'Your ban is not set to expire.';
+$txt['your_ban_expires'] = 'This ban is set to expire %1$s.';
+$txt['your_ban_expires_never'] = 'This ban is not set to expire.';
 $txt['ban_continue_browse'] = 'You may continue to browse the forum as a guest.';
 
 $txt['mark_as_read'] = 'Mark ALL messages as read';
