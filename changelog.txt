@@ -6,6 +6,7 @@ SMF 2.0 RC3                                                      			 ???
 February 2010
 --------------------------------------------------------------------------------
  * The permissions layout was broken when using different languages (ManagePermissions template, admin.css) [Bug 4050]
+ * When moving topics the target board name wasn't correctly displayed in Opera (index.css, compat.css) [Bug 4154]
 
 January 2010
 --------------------------------------------------------------------------------

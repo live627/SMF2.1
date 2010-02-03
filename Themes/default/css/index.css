@@ -2362,6 +2362,14 @@ ul.post_options li
 {
 	margin-bottom: 0;
 }
+#move_topic dl.settings dt
+{
+    width: 40%;
+}
+#move_topic dl.settings dd
+{
+    width: 59%;
+}
 .move_topic
 {
 	width: 710px;
