@@ -108,14 +108,17 @@ TRUNCATE {$to_prefix}messages;
 TRUNCATE {$to_prefix}attachments;
 
 ---* {$to_prefix}messages 200
+---{
+$ignore_slashes = true;
+---}
 SELECT
 	p.pid AS id_msg, p.tid AS id_topic, t.fid AS id_board, p.uid AS id_member,
 	SUBSTRING(p.username, 1, 255) AS poster_name, p.dateline AS poster_time,
 	SUBSTRING(p.ipaddress, 1, 255) AS poster_ip,
 	SUBSTRING(IF(p.subject = '', t.subject, p.subject), 1, 255) AS subject,
-	SUBSTRING(u.email, 1, 255) AS poster_email,
+	SUBSTRING(IF(p.uid > 0, u.email, ''), 1, 255) AS poster_email,
 	p.smilieoff = 'no' AS smileys_enabled,
-	SUBSTRING(edit_u.username, 1, 255) AS modified_name,
+	SUBSTRING(IF(p.edituid > 0, edit_u.username, ''), 1, 255) AS modified_name,
 	p.edittime AS modified_time,
 	SUBSTRING(REPLACE(p.message, '<br>', '<br />'), 1, 65534) AS body,
 	'xx' AS icon
