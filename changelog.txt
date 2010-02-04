@@ -9,6 +9,7 @@ February 2010
  * When moving topics the target board name wasn't correctly displayed in Opera (index.css, compat.css) [Bug 4154]
  * Polished the ManagePermissions template slighty. (ManagePermissions template, admin.css)
  & Rephrased the ban expiration time notice so it is less personal. (index language file)
+ ! The allowedTo function wasn't called correctly due to a typo (Profile-Actions.php) [Bug 4192]
 
 
 January 2010

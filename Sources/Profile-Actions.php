@@ -416,7 +416,7 @@ function deleteAccount($memID)
 		isAllowedTo('profile_remove_own');
 
 	// Permissions for removing stuff...
-	$context['can_delete_posts'] = !$context['user']['is_owner'] && allowedto('moderate_forum');
+	$context['can_delete_posts'] = !$context['user']['is_owner'] && allowedTo('moderate_forum');
 
 	// Can they do this, or will they need approval?
 	$context['needs_approval'] = $context['user']['is_owner'] && !empty($modSettings['approveAccountDeletion']) && !allowedTo('moderate_forum');
