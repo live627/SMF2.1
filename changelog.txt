@@ -12,6 +12,7 @@ February 2010
  ! The allowedTo function wasn't called correctly due to a typo (Profile-Actions.php) [Bug 4192]
  * Fixed iframe alignment issues on admin CSS editing page with IE7 (Themes template) [Bug 4153]
  * Sending PMs in wireless mode caused an implode error (Wireless template)[Bug 3980]
+ * The message layout was broken on Firefox when using very long words (firefox.css) [Bug 4111]
 
 
 January 2010
