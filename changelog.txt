@@ -11,6 +11,7 @@ February 2010
  & Rephrased the ban expiration time notice so it is less personal. (index language file)
  ! The allowedTo function wasn't called correctly due to a typo (Profile-Actions.php) [Bug 4192]
  * Fixed iframe alignment issues on admin CSS editing page with IE7 (Themes template) [Bug 4153]
+ * Sending PMs in wireless mode caused an implode error (Wireless template)[Bug 3980]
 
 
 January 2010
