@@ -296,8 +296,8 @@ function MLAll()
 	// List out the different sorting methods...
 	$sort_methods = array(
 		'is_online' => array(
-			'down' => '(IFNULL(lo.log_time, 1=1)' . (!allowedTo('moderate_forum') ? ' OR NOT mem.show_online' : '') . ') ASC, real_name ASC',
-			'up' => '(IFNULL(lo.log_time, 1=1)' . (!allowedTo('moderate_forum') ? ' OR NOT mem.show_online' : '') . ') DESC, real_name DESC'
+			'down' => allowedTo('moderate_forum') ? 'IFNULL(lo.log_time, 1) ASC, real_name ASC' : 'IF(mem.show_online, IFNULL(lo.log_time, 1), 1) ASC, real_name ASC',
+            'up' => allowedTo('moderate_forum') ? 'IFNULL(lo.log_time, 1) DESC, real_name DESC' : 'IF(mem.show_online, IFNULL(lo.log_time, 1), 1) DESC, real_name DESC'
 		),
 		'real_name' => array(
 			'down' => 'mem.real_name DESC',

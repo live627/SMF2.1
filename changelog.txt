@@ -13,6 +13,7 @@ February 2010
  * Fixed iframe alignment issues on admin CSS editing page with IE7 (Themes template) [Bug 4153]
  * Sending PMs in wireless mode caused an implode error (Wireless template)[Bug 3980]
  * The message layout was broken on Firefox when using very long words (firefox.css) [Bug 4111]
+ ! Memberlist didn't order by online status correctly for non moderators (Memberlist.php) [Bug 3990]
 
 
 January 2010
