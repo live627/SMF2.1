@@ -14,6 +14,7 @@ February 2010
  * Sending PMs in wireless mode caused an implode error (Wireless template)[Bug 3980]
  * The message layout was broken on Firefox when using very long words (firefox.css) [Bug 4111]
  ! Memberlist didn't order by online status correctly for non moderators (Memberlist.php) [Bug 3990]
+ ! Choose Theme was missing the LinkTree (Themes.php) [Bug 4134]
 
 
 January 2010

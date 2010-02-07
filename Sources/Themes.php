@@ -965,10 +965,16 @@ function RemoveTheme()
 // Choose a theme from a list.
 function PickTheme()
 {
-	global $txt, $context, $modSettings, $user_info, $language, $smcFunc, $settings;
+	global $txt, $context, $modSettings, $user_info, $language, $smcFunc, $settings, $scripturl;
 
 	loadLanguage('Profile');
 	loadTemplate('Themes');
+	
+	 // Build the link tree.
+    $context['linktree'][] = array(
+        'url' => $scripturl . '?action=theme;sa=pick;u=' . (!empty($_REQUEST['u']) ? (int) $_REQUEST['u'] : 0),
+        'name' => $txt['theme_pick'],
+    ); 
 
 	$_SESSION['id_theme'] = 0;
 
