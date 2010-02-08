@@ -784,6 +784,8 @@ function ModReport()
 	// If they are adding a comment then... add a comment.
 	if (isset($_POST['add_comment']) && !empty($_POST['mod_comment']))
 	{
+		checkSession();
+
 		$newComment = trim($smcFunc['htmlspecialchars']($_POST['mod_comment']));
 
 		// In it goes.

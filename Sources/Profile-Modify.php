@@ -1354,6 +1354,8 @@ function editBuddies($memID)
 	// Removing a buddy?
 	if (isset($_GET['remove']))
 	{
+		checkSession('get');
+
 		// Heh, I'm lazy, do it the easy way...
 		foreach ($buddiesArray as $key => $buddy)
 			if ($buddy == (int) $_GET['remove'])
@@ -1459,6 +1461,8 @@ function editIgnoreList($memID)
 	// Removing a member from the ignore list?
 	if (isset($_GET['remove']))
 	{
+		checkSession('get');
+
 		// Heh, I'm lazy, do it the easy way...
 		foreach ($ignoreArray as $key => $id_remove)
 			if ($id_remove == (int) $_GET['remove'])

@@ -349,6 +349,8 @@ function UnapprovedAttachments()
 	// Something to do, let's do it!
 	if (!empty($attachments) && isset($curAction))
 	{
+		checkSession('request');
+
 		// This will be handy.
 		require_once($sourcedir . '/ManageAttachments.php');
 

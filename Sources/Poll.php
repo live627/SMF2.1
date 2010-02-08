@@ -205,6 +205,8 @@ function Vote()
 			redirectexit('topic=' . $topic . '.' . $_REQUEST['start']);
 	}
 
+	checkSession('request');
+
 	// Make sure the option(s) are valid.
 	if (empty($_POST['options']))
 		fatal_lang_error('didnt_select_vote', false);

@@ -1147,7 +1147,7 @@ function ExamineFile()
 	if (!isset($_REQUEST['file']) || $_REQUEST['file'] == '')
 		redirectexit('action=admin;area=packages');
 
-	$_REQUEST['package'] = preg_replace('~[\.]+~', '.', $_REQUEST['package']);
+	$_REQUEST['package'] = preg_replace('~[\.]+~', '.', strtr($_REQUEST['package'], array('/' => '_', '\\' => '_')));
 	$_REQUEST['file'] = preg_replace('~[\.]+~', '.', $_REQUEST['file']);
 
 	if (isset($_REQUEST['raw']))

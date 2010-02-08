@@ -73,6 +73,9 @@ function ViewModlog()
 
 	// Handle deletion...
 	if (isset($_POST['removeall']) && $context['can_delete'])
+	{
+		checkSession();
+
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_actions
 			WHERE id_log = {int:moderate_log}
@@ -82,7 +85,10 @@ function ViewModlog()
 				'moderate_log' => $context['log_type'],
 			)
 		);
+	}
 	elseif (!empty($_POST['remove']) && isset($_POST['delete']) && $context['can_delete'])
+	{
+		checkSession();
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_actions
 			WHERE id_log = {int:moderate_log}
@@ -94,6 +100,7 @@ function ViewModlog()
 				'moderate_log' => $context['log_type'],
 			)
 		);
+	}
 
 	// Do the column stuff!
 	$sort_types = array(
