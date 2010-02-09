@@ -788,14 +788,31 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		)
 	);
 
-	// We're going to assume they bothered to read it before splitting it.
-	if (!$user_info['is_guest'])
-		$smcFunc['db_insert']('replace',
+	// Copy log topic entries.
+	// !!! This should really be chunked.
+	$request = $smcFunc['db_query']('', '
+		SELECT id_member, id_msg
+		FROM {db_prefix}log_topics
+		WHERE id_topic = {int:id_topic}',
+		array(
+			'id_topic' => (int) $split1_ID_TOPIC,
+		)
+	);
+	if ($smcFunc['db_num_rows']($request) > 0)
+	{
+		$replaceEntries = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$replaceEntries[] = array($row['id_member'], $split2_ID_TOPIC, $row['id_msg']);
+
+		$smcFunc['db_insert']('ignore',
 			'{db_prefix}log_topics',
-			array('id_msg' => 'int', 'id_member' => 'int', 'id_topic' => 'int'),
-			array($modSettings['maxMsgID'], $user_info['id'], $split2_ID_TOPIC),
+			array('id_member' => 'int', 'id_topic' => 'int', 'id_msg' => 'int'),
+			$replaceEntries,
 			array('id_member', 'id_topic')
 		);
+		unset($replaceEntries);
+	}
+	$smcFunc['db_free_result']($request);
 
 	// Housekeeping.
 	updateStats('topic');

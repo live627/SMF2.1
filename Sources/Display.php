@@ -383,106 +383,6 @@ function Display()
 	// Default this topic to not marked for notifications... of course...
 	$context['is_marked_notify'] = false;
 
-	// Guests can't mark topics read or for notifications, just can't sorry.
-	if (!$user_info['is_guest'])
-	{
-		$smcFunc['db_insert']('replace',
-			'{db_prefix}log_topics',
-			array(
-				'id_member' => 'int', 'id_topic' => 'int', 'id_msg' => 'int',
-			),
-			array(
-				$user_info['id'], $topic, $modSettings['maxMsgID'],
-			),
-			array('id_member', 'id_topic')
-		);
-
-		// Check for notifications on this topic OR board.
-		$request = $smcFunc['db_query']('', '
-			SELECT sent, id_topic
-			FROM {db_prefix}log_notify
-			WHERE (id_topic = {int:current_topic} OR id_board = {int:current_board})
-				AND id_member = {int:current_member}
-			LIMIT 2',
-			array(
-				'current_board' => $board,
-				'current_member' => $user_info['id'],
-				'current_topic' => $topic,
-			)
-		);
-		$do_once = true;
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-		{
-			// Find if this topic is marked for notification...
-			if (!empty($row['id_topic']))
-				$context['is_marked_notify'] = true;
-
-			// Only do this once, but mark the notifications as "not sent yet" for next time.
-			if (!empty($row['sent']) && $do_once)
-			{
-				$smcFunc['db_query']('', '
-					UPDATE {db_prefix}log_notify
-					SET sent = {int:is_not_sent}
-					WHERE (id_topic = {int:current_topic} OR id_board = {int:current_board})
-						AND id_member = {int:current_member}',
-					array(
-						'current_board' => $board,
-						'current_member' => $user_info['id'],
-						'current_topic' => $topic,
-						'is_not_sent' => 0,
-					)
-				);
-				$do_once = false;
-			}
-		}
-
-		// Have we recently cached the number of new topics in this board, and it's still a lot?
-		if (isset($_REQUEST['topicseen']) && isset($_SESSION['topicseen_cache'][$board]) && $_SESSION['topicseen_cache'][$board] > 5)
-			$_SESSION['topicseen_cache'][$board]--;
-		// Mark board as seen if this is the only new topic.
-		elseif (isset($_REQUEST['topicseen']))
-		{
-			// Use the mark read tables... and the last visit to figure out if this should be read or not.
-			$request = $smcFunc['db_query']('', '
-				SELECT COUNT(*)
-				FROM {db_prefix}topics AS t
-					LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = {int:current_board} AND lb.id_member = {int:current_member})
-					LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = {int:current_member})
-				WHERE t.id_board = {int:current_board}
-					AND t.id_last_msg > IFNULL(lb.id_msg, 0)
-					AND t.id_last_msg > IFNULL(lt.id_msg, 0)' . (empty($_SESSION['id_msg_last_visit']) ? '' : '
-					AND t.id_last_msg > {int:id_msg_last_visit}'),
-				array(
-					'current_board' => $board,
-					'current_member' => $user_info['id'],
-					'id_msg_last_visit' => (int) $_SESSION['id_msg_last_visit'],
-				)
-			);
-			list ($numNewTopics) = $smcFunc['db_fetch_row']($request);
-			$smcFunc['db_free_result']($request);
-
-			// If there're no real new topics in this board, mark the board as seen.
-			if (empty($numNewTopics))
-				$_REQUEST['boardseen'] = true;
-			else
-				$_SESSION['topicseen_cache'][$board] = $numNewTopics;
-		}
-		// Probably one less topic - maybe not, but even if we decrease this too fast it will only make us look more often.
-		elseif (isset($_SESSION['topicseen_cache'][$board]))
-			$_SESSION['topicseen_cache'][$board]--;
-
-		// Mark board as seen if we came using last post link from BoardIndex. (or other places...)
-		if (isset($_REQUEST['boardseen']))
-		{
-			$smcFunc['db_insert']('replace',
-				'{db_prefix}log_boards',
-				array('id_msg' => 'int', 'id_member' => 'int', 'id_board' => 'int'),
-				array($modSettings['maxMsgID'], $user_info['id'], $board),
-				array('id_member', 'id_board')
-			);
-		}
-	}
-
 	// Let's get nosey, who is viewing this topic?
 	if (!empty($settings['display_who_viewing']))
 	{
@@ -922,6 +822,112 @@ function Display()
 	}
 	$smcFunc['db_free_result']($request);
 	$posters = array_unique($posters);
+
+	// Guests can't mark topics read or for notifications, just can't sorry.
+	if (!$user_info['is_guest'])
+	{
+		$mark_at_msg = max($messages);
+		if ($mark_at_msg >= $topicinfo['id_last_msg'])
+			$mark_at_msg = $modSettings['maxMsgID'];
+		if ($mark_at_msg >= $topicinfo['new_from'])
+		{
+			$smcFunc['db_insert']($topicinfo['new_from'] == 0 ? 'ignore' : 'replace',
+				'{db_prefix}log_topics',
+				array(
+					'id_member' => 'int', 'id_topic' => 'int', 'id_msg' => 'int',
+				),
+				array(
+					$user_info['id'], $topic, $mark_at_msg,
+				),
+				array('id_member', 'id_topic')
+			);
+		}
+
+		// Check for notifications on this topic OR board.
+		$request = $smcFunc['db_query']('', '
+			SELECT sent, id_topic
+			FROM {db_prefix}log_notify
+			WHERE (id_topic = {int:current_topic} OR id_board = {int:current_board})
+				AND id_member = {int:current_member}
+			LIMIT 2',
+			array(
+				'current_board' => $board,
+				'current_member' => $user_info['id'],
+				'current_topic' => $topic,
+			)
+		);
+		$do_once = true;
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			// Find if this topic is marked for notification...
+			if (!empty($row['id_topic']))
+				$context['is_marked_notify'] = true;
+
+			// Only do this once, but mark the notifications as "not sent yet" for next time.
+			if (!empty($row['sent']) && $do_once)
+			{
+				$smcFunc['db_query']('', '
+					UPDATE {db_prefix}log_notify
+					SET sent = {int:is_not_sent}
+					WHERE (id_topic = {int:current_topic} OR id_board = {int:current_board})
+						AND id_member = {int:current_member}',
+					array(
+						'current_board' => $board,
+						'current_member' => $user_info['id'],
+						'current_topic' => $topic,
+						'is_not_sent' => 0,
+					)
+				);
+				$do_once = false;
+			}
+		}
+
+		// Have we recently cached the number of new topics in this board, and it's still a lot?
+		if (isset($_REQUEST['topicseen']) && isset($_SESSION['topicseen_cache'][$board]) && $_SESSION['topicseen_cache'][$board] > 5)
+			$_SESSION['topicseen_cache'][$board]--;
+		// Mark board as seen if this is the only new topic.
+		elseif (isset($_REQUEST['topicseen']))
+		{
+			// Use the mark read tables... and the last visit to figure out if this should be read or not.
+			$request = $smcFunc['db_query']('', '
+				SELECT COUNT(*)
+				FROM {db_prefix}topics AS t
+					LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = {int:current_board} AND lb.id_member = {int:current_member})
+					LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = {int:current_member})
+				WHERE t.id_board = {int:current_board}
+					AND t.id_last_msg > IFNULL(lb.id_msg, 0)
+					AND t.id_last_msg > IFNULL(lt.id_msg, 0)' . (empty($_SESSION['id_msg_last_visit']) ? '' : '
+					AND t.id_last_msg > {int:id_msg_last_visit}'),
+				array(
+					'current_board' => $board,
+					'current_member' => $user_info['id'],
+					'id_msg_last_visit' => (int) $_SESSION['id_msg_last_visit'],
+				)
+			);
+			list ($numNewTopics) = $smcFunc['db_fetch_row']($request);
+			$smcFunc['db_free_result']($request);
+
+			// If there're no real new topics in this board, mark the board as seen.
+			if (empty($numNewTopics))
+				$_REQUEST['boardseen'] = true;
+			else
+				$_SESSION['topicseen_cache'][$board] = $numNewTopics;
+		}
+		// Probably one less topic - maybe not, but even if we decrease this too fast it will only make us look more often.
+		elseif (isset($_SESSION['topicseen_cache'][$board]))
+			$_SESSION['topicseen_cache'][$board]--;
+
+		// Mark board as seen if we came using last post link from BoardIndex. (or other places...)
+		if (isset($_REQUEST['boardseen']))
+		{
+			$smcFunc['db_insert']('replace',
+				'{db_prefix}log_boards',
+				array('id_msg' => 'int', 'id_member' => 'int', 'id_board' => 'int'),
+				array($modSettings['maxMsgID'], $user_info['id'], $board),
+				array('id_member', 'id_board')
+			);
+		}
+	}
 
 	$attachments = array();
 

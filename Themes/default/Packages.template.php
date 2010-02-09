@@ -279,7 +279,7 @@ function template_view_package()
 	if (!$context['ftp_needed'] && (!empty($context['actions']) || !empty($context['database_changes'])))
 	{
 		echo '
-			<input type="submit" value="', $context['uninstalling'] ? $txt['package_uninstall_now'] : $txt['package_install_now'], '" onclick="return ', !empty($context['has_failure']) ? '(submitThisOnce(this) &amp;&amp; confirm(\'' . ($context['uninstalling'] ? $txt['package_will_fail_popup_uninstall'] : $txt['package_will_fail_popup']) . '\'))' : 'submitThisOnce(this)', ';" />';
+			<input type="submit" value="', $context['uninstalling'] ? $txt['package_uninstall_now'] : $txt['package_install_now'], '" onclick="return ', !empty($context['has_failure']) ? '(submitThisOnce(this) &amp;&amp; confirm(\'' . ($context['uninstalling'] ? $txt['package_will_fail_popup_uninstall'] : $txt['package_will_fail_popup']) . '\'))' : 'submitThisOnce(this)', ';" class="button_submit" />';
 	}
 	// If we need ftp information then demand it!
 	elseif ($context['ftp_needed'])
@@ -2124,7 +2124,7 @@ function template_action_permissions()
 	echo '
 					<input type="hidden" name="method" value="', $context['method'], '" />
 					<input type="hidden" name="action_changes" value="1" />
-					<input type="submit" name="go" id="cont" value="', $txt['not_done_continue'], '" />
+					<input type="submit" name="go" id="cont" value="', $txt['not_done_continue'], '" class="button_submit" />
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

@@ -253,27 +253,53 @@ function MarkRead()
 
 		redirectexit('action=unreadreplies');
 	}
+
 	// Special case: mark a topic unread!
 	elseif (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'topic')
 	{
+		// First, let's figure out what the latest message is.
+		$result = $smcFunc['db_query']('', '
+			SELECT id_first_msg, id_last_msg
+			FROM {db_prefix}topics
+			WHERE id_topic = {int:current_topic}',
+			array(
+				'current_topic' => $topic,
+			)
+		);
+		$topicinfo = $smcFunc['db_fetch_assoc']($result);
+		$smcFunc['db_free_result']($result);
+
 		if (!empty($_GET['t']))
 		{
-			// Get the latest message before this one.
-			$result = $smcFunc['db_query']('', '
-				SELECT MAX(id_msg)
-				FROM {db_prefix}messages
-				WHERE id_topic = {int:current_topic}
-					AND id_msg < {int:topic_msg_id}',
-				array(
-					'current_topic' => $topic,
-					'topic_msg_id' => (int) $_GET['t'],
-				)
-			);
-			list ($earlyMsg) = $smcFunc['db_fetch_row']($result);
-			$smcFunc['db_free_result']($result);
+			// If they read the whole topic, go back to the beginning.
+			if ($_GET['t'] >= $topicinfo['id_last_msg'])
+				$earlyMsg = 0;
+			// If they want to mark the whole thing read, same.
+			elseif ($_GET['t'] <= $topicinfo['id_first_msg'])
+				$earlyMsg = 0;
+			// Otherwise, get the latest message before the named one.
+			else
+			{
+				$result = $smcFunc['db_query']('', '
+					SELECT MAX(id_msg)
+					FROM {db_prefix}messages
+					WHERE id_topic = {int:current_topic}
+						AND id_msg >= {int:id_first_msg}
+						AND id_msg < {int:topic_msg_id}',
+					array(
+						'current_topic' => $topic,
+						'topic_msg_id' => (int) $_GET['t'],
+						'id_first_msg' => $topicinfo['id_first_msg'],
+					)
+				);
+				list ($earlyMsg) = $smcFunc['db_fetch_row']($result);
+				$smcFunc['db_free_result']($result);
+			}
 		}
-
-		if (empty($earlyMsg))
+		// Marking read from first page?  That's the whole topic.
+		elseif ($_REQUEST['start'] == 0)
+			$earlyMsg = 0;
+		else
 		{
 			$result = $smcFunc['db_query']('', '
 				SELECT id_msg
@@ -287,11 +313,11 @@ function MarkRead()
 			);
 			list ($earlyMsg) = $smcFunc['db_fetch_row']($result);
 			$smcFunc['db_free_result']($result);
+
+			$earlyMsg--;
 		}
 
-		$earlyMsg--;
-
-		// Use a time one second earlier than the first time: blam, unread!
+		// Blam, unread!
 		$smcFunc['db_insert']('replace',
 			'{db_prefix}log_topics',
 			array('id_msg' => 'int', 'id_member' => 'int', 'id_topic' => 'int'),

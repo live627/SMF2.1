@@ -1978,7 +1978,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		{
 			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}log_topics
-				SET id_msg = {int:id_msg} + 1
+				SET id_msg = {int:id_msg}
 				WHERE id_member = {int:current_member}
 					AND id_topic = {int:id_topic}',
 				array(
@@ -1993,10 +1993,10 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 		if (empty($flag))
 		{
-			$smcFunc['db_insert']('replace',
+			$smcFunc['db_insert']('ignore',
 				'{db_prefix}log_topics',
 				array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
-				array($topicOptions['id'], $posterOptions['id'], $msgOptions['id'] + 1),
+				array($topicOptions['id'], $posterOptions['id'], $msgOptions['id']),
 				array('id_topic', 'id_member')
 			);
 		}
@@ -2423,12 +2423,32 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 	// Mark inserted topic as read.
 	if (!empty($topicOptions['mark_as_read']) && !$user_info['is_guest'])
-		$smcFunc['db_insert']('replace',
-			'{db_prefix}log_topics',
-			array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
-			array($topicOptions['id'], $user_info['id'], $modSettings['maxMsgID']),
-			array('id_topic', 'id_member')
+	{
+		// Since it's likely they *read* it before editing, let's try an UPDATE first.
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}log_topics
+			SET id_msg = {int:id_msg}
+			WHERE id_member = {int:current_member}
+				AND id_topic = {int:id_topic}',
+			array(
+				'current_member' => $posterOptions['id'],
+				'id_msg' => $msgOptions['id'],
+				'id_topic' => $topicOptions['id'],
+			)
 		);
+
+		$flag = $smcFunc['db_affected_rows']() != 0;
+
+		if (empty($flag))
+		{
+			$smcFunc['db_insert']('ignore',
+				'{db_prefix}log_topics',
+				array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
+				array($topicOptions['id'], $posterOptions['id'], $msgOptions['id']),
+				array('id_topic', 'id_member')
+			);
+		}
+	}
 
 	// If there's a custom search index, it needs to be modified...
 	if (isset($msgOptions['body']) && !empty($modSettings['search_custom_index_config']))
