@@ -23,6 +23,7 @@ February 2010
  ! Mark unread moves up one post each time. (Subs-Post.php) [Bug 4189]
  ! Maintain unread logs even after splitting a topic. (SplitTopics.php) [Bug 4189]
  ! When reminding members of activation, the activation emails would not contain the activation code for manual activation. (ManageMembers.php)
+ ! Make sure the smf_prepareScriptUrl is being used to encapsulate the scripturl. (script.js) [Bug 4067]
 
 
 January 2010
