@@ -1245,7 +1245,7 @@ function AdminApprove()
 				'USERNAME' => $member['name'],
 				'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $member['id'] . ';code=' . $member['code'],
 				'ACTIVATIONLINKWITHOUTCODE' => $scripturl . '?action=activate;u=' . $member['id'],
-				'ACTIVATIONCODE' => $validation_code,
+				'ACTIVATIONCODE' => $member['code'],
 			);
 
 			$emaildata = loadEmailTemplate('admin_approve_remind', $replacements, $member['language']);

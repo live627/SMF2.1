@@ -22,6 +22,7 @@ February 2010
  ! Reading halfway into a topic would mark it as fully read. (Display.php, Subs-Boards.php) [Bug 4189]
  ! Mark unread moves up one post each time. (Subs-Post.php) [Bug 4189]
  ! Maintain unread logs even after splitting a topic. (SplitTopics.php) [Bug 4189]
+ ! When reminding members of activation, the activation emails would not contain the activation code for manual activation. (ManageMembers.php)
 
 
 January 2010
