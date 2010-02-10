@@ -2431,7 +2431,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			WHERE id_member = {int:current_member}
 				AND id_topic = {int:id_topic}',
 			array(
-				'current_member' => $posterOptions['id'],
+				'current_member' => $user_info['id'],
 				'id_msg' => $msgOptions['id'],
 				'id_topic' => $topicOptions['id'],
 			)
@@ -2444,7 +2444,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			$smcFunc['db_insert']('ignore',
 				'{db_prefix}log_topics',
 				array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
-				array($topicOptions['id'], $posterOptions['id'], $msgOptions['id']),
+				array($topicOptions['id'], $user_info['id'], $msgOptions['id']),
 				array('id_topic', 'id_member')
 			);
 		}

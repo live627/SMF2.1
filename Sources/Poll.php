@@ -608,6 +608,10 @@ function EditPoll2()
 	global $txt, $topic, $board, $context;
 	global $modSettings, $user_info, $smcFunc, $sourcedir;
 
+	// Sneaking off, are we?
+	if (empty($_POST))
+		redirectexit('action=editpoll;topic=' . $topic . '.0'); 
+
 	if (checkSession('post', '', false) != '')
 		$poll_errors[] = 'session_timeout';
 
