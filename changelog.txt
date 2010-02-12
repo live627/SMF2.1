@@ -25,6 +25,7 @@ February 2010
  ! When reminding members of activation, the activation emails would not contain the activation code for manual activation. (ManageMembers.php)
  ! Make sure the smf_prepareScriptUrl is being used to encapsulate the scripturl. (script.js) [Bug 4067]
  ! Redirect invalid poll edit requests. (Poll.php) [Bug 4194]
+ ! Spiders weren't detected properly with caching enabled. (ManageSearchEngines.php) [Bug 4195]
 
 
 January 2010

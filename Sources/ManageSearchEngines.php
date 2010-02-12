@@ -468,13 +468,11 @@ function SpiderCheck()
 		);
 		$spider_data = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
-		{
 			$spider_data[] = $row;
-
-			if (!empty($modSettings['cache_enable']))
-				cache_put_data('spider_search', $spider_data, 300);
-		}
 		$smcFunc['db_free_result']($request);
+
+		if (!empty($modSettings['cache_enable']))
+			cache_put_data('spider_search', $spider_data, 300);
 	}
 
 	if (empty($spider_data))
