@@ -455,10 +455,11 @@ function ModBlockReportedPosts()
 	}
 
 	$context['reported_posts'] = array();
-	foreach ($reported_posts as $row)
+	foreach ($reported_posts as $i => $row)
 	{
 		$context['reported_posts'][] = array(
 			'id' => $row['id_report'],
+			'alternate' => $i % 2,
 			'topic_href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 			'report_href' => $scripturl . '?action=moderate;area=reports;report=' . $row['id_report'],
 			'author' => array(
@@ -498,10 +499,11 @@ function ModBlockGroupRequests()
 		array(
 		)
 	);
-	while ($row = $smcFunc['db_fetch_assoc']($request))
+	for ($i = 0; $row = $smcFunc['db_fetch_assoc']($request); $i ++)
 	{
 		$context['group_requests'][] = array(
 			'id' => $row['id_request'],
+			'alternate' => $i % 2,
 			'request_href' => $scripturl . '?action=groups;sa=requests;gid=' . $row['id_group'],
 			'member' => array(
 				'id' => $row['id_member'],
@@ -636,11 +638,12 @@ function ReportedPosts()
 	);
 	$context['reports'] = array();
 	$report_ids = array();
-	while ($row = $smcFunc['db_fetch_assoc']($request))
+	for ($i = 0; $row = $smcFunc['db_fetch_assoc']($request); $i++)
 	{
 		$report_ids[] = $row['id_report'];
 		$context['reports'][$row['id_report']] = array(
 			'id' => $row['id_report'],
+			'alternate' => $i % 2,
 			'topic_href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 			'report_href' => $scripturl . '?action=moderate;area=reports;report=' . $row['id_report'],
 			'author' => array(

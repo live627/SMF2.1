@@ -26,6 +26,7 @@ February 2010
  ! Make sure the smf_prepareScriptUrl is being used to encapsulate the scripturl. (script.js) [Bug 4067]
  ! Redirect invalid poll edit requests. (Poll.php) [Bug 4194]
  ! Spiders weren't detected properly with caching enabled. (ManageSearchEngines.php) [Bug 4195]
+ * Alternate between windowbg and windowbg2 when viewing mod reports in the moderation center. (ModerationCenter.php, ModerationCenter template)
 
 
 January 2010

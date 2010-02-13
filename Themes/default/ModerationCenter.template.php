@@ -254,9 +254,6 @@ function template_reported_posts()
 			<div class="pages">', $txt['pages'], ': ', $context['page_index'], '</div>
 		</div>';
 
-	// Loop through and print out each report!
-	$alternate = 0;
-
 	// Make the buttons.
 	$close_button = create_button('close.gif', $context['view_closed'] ? 'mc_reportedp_open' : 'mc_reportedp_close', $context['view_closed'] ? 'mc_reportedp_open' : 'mc_reportedp_close', 'align="middle"');
 	$details_button = create_button('details.gif', 'mc_reportedp_details', 'mc_reportedp_details', 'align="middle"');
@@ -266,7 +263,7 @@ function template_reported_posts()
 	foreach ($context['reports'] as $report)
 	{
 		echo '
-		<div class="', $report['ignore'] ? 'windowbg' : 'windowbg2', '">
+		<div class="', $report['alternate'] ? 'windowbg' : 'windowbg2', '">
 			<span class="topslice"><span></span></span>
 			<div class="content">
 				<div>
@@ -295,13 +292,12 @@ function template_reported_posts()
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>';
-		$alternate = !$alternate;
 	}
 
 	// Were none found?
 	if (empty($context['reports']))
 		echo '
-		<div class="windowbg">
+		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
 			<div class="content">
 				<p class="centertext">', $txt['mc_reportedp_none_found'], '</p>
@@ -335,9 +331,6 @@ function template_unapproved_posts()
 			<h3 class="catbg">', $txt['mc_unapproved_posts'], '</h3>
 		</div>';
 
-	// Loop through and print out each outstanding post ;)
-	$alternate = false;
-
 	// Make up some buttons
 	$approve_button = create_button('approve.gif', 'approve', 'approve', 'align="middle"');
 	$remove_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
@@ -345,7 +338,7 @@ function template_unapproved_posts()
 	// No posts?
 	if (empty($context['unapproved_items']))
 		echo '
-		<div class="windowbg">
+		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
 			<div class="content">
 				<p class="centertext">', $txt['mc_unapproved_' . $context['current_view'] . '_none_found'], '</p>
@@ -368,7 +361,7 @@ function template_unapproved_posts()
 				<span class="smalltext align_right">', $txt['mc_unapproved_by'], ' ', $item['poster']['link'], ' ', $txt['on'], ': ', $item['time'], '</span>
 			</h3>
 		</div>
-		<div class="windowbg">
+		<div class="', $$item['alternate'] ? 'windowbg' : 'windowbg2', '">
 			<span class="topslice"><span></span></span>
 			<div class="content">
 				<div class="post">', $item['body'], '</div>
@@ -389,7 +382,6 @@ function template_unapproved_posts()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>';
-		$alternate = !$alternate;
 	}
 
 	echo '
@@ -452,11 +444,10 @@ function template_unapproved_attachments()
 			</thead>
 			<tbody>';
 
-	$alternate = 0;
 	foreach ($context['unapproved_items'] as $item)
 	{
 		echo '
-				<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
+				<tr class="', $item['alternate'] ? 'windowbg' : 'windowbg2', '">
 					<td>
 						', $item['filename'], '
 					</td>
@@ -473,8 +464,6 @@ function template_unapproved_attachments()
 						<input type="checkbox" name="item[]" value="', $item['id'], '" checked="checked" class="input_check" />
 					</td>
 				</tr>';
-
-		$alternate = !$alternate;
 	}
 
 	echo '
