@@ -305,7 +305,7 @@ function scheduled_approval_notification()
 	$members = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		// Check they are interested.
+		// Check whether they are interested.
 		if (!empty($row['mod_prefs']))
 		{
 			list(,, $pref_binary) = explode('|', $row['mod_prefs']);

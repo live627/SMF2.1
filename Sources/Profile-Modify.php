@@ -3217,7 +3217,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 		if (!empty($moderators))
 		{
 			$request = $smcFunc['db_query']('', '
-				SELECT id_member, email_address, lngfile, member_name
+				SELECT id_member, email_address, lngfile, member_name, mod_prefs
 				FROM {db_prefix}members
 				WHERE id_member IN ({array_int:moderator_list})
 					AND notify_types != {int:no_notifications}
@@ -3229,6 +3229,14 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 			);
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 			{
+				// Check whether they are interested.
+				if (!empty($row['mod_prefs']))
+				{
+					list(,, $pref_binary) = explode('|', $row['mod_prefs']);
+					if (!($pref_binary & 4))
+						continue;
+				}
+
 				$replacements = array(
 					'RECPNAME' => $row['member_name'],
 					'APPYNAME' => $old_profile['member_name'],
