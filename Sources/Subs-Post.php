@@ -2055,6 +2055,8 @@ function createAttachment(&$attachmentOptions)
 {
 	global $modSettings, $sourcedir, $smcFunc, $context;
 
+	require_once($sourcedir . '/Subs-Graphics.php');
+
 	// We need to know where this thing is going.
 	if (!empty($modSettings['currentAttachmentUploadDir']))
 	{
@@ -2091,7 +2093,17 @@ function createAttachment(&$attachmentOptions)
 	}
 
 	// These are the only valid image types for SMF.
-	$validImageTypes = array(1 => 'gif', 2 => 'jpeg', 3 => 'png', 5 => 'psd', 6 => 'bmp', 7 => 'tiff', 8 => 'tiff', 9 => 'jpeg', 14 => 'iff');
+	$validImageTypes = array(
+		1 => 'gif',
+		2 => 'jpeg',
+		3 => 'png',
+		5 => 'psd',
+		6 => 'bmp',
+		7 => 'tiff',
+		8 => 'tiff',
+		9 => 'jpeg',
+		14 => 'iff'
+	);
 
 	if (!$file_restricted || $already_uploaded)
 	{
@@ -2237,12 +2249,16 @@ function createAttachment(&$attachmentOptions)
 		rename($attachmentOptions['tmp_name'], $attachmentOptions['destination']);
 	elseif (!move_uploaded_file($attachmentOptions['tmp_name'], $attachmentOptions['destination']))
 		fatal_lang_error('attach_timeout', 'critical');
-	// We couldn't access the file before...
-	elseif ($file_restricted)
-	{
-		$size = @getimagesize($attachmentOptions['destination']);
-		list ($attachmentOptions['width'], $attachmentOptions['height']) = $size;
 
+	// Attempt to chmod it.
+	@chmod($attachmentOptions['destination'], 0644);
+	
+	$size = @getimagesize($attachmentOptions['destination']);
+	list ($attachmentOptions['width'], $attachmentOptions['height']) = empty($size) ? array(null, null, null) : $size;
+
+	// We couldn't access the file before...
+	if ($file_restricted)
+	{
 		// Have a go at getting the right mime type.
 		if (empty($attachmentOptions['mime_type']) && $attachmentOptions['width'])
 		{
@@ -2268,9 +2284,22 @@ function createAttachment(&$attachmentOptions)
 				)
 			);
 	}
-
-	// Attempt to chmod it.
-	@chmod($attachmentOptions['destination'], 0644);
+		
+	// Reencode it if it smells bad.
+	if (isset($validImageTypes[$size[2]]) && !checkImageContents($attachmentOptions['destination']))
+	{
+		if (!reencodeImage($attachmentOptions['destination']))
+		{
+			require_once($sourcedir . '/ManageAttachments.php');
+			removeAttachments(array(
+				'id_attach' => $attachmentOptions['id'] 
+			));
+			$attachmentOptions['id'] = null;
+			$attachmentOptions['errors'][] = 'could_not_upload';
+			
+			return false;
+		}
+	}	
 
 	if (!empty($attachmentOptions['skip_thumbnail']) || (empty($attachmentOptions['width']) && empty($attachmentOptions['height'])))
 		return true;
@@ -2278,7 +2307,6 @@ function createAttachment(&$attachmentOptions)
 	// Like thumbnails, do we?
 	if (!empty($modSettings['attachmentThumbnails']) && !empty($modSettings['attachmentThumbWidth']) && !empty($modSettings['attachmentThumbHeight']) && ($attachmentOptions['width'] > $modSettings['attachmentThumbWidth'] || $attachmentOptions['height'] > $modSettings['attachmentThumbHeight']))
 	{
-		require_once($sourcedir . '/Subs-Graphics.php');
 		if (createThumbnail($attachmentOptions['destination'], $modSettings['attachmentThumbWidth'], $modSettings['attachmentThumbHeight']))
 		{
 			// Figure out how big we actually made it.

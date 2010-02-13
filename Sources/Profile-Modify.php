@@ -2620,24 +2620,15 @@ function profileSaveAvatarData(&$value)
 			}
 			elseif (is_array($sizes))
 			{
-				// Though not an exhaustive list, better safe than sorry.
-				$fp = fopen($_FILES['attachment']['tmp_name'], 'rb');
-				if (!$fp)
-					fatal_lang_error('attach_timeout');
-
 				// Now try to find an infection.
-				while (!feof($fp))
+				require_once($sourcedir . '/Subs-Graphics.php');
+				if (!checkImageContents($_FILES['attachment']['tmp_name']))
 				{
-					if (preg_match('~(iframe|\\<\\?php|\\<\\?[\s=]|\\<%[\s=]|html|eval|body|script\W)~', fgets($fp, 4096)) === 1)
-					{
-						if (file_exists($uploadDir . '/avatar_tmp_' . $memID))
-							@unlink($uploadDir . '/avatar_tmp_' . $memID);
-
-						fatal_lang_error('attach_timeout');
-					}
+					// If the contents are suspisious, reencode them, just to be sure.
+					if (!reencodeImage($uploadDir . '/avatar_tmp_' . $memID))
+						return 'bad_avatar';
 				}
-				fclose($fp);
-
+				
 				$extensions = array(
 					'1' => 'gif',
 					'2' => 'jpg',

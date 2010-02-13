@@ -1342,9 +1342,15 @@ function Download()
 	// IE 6 just doesn't play nice. As dirty as this seems, it works.
 	if ($context['browser']['is_ie6'] && isset($_REQUEST['image']))
 		unset($_REQUEST['image']);
+		
+	// Make sure the mime type warrants an inline display.
+	elseif (isset($_REQUEST['image']) && !empty($mime_type) && strpos($mime_type, 'image/') !== 0)
+		unset($_REQUEST['image']);
+	
 	// Does this have a mime type?
 	elseif (!empty($mime_type) && (isset($_REQUEST['image']) || !in_array($file_ext, array('jpg', 'gif', 'jpeg', 'x-ms-bmp', 'png', 'psd', 'tiff', 'iff'))))
 		header('Content-Type: ' . strtr($mime_type, array('image/bmp' => 'image/x-ms-bmp')));
+		
 	else
 	{
 		header('Content-Type: ' . ($context['browser']['is_ie'] || $context['browser']['is_opera'] ? 'application/octetstream' : 'application/octet-stream'));

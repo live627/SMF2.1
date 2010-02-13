@@ -47,7 +47,29 @@ if (!defined('SMF'))
 		- returns whether the download and resize was successful.
 
 	bool createThumbnail(string source, int max_width, int max_height)
-		// !!!
+		- create a thumbnail of the given source.
+		- uses the resizeImageURL function to achieve the resize.
+		- returns whether the thumbnail creation was successful.
+		
+	bool reencodeImage(string fileName)
+		- creates a copy of the file at the same location as fileName.
+		- makes sure that all non-essential image contents are disposed.
+		- returns true on success, false on failure.
+		
+	bool checkImageContents(string fileName)
+		- searches through the file to see if there's non-binary content.
+		- returns true on success, false on failure.
+		
+	bool checkGD()
+		- sets a global $gd2 variable needed by some functions to determine
+		  whetehr the GD2 library is present.
+		- returns whether or not GD1 is available.
+		
+	void resizeImageURL(string sourceURL, string destinationFile,
+			int max_width, int max_height)
+		- resizes an image from a remote location or a local file.
+		- puts the resized image at the destinationFile location.
+		- returns whether it succeeded.
 
 	void resizeImage(resource src_img, string destination_filename,
 			int src_width, int src_height, int max_width, int max_height)
@@ -94,34 +116,15 @@ if (!defined('SMF'))
 
 function downloadAvatar($url, $memID, $max_width, $max_height)
 {
-	global $modSettings, $sourcedir, $gd2, $smcFunc;
+	global $modSettings, $sourcedir, $smcFunc;
 
 	$ext = !empty($modSettings['avatar_download_png']) ? 'png' : 'jpeg';
 	$destName = 'avatar_' . $memID . '_' . time() . '.' . $ext;
 
-	$default_formats = array(
-		'1' => 'gif',
-		'2' => 'jpeg',
-		'3' => 'png',
-		'6' => 'bmp',
-		'15' => 'wbmp'
-	);
-
-	// Check to see if GD is installed and what version.
-	$testGD = get_extension_funcs('gd');
-
-	// If GD is not installed, this function is pointless.
-	if (empty($testGD))
-		return false;
-
 	// Just making sure there is a non-zero member.
 	if (empty($memID))
 		return false;
-
-	// GD 2 maybe?
-	$gd2 = in_array('imagecreatetruecolor', $testGD) && function_exists('imagecreatetruecolor');
-	unset($testGD);
-
+		
 	require_once($sourcedir . '/ManageAttachments.php');
 	removeAttachments(array('id_member' => $memID));
 
@@ -150,75 +153,8 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	$destName = (empty($modSettings['custom_avatar_enabled']) ? (is_array($modSettings['attachmentUploadDir']) ? $modSettings['attachmentUploadDir'][$modSettings['currentAttachmentUploadDir']] : $modSettings['attachmentUploadDir']) : $modSettings['custom_avatar_dir']) . '/' . $destName . '.tmp';
 
 	$success = false;
-	$sizes = url_image_size($url);
 
-	require_once($sourcedir . '/Subs-Package.php');
-
-	$fp = fopen($destName, 'wb');
-	if ($fp && substr($url, 0, 7) == 'http://')
-	{
-		$fileContents = fetch_web_data($url);
-
-		// Though not an exhaustive list, better safe than sorry.
-		if (preg_match('~(iframe|\\<\\?php|\\<\\?|\\<%|html|eval|body|script)~', $fileContents) === 1)
-		{
-			fclose($fp);
-			return false;
-		}
-
-		fwrite($fp, $fileContents);
-		fclose($fp);
-	}
-	elseif ($fp)
-	{
-		$fp2 = fopen($url, 'rb');
-		if ($fp2 !== false)
-		{
-			$prev_chunk = '';
-			while (!feof($fp2))
-			{
-				$cur_chunk = fread($fp2, 8192);
-
-				// Make sure nothing odd came through.
-				if (preg_match('~(iframe|\\<\\?php|\\<\\?[\s=]|\\<%[\s=]|html|eval|body|script\W)~', $prev_chunk . $cur_chunk) === 1)
-				{
-					fclose($fp2);
-					fclose($fp);
-					unlink($destName);
-					return false;
-				}
-
-				fwrite($fp, $cur_chunk);
-				$prev_chunk = $cur_chunk;
-			}
-			fclose($fp2);
-		}
-		else
-			$sizes = array(-1, -1, -1);
-		fclose($fp);
-	}
-	// We can't get to the file.
-	else
-		$sizes = array(-1, -1, -1);
-
-	// Gif? That might mean trouble if gif support is not available.
-	if ($sizes[2] == 1 && !function_exists('imagecreatefromgif') && function_exists('imagecreatefrompng'))
-	{
-		// Download it to the temporary file... use the special gif library... and save as png.
-		if ($img = @gif_loadFile($destName) && gif_outputAsPng($img, $destName))
-			$sizes[2] = 3;
-	}
-
-	// A known and supported format?
-	if (isset($default_formats[$sizes[2]]) && function_exists('imagecreatefrom' . $default_formats[$sizes[2]]))
-	{
-		$imagecreatefrom = 'imagecreatefrom' . $default_formats[$sizes[2]];
-		if ($src_img = @$imagecreatefrom($destName))
-		{
-			resizeImage($src_img, $destName, imagesx($src_img), imagesy($src_img), $max_width, $max_height);
-			$success = true;
-		}
-	}
+	$success = resizeImageURL($url, $destName, $max_width, $max_height);
 
 	// Remove the .tmp extension.
 	$destName = substr($destName, 0, -4);
@@ -278,59 +214,15 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 
 function createThumbnail($source, $max_width, $max_height)
 {
-	global $modSettings, $gd2;
-
-	$default_formats = array(
-		'1' => 'gif',
-		'2' => 'jpeg',
-		'3' => 'png',
-		'6' => 'bmp',
-		'15' => 'wbmp'
-	);
-
-	// Is GD installed....?
-	$testGD = get_extension_funcs('gd');
-
-	// No GD?  Resizing to nothing?  Time to bail!
-	if (empty($testGD) || (empty($max_width) && empty($max_height)))
-		return false;
-
-	// Do we have GD 2, even?
-	$gd2 = in_array('imagecreatetruecolor', $testGD) && function_exists('imagecreatetruecolor');
-	unset($testGD);
+	global $modSettings;
 
 	$destName = $source . '_thumb.tmp';
 
 	// Ask for more memory: we need it for this, and it'll only happen once!
 	@ini_set('memory_limit', '90M');
 
-	$success = false;
-	$sizes = getimagesize($source);
-
-	if (empty($sizes))
-		return false;
-
-	// If we have to handle a gif, we might be able to... but maybe not :/.
-	if ($sizes[2] == 1 && !function_exists('imagecreatefromgif') && function_exists('imagecreatefrompng'))
-	{
-		// Try out a temporary file, if possible...
-		if ($img = @gif_loadFile($source) && gif_outputAsPng($img, $destName))
-			if ($src_img = imagecreatefrompng($destName))
-			{
-				resizeImage($src_img, $destName, imagesx($src_img), imagesy($src_img), $max_width, $max_height);
-				$success = true;
-			}
-	}
-	// Or is it one of the formats supported above?
-	elseif (isset($default_formats[$sizes[2]]) && function_exists('imagecreatefrom' . $default_formats[$sizes[2]]))
-	{
-		$imagecreatefrom = 'imagecreatefrom' . $default_formats[$sizes[2]];
-		if ($src_img = @$imagecreatefrom($source))
-		{
-			resizeImage($src_img, $destName, imagesx($src_img), imagesy($src_img), $max_width, $max_height);
-			$success = true;
-		}
-	}
+	// Do the actual resize.
+	$success = resizeImageURL($source, $destName, $max_width, $max_height);
 
 	// Okay, we're done with the temporary stuff.
 	$destName = substr($destName, 0, -4);
@@ -345,9 +237,134 @@ function createThumbnail($source, $max_width, $max_height)
 	}
 }
 
-function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $max_height)
+function reencodeImage($fileName)
+{
+	if (!resizeImageURL($fileName, $fileName . '.tmp', null, null))
+	{
+		if (file_exists($fileName . '.tmp'))
+			unlink($fileName . '.tmp');
+			
+		return false;
+	}
+	
+	if (!unlink($fileName))
+		return false;
+	
+	if (!rename($fileName . '.tmp', $fileName))
+		return false;
+	
+	return true;		
+}
+
+function checkImageContents($fileName)
+{
+	$fp = fopen($fileName, 'rb');
+	if (!$fp)
+		fatal_lang_error('attach_timeout');
+
+	$prev_chunk = '';
+	while (!feof($fp))
+	{
+		$cur_chunk = fread($fp, 8192);
+		
+		// Though not an exhaustive list, better safe than sorry.
+		if (preg_match('~(iframe|\\<\\?|\\<%|html|eval|body|script\W|[CF]WS[\x01-\x0C])~i', $prev_chunk . $cur_chunk) === 1)
+		{
+			fclose($fp);
+			return false;
+		}
+		$prev_chunk = $cur_chunk;
+	}
+	fclose($fp);
+	
+	return true;
+}
+
+function checkGD()
+{
+	global $gd2;
+	
+	// Check to see if GD is installed and what version.
+	if (($extensionFunctions = get_extension_funcs('gd')) === false)
+		return false;
+	
+	// Also determine if GD2 is installed and store it in a global.
+	$gd2 = in_array('imagecreatetruecolor', $extensionFunctions) && function_exists('imagecreatetruecolor');
+	
+	return true;
+}
+
+function resizeImageURL($sourceURL, $destinationFile, $max_width, $max_height)
+{
+	global $sourcedir;
+	
+	static $default_formats = array(
+		'1' => 'gif',
+		'2' => 'jpeg',
+		'3' => 'png',
+		'6' => 'bmp',
+		'15' => 'wbmp'
+	);
+
+	require_once($sourcedir . '/Subs-Package.php');
+
+	$success = false;
+	$sizes = url_image_size($sourceURL);
+
+	$fp_destination = fopen($destinationFile, 'wb');
+	if ($fp_destination && substr($sourceURL, 0, 7) == 'http://')
+	{
+		$fileContents = fetch_web_data($sourceURL);
+
+		fwrite($fp_destination, $fileContents);
+		fclose($fp_destination);
+	}
+	elseif ($fp_destination)
+	{
+		$fp_source = fopen($sourceURL, 'rb');
+		if ($fp_source !== false)
+		{
+			while (!feof($fp_source))
+				fwrite($fp_destination, fread($fp_source, 8192));
+			fclose($fp_source);
+		}
+		else
+			$sizes = array(-1, -1, -1);
+		fclose($fp_destination);
+	}
+	// We can't get to the file.
+	else
+		$sizes = array(-1, -1, -1);
+
+	// Gif? That might mean trouble if gif support is not available.
+	if ($sizes[2] == 1 && !function_exists('imagecreatefromgif') && function_exists('imagecreatefrompng'))
+	{
+		// Download it to the temporary file... use the special gif library... and save as png.
+		if ($img = @gif_loadFile($destinationFile) && gif_outputAsPng($img, $destinationFile))
+			$sizes[2] = 3;
+	}
+
+	// A known and supported format?
+	if (isset($default_formats[$sizes[2]]) && function_exists('imagecreatefrom' . $default_formats[$sizes[2]]))
+	{
+		$imagecreatefrom = 'imagecreatefrom' . $default_formats[$sizes[2]];
+		if ($src_img = @$imagecreatefrom($destinationFile))
+		{
+			resizeImage($src_img, $destinationFile, imagesx($src_img), imagesy($src_img), $max_width === null ? imagesx($src_img) : $max_width, $max_height === null ? imagesy($src_img) : $max_height, true);
+			$success = true;
+		}
+	}
+	
+	return $success;
+}
+
+function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $max_height, $force_resize = false)
 {
 	global $gd2, $modSettings;
+	
+	// Without GD, no image resizing at all.<br>
+	if (!checkGD())
+		return false;
 
 	// Determine whether to resize to max width or to max height (depending on the limits.)
 	if (!empty($max_width) || !empty($max_height))
@@ -364,7 +381,7 @@ function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $
 		}
 
 		// Don't bother resizing if it's already smaller...
-		if (!empty($dst_width) && !empty($dst_height) && ($dst_width < $src_width || $dst_height < $src_height))
+		if (!empty($dst_width) && !empty($dst_height) && ($dst_width < $src_width || $dst_height < $src_height || $force_resize))
 		{
 			// (make a true color image, because it just looks better for resizing.)
 			if ($gd2)

@@ -41,6 +41,9 @@ February 2010
  ! Disabling notifications of items awaiting approval should include group request approvals. (Profile-Modify.php) [Bug 3927]
  ! When generating a thumbnail on the fly, don't forget to store the mime type and extension, too. (Display.php)
  ! When regenerating a thumbnail, make sure to remove the old one. (Display.php) [Bug 4037]
+ ! Make it harder for flash files to be used inline. (Display.php) [Bug 3979]
+ ! Improved regular expression detection and reencode all suspicious image attachments. (Profile-Modify.php, Subs-Graphics.php, Subs-Post.php) [Bug 3484]
+ ! Restructured the Subs-Graphics functions to reduce code duplication. (Subs-Graphics.php)
 
 
 January 2010
