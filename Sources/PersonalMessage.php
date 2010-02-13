@@ -1785,7 +1785,8 @@ function MessagePost()
 	$editorOptions = array(
 		'id' => 'message',
 		'value' => $context['message'],
-		'width' => '90%',
+		'height' => '175px',
+		'width' => '100%',
 		'labels' => array(
 			'post_button' => $txt['send_message'],
 		),

@@ -107,7 +107,7 @@ function template_main()
 					<span class="topslice"><span></span></span>
 					<div class="content">
 						<div class="post" id="preview_body">
-							', empty($context['preview_message']) ? str_repeat('<br />', 5) : $context['preview_message'], '
+							', empty($context['preview_message']) ? '<br />' : $context['preview_message'], '
 						</div>
 					</div>
 					<span class="botslice"><span></span></span>
@@ -506,7 +506,7 @@ function template_main()
 					<p class="smalltext" id="shortcuts">
 						', $context['browser']['is_firefox'] ? $txt['shortcuts_firefox'] : $txt['shortcuts'], '
 					</p>
-					<p id="post_confirm_buttons">
+					<p id="post_confirm_buttons" class="righttext">
 						', template_control_richedit_buttons($context['post_box_name']);
 
 	// Option to delete an event if user is editing one.

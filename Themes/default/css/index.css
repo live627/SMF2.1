@@ -2102,16 +2102,10 @@ ul.quickbuttons li.inline_mod_check
 
 #quickReplyOptions .roundframe
 {
-	text-align: center;
 	padding: 0 10%;
 }
-#quickReplyContent
+#quickReplyOptions form textarea
 {
-	padding: 0.5em 0;
-}
-#quickReplyContent form textarea
-{
-	width: 91%;
 	height: 100px;
 	margin: 0.25em 0 1em 0;
 }
@@ -2133,17 +2127,12 @@ ul.quickbuttons li.inline_mod_check
 ---------------------------------------------------- */
 form#postmodify .roundframe
 {
-	padding-left: 12%;
-}
-form#postmodify .roundframe .errorbox
-{
-	width: 84.5%;
+	padding: 0 12%;
 }
 #post_header
 {
 	margin-bottom: 0.5em;
 	border-bottom: 1px solid #cacdd3;
-	width: 85%;
 	padding: 0.5em;
 	overflow: hidden;
 }
@@ -2298,7 +2287,6 @@ ul.post_options li
 {
 	margin-bottom: 0.5em;
 	border: none;
-	width: 85%;
 	border-bottom: 1px solid #cacdd3;
 	padding: 0.5em;
 	clear: both;

@@ -1611,11 +1611,12 @@ function template_download_language()
 	// Show the main files.
 	template_show_list('lang_main_files_list');
 
-	// Now all the images and the like, javascript hidden cause there are so fecking many.
+	// Now, all the images and the likes, hidden via javascript 'cause there are so fecking many.
 	echo '
-			<div class="cat_bar">
+			<br />
+			<div class="title_bar">
 				<h3 class="titlebg">
-					', $txt['languages_download'], '
+					', $txt['languages_download_theme_files'], '
 				</h3>
 			</div>
 			<table class="table_grid" cellspacing="0" width="100%">
@@ -1624,13 +1625,13 @@ function template_download_language()
 					<th scope="col" class="smalltext">
 						', $txt['languages_download_filename'], '
 					</th>
-					<th scope="col" class="smalltext">
+					<th scope="col" class="smalltext" width="100">
 						', $txt['languages_download_writable'], '
 					</th>
-					<th scope="col" class="smalltext">
+					<th scope="col" class="smalltext" width="100">
 						', $txt['languages_download_exists'], '
 					</th>
-					<th scope="col" class="smalltext">
+					<th scope="col" class="smalltext" width="50">
 						', $txt['languages_download_copy'], '
 					</th>
 				</tr>
@@ -1647,10 +1648,11 @@ function template_download_language()
 					</td>
 				</tr>';
 
+		$alternate = false;
 		foreach ($group as $file)
 		{
 			echo '
-				<tr class="windowbg" id="', $theme, '-', $count++, '">
+				<tr class="windowbg', $alternate ? '2' : '', '" id="', $theme, '-', $count++, '">
 					<td>
 						<strong>', $file['name'], '</strong><br />
 						<span class="smalltext">', $txt['languages_download_dest'], ': ', $file['destination'], '</span>
@@ -1665,6 +1667,7 @@ function template_download_language()
 						<input type="checkbox" name="copy_file[]" value="', $file['generaldest'], '"', ($file['default_copy'] ? ' checked="checked"' : ''), ' class="input_check" />
 					</td>
 				</tr>';
+			$alternate = !$alternate;
 		}
 	}
 
@@ -1728,7 +1731,7 @@ function template_download_language()
 
 	// Install?
 	echo '
-			<div class="righttext">
+			<div class="righttext padding">
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				<input type="submit" name="do_install" value="', $txt['add_language_smf_install'], '" class="button_submit" />
 			</div>

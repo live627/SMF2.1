@@ -664,7 +664,7 @@ function DownloadLanguage()
 		}
 
 		// I love PHP files, that's why I'm a developer and not an artistic type spending my time drinking absinth and living a life of sin...
-		if ($extension == 'php' && preg_match('~\w+\.\w+\.php~', $filename))
+		if ($extension == 'php' && preg_match('~\w+\.\w+(?:-utf8)?\.php~', $filename))
 		{
 			$context_data += array(
 				'version' => '??',
@@ -708,7 +708,7 @@ function DownloadLanguage()
 		}
 		else
 		{
-			// If we think it's a theme thing work out what the theme is.
+			// If we think it's a theme thing, work out what the theme is.
 			if (substr($dirname, 0, 6) == 'Themes' && preg_match('~Themes[\\/]([^\\/]+)[\\/]~', $dirname, $match))
 				$theme_name = $match[1];
 			else
@@ -726,9 +726,7 @@ function DownloadLanguage()
 	// So, I'm a perfectionist - let's get the theme names.
 	$theme_indexes = array();
 	foreach ($context['files']['images'] as $k => $dummy)
-	{
 		$indexes[] = $k;
-	}
 
 	$context['theme_names'] = array();
 	if (!empty($indexes))

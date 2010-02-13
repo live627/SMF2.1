@@ -338,6 +338,7 @@ $txt['languages_download_info'] = '<strong>Note:</strong>
 	</ul>';
 
 $txt['languages_download_main_files'] = 'Primary Files';
+$txt['languages_download_theme_files'] = 'Theme-related Files';
 $txt['languages_download_filename'] = 'File Name';
 $txt['languages_download_dest'] = 'Destination';
 $txt['languages_download_writable'] = 'Writable';

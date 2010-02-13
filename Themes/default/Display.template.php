@@ -645,34 +645,39 @@ function template_main()
 				<div id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
 					<span class="upperframe"><span></span></span>
 					<div class="roundframe">
-						<p class="smalltext">', $txt['quick_reply_desc'], '</p>
+						<p class="smalltext lefftext">', $txt['quick_reply_desc'], '</p>
 						', $context['is_locked'] ? '<p class="alert smalltext">' . $txt['quick_reply_warning'] . '</p>' : '',
 						$context['oldTopicError'] ? '<p class="alert smalltext">' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</p>' : '', '
-						<div id="quickReplyContent">', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
-							', !$context['can_reply_approved'] && $context['require_verification'] ? '<br />' : '', '
-							<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
-								<input type="hidden" name="topic" value="', $context['current_topic'], '" />
-								<input type="hidden" name="subject" value="', $context['response_prefix'], $context['subject'], '" />
-								<input type="hidden" name="icon" value="xx" />
-								<input type="hidden" name="from_qr" value="1" />
-								<input type="hidden" name="notify" value="', $context['is_marked_notify'] || !empty($options['auto_notify']) ? '1' : '0', '" />
-								<input type="hidden" name="not_approved" value="', !$context['can_reply_approved'], '" />
-								<input type="hidden" name="goback" value="', empty($options['return_to_post']) ? '0' : '1', '" />
-								<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />';
-
+						', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
+						', !$context['can_reply_approved'] && $context['require_verification'] ? '<br />' : '', '
+						<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
+							<input type="hidden" name="topic" value="', $context['current_topic'], '" />
+							<input type="hidden" name="subject" value="', $context['response_prefix'], $context['subject'], '" />
+							<input type="hidden" name="icon" value="xx" />
+							<input type="hidden" name="from_qr" value="1" />
+							<input type="hidden" name="notify" value="', $context['is_marked_notify'] || !empty($options['auto_notify']) ? '1' : '0', '" />
+							<input type="hidden" name="not_approved" value="', !$context['can_reply_approved'], '" />
+							<input type="hidden" name="goback" value="', empty($options['return_to_post']) ? '0' : '1', '" />
+							<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />
+							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+							<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />';
+							
 			// Guests just need more.
 			if ($context['user']['is_guest'])
 				echo '
-								<strong>', $txt['name'], ':</strong> <input type="text" name="guestname" value="', $context['name'], '" size="25" class="input_text" tabindex="', $context['tabindex']++, '" />
-								<strong>', $txt['email'], ':</strong> <input type="text" name="email" value="', $context['email'], '" size="25" class="input_text" tabindex="', $context['tabindex']++, '" /><br />';
+							<strong>', $txt['name'], ':</strong> <input type="text" name="guestname" value="', $context['name'], '" size="25" class="input_text" tabindex="', $context['tabindex']++, '" />
+							<strong>', $txt['email'], ':</strong> <input type="text" name="email" value="', $context['email'], '" size="25" class="input_text" tabindex="', $context['tabindex']++, '" /><br />';
 
 			// Is visual verification enabled?
 			if ($context['require_verification'])
 				echo '
-								<strong>', $txt['verification'], ':</strong>', template_control_verification($context['visual_verification_id'], 'quick_reply'), '<br />';
+							<strong>', $txt['verification'], ':</strong>', template_control_verification($context['visual_verification_id'], 'quick_reply'), '<br />';
 
 			echo '
-								<textarea cols="75" rows="7" style="', $context['browser']['is_ie8'] ? 'max-width: 95%; min-width: 95%' : 'width: 95%', '; height: 100px;" name="message" tabindex="', $context['tabindex']++, '"></textarea><br />
+							<div class="quickReplyContent">
+								<textarea cols="75" rows="7" style="', $context['browser']['is_ie8'] ? 'max-width: 100%; min-width: 100%' : 'width: 100%', '; height: 100px;" name="message" tabindex="', $context['tabindex']++, '"></textarea>
+							</div>
+							<div class="righttext padding">
 								<input type="submit" name="post" value="', $txt['post'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="', $context['tabindex']++, '" class="button_submit" />
 								<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="', $context['tabindex']++, '" class="button_submit" />';
 
@@ -681,10 +686,8 @@ function template_main()
 								<input type="button" value="', $txt['spell_check'], '" onclick="spellCheck(\'postmodify\', \'message\');" tabindex="', $context['tabindex']++, '" class="button_submit" />';
 
 			echo '
-								<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-								<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
-							</form>
-						</div>
+							</div>
+						</form>
 					</div>
 					<span class="lowerframe"><span></span></span>
 				</div>
