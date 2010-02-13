@@ -32,7 +32,9 @@ February 2010
  ! Detect nginx as server software. (Load.php) [Bug 4191]
  ! With WYSIWYG disabled, it was not possible to select the same combobox item twice in a row. (editor.js) [Bug 4036]
  * Optimized the styling of additional rows. (various source files, index.css, compat.css)
- 
+ * Hide empty custom profile fields in the profile summary. (Profile template) [Bug 3895]
+ * The headers in the statistics center were looking a bit off. (index.css)
+
 
 January 2010
 --------------------------------------------------------------------------------

@@ -3156,7 +3156,7 @@ div#profile_success
 {
 	padding: 0.5em 0;
 }
-#statistics h4.titlebg
+#statistics div.title_bar
 {
 	margin: 4px 0 -2px 0;
 }

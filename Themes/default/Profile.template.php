@@ -178,7 +178,7 @@ function template_summary()
 		$shown = false;
 		foreach ($context['custom_fields'] as $field)
 		{
-			if ($field['placement'] != 0)
+			if ($field['placement'] != 0 || empty($field['output_html']))
 				continue;
 
 			if (empty($shown))
