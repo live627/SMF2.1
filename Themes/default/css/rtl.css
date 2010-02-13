@@ -31,12 +31,6 @@
 }
 
 /* GenericList */
-.additional_row
-{
-	float: right;
-	padding: 0.5em 2em 0.5em 0;
-}
-
 .additional_row input
 {
 	margin-left: 0;
@@ -498,10 +492,6 @@ ul.quickbuttons li.inline_mod_check
 
 /* Styles for edit post section
 ---------------------------------------------------- */
-form#postmodify .roundframe
-{
-	padding: 0 12% 0 0;
-}
 #post_header dt
 {
 	float: right;
@@ -987,6 +977,11 @@ span.statsbar
 	margin-left: 0;
 	margin-right: 2em;
 }
+#error_log td div.marginleft
+{
+	margin: 0 1ex 0 0 !important;
+}
+
 /* Styles for the package manager.
 ------------------------------------------------- */
 #package_list .tborder

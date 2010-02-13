@@ -11,7 +11,7 @@ See https://bugzilla.mozilla.org/show_bug.cgi?id=215055 for more info.
 	word-wrap: break-word;
 }
 
-/* Display.template */
+/* Display template */
 #quickreplybox h3.catbg
 {
 	margin: 0;

@@ -180,7 +180,7 @@ function template_main()
 		}
 
 		echo '
-		<div class="righttext">
+		<div class="righttext padding">
 			<input type="submit" name="submit" value="', $txt['search'], '" class="button_submit" />
 		</div>';
 	}

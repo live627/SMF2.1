@@ -188,7 +188,7 @@ function template_manual_main_menu()
 	<div class="help_sample">
 		<div class="main_menu">
 			<ul class="reset clearfix">
-				<li class="active">
+				<li class="active', $context['right_to_left'] ? ' last' : '', '">
 					<a href="', $scripturl, '?action=help;area=board_index">
 						<span>
 							<em>', $txt['home'], '</em>
@@ -215,7 +215,7 @@ function template_manual_main_menu()
 						<span>', $txt['login'], '</span>
 					</a>
 				</li>
-				<li class="last">
+				<li', !$context['right_to_left'] ? ' class="last"' : '', '>
 					<a href="', $scripturl, '?action=help;area=registration_screen">
 						<span>', $txt['register'], '</span>
 					</a>
@@ -236,7 +236,7 @@ function template_manual_main_menu()
 	<div class="help_sample">
 		<div class="main_menu">
 			<ul class="reset clearfix">
-				<li class="active">
+				<li class="active', $context['right_to_left'] ? ' last' : '', '">
 					<a href="', $scripturl, '?action=help;area=board_index">
 						<span>
 							<em>', $txt['home'], '</em>
@@ -273,7 +273,7 @@ function template_manual_main_menu()
 						<span>', $txt['members_title'], '</span>
 					</a>
 				</li>
-				<li class="last">
+				<li', !$context['right_to_left'] ? ' class="last"' : '', '>
 					<a href="', $scripturl, '?action=help;area=logging_in">
 						<span>', $txt['logout'], '</span>
 					</a>
@@ -1405,12 +1405,12 @@ function template_manual_modify_profile()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-	<p>', $txt['manual_profile_normal_desc'], '</p>
-	<ul>
-		<li>', $txt['manual_profile_account_related'], '</li>
-		<li>', $txt['manual_profile_forum_profile_info'], '</li>
-		<li>', $txt['manual_profile_look_layout'], '</li>
-	</ul>
+		<p>', $txt['manual_profile_normal_desc'], '</p>
+		<ul class="basic_helplist">
+			<li>', $txt['manual_profile_account_related'], '</li>
+			<li>', $txt['manual_profile_forum_profile_info'], '</li>
+			<li>', $txt['manual_profile_look_layout'], '</li>
+		</ul>
 		<div class="help_sample">
 			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
 				<tr>
@@ -1594,18 +1594,20 @@ function template_manual_modify_profile()
 						</form>
 					</td>
 				</tr>
-			</table><br />
-	</div>
-	<ul>
-		<li>', $txt['manual_profile_notify_email_prefs'], '</li>
-		<li>', $txt['manual_profile_pm_options_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms">', $txt['manual_profile_pm_options_link_pm'], '</a>', $txt['manual_profile_pm_options_part2'], '</li>
-	</ul>
-	<h3 class="section" id="actions-owners">', $txt['manual_profile_sub_actions'], '</h3>
-	<ul>
-		<li>', $txt['manual_profile_confirm_delete_acct'], '</li>
-	</ul>
-	<h2 class="section" id="admins">', $txt['manual_profile_sec_settings'], '</h2>
-	<p>', $txt['manual_profile_settings_desc'], '</p>
+			</table>
+			<br />
+		</div>
+		<ul class="basic_helplist">
+			<li>', $txt['manual_profile_notify_email_prefs'], '</li>
+			<li>', $txt['manual_profile_pm_options_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms">', $txt['manual_profile_pm_options_link_pm'], '</a>', $txt['manual_profile_pm_options_part2'], '</li>
+		</ul>
+		<h3 class="section" id="actions-owners">', $txt['manual_profile_sub_actions'], '</h3>
+		<ul>
+			<li>', $txt['manual_profile_confirm_delete_acct'], '</li>
+		</ul>
+		<br />
+		<h2 class="section" id="admins">', $txt['manual_profile_sec_settings'], '</h2>
+		<p>', $txt['manual_profile_settings_desc'], '</p>
 		<div>
 		<div style="width: 180px; float: left; border: none;">
 			<table border="0" cellpadding="4" cellspacing="1" class="bordercolor" width="170">
@@ -2741,9 +2743,9 @@ function template_manual_searching()
 			<fieldset>
 				<span class="upperframe"><span></span></span>
 				<div class="roundframe">
-					<h4 class="titlebg"><span class="left"></span>
-						', $txt['manual_searching_choose'], '
-					</h4>
+					<div class="title_bar">
+						<h4 class="titlebg">', $txt['manual_searching_choose'], '</h4>
+					</div>
 					<div class="flow_auto" id="searchBoardsExpand">
 						<ul class="floatleft">
 							<li class="category">

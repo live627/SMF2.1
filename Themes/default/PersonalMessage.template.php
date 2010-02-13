@@ -750,7 +750,7 @@ function template_search()
 		}
 
 		echo '
-		<div class="righttext">
+		<div class="righttext padding">
 			<input type="submit" name="submit" value="', $txt['pm_search_go'], '" class="button_submit" />
 		</div>';
 	}

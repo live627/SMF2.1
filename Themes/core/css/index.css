@@ -1844,9 +1844,10 @@ ul.postingbuttons li
 }
 #quickReplyOptions #quickReplyContent
 {
-	text-align: center;
+	text-align: right;
 	float: left;
-	width: 72%;
+	width: 67.5%;
+	padding: 1em;
 	border-left: 1px solid #aaa;
 }
 
@@ -1894,17 +1895,12 @@ ul.postingbuttons li
 ---------------------------------------------------- */
 form#postmodify .roundframe
 {
-	padding-left: 12%;
-}
-form#postmodify .roundframe .errorbox
-{
-	width: 84.5%;
+	padding: 0 12%;
 }
 #post_header
 {
 	margin-bottom: 0.5em;
 	border-bottom: 1px solid #666;
-	width: 85%;
 	padding: 0.5em;
 	overflow: hidden;
 }
@@ -2059,7 +2055,6 @@ ul.post_options li
 {
 	margin-bottom: 0.5em;
 	border: none;
-	width: 85%;
 	border-bottom: 1px solid #666;
 	padding: 0.5em;
 	clear: both;
@@ -2341,6 +2336,10 @@ tr.titlebg td
 #admin_login .centertext
 {
 	padding: 1em;
+}
+#admin_login .centertext .error
+{
+	padding: 0 0 1em 0;
 }
 
 /* Styles for sidebar menus.
@@ -3122,10 +3121,9 @@ span.hidelink
 
 /* Styles for the basic search section.
 ------------------------------------------------- */
-#searchform, #simple_search p
+#simple_search p
 {
 	padding: 0.5em;
-	margin: 0;
 }
 #simple_search, #simple_search p, #advanced_search
 {
@@ -3149,8 +3147,12 @@ span.hidelink
 {
 	text-align: left;
 	padding: 0;
-	margin: 0.5em 0;
+	margin: 0;
 	border: none;
+}
+fieldset#advanced_search .roundframe
+{
+	border-bottom: none !important;
 }
 #advanced_search dl#search_options
 {

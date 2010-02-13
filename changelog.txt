@@ -45,6 +45,11 @@ February 2010
  ! Improved regular expression detection and reencode all suspicious image attachments. (Profile-Modify.php, Subs-Graphics.php, Subs-Post.php) [Bug 3484]
  ! Restructured the Subs-Graphics functions to reduce code duplication. (Subs-Graphics.php)
  ! Prevent HTML entities from being used as reserved names. (Subs-Members.php) [Bug 4127]
+ ! A downloaded UTF8 language pack wouldn't have its content listing split correctly. (ManageServer.php)
+ ! Increase the height of the editor slightly in several places. (PersonalMessage.php, Post.php)
+ * The error log wasn't displayed correctly in RTL mode. (Admin template, index.css, rtl.css)
+ * Tweaked the admin login screen slightly. (index.css, Login template)
+ * Slightly enhanced the looks of the quick reply and post forms. (index.css, rtl.css, Display template, PersonalMessage template, Post template)
 
 
 January 2010

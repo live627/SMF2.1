@@ -1,8 +1,6 @@
-/* Styles for the general looks for the Core theme.
-------------------------------------------------------- */
-
 /* Common classes to easy styling.
 ------------------------------------------------------- */
+
 .floatright, .align_right
 {
 	float: left;
@@ -72,7 +70,7 @@ dl.settings img
 	margin-left: 0;
 	margin-right: 10px;
 }
-#main_menu li
+.main_menu li
 {
 	float: right;
 }
@@ -163,12 +161,12 @@ h3.catbg img.icon, div.titlebg img.icon, h3.catbg img
 /* Styles for the general looks for the Core theme.
 ------------------------------------------------------- */
 
-#main_menu ul
+.main_menu ul
 {
 	padding-right: 1em;
 	float: right;
 }
-#main_menu
+.main_menu
 {
 	overflow: hidden;
 }
@@ -416,7 +414,8 @@ ul.postingbuttons li
 }
 #quickReplyOptions #quickReplyContent
 {
-	float: right;
+	text-align: left;
+	float: left;
 	border-left: none;
 	border-right: 1px solid #aaa;
 }
@@ -424,17 +423,9 @@ ul.postingbuttons li
 {
 	float: right;
 }
-#quickReplyContent
-{
-	float: left;
-}
 
 /* Styles for edit post section
 ---------------------------------------------------- */
-form#postmodify .roundframe
-{
-	padding: 0 12% 0 0;
-}
 #post_header dt
 {
 	float: right;
@@ -865,29 +856,6 @@ dl.stats dd
 	padding-left: 0;
 }
 
-/* put back the bullets please */
-#helpmain ul
-{
-	margin: 0 2em 1em 0;
-	padding-left: 0;
-	padding-right: 1em;
-}
-#helpmain ul li
-{
-	padding-right: 0.2em;
-}
-
-/* ...but leave the tab strips alone! */
-#helpmain .buttonlist_bottom ul, #helpmain .buttonlist ul
-{
-	padding: 0 1em 0 0 !important;
-}
-
-#helpmain .buttonlist_bottom ul li, #helpmain .buttonlist ul li
-{
-	margin: 0 0 0 0.2em !important;
-}
-
 /* Depreciated stuff from the old days.
 ------------------------------------------------- */
 
@@ -984,16 +952,15 @@ ul.admin_menu li.chosen h4
 	background: url(../images/mirrortab_active_last.gif) no-repeat;
 	width: 8px;
 }
-#main_menu li.last.active
+.main_menu li.last.active
 {
 	float: right;
 	background: url(../images/maintab_last.gif) no-repeat bottom right;
 	padding: 0 8px 0 0;
 }
 /* IE6 doesn't support multiple class selectors */
-#main_menu li.lastactive
+.main_menu li.lastactive
 {
-	float: right;
 	padding: 0 8px 0 0;
 	background: url(../images/maintab_last.gif) no-repeat bottom right;
 }
@@ -1051,6 +1018,10 @@ ul.horizlist li
 {
 	margin-left: 0;
 	margin-right: 2em;
+}
+#error_log td div.marginleft
+{
+	margin: 0 1ex 0 0 !important;
 }
 
 /* Styles for the package manager.

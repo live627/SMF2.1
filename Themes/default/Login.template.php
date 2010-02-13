@@ -196,16 +196,16 @@ function template_admin_login()
 			</h3>
 		</div>
 		<span class="upperframe"><span></span></span>
-		<div class="roundframe centertext">
-			<strong>', $txt['password'], ':</strong>
-			<input type="password" name="admin_pass" size="24" class="input_password" />
-			<a href="', $scripturl, '?action=helpadmin;help=securityDisable_why" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a><br />';
+		<div class="roundframe centertext">';
 
 	if (!empty($context['incorrect_password']))
 		echo '
-			<div class="error centertext">', $txt['admin_incorrect_password'], '</div>';
+			<div class="error">', $txt['admin_incorrect_password'], '</div>';
 
 	echo '
+			<strong>', $txt['password'], ':</strong>
+			<input type="password" name="admin_pass" size="24" class="input_password" />
+			<a href="', $scripturl, '?action=helpadmin;help=securityDisable_why" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a><br />
 			<input type="submit" style="margin-top: 1em;" value="', $txt['login'], '" class="button_submit" />';
 
 	// Make sure to output all the old post data.

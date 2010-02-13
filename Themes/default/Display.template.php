@@ -744,7 +744,7 @@ function template_main()
 					});';
 
 	echo '
-					if (typeof(window.XMLHttpRequest) != "undefined")
+					if (\'XMLHttpRequest\' in window)
 					{
 						var oQuickModify = new QuickModify({
 							sScriptUrl: smf_scripturl,
@@ -764,8 +764,8 @@ function template_main()
 							sTemplateSubjectEdit: ', JavaScriptEscape('<input type="text" style="width: 90%;" name="subject" value="%subject%" size="80" maxlength="80" tabindex="' . $context['tabindex']++ . '" class="input_text" />'), ',
 							sTemplateBodyNormal: ', JavaScriptEscape('%body%'), ',
 							sTemplateSubjectNormal: ', JavaScriptEscape('<a href="' . $scripturl . '?topic=' . $context['current_topic'] . '.msg%msg_id%#msg%msg_id%" rel="nofollow">%subject%</a>'), ',
-							sTemplateTopSubject: "' . $txt['topic'] . ': %subject% &nbsp;(' . $txt['read'] . ' ' . $context['num_views'] . ' ' . $txt['times'] . ')",
-							sErrorBorderStyle: "1px solid red"
+							sTemplateTopSubject: ', JavaScriptEscape($txt['topic'] . ': %subject% &nbsp;(' . $txt['read'] . ' ' . $context['num_views'] . ' ' . $txt['times'] . ')'), ',
+							sErrorBorderStyle: ', JavaScriptEscape('1px solid red'), '
 						});
 
 						aJumpTo[aJumpTo.length] = new JumpTo({

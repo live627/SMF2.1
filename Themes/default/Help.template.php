@@ -1470,7 +1470,7 @@ function template_manual_modify_profile()
 			<li>', $txt['manual_profile_notify_email_prefs'], '</li>
 			<li>', $txt['manual_profile_pm_options_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms">', $txt['manual_profile_pm_options_link_pm'], '</a>', $txt['manual_profile_pm_options_part2'], '</li>
 		</ul>
-		<h3 class="section" id="actions-owners"><b>', $txt['manual_profile_sub_actions'], '</b></h3>
+		<h3 class="section" id="actions-owners">', $txt['manual_profile_sub_actions'], '</h3>
 		<ul>
 			<li>', $txt['manual_profile_confirm_delete_acct'], '</li>
 		</ul>
@@ -1514,18 +1514,18 @@ function template_manual_modify_profile()
 			</table>
 		</div><br />
 		<div style="margin: -1.8em 20px 0 200px;">
-			<h3 class="section" id="info-admins"><b>', $txt['manual_profile_sub_profile_info'], '</b></h3>
+			<h3 class="section" id="info-admins">', $txt['manual_profile_sub_profile_info'], '</h3>
 			<ul>
 				<li>', $txt['manual_profile_sub_track_user'], '</li>
 				<li>', $txt['manual_profile_sub_track_ip'], '</li>
 				<li>', $txt['manual_profile_sub_show_permissions'], '</li>
 			</ul>
-			<h3 class="section" id="edit-admins"><b>', $txt['manual_profile_sub_modify_profile'], '</b></h3>
+			<h3 class="section" id="edit-admins">', $txt['manual_profile_sub_modify_profile'], '</h3>
 			<ul>
 				<li>', $txt['manual_profile_sub_acct_settings'], '</li>
 				<li>', $txt['manual_profile_sub_forum_profile_info'], '</li>
 			</ul>
-			<h3 class="section" id="actions-admins"><b>', $txt['manual_profile_sub_actions2'], '</b></h3>
+			<h3 class="section" id="actions-admins">', $txt['manual_profile_sub_actions2'], '</h3>
 			<ul>
 				<li>', $txt['manual_profile_sub_ban_user'], '</li>
 				<li>', $txt['manual_profile_sub_delete_acct'], '</li>

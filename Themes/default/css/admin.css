@@ -610,13 +610,8 @@ h3.grid_header
 	vertical-align: top;
 	text-align: center;
 }
-#error_log div.filter_link
-{
-	clear: left;
-}
 #error_log td div.marginleft
 {
-	float: left;
 	margin: 0 0 0 1ex;
 }
 #admincenter span.botslice, #manage_boards span.botslice, #manage_maintenance span.botslice, #manage_mail span.botslice

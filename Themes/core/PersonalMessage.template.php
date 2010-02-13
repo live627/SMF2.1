@@ -507,7 +507,7 @@ function template_subject_list()
 	{
 		echo '
 		<tr class="', $next_alternate ? 'windowbg' : 'windowbg2', '">
-			<td align="center" width="2%">
+			<td align="center" width="4%">
 			<script type="text/javascript"><!-- // --><![CDATA[
 				currentLabels[', $message['id'], '] = {';
 
@@ -529,7 +529,7 @@ function template_subject_list()
 			<td>', $message['time'], '</td>
 			<td>', ($context['display_mode'] != 0 && $context['current_pm'] == $message['id'] ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="*" />' : ''), '<a href="', ($context['display_mode'] == 0 || $context['current_pm'] == $message['id'] ? '' : ($scripturl . '?action=pm;pmid=' . $message['id'] . ';kstart;f=' . $context['folder'] . ';start=' . $context['start'] . ';sort=' . $context['sort_by'] . ($context['sort_direction'] == 'up' ? ';' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''))), '#msg', $message['id'], '">', $message['subject'], '</a>', $message['is_unread'] ? '&nbsp;<img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" />' : '', '</td>
 			<td>', ($context['from_or_to'] == 'from' ? $message['member']['link'] : (empty($message['recipients']['to']) ? '' : implode(', ', $message['recipients']['to']))), '</td>
-			<td align="center"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" /></td>
+			<td align="center" width="4%"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" /></td>
 		</tr>';
 			$next_alternate = !$next_alternate;
 	}
@@ -595,9 +595,9 @@ function template_search()
 		}
 	// ]]></script>
 	<form action="', $scripturl, '?action=pm;sa=search2" method="post" accept-charset="', $context['character_set'], '" name="searchform" id="searchform">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['pm_search_title'], '
-		</h3>';
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pm_search_title'], '</h3>
+		</div>';
 
 	if (!empty($context['search_errors']))
 	{
@@ -680,9 +680,11 @@ function template_search()
 		<fieldset class="labels">
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
-				<h4 class="titlebg"><span class="left"></span>
-					<a href="javascript:void(0);" onclick="expandCollapseLabels(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandLabelsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseLabels(); return false;"><strong>', $txt['pm_search_choose_label'], '</strong></a>
-				</h4>
+				<div class="title_bar">
+					<h4 class="titlebg">
+						<span class="ie6_header floatleft"><a href="javascript:void(0);" onclick="expandCollapseLabels(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandLabelsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseLabels(); return false;"><strong>', $txt['pm_search_choose_label'], '</strong></a></span>
+					</h4>
+				</div>
 				<ul id="searchLabelsExpand" class="reset" ', $context['check_all'] ? 'style="display: none;"' : '', '>';
 
 			foreach ($context['search_labels'] as $label)
@@ -703,7 +705,9 @@ function template_search()
 		}
 
 		echo '
-		<input type="submit" name="submit" value="', $txt['pm_search_go'], '" class="button_submit" />';
+		<div class="righttext padding">
+			<input type="submit" name="submit" value="', $txt['pm_search_go'], '" class="button_submit" />
+		</div>';
 	}
 
 	echo '
@@ -867,46 +871,47 @@ function template_send()
 	if (!empty($context['send_log']))
 	{
 		echo '
-	<h3 class="catbg">
-		<span class="left"></span>
-		', $txt['pm_send_report'], '
-	</h3>
-	<div class="windowbg">
-		<span class="topslice"><span></span></span>
-		<div class="content">';
-		if (!empty($context['send_log']['sent']))
-			foreach ($context['send_log']['sent'] as $log_entry)
-				echo '<span class="error">', $log_entry, '</span><br />';
-		if (!empty($context['send_log']['failed']))
-			foreach ($context['send_log']['failed'] as $log_entry)
-				echo '<span class="error">', $log_entry, '</span><br />';
-		echo '
-		</div>
-		<span class="botslice"><span></span></span>
-	</div><br />';
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['pm_send_report'], '</h3>
+			</div>
+			<div class="windowbg">
+			<span class="topslice"><span></span></span>
+				<div class="content">';
+				if (!empty($context['send_log']['sent']))
+					foreach ($context['send_log']['sent'] as $log_entry)
+						echo '<span class="error">', $log_entry, '</span><br />';
+				if (!empty($context['send_log']['failed']))
+					foreach ($context['send_log']['failed'] as $log_entry)
+						echo '<span class="error">', $log_entry, '</span><br />';
+				echo '
+				</div>
+			<span class="botslice"><span></span></span>
+			</div>
+			<br />';
 	}
 
 	// Show the preview of the personal message.
 	if (isset($context['preview_message']))
 	echo '
-	<h3 class="catbg">
-		<span class="left"></span>
-		', $context['preview_subject'], '
-	</h3>
-	<div class="windowbg">
+		<div class="cat_bar">
+			<h3 class="catbg">', $context['preview_subject'], '</h3>
+		</div>
+		<div class="windowbg">
 		<span class="topslice"><span></span></span>
-		<div class="content">
-			', $context['preview_message'], '
-				</div>
+			<div class="content">
+				', $context['preview_message'], '
+			</div>
 		<span class="botslice"><span></span></span>
-	</div><br />';
+		</div>
+		<br />';
 
 	// Main message editing box.
 	echo '
-	<h3 class="catbg">
-		<span class="left"></span>
-		<img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt['new_message'], '" title="', $txt['new_message'], '" />&nbsp;', $txt['new_message'], '
-	</h3>';
+		<div class="cat_bar">
+			<h3 class="catbg">
+					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt['new_message'], '" title="', $txt['new_message'], '" />&nbsp;', $txt['new_message'], '</span>
+			</h3>
+		</div>';
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=send2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'message\']);">
@@ -1008,7 +1013,7 @@ function template_send()
 				<p id="shortcuts" class="smalltext">
 					', $context['browser']['is_firefox'] ? $txt['shortcuts_firefox'] : $txt['shortcuts'], '
 				</p>
-				<p id="post_confirm_strip">
+				<p id="post_confirm_strip" class="righttext">
 					', template_control_richedit_buttons($context['post_box_name']), '
 				</p>
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -1027,23 +1032,19 @@ function template_send()
 		echo '
 	<br />
 	<br />
-	<h3 class="catbg">
-		<span class="left"></span>
-		', $txt['subject'], ': ', $context['quoted_message']['subject'], '
-	</h3>
-	<h3 class="titlebg">
-		<span class="left"></span>
-		<span class="align_left">
-			', $txt['from'], ': ', $context['quoted_message']['member']['name'], '
-		</span>
-		<span class="align_right">
-			', $txt['on'], ': ', $context['quoted_message']['time'], '
-		</span>
-	</h3>
+	<div class="cat_bar">
+		<h3 class="catbg">', $txt['subject'], ': ', $context['quoted_message']['subject'], '</h3>
+	</div>
+	<div class="title_bar">
+		<h3 class="titlebg">
+			<span class="align_left">', $txt['from'], ': ', $context['quoted_message']['member']['name'], '</span>
+			<span class="align_right">', $txt['on'], ': ', $context['quoted_message']['time'], '</span>
+		</h3>
+	</div>
 	<div class="windowbg2">
 		<span class="topslice"><span></span></span>
 		<div class="content">
-			', $context['quoted_message']['body'], '</td>
+			', $context['quoted_message']['body'], '
 		</div>
 		<span class="botslice"><span></span></span>
 	</div>';
@@ -1100,18 +1101,17 @@ function template_ask_delete()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
-	<h3 class="catbg">
-		<span class="left"></span>
-		', ($context['delete_all'] ? $txt['delete_message'] : $txt['delete_all']), '
-	</h3>
-	<div class="windowbg">
-		<span class="topslice"><span></span></span>
-		<div class="content">
-			<p>', $txt['delete_all_confirm'], '</p><br />
-			<strong><a href="', $scripturl, '?action=pm;sa=removeall2;f=', $context['folder'], ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="javascript:history.go(-1);">', $txt['no'], '</a></strong>
+		<div class="cat_bar">
+			<h3 class="catbg">', ($context['delete_all'] ? $txt['delete_message'] : $txt['delete_all']), '</h3>
 		</div>
+		<div class="windowbg">
+		<span class="topslice"><span></span></span>
+			<div class="content">
+				<p>', $txt['delete_all_confirm'], '</p><br />
+				<strong><a href="', $scripturl, '?action=pm;sa=removeall2;f=', $context['folder'], ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="javascript:history.go(-1);">', $txt['no'], '</a></strong>
+			</div>
 		<span class="botslice"><span></span></span>
-	</div>';
+		</div>';
 }
 
 // This template asks the user what messages they want to prune.
@@ -1121,15 +1121,16 @@ function template_prune()
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=prune" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['pm_prune_warning'], '\');">
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $txt['pm_prune'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pm_prune'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
 				<p>', $txt['pm_prune_desc1'], ' <input type="text" name="age" size="3" value="14" class="input_text" /> ', $txt['pm_prune_desc2'], '</p>
-				<input type="submit" value="', $txt['delete'], '" class="button_submit" />
+				<div class="righttext">
+					<input type="submit" value="', $txt['delete'], '" class="button_submit" />
+				</div>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
@@ -1144,10 +1145,9 @@ function template_labels()
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=manlabels" method="post" accept-charset="', $context['character_set'], '">
-		<h3 class="titlebg">
-			<span class="left"></span>
-			', $txt['pm_manage_labels'], '
-		</h3>
+		<div class="title_bar">
+			<h3 class="titlebg">', $txt['pm_manage_labels'], '</h3>
+		</div>
 		<div class="description">
 			', $txt['pm_labels_desc'], '
 		</div>
@@ -1171,8 +1171,9 @@ function template_labels()
 		$alternate = true;
 		foreach ($context['labels'] as $label)
 		{
-			if ($label['id'] != -1)
-			{
+			if ($label['id'] == -1)
+				continue;
+
 				echo '
 			<tr class="', $alternate ? 'windowbg2' : 'windowbg', '">
 				<td>
@@ -1180,10 +1181,9 @@ function template_labels()
 				</td>
 				<td width="4%" align="center"><input type="checkbox" class="input_check" name="delete_label[', $label['id'], ']" /></td>
 			</tr>';
-				$alternate = !$alternate;
-			}
-		}
 
+			$alternate = !$alternate;
+		}
 	}
 	echo '
 		</tbody>
@@ -1191,7 +1191,7 @@ function template_labels()
 
 	if (!count($context['labels']) < 2)
 		echo '
-		<div class="pagesection righttext">
+		<div class="padding righttext">
 			<input type="submit" name="save" value="', $txt['save'], '" class="button_submit" />
 			<input type="submit" name="delete" value="', $txt['quickmod_delete_selected'], '" onclick="return confirm(\'', $txt['pm_labels_delete'], '\');" class="button_submit" />
 		</div>';
@@ -1200,9 +1200,9 @@ function template_labels()
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>
 	<form action="', $scripturl, '?action=pm;sa=manlabels" method="post" accept-charset="', $context['character_set'], '" style="margin-top: 1ex;">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['pm_label_add_new'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pm_label_add_new'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
@@ -1214,7 +1214,9 @@ function template_labels()
 						<input type="text" id="add_label" name="label" value="" size="30" maxlength="30" class="input_text" />
 					</dd>
 				</dl>
-				<input type="submit" name="add" value="', $txt['pm_label_add_new'], '" class="button_submit" />
+				<div class="righttext">
+					<input type="submit" name="add" value="', $txt['pm_label_add_new'], '" class="button_submit" />
+				</div>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
@@ -1230,10 +1232,9 @@ function template_report_message()
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=report;l=', $context['current_label_id'], '" method="post" accept-charset="', $context['character_set'], '">
 		<input type="hidden" name="pmsg" value="', $context['pm_id'], '" />
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $txt['pm_report_title'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pm_report_title'], '</h3>
+		</div>
 		<div class="description">
 			', $txt['pm_report_desc'], '
 		</div>
@@ -1283,17 +1284,17 @@ function template_report_message_complete()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<h3 class="catbg"><span class="left"></span>
-		', $txt['pm_report_title'], '
-	</h3>
-	<div class="windowbg">
-		<span class="topslice"><span></span></span>
-		<div class="content">
-			<p>', $txt['pm_report_done'], '</p>
-			<a href="', $scripturl, '?action=pm;l=', $context['current_label_id'], '">', $txt['pm_report_return'], '</a>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pm_report_title'], '</h3>
 		</div>
-		<span class="botslice"><span></span></span>
-	</div>';
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+			<div class="content">
+				<p>', $txt['pm_report_done'], '</p>
+				<a href="', $scripturl, '?action=pm;l=', $context['current_label_id'], '">', $txt['pm_report_return'], '</a>
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>';
 }
 
 // Manage rules.
@@ -1303,10 +1304,9 @@ function template_rules()
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=manrules" method="post" accept-charset="', $context['character_set'], '" name="manRules">
-		<h3 class="titlebg">
-			<span class="left"></span>
-			', $txt['pm_manage_rules'], '
-		</h3>
+		<div class="title_bar">
+			<h3 class="titlebg">', $txt['pm_manage_rules'], '</h3>
+		</div>
 		<div class="description">
 			', $txt['pm_manage_rules_desc'], '
 		</div>
@@ -1354,24 +1354,20 @@ function template_rules()
 	echo '
 		</tbody>
 		</table>
-			<div class="floatleft">
-				[<a href="', $scripturl, '?action=pm;sa=manrules;add;rid=0">', $txt['pm_add_rule'], '</a>]';
+		<div class="righttext">
+			[<a href="', $scripturl, '?action=pm;sa=manrules;add;rid=0">', $txt['pm_add_rule'], '</a>]';
 
 	if (!empty($context['rules']))
 		echo '
-				[<a href="', $scripturl, '?action=pm;sa=manrules;apply;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['pm_js_apply_rules_confirm'], '\');">', $txt['pm_apply_rules'], '</a>]';
-
-	echo '
-			</div>';
+			[<a href="', $scripturl, '?action=pm;sa=manrules;apply;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['pm_js_apply_rules_confirm'], '\');">', $txt['pm_apply_rules'], '</a>]';
 
 	if (!empty($context['rules']))
 		echo '
-			<div class="floatright">
-				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-				<input type="submit" name="delselected" value="', $txt['pm_delete_selected_rule'], '" onclick="return confirm(\'', $txt['pm_js_delete_rule_confirm'], '\');" class="button_submit" />
-			</div>';
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+			<input type="submit" name="delselected" value="', $txt['pm_delete_selected_rule'], '" onclick="return confirm(\'', $txt['pm_js_delete_rule_confirm'], '\');" class="button_submit" />';
 
 	echo '
+			</div>
 	</form>';
 
 }
@@ -1551,10 +1547,9 @@ function template_add_rule()
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=manrules;save;rid=', $context['rid'], '" method="post" accept-charset="', $context['character_set'], '" name="addrule" id="addrule">
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $context['rid'] == 0 ? $txt['pm_add_rule'] : $txt['pm_edit_rule'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $context['rid'] == 0 ? $txt['pm_add_rule'] : $txt['pm_edit_rule'], '</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
@@ -1564,7 +1559,7 @@ function template_add_rule()
 						<span class="smalltext">', $txt['pm_rule_name_desc'], '</span>
 					</dt>
 					<dd>
-						<input type="text" name="rule_name" value="', empty($context['rule']['name']) ? $txt['pm_rule_name_default'] : $context['rule']['name'], '" class="input_text" />
+						<input type="text" name="rule_name" value="', empty($context['rule']['name']) ? $txt['pm_rule_name_default'] : $context['rule']['name'], '" class="input_text" style="width: 100%" />
 					</dd>
 				</dl>
 				<fieldset>
@@ -1613,7 +1608,8 @@ function template_add_rule()
 	}
 
 	echo '
-					<span id="criteriaAddHere"></span> <a href="#" onclick="addCriteriaOption(); return false;" id="addonjs1" style="display: none;">(', $txt['pm_rule_criteria_add'], ')</a>
+					<span id="criteriaAddHere"></span><br />
+					<a href="#" onclick="addCriteriaOption(); return false;" id="addonjs1" style="display: none;">(', $txt['pm_rule_criteria_add'], ')</a>
 					<br /><br />
 					', $txt['pm_rule_logic'], ':
 					<select name="rule_logic" id="logic" onchange="rebuildRuleDesc();">
@@ -1662,19 +1658,19 @@ function template_add_rule()
 	}
 
 	echo '
-					<span id="actionAddHere"></span> <a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>
+					<span id="actionAddHere"></span><br />
+					<a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>
 				</fieldset>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<h3 class="catbg">
-			<span class="left"></span>
-			', $txt['pm_rule_description'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pm_rule_description'], '</h3>
+		</div>
 		<div class="information">
 			<div id="ruletext" class="smalltext">', $txt['pm_rule_js_disabled'], '</div>
 		</div>
-		<div class="pagesection">
+		<div class="righttext">
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			<input type="submit" name="save" value="', $txt['pm_rule_save'], '" class="button_submit" />
 		</div>

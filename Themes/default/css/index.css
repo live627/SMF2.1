@@ -2573,6 +2573,10 @@ tr.titlebg td
 {
 	padding: 1em;
 }
+#admin_login .centertext .error
+{
+	padding: 0 0 1em 0;
+}
 
 /* Styles for sidebar menus.
 ------------------------------------------------------- */
