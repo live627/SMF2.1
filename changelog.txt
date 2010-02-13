@@ -29,6 +29,7 @@ February 2010
  * Alternate between windowbg and windowbg2 when viewing mod reports in the moderation center. (ModerationCenter.php, ModerationCenter template)
  * Synchronised Core's help template with Curve's. (Help template, index.css, compat.css)
  & Removed redundant language entries. (Manual language file)
+ ! Detect nginx as server software. (Load.php) [Bug 4191]
 
 
 January 2010
