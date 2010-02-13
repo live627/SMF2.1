@@ -362,7 +362,7 @@ function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $
 {
 	global $gd2, $modSettings;
 	
-	// Without GD, no image resizing at all.<br>
+	// Without GD, no image resizing at all.
 	if (!checkGD())
 		return false;
 

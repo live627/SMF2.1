@@ -1010,6 +1010,7 @@ function template_show_settings()
 
 	if (empty($context['settings_save_dont_show']))
 		echo '
+						<hr class="hrcolor" />
 						<div class="righttext">
 							<input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), (!empty($context['settings_save_onclick']) ? ' onclick="' . $context['settings_save_onclick'] . '"' : ''), ' class="button_submit" />
 						</div>';

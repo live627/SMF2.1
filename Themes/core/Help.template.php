@@ -322,7 +322,7 @@ function template_manual_board_index()
 			function markBoardRead()
 			{
 					document.getElementById("board-new-or-not").src = smf_images_url + "/" + "off.gif";
-					document.getElementById("board-new-or-not").alt = "', $txt['manual_index_no_new'], '";
+					document.getElementById("board-new-or-not").alt = "', $txt['old_posts'], '";
 			}
 		//]]></script>
 		<div class="tborder">
