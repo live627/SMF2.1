@@ -962,7 +962,9 @@ function template_servers()
 							<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $context['package_ftp']['path'], '" style="width: 99%;" class="input_text" />
 						</dd>
 					</dl>
-					<input type="submit" value="', $txt['package_proceed'], '" class="button_submit" />
+					<div class="righttext">
+						<input type="submit" value="', $txt['package_proceed'], '" class="button_submit" />
+					</div>
 				</form>
 			</div>
 			<span class="botslice"><span></span></span>
@@ -1003,8 +1005,10 @@ function template_servers()
 								<input type="text" name="serverurl" size="50" value="http://" class="input_text" />
 							</dd>
 						</dl>
-						<input type="submit" value="' . $txt['add_server'] . '" class="button_submit" />
-						<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
+						<div class="righttext">
+							<input type="submit" value="' . $txt['add_server'] . '" class="button_submit" />
+							<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
+						</div>
 					</form>
 				</fieldset>
 				<fieldset>
@@ -1025,7 +1029,9 @@ function template_servers()
 								<span class="smalltext">', $txt['package_download_filename_info'], '</span>
 							</dd>
 						</dl>
-						<input type="submit" value="', $txt['download'], '" class="button_submit" />
+						<div class="righttext">
+							<input type="submit" value="', $txt['download'], '" class="button_submit" />
+						</div>
 					</form>
 				</fieldset>
 			</div>
@@ -1047,8 +1053,10 @@ function template_servers()
 								<input type="file" name="package" size="38" class="input_file" />
 							</dd>
 						</dl>
-						<input type="submit" value="' . $txt['package_upload'] . '" class="button_submit" />
-						<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
+						<div class="righttext">
+							<input type="submit" value="' . $txt['package_upload'] . '" class="button_submit" />
+							<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
+						</div>
 					</form>
 				</div>
 				<span class="botslice"><span></span></span>
@@ -1325,8 +1333,10 @@ function template_install_options()
 						</dd>
 					</dl>
 					<label for="package_make_backups"><input type="checkbox" name="package_make_backups" id="package_make_backups" value="1" class="input_check"', $context['package_make_backups'] ? ' checked="checked"' : '', ' /> ', $txt['package_install_options_make_backups'], '</label><br /><br />
-					<input type="submit" name="submit" value="', $txt['save'], '" class="button_submit" />
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					<div class="righttext">
+						<input type="submit" name="submit" value="', $txt['save'], '" class="button_submit" />
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					</div>
 				</form>
 			</div>
 			<span class="botslice"><span></span></span>
@@ -1944,8 +1954,10 @@ function template_file_permissions()
 
 	echo '
 				<span id="test_ftp_placeholder_full"></span>
-				<input type="hidden" name="action_changes" value="1" />
-				<input type="submit" value="', $txt['package_file_perms_go'], '" name="go" class="button_submit" />
+				<div class="righttext">
+					<input type="hidden" name="action_changes" value="1" />
+					<input type="submit" value="', $txt['package_file_perms_go'], '" name="go" class="button_submit" />
+				</div>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>';

@@ -81,7 +81,9 @@ function template_main()
 							</dd>
 						</dl>
 					</fieldset>
-					<input type="submit" name="send" value="', $txt['sendtopic_send'], '" class="button_submit" />
+					<div class="righttext">
+						<input type="submit" name="send" value="', $txt['sendtopic_send'], '" class="button_submit" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
@@ -169,7 +171,9 @@ function template_custom_email()
 							<textarea id="email_body" name="email_body" rows="10" cols="20" style="width: 90%;"></textarea>
 						</dd>
 					</dl>
-					<input type="submit" name="send" value="', $txt['sendtopic_send'], '" class="button_submit" />
+					<div class="righttext">
+						<input type="submit" name="send" value="', $txt['sendtopic_send'], '" class="button_submit" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';
@@ -202,7 +206,9 @@ function template_report()
 						<p>', $txt['report_to_mod_func'], '</p>
 						<br />
 						<label for="report_comment">', $txt['enter_comment'], '</label>: <input type="text" id="report_comment" name="comment" size="50" maxlength="255" />
-						<input type="submit" name="submit" value="', $txt['rtm10'], '" style="margin-left: 1ex;" class="button_submit" />
+						<div class="righttext">
+							<input type="submit" name="submit" value="', $txt['rtm10'], '" style="margin-left: 1ex;" class="button_submit" />
+						</div>
 					</div>
 					<span class="botslice"><span></span></span>
 				</div>

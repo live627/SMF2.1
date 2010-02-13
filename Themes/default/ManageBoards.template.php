@@ -86,8 +86,10 @@ function template_main()
 		// Button to add a new board.
 		echo '
 					</ul>
-					<input type="submit" value="', $txt['mboards_new_board'], '" class="button_submit" />
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					<div class="righttext">
+						<input type="submit" value="', $txt['mboards_new_board'], '" class="button_submit" />
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
@@ -121,53 +123,56 @@ function template_modify_category()
 	if (count($context['category_order']) > 1)
 	{
 		echo '
-					<dt><strong>', $txt['order'], ':</strong></dt>
-					<dd>
-						<select name="cat_order">';
+						<dt><strong>', $txt['order'], ':</strong></dt>
+						<dd>
+							<select name="cat_order">';
 		// Print every existing category into a select box.
 		foreach ($context['category_order'] as $order)
 			echo '
-							<option', $order['selected'] ? ' selected="selected"' : '', ' value="', $order['id'], '">', $order['name'], '</option>';
+								<option', $order['selected'] ? ' selected="selected"' : '', ' value="', $order['id'], '">', $order['name'], '</option>';
 		echo '
-						</select>
-					</dd>';
+							</select>
+						</dd>';
 	}
 	// Allow the user to edit the category name and/or choose whether you can collapse the category.
 	echo '
-					<dt>
-						<strong>', $txt['full_name'], ':</strong><br />
-						<span class="smalltext">', $txt['name_on_display'], '</span>
-					</dt>
-					<dd>
-						<input type="text" name="cat_name" value="', $context['category']['editable_name'], '" size="30" tabindex="', $context['tabindex']++, '" class="input_text" />
-					</dd>
-					<dt>
-						<strong>' . $txt['collapse_enable'] . '</strong><br />
-						<span class="smalltext">' . $txt['collapse_desc'] . '</span>
-					</dt>
-					<dd>
-						<input type="checkbox" name="collapse"', $context['category']['can_collapse'] ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" class="input_check" />
-					</dd>';
+						<dt>
+							<strong>', $txt['full_name'], ':</strong><br />
+							<span class="smalltext">', $txt['name_on_display'], '</span>
+						</dt>
+						<dd>
+							<input type="text" name="cat_name" value="', $context['category']['editable_name'], '" size="30" tabindex="', $context['tabindex']++, '" class="input_text" />
+						</dd>
+						<dt>
+							<strong>' . $txt['collapse_enable'] . '</strong><br />
+							<span class="smalltext">' . $txt['collapse_desc'] . '</span>
+						</dt>
+						<dd>
+							<input type="checkbox" name="collapse"', $context['category']['can_collapse'] ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" class="input_check" />
+						</dd>';
 
 	// Table footer.
 	echo '
-				</dl>';
+					</dl>
+					<div class="righttext">';
+
 	if (isset($context['category']['is_new']))
 		echo '
-				<input type="submit" name="add" value="', $txt['mboards_add_cat_button'], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex="', $context['tabindex']++, '" class="button_submit" />';
+						<input type="submit" name="add" value="', $txt['mboards_add_cat_button'], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex="', $context['tabindex']++, '" class="button_submit" />';
 	else
 		echo '
-				<input type="submit" name="edit" value="', $txt['modify'], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex="', $context['tabindex']++, '" class="button_submit" />
-				<input type="submit" name="delete" value="', $txt['mboards_delete_cat'], '" onclick="return confirm(\'', $txt['catConfirm'], '\');" class="button_submit" />';
+						<input type="submit" name="edit" value="', $txt['modify'], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex="', $context['tabindex']++, '" class="button_submit" />
+						<input type="submit" name="delete" value="', $txt['mboards_delete_cat'], '" onclick="return confirm(\'', $txt['catConfirm'], '\');" class="button_submit" />';
 	echo '
-				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
 
 	// If this category is empty we don't bother with the next confirmation screen.
 	if ($context['category']['is_empty'])
 		echo '
-				<input type="hidden" name="empty" value="1" />';
+						<input type="hidden" name="empty" value="1" />';
 
 	echo '
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

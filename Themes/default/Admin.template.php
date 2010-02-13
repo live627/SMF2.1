@@ -975,7 +975,8 @@ function template_show_settings()
 				}
 				// A simple message?
 				elseif ($config_var['type'] == 'var_message')
-					echo $config_var['var_message'];
+					echo '
+							<div', !empty($config_var['name']) ? ' id="' . $config_var['name'] . '"' : '', '>', $config_var['var_message'], '</div>';
 				// Assume it must be a text box.
 				else
 					echo '
@@ -1009,9 +1010,9 @@ function template_show_settings()
 
 	if (empty($context['settings_save_dont_show']))
 		echo '
-						<p>
+						<div class="righttext">
 							<input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), (!empty($context['settings_save_onclick']) ? ' onclick="' . $context['settings_save_onclick'] . '"' : ''), ' class="button_submit" />
-						</p>';
+						</div>';
 
 	if ($is_open)
 		echo '
@@ -1284,13 +1285,15 @@ function template_edit_profile_field()
 							</dd>
 						</dl>
 					</fieldset>
-					<input type="submit" name="save" value="', $txt['save'], '" class="button_submit" />';
+					<div class="righttext">
+						<input type="submit" name="save" value="', $txt['save'], '" class="button_submit" />';
 
 	if ($context['fid'])
 		echo '
-					<input type="submit" name="delete" value="', $txt['delete'], '" onclick="return confirm(\'', $txt['custom_edit_delete_sure'], '\');" class="button_submit" />';
+						<input type="submit" name="delete" value="', $txt['delete'], '" onclick="return confirm(\'', $txt['custom_edit_delete_sure'], '\');" class="button_submit" />';
 
 	echo '
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
@@ -1299,7 +1302,7 @@ function template_edit_profile_field()
 	</div>
 	<br class="clear" />';
 
-	// Get the java bits right!
+	// Get the javascript bits right!
 	echo '
 	<script type="text/javascript"><!-- // --><![CDATA[
 		updateInputBoxes();
@@ -1452,11 +1455,11 @@ function template_core_features()
 	}
 
 	echo '
-			<p class="padding">
+			<div class="righttext">
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				<input type="hidden" value="0" name="js_worked" id="js_worked" />
 				<input type="submit" value="', $txt['save'], '" name="save" class="button_submit" />
-			</p>
+			</div>
 		</form>
 	</div>
 	<br class="clear" />';
@@ -1501,10 +1504,10 @@ function template_add_language()
 	echo '
 
 					</fieldset>
-					<p>
+					<div class="righttext">
 						', $context['browser']['is_ie'] ? '<input type="text" name="ie_fix" style="display: none;" class="input_text" /> ' : '', '
 						<input type="submit" name="smf_add_sub" value="', $txt['search'], '" class="button_submit" />
-					</p>
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
@@ -1725,8 +1728,10 @@ function template_download_language()
 
 	// Install?
 	echo '
-			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-			<input type="submit" name="do_install" value="', $txt['add_language_smf_install'], '" class="button_submit" />
+			<div class="righttext">
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+				<input type="submit" name="do_install" value="', $txt['add_language_smf_install'], '" class="button_submit" />
+			</div>
 		</form>
 	</div>
 	<br class="clear" />';
@@ -1829,15 +1834,17 @@ function template_modify_language_entries()
 						</dd>
 					</dl>
 					</fieldset>
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="submit" name="save_main" value="', $txt['save'], '"', $context['lang_file_not_writable_message'] || !empty($context['file_entries']) ? ' disabled="disabled"' : '', ' class="button_submit" />';
+					<div class="righttext">
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+						<input type="submit" name="save_main" value="', $txt['save'], '"', $context['lang_file_not_writable_message'] || !empty($context['file_entries']) ? ' disabled="disabled"' : '', ' class="button_submit" />';
 
 	// English can't be deleted.
 	if ($context['lang_id'] != 'english')
 		echo '
-				<input type="submit" name="delete_main" value="', $txt['delete'], '"', $context['lang_file_not_writable_message'] || !empty($context['file_entries']) ? ' disabled="disabled"' : '', ' onclick="confirm(\'', $txt['languages_delete_confirm'], '\');" class="button_submit" />';
+						<input type="submit" name="delete_main" value="', $txt['delete'], '"', $context['lang_file_not_writable_message'] || !empty($context['file_entries']) ? ' disabled="disabled"' : '', ' onclick="confirm(\'', $txt['languages_delete_confirm'], '\');" class="button_submit" />';
 
 	echo '
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

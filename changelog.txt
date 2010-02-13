@@ -34,6 +34,9 @@ February 2010
  * Optimized the styling of additional rows. (various source files, index.css, compat.css)
  * Hide empty custom profile fields in the profile summary. (Profile template) [Bug 3895]
  * The headers in the statistics center were looking a bit off. (index.css)
+ * Greatly improved general usability by aligning submit buttons consistently to the right. (various templates)
+ * Show the birthday email preview as plain text instead of text fields, to prevent it from being interpreted as editable. (ManageMail.php, Admin template)
+ * Improved the usability of the Issue Warning screen. (Profile template)
 
 
 January 2010

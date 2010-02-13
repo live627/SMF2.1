@@ -196,9 +196,10 @@ function template_modify_subscription()
 							</dl>
 						</fieldset>
 					</div>
-					<br />
-					<input type="submit" name="save" value="', $txt['paid_settings_save'], '" class="button_submit" />
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					<div class="righttext">
+						<input type="submit" name="save" value="', $txt['paid_settings_save'], '" class="button_submit" />
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

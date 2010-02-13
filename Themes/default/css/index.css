@@ -3240,7 +3240,7 @@ span.statsbar span
 {
 	margin: 0 0 0 9em;
 }
-#personal_messages .labels
+#personal_messages div.labels
 {
 	padding: 0 1em 0 0;
 }

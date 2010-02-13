@@ -165,7 +165,9 @@ function template_permission_index()
 								</dd>
 							</dl>
 						</fieldset>
-					<input type="submit" value="', $txt['permissions_set_permissions'], '" onclick="return checkSubmit();" class="button_submit" />
+					<div class="righttext">
+						<input type="submit" value="', $txt['permissions_set_permissions'], '" onclick="return checkSubmit();" class="button_submit" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';
@@ -241,8 +243,7 @@ function template_by_board()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<div id="admincenter">
-		<form action="', $scripturl, '?action=admin;area=permissions;sa=board" method="post" accept-charset="', $context['character_set'], '">
+		<form id="admincenter" action="', $scripturl, '?action=admin;area=permissions;sa=board" method="post" accept-charset="', $context['character_set'], '">
 			<div class="cat_bar">
 				<h3 class="catbg">', $txt['permissions_boards'], '</h3>
 			</div>
@@ -278,50 +279,53 @@ function template_by_board()
 
 			echo '
 
-					<li class="flow_hidden' ,' windowbg', $alternate ? '' : '2','">
-						<span class="perm_board align_left">
-							<a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], ';rid=permissions;', $context['session_var'], '=', $context['session_id'], '">', str_repeat('-', $board['child_level']), ' ', $board['name'], '</a>
-						</span>
-						<span class="perm_boardprofile align_left">';
+						<li class="flow_hidden' ,' windowbg', $alternate ? '' : '2','">
+							<span class="perm_board align_left">
+								<a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], ';rid=permissions;', $context['session_var'], '=', $context['session_id'], '">', str_repeat('-', $board['child_level']), ' ', $board['name'], '</a>
+							</span>
+							<span class="perm_boardprofile align_left">';
 			if ($context['edit_all'])
 			{
 				echo '
-							<select name="boardprofile[', $board['id'], ']">';
+								<select name="boardprofile[', $board['id'], ']">';
 
 				foreach ($context['profiles'] as $id => $profile)
 					echo '
-								<option value="', $id, '" ', $id == $board['profile'] ? 'selected="selected"' : '', '>', $profile['name'], '</option>';
+									<option value="', $id, '" ', $id == $board['profile'] ? 'selected="selected"' : '', '>', $profile['name'], '</option>';
 
 				echo '
-							</select>';
+								</select>';
 			}
 			else
 				echo '
-							<a href="', $scripturl, '?action=admin;area=permissions;sa=index;pid=', $board['profile'], ';', $context['session_var'], '=', $context['session_id'], '"> [', $board['profile_name'], ']</a>';
+								<a href="', $scripturl, '?action=admin;area=permissions;sa=index;pid=', $board['profile'], ';', $context['session_var'], '=', $context['session_id'], '"> [', $board['profile_name'], ']</a>';
 
 			echo '
-						</span>
-					</li>';
+							</span>
+						</li>';
 		}
 
 		if (!empty($category['boards']))
 			echo '
-				</ul>
+					</ul>
 				</div>
-			<span class="botslice"><span></span></span>
-		</div>';
+				<span class="botslice"><span></span></span>
+			</div>';
 	}
 
+	echo '
+			<div class="righttext">';
+	
 	if ($context['edit_all'])
 		echo '
-					<input type="submit" name="save_changes" value="', $txt['save'], '" class="button_submit" />';
+				<input type="submit" name="save_changes" value="', $txt['save'], '" class="button_submit" />';
 	else
 		echo '
-					<a href="', $scripturl, '?action=admin;area=permissions;sa=board;edit;', $context['session_var'], '=', $context['session_id'], '">[', $txt['permissions_board_all'], ']</a>';
+				<a href="', $scripturl, '?action=admin;area=permissions;sa=board;edit;', $context['session_var'], '=', $context['session_id'], '">[', $txt['permissions_board_all'], ']</a>';
 
 	echo '
-
-			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+			</div>
 		</form>
 	</div>
 	<br class="clear" />';
@@ -375,7 +379,7 @@ function template_edit_profiles()
 	echo '
 			</tbody>
 			</table>
-			<div class="pagesection">
+			<div class="righttext padding">
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
 
 	if ($context['can_edit_something'])
@@ -415,8 +419,10 @@ function template_edit_profiles()
 							</select>
 						</dd>
 					</dl>
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="submit" name="create" value="', $txt['permissions_profile_new_create'], '" class="button_submit" />
+					<div class="righttext">
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+						<input type="submit" name="create" value="', $txt['permissions_profile_new_create'], '" class="button_submit" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
@@ -500,7 +506,6 @@ function template_modify_group()
 			<div class="cat_bar">
 				<h3 class="catbg">', $txt['permissions_board'], '</h3>
 			</div>
-
 			<div class="information">
 				', $txt['permissions_board_desc'], '
 			</div>
@@ -510,15 +515,19 @@ function template_modify_group()
 			template_modify_group_simple('board');
 		else
 			template_modify_group_classic('board');
+		
+		echo '
+			</div>';
 	}
 
 	if ($context['profile']['can_modify'])
 		echo '
-			<input type="submit" value="', $txt['permissions_commit'], '" class="button_submit" />';
+			<div class="righttext padding">
+				<input type="submit" value="', $txt['permissions_commit'], '" class="button_submit" />
+			</div>';
 
 	echo '
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-			</div>
 		</form>
 	</div>
 	<br class="clear" />';
@@ -553,7 +562,8 @@ function template_modify_group_simple($type)
 				</tr>
 			</thead>
 			<tbody>';
-	foreach ($permission_data as $id_group => $permissionGroup)
+
+			foreach ($permission_data as $id_group => $permissionGroup)
 	{
 		if (empty($permissionGroup['permissions']))
 			continue;
@@ -649,8 +659,8 @@ function template_modify_group_simple($type)
 				</tr>';
 	}
 	echo '
-				</tbody>
-				</table>
+			</tbody>
+		</table>
 	<script type="text/javascript"><!-- // --><![CDATA[';
 
 	if ($context['profile']['can_modify'] && empty($context['simple_javascript_displayed']))
@@ -950,7 +960,7 @@ function template_modify_group_classic($type)
 								<td><input type="radio" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'denied' ? ' checked="checked"' : '', ' value="deny" onclick="window.smf_usedDeny = true;" class="input_radio" ', $disable_field, '/></td>';
 
 						echo '
-					</tr>';
+							</tr>';
 					}
 				}
 				$alternate = !$alternate;
@@ -959,7 +969,7 @@ function template_modify_group_classic($type)
 			if (!$permissionGroup['hidden'] && $has_display_content)
 				echo '
 							<tr class="windowbg2">
-								<td colspan="5" width="100%"><div style="border-top: 1px solid; padding-bottom: 1.5ex; margin-top: 2px;">&nbsp;</div></td>
+								<td colspan="5" width="100%"><!--separator--></td>
 							</tr>';
 		}
 	echo '

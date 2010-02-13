@@ -71,8 +71,10 @@ function template_edit_scheduled_tasks()
 							<input type="checkbox" name="enabled" id="enabled" ', !$context['task']['disabled'] ? 'checked="checked"' : '', ' class="input_check" />
 						</dd>
 					</dl>
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="submit" name="save" value="', $txt['scheduled_tasks_save_changes'], '" class="button_submit" />
+					<div class="righttext">
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+						<input type="submit" name="save" value="', $txt['scheduled_tasks_save_changes'], '" class="button_submit" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

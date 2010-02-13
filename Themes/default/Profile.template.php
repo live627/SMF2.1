@@ -477,7 +477,7 @@ function template_editBuddies()
 			<h3 class="titlebg">
 				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />', $txt['editBuddies'], '</span>
 			</h3>
-		</div.
+		</div>
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<th width="20%">', $txt['name'], '</th>
@@ -2064,13 +2064,7 @@ function template_issueWarning()
 
 	echo '
 						<dt>
-							<strong>', $txt['profile_warning_level'], ':</strong>
-							<span style="padding: 0 1em;">
-								<strong>
-									<a href="#" onclick="changeWarnLevel(-5); return false;">&#171;</a>
-									<a href="#" onclick="changeWarnLevel(5); return false;">&#187;</a>
-								</strong>
-							</span>';
+							<strong>', $txt['profile_warning_level'], ':</strong>';
 
 	// Is there only so much they can apply?
 	if ($context['warning_limit'])
@@ -2082,12 +2076,13 @@ function template_issueWarning()
 						<dd>
 							<div id="warndiv1" style="display: none;">
 								<div>
-									<div id="warning_contain" style="font-size: 8pt; height: 12pt; width: ', $context['warningBarWidth'], 'px; border: 1px solid black; background-color: white; padding: 1px; position: relative;" onmousedown="setWarningBarPos(event, true);" onmousemove="setWarningBarPos(event, true);" onclick="setWarningBarPos(event);">
+									<span class="floatleft" style="padding: 0 0.5em"><a href="#" onclick="changeWarnLevel(-5); return false;">[-]</a></span>
+									<div class="floatleft" id="warning_contain" style="font-size: 8pt; height: 12pt; width: ', $context['warningBarWidth'], 'px; border: 1px solid black; background-color: white; padding: 1px; position: relative;" onmousedown="setWarningBarPos(event, true);" onmousemove="setWarningBarPos(event, true);" onclick="setWarningBarPos(event);">
 										<div id="warning_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['member']['warning'], '%</div>
 										<div id="warning_progress" style="width: ', $context['member']['warning'], '%; height: 12pt; z-index: 1; background-color: ', $context['current_color'], ';">&nbsp;</div>
 									</div>
-									</span>
-									<div class="smalltext">', $txt['profile_warning_impact'], ': <span id="cur_level_div">', $context['level_effects'][$context['current_level']], '</span></div>
+									<span class="floatleft" style="padding: 0 0.5em"><a href="#" onclick="changeWarnLevel(5); return false;">[+]</a></span>
+									<div class="clear_left smalltext">', $txt['profile_warning_impact'], ': <span id="cur_level_div">', $context['level_effects'][$context['current_level']], '</span></div>
 								</div>
 								<input type="hidden" name="warning_level" id="warning_level" value="SAME" />
 							</div>
@@ -2116,7 +2111,7 @@ function template_issueWarning()
 						</dd>
 					</dl>
 					<hr />
-					<dl>
+					<dl class="settings">
 						<dt>
 							<strong>', $txt['profile_warning_notify'], ':</strong>
 						</dt>
@@ -2149,21 +2144,23 @@ function template_issueWarning()
 	}
 	echo '
 					</dl>
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="submit" name="save" value="', $context['user']['is_owner'] ? $txt['change_profile'] : $txt['profile_warning_issue'], '" class="button_submit" />
+					<div class="righttext">
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+						<input type="submit" name="save" value="', $context['user']['is_owner'] ? $txt['change_profile'] : $txt['profile_warning_issue'], '" class="button_submit" />
+					</div>
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
 	</form>';
 
 	// Previous warnings?
-	echo '
+	echo '<br />
+		<div class="title_bar">
+			<h3 class="titlebg">
+				', $txt['profile_warning_previous'], '
+			</h3>
+		</div>
 		<table border="0" width="100%" cellspacing="1" cellpadding="5" class="bordercolor" align="center">
-			<tr class="titlebg">
-				<td colspan="4">
-					', $txt['profile_warning_previous'], '
-				</td>
-			</tr>
 			<tr class="catbg">
 				<td width="20%">', $txt['profile_warning_previous_issued'], '</td>
 				<td width="30%">', $txt['profile_warning_previous_time'], '</td>

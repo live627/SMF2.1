@@ -180,7 +180,9 @@ function template_main()
 		}
 
 		echo '
-			<div><input type="submit" name="submit" value="', $txt['search'], '" class="button_submit" /></div>';
+		<div class="righttext">
+			<input type="submit" name="submit" value="', $txt['search'], '" class="button_submit" />
+		</div>';
 	}
 
 	echo '

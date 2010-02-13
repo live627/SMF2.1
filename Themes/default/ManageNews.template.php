@@ -46,21 +46,21 @@ function template_edit_news()
 				</tr>
 			</tbody>
 			</table>
-			<div class="align_left">
+			<div class="align_left padding">
 				<div id="moreNewsItems_link" style="display: none;"><a href="javascript:void(0);" onclick="addNewsItem(); return false;">', $txt['editnews_clickadd'], '</a></div>
-						<script type="text/javascript"><!-- // --><![CDATA[
-							document.getElementById("moreNewsItems_link").style.display = "";
-							function addNewsItem()
-							{
-								document.getElementById("moreNews").style.display = "";
-								setOuterHTML(document.getElementById("moreNewsItems"), \'<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" name="news[]" style="width: 85%;"><\' + \'/textarea><\' + \'/div><div id="moreNewsItems"><\' + \'/div>\');
-							}
-						// ]]></script>
-						<noscript>
-							<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" style="width: 85%;" name="news[]"></textarea></div>
-						</noscript>
+				<script type="text/javascript"><!-- // --><![CDATA[
+					document.getElementById("moreNewsItems_link").style.display = "";
+					function addNewsItem()
+					{
+						document.getElementById("moreNews").style.display = "";
+						setOuterHTML(document.getElementById("moreNewsItems"), \'<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" name="news[]" style="width: 85%;"><\' + \'/textarea><\' + \'/div><div id="moreNewsItems"><\' + \'/div>\');
+					}
+				// ]]></script>
+				<noscript>
+					<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" style="width: 85%;" name="news[]"></textarea></div>
+				</noscript>
 			</div>
-			<div class="align_right">
+			<div class="align_right padding">
 				<input type="submit" name="save_items" value="', $txt['save'], '" class="button_submit" /> <input type="submit" name="delete_selection" value="', $txt['editnews_remove_selected'], '" onclick="return confirm(\'', $txt['editnews_remove_confirm'], '\');" class="button_submit" />
 			</div>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -189,10 +189,10 @@ function template_email_members()
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
-			<p>
+			<div class="righttext">
 				<input type="submit" value="', $txt['admin_next'], '" class="button_submit" />
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-			</p>
+			</div>
 		</form>
 	</div>
 	<br class="clear" />';

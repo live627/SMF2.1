@@ -396,8 +396,10 @@ function template_set_options()
 
 	echo '
 					</ul>
-					<input type="submit" name="submit" value="', $txt['save'], '" class="button_submit" />
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					<div class="righttext">
+						<input type="submit" name="submit" value="', $txt['save'], '" class="button_submit" />
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
@@ -605,7 +607,9 @@ function template_set_settings()
 
 	echo '
 					</dl>
-					<input type="submit" name="submit" value="', $txt['save'], '" class="button_submit" />
+					<div class="righttext">
+						<input type="submit" name="submit" value="', $txt['save'], '" class="button_submit" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

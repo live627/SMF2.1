@@ -30,8 +30,9 @@ function template_ask()
 							<input type="radio" id="selective" name="step2" value="selective" class="input_radio" /> <label for="selective">', $txt['select_split_posts'], '</label>
 						</li>
 					</ul>
-					<br />
-					<input type="submit" value="', $txt['split'], '" class="button_submit" />
+					<div class="righttext">
+						<input type="submit" value="', $txt['split'], '" class="button_submit" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
@@ -242,14 +243,14 @@ function template_merge_done()
 			<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
-					<p>' . $txt['merge_successful'] . '</p>
+					<p>', $txt['merge_successful'], '</p>
 					<br />
 					<ul class="reset">
 						<li>
-							<a href="' . $scripturl . '?board=' . $context['target_board'] . '.0">' . $txt['message_index'] . '</a>
+							<a href="', $scripturl, '?board=', $context['target_board'], '.0">', $txt['message_index'], '</a>
 						</li>
 						<li>
-							<a href="' . $scripturl . '?topic=' . $context['target_topic'] . '.0">' . $txt['new_merged_topic'] . '</a>
+							<a href="', $scripturl, '?topic=', $context['target_topic'], '.0">', $txt['new_merged_topic'], '</a>
 						</li>
 					</ul>
 				</div>
@@ -280,24 +281,13 @@ function template_merge()
 						</dt>
 						<dd>
 							', $context['origin_subject'], '
-						</dd>
-						<dt>
-							<strong>', $txt['merge_to_topic_id'], ': </strong>
-						</dt>
-						<dd>
-							<form action="', $scripturl , '?action=mergetopics;sa=options" method="post" accept-charset="', $context['character_set'], '" style="display: inline;">
-								<input type="hidden" name="topics[]" value="', $context['origin_topic'], '" />
-								<input type="text" name="topics[]" class="input_text" />
-								<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-								<input type="submit" value="', $txt['merge'], '" class="button_submit" />
-							</form>
 						</dd>';
 
 	if (!empty($context['boards']) && count($context['boards']) > 1)
 	{
 			echo '
 						<dt>
-							<strong>' . $txt['target_board'] . ':</strong>
+							<strong>', $txt['target_board'], ':</strong>
 						</dt>
 						<dd>
 							<form action="' . $scripturl . '?action=mergetopics;from=' . $context['origin_topic'] . ';targetboard=' . $context['target_board'] . ';board=' . $context['current_board'] . '.0" method="post" accept-charset="', $context['character_set'], '">
@@ -307,24 +297,41 @@ function template_merge()
 				echo '
 									<option value="', $board['id'], '"', $board['id'] == $context['target_board'] ? ' selected="selected"' : '', '>', $board['category'], ' - ', $board['name'], '</option>';
 			echo '
-								</select> <noscript><input type="submit" value="', $txt['go_caps'], '" class="button_submit" /></noscript>
+								</select>
+								<input type="submit" value="', $txt['go'], '" class="button_submit" />
 							</form>
 						</dd>';
 	}
 
+	echo '
+					</dl>
+					<hr class="hrcolor" />
+					<dl class="settings merge_topic">
+						<dt>
+							<strong>', $txt['merge_to_topic_id'], ': </strong>
+						</dt>
+						<dd>
+							<form action="', $scripturl , '?action=mergetopics;sa=options" method="post" accept-charset="', $context['character_set'], '">
+								<input type="hidden" name="topics[]" value="', $context['origin_topic'], '" />
+								<input type="text" name="topics[]" class="input_text" />
+								<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+								<input type="submit" value="', $txt['merge'], '" class="button_submit" />
+							</form>
+						</dd>';
+
 		echo '
 					</dl>
 				</div>
-			<span class="botslice"><span></span></span>
-			</div>
+				<span class="botslice"><span></span></span>
+			</div><br />
 			<div class="cat_bar">
 				<h3 class="catbg">', $txt['target_topic'], '</h3>
 			</div>
 			<div class="pagesection">
-				<strong>' . $txt['pages'] . ':</strong> ' . $context['page_index'] . '
+				<strong>', $txt['pages'], ':</strong> ', $context['page_index'], '
 			</div>
 			<div class="windowbg2">
-			<span class="topslice"><span></span></span>
+				<span class="topslice"><span></span></span>
 				<div class="content">
 					<ul class="reset merge_topics">';
 
@@ -332,19 +339,18 @@ function template_merge()
 
 		foreach ($context['topics'] as $topic)
 			echo '
-
 						<li>
-							<a href="' . $scripturl . '?action=mergetopics;sa=options;board=' . $context['current_board'] . '.0;from=' . $context['origin_topic'] . ';to=' . $topic['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '">' . $merge_button . '</a>&nbsp;
-							<a href="' . $scripturl . '?topic=' . $topic['id'] . '.0" target="_blank" class="new_win">' . $topic['subject'] . '</a> ' . $txt['started_by'] . ' ' . $topic['poster']['link'] . '
+							<a href="', $scripturl, '?action=mergetopics;sa=options;board=', $context['current_board'], '.0;from=', $context['origin_topic'], ';to=', $topic['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $merge_button, '</a>&nbsp;
+							<a href="', $scripturl, '?topic=', $topic['id'], '.0" target="_blank" class="new_win">', $topic['subject'], '</a> ', $txt['started_by'], ' ', $topic['poster']['link'], '
 						</li>';
 
 		echo '
 					</ul>
 				</div>
-			<span class="botslice"><span></span></span>
+				<span class="botslice"><span></span></span>
 			</div>
 			<div class="pagesection">
-				<strong>' . $txt['pages'] . ':</strong> ' . $context['page_index'] . '
+				<strong>', $txt['pages'], ':</strong> ', $context['page_index'], '
 			</div>
 		</div>
 	<br class="clear" />';

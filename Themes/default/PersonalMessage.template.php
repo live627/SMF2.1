@@ -750,7 +750,9 @@ function template_search()
 		}
 
 		echo '
-		<input type="submit" name="submit" value="', $txt['pm_search_go'], '" class="button_submit" />';
+		<div class="righttext">
+			<input type="submit" name="submit" value="', $txt['pm_search_go'], '" class="button_submit" />
+		</div>';
 	}
 
 	echo '
@@ -1142,7 +1144,9 @@ function template_prune()
 			<span class="topslice"><span></span></span>
 			<div class="content">
 				<p>', $txt['pm_prune_desc1'], ' <input type="text" name="age" size="3" value="14" class="input_text" /> ', $txt['pm_prune_desc2'], '</p>
-				<input type="submit" value="', $txt['delete'], '" class="button_submit" />
+				<div class="righttext">
+					<input type="submit" value="', $txt['delete'], '" class="button_submit" />
+				</div>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
@@ -1183,8 +1187,9 @@ function template_labels()
 		$alternate = true;
 		foreach ($context['labels'] as $label)
 		{
-			if ($label['id'] != -1)
-			{
+			if ($label['id'] == -1)
+				continue;
+
 				echo '
 			<tr class="', $alternate ? 'windowbg2' : 'windowbg', '">
 				<td>
@@ -1192,10 +1197,9 @@ function template_labels()
 				</td>
 				<td width="4%" align="center"><input type="checkbox" class="input_check" name="delete_label[', $label['id'], ']" /></td>
 			</tr>';
-				$alternate = !$alternate;
-			}
-		}
 
+			$alternate = !$alternate;
+		}
 	}
 	echo '
 		</tbody>
@@ -1203,7 +1207,7 @@ function template_labels()
 
 	if (!count($context['labels']) < 2)
 		echo '
-		<div class="pagesection righttext">
+		<div class="padding righttext">
 			<input type="submit" name="save" value="', $txt['save'], '" class="button_submit" />
 			<input type="submit" name="delete" value="', $txt['quickmod_delete_selected'], '" onclick="return confirm(\'', $txt['pm_labels_delete'], '\');" class="button_submit" />
 		</div>';
@@ -1226,7 +1230,9 @@ function template_labels()
 						<input type="text" id="add_label" name="label" value="" size="30" maxlength="30" class="input_text" />
 					</dd>
 				</dl>
-				<input type="submit" name="add" value="', $txt['pm_label_add_new'], '" class="button_submit" />
+				<div class="righttext">
+					<input type="submit" name="add" value="', $txt['pm_label_add_new'], '" class="button_submit" />
+				</div>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
@@ -1364,24 +1370,20 @@ function template_rules()
 	echo '
 		</tbody>
 		</table>
-			<div class="floatleft">
-				[<a href="', $scripturl, '?action=pm;sa=manrules;add;rid=0">', $txt['pm_add_rule'], '</a>]';
+		<div class="righttext">
+			[<a href="', $scripturl, '?action=pm;sa=manrules;add;rid=0">', $txt['pm_add_rule'], '</a>]';
 
 	if (!empty($context['rules']))
 		echo '
-				[<a href="', $scripturl, '?action=pm;sa=manrules;apply;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['pm_js_apply_rules_confirm'], '\');">', $txt['pm_apply_rules'], '</a>]';
-
-	echo '
-			</div>';
+			[<a href="', $scripturl, '?action=pm;sa=manrules;apply;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['pm_js_apply_rules_confirm'], '\');">', $txt['pm_apply_rules'], '</a>]';
 
 	if (!empty($context['rules']))
 		echo '
-			<div class="floatright">
-				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-				<input type="submit" name="delselected" value="', $txt['pm_delete_selected_rule'], '" onclick="return confirm(\'', $txt['pm_js_delete_rule_confirm'], '\');" class="button_submit" />
-			</div>';
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+			<input type="submit" name="delselected" value="', $txt['pm_delete_selected_rule'], '" onclick="return confirm(\'', $txt['pm_js_delete_rule_confirm'], '\');" class="button_submit" />';
 
 	echo '
+			</div>
 	</form>';
 
 }
@@ -1573,7 +1575,7 @@ function template_add_rule()
 						<span class="smalltext">', $txt['pm_rule_name_desc'], '</span>
 					</dt>
 					<dd>
-						<input type="text" name="rule_name" value="', empty($context['rule']['name']) ? $txt['pm_rule_name_default'] : $context['rule']['name'], '" class="input_text" />
+						<input type="text" name="rule_name" value="', empty($context['rule']['name']) ? $txt['pm_rule_name_default'] : $context['rule']['name'], '" class="input_text" style="width: 100%" />
 					</dd>
 				</dl>
 				<fieldset>
@@ -1622,7 +1624,8 @@ function template_add_rule()
 	}
 
 	echo '
-					<span id="criteriaAddHere"></span> <a href="#" onclick="addCriteriaOption(); return false;" id="addonjs1" style="display: none;">(', $txt['pm_rule_criteria_add'], ')</a>
+					<span id="criteriaAddHere"></span><br />
+					<a href="#" onclick="addCriteriaOption(); return false;" id="addonjs1" style="display: none;">(', $txt['pm_rule_criteria_add'], ')</a>
 					<br /><br />
 					', $txt['pm_rule_logic'], ':
 					<select name="rule_logic" id="logic" onchange="rebuildRuleDesc();">
@@ -1671,7 +1674,8 @@ function template_add_rule()
 	}
 
 	echo '
-					<span id="actionAddHere"></span> <a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>
+					<span id="actionAddHere"></span><br />
+					<a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>
 				</fieldset>
 			</div>
 			<span class="botslice"><span></span></span>
@@ -1682,7 +1686,7 @@ function template_add_rule()
 		<div class="information">
 			<div id="ruletext" class="smalltext">', $txt['pm_rule_js_disabled'], '</div>
 		</div>
-		<div class="pagesection">
+		<div class="righttext">
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			<input type="submit" name="save" value="', $txt['pm_rule_save'], '" class="button_submit" />
 		</div>

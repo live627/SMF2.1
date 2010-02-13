@@ -115,7 +115,9 @@ function template_new_group()
 							</fieldset>
 						</dd>
 					</dl>
-					<input type="submit" value="', $txt['membergroups_add_group'], '" class="button_submit" />
+					<div class="righttext">
+						<input type="submit" value="', $txt['membergroups_add_group'], '" class="button_submit" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';
@@ -297,8 +299,10 @@ function template_edit_group()
 	}
 	echo '
 					</dl>
-					<input type="submit" name="submit" value="', $txt['membergroups_edit_save'], '" class="button_submit" />', $context['group']['allow_delete'] ? '
-					<input type="submit" name="delete" value="' . $txt['membergroups_delete'] . '" onclick="return confirm(\'' . $txt['membergroups_confirm_delete'] . '\');" class="button_submit" />' : '', '
+					<div class="righttext">
+						<input type="submit" name="submit" value="', $txt['membergroups_edit_save'], '" class="button_submit" />', $context['group']['allow_delete'] ? '
+						<input type="submit" name="delete" value="' . $txt['membergroups_delete'] . '" onclick="return confirm(\'' . $txt['membergroups_confirm_delete'] . '\');" class="button_submit" />' : '', '
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

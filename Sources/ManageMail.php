@@ -302,8 +302,8 @@ function ModifyMailSettings($return_config = false)
 			array('password', 'smtp_password'),
 		'',
 			array('select', 'birthday_email', $emails, 'value' => empty($modSettings['birthday_email']) ? 'happy_birthday' : $modSettings['birthday_email'], 'javascript' => 'onchange="fetch_birthday_preview()"'),
-			'birthday_subject' => array('text', 'birthday_subject', 'value' => $birthdayEmails[empty($modSettings['birthday_email']) ? 'happy_birthday' : $modSettings['birthday_email']]['subject'], 'disabled' => true, 'size' => strlen($subject) + 3),
-			'birthday_body' => array('large_text', 'birthday_body', 'value' => $body, 'disabled' => true, 'size' => ceil(strlen($body) / 25)),
+			'birthday_subject' => array('var_message', 'birthday_subject', 'var_message' => $birthdayEmails[empty($modSettings['birthday_email']) ? 'happy_birthday' : $modSettings['birthday_email']]['subject'], 'disabled' => true, 'size' => strlen($subject) + 3),
+			'birthday_body' => array('var_message', 'birthday_body', 'var_message' => nl2br($body), 'disabled' => true, 'size' => ceil(strlen($body) / 25)),
 		'',
 
 	);
@@ -336,28 +336,25 @@ function ModifyMailSettings($return_config = false)
 
 	$context['settings_insert_above'] = '
 	<script type="text/javascript"><!-- // --><![CDATA[
-		var bDay = new Array();';
+		var bDay = {';
 
+	$i = 0;
 	foreach ($birthdayEmails as $index => $email)
 	{
-		// Remove the newlines and count them.
-		$newlines = count(explode("\n", $email['body']));
-		$email['body'] = str_replace("\n", '<br />', $email['body']);
+		$is_last = ++$i == count($birthdayEmails);
 		$context['settings_insert_above'] .= '
-			bDay[\'' . $index . '\'] = {
+			' . $index . ': {
 				subject: \'' . addslashes($email['subject']) . '\',
-				body: \'' . addslashes(str_replace("\r", '', $email['body'])) . '\',
-				newlines: ' . $newlines . '
-			};';
+				body: \'' . addslashes(str_replace("\n", '', nl2br($email['body']))) . '\'
+			}' . (!$is_last ? ',' : '');
 	}
 	$context['settings_insert_above'] .= '
+		};
 		function fetch_birthday_preview()
 		{
 			var index = document.getElementById(\'birthday_email\').value;
-			document.getElementById(\'birthday_subject\').value = bDay[index][\'subject\'];
-			document.getElementById(\'birthday_subject\').size = bDay[index][\'subject\'].length + 2;
-			document.getElementById(\'birthday_body\').value = bDay[index][\'body\'].replace(/<br \/>/g, "\n");
-			document.getElementById(\'birthday_body\').rows = bDay[index][\'body\'].length / 30 + bDay[index][\'newlines\'];
+			document.getElementById(\'birthday_subject\').innerHTML = bDay[index].subject;
+			document.getElementById(\'birthday_body\').innerHTML = bDay[index].body;
 		}
 	// ]]></script>';
 }

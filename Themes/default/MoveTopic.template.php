@@ -61,9 +61,9 @@ function template_main()
 								</dd>
 							</dl>
 						</fieldset>
-						<p>
+						<div class="righttext">
 							<input type="submit" value="', $txt['move_topic'], '" onclick="return submitThisOnce(this);" accesskey="s" class="button_submit" />
-						</p>
+						</div>
 					</div>
 				</div>
 				<span class="botslice"><span></span></span>

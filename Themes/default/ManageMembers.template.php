@@ -215,10 +215,10 @@ function template_search_members()
 						</td>
 					</tr>
 				</table>
-			</div>
-			<p>
+			</div><br />
+			<div class="righttext">
 				<input type="submit" value="', $txt['search'], '" class="button_submit" />
-			</p>
+			</div>
 		</form>
 	</div>
 	<br class="clear" />';
