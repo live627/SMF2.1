@@ -20,7 +20,7 @@ function template_main()
 				}
 				pollOptionNum++
 
-				setOuterHTML(document.getElementById("pollMoreOptions"), \'<li><label for="options-\' + pollOptionNum + \'" ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '>', $txt['option'], ' \' + pollOptionNum + \'</label>: <input type="text" name="options[\' + (pollOptionNum - 1) + \']" id="options-\' + (pollOptionNum - 1) + \'" value="" size="25" class="input_text" /></li><li id="pollMoreOptions"></li\');
+				setOuterHTML(document.getElementById("pollMoreOptions"), \'<li><label for="options-\' + pollOptionNum + \'" ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '>', $txt['option'], ' \' + pollOptionNum + \'</label>: <input type="text" name="options[\' + (pollOptionNum - 1) + \']" id="options-\' + (pollOptionNum - 1) + \'" value="" size="80" maxlength="255" class="input_text" /></li><li id="pollMoreOptions"></li\');
 			}
 		// ]]></script>';
 
@@ -51,15 +51,16 @@ function template_main()
 				<div class="roundframe">
 					<input type="hidden" name="poll" value="' . $context['poll']['id'] . '" />
 					<fieldset id="poll_main">
-						<legend><span ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '>' . $txt['poll_question'] . '</span></legend>
-						<input type="text" name="question" size="40" value="' . $context['poll']['question'] . '" class="input_text" />
+						<legend><span ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '>', $txt['poll_question'], '</span></legend>
+						<input type="text" name="question" size="80" value="', $context['poll']['question'], '" class="input_text" />
 						<ul class="poll_main">';
 
 	foreach ($context['choices'] as $choice)
 	{
 		echo '
 							<li>
-								<label for="options-', $choice['id'], '" ', (isset($context['poll_error']['poll_few']) ? ' class="error"' : ''), '>', $txt['option'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" size="25" value="', $choice['label'], '" class="input_text" />';
+								<label for="options-', $choice['id'], '" ', (isset($context['poll_error']['poll_few']) ? ' class="error"' : ''), '>', $txt['option'], ' ', $choice['number'], '</label>:
+								<input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" value="', $choice['label'], '" class="input_text" size="80" maxlength="255" />';
 
 		// Does this option have a vote count yet, or is it new?
 		if ($choice['votes'] != -1)
@@ -80,7 +81,7 @@ function template_main()
 	if ($context['can_moderate_poll'])
 	{
 		echo '
-						<div class="poll_options smalltext">
+						<div class="poll_options">
 							<ul class="poll_options">
 								<li>
 									<input type="text" name="poll_max_votes" id="poll_max_votes" size="2" value="', $context['poll']['max_votes'], '" class="input_text" /> <label for="poll_max_votes">', $txt['poll_max_votes'], '</label>
@@ -104,7 +105,7 @@ function template_main()
 	}
 
 	echo '
-						<div class="poll_options smalltext">
+						<div class="poll_options">
 							<ul class="poll_options">
 								<li>
 									<input type="radio" name="poll_hide" id="poll_results_anyone" value="0"', $context['poll']['hide_results'] == 0 ? ' checked="checked"' : '', ' class="input_radio" /> <label for="poll_results_anyone">', $txt['poll_results_anyone'], '</label>

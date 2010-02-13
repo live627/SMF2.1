@@ -37,6 +37,7 @@ February 2010
  * Greatly improved general usability by aligning submit buttons consistently to the right. (various templates)
  * Show the birthday email preview as plain text instead of text fields, to prevent it from being interpreted as editable. (ManageMail.php, Admin template)
  * Improved the usability of the Issue Warning screen. (Profile template)
+ * Made the Edit Poll and Edit Event screens more consistent throughout the forum. (Poll template, Post template, index.css, compat.css, rtl.css)
 
 
 January 2010

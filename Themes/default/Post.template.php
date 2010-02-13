@@ -64,7 +64,7 @@ function template_main()
 				}
 				pollOptionNum++
 
-				setOuterHTML(document.getElementById(\'pollMoreOptions\'), ', JavaScriptEscape('<li><label for="options-'), ' + pollOptionNum + ', JavaScriptEscape('">' . $txt['option'] . ' '), ' + pollOptionNum + ', JavaScriptEscape('</label>: <input type="text" name="options['), ' + pollOptionNum + ', JavaScriptEscape(']" id="options-'), ' + pollOptionNum + ', JavaScriptEscape('" value="" size="25" tabindex="'), ' + pollTabIndex + ', JavaScriptEscape('" class="input_text" /></li><li id="pollMoreOptions"></li>'), ');
+				setOuterHTML(document.getElementById(\'pollMoreOptions\'), ', JavaScriptEscape('<li><label for="options-'), ' + pollOptionNum + ', JavaScriptEscape('">' . $txt['option'] . ' '), ' + pollOptionNum + ', JavaScriptEscape('</label>: <input type="text" name="options['), ' + pollOptionNum + ', JavaScriptEscape(']" id="options-'), ' + pollOptionNum + ', JavaScriptEscape('" value="" size="80" maxlength="255" tabindex="'), ' + pollTabIndex + ', JavaScriptEscape('" class="input_text" /></li><li id="pollMoreOptions"></li>'), ');
 			}';
 
 	// If we are making a calendar event we want to ensure we show the current days in a month etc... this is done here.
@@ -215,7 +215,7 @@ function template_main()
 						<fieldset id="event_main">
 							<legend><span', isset($context['post_error']['no_event']) ? ' class="error"' : '', ' id="caption_evtitle">', $txt['calendar_event_title'], '</span></legend>
 							<input type="text" name="evtitle" maxlength="60" size="60" value="', $context['event']['title'], '" tabindex="', $context['tabindex']++, '" class="input_text" />
-							<div class="padding smalltext">
+							<div class="padding">
 								<input type="hidden" name="calendar" value="1" />', $txt['calendar_year'], '&nbsp;
 								<select name="year" id="year" tabindex="', $context['tabindex']++, '" onchange="generateDays();">';
 
@@ -247,58 +247,62 @@ function template_main()
 		echo '
 								</select>
 							</div>
-						</fieldset>
+						</fieldset>';
+
+		if (!empty($modSettings['cal_allowspan']) || ($context['event']['new'] && $context['is_new_post']))
+		{
+			echo '
 						<fieldset id="event_options">
 							<legend>', $txt['calendar_event_options'], '</legend>
-							<div class="smalltext event_options">
+							<div class="event_options">
 								<ul class="event_options">';
 
-		// If events can span more than one day then allow the user to select how long it should last.
-		if (!empty($modSettings['cal_allowspan']))
-		{
-			echo '
-									<li>
-										', $txt['calendar_numb_days'], '
-										<span class="smalltext">
-											<select name="span">';
-
-			for ($days = 1; $days <= $modSettings['cal_maxspan']; $days++)
-				echo '
-												<option value="', $days, '"', $days == $context['event']['span'] ? ' selected="selected"' : '', '>', $days, '</option>';
-
-			echo '
-											</select>
-										</span>
-									</li>';
-		}
-
-		// If this is a new event let the user specify which board they want the linked post to be put into.
-		if ($context['event']['new'] && $context['is_new_post'])
-		{
-			echo '
-									<li>
-										', $txt['calendar_post_in'], '
-										<span class="smalltext">
-											<select name="board">';
-			foreach ($context['event']['categories'] as $category)
+			// If events can span more than one day then allow the user to select how long it should last.
+			if (!empty($modSettings['cal_allowspan']))
 			{
 				echo '
-												<optgroup label="', $category['name'], '">';
-				foreach ($category['boards'] as $board)
+									<li>
+										', $txt['calendar_numb_days'], '
+										<select name="span">';
+
+				for ($days = 1; $days <= $modSettings['cal_maxspan']; $days++)
 					echo '
-													<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
+											<option value="', $days, '"', $days == $context['event']['span'] ? ' selected="selected"' : '', '>', $days, '</option>';
+
 				echo '
-												</optgroup>';
-			}
-			echo '
-											</select>
-										</span>
+										</select>
 									</li>';
-		}
-		echo '
+			}
+
+			// If this is a new event let the user specify which board they want the linked post to be put into.
+			if ($context['event']['new'] && $context['is_new_post'])
+			{
+				echo '
+									<li>
+										', $txt['calendar_post_in'], '
+										<select name="board">';
+				foreach ($context['event']['categories'] as $category)
+				{
+					echo '
+											<optgroup label="', $category['name'], '">';
+					foreach ($category['boards'] as $board)
+						echo '
+												<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
+					echo '
+											</optgroup>';
+				}
+				echo '
+										</select>
+									</li>';
+			}
+
+			echo '
 								</ul>
 							</div>
-						</fieldset>
+						</fieldset>';
+		}
+
+		echo '
 					</div>';
 	}
 
@@ -310,14 +314,15 @@ function template_main()
 						<fieldset id="poll_main">
 							<legend><span ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '>' . $txt['poll_question'] . '</span></legend>
 							<input type="text" name="question" value="', isset($context['question']) ? $context['question'] : '', '" tabindex="', $context['tabindex']++, '" size="80" class="input_text" />
-							<ul class="smalltext poll_main">';
+							<ul class="poll_main">';
 
 		// Loop through all the choices and print them out.
 		foreach ($context['choices'] as $choice)
 		{
 			echo '
 								<li>
-									<label for="options-', $choice['id'], '">', $txt['option'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" value="', $choice['label'], '" tabindex="', $context['tabindex']++, '" size="25" class="input_text" />
+									<label for="options-', $choice['id'], '">', $txt['option'], ' ', $choice['number'], '</label>:
+									<input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" value="', $choice['label'], '" tabindex="', $context['tabindex']++, '" size="80" maxlength="255" class="input_text" />
 								</li>';
 		}
 
@@ -328,7 +333,7 @@ function template_main()
 						</fieldset>
 						<fieldset id="poll_options">
 							<legend>', $txt['poll_options'], '</legend>
-							<div class="smalltext poll_options">
+							<div class="poll_options">
 								<ul class="poll_options">
 									<li>
 										<input type="text" id="poll_max_votes" name="poll_max_votes" size="2" value="', $context['poll_options']['max_votes'], '" class="input_text" /> <label for="poll_max_votes">', $txt['poll_max_votes'], '</label>
@@ -349,7 +354,7 @@ function template_main()
 		echo '
 								</ul>
 							</div>
-							<div class="smalltext poll_options">
+							<div class="poll_options">
 								<ul class="poll_options">
 									<li>
 										<input type="radio" name="poll_hide" value="0"', $context['poll_options']['hide'] == 0 ? ' checked="checked"' : '', ' class="input_radio" /> ', $txt['poll_results_anyone'], '<br />
