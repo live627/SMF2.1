@@ -709,8 +709,10 @@ function template_moderation_settings()
 	}
 	echo '
 					</dl>
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="submit" name="save" value="', $txt['save'], '" class="button_submit" />
+					<div class="righttext">
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+						<input type="submit" name="save" value="', $txt['save'], '" class="button_submit" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

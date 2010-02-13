@@ -39,7 +39,9 @@ February 2010
  * Improved the usability of the Issue Warning screen. (Profile template)
  * Made the Edit Poll and Edit Event screens more consistent throughout the forum. (Poll template, Post template, index.css, compat.css, rtl.css)
  ! Disabling notifications of items awaiting approval should include group request approvals. (Profile-Modify.php) [Bug 3927]
- 
+ ! When generating a thumbnail on the fly, don't forget to store the mime type and extension, too. (Display.php)
+ ! When regenerating a thumbnail, make sure to remove the old one. (Display.php) [Bug 4037]
+
 
 January 2010
 --------------------------------------------------------------------------------
