@@ -30,6 +30,7 @@ February 2010
  * Synchronised Core's help template with Curve's. (Help template, index.css, compat.css)
  & Removed redundant language entries. (Manual language file)
  ! Detect nginx as server software. (Load.php) [Bug 4191]
+ ! With WYSIWYG disabled, it was not possible to select the same combobox item twice in a row. (editor.js) [Bug 4036]
 
 
 January 2010

@@ -718,6 +718,8 @@ smc_Editor.prototype.handleSelectChange = function (oSelectProperties)
 	this.setFocus();
 
 	var sValue = oSelectProperties.oSelect.value;
+	if (sValue == '')
+		return true;
 
 	// Changing font face?
 	if (oSelectProperties.sName == 'sel_face')
@@ -726,7 +728,8 @@ smc_Editor.prototype.handleSelectChange = function (oSelectProperties)
 		if (!this.bRichTextEnabled)
 		{
 			sValue = sValue.replace(/"/, '');
-			surroundText('[font=' + sValue + ']', '[/font]', this.oTextHandle)
+			surroundText('[font=' + sValue + ']', '[/font]', this.oTextHandle);
+			oSelectProperties.oSelect.selectedIndex = 0;
 		}
 		else
 			this.smf_execCommand('fontname', false, sValue);
@@ -737,7 +740,10 @@ smc_Editor.prototype.handleSelectChange = function (oSelectProperties)
 	{
 		// Are we in boring mode?
 		if (!this.bRichTextEnabled)
-			surroundText('[size=' + this.aFontSizes[sValue] + 'pt]', '[/size]', this.oTextHandle)
+		{		
+			surroundText('[size=' + this.aFontSizes[sValue] + 'pt]', '[/size]', this.oTextHandle);
+			oSelectProperties.oSelect.selectedIndex = 0;
+		}
 
 		else
 			this.smf_execCommand('fontsize', false, sValue);
@@ -747,7 +753,10 @@ smc_Editor.prototype.handleSelectChange = function (oSelectProperties)
 	{
 		// Are we in boring mode?
 		if (!this.bRichTextEnabled)
-			surroundText('[color=' + sValue + ']', '[/color]', this.oTextHandle)
+		{
+			surroundText('[color=' + sValue + ']', '[/color]', this.oTextHandle);
+			oSelectProperties.oSelect.selectedIndex = 0;
+		}
 
 		else
 			this.smf_execCommand('forecolor', false, sValue);
