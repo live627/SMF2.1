@@ -908,10 +908,17 @@ function registerMember(&$regOptions, $return_errors = false)
 // Check if a name is in the reserved words list. (name, current member id, name/username?.)
 function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal = true)
 {
-	global $user_info, $modSettings, $smcFunc;
+	global $user_info, $modSettings, $smcFunc, $context;
 
-	$checkName = $smcFunc['strtolower']($name);
-
+	// No cheating with entities please.
+	$replaceEntities = create_function('$string', '
+		$num = substr($string, 0, 1) === \'x\' ? hexdec(substr($string, 1)) : (int) $string;' . (empty($context['utf8']) ? '
+		return $num < 0x20 ? \'\' : ($num < 0x80 ? chr($num) : \'&#\' . $string . \';\');' : '
+		return $num < 0x20 || $num > 0x10FFFF || ($num >= 0xD800 && $num <= 0xDFFF) ? \'\' : ($num < 0x80 ? chr($num) : ($num < 0x800 ? chr(192 | $num >> 6) . chr(128 | $num & 63) : ($num < 0x10000 ? chr(224 | $num >> 12) . chr(128 | $num >> 6 & 63) . chr(128 | $num & 63) : chr(240 | $num >> 18) . chr(128 | $num >> 12 & 63) . chr(128 | $num >> 6 & 63) . chr(128 | $num & 63))));')
+	);
+	
+	$checkName = $smcFunc['strtolower'](preg_replace('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e', '$replaceEntities(\'\\2\')', $name));
+	
 	// Administrators are never restricted ;).
 	if (!allowedTo('moderate_forum') && ((!empty($modSettings['reserveName']) && $is_name) || !empty($modSettings['reserveUser']) && !$is_name))
 	{
@@ -925,8 +932,13 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 			if ($reserved == '')
 				continue;
 
+			// The admin might've used entities too, level the playing field.
+			$reservedCheck = preg_replace('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e', '$replaceEntities(\'\\2\')', $reserved);
+			
 			// Case sensitive name?
-			$reservedCheck = empty($modSettings['reserveCase']) ? $smcFunc['strtolower']($reserved) : $reserved;
+			if (empty($modSettings['reserveCase']))
+				$reservedCheck = $smcFunc['strtolower']($reservedCheck);
+				
 			// If it's not just entire word, check for it in there somewhere...
 			if ($checkMe == $reservedCheck || ($smcFunc['strpos']($checkMe, $reservedCheck) !== false && empty($modSettings['reserveWord'])))
 				if ($fatal)

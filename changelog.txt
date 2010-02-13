@@ -44,6 +44,7 @@ February 2010
  ! Make it harder for flash files to be used inline. (Display.php) [Bug 3979]
  ! Improved regular expression detection and reencode all suspicious image attachments. (Profile-Modify.php, Subs-Graphics.php, Subs-Post.php) [Bug 3484]
  ! Restructured the Subs-Graphics functions to reduce code duplication. (Subs-Graphics.php)
+ ! Prevent HTML entities from being used as reserved names. (Subs-Members.php) [Bug 4127]
 
 
 January 2010
