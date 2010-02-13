@@ -1137,31 +1137,22 @@ function ssi_recentPoll($topPollInstead = false, $output_method = 'echo')
 	if ($allow_view_results)
 	{
 		echo '
-		<form action="', $boardurl, '/SSI.php?ssi_function=pollVote" method="post" accept-charset="', $context['character_set'], '">
-			<input type="hidden" name="poll" value="', $return['id'], '" />
-			<table border="0" cellspacing="1" cellpadding="0" class="ssi_table">
-				<tr>
-					<td><strong>', $return['question'], '</strong></td>
-				</tr>
-				<tr>
-					<td>', $return['allowed_warning'], '</td>
-				</tr>';
+		<form class="ssi_poll" action="', $boardurl, '/SSI.php?ssi_function=pollVote" method="post" accept-charset="', $context['character_set'], '">
+			<strong>', $return['question'], '</strong><br />
+			', !empty($return['allowed_warning']) ? $return['allowed_warning'] . '<br />' : '';
+
 		foreach ($return['options'] as $option)
 			echo '
-				<tr>
-					<td><label for="', $option['id'], '">', $option['vote_button'], ' ', $option['option'], '</label></td>
-				</tr>';
+			<label for="', $option['id'], '">', $option['vote_button'], ' ', $option['option'], '</label><br />';
+
 		echo '
-				<tr>
-					<td><input type="submit" value="', $txt['poll_vote'], '" class="button_submit" /></td>
-				</tr>
-			</table>
+			<input type="submit" value="', $txt['poll_vote'], '" class="button_submit" />
+			<input type="hidden" name="poll" value="', $return['id'], '" />
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>';
 	}
 	else
-		echo '
-				', $txt['poll_cannot_see'];
+		echo $txt['poll_cannot_see'];
 }
 
 function ssi_showPoll($topic = null, $output_method = 'echo')
@@ -1298,51 +1289,45 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 	if ($return['allow_vote'])
 	{
 		echo '
-			<form action="', $boardurl, '/SSI.php?ssi_function=pollVote" method="post" accept-charset="', $context['character_set'], '">
-				<input type="hidden" name="poll" value="', $return['id'], '" />
-				<table border="0" cellspacing="1" cellpadding="0" class="ssi_table">
-					<tr>
-						<td><strong>', $return['question'], '</strong></td>
-					</tr>
-					<tr>
-						<td>', $return['allowed_warning'], '</td>
-					</tr>';
+			<form class="ssi_poll" action="', $boardurl, '/SSI.php?ssi_function=pollVote" method="post" accept-charset="', $context['character_set'], '">
+				<strong>', $return['question'], '</strong><br />
+				', !empty($return['allowed_warning']) ? $return['allowed_warning'] . '<br />' : '';
+
 		foreach ($return['options'] as $option)
 			echo '
-					<tr>
-						<td><label for="', $option['id'], '">', $option['vote_button'], ' ', $option['option'], '</label></td>
-					</tr>';
+				<label for="', $option['id'], '">', $option['vote_button'], ' ', $option['option'], '</label><br />';
+
 		echo '
-					<tr>
-						<td><input type="submit" value="', $txt['poll_vote'], '" class="button_submit" /></td>
-					</tr>
-				</table>
+				<input type="submit" value="', $txt['poll_vote'], '" class="button_submit" />
+				<input type="hidden" name="poll" value="', $return['id'], '" />
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			</form>';
 	}
 	elseif ($return['allow_view_results'])
 	{
 		echo '
-				<table border="0" cellspacing="1" cellpadding="0" class="ssi_table">
-					<tr>
-						<td colspan="2"><strong>', $return['question'], '</strong></td>
-					</tr>';
+			<div class="ssi_poll">
+				<strong>', $return['question'], '</strong>
+				<dl>';
+
 		foreach ($return['options'] as $option)
 			echo '
-					<tr>
-						<td align="right" valign="top">', $option['option'], '</td>
-						<td align="left">', $option['bar'], ' ', $option['votes'], ' (', $option['percent'], '%)</td>
-					</tr>';
+					<dt>', $option['option'], '</dt>
+					<dd>
+						<div class="ssi_poll_bar" style="border: 1px solid #666; height: 1em">
+							<div class="ssi_poll_bar_fill" style="background: #ccf; height: 1em; width: ', $option['percent'], '%;">
+							</div>
+						</div>
+						', $option['votes'], ' (', $option['percent'], '%)
+					</dd>';
 		echo '
-					<tr>
-						<td colspan="2"><strong>', $txt['poll_total_voters'], ': ', $return['total_votes'], '</strong></td>
-					</tr>
-				</table>';
+				</dl>
+				<strong>', $txt['poll_total_voters'], ': ', $return['total_votes'], '</strong>
+			</div>';
 	}
 	// Cannot see it I'm afraid!
 	else
-		echo '
-				', $txt['poll_cannot_see'];
+		echo $txt['poll_cannot_see'];
 }
 
 // Takes care of voting - don't worry, this is done automatically.
@@ -1706,7 +1691,7 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 		$return[] = array(
 			'id' => $row['id_topic'],
 			'message_id' => $row['id_msg'],
-			'icon' => '<img src="' . $settings[$icon_sources[$row['icon']]] . '/post/' . $row['icon'] . '.gif" align="middle" alt="' . $row['icon'] . '" border="0" />',
+			'icon' => '<img src="' . $settings[$icon_sources[$row['icon']]] . '/post/' . $row['icon'] . '.gif" alt="' . $row['icon'] . '" />',
 			'subject' => $row['subject'],
 			'time' => timeformat($row['poster_time']),
 			'timestamp' => forum_time(true, $row['poster_time']),
@@ -1740,18 +1725,19 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 	foreach ($return as $news)
 	{
 		echo '
-			<div>
-				<a href="', $news['href'], '">', $news['icon'], '</a> <strong>', $news['subject'], '</strong>
-				<div class="smaller">', $news['time'], ' ', $txt['by'], ' ', $news['poster']['link'], '</div>
-
-				<div class="post" style="padding: 2ex 0;">', $news['body'], '</div>
-
+			<div class="news_item">
+				<h3 class="news_header">
+					', $news['icon'], '
+					<a href="', $news['href'], '">', $news['subject'], '</a>
+				</h3>
+				<div class="news_timestamp">', $news['time'], ' ', $txt['by'], ' ', $news['poster']['link'], '</div>
+				<div class="news_body" style="padding: 2ex 0;">', $news['body'], '</div>
 				', $news['link'], $news['locked'] ? '' : ' | ' . $news['comment_link'], '
 			</div>';
 
 		if (!$news['is_last'])
 			echo '
-			<hr style="margin: 2ex 0;" width="100%" />';
+			<hr />';
 	}
 }
 
@@ -1957,7 +1943,7 @@ function ssi_recentAttachments($num_attachments = 10, $attachment_ext = array(),
 
 	// Give them the default.
 	echo '
-		<table class="ssi_table" cellpadding="2">
+		<table class="ssi_downloads" cellpadding="2">
 			<tr>
 				<th align="left">', $txt['file'], '</th>
 				<th align="left">', $txt['posted_by'], '</th>

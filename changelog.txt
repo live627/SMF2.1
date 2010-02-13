@@ -53,6 +53,7 @@ February 2010
  ! Fixed an issue in IE6 and IE7 causing an 'Operation aborted' message to be shown when using the autosuggest control. (script.js, suggest.js) [Bug 3304]
  ! Do a better job at hiding non-UTF8 language packs where UTF8 is favored. (Load.php, ManageServer.php) [Bug 3657]
  ! When updating entries in the built-in language editor, at least save a placeholder when the user clears a string. (ManageServer.php)
+ ! Updated the SSI poll and topic functions to output easily targetable HTML, having presentable inline styles. (SSI.php) [Bug 4039]
 
 
 January 2010
