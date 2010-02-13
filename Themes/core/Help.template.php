@@ -173,14 +173,9 @@ function template_manual_intro()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-	<p>', $txt['manual_index_you_have_arrived_part1'], '<a href="http://www.simplemachines.org/">', $txt['manual_index_you_have_arrived_link_site0'], '</a>', $txt['manual_index_you_have_arrived_part2'], '<a href="', $scripturl, '?action=help;area=board_index">', $txt['manual_index_you_have_arrived_link_site0_board'], '</a>', $txt['manual_index_you_have_arrived_part3'], '</p>
-	<p>', sprintf($txt['manual_index_guest_permit_read_part1'], $scripturl . '?action=credits'), '<a href="', $scripturl, '?action=help;area=registration_screen">', $txt['manual_index_guest_permit_read_link_registering'], '</a>', $txt['manual_index_guest_permit_read_part2'], '</p>
-	<ol>
-		<li><a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_index_main_menu'], '</a></li>
-		<li><a href="', $scripturl, '?action=help;area=board_index">', $txt['manual_index_sec_board_index'], '</a></li>
-		<li><a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_index_sec_msg_index'], '</a></li>
-		<li><a href="', $scripturl, '?action=help;area=topic_view">', $txt['manual_index_sec_topic'], '</a></li>
-	</ol>';
+	<p>', $txt['manual_intro_welcome_to'], $context['forum_name'], $txt['manual_intro_welcome_after'], '<a href="http://www.simplemachines.org/">', $txt['manual_intro_smf_link'], '</a>', $txt['manual_intro_smf_abbreviation'], '</p>
+	<p>', $txt['manual_intro_overview'], '</p>
+	<p>', $txt['manual_intro_outline'], '</p>';
 }
 
 // The main menu page.
@@ -189,25 +184,116 @@ function template_manual_main_menu()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-	<p>', $txt['manual_index_suppossing_guest'], '</p>
+	<p>', $txt['manual_main_menu_describe'], '</p>
+	<div class="help_sample">
+		<div class="main_menu">
+			<ul class="reset clearfix">
+				<li class="active">
+					<a href="', $scripturl, '?action=help;area=board_index">
+						<span>
+							<em>', $txt['home'], '</em>
+						</span>
+					</a>
+				</li>
+				<li>
+					<a href="', $scripturl, '?action=help">
+						<span>', $txt['help'], '</span>
+					</a>
+				</li>
+				<li>
+					<a href="', $scripturl, '?action=help;area=searching">
+						<span>', $txt['search'], '</span>
+					</a>
+				</li>
+				<li>
+					<a href="', $scripturl, '?action=help;area=calendar">
+						<span>', $txt['calendar'], '</span>
+					</a>
+				</li>
+				<li>
+					<a href="', $scripturl, '?action=help;area=logging_in">
+						<span>', $txt['login'], '</span>
+					</a>
+				</li>
+				<li class="last">
+					<a href="', $scripturl, '?action=help;area=registration_screen">
+						<span>', $txt['register'], '</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<br />
+	</div>
+	<p style="margin-top: 1em;">', $txt['manual_main_menu_guest_links'], '</p>
 	<ul>
-		<li>', $txt['manual_index_home_desc_part1'], '<a href="', $scripturl, '?action=help;area=board_index">', $txt['manual_index_home_desc_link_board'], '</a>', $txt['manual_index_home_desc_part2'], '</li>
-		<li>', $txt['manual_index_help_desc'], '</li>
-		<li>', $txt['manual_index_search_desc_part1'], '<a href="', $scripturl, '?action=help;area=searching">', $txt['manual_index_search_desc_link_searching'], '</a>', $txt['manual_index_search_desc_part2'], '</li>
-		<li>', $txt['manual_index_calendar_desc_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#calendar">', $txt['manual_index_calendar_desc_link_posting_calendar'], '</a>', $txt['manual_index_calendar_desc_part2'], '</li>
-		<li>', $txt['manual_index_login_desc_part1'], '<a href="', $scripturl, '?action=help;area=logging_in">', $txt['manual_index_login_desc_link_loginout'], '</a>', $txt['manual_index_login_desc_part2'], '</li>
-		<li>', $txt['manual_index_register_desc_part1'], '<a href="', $scripturl, '?action=help;area=registration_screen">', $txt['manual_index_register_desc_link_registering'], '</a>', $txt['manual_index_register_desc_part2'], '</li>
+		<li>', $txt['manual_main_menu_home'], '</li>
+		<li>', $txt['manual_main_menu_help'], '</li>
+		<li>', $txt['manual_main_menu_search'], '</li>
+		<li>', $txt['manual_main_menu_calendar'], '</li>
+		<li>', $txt['manual_main_menu_login'], '</li>
+		<li>', $txt['manual_main_menu_register'], '</li>
 	</ul>
-	<p>', $txt['manual_index_once_registered'], '</p>
+	<div class="help_sample">
+		<div class="main_menu">
+			<ul class="reset clearfix">
+				<li class="active">
+					<a href="', $scripturl, '?action=help;area=board_index">
+						<span>
+							<em>', $txt['home'], '</em>
+						</span>
+					</a>
+				</li>
+				<li>
+					<a href="', $scripturl, '?action=help">
+						<span>', $txt['help'], '</span>
+					</a>
+				</li>
+				<li>
+					<a href="', $scripturl, '?action=help;area=searching">
+						<span>', $txt['search'], '</span>
+					</a>
+				</li>
+				<li>
+					<a href="', $scripturl, '?action=help;area=profile_info">
+						<span>', $txt['profile'], '</span>
+					</a>
+				</li>
+				<li>
+					<a href="', $scripturl, '?action=help;area=messages">
+						<span>', $txt['pm_short'], '</span>
+					</a>
+				</li>
+				<li>
+					<a href="', $scripturl, '?action=help;area=calendar">
+						<span>', $txt['calendar'], '</span>
+					</a>
+				</li>
+				<li>
+					<a href="', $scripturl, '?action=help;area=memberlist">
+						<span>', $txt['members_title'], '</span>
+					</a>
+				</li>
+				<li class="last">
+					<a href="', $scripturl, '?action=help;area=logging_in">
+						<span>', $txt['logout'], '</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<br />
+	</div>
+	<p>', $txt['manual_main_menu_member_links'], '</p>
 	<ul>
-		<li>', $txt['manual_index_home_reg'], '</li>
-		<li>', $txt['manual_index_help_reg'], '</li>
-		<li>', $txt['manual_index_search_reg'], '</li>
-		<li>', $txt['manual_index_profile_reg_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary">', $txt['manual_index_profile_reg_link_profile'], '</a>', $txt['manual_index_profile_reg_part2'], '</li>
-		<li>', $txt['manual_index_calendar_reg'], '</li>
-		<li>', $txt['manual_index_logout_reg_part1'], '<a href="', $scripturl, '?action=help;area=logging_in#logout">', $txt['manual_index_logout_reg_link_loginout_logout'], '</a>', $txt['manual_index_logout_reg_part2'], '</li>
+		<li>', $txt['manual_main_menu_home'], '</li>
+		<li>', $txt['manual_main_menu_help'], '</li>
+		<li>', $txt['manual_main_menu_search'], '</li>
+		<li>', $txt['manual_main_menu_profile'], '</li>
+		<li>', $txt['manual_main_menu_messages'], '</li>
+		<li>', $txt['manual_main_menu_calendar'], '</li>
+		<li>', $txt['manual_main_menu_members'], '</li>
+		<li>', $txt['manual_main_menu_logout'], '</li>
 	</ul>
-	<p>', $txt['manual_index_forum_admins_note_presentation'], '</p>';
+	<p>', $txt['manual_main_menu_admin_mod'], '</p>';
 }
 
 // The board index page.
@@ -216,13 +302,14 @@ function template_manual_board_index()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-	<p>', $txt['manual_index_sec_board_index_def'], '</p>
+	<p>', $txt['manual_board_index_describe'], '</p>
+	<p>', $txt['manual_board_index_looks'], '</p>
 	<div class="help_sample">
-		<table width="100%" cellpadding="3" cellspacing="0">
-			<tr>
-				<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></strong></span></td>
-			</tr>
-		</table>
+		<ul class="linktree">
+			<li>
+				<a href="', $scripturl, '?action=help;area=board_index" class="nav">', $context['forum_name'], '</a>
+			</li>
+		</ul>
 		<script type="text/javascript">//<![CDATA[
 			var collapseExpand = false;
 			function collapseExpandCategory()
@@ -238,20 +325,81 @@ function template_manual_board_index()
 					document.getElementById("board-new-or-not").alt = "', $txt['manual_index_no_new'], '";
 			}
 		//]]></script>
-			<div class="tborder">
-				<table border="0" width="100%" cellspacing="1" cellpadding="5">
+		<div class="tborder">
+			<table class="bordercolor boardsframe" border="0" width="100%" cellspacing="1" cellpadding="5">
+				<tbody>
 					<tr>
-						<td colspan="4" class="catbg" height="18"><a href="javascript:collapseExpandCategory();"><img src="', $settings['images_url'], '/collapse.gif" alt="-" border="0" id="collapseArrow" name="collapseArrow" /></a>&nbsp; <a href="javascript:collapseExpandCategory();" class="board">', $txt['manual_index_cat_name'], '</a></td>
+						<td colspan="4" class="catbg" height="18">
+							<a class="collapse" href="javascript:collapseExpandCategory();"><img src="', $settings['images_url'], '/collapse.gif" alt="-" border="0" id="collapseArrow" name="collapseArrow" /></a>
+							<a class="floatright" href="#">', $txt['view_unread_category'], '</a>
+							<a href="#">', $txt['manual_board_index_category_name'], '</a>
+						</td>
 					</tr>
-					<tr id="collapseCategory" class="windowbg2">
-						<td class="windowbg" width="6%" align="center" valign="top"><img src="', $settings['images_url'], '/on.gif" id="board-new-or-not" alt="', $txt['manual_index_new_posts'], '" name="board-new-or-not" /></td>
-						<td align="left" class="windowbg"><strong><a href="', $scripturl, '?action=help;area=message_view" class="board">', $txt['manual_index_board_name'], '</a></strong><br />
-						', $txt['manual_index_board_desc'], '</td>
-						<td class="windowbg" valign="middle" align="center" style="width: 12ex;"><span class="smalltext">', $txt['manual_index_topics_posts'], '</span></td>
-						<td valign="middle" width="22%" class="windowbg">', $txt['manual_index_date_time'], '</td>
+				</tbody>
+				<tbody id="collapseCategory">
+					<tr class="windowbg2">
+						<td class="windowbg icon">
+							<a href="#">
+								<img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'redirect.gif" alt="*" title="*" border="0" />
+							</a>
+						</td>
+						<td class="windowbg2 info">
+							<h4>
+								<a class="subject" href="#" name="b3">', $txt['redirect_board'], '</a>
+							</h4>
+							<p>', $txt['manual_board_index_external'], '</p>
+						</td>
+						<td class="windowbg stats smalltext">
+							', $txt['manual_board_index_num_redirects'], '
+						</td>
+						<td class="windowbg2 smalltext lastpost">
+						</td>
 					</tr>
-				</table>
-			</div>';
+					<tr class="windowbg2">
+						<td class="windowbg icon" rowspan="2">
+							<a href="#">
+								<img src="', $settings['images_url'], '/', $context['theme_variant_url'], '/on.gif" id="board-new-or-not" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" />
+							</a>
+						</td>
+						<td class="windowbg2 info">
+							<h4>
+								<a class="subject" href="', $scripturl, '?action=help;area=message_view" name="b1">', $txt['manual_board_index_board_name'], '</a>
+							</h4>
+							<p>', $txt['manual_board_index_board_discuss'], '</p>
+						</td>
+						<td class="windowbg stats smalltext" rowspan="2">
+							<p>', $txt['manual_board_index_posts_topics'], '</p>
+						</td>
+						<td class="windowbg2 smalltext lastpost" rowspan="2">
+							<p>', $txt['manual_board_index_dtsa'], '</p>
+						</td>
+					</tr>
+					<tr>
+						<td class="children windowbg">
+							<strong>', $txt['manual_board_index_child_boards'], '</strong>: <a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_board_index_child'], '</a>
+						</td>
+					</tr>
+					<tr class="windowbg2">
+						<td class="windowbg icon">
+							<a href="#"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], '/off.gif" alt="', $txt['old_posts'], '" title="', $txt['old_posts'], '" /></a>
+						</td>
+						<td class="windowbg2 info">
+							<h4>
+								<a class="subject" href="', $scripturl, '?action=help;area=message_view" name="b2">', $txt['manual_board_index_board_name'], '</a>
+							</h4>
+							<p>', $txt['manual_board_index_board_discuss'], '</p>
+							<p class="moderators">', $txt['moderator'], ': <a href="', $scripturl, '?action=help;area=profile_info">', $txt['manual_board_index_board_mod'], '</a></p>
+						</td>
+						<td class="windowbg stats smalltext">
+							<p>', $txt['manual_board_index_posts_topics'], '</p>
+						</td>
+						<td class="windowbg2 smalltext lastpost">
+							<p>', $txt['manual_board_index_dtsa'], '</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>';
 
 	// This changes dependant on theme really...
 	$mark_read_button = array('markread' => array('text' => 'mark_as_read', 'image' => 'markread.gif', 'lang' => true, 'url' => 'javascript:markBoardRead();'));
@@ -262,8 +410,8 @@ function template_manual_board_index()
 		<table border="0" width="100%" cellspacing="0" cellpadding="5">
 			<tr>
 				<td align="', !$context['right_to_left'] ? 'left' : 'right', '" class="smalltext">
-					<img src="' . $settings['images_url'] . '/new_some.gif" alt="" align="middle" /> ', $txt['manual_index_new_posts'], '
-					<img src="' . $settings['images_url'] . '/new_none.gif" alt="" align="middle" style="margin-left: 4ex;" /> ', $txt['manual_index_no_new'], '
+					<img src="' . $settings['images_url'] . '/new_some.gif" alt="" align="middle" /> ', $txt['new_posts'], '
+					<img src="' . $settings['images_url'] . '/new_none.gif" alt="" align="middle" style="margin-left: 4ex;" /> ', $txt['old_posts'], '
 				</td>
 			</tr>
 		</table>
@@ -298,14 +446,61 @@ function template_manual_board_index()
 
 	echo '
 	</div>
-	<ul>
-		<li>', $txt['manual_index_f_name'], '</li>
-		<li>', $txt['manual_index_cat'], '</li>
-		<li>', $txt['manual_index_b_name_part1'], '<a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_index_b_name_link_message'], '</a>', $txt['manual_index_b_name_part2'], '</li>
-		<li>', $txt['manual_index_b_desc'], '</li>
-		<li>', $txt['manual_index_n_no_n_posts'], '</li>
-		<li>', $txt['manual_index_m_read'], '</li>
-	</ul>';
+	<ul class="basic_helplist">
+		<li><strong>', $context['forum_name'], '</strong> - ', $txt['manual_board_index_forum'], '</li>
+		<li>', $txt['manual_board_index_category'], '</li>
+		<li>', $txt['manual_board_index_new'], '</li>
+		<li>', $txt['manual_board_index_redirect'], '</li>
+		<li>', $txt['manual_board_index_board'], '</li>
+		<li>', $txt['manual_board_index_board_desc'], '</li>
+		<li>', $txt['manual_board_index_moderators'], '</li>
+		<li>', $txt['manual_board_index_children'], '</li>
+		<li>', $txt['manual_board_index_board_info'], '</li>
+		<li>', $txt['manual_board_index_mark_read'], '</li>
+	</ul>
+	<p>', $txt['manual_board_index_info_center'], '</p>
+	<div class="help_sample">
+		<div class="tborder clearfix">
+			<h3 class="catbg">
+				', sprintf($txt['info_center_title'], $context['forum_name']), '
+			</h3>
+			<div id="upshrinkHeaderIC">
+				<div class="infocenter_section">
+					<h4 class="titlebg">', $txt['forum_stats'], '</h4>
+					<div class="windowbg">
+						<p class="section">
+							<a href="#"><img class="icon" src="', $settings['images_url'], '/icons/info.gif" alt="', $txt['forum_stats'], '" /></a>
+						</p>
+						<div class="windowbg2 sectionbody middletext">
+							', $txt['manual_board_index_stats_1'], '<br />
+							', $txt['manual_board_index_stats_2'], '<br />
+							<a href="#">', $txt['recent_view'], '</a><br />
+							<a href="#">', $txt['more_stats'], '</a>
+						</div>
+					</div>
+				</div>
+				<div class="infocenter_section">
+					<h4 class="titlebg">', $txt['online_users'], '</h4>
+					<div class="windowbg">
+						<p class="section">
+							<a href="#"><img src="', $settings['images_url'], '/icons/online.gif" alt="', $txt['online_users'], '" /></a>
+						</p>
+						<div class="windowbg2 sectionbody">
+							<a href="#">', $txt['manual_board_index_guests_users'], ':</a>
+							<div class="smalltext">
+								', sprintf($txt['users_active'], $modSettings['lastActive']), '
+							</div>
+							<hr class="hrcolor" />
+							<div class="smalltext">
+								', $txt['manual_board_index_most_users'], '
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>';
 }
 
 // The message index page.
@@ -314,44 +509,42 @@ function template_manual_message_view()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-	<p>', $txt['manual_index_sec_msg_index_def'], '</p>
+	<p>', $txt['manual_message_index_describe'], '</p>
+	<p>', $txt['manual_message_index_looks'], '</p>
 	<div class="help_sample">
+		<ul class="linktree">
+			<li>
+				<a href="', $scripturl, '?action=help;area=board_index"><span>', $context['forum_name'], '</span></a> &gt;
+			</li>
+			<li>
+				<a href="', $scripturl, '?action=help;area=board_index"><span>', $txt['manual_board_index_category_name'], '</span></a> &gt;
+			</li>
+			<li>
+				<a href="', $scripturl, '?action=help;area=message_index"><span>', $txt['manual_board_index_board_name'], '</span></a>
+			</li>
+		</ul>
 		<script type="text/javascript">//<![CDATA[
-			var currentSort = false;
-			function sortLastPost()
-			{
-					document.getElementById("sort-arrow").src = smf_images_url + "/" + (currentSort ? "sort_down.gif" : "sort_up.gif");
-					document.getElementById("sort-arrow").alt = "";
-					currentSort = !currentSort;
-			}
 			function markMessageRead()
 			{
-					document.getElementById("message-new-or-not").style.display = "none";
+					document.getElementById("newicon1").style.display = "none";
 			}
-		//]]></script>
-			<table width="100%" cellpadding="3" cellspacing="0">
-				<tr>
-					<td><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></strong><br />
-					<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_cat_name'], '</a></strong><br />
-					<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=message_index" class="nav">', $txt['manual_index_board_name'], '</a></strong></span></td>
-				</tr>
-			</table>';
+		//]]></script>';
 
 	// Create the buttons we need here...
 	$mindex_buttons = array(
-		'markmread' => array('text' => 'mark_read_short', 'image' => 'markread.gif', 'lang' => true, 'url' => 'javascript:markMessageRead();'),
-		'notify' => array('text' => 'manual_index_notify', 'image' => 'notify.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['manual_index_ru_sure_notify'] . '\');"', 'url' => $scripturl . '?action=help;area=message_view'),
-		'topic' => array('text' => 'manual_index_start_new', 'image' => 'new_topic.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#newtopic'),
-		'poll' => array('text' => 'manual_index_new_poll', 'image' => 'new_poll.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#newpoll'),
+		'topic' => array('text' => 'new_topic', 'image' => 'new_topic.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#newtopic'),
+		'poll' => array('text' => 'new_poll', 'image' => 'new_poll.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#newpoll'),
+		'notify' => array('text' => 'notify', 'image' => 'notify.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=message_view'),
+		'markread' => array('text' => 'mark_read_short', 'image' => 'markread.gif', 'lang' => true, 'url' => 'javascript:markMessageRead();'),
 	);
 
 	if (!empty($settings['use_tabs']))
 	{
 		echo '
-				<div class="clearfix margintop" id="modbuttons_top">
-					<div class="margintop middletext floatleft"><strong>', $txt['manual_index_pages'], ':</strong> [<strong>1</strong>]</div>
-					<div class="nav floatright">', template_button_strip($mindex_buttons, 'bottom'), '</div>
-				</div>';
+			<div class="modbuttons clearfix margintop">
+				<div class="middletext floatleft">', $txt['manual_message_index_pages'], '</div>
+				<div class="nav floatright">', template_button_strip($mindex_buttons, 'bottom'), '</div>
+			</div>';
 	}
 	else
 	{
@@ -361,7 +554,7 @@ function template_manual_message_view()
 					<td align="left" class="catbg" width="100%" height="30">
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
-								<td><strong>', $txt['manual_index_pages'], ':</strong> [<strong>1</strong>]</td>
+								<td><strong>', $txt['manual_message_index_pages'], '</td>
 								<td>
 									', template_button_strip($mindex_buttons, 'bottom', 'align="right" style="white-space: nowrap; font-size: smaller;"'), '
 								</td>
@@ -377,22 +570,90 @@ function template_manual_message_view()
 					<thead>
 						<tr>
 							<th class="catbg3 headerpadding" width="9%" colspan="2"></th>
-							<th class="catbg3 headerpadding"><a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_index_subject'], '</a></th>
-							<th class="catbg3 headerpadding" width="14%"><a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_index_started_by'], '</a></th>
-							<th class="catbg3 headerpadding" width="4%" align="center"><a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_index_replies'], '</a></th>
-							<th class="catbg3 headerpadding" width="4%" align="center"><a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_index_views'], '</a></th>
-							<th class="catbg3 headerpadding" width="22%"><a href="javascript:sortLastPost();">', $txt['manual_index_last_post'], ' &nbsp; <img id="sort-arrow" src="', $settings['images_url'], '/sort_down.gif" alt="" border="0" name="sort-arrow" /></a></th>
+							<th class="catbg3 headerpadding"><a href="', $scripturl, '?action=help;area=message_view">', $txt['subject'], '</a></th>
+							<th class="catbg3 headerpadding" width="14%"><a href="', $scripturl, '?action=help;area=message_view">', $txt['started_by'], '</a></th>
+							<th class="catbg3 headerpadding" width="4%" align="center"><a href="', $scripturl, '?action=help;area=message_view">', $txt['replies'], '</a></th>
+							<th class="catbg3 headerpadding" width="4%" align="center"><a href="', $scripturl, '?action=help;area=message_view">', $txt['views'], '</a></th>
+							<th class="catbg3 headerpadding" width="22%"><a href="', $scripturl, '?action=help;area=message_view">', $txt['last_post'], ' &nbsp; <img src="', $settings['images_url'], '/sort_down.gif" alt="" border="0" /></a></th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="windowbg2">
-							<td class="windowbg2" valign="middle" align="center" width="5%"><img src="', $settings['images_url'], '/topic/my_normal_poll.gif" alt="" /></td>
-							<td class="windowbg2" valign="middle" align="center" width="4%"><img src="', $settings['images_url'], '/post/xx.gif" alt="" align="middle" /></td>
-							<td class="windowbg" valign="middle"><a href="', $scripturl, '?action=help;area=topic_view" class="board">', $txt['manual_index_topic_subject'], '</a> <a href="', $scripturl, '?action=help;area=topic_view"><img id="message-new-or-not" src="', $settings['lang_images_url'], '/new.gif" border="0" alt="', $txt['manual_index_new'], '" name="message-new-or-not" /></a></td>
-							<td class="windowbg2" valign="middle" width="14%"><a href="', $scripturl, '?action=help;area=profile_summary" class="board">', $txt['manual_index_topic_starter'], '</a></td>
-							<td class="windowbg" valign="middle" width="4%" align="center">0</td>
-							<td class="windowbg" valign="middle" width="4%" align="center">0</td>
-							<td class="windowbg2" valign="middle" width="22%"><span class="smalltext">', $txt['manual_index_last_poster'], '</span></td>
+						<tr>
+							<td class="windowbg2 icon1" valign="middle" align="center" width="5%">
+								<img src="', $settings['images_url'], '/topic/normal_post.gif" alt="" />
+							</td>
+							<td class="windowbg2 icon2" valign="middle" align="center" width="4%">
+								<img src="', $settings['images_url'], '/post/thumbup.gif" alt="" />
+							</td>
+							<td class="subject windowbg3" valign="middle">
+								<img alt="" class="align_right" src="', $settings['images_url'], '/icons/show_sticky.gif">
+								<strong><span id="msg_2"><a href="', $scripturl, '?action=help;area=topic_view">', $txt['manual_message_index_sticky_topic'], '</a></span></strong>
+							</td>
+							<td class="windowbg2 starter" valign="middle" width="14%">
+								<a href="', $scripturl, '?action=help;area=profile_summary" class="board">', $txt['manual_message_index_started_by'], '</a>
+							</td>
+							<td class="windowbg3 replies" valign="middle" width="4%" align="center">
+								', $txt['manual_message_index_num_replies'], '
+							</td>
+							<td class="windowbg3 views" valign="middle" width="4%" align="center">
+								', $txt['manual_message_index_num_views'], '
+							</td>
+							<td class="windowbg2 lastpost" valign="middle" width="22%">
+								<a href="', $scripturl, '?action=help;area=topic_view"><img src="', $settings['images_url'], '/icons/last_post.gif" alt="', $txt['last_post'], '" title="', $txt['last_post'], '" /></a>
+								', $txt['manual_message_index_dta'], '
+							</td>
+						</tr>
+						<tr>
+							<td class="windowbg2 icon1">
+								<img src="', $settings['images_url'], '/topic/normal_post.gif" alt="" />
+							</td>
+							<td class="windowbg2 icon2">
+								<img src="', $settings['images_url'], '/post/xx.gif" alt="" />
+							</td>
+							<td class="subject windowbg">
+								<span id="msg_1"><a href="', $scripturl, '?action=help;area=topic_view">', $txt['manual_message_index_normal_topic'], '</a></span>
+								<a id="newicon1" href="', $scripturl, '?action=help;area=topic_view">
+									<img alt="', $txt['new'], '" src="', $settings['images_url'], '/english/new.gif" />
+								</a>
+							</td>
+							<td class="windowbg2 starter" valign="middle" width="14%">
+								<a href="', $scripturl, '?action=help;area=profile_summary" class="board">', $txt['manual_message_index_started_by'], '</a>
+							</td>
+							<td class="windowbg replies">
+								', $txt['manual_message_index_num_replies'], '
+							</td>
+							<td class="windowbg views">
+								', $txt['manual_message_index_num_views'], '
+							</td>
+							<td class="windowbg2 lastpost">
+								<a href="', $scripturl, '?action=help;area=topic_view"><img src="', $settings['images_url'], '/icons/last_post.gif" alt="', $txt['last_post'], '" title="', $txt['last_post'], '" /></a>
+								', $txt['manual_message_index_dta'], '
+							</td>
+						</tr>
+						<tr>
+							<td class="windowbg2 icon1">
+								<img src="', $settings['images_url'], '/topic/normal_post.gif" alt="" />
+							</td>
+							<td class="windowbg2 icon2">
+								<img src="', $settings['images_url'], '/post/xx.gif" alt="" />
+							</td>
+							<td class="subject windowbg">
+								<img alt="" class="align_right" src="', $settings['images_url'], '/icons/quick_lock.gif">
+								<span id="msg_3"><a href="', $scripturl, '?action=help;area=topic_view">', $txt['manual_message_index_locked_topic'], '</a></span>
+							</td>
+							<td class="windowbg2 starter" valign="middle" width="14%">
+								<a href="', $scripturl, '?action=help;area=profile_summary" class="board">', $txt['manual_message_index_started_by'], '</a>
+							</td>
+							<td class="windowbg replies">
+								', $txt['manual_message_index_num_replies'], '
+							</td>
+							<td class="windowbg views">
+								', $txt['manual_message_index_num_views'], '
+							</td>
+							<td class="windowbg2 lastpost">
+								<a href="', $scripturl, '?action=help;area=topic_view"><img src="', $settings['images_url'], '/icons/last_post.gif" alt="', $txt['last_post'], '" title="', $txt['last_post'], '" /></a>
+								', $txt['manual_message_index_dta'], '
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -401,8 +662,10 @@ function template_manual_message_view()
 	if (!empty($settings['use_tabs']))
 	{
 		echo '
-			<div class="middletext floatleft">', $txt['manual_index_pages'], ': [<strong>1</strong>]</div>
-			<div class="nav floatright">', template_button_strip($mindex_buttons, 'top'), '</div>';
+			<div class="modbuttons clearfix">
+				<div class="middletext floatleft">', $txt['manual_message_index_pages'], '</div>
+				<div class="nav floatright">', template_button_strip($mindex_buttons, 'top'), '</div>
+			</div>';
 	}
 	else
 	{
@@ -412,7 +675,7 @@ function template_manual_message_view()
 					<td align="left" class="catbg" width="100%" height="30">
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
-								<td><strong>', $txt['manual_index_pages'], ':</strong> [<strong>1</strong>]</td>
+								<td>', $txt['manual_message_index_pages'], '</td>
 								<td>
 									', template_button_strip($mindex_buttons, 'bottom', 'align="right" style="white-space: nowrap; font-size: smaller;"'), '
 								</td>
@@ -422,90 +685,72 @@ function template_manual_message_view()
 				</tr>
 			</table>';
 	}
+
 	echo '
-			<table cellpadding="0" cellspacing="0" width="100%">
-				<tr>
-					<td class="smalltext" align="left" style="padding-top: 1ex;"><img src="', $settings['images_url'], '/topic/my_normal_post.gif" alt="" align="middle" />&nbsp; ', $txt['manual_index_normal_post'], '<br />
-					<img src="', $settings['images_url'], '/topic/normal_post.gif" alt="" align="middle" />&nbsp; ', $txt['manual_index_normal_topic'], '<br />
-					<img src="', $settings['images_url'], '/topic/hot_post.gif" alt="" align="middle" />&nbsp; ', $txt['manual_index_hot_post'], '<br />
-					<img src="', $settings['images_url'], '/topic/veryhot_post.gif" alt="" align="middle" />&nbsp; ', $txt['manual_index_very_hot_post'], '</td>
-					<td class="smalltext" align="left" valign="top" style="padding-top: 1ex;"><img src="', $settings['images_url'], '/topic/normal_post_locked.gif" alt="" align="middle" />&nbsp; ', $txt['manual_index_locked'], '<br />
-					<img src="', $settings['images_url'], '/topic/normal_post_sticky.gif" alt="" align="middle" />&nbsp; ', $txt['manual_index_sticky'], '<br />
-					<img src="', $settings['images_url'], '/topic/normal_poll.gif" alt="" align="middle" />&nbsp; ', $txt['manual_index_poll'], '</td>
-					<td class="smalltext" align="right" valign="middle">
-						<form action="', $scripturl, '?action=help;area=topic_view" method="get" accept-charset="', $context['character_set'], '">
-							<label for="jumpto">', $txt['manual_index_jump_to'], '</label>: <select name="jumpto" id="jumpto" onchange="if (this.options[this.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;area=topic_view\' + this.options[this.selectedIndex].value;">
-								<option value="">
-									', $txt['manual_index_destination'], ':
-								</option>
-								<option value="">
-									-----------------------------
-								</option>
-								<option value="#board">
-									', $txt['manual_index_cat_name'], '
-								</option>
-								<option value="">
-									-----------------------------
-								</option>
-								<option value="#message">
-									=&gt; ', $txt['manual_index_board_name'], '
-								</option>
-								<option value="#message">
-									=&gt; ', $txt['manual_index_another_board'], '
-								</option>
-							</select>&nbsp; <input type="button" onclick="if (this.form.jumpto.options[this.form.jumpto.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;area=topic_view\' + this.form.jumpto.options[this.form.jumpto.selectedIndex].value;" value="', $txt['manual_index_go'], '" class="button_submit" />
-						</form>
-					</td>
-				</tr>
-			</table><br />
+		<br />
 	</div>
+	<p>', $txt['manual_message_index_tabs'], '</p>
 	<ul>
-		<li>', $txt['manual_index_nav_tree'], '</li>
-		<li>', $txt['manual_index_page_number'], '</li>
-		<li>', $txt['manual_index_mark_read_button'], '</li>
-		<li>', $txt['manual_index_notify_button'], '</li>
-		<li>', $txt['manual_index_new_topic_poll_button_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics">', $txt['manual_index_new_topic_poll_button_link_posting'], '</a>', $txt['manual_index_new_topic_poll_button_part2'], '</li>
-		<li>', $txt['manual_index_subject_replies_etc'], '</li>
-		<li>', $txt['manual_index_topic_icons'], '</li>
-		<li>', $txt['manual_index_post_icons'], '</li>
-		<li>', $txt['manual_index_topic_subject_links_part1'], '<a href="', $scripturl, '?action=help;area=topic_view">', $txt['manual_index_topic_subject_links_link_topic'], '</a>', $txt['manual_index_topic_subject_links_part2'], '</li>
-		<li>', $txt['manual_index_where_topic_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary">', $txt['manual_index_where_topic_link_profile'], '</a>', $txt['manual_index_where_topic_part2'], '</li>
-		<li>', $txt['manual_index_jump_to_menu'], '</li>
-	</ul>';
+		<li>', $txt['manual_message_index_new_topic'], '</li>
+		<li>', $txt['manual_message_index_new_poll'], '</li>
+		<li>', $txt['manual_message_index_notification'], '</li>
+		<li>', $txt['manual_message_index_mark_read'], '</li>
+	</ul>
+	<p>', $txt['manual_message_index_topic_row'], '</p>
+	<ul>
+		<li>', $txt['manual_message_index_topic_icon'], '</li>
+		<li>', $txt['manual_message_index_message_icon'], '</li>
+		<li>', $txt['manual_message_index_subject_starter'], '</li>
+		<li>', $txt['manual_message_index_new_indicate'], '</li>
+		<li>', $txt['manual_message_index_replies_views'], '</li>
+		<li>', $txt['manual_message_index_last_post'], '</li>
+	</ul>
+	<p>', $txt['manual_message_index_sticky_locked'], '</p>
+	<p>', $txt['manual_message_index_sorting'], '</p>';
 }
 
+// The topic page.
 function template_manual_topic_view()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-	<p>', $txt['manual_index_ref_thread'], '</p>';
+	<p>', $txt['manual_topic_describe'], '</p>
+	<p>', $txt['manual_topic_looks'], '</p>';
 
 	// The buttons...
 	$display_buttons = array(
-		'reply' => array('text' => 'manual_index_reply', 'image' => 'reply.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#reply'),
-		'notify' => array('text' => 'manual_index_notify', 'image' => 'notify.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['manual_index_ru_sure_enable_notify'] . '\');"', 'url' => $scripturl . '?action=help;area=topic_view'),
-		'markunread' => array('text' => 'manual_index_mark_unread', 'image' => 'markunread.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#topic'),
-		'sendtopic' => array('text' => 'manual_index_send_topic', 'image' => 'sendtopic.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#topic'),
-		'print' => array('text' => 'manual_index_print', 'image' => 'print.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#topic'),
+		'reply' => array('text' => 'reply', 'image' => 'reply.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#reply'),
+		'notify' => array('text' => 'notify', 'image' => 'notify.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=topic_view'),
+		'markunread' => array('text' => 'mark_unread', 'image' => 'markunread.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#topic'),
+		'sendtopic' => array('text' => 'send_topic', 'image' => 'sendtopic.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#topic'),
+		'print' => array('text' => 'print', 'image' => 'print.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#topic'),
 	);
 
 	echo '
 	<div class="help_sample">
-			<table width="100%" cellpadding="3" cellspacing="0">
-				<tr>
-					<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></strong><br />
-					<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_cat_name'], '</a></strong><br />
-					<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=message_view" class="nav">', $txt['manual_index_board_name'], '</a></strong><br />
-					<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=topic_view" class="nav">', $txt['manual_index_topic_subject'], '</a></strong></span></td>
-				</tr>
-			</table>';
+		<ul class="linktree">
+			<li>
+				<a href="', $scripturl, '?action=help;area=board_index"><span>', $context['forum_name'], '</span></a> &gt;
+			</li>
+			<li>
+				<a href="', $scripturl, '?action=help;area=board_index"><span>', $txt['manual_board_index_category_name'], '</span></a> &gt;
+			</li>
+			<li>
+				<a href="', $scripturl, '?action=help;area=message_view"><span>', $txt['manual_board_index_board_name'], '</span></a> &gt;
+			</li>
+			<li>
+				<a href="', $scripturl, '?action=help;area=topic_view"><span>', $txt['manual_topic_subject'], '</span></a>
+			</li>
+		</ul>';
 
 	if (!empty($settings['use_tabs']))
 	{
 		echo '
-			<div class="margintop middletext floatleft"><strong>', $txt['manual_index_pages'], ':</strong> [<strong>1</strong>]</div>
-			<div class="nav floatright">', template_button_strip($display_buttons, 'bottom'), '</div>';
+			<div class="margintop clearfix">
+				<div class="middletext floatleft">', $txt['manual_message_index_pages'], '</div>
+				<div class="nav floatright">', template_button_strip($display_buttons, 'bottom'), '</div>
+			</div>';
 	}
 	else
 	{
@@ -515,7 +760,7 @@ function template_manual_topic_view()
 					<td align="left" class="catbg" width="100%" height="35">
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
-								<td><strong>', $txt['manual_index_pages'], ':</strong> [<strong>1</strong>]</td>
+								<td>', $txt['manual_message_index_pages'], '</td>
 								<td>
 									', template_button_strip($display_buttons, 'bottom', 'align="right" style="font-size: smaller;"'), '
 								</td>
@@ -526,74 +771,79 @@ function template_manual_topic_view()
 			</table>';
 	}
 	echo '
-			<table width="100%" cellpadding="3" cellspacing="0" border="0" class="tborder" style="border-bottom: 0;">
-				<tr class="catbg3">
-					<td valign="middle" align="left" width="2%" style="padding-left: 6px;"><img src="', $settings['images_url'], '/topic/normal_post.gif" alt="" align="middle" /></td>
-					<td width="13%">', $txt['manual_index_author'], '</td>
-					<td valign="middle" align="left" width="85%" style="padding-left: 6px;">', $txt['manual_index_topic'], ': ', $txt['manual_index_topic_subject'], ' &nbsp;(', $txt['manual_index_read_x_times'], ')</td>
-				</tr>
-			</table>
-			<table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor">
-				<tr>
-					<td style="padding: 1px;">
-						<table cellpadding="3" cellspacing="0" border="0" width="100%">
-							<tr>
-								<td class="windowbg">
-									<table width="100%" cellpadding="5" cellspacing="0" style="table-layout: fixed;">
-										<tr>
-											<td valign="top" width="15%" rowspan="2" style="overflow: hidden;"><strong><a href="', $scripturl, '?action=help;area=profile_summary" class="board" title="', $txt['manual_index_view_author_profile'], '">', $txt['manual_index_author'], '</a></strong><br />
-											<span class="smalltext">', $txt['manual_index_member_group'], '<br />
-											', $txt['manual_index_post_group'], '<br />
-											<img src="', $settings['images_url'], '/star.gif" alt="*" border="0" /><br />
-											', $txt['manual_index_post_count'], '<br />
-											<br />
-											<br />
-											<br />
-											<a href="', $scripturl, '?action=help;area=profile_summary" title="', $txt['manual_index_view_profile'], '"><img src="', $settings['images_url'], '/icons/profile_sm.gif" border="0" alt="', $txt['manual_index_view_profile'], '" /></a> <a href="mailto:author@some.address" title="', $txt['manual_index_email'], '"><img src="', $settings['images_url'], '/email_sm.gif" border="0" alt="', $txt['manual_index_email'], '" /></a> <a href="', $scripturl, '?action=help;area=sending_pms" title="', $txt['manual_index_personal_msg'], '"><img src="', $settings['images_url'], '/im_off.gif" border="0" alt="', $txt['manual_index_personal_msg'], '" /></a></span></td>
-											<td valign="top" width="85%" height="100%">
-												<table width="100%" border="0">
-													<tr>
-														<td width="20" align="left" valign="middle"><img src="', $settings['images_url'], '/post/xx.gif" alt="" border="0" /></td>
-														<td align="left" valign="middle">
-															<strong><a href="', $scripturl, '?action=help;area=topic_view" class="board">', $txt['manual_index_topic_subject'], '</a></strong>
-															<div class="smalltext">
-																&laquo; ', $txt['manual_index_post_date_time'], ' &raquo;
-															</div>
-														</td>
-														<td align="right" valign="bottom" height="20" style="font-size: smaller;"><a href="', $scripturl, '?action=help;area=posting_topics#quote">', create_button('quote.gif', 'manual_index_reply_quote', 'quote', 'align="middle"'), '</a></td>
-													</tr>
-												</table>
-												<hr width="100%" size="1" class="hrcolor" />
-												<div style="overflow: auto; width: 100%;">
-													', $txt['manual_index_topic_text'], '&nbsp;<img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/smiley.gif" border="0" alt="', $txt['manual_index_smiley'], '" />
-												</div>
-											</td>
-										</tr>
-										<tr>
-											<td valign="bottom" class="smalltext">
-												<table width="100%" border="0" style="table-layout: fixed;">
-													<tr>
-														<td align="right" valign="bottom" class="smalltext"><a href="', $scripturl, '?action=help;area=topic_view" class="board" style="font-size: x-small;">', $txt['manual_index_report_to_mod'], '</a>&nbsp;&nbsp; <img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />&nbsp; ', $txt['manual_index_logged'], '</td>
-													</tr>
-												</table>
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table><a id="lastPost"></a>';
+			<div id="forumposts" class="tborder">
+				<h3 class="catbg3">
+					<img src="', $settings['images_url'], '/topic/normal_post.gif" align="bottom" alt="" />
+					<span>', $txt['author'], '</span>
+					<span id="top_subject">', $txt['manual_topic_heading'], '</span>
+				</h3>
+				<div class="bordercolor">
+					<div class="clearfix windowbg largepadding">
+						<div class="post_wrapper">
+							<div class="poster">
+								<h4>
+									<a href="', $scripturl, '?action=help;area=profile_summary" class="board">', $txt['manual_topic_post_author'], '</a>
+								</h4>
+								<ul id="msg_1_extra_info" class="reset smalltext">
+									<li class="title">', $txt['manual_topic_custom_title'], '</li>
+									<li class="membergroup">', $txt['manual_topic_membergroup'], '</li>
+									<li class="postgroup">', $txt['manual_topic_post_group'], '</li>
+									<li class="stars"><img border="0" alt="*" src="', $settings['images_url'], '/star.gif" /></li>
+									<li class="avatar flow_auto">
+										<img class="avatar" alt="" src="', $settings['default_images_url'], '/admin/smilies_and_messageicons.png" />
+									</li>
+									<li class="postcount">', $txt['manual_topic_post_count'], '</li>
+									<li class="profile margintop">
+										<ul class="reset nolist">
+											<li><a href="#"><img border="0" title="', $txt['view_profile'], '" alt="', $txt['view_profile'], '" src="', $settings['images_url'], '/icons/profile_sm.gif" /></a></li>
+											<li><a rel="nofollow" href="#"><img title="', $txt['email'], '" alt="', $txt['email'], '" src="', $settings['images_url'], '/email_sm.gif" /></a></li>
+											<li><a title="', $txt['personal_message'], '" href="#"><img border="0" alt="', $txt['personal_message'], '" src="', $settings['images_url'], '/im_off.gif" /></a></li>
+										</ul>
+									</li>
+								</ul>
+							</div>
+							<div class="postarea">
+								<div class="flow_hidden">
+									<div class="keyinfo">
+										<div class="messageicon">
+											<img src="', $settings['images_url'], '/post/xx.gif" alt="" border="0" />
+										</div>
+										<h5 id="subject_4">
+											<a href="', $scripturl, '?action=help;area=topic_view" class="board">', $txt['manual_topic_post'], '</a>
+										</h5>
+										<div class="smalltext">&laquo; ', $txt['manual_topic_dt'], ' &raquo;</div>
+									</div>
+									<ul class="reset smalltext quickbuttons">
+										<li class="quote_button"><a href="', $scripturl, '?action=help;area=posting_topics#quote">', $txt['quote'], '</a></li>
+									</ul>
+								</div>
+								<div class="post">
+									<hr size="1" width="100%" class="hrcolor">
+									<div class="inner">
+										', $txt['manual_topic_body'], ' <img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/smiley.gif" align="bottom" alt="', $txt['manual_posting_smiley_code'], '" border="0" />
+									</div>
+								</div>
+							</div>
+							<div class="moderatorbar">
+								<div class="smalltext floatleft" id="modified_4">
+								</div>
+								<div class="smalltext largepadding floatright">
+									<a href="', $scripturl, '?action=help;area=topic_view" class="board">', $txt['report_to_mod'], '</a> &nbsp;
+									<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />&nbsp; ', $txt['logged'], '
+								</div>
+								<div class="signature">', $txt['manual_topic_signature'], '</div>
+							</div>
+						</div>
+					</div>
+					<a id="lastPost"></a>
+				</div>
+			</div>';
+
 	if (!empty($settings['use_tabs']))
 	{
 		echo '
-			<div class="nav floatright">', template_button_strip($display_buttons, 'top'), '</div>
-			<table width="100%" cellpadding="0" cellspacing="0" border="0">
-				<tr>
-					<td class="middletext"><strong>', $txt['manual_index_pages'], ':</strong> [<strong>1</strong>]</td>
-				</tr>
-			</table>';
+			<div class="middletext floatleft">', $txt['manual_message_index_pages'], '</div>
+			<div class="nav floatright">', template_button_strip($display_buttons, 'top'), '</div>';
 	}
 	else
 	{
@@ -613,51 +863,61 @@ function template_manual_topic_view()
 				</tr>
 			</table>';
 	}
+
 	echo '
-			<div style="padding-top: 4px; padding-bottom: 4px;"></div>
-			<div class="righttext floatright" style="margin-bottom: 1ex;">
-				<form action="', $scripturl, '?action=help;area=topic_view" method="get" accept-charset="', $context['character_set'], '">
-					<label for="jump2">', $txt['manual_index_jump_to'], '</label>: <select name="jump2" id="jump2" onchange="if (this.options[this.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;area=topic_view\' + this.options[this.selectedIndex].value;">
-						<option value="">
-							', $txt['manual_index_destination'], ':
-						</option>
-						<option value="">
-							-----------------------------
-						</option>
-						<option value="#board">
-							', $txt['manual_index_cat_name'], '
-						</option>
-						<option value="">
-							-----------------------------
-						</option>
-						<option value="#message">
-							=&gt; ', $txt['manual_index_board_name'], '
-						</option>
-						<option value="#message">
-							=&gt; ', $txt['manual_index_another_board'], '
-						</option>
-					</select>&nbsp; <input type="button" onclick="if (this.form.jump2.options[this.form.jump2.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;area=topic_view\' + this.form.jump2.options[this.form.jump2.selectedIndex].value;" value="', $txt['manual_index_go'], '" class="button_submit" />
-				</form>
-			</div><br />
+		<ul class="linktree">
+			<li>
+				<a href="', $scripturl, '?action=help;area=board_index"><span>', $context['forum_name'], '</span></a> &gt;
+			</li>
+			<li>
+				<a href="', $scripturl, '?action=help;area=board_index"><span>', $txt['manual_board_index_category_name'], '</span></a> &gt;
+			</li>
+			<li>
+				<a href="', $scripturl, '?action=help;area=message_view"><span>', $txt['manual_board_index_board_name'], '</span></a> &gt;
+			</li>
+			<li>
+				<a href="', $scripturl, '?action=help;area=topic_view"><span>', $txt['manual_topic_subject'], '</span></a>
+			</li>
+		</ul>
+		<br />
 	</div>
+	<p>', $txt['manual_topic_tabs'], '</p>
 	<ul>
-		<li>', $txt['manual_index_navigation_tree'], '</li>
-		<li>', $txt['manual_index_prev_next'], '</li>
-		<li>', $txt['manual_index_page_no_link'], '</li>
-		<li>', $txt['manual_index_reply_button_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#reply">', $txt['manual_index_reply_button_link_posting_reply'], '</a>', $txt['manual_index_reply_button_part2'], '</li>
-		<li>', $txt['manual_index_notify_button_enables'], '</li>
-		<li>', $txt['manual_index_mark_unread_button'], '</li>
-		<li>', $txt['manual_index_send_topic_button'], '</li>
-		<li>', $txt['manual_index_print_button'], '</li>
-		<li>', $txt['manual_index_author_name_link_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary">', $txt['manual_index_author_name_link_link_profile'], '</a></li>
-		<li>', $txt['manual_index_author_details'], '</li>
-		<li>', $txt['manual_index_topic_subject_links_start'], '</li>
-		<li>', $txt['manual_index_quote_button_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#quote">', $txt['manual_index_quote_button_link_posting_quote'], '</a>', $txt['manual_index_quote_button_part2'], '</li>
-		<li>', $txt['manual_index_modify_delete_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#modify">', $txt['manual_index_modify_delete_link_posting_modify'], '</a>', $txt['manual_index_modify_delete_part2'], '</li>
-		<li>', $txt['manual_index_report_to_moderator'], '</li>
-		<li>', $txt['manual_index_logged_IP'], '</li>
-		<li>', $txt['manual_index_jump_to_menu_provides'], '</li>
-	</ul>';
+		<li>', $txt['manual_topic_new_reply'], '</li>
+		<li>', $txt['manual_topic_notification'], '</li>
+		<li>', $txt['manual_topic_mark_unread'], '</li>
+		<li>', $txt['manual_topic_send_topic'], '</li>
+		<li>', $txt['manual_topic_print_topic'], '</li>
+	</ul>
+	<p>', $txt['manual_topic_posts'], '</p>
+	<ul>
+		<li>
+			Author Section
+			<ul>
+				<li>', $txt['manual_topic_author_name'], '</li>
+				<li>', $txt['manual_topic_author_custom_title'], '</li>
+				<li>', $txt['manual_topic_author_membergroup'], '</li>
+				<li>', $txt['manual_topic_author_post_group'], '</li>
+				<li>', $txt['manual_topic_author_stars'], '</li>
+				<li>', $txt['manual_topic_author_posts'], '</li>
+				<li>', $txt['manual_topic_author_icons'], '</li>
+			</ul>
+		</li>
+		<li>
+			Post Section
+			<ul>
+				<li>', $txt['manual_topic_post_message_icon'], '</li>
+				<li>', $txt['manual_topic_post_subject'], '</li>
+				<li>', $txt['manual_topic_post_quick_buttons'], '</li>
+				<li>', $txt['manual_topic_post_dt'], '</li>
+				<li>', $txt['manual_topic_post_body'], '</li>
+				<li>', $txt['manual_topic_post_signature'], '</li>
+				<li>', $txt['manual_topic_post_report'], '</li>
+				<li>', $txt['manual_topic_post_logged'], '</li>
+			</ul>
+		</li>
+	</ul>
+	<p>', $txt['manual_topic_hide'], '</p>';
 }
 
 // When and how to register page.

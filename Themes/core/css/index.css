@@ -1132,17 +1132,12 @@ h1#forum_name
 	display: inline;
 }
 
-/* the main content area */
-#bodyarea
-{
-}
-
 /* The main menu. */
-#main_menu
+.main_menu
 {
 	padding-left: 1em;
 }
-#main_menu ul
+.main_menu ul
 {
 	list-style: none;
 	padding: 0;
@@ -1150,13 +1145,13 @@ h1#forum_name
 	background: url(../images/maintab_first.gif) no-repeat bottom left;
 	padding-left: 10px;
 }
-#main_menu li
+.main_menu li
 {
 	margin: 0;
 	padding: 0;
 	display: inline;
 }
-#main_menu li a
+.main_menu li a
 {
 	float: left;
 	display: block;
@@ -1165,48 +1160,48 @@ h1#forum_name
 	font-family: tahoma, sans-serif;
 	text-transform: uppercase;
 }
-#main_menu li a:hover
+.main_menu li a:hover
 {
 	color: #e0e0ff;
 	text-decoration: none;
 }
-#main_menu li a span
+.main_menu li a span
 {
 	background: url(../images/maintab_back.gif) repeat-x bottom left;
 	display: block;
 	padding: 0.1em 0.5em 0.5em 0.5em;
 }
-#main_menu li.last a span
+.main_menu li.last a span
 {
 	background: url(../images/maintab_last.gif) no-repeat bottom right;
 	padding: 0.1em 1em 0.5em 0.5em;
 }
-#main_menu li.active a span em
+.main_menu li.active a span em
 {
 	padding: 0.1em 0.5em 0.5em 0.5em;
 	display: block;
 	font-style: normal;
 	background: url(../images/maintab_active_back.gif) repeat-x bottom right;
 }
-#main_menu li.active a span
+.main_menu li.active a span
 {
 	background: url(../images/maintab_active_first.gif) no-repeat bottom left;
 	padding: 0 0 0 8px;
 }
-#main_menu li.last.active
+.main_menu li.last.active
 {
 	float: left;
 	background: url(../images/maintab_last.gif) no-repeat bottom right;
 	padding: 0 8px 0 0;
 }
 /* IE6 doesn't support multiple class selectors */
-#main_menu li.lastactive
+.main_menu li.lastactive
 {
 	float: left;
 	padding: 0 8px 0 0;
 	background: url(../images/maintab_last.gif) no-repeat bottom right;
 }
-#main_menu li.active a
+.main_menu li.active a
 {
 	background: url(../images/maintab_active_last.gif) no-repeat bottom right;
 	padding-right: 8px;
@@ -3288,14 +3283,9 @@ span.hidelink
 	overflow: auto;
 	margin-bottom: 1em;
 }
-#helpmain .help_sample .navigate_section
+#helpmain .help_sample .linktree
 {
-	margin: 0;
-}
-#helpmain .help_sample .navigate_section ul
-{
-	padding-top: 0;
-	border: none;
+	font-weight: bold;
 }
 
 /* We need some air between the lines */
@@ -3321,17 +3311,18 @@ span.hidelink
 	padding-left: 1.5em;
 }
 
-/* put back the bullets please */
-#helpmain ul
+ul.basic_helplist
 {
-	margin: 0 0 1em 2em;
-	padding-left: 1em;
-}
-#helpmain ul li
-{
+	padding: 0.8em 1.5em;
 	line-height: 1.5em;
-	list-style-type: disc;
-	padding-left: 0.2em;
+}
+#helpmain .boardsframe p
+{
+	margin: 0;
+}
+#helpmain #messageindex
+{
+	clear: right;
 }
 
 /* ...but leave the tab strips alone! */

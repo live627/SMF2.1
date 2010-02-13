@@ -105,11 +105,13 @@ function template_main()
 <div id="events" class="tborder marginbottom margintop">
 	<h3 class="titlebg headerpadding">', $txt['calendar_linked_events'], '</h3>
 	<ul class="reset windowbg largepadding">';
+
 		foreach ($context['linked_calendar_events'] as $event)
 			echo '
 		<li>
 			', ($event['can_edit'] ? '<a href="' . $event['modify_href'] . '" style="color: red;">*</a> ' : ''), '<strong>', $event['title'], '</strong>: ', $event['start_date'], ($event['start_date'] != $event['end_date'] ? ' - ' . $event['end_date'] : ''), '
 		</li>';
+
 		echo '
 	</ul>
 </div>';
@@ -141,6 +143,7 @@ function template_main()
 		<span>', $txt['author'], '</span>
 		<span id="top_subject">', $txt['topic'], ': ', $context['subject'], ' &nbsp;(', $txt['read'], ' ', $context['num_views'], ' ', $txt['times'], ')</span>
 	</h3>';
+
 	if (!empty($settings['display_who_viewing']))
 	{
 		echo '

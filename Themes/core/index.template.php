@@ -442,7 +442,7 @@ function template_menu()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="main_menu">
+	<div class="main_menu">
 		<ul class="reset clearfix">';
 
 	foreach ($context['menu_buttons'] as $act => $button)

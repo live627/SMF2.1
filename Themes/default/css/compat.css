@@ -2323,14 +2323,9 @@ span.memberstatsbar span
 	overflow: auto;
 	margin-bottom: 1em;
 }
-#helpmain .help_sample .navigate_section
+#helpmain .help_sample .linktree
 {
-	margin: 0;
-}
-#helpmain .help_sample .navigate_section ul
-{
-	padding-top: 0;
-	border: none;
+	font-weight: bold;
 }
 
 /* We need some air between the lines */
@@ -2356,17 +2351,18 @@ span.memberstatsbar span
 	padding-left: 1.5em;
 }
 
-/* put back the bullets please */
-#helpmain ul
+ul.basic_helplist
 {
-	margin: 0 0 1em 2em;
-	padding-left: 1em;
-}
-#helpmain ul li
-{
+	padding: 0.8em 1.5em;
 	line-height: 1.5em;
-	list-style-type: disc;
-	padding-left: 0.2em;
+}
+#helpmain .boardsframe p
+{
+	margin: 0;
+}
+#helpmain #messageindex
+{
+	clear: right;
 }
 
 /* ...but leave the tab strips alone! */

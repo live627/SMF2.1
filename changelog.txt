@@ -27,6 +27,8 @@ February 2010
  ! Redirect invalid poll edit requests. (Poll.php) [Bug 4194]
  ! Spiders weren't detected properly with caching enabled. (ManageSearchEngines.php) [Bug 4195]
  * Alternate between windowbg and windowbg2 when viewing mod reports in the moderation center. (ModerationCenter.php, ModerationCenter template)
+ * Synchronised Core's help template with Curve's. (Help template, index.css, compat.css)
+ & Removed redundant language entries. (Manual language file)
 
 
 January 2010
