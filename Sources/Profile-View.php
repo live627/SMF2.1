@@ -973,8 +973,8 @@ function trackActivity($memID)
 		'additional_rows' => array(
 			array(
 				'position' => 'after_title',
-				'value' => '<span class="smalltext">' . $txt['errors_desc'] . '</span>',
-				'class' => 'windowbg',
+				'value' => $txt['errors_desc'],
+				'class' => 'smalltext',
 				'style' => 'padding: 2ex;',
 			),
 		),
@@ -1343,8 +1343,8 @@ function TrackIP($memID = 0)
 		'additional_rows' => array(
 			array(
 				'position' => 'after_title',
-				'value' => '<span class="smalltext">' . $txt['messages_from_ip_desc'] . '</span>',
-				'class' => 'windowbg',
+				'value' => $txt['messages_from_ip_desc'],
+				'class' => 'smalltext',
 				'style' => 'padding: 2ex;',
 			),
 		),
@@ -1432,8 +1432,8 @@ function TrackIP($memID = 0)
 		'additional_rows' => array(
 			array(
 				'position' => 'after_title',
-				'value' => '<span class="smalltext">' . $txt['errors_from_ip_desc'] . '</span>',
-				'class' => 'windowbg',
+				'value' => $txt['errors_from_ip_desc'],
+				'class' => 'smalltext',
 				'style' => 'padding: 2ex;',
 			),
 		),
@@ -1935,8 +1935,8 @@ function viewWarning($memID)
 		'additional_rows' => array(
 			array(
 				'position' => 'after_title',
-				'value' => '<span class="smalltext">' . $txt['profile_viewwarning_desc'] . '</span>',
-				'class' => 'windowbg',
+				'value' => $txt['profile_viewwarning_desc'],
+				'class' => 'smalltext',
 				'style' => 'padding: 2ex;',
 			),
 		),

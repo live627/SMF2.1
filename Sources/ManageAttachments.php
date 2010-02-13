@@ -466,7 +466,6 @@ function BrowseFiles()
 			array(
 				'position' => 'below_table_data',
 				'value' => '<input type="submit" name="remove_submit" class="button_submit" value="' . $txt['quickmod_delete_selected'] . '" onclick="return confirm(\'' . $txt['confirm_delete_attachments'] . '\');" />',
-				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
 		),
@@ -1721,7 +1720,6 @@ function ManageAttachmentPaths()
 			array(
 				'position' => 'below_table_data',
 				'value' => '<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" /><input type="submit" name="new_path" value="' . $txt['attach_add_path'] . '" class="button_submit" />&nbsp;<input type="submit" name="save" value="' . $txt['save'] . '" class="button_submit" />',
-				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
 		),

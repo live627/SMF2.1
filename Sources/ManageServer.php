@@ -991,7 +991,6 @@ function ModifyLanguages()
 			array(
 				'position' => 'below_table_data',
 				'value' => '<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" /><input type="submit" name="set_default" value="' . $txt['save'] . '"' . (is_writable($boarddir . '/Settings.php') ? '' : ' disabled="disabled"') . ' class="button_submit" />',
-				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
 		),
@@ -1018,8 +1017,8 @@ function ModifyLanguages()
 	if (!is_writable($boarddir . '/Settings.php'))
 		$listOptions['additional_rows'][] = array(
 				'position' => 'after_title',
-				'value' => '<span class="smalltext alert">' . $txt['language_settings_writable'] . '</span>',
-				'class' => 'windowbg',
+				'value' => $txt['language_settings_writable'],
+				'class' => 'smalltext alert',
 			);
 
 	require_once($sourcedir . '/Subs-List.php');

@@ -629,7 +629,6 @@ function ViewMemberlist()
 			array(
 				'position' => 'below_table_data',
 				'value' => '<input type="submit" name="delete_members" value="' . $txt['admin_delete_members'] . '" onclick="return confirm(\'' . $txt['confirm_delete_members'] . '\');" class="button_submit" />',
-				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
 		),
@@ -989,7 +988,6 @@ function MembersAwaitingActivation()
 						</select>
 						<noscript><input type="submit" value="' . $txt['go'] . '" class="button_submit" /></noscript>
 					</div>',
-				'class' => 'titlebg',
 			),
 		),
 	);
@@ -1020,7 +1018,6 @@ function MembersAwaitingActivation()
 			'position' => 'above_column_headers',
 			'value' => $filterOptions,
 			'style' => 'text-align: center;',
-			'class' => 'titlebg',
 		);
 	}
 
@@ -1028,9 +1025,9 @@ function MembersAwaitingActivation()
 	if (!empty($context['show_filter']) && !empty($context['available_filters']))
 		$listOptions['additional_rows'][] = array(
 			'position' => 'above_column_headers',
-			'value' => '<span class="smalltext"><strong>' . $txt['admin_browse_filter_show'] . ':</strong> ' . $context['available_filters'][0]['desc'] . '</span>',
+			'value' => '<strong>' . $txt['admin_browse_filter_show'] . ':</strong> ' . $context['available_filters'][0]['desc'],
+			'class' => 'smalltext',
 			'style' => 'text-align: left;',
-			'class' => 'windowbg2',
 		);
 
 	// Now that we have all the options, create the list.

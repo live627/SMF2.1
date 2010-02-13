@@ -1867,7 +1867,6 @@ function notification($memID)
 			array(
 				'position' => 'bottom_of_list',
 				'value' => '<input type="submit" name="edit_notify_boards" value="' . $txt['notifications_update'] . '" class="button_submit" />',
-				'class' => 'windowbg',
 				'align' => 'right',
 			),
 		),
@@ -1982,7 +1981,6 @@ function notification($memID)
 			array(
 				'position' => 'bottom_of_list',
 				'value' => '<input type="submit" name="edit_notify_topics" value="' . $txt['notifications_update'] . '" class="button_submit" />',
-				'class' => 'windowbg',
 				'align' => 'right',
 			),
 		),

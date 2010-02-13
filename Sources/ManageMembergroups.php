@@ -234,7 +234,6 @@ function MembergroupIndex()
 			array(
 				'position' => 'below_table_data',
 				'value' => '[<a href="' . $scripturl . '?action=admin;area=membergroups;sa=add;generalgroup">' . $txt['membergroups_add_group'] . '</a>]',
-				'class' => 'catbg',
 			),
 		),
 	);
@@ -348,7 +347,6 @@ function MembergroupIndex()
 			array(
 				'position' => 'below_table_data',
 				'value' => '[<a href="' . $scripturl . '?action=admin;area=membergroups;sa=add;postgroup">' . $txt['membergroups_add_group'] . '</a>]',
-				'class' => 'catbg',
 			),
 		),
 	);

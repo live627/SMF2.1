@@ -303,7 +303,6 @@ function ViewSpiders()
 					<input type="submit" name="addSpider" value="' . $txt['spiders_add'] . '" class="button_submit" />
 					<input type="submit" name="removeSpiders" value="' . $txt['spiders_remove_selected'] . '" onclick="return confirm(\'' . $txt['spider_remove_selected_confirm'] . '\');" class="button_submit" />
 				',
-				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
 		),
@@ -750,10 +749,8 @@ function SpiderLogs()
 		'additional_rows' => array(
 			array(
 				'position' => 'above_column_headers',
-				'value' => '
-					<span class="smalltext">' . $txt['spider_logs_info'] . '</span>
-				',
-				'class' => 'windowbg2',
+				'value' => $txt['spider_logs_info'],
+				'class' => 'smalltext',
 			),
 		),
 	);
@@ -968,7 +965,6 @@ function SpiderStats()
 			array(
 				'position' => 'below_table_data',
 				'value' => $date_select,
-				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
 		),

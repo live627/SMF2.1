@@ -406,10 +406,6 @@ tr.catbg th.smalltext
 }
 
 /* GenericList */
-.additional_row input
-{
-	margin-left: 1em;
-}
 table.table_grid thead tr.catbg th.smalltext
 {
 	white-space: nowrap;

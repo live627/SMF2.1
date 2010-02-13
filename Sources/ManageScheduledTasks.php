@@ -264,11 +264,9 @@ function ScheduledTasks()
 			array(
 				'position' => 'below_table_data',
 				'value' => '
-					<div class="floatright">
-						<input type="submit" name="save" value="' . $txt['scheduled_tasks_save_changes'] . '" class="button_submit" />
-						<input type="submit" name="run" value="' . $txt['scheduled_tasks_run_now'] . '" class="button_submit" />
-					</div>',
-				'class' => 'titlebg',
+					<input type="submit" name="save" value="' . $txt['scheduled_tasks_save_changes'] . '" class="button_submit" />
+					<input type="submit" name="run" value="' . $txt['scheduled_tasks_run_now'] . '" class="button_submit" />',
+				'class' => 'floatright',
 				'style' => 'text-align: right;',
 			),
 			array(
@@ -505,14 +503,12 @@ function TaskLog()
 				'position' => 'below_table_data',
 				'value' => '
 					<input type="submit" name="removeAll" value="' . $txt['scheduled_log_empty_log'] . '" class="button_submit" />',
-				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
 			array(
 				'position' => 'after_title',
-				'value' => '
-					<span class="smalltext">' . $txt['scheduled_tasks_time_offset'] . '</span>',
-				'class' => 'windowbg2',
+				'value' => $txt['scheduled_tasks_time_offset'],
+				'class' => 'smalltext',
 			),
 		),
 	);

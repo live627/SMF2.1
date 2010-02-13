@@ -356,7 +356,6 @@ function ViewSubscriptions()
 				'value' => '
 					<input type="submit" name="add" value="' . $txt['paid_add_subscription'] . '" class="button_submit" />
 				',
-				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
 		),
@@ -789,7 +788,6 @@ function ViewSubscribedUsers()
 						<input type="submit" name="delete" value="' . $txt['delete_selected'] . '" onclick="return confirm(\'' . $txt['delete_are_sure'] . '\');" class="button_submit" />
 					</div>
 				',
-				'class' => 'titlebg',
 			),
 			array(
 				'position' => 'top_of_list',

@@ -31,7 +31,8 @@ February 2010
  & Removed redundant language entries. (Manual language file)
  ! Detect nginx as server software. (Load.php) [Bug 4191]
  ! With WYSIWYG disabled, it was not possible to select the same combobox item twice in a row. (editor.js) [Bug 4036]
-
+ * Optimized the styling of additional rows. (various source files, index.css, compat.css)
+ 
 
 January 2010
 --------------------------------------------------------------------------------

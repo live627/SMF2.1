@@ -455,7 +455,6 @@ function EditSmileySets()
 			array(
 				'position' => 'below_table_data',
 				'value' => '<input type="submit" name="delete" value="' . $txt['smiley_sets_delete'] . '" onclick="return confirm(\'' . $txt['smiley_sets_confirm'] . '\');" style="float: right;" class="button_submit" /> [<a href="' . $scripturl . '?action=admin;area=smileys;sa=modifyset' . '">' . $txt['smiley_sets_add'] . '</a>]',
-				'class' => 'titlebg',
 			),
 		),
 	);
@@ -1049,7 +1048,6 @@ function EditSmileys()
 					'position' => 'above_column_headers',
 					'value' => $smileyset_option_list,
 					'style' => 'text-align: right;',
-					'class' => 'titlebg',
 				),
 				array(
 					'position' => 'below_table_data',
@@ -1064,7 +1062,6 @@ function EditSmileys()
 						</select>
 						<noscript><input type="submit" name="perform_action" value="' . $txt['go'] . '" class="button_submit" /></noscript>',
 					'style' => 'text-align: right;',
-					'class' => 'titlebg',
 				),
 			),
 			'javascript' => '
@@ -1686,7 +1683,6 @@ function EditMessageIcons()
 			array(
 				'position' => 'below_table_data',
 				'value' => '<input type="submit" name="delete" value="' . $txt['quickmod_delete_selected'] . '" style="float: right" class="button_submit" />[<a href="' . $scripturl . '?action=admin;area=smileys;sa=editicon">' . $txt['icons_add_new'] . '</a>]',
-				'class' => 'titlebg',
 			),
 		),
 	);

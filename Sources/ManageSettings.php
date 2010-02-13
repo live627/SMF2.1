@@ -1333,7 +1333,6 @@ function ShowCustomProfiles()
 				'position' => 'below_table_data',
 				'value' => '<input type="submit" name="save" value="' . $txt['save'] . '" class="button_submit" />',
 				'style' => 'text-align: right;',
-				'class' => 'titlebg',
 			),
 		),
 	);
@@ -1454,7 +1453,6 @@ function ShowCustomProfiles()
 				'position' => 'below_table_data',
 				'value' => '<input type="submit" name="new" value="' . $txt['custom_profile_make_new'] . '" class="button_submit" />',
 				'style' => 'text-align: right;',
-				'class' => 'titlebg',
 			),
 		),
 	);

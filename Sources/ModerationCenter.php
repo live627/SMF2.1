@@ -1219,7 +1219,6 @@ function ViewWatchedUsers()
 				'position' => 'bottom_of_list',
 				'value' => '
 					<input type="submit" name="delete_selected" value="' . $txt['quickmod_delete_selected'] . '" class="button_submit" />',
-				'class' => 'windowbg',
 				'align' => 'right',
 			) : array(),
 		),
@@ -1736,7 +1735,6 @@ function ViewWarningTemplates()
 				'value' => '
 					<input type="submit" name="add" value="' . $txt['mc_warning_template_add'] . '" class="button_submit" />
 					<input type="submit" name="delete" value="' . $txt['mc_warning_template_delete'] . '" onclick="return confirm(\'' . $txt['mc_warning_template_delete_confirm'] . '\');" class="button_submit" />',
-				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
 		),
