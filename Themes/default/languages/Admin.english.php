@@ -469,7 +469,7 @@ $txt['manageposts_topic_settings'] = 'Topic Settings';
 $txt['manageposts_topic_settings_description'] = 'Here you can set all settings involving topics.';
 $txt['manageposts_topic_settings_submit'] = 'Save';
 
-$txt['removeNestedQuotes'] = 'Remove nested quotes when posting';
+$txt['removeNestedQuotes'] = 'Remove nested quotes when quoting';
 $txt['enableEmbeddedFlash'] = 'Embed flash into posts';
 $txt['enableEmbeddedFlash_warning'] = 'may be a security risk!';
 $txt['enableSpellChecking'] = 'Enable spell checking';

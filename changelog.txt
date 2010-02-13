@@ -54,6 +54,7 @@ February 2010
  ! Do a better job at hiding non-UTF8 language packs where UTF8 is favored. (Load.php, ManageServer.php) [Bug 3657]
  ! When updating entries in the built-in language editor, at least save a placeholder when the user clears a string. (ManageServer.php)
  ! Updated the SSI poll and topic functions to output easily targetable HTML, having presentable inline styles. (SSI.php) [Bug 4039]
+ & Reworded the description for the nested quotes removal feature. (Admin language file, Help language file) [Bug 3866]
 
 
 January 2010

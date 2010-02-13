@@ -289,7 +289,7 @@ $helptxt['compactTopicPagesEnable'] = 'This will just show a selection of the nu
 		&quot;3&quot; to display: 1 ... 4 [5] 6 ... 9 <br />
 		&quot;5&quot; to display: 1 ... 3 4 [5] 6 7 ... 9';
 $helptxt['timeLoadPageEnable'] = 'This will show the time in seconds SMF took to create that page at the bottom of the board.';
-$helptxt['removeNestedQuotes'] = 'This will only show the quote of the post in question, not any quoted posts from that post.';
+$helptxt['removeNestedQuotes'] = 'This will strip nested quotes from a post when citing the post in question via a quote link.';
 $helptxt['simpleSearch'] = 'This will show a simple search form and a link to a more advanced form.';
 $helptxt['max_image_width'] = 'This allows you to set a maximum size for posted pictures. Pictures smaller than the maximum will not be affected.';
 $helptxt['mail_type'] = 'This setting allows you to choose either PHP\'s default settings, or to override those settings with SMTP.  PHP doesn\'t support using authentication with SMTP (which many hosts require, now) so if you want that you should select SMTP.  Please note that SMTP can be slower, and some servers will not take usernames and passwords.<br /><br />You don\'t need to fill in the SMTP settings if this is set to PHP\'s default.';
