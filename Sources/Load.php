@@ -1960,7 +1960,7 @@ function getBoardParents($id_parent)
 }
 
 // Attempt to reload our languages.
-function getLanguages($use_cache = true, $ignore_utf8 = true)
+function getLanguages($use_cache = true, $favor_utf8 = true)
 {
 	global $context, $smcFunc, $settings, $modSettings;
 
@@ -1994,7 +1994,7 @@ function getLanguages($use_cache = true, $ignore_utf8 = true)
 			while ($entry = $dir->read())
 			{
 				// Look for the index language file....
-				if (preg_match('~^index\.(.+)\.php$~', $entry, $matches) == 0)
+				if (!preg_match('~^index\.(.+)\.php$~', $entry, $matches))
 					continue;
 
 				$context['languages'][$matches[1]] = array(
@@ -2006,6 +2006,14 @@ function getLanguages($use_cache = true, $ignore_utf8 = true)
 
 			}
 			$dir->close();
+		}
+
+		// Favoring UTF8? Then prevent us from selecting non-UTF8 versions.
+		if ($favor_utf8)
+		{
+			foreach ($context['languages'] as $lang)
+				if (substr($lang['filename'], strlen($lang['filename']) - 5, 5) != '-utf8' && isset($context['languages'][$lang['filename'] . '-utf8']))
+					unset($context['languages'][$lang['filename']]);
 		}
 
 		// Lets cash in on this deal.

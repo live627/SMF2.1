@@ -1124,7 +1124,7 @@ function ModifyLanguageSettings($return_config = false)
 	// Get our languages. No cache and use utf8.
 	getLanguages(false, false);
 	foreach ($context['languages'] as $lang)
-		$config_vars['language'][4][$lang['filename']] = array($lang['filename'], $lang['name']);
+		$config_vars['language'][4][$lang['filename']] = array($lang['filename'], strtr($lang['name'], array('-utf8' => ' (UTF-8)')));
 
 	// Saving settings?
 	if (isset($_REQUEST['save']))
