@@ -50,6 +50,7 @@ February 2010
  * The error log wasn't displayed correctly in RTL mode. (Admin template, index.css, rtl.css)
  * Tweaked the admin login screen slightly. (index.css, Login template)
  * Slightly enhanced the looks of the quick reply and post forms. (index.css, rtl.css, Display template, PersonalMessage template, Post template)
+ ! Fixed an issue in IE6 and IE7 causing an 'Operation aborted' message to be shown when using the autosuggest control. (script.js, suggest.js) [Bug 3304]
 
 
 January 2010

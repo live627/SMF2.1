@@ -42,7 +42,7 @@ function smc_AutoSuggest(oOptions)
 	this.oXmlRequestHandle = null;
 
 	// Just make sure the page is loaded before calling the init.
-	setTimeout(this.opt.sSelf + '.init();', 1);
+	addLoadEvent(this.opt.sSelf + '.init();');
 }
 
 smc_AutoSuggest.prototype.init = function init()

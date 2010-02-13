@@ -1386,6 +1386,8 @@ function addLoadEvent(fNewOnload)
 			{
 				if (typeof(aOnloadEvents[i]) == 'function')
 					aOnloadEvents[i]();
+				else if (typeof(aOnloadEvents[i]) == 'string')
+					eval(aOnloadEvents[i]);
 			}
 		}
 	}
