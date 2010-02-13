@@ -1471,6 +1471,10 @@ function ModifyLanguage()
 				// Saving?
 				if (isset($save_strings[$entryKey]) && $save_strings[$entryKey] != $entryValue['entry'])
 				{
+					// !!! Fix this properly.
+					if ($save_strings[$entryKey] == '')
+						$save_strings[$entryKey] = '\'\'';
+
 					// Set the new value.
 					$entryValue['entry'] = $save_strings[$entryKey];
 					// And we know what to save now!
@@ -1510,7 +1514,7 @@ function ModifyLanguage()
 		$txt = $old_txt;
 	}
 
-	// If we saved redirect.
+	// If we saved, redirect.
 	if ($madeSave)
 	{
 		clean_cache('lang');
