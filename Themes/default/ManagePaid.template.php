@@ -514,13 +514,11 @@ function template_user_subscription()
 				<span class="botslice"><span></span></span>
 			</div>';
 		}
-
-		echo '
-		</form>
-		<br />';
 	}
 
 	echo '
+		</form>
+		<br />
 		<div class="title_bar">
 			<h3 class="titlebg">', $txt['paid_current'], '</h3>
 		</div>
