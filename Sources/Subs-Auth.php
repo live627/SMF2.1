@@ -193,7 +193,7 @@ function setLoginCookie($cookie_length, $id, $password = '')
 		if (version_compare(PHP_VERSION, '4.3.2') === 0 || (isset($_COOKIE[session_name()]) && $_COOKIE[session_name()] != session_id()))
 		{
 			$sessionCookieLifetime = @ini_get('session.cookie_lifetime');
-			setcookie(session_name(), session_id(), time() + (empty($sessionCookieLifetime) ? $cookie_length : $sessionCookieLifetime), $cookie_url[1], '', !empty($modSettings['secureCookies']));
+			setcookie(session_name(), session_id(), time() + (empty($sessionCookieLifetime) ? $cookie_length : $sessionCookieLifetime), $cookie_url[1], $cookie_url[0], !empty($modSettings['secureCookies']));
 		}
 
 		$_SESSION['login_' . $cookiename] = $data;
