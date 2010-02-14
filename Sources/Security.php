@@ -211,13 +211,19 @@ function is_not_guest($message = '')
 		$context['login_error'] = $message ? $message : $txt['only_members_can_access'];
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_login';
 	}
+	// Apparently we're not in a position to handle this now. Let's go to a safer location for now.
+	elseif (empty($context['template_layers']))
+	{
+		$_SESSION['login_url'] = $scripturl . '?' . $_SERVER['QUERY_STRING'];
+		redirectexit('action=login');
+	}
 	else
 	{
 		loadTemplate('Login');
 		$context['sub_template'] = 'kick_guest';
 		$context['robot_no_index'] = true;
 	}
-
+	
 	// Use the kick_guest sub template...
 	$context['kick_message'] = $message;
 	$context['page_title'] = $txt['login'];

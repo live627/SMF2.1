@@ -55,6 +55,8 @@ February 2010
  ! When updating entries in the built-in language editor, at least save a placeholder when the user clears a string. (ManageServer.php)
  ! Updated the SSI poll and topic functions to output easily targetable HTML, having presentable inline styles. (SSI.php) [Bug 4039]
  & Reworded the description for the nested quotes removal feature. (Admin language file, Help language file) [Bug 3866]
+ ! Don't use kick_guest when there aren't any template layers set. (Security.php) [Bug 3930]
+ ! In the print topic view, redirect to the boardindex if no valid topic id is provided. (Printpage.php)
 
 
 January 2010

@@ -41,8 +41,9 @@ function PrintTopic()
 	global $topic, $txt, $scripturl, $context;
 	global $board_info, $smcFunc;
 
+	// Redirect to the boardindex if no valid topic id is provided.
 	if (empty($topic))
-		fatal_lang_error('not_a_topic', false);
+		redirectexit();
 
 	// Whatever happens don't index this.
 	$context['robot_no_index'] = true;
@@ -59,8 +60,9 @@ function PrintTopic()
 			'current_topic' => $topic,
 		)
 	);
+	// Redirect to the boardindex if no valid topic id is provided.
 	if ($smcFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('no_board');
+		redirectexit();
 	$row = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 
