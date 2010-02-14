@@ -923,6 +923,7 @@ function template_edit_style()
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var previewData = "";
 			var previewTimeout;
+			var editFilename = ', JavaScriptEscape($context['edit_filename']), ';
 
 			// Load up a page, but apply our stylesheet.
 			function navigatePreview(url)
@@ -968,6 +969,8 @@ function template_edit_style()
 				if (check && identical)
 					return;
 				refreshPreviewCache = document.forms.stylesheetForm.entire_file.value;
+				// Replace the paths for images.
+				refreshPreviewCache = refreshPreviewCache.replace(/url\(\.\.\/images/gi, "url(" + smf_images_url);
 
 				// Try to do it without a complete reparse.
 				if (identical)
@@ -998,7 +1001,12 @@ function template_edit_style()
 				if (!identical)
 				{
 					var data = previewData + "";
-					data = data.replace(/<link rel="stylesheet"[^>]+?>/, "<style type=\"text/css\" id=\"css_preview_sheet\">" + document.forms.stylesheetForm.entire_file.value + "<" + "/style>");
+					var preview_sheet = document.forms.stylesheetForm.entire_file.value;
+					var stylesheetMatch = new RegExp(\'<link rel="stylesheet"[^>]+href="[^"]+\' + editFilename + \'[^>]*>\');
+
+					// Replace the paths for images.
+					preview_sheet = preview_sheet.replace(/url\(\.\.\/images/gi, "url(" + smf_images_url);
+					data = data.replace(stylesheetMatch, "<style type=\"text/css\" id=\"css_preview_sheet\">" + preview_sheet + "<" + "/style>");
 
 					frames["css_preview_box"].document.open();
 					frames["css_preview_box"].document.write(data);
@@ -1052,12 +1060,13 @@ function template_edit_style()
 
 	echo '
 					<textarea name="entire_file" cols="80" rows="20" style="width: 96%; font-family: monospace; margin-top: 1ex; white-space: pre;" onkeyup="setPreviewTimeout();" onchange="refreshPreview(true);">', $context['entire_file'], '</textarea><br />
-					<input type="submit" name="submit" value="', $txt['theme_edit_save'], '"', $context['allow_save'] ? '' : ' disabled="disabled"', ' style="margin-top: 1ex;" class="button_submit" />
-					<input type="button" value="', $txt['themeadmin_edit_preview'], '" onclick="refreshPreview(false);" class="button_submit" />
+					<div class="padding righttext">
+						<input type="submit" name="submit" value="', $txt['theme_edit_save'], '"', $context['allow_save'] ? '' : ' disabled="disabled"', ' style="margin-top: 1ex;" class="button_submit" />
+						<input type="button" value="', $txt['themeadmin_edit_preview'], '" onclick="refreshPreview(false);" class="button_submit" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
-
 			<input type="hidden" name="filename" value="', $context['edit_filename'], '" />
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>

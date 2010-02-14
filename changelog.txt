@@ -63,6 +63,7 @@ February 2010
  ! The function setting a session cookie wasn't respecting the configured session timeout and domain. (Subs-Auth.php) [Bug 3915]
  * Added board ID to the quick reply form to prevent session timeouts. (Display template) [Bug 3915]
  ! Various fixes for the webinstall script. (webinstall.php) [Bug 4105]
+ ! The stylesheet preview iframe was not working correctly since the introduction of multiple stylesheets. (Themes template) [Bug 2717]
 
 
 January 2010
