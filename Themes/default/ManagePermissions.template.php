@@ -88,48 +88,48 @@ function template_permission_index()
 				<div class="content">
 					<fieldset>
 						<legend>', $txt['permissions_with_selection'], '</legend>
-							<dl class="settings admin_permissions">
-								<dt>
-									', $txt['permissions_apply_pre_defined'], ' <a href="', $scripturl, '?action=helpadmin;help=permissions_quickgroups" onclick="return reqWin(this.href);">(?)</a>:
-								</dt>
-								<dd>
-									<select name="predefined">
-										<option value="">(', $txt['permissions_select_pre_defined'], ')</option>
-										<option value="restrict">', $txt['permitgroups_restrict'], '</option>
-										<option value="standard">', $txt['permitgroups_standard'], '</option>
-										<option value="moderator">', $txt['permitgroups_moderator'], '</option>
-										<option value="maintenance">', $txt['permitgroups_maintenance'], '</option>
-									</select>
-								</dd>
-								<dt>
-									', $txt['permissions_like_group'], ':
-								</dt>
-								<dd>
-									<select name="copy_from">
-										<option value="empty">(', $txt['permissions_select_membergroup'], ')</option>';
+						<dl class="settings admin_permissions">
+							<dt>
+								', $txt['permissions_apply_pre_defined'], ' <a href="', $scripturl, '?action=helpadmin;help=permissions_quickgroups" onclick="return reqWin(this.href);">(?)</a>:
+							</dt>
+							<dd>
+								<select name="predefined">
+									<option value="">(', $txt['permissions_select_pre_defined'], ')</option>
+									<option value="restrict">', $txt['permitgroups_restrict'], '</option>
+									<option value="standard">', $txt['permitgroups_standard'], '</option>
+									<option value="moderator">', $txt['permitgroups_moderator'], '</option>
+									<option value="maintenance">', $txt['permitgroups_maintenance'], '</option>
+								</select>
+							</dd>
+							<dt>
+								', $txt['permissions_like_group'], ':
+							</dt>
+							<dd>
+								<select name="copy_from">
+									<option value="empty">(', $txt['permissions_select_membergroup'], ')</option>';
 		foreach ($context['groups'] as $group)
 		{
 			if ($group['id'] != 1)
 				echo '
-										<option value="', $group['id'], '">', $group['name'], '</option>';
+									<option value="', $group['id'], '">', $group['name'], '</option>';
 		}
 
 		echo '
-									</select>
-								</dd>
-								<dt>
-									<select name="add_remove">
-										<option value="add">', $txt['permissions_add'], '...</option>
-										<option value="clear">', $txt['permissions_remove'], '...</option>';
+								</select>
+							</dd>
+							<dt>
+								<select name="add_remove">
+									<option value="add">', $txt['permissions_add'], '...</option>
+									<option value="clear">', $txt['permissions_remove'], '...</option>';
 		if (!empty($modSettings['permission_enable_deny']))
 			echo '
-										<option value="deny">', $txt['permissions_deny'], '...</option>';
+									<option value="deny">', $txt['permissions_deny'], '...</option>';
 		echo '
-									</select>
-								</dt>
-								<dd>
-									<select name="permissions">
-										<option value="">(', $txt['permissions_select_permission'], ')</option>';
+								</select>
+							</dt>
+							<dd>
+								<select name="permissions">
+									<option value="">(', $txt['permissions_select_permission'], ')</option>';
 		foreach ($context['permissions'] as $permissionType)
 		{
 			if ($permissionType['id'] == 'membergroup' && !empty($context['profile']))
@@ -143,7 +143,7 @@ function template_permission_index()
 						continue;
 
 					echo '
-										<option value="" disabled="disabled">[', $permissionGroup['name'], ']</option>';
+									<option value="" disabled="disabled">[', $permissionGroup['name'], ']</option>';
 					foreach ($permissionGroup['permissions'] as $perm)
 					{
 						if ($perm['hidden'])
@@ -151,20 +151,20 @@ function template_permission_index()
 
 						if ($perm['has_own_any'])
 							echo '
-										<option value="', $permissionType['id'], '/', $perm['own']['id'], '">&nbsp;&nbsp;&nbsp;', $perm['name'], ' (', $perm['own']['name'], ')</option>
-										<option value="', $permissionType['id'], '/', $perm['any']['id'], '">&nbsp;&nbsp;&nbsp;', $perm['name'], ' (', $perm['any']['name'], ')</option>';
+									<option value="', $permissionType['id'], '/', $perm['own']['id'], '">&nbsp;&nbsp;&nbsp;', $perm['name'], ' (', $perm['own']['name'], ')</option>
+									<option value="', $permissionType['id'], '/', $perm['any']['id'], '">&nbsp;&nbsp;&nbsp;', $perm['name'], ' (', $perm['any']['name'], ')</option>';
 						else
 							echo '
-										<option value="', $permissionType['id'], '/', $perm['id'], '">&nbsp;&nbsp;&nbsp;', $perm['name'], '</option>';
+									<option value="', $permissionType['id'], '/', $perm['id'], '">&nbsp;&nbsp;&nbsp;', $perm['name'], '</option>';
 					}
 				}
 			}
 		}
 		echo '
-									</select>
-								</dd>
-							</dl>
-						</fieldset>
+								</select>
+							</dd>
+						</dl>
+					</fieldset>
 					<div class="righttext">
 						<input type="submit" value="', $txt['permissions_set_permissions'], '" onclick="return checkSubmit();" class="button_submit" />
 					</div>
