@@ -64,7 +64,8 @@ February 2010
  * Added board ID to the quick reply form to prevent session timeouts. (Display template) [Bug 3915]
  ! Various fixes for the webinstall script. (webinstall.php) [Bug 4105]
  ! The stylesheet preview iframe was not working correctly since the introduction of multiple stylesheets. (Themes template) [Bug 2717]
-
+ * Re-introduced blue bars in the statistics center as the old bars felt out of place. (Stats template, index.css, rtl.css)
+ 
 
 January 2010
 --------------------------------------------------------------------------------

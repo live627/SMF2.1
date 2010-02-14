@@ -846,17 +846,21 @@ tr.titlebg td
 dl.stats dt
 {
 	float: right;
-
 }
 dl.stats dd
 {
 	text-align: left;
 }
-span.statsbar
+.statsbar div.bar
 {
-	margin-left: 8em;
-	margin-right: 0em;
+	float: right;
 }
+.statsbar div.bar div
+{
+	right: -6px;
+	padding: 0 0 0 6px;
+}
+
 /* Styles for the calendar section.
 ------------------------------------------------- */
 #month_grid

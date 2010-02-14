@@ -90,7 +90,7 @@ function template_main()
 		echo '
 						<tr>
 							<td width="60%" valign="top">', $poster['link'], '</td>
-							<td width="20%" align="left" valign="top">', $poster['num_posts'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $poster['post_percent'] . '" height="15" alt="" />' : '&nbsp;', '</td>
+							<td width="20%" align="', $context['right_to_left'] ? 'right' : 'left', '" valign="top">', $poster['num_posts'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $poster['post_percent'] . '" height="15" alt="" />' : '&nbsp;', '</td>
 							<td width="20%" align="right" valign="top">', $poster['num_posts'], '</td>
 						</tr>';
 	echo '
@@ -103,7 +103,7 @@ function template_main()
 		echo '
 						<tr>
 							<td width="60%" valign="top">', $board['link'], '</td>
-							<td width="20%" align="left" valign="top">', $board['num_posts'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $board['post_percent'] . '" height="15" alt="" />' : '&nbsp;', '</td>
+							<td width="20%" align="', $context['right_to_left'] ? 'right' : 'left', '" valign="top">', $board['num_posts'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $board['post_percent'] . '" height="15" alt="" />' : '&nbsp;', '</td>
 							<td width="20%" align="right" valign="top">', $board['num_posts'], '</td>
 						</tr>';
 	echo '
@@ -120,7 +120,7 @@ function template_main()
 		echo '
 						<tr>
 							<td width="60%" valign="top">', $topic['link'], '</td>
-							<td width="20%" align="left" valign="top">', $topic['num_replies'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $topic['post_percent'] . '" height="15" alt="" />' : '&nbsp;', '</td>
+							<td width="20%" align="', $context['right_to_left'] ? 'right' : 'left', '" valign="top">', $topic['num_replies'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $topic['post_percent'] . '" height="15" alt="" />' : '&nbsp;', '</td>
 							<td width="20%" align="right" valign="top">', $topic['num_replies'], '</td>
 						</tr>';
 	echo '
@@ -133,7 +133,7 @@ function template_main()
 		echo '
 						<tr>
 							<td width="60%" valign="top">', $topic['link'], '</td>
-							<td width="20%" align="left" valign="top">', $topic['num_views'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $topic['post_percent'] . '" height="15" alt="" />' : '&nbsp;', '</td>
+							<td width="20%" align="', $context['right_to_left'] ? 'right' : 'left', '" valign="top">', $topic['num_views'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $topic['post_percent'] . '" height="15" alt="" />' : '&nbsp;', '</td>
 							<td width="20%" align="right" valign="top">', $topic['num_views'], '</td>
 						</tr>';
 	echo '
@@ -150,7 +150,7 @@ function template_main()
 		echo '
 						<tr>
 							<td width="60%" valign="top">', $poster['link'], '</td>
-							<td width="20%" align="left" valign="top">', $poster['num_topics'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $poster['post_percent'] . '" height="15" alt="" />' : '&nbsp;', '</td>
+							<td width="20%" align="', $context['right_to_left'] ? 'right' : 'left', '" valign="top">', $poster['num_topics'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $poster['post_percent'] . '" height="15" alt="" />' : '&nbsp;', '</td>
 							<td width="20%" align="right" valign="top">', $poster['num_topics'], '</td>
 						</tr>';
 	echo '
@@ -163,7 +163,7 @@ function template_main()
 		echo '
 						<tr>
 							<td width="60%" valign="top">', $poster['link'], '</td>
-							<td width="20%" align="left" valign="top">', $poster['time_online'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $poster['time_percent'] . '" height="15" alt="" />' : '&nbsp;', '</td>
+							<td width="20%" align="', $context['right_to_left'] ? 'right' : 'left', '" valign="top">', $poster['time_online'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $poster['time_percent'] . '" height="15" alt="" />' : '&nbsp;', '</td>
 							<td width="20%" align="right" valign="top" nowrap="nowrap">', $poster['time_online'], '</td>
 						</tr>';
 	echo '

@@ -132,8 +132,8 @@ hr, .hrcolor
 {
 	height: 1px;
 	border: 0;
-	color: #7F9DB9;
-	background-color: #7F9DB9;
+	color: #ccc;
+	background-color: #ccc;
 }
 
 /* By default set the color on these tags as #000. */
@@ -3199,20 +3199,21 @@ dl.stats dd
 	line-height: 16px;
 	padding: 0;
 }
-span.statsbar, span.statsbar span
+.statsbar div.bar
 {
-	height: 1.1em;
+	float: left;
+	background: url(../images/bar_stats.png) no-repeat;
 	display: block;
+	margin: 0 6px;
+	height: 16px;
 }
-span.statsbar
+.statsbar div.bar div
 {
-	background: #fff;
-	border: 1px solid #888;
-	margin-right: 8em;
-}
-span.statsbar span
-{
-	background: #fe9540;
+	position: relative;
+	right: -6px;
+	padding: 0 6px 0 0;
+	background: url(../images/bar_stats.png) no-repeat 100%;
+	height: 16px;
 }
 
 /* Styles for the personal messages section.

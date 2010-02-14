@@ -104,15 +104,15 @@ function template_main()
 									', $poster['link'], '
 								</dt>
 								<dd class="statsbar">';
-		
-		echo '
-									<span class="floatright">', $poster['num_posts'], '</span>';
 
 		if (!empty($poster['post_percent']))
-				echo '
-										<span class="statsbar"><span style="width: ', $poster['post_percent'], '%;"></span></span>';
+			echo '
+									<div class="bar">
+										<div style="width: ', $poster['post_percent'], 'px;"></div>
+									</div>';
 
 		echo '
+									<span class="righttext">', $poster['num_posts'], '</span>
 								</dd>';
 	}
 
@@ -142,14 +142,15 @@ function template_main()
 								<dt>
 									', $board['link'], '
 								</dt>
-								<dd class="statsbar">
-									<span class="floatright">', $board['num_posts'], '</span>';
+								<dd class="statsbar">';
 
 		if (!empty($board['post_percent']))
-				echo '
-										<span class="statsbar"><span style="width: ', $board['post_percent'], '%;"></span></span>';
-
+			echo '
+									<div class="bar">
+										<div style="width: ', $board['post_percent'], 'px;"></div>
+									</div>';
 		echo '
+									<span class="righttext">', $board['num_posts'], '</span>
 								</dd>';
 	}
 
@@ -181,14 +182,15 @@ function template_main()
 								<dt>
 									', $topic['link'], '
 								</dt>
-								<dd class="statsbar">
-									<span class="floatright">', $topic['num_replies'], '</span>';
-
+								<dd class="statsbar">';
 		if (!empty($topic['post_percent']))
-				echo '
-										<span class="statsbar"><span style="width: ', $topic['post_percent'], '%;"></span></span>';
+			echo '
+									<div class="bar">
+										<div style="width: ', $topic['post_percent'], 'px;"></div>
+									</div>';
 
 		echo '
+									<span class="righttext">' . $topic['num_replies'] . '</span>
 								</dd>';
 	}
 	echo '
@@ -216,15 +218,17 @@ function template_main()
 	{
 		echo '
 							<dt>', $topic['link'], '</dt>
-							<dd class="statsbar">
-								<span class="floatright">', $topic['num_views'], '</span>';
+							<dd class="statsbar">';
 
 		if (!empty($topic['post_percent']))
-				echo '
-										<span class="statsbar"><span style="width: ', $topic['post_percent'], '%;"></span></span>';
+			echo '
+								<div class="bar">
+									<div style="width: ', $topic['post_percent'], 'px;"></div>
+								</div>';
 
 		echo '
-								</dd>';
+								<span class="righttext">' . $topic['num_views'] . '</span>
+							</dd>';
 	}
 
 	echo '
@@ -255,15 +259,17 @@ function template_main()
 							<dt>
 								', $poster['link'], '
 							</dt>
-							<dd class="statsbar">
-								<span class="floatright">', $poster['num_topics'], '</span>';
+							<dd class="statsbar">';
 
 		if (!empty($poster['post_percent']))
-				echo '
-										<span class="statsbar"><span style="width: ', $poster['post_percent'], '%;"></span></span>';
+			echo '
+								<div class="bar">
+									<div style="width: ', $poster['post_percent'], 'px;"></div>
+								</div>';
 
 		echo '
-								</dd>';
+								<span class="righttext">', $poster['num_topics'], '</span>
+							</dd>';
 	}
 
 	echo '
@@ -292,15 +298,17 @@ function template_main()
 							<dt>
 								', $poster['link'], '
 							</dt>
-							<dd class="statsbar">
-								<span class="floatright">', $poster['time_online'], '</span>';
+							<dd class="statsbar">';
 
 		if (!empty($poster['time_online']))
-				echo '
-									<span class="statsbar"><span style="width: ', $poster['time_percent'], '%;"></span></span>';
+			echo '
+								<div class="bar">
+									<div style="width: ', $poster['post_percent'], 'px;"></div>
+								</div>';
 
 		echo '
-								</dd>';
+								<span>', $poster['time_online'], '</span>
+							</dd>';
 	}
 
 	echo '
