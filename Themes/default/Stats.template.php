@@ -303,7 +303,7 @@ function template_main()
 		if (!empty($poster['time_online']))
 			echo '
 								<div class="bar">
-									<div style="width: ', $poster['post_percent'], 'px;"></div>
+									<div style="width: ', $poster['time_percent'], 'px;"></div>
 								</div>';
 
 		echo '
