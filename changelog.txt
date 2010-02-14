@@ -62,6 +62,7 @@ February 2010
  * Updated the findmember dialogue to match Curve's look and feel. (Help template) [Bug 4160]
  ! The function setting a session cookie wasn't respecting the configured session timeout and domain. (Subs-Auth.php) [Bug 3915]
  * Added board ID to the quick reply form to prevent session timeouts. (Display template) [Bug 3915]
+ ! Various fixes for the webinstall script. (webinstall.php) [Bug 4105]
 
 
 January 2010
