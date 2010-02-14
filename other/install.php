@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC2                                         *
+* Software Version:           SMF 2.0 RC3                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -22,7 +22,7 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-$GLOBALS['current_smf_version'] = '2.0 RC2';
+$GLOBALS['current_smf_version'] = '2.0 RC3';
 $GLOBALS['db_script_version'] = '2-0';
 
 $GLOBALS['required_php_version'] = '4.1.0';
@@ -2043,8 +2043,8 @@ function template_install_above()
 		<meta http-equiv="Content-Type" content="text/html; charset=', isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1', '" />
 		<meta name="robots" content="noindex" />
 		<title>', $txt['smf_installer'], '</title>
-		<link rel="stylesheet" type="text/css" href="Themes/default/css/index.css?rc2" />
-		<link rel="stylesheet" type="text/css" href="Themes/default/css/install.css?rc2" />
+		<link rel="stylesheet" type="text/css" href="Themes/default/css/index.css?rc3" />
+		<link rel="stylesheet" type="text/css" href="Themes/default/css/install.css?rc3" />
 		<script type="text/javascript" src="Themes/default/scripts/script.js"></script>
 	</head>
 	<body>

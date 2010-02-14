@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC2; ManageSearch
+// Version: 2.0 RC3; ManageSearch
 
 function template_modify_weights()
 {

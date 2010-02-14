@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC2; index
+// Version: 2.0 RC3; index
 
 /*	This template is, perhaps, the most important template in the theme. It
 	contains the main template layer that displays the header and footer of
@@ -77,8 +77,8 @@ function template_html_above()
 	<meta name="description" content="', $context['page_title_html_safe'], '" />', !empty($context['meta_keywords']) ? '
 	<meta name="keywords" content="' . $context['meta_keywords'] . '" />' : '', '
 	<title>', $context['page_title_html_safe'], '</title>
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?rc2" />
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc2" media="print" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?rc3" />
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc3" media="print" />';
 
 	// Please don't index these Mr Robot.
 	if (!empty($context['robot_no_index']))
@@ -113,8 +113,8 @@ function template_html_above()
 	<link rel="index" href="' . $scripturl . '?board=' . $context['current_board'] . '.0" />';
 
 	echo '
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2"></script>
-	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/theme.js?rc2"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc3"></script>
+	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/theme.js?rc3"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_default_theme_url = "', $settings['default_theme_url'], '";

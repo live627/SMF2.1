@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC2; index
+// Version: 2.0 RC3; index
 
 /*	This template is, perhaps, the most important template in the theme. It
 	contains the main template layer that displays the header and footer of
@@ -44,7 +44,7 @@ function template_init()
 
 	/* The version this template/theme is for.
 		This should probably be the version of SMF it was created for. */
-	$settings['theme_version'] = '2.0 RC2';
+	$settings['theme_version'] = '2.0 RC3';
 
 	/* Set a setting that tells the theme that it can render the tabs. */
 	$settings['use_tabs'] = true;
@@ -88,10 +88,10 @@ function template_html_above()
 		echo '
 	<link rel="canonical" href="', $context['canonical_url'], '" />';
 
-	// The ?rc2 part of this link is just here to make sure browsers don't cache it wrongly.
+	// The ?rc3 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index', $context['theme_variant'], '.css?rc2" />
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc2" media="print" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index', $context['theme_variant'], '.css?rc3" />
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc3" media="print" />';
 
 	// Show all the relative links, such as help, search, contents, and the like.
 	echo '
@@ -134,8 +134,8 @@ function template_html_above()
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/rtl.css" />';
 
 	echo '
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2"></script>
-	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/theme.js?rc2"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc3"></script>
+	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/theme.js?rc3"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_default_theme_url = "', $settings['default_theme_url'], '";

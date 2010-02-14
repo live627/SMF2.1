@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC2; ManagePaid
+// Version: 2.0 RC3; ManagePaid
 
 // The template for adding or editing a subscription.
 function template_modify_subscription()
@@ -379,7 +379,7 @@ function template_modify_user_subscription()
 			</div>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 		var oAddMemberSuggest = new smc_AutoSuggest({
 			sSelf: \'oAddMemberSuggest\',

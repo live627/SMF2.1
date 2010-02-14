@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC2; PersonalMessage
+// Version: 2.0 RC3; PersonalMessage
 
 // This is the main sidebar for the personal messages section.
 function template_pm_above()
@@ -1050,8 +1050,8 @@ function template_send()
 	</div>';
 
 	echo '
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/PersonalMessage.js?rc2"></script>
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/PersonalMessage.js?rc3"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var oPersonalMessageSend = new smf_PersonalMessageSend({
 				sSelf: \'oPersonalMessageSend\',

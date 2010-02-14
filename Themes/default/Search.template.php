@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC2; Search
+// Version: 2.0 RC3; Search
 
 function template_main()
 {

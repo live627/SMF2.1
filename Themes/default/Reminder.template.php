@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC2; Reminder
+// Version: 2.0 RC3; Reminder
 
 function template_main()
 {

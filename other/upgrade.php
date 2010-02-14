@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC2                                         *
+* Software Version:           SMF 2.0 RC3                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -23,8 +23,8 @@
 **********************************************************************************/
 
 // Version information...
-define('SMF_VERSION', '2.0 RC2');
-define('SMF_LANG_VERSION', '2.0 RC2');
+define('SMF_VERSION', '2.0 RC3');
+define('SMF_LANG_VERSION', '2.0 RC3');
 
 $GLOBALS['required_php_version'] = '4.1.0';
 $GLOBALS['required_mysql_version'] = '3.23.28';
@@ -3729,8 +3729,8 @@ function template_upgrade_above()
 		<meta http-equiv="Content-Type" content="text/html; charset=', isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1', '" />
 		<meta name="robots" content="noindex" />
 		<title>', $txt['upgrade_upgrade_utility'], '</title>
-		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css?rc2" />
-		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/install.css?rc2" />
+		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css?rc3" />
+		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/install.css?rc3" />
 				<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var smf_scripturl = \'', $upgradeurl, '\';

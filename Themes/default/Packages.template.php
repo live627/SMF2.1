@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC2; Packages
+// Version: 2.0 RC3; Packages
 
 function template_main()
 {
@@ -1542,8 +1542,8 @@ function template_view_operations()
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index.css" />
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/admin.css" />
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2"></script>
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc2"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc3"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc3"></script>
 	</head>
 	<body>
 		<div class="padding windowbg">

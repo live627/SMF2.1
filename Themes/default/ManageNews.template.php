@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC2; ManageNews
+// Version: 2.0 RC3; ManageNews
 
 // Form for editing current news on the site.
 function template_edit_news()
@@ -199,7 +199,7 @@ function template_email_members()
 
 	// Make the javascript stuff visible.
 	echo '
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		document.getElementById("advanced_select_div").style.display = "";
 		var oMemberSuggest = new smc_AutoSuggest({

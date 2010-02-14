@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC2; ManageMembergroups
+// Version: 2.0 RC3; ManageMembergroups
 
 function template_main()
 {
@@ -310,7 +310,7 @@ function template_edit_group()
 		</form>
 	</div>
 	<br class="clear" />
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var oModeratorSuggest = new smc_AutoSuggest({
 				sSelf: \'oModeratorSuggest\',
@@ -524,7 +524,7 @@ function template_group_members()
 
 	if (!empty($context['group']['assignable']))
 		echo '
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var oAddMemberSuggest = new smc_AutoSuggest({
 				sSelf: \'oAddMemberSuggest\',

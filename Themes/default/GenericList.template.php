@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC2; GenericList
+// Version: 2.0 RC3; GenericList
 
 function template_show_list($list_id = null)
 {

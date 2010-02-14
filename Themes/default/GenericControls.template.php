@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC2; GenericControls
+// Version: 2.0 RC3; GenericControls
 
 // This function displays all the stuff you get with a richedit box - BBC, smileys etc.
 function template_control_richedit($editor_id, $smileyContainer = null, $bbcContainer = null)
@@ -69,7 +69,7 @@ function template_control_richedit($editor_id, $smileyContainer = null, $bbcCont
 						<html>
 							<head>
 								<title>' . $txt['more_smileys_title'] . '</title>
-								<link rel="stylesheet" type="text/css" href="' . $settings['theme_url'] . '/css/index' . $context['theme_variant'] . '.css?rc2" />
+								<link rel="stylesheet" type="text/css" href="' . $settings['theme_url'] . '/css/index' . $context['theme_variant'] . '.css?rc3" />
 							</head>
 							<body id="help_popup">
 								<div class="padding windowbg">

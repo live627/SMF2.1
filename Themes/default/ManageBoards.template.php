@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC2; ManageBoards
+// Version: 2.0 RC3; ManageBoards
 
 // Template for listing all the current categories and boards.
 function template_main()
@@ -502,7 +502,7 @@ function template_modify_board()
 		</form>
 	</div>
 	<br class="clear" />
-<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
+<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
 <script type="text/javascript"><!-- // --><![CDATA[
 	var oModeratorSuggest = new smc_AutoSuggest({
 		sSelf: \'oModeratorSuggest\',
