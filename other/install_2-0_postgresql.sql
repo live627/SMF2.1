@@ -49,14 +49,22 @@ CREATE OR REPLACE FUNCTION INET_NTOA(bigint) RETURNS text AS
     ($1 & 255::int8) AS result'
 LANGUAGE 'sql';
 
-CREATE OR REPLACE FUNCTION FIND_IN_SET(text, text) RETURNS boolean AS
-  'SELECT
-  	COALESCE($1 = ANY(STRING_TO_ARRAY($2, '','')), FALSE) AS result'
+CREATE OR REPLACE FUNCTION FIND_IN_SET(needle text, haystack text) RETURNS integer AS '
+	SELECT i AS result
+	FROM generate_series(1, array_upper(string_to_array($2,'',''), 1)) AS g(i)
+	WHERE  (string_to_array($2,'',''))[i] = $1
+		UNION ALL
+	SELECT 0
+	LIMIT 1'
 LANGUAGE 'sql';
 
-CREATE OR REPLACE FUNCTION FIND_IN_SET(integer, character varying) RETURNS boolean AS
-	'SELECT
-	  COALESCE(CAST($1 AS text) = ANY(STRING_TO_ARRAY($2, '','')), FALSE) AS result'
+CREATE OR REPLACE FUNCTION FIND_IN_SET(needle integer, haystack text) RETURNS integer AS '
+	SELECT i AS result
+	FROM generate_series(1, array_upper(string_to_array($2,'',''), 1)) AS g(i)
+	WHERE  (string_to_array($2,'',''))[i] = CAST($1 AS text)
+		UNION ALL
+	SELECT 0
+	LIMIT 1'
 LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION LEFT (text, int4) RETURNS text AS

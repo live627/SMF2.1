@@ -456,7 +456,7 @@ function MessageFolder()
 	$context['signature_enabled'] = substr($modSettings['signature_settings'], 0, 1) == 1;
 
 	$labelQuery = $context['folder'] != 'sent' ? '
-			AND FIND_IN_SET(' . $context['current_label_id'] . ', pmr.labels)' : '';
+			AND FIND_IN_SET(' . $context['current_label_id'] . ', pmr.labels) != 0' : '';
 
 	// Set the index bar correct!
 	messageIndexBar($context['current_label_id'] == -1 ? $context['folder'] : 'label' . $context['current_label_id']);
@@ -1256,8 +1256,15 @@ function MessageSearch2()
 		elseif (count($_REQUEST['searchlabel']) != count($context['labels']))
 		{
 			$labelQuery = '
-			AND (FIND_IN_SET({raw:label_implode}, pmr.labels))';
-			$searchq_parameters['label_implode'] = '\'' . implode('\', pmr.labels) OR FIND_IN_SET(\'', $_REQUEST['searchlabel']) . '\'';
+			AND {raw:label_implode}';
+
+			$labelStatements = array();
+			foreach ($_REQUEST['searchlabel'] as $label)
+				$labelStatements[] = $smcFunc['db_quote']('FIND_IN_SET({string:label}, pmr.labels) != 0', array(
+					'label' => $label,
+				));
+
+			$searchq_parameters['label_implode'] = '(' . implode(' OR ', $labelStatements) . ')';
 		}
 	}
 
@@ -2675,7 +2682,7 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 		SET is_read = is_read | 1
 		WHERE id_member = {int:id_member}
 			AND NOT (is_read & 1 >= 1)' . ($label === null ? '' : '
-			AND FIND_IN_SET({string:label}, labels)') . ($personal_messages !== null ? '
+			AND FIND_IN_SET({string:label}, labels) != 0') . ($personal_messages !== null ? '
 			AND id_pm IN ({array_int:personal_messages})' : ''),
 		array(
 			'personal_messages' => $personal_messages,
@@ -2836,11 +2843,11 @@ function ManageLabels()
 			$request = $smcFunc['db_query']('', '
 				SELECT id_pm, labels
 				FROM {db_prefix}pm_recipients
-				WHERE FIND_IN_SET({raw:find_label_implode}, labels)
+				WHERE FIND_IN_SET({raw:find_label_implode}, labels) != 0
 					AND id_member = {int:current_member}',
 				array(
 					'current_member' => $user_info['id'],
-					'find_label_implode' => '\'' . implode('\', labels) OR FIND_IN_SET(\'', $searchArray) . '\'',
+					'find_label_implode' => '\'' . implode('\', labels) != 0 OR FIND_IN_SET(\'', $searchArray) . '\'',
 				)
 			);
 			while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -3018,7 +3025,7 @@ function ReportMessage()
 		$request = $smcFunc['db_query']('', '
 			SELECT id_member, real_name
 			FROM {db_prefix}members
-			WHERE id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups)
+			WHERE id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups) != 0
 			ORDER BY real_name',
 			array(
 				'admin_group' => 1,
@@ -3091,7 +3098,7 @@ function ReportMessage()
 		$request = $smcFunc['db_query']('', '
 			SELECT id_member, real_name, lngfile
 			FROM {db_prefix}members
-			WHERE (id_group = {int:admin_id} OR FIND_IN_SET({int:admin_id}, additional_groups))
+			WHERE (id_group = {int:admin_id} OR FIND_IN_SET({int:admin_id}, additional_groups) != 0)
 				' . (empty($_REQUEST['ID_ADMIN']) ? '' : 'AND id_member = {int:specific_admin}') . '
 			ORDER BY lngfile',
 			array(

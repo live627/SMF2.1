@@ -1705,7 +1705,7 @@ function MaintainPurgeInactiveMembers()
 				}
 				else
 				{
-					$where .= ' AND mem.id_group != {int:id_group_' . $row['id_group'] . '} AND NOT FIND_IN_SET({int:id_group_' . $row['id_group'] . '}, mem.additional_groups)';
+					$where .= ' AND mem.id_group != {int:id_group_' . $row['id_group'] . '} AND FIND_IN_SET({int:id_group_' . $row['id_group'] . '}, mem.additional_groups) = 0';
 					$where_vars['id_group_' . $row['id_group']] = $row['id_group'];
 				}
 			}

@@ -439,10 +439,10 @@ function deleteMembers($users, $check_not_admin = false)
 	$request = $smcFunc['db_query']('', '
 		SELECT id_member, pm_ignore_list, buddy_list
 		FROM {db_prefix}members
-		WHERE FIND_IN_SET({raw:pm_ignore_list}, pm_ignore_list) OR FIND_IN_SET({raw:buddy_list}, buddy_list)',
+		WHERE FIND_IN_SET({raw:pm_ignore_list}, pm_ignore_list) != 0 OR FIND_IN_SET({raw:buddy_list}, buddy_list) != 0',
 		array(
-			'pm_ignore_list' => implode(', pm_ignore_list) OR FIND_IN_SET(', $users),
-			'buddy_list' => implode(', buddy_list) OR FIND_IN_SET(', $users),
+			'pm_ignore_list' => implode(', pm_ignore_list) != 0 OR FIND_IN_SET(', $users),
+			'buddy_list' => implode(', buddy_list) != 0 OR FIND_IN_SET(', $users),
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -1094,14 +1094,14 @@ function membersAllowedTo($permission, $board_id = null)
 		SELECT mem.id_member
 		FROM {db_prefix}members AS mem' . ($include_moderators || $exclude_moderators ? '
 			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_member = mem.id_member AND mods.id_board = {int:board_id})' : '') . '
-		WHERE (' . ($include_moderators ? 'mods.id_member IS NOT NULL OR ' : '') . 'mem.id_group IN ({array_int:member_groups_allowed}) OR FIND_IN_SET({raw:member_group_allowed_implode}, mem.additional_groups))' . (empty($member_groups['denied']) ? '' : '
-			AND NOT (' . ($exclude_moderators ? 'mods.id_member IS NOT NULL OR ' : '') . 'mem.id_group IN ({array_int:member_groups_denied}) OR FIND_IN_SET({raw:member_group_denied_implode}, mem.additional_groups))'),
+		WHERE (' . ($include_moderators ? 'mods.id_member IS NOT NULL OR ' : '') . 'mem.id_group IN ({array_int:member_groups_allowed}) OR FIND_IN_SET({raw:member_group_allowed_implode}, mem.additional_groups) != 0)' . (empty($member_groups['denied']) ? '' : '
+			AND NOT (' . ($exclude_moderators ? 'mods.id_member IS NOT NULL OR ' : '') . 'mem.id_group IN ({array_int:member_groups_denied}) OR FIND_IN_SET({raw:member_group_denied_implode}, mem.additional_groups) != 0)'),
 		array(
 			'member_groups_allowed' => $member_groups['allowed'],
 			'member_groups_denied' => $member_groups['denied'],
 			'board_id' => $board_id,
-			'member_group_allowed_implode' => implode(', mem.additional_groups) OR FIND_IN_SET(', $member_groups['allowed']),
-			'member_group_denied_implode' => implode(', mem.additional_groups) OR FIND_IN_SET(', $member_groups['denied']),
+			'member_group_allowed_implode' => implode(', mem.additional_groups) != 0 OR FIND_IN_SET(', $member_groups['allowed']),
+			'member_group_denied_implode' => implode(', mem.additional_groups) != 0 OR FIND_IN_SET(', $member_groups['denied']),
 		)
 	);
 	$members = array();

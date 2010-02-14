@@ -2133,7 +2133,7 @@ function AnnouncementSelectMembergroup()
 	$request = $smcFunc['db_query']('', '
 		SELECT mg.id_group, COUNT(mem.id_member) AS num_members
 		FROM {db_prefix}membergroups AS mg
-			LEFT JOIN {db_prefix}members AS mem ON (mem.id_group = mg.id_group OR FIND_IN_SET(mg.id_group, mem.additional_groups) OR mg.id_group = mem.id_post_group)
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_group = mg.id_group OR FIND_IN_SET(mg.id_group, mem.additional_groups) != 0 OR mg.id_group = mem.id_post_group)
 		WHERE mg.id_group IN ({array_int:group_list})
 		GROUP BY mg.id_group',
 		array(
@@ -2238,7 +2238,7 @@ function AnnouncementSend()
 		WHERE mem.id_member != {int:current_member}' . (!empty($modSettings['allow_disableAnnounce']) ? '
 			AND mem.notify_announcements = {int:notify_announcements}' : '') . '
 			AND mem.is_activated = {int:is_activated}
-			AND (mem.id_group IN ({array_int:group_list}) OR mem.id_post_group IN ({array_int:group_list}) OR FIND_IN_SET({raw:additional_group_list}, mem.additional_groups))
+			AND (mem.id_group IN ({array_int:group_list}) OR mem.id_post_group IN ({array_int:group_list}) OR FIND_IN_SET({raw:additional_group_list}, mem.additional_groups) != 0)
 			AND mem.id_member > {int:start}
 		ORDER BY mem.id_member
 		LIMIT ' . $chunkSize,
@@ -2248,7 +2248,7 @@ function AnnouncementSend()
 			'notify_announcements' => 1,
 			'is_activated' => 1,
 			'start' => $context['start'],
-			'additional_group_list' => implode(', mem.additional_groups) OR FIND_IN_SET(', $_POST['who']),
+			'additional_group_list' => implode(', mem.additional_groups) != 0 OR FIND_IN_SET(', $_POST['who']),
 		)
 	);
 

@@ -162,7 +162,7 @@ function GroupList()
 				FROM {db_prefix}membergroups AS mg
 					INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:blank_screen}
 						AND mem.id_group != mg.id_group
-						AND FIND_IN_SET(mg.id_group, mem.additional_groups))
+						AND FIND_IN_SET(mg.id_group, mem.additional_groups) != 0)
 				WHERE mg.id_group IN ({array_int:group_list})
 				GROUP BY mg.id_group',
 				array(
@@ -319,7 +319,7 @@ function list_getGroups($start, $items_per_page, $sort)
 				FROM {db_prefix}membergroups AS mg
 					INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:blank_screen}
 						AND mem.id_group != mg.id_group
-						AND FIND_IN_SET(mg.id_group, mem.additional_groups))
+						AND FIND_IN_SET(mg.id_group, mem.additional_groups) != 0)
 				WHERE mg.id_group IN ({array_int:group_list})
 				GROUP BY mg.id_group',
 				array(
@@ -509,7 +509,7 @@ function MembergroupMembers()
 				FROM {db_prefix}members
 				WHERE (' . implode(' OR ', $member_query) . ')
 					AND id_group != {int:id_group}
-					AND NOT FIND_IN_SET({int:id_group}, additional_groups)',
+					AND FIND_IN_SET({int:id_group}, additional_groups) = 0',
 				array_merge($member_parameters, array(
 					'id_group' => $_REQUEST['group'],
 				))
@@ -555,7 +555,7 @@ function MembergroupMembers()
 
 	// The where on the query is interesting. Non-moderators should only see people who are in this group as primary.
 	if ($context['group']['can_moderate'])
-		$where = $context['group']['is_post_group'] ? 'id_post_group = {int:group}' : 'id_group = {int:group} OR FIND_IN_SET({int:group}, additional_groups)';
+		$where = $context['group']['is_post_group'] ? 'id_post_group = {int:group}' : 'id_group = {int:group} OR FIND_IN_SET({int:group}, additional_groups) != 0';
 	else
 		$where = $context['group']['is_post_group'] ? 'id_post_group = {int:group}' : 'id_group = {int:group}';
 

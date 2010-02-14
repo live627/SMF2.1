@@ -2449,7 +2449,7 @@ function profileSaveGroups(&$value)
 			$request = $smcFunc['db_query']('', '
 				SELECT id_member
 				FROM {db_prefix}members
-				WHERE (id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups))
+				WHERE (id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups) != 0)
 					AND id_member != {int:selected_member}
 				LIMIT 1',
 				array(

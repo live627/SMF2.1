@@ -1051,9 +1051,9 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			member_name, real_name, id_member, email_address, lngfile,
 			pm_email_notify, instant_messages,' . (allowedTo('moderate_forum') ? ' 0' : '
 			(pm_receive_from = {int:admins_only}' . (!empty($modSettings['enable_buddylist']) ? '' : ' OR
-			(pm_receive_from = {int:buddies_only} AND NOT FIND_IN_SET({string:from_id}, buddy_list)) OR
-			(pm_receive_from = {int:not_on_ignore_list} AND FIND_IN_SET({string:from_id}, pm_ignore_list))') . ')') . ' AS ignored,
-			FIND_IN_SET({string:from_id}, buddy_list) AS is_buddy, is_activated,
+			(pm_receive_from = {int:buddies_only} AND FIND_IN_SET({string:from_id}, buddy_list) = 0) OR
+			(pm_receive_from = {int:not_on_ignore_list} AND FIND_IN_SET({string:from_id}, pm_ignore_list) != 0)') . ')') . ' AS ignored,
+			FIND_IN_SET({string:from_id}, buddy_list) != 0 AS is_buddy, is_activated,
 			additional_groups, id_group, id_post_group
 		FROM {db_prefix}members
 		WHERE id_member IN ({array_int:recipients})
@@ -3103,13 +3103,13 @@ function adminNotify($type, $memberID, $member_name = null)
 	$request = $smcFunc['db_query']('', '
 		SELECT id_member, lngfile, email_address
 		FROM {db_prefix}members
-		WHERE (id_group IN ({array_int:group_list}) OR FIND_IN_SET({raw:group_array_implode}, additional_groups))
+		WHERE (id_group IN ({array_int:group_list}) OR FIND_IN_SET({raw:group_array_implode}, additional_groups) != 0)
 			AND notify_types != {int:notify_types}
 		ORDER BY lngfile',
 		array(
 			'group_list' => $groups,
 			'notify_types' => 4,
-			'group_array_implode' => implode(', additional_groups) OR FIND_IN_SET(', $groups),
+			'group_array_implode' => implode(', additional_groups) != 0 OR FIND_IN_SET(', $groups),
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request))

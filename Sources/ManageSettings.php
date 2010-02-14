@@ -939,7 +939,7 @@ function ModifySignatureSettings($return_config = false)
 				FROM {db_prefix}members
 				WHERE id_member BETWEEN ' . $_GET['step'] . ' AND ' . $_GET['step'] . ' + 49
 					AND id_group != {int:admin_group}
-					AND NOT FIND_IN_SET({int:admin_group}, additional_groups)',
+					AND FIND_IN_SET({int:admin_group}, additional_groups) = 0',
 				array(
 					'admin_group' => 1,
 				)

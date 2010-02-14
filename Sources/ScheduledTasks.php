@@ -293,13 +293,13 @@ function scheduled_approval_notification()
 		SELECT id_member, real_name, email_address, lngfile, id_group, additional_groups, mod_prefs
 		FROM {db_prefix}members
 		WHERE id_group IN ({array_int:additional_group_list})
-			OR FIND_IN_SET({raw:additional_group_list_implode}, additional_groups)
-			' . (empty($members) ? '' : ' OR id_member IN ({array_int:member_list})') . '
+			OR FIND_IN_SET({raw:additional_group_list_implode}, additional_groups) != 0' . (empty($members) ? '' : '
+			OR id_member IN ({array_int:member_list})') . '
 		ORDER BY lngfile',
 		array(
 			'additional_group_list' => $addGroups,
 			'member_list' => $members,
-			'additional_group_list_implode' => implode(', additional_groups) OR FIND_IN_SET(', $addGroups),
+			'additional_group_list_implode' => implode(', additional_groups) != 0 OR FIND_IN_SET(', $addGroups),
 		)
 	);
 	$members = array();

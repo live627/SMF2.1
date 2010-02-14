@@ -164,9 +164,9 @@ function deleteMembergroups($groups)
 	$request = $smcFunc['db_query']('', '
 		SELECT id_member, additional_groups
 		FROM {db_prefix}members
-		WHERE FIND_IN_SET({raw:additional_groups_explode}, additional_groups)',
+		WHERE FIND_IN_SET({raw:additional_groups_explode}, additional_groups) != 0',
 		array(
-			'additional_groups_explode' => implode(', additional_groups) OR FIND_IN_SET(', $groups),
+			'additional_groups_explode' => implode(', additional_groups) != 0 OR FIND_IN_SET(', $groups),
 		)
 	);
 	$updates = array();
@@ -181,9 +181,9 @@ function deleteMembergroups($groups)
 	$request = $smcFunc['db_query']('', '
 		SELECT id_board, member_groups
 		FROM {db_prefix}boards
-		WHERE FIND_IN_SET({raw:member_groups_explode}, member_groups)',
+		WHERE FIND_IN_SET({raw:member_groups_explode}, member_groups) != 0',
 		array(
-			'member_groups_explode' => implode(', member_groups) OR FIND_IN_SET(', $groups),
+			'member_groups_explode' => implode(', member_groups) != 0 OR FIND_IN_SET(', $groups),
 		)
 	);
 	$updates = array();
@@ -267,7 +267,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 				additional_groups = {string:blank_string}
 			WHERE id_member IN ({array_int:member_list})' . (allowedTo('admin_forum') ? '' : '
 				AND id_group != {int:admin_group}
-				AND NOT FIND_IN_SET(1, additional_groups)'),
+				AND FIND_IN_SET({int:admin_group}, additional_groups) = 0'),
 			array(
 				'member_list' => $members,
 				'regular_member' => 0,
@@ -361,12 +361,12 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_member, additional_groups
 		FROM {db_prefix}members
-		WHERE (FIND_IN_SET({raw:additional_groups_implode}, additional_groups))
+		WHERE (FIND_IN_SET({raw:additional_groups_implode}, additional_groups) != 0)
 			AND id_member IN ({array_int:member_list})
 		LIMIT ' . count($members),
 		array(
 			'member_list' => $members,
-			'additional_groups_implode' => implode(', additional_groups) OR FIND_IN_SET(', $groups),
+			'additional_groups_implode' => implode(', additional_groups) != 0 OR FIND_IN_SET(', $groups),
 		)
 	);
 	$updates = array();
@@ -483,7 +483,7 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 			SET additional_groups = CASE WHEN additional_groups = {string:blank_string} THEN {string:id_group_string} ELSE CONCAT(additional_groups, {string:id_group_string_extend}) END
 			WHERE id_member IN ({array_int:member_list})
 				AND id_group != {int:id_group}
-				AND NOT FIND_IN_SET({int:id_group}, additional_groups)',
+				AND FIND_IN_SET({int:id_group}, additional_groups) = 0',
 			array(
 				'member_list' => $members,
 				'id_group' => $group,
@@ -498,7 +498,7 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 			SET id_group = {int:id_group}
 			WHERE id_member IN ({array_int:member_list})' . ($type == 'force_primary' ? '' : '
 				AND id_group = {int:regular_group}
-				AND NOT FIND_IN_SET({int:id_group}, additional_groups)'),
+				AND FIND_IN_SET({int:id_group}, additional_groups) = 0'),
 			array(
 				'member_list' => $members,
 				'id_group' => $group,
@@ -515,7 +515,7 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 				id_group = CASE WHEN id_group = {int:regular_group} THEN {int:id_group} ELSE id_group END
 			WHERE id_member IN ({array_int:member_list})
 				AND id_group != {int:id_group}
-				AND NOT FIND_IN_SET({int:id_group}, additional_groups)',
+				AND FIND_IN_SET({int:id_group}, additional_groups) = 0',
 			array(
 				'member_list' => $members,
 				'regular_group' => 0,
@@ -561,7 +561,7 @@ function listMembergroupMembers_Href(&$members, $membergroup, $limit = null)
 	$request = $smcFunc['db_query']('', '
 		SELECT id_member, real_name
 		FROM {db_prefix}members
-		WHERE id_group = {int:id_group} OR FIND_IN_SET({int:id_group}, additional_groups)' . ($limit === null ? '' : '
+		WHERE id_group = {int:id_group} OR FIND_IN_SET({int:id_group}, additional_groups) != 0' . ($limit === null ? '' : '
 		LIMIT ' . ($limit + 1)),
 		array(
 			'id_group' => $membergroup,
@@ -680,7 +680,7 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 				FROM {db_prefix}membergroups AS mg
 					INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:blank_string}
 						AND mem.id_group != mg.id_group
-						AND FIND_IN_SET(mg.id_group, mem.additional_groups))
+						AND FIND_IN_SET(mg.id_group, mem.additional_groups) != 0)
 				WHERE mg.id_group IN ({array_int:group_list})
 				GROUP BY mg.id_group',
 				array(

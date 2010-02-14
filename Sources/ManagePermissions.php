@@ -309,7 +309,7 @@ function PermissionIndex()
 			FROM {db_prefix}membergroups AS mg
 				INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:blank_string}
 					AND mem.id_group != mg.id_group
-					AND FIND_IN_SET(mg.id_group, mem.additional_groups))
+					AND FIND_IN_SET(mg.id_group, mem.additional_groups) != 0)
 			WHERE mg.id_group IN ({array_int:normal_group_list})
 			GROUP BY mg.id_group',
 			array(

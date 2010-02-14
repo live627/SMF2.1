@@ -487,7 +487,7 @@ function BanEdit()
 			$request = $smcFunc['db_query']('', '
 				SELECT id_member
 				FROM {db_prefix}members
-				WHERE (id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups))
+				WHERE (id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups) != 0)
 					AND email_address LIKE {string:email}
 				LIMIT 1',
 				array(
@@ -508,7 +508,7 @@ function BanEdit()
 			$_POST['user'] = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', $smcFunc['htmlspecialchars']($_POST['user'], ENT_QUOTES));
 
 			$request = $smcFunc['db_query']('', '
-				SELECT id_member, (id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups)) AS isAdmin
+				SELECT id_member, (id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups) != 0) AS isAdmin
 				FROM {db_prefix}members
 				WHERE member_name = {string:user_name} OR real_name = {string:user_name}
 				LIMIT 1',
@@ -698,7 +698,7 @@ function BanEdit()
 						$_POST['user'] = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', $smcFunc['htmlspecialchars']($_POST['user'], ENT_QUOTES));
 
 						$request = $smcFunc['db_query']('', '
-							SELECT id_member, (id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups)) AS isAdmin
+							SELECT id_member, (id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups) != 0) AS isAdmin
 							FROM {db_prefix}members
 							WHERE member_name = {string:username} OR real_name = {string:username}
 							LIMIT 1',

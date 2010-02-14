@@ -668,7 +668,7 @@ function EditMembergroup()
 			$request = $smcFunc['db_query']('', '
 				SELECT id_board, member_groups
 				FROM {db_prefix}boards
-				WHERE FIND_IN_SET({string:current_group}, member_groups)' . (empty($_POST['boardaccess']) ? '' : '
+				WHERE FIND_IN_SET({string:current_group}, member_groups) != 0' . (empty($_POST['boardaccess']) ? '' : '
 					AND id_board NOT IN ({array_int:board_access_list})'),
 				array(
 					'current_group' => (int) $_REQUEST['group'],
@@ -693,7 +693,7 @@ function EditMembergroup()
 					UPDATE {db_prefix}boards
 					SET member_groups = CASE WHEN member_groups = {string:blank_string} THEN {string:group_id_string} ELSE CONCAT(member_groups, {string:comma_group}) END
 					WHERE id_board IN ({array_int:board_list})
-						AND NOT FIND_IN_SET({int:current_group}, member_groups)',
+						AND FIND_IN_SET({int:current_group}, member_groups) = 0',
 					array(
 						'board_list' => $_POST['boardaccess'],
 						'blank_string' => '',
@@ -720,7 +720,7 @@ function EditMembergroup()
 			$request = $smcFunc['db_query']('', '
 				SELECT id_member, additional_groups
 				FROM {db_prefix}members
-				WHERE FIND_IN_SET({string:current_group}, additional_groups)',
+				WHERE FIND_IN_SET({string:current_group}, additional_groups) != 0',
 				array(
 					'current_group' => (int) $_REQUEST['group'],
 				)
@@ -742,7 +742,7 @@ function EditMembergroup()
 					SELECT id_member, additional_groups
 					FROM {db_prefix}members
 					WHERE id_group = {int:current_group}
-						AND NOT FIND_IN_SET({int:current_group}, additional_groups)',
+						AND FIND_IN_SET({int:current_group}, additional_groups) = 0',
 					array(
 						'current_group' => (int) $_REQUEST['group'],
 					)
@@ -947,7 +947,7 @@ function EditMembergroup()
 	if ($_REQUEST['group'] == 2 || $_REQUEST['group'] > 3)
 	{
 		$result = $smcFunc['db_query']('', '
-			SELECT id_board, name, child_level, FIND_IN_SET({string:current_group}, member_groups) AS can_access
+			SELECT id_board, name, child_level, FIND_IN_SET({string:current_group}, member_groups) != 0 AS can_access
 			FROM {db_prefix}boards',
 			array(
 				'current_group' => (int) $_REQUEST['group'],
