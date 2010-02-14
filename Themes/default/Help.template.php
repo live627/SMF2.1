@@ -16,7 +16,7 @@ function template_popup()
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 	</head>
 	<body id="help_popup">
-		<div class="tborder windowbg description">
+		<div class="windowbg description">
 			', $context['help_text'], '<br />
 			<br />
 			<a href="javascript:self.close();">', $txt['close_window'], '</a>
@@ -59,79 +59,72 @@ function template_find_members()
 			}
 		// ]]></script>
 	</head>
-	<body>
-		<form action="', $scripturl, '?action=findmember;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<table border="0" width="100%" cellpadding="4" cellspacing="0" class="tborder">
-				<tr class="titlebg">
-					<td align="center" colspan="2">', $txt['find_members'], '</td>
-				</tr>
-				<tr class="windowbg">
-					<td align="left" colspan="2">
+	<body id="help_popup">
+		<form action="', $scripturl, '?action=findmember;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '" class="padding description">
+			<span class="upperframe"><span></span></span>
+			<div class="roundframe">
+				<div class="innerframe">
+					<div class="cat_bar">
+						<h3 class="catbg">', $txt['find_members'], '</h3>
+					</div>
+					<div class="padding">
 						<strong>', $txt['find_username'], ':</strong><br />
 						<input type="text" name="search" id="search" value="', isset($context['last_search']) ? $context['last_search'] : '', '" style="margin-top: 4px; width: 96%;" class="input_text" /><br />
-					</td>
-				</tr>
-				<tr class="windowbg" valign="top">';
+						<span class="smalltext"><em>', $txt['find_wildcards'], '</em></span><br />';
 
 	// Only offer to search for buddies if we have some!
 	if (!empty($context['show_buddies']))
 		echo '
-					<td align="left">
-						<span class="smalltext"><label for="buddies"><input type="checkbox" class="input_check" name="buddies" id="buddies"', !empty($context['buddy_search']) ? ' checked="checked"' : '', ' /> ', $txt['find_buddies'], '</label></span>
-					</td>
-					<td align="right">';
-	else
-		echo '
-					<td>';
+						<span class="smalltext"><label for="buddies"><input type="checkbox" class="input_check" name="buddies" id="buddies"', !empty($context['buddy_search']) ? ' checked="checked"' : '', ' /> ', $txt['find_buddies'], '</label></span><br />';
 
 	echo '
-						<span class="smalltext"><em>', $txt['find_wildcards'], '</em></span>
-					</td>
-				</tr>
-				<tr class="windowbg">
-					<td align="right" colspan="2">
-						<input type="submit" value="', $txt['search'], '" class="button_submit" />
-						<input type="button" value="', $txt['find_close'], '" onclick="window.close();" class="button_submit" />
-					</td>
-				</tr>
-			</table>
-
+						<div class="padding righttext">
+							<input type="submit" value="', $txt['search'], '" class="button_submit" />
+							<input type="button" value="', $txt['find_close'], '" onclick="window.close();" class="button_submit" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<span class="lowerframe"><span></span></span>
 			<br />
-
-			<table border="0" width="100%" cellpadding="4" cellspacing="0" class="tborder">
-				<tr class="titlebg">
-					<td align="center">', $txt['find_results'], '</td>
-				</tr>';
+			<span class="upperframe"><span></span></span>
+			<div class="roundframe">
+				<div class="innerframe">
+					<div class="cat_bar">
+						<h3 class="catbg">', $txt['find_results'], '</h3>
+					</div>';
 
 	if (empty($context['results']))
 		echo '
-				<tr class="windowbg">
-					<td align="center">', $txt['find_no_results'], '</td>
-				</tr>';
+					<p class="error">', $txt['find_no_results'], '</p>';
 	else
 	{
+		echo '
+					<ul class="reset padding">';
+
 		$alternate = true;
 		foreach ($context['results'] as $result)
 		{
 			echo '
-				<tr class="', $alternate ? 'windowbg2' : 'windowbg', '" valign="middle">
-					<td align="left">
-						<a href="', $result['href'], '" target="_blank" class="new_win"><img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" border="0" /></a>
-						<a href="javascript:void(0);" onclick="addMember(this.title); return false;" title="', $result['username'], '">', $result['name'], '</a>
-					</td>
-				</tr>';
+						<li class="', $alternate ? 'windowbg2' : 'windowbg', '">
+							<a href="', $result['href'], '" target="_blank" class="new_win"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="', $txt['view_profile'], '" title="', $txt['view_profile'], '" border="0" /></a>
+							<a href="javascript:void(0);" onclick="addMember(this.innerHTML); return false;">', $result['name'], '</a>
+						</li>';
 
 			$alternate = !$alternate;
 		}
 
 		echo '
-				<tr class="titlebg">
-					<td align="left">', $txt['pages'], ': ', $context['page_index'], '</td>
-				</tr>';
+					</ul>
+					<div class="pagesection">
+						', $txt['pages'], ': ', $context['page_index'], '
+					</div>';
 	}
 
 	echo '
-			</table>
+				</div>
+			</div>
+			<span class="lowerframe"><span></span></span>
 			<input type="hidden" name="input" value="', $context['input_box_name'], '" />
 			<input type="hidden" name="delim" value="', $context['delimiter'], '" />
 			<input type="hidden" name="quote" value="', $context['quote_results'] ? '1' : '0', '" />

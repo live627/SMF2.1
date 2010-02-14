@@ -41,6 +41,9 @@ if (!defined('SMF'))
 	void CoppaForm()
 		// !!!
 
+	void VerificationCode()
+		// Show the verification code or let it hear.
+		
 	void RegisterCheckUsername()
 		// !!!
 */
