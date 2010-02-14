@@ -65,7 +65,8 @@ February 2010
  ! Various fixes for the webinstall script. (webinstall.php) [Bug 4105]
  ! The stylesheet preview iframe was not working correctly since the introduction of multiple stylesheets. (Themes template) [Bug 2717]
  * Re-introduced blue bars in the statistics center as the old bars felt out of place. (Stats template, index.css, rtl.css)
- 
+ * Divide the list of boards on the search and ignore boards screens by amount of boards, not categories. (Profile template, Search.php)
+
 
 January 2010
 --------------------------------------------------------------------------------

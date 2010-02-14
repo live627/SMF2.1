@@ -1779,30 +1779,36 @@ function template_ignoreboards()
 						<ul class="ignoreboards floatleft">';
 
 	$i = 0;
-	$limit = ceil(count($context['categories']) / 2);
+	$limit = ceil($context['num_boards'] / 2);
 	foreach ($context['categories'] as $category)
 	{
-		if ($i == $limit)
-			echo '
-						</ul>
-						<ul class="ignoreboards floatright">';
-
 		echo '
 							<li class="category">
 								<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $category['child_ids']), ']); return false;">', $category['name'], '</a>
 								<ul>';
 
 		foreach ($category['boards'] as $board)
+		{
+			if ($i == $limit)
+				echo '
+								</ul>
+							</li>
+						</ul>
+						<ul class="ignoreboards floatright">
+							<li class="category">
+								<ul>';
+
 			echo '
 									<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left', ': ', $board['child_level'], 'em;">
 										<label for="ignore_brd', $board['id'], '"><input type="checkbox" id="ignore_brd', $board['id'], '" name="ignore_brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="input_check" /> ', $board['name'], '</label>
 									</li>';
 
+			$i ++;
+		}
+
 		echo '
 								</ul>
 							</li>';
-
-		$i ++;
 	}
 
 	echo '
