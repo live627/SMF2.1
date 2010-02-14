@@ -1143,8 +1143,8 @@ function loadMemberContext($user, $display_custom_fields = false)
 		'icq' => $profile['icq'] != '' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
 			'name' => $profile['icq'],
 			'href' => 'http://www.icq.com/whitepages/about_me.php?uin=' . $profile['icq'],
-			'link' => '<a class="icq" href="http://www.icq.com/whitepages/about_me.php?uin=' . $profile['icq'] . '" target="_blank" class="new_win" title="' . $txt['icq_title'] . ' - ' . $profile['icq'] . '"><img src="http://status.icq.com/online.gif?img=5&amp;icq=' . $profile['icq'] . '" alt="' . $txt['icq_title'] . ' - ' . $profile['icq'] . '" width="18" height="18" border="0" /></a>',
-			'link_text' => '<a class="icq" href="http://www.icq.com/whitepages/about_me.php?uin=' . $profile['icq'] . '" class="extern" title="' . $txt['icq_title'] . ' - ' . $profile['icq'] . '">' . $profile['icq'] . '</a>',
+			'link' => '<a class="icq new_win" href="http://www.icq.com/whitepages/about_me.php?uin=' . $profile['icq'] . '" target="_blank" title="' . $txt['icq_title'] . ' - ' . $profile['icq'] . '"><img src="http://status.icq.com/online.gif?img=5&amp;icq=' . $profile['icq'] . '" alt="' . $txt['icq_title'] . ' - ' . $profile['icq'] . '" width="18" height="18" border="0" /></a>',
+			'link_text' => '<a class="icq extern" href="http://www.icq.com/whitepages/about_me.php?uin=' . $profile['icq'] . '" title="' . $txt['icq_title'] . ' - ' . $profile['icq'] . '">' . $profile['icq'] . '</a>',
 		) : array('name' => '', 'add' => '', 'href' => '', 'link' => '', 'link_text' => ''),
 		'aim' => $profile['aim'] != '' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
 			'name' => $profile['aim'],
@@ -1161,8 +1161,8 @@ function loadMemberContext($user, $display_custom_fields = false)
 		'msn' => $profile['msn'] !='' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
 			'name' => $profile['msn'],
 			'href' => 'http://members.msn.com/' . $profile['msn'],
-			'link' => '<a class="msn" href="http://members.msn.com/' . $profile['msn'] . '" class="extern" title="' . $txt['msn_title'] . ' - ' . $profile['msn'] . '"><img src="' . $settings['images_url'] . '/msntalk.gif" alt="' . $txt['msn_title'] . ' - ' . $profile['msn'] . '" border="0" /></a>',
-			'link_text' => '<a href="class="msn" http://members.msn.com/' . $profile['msn'] . '" class="extern" title="' . $txt['msn_title'] . ' - ' . $profile['msn'] . '">' . $profile['msn'] . '</a>'
+			'link' => '<a class="msn new_win" href="http://members.msn.com/' . $profile['msn'] . '" title="' . $txt['msn_title'] . ' - ' . $profile['msn'] . '"><img src="' . $settings['images_url'] . '/msntalk.gif" alt="' . $txt['msn_title'] . ' - ' . $profile['msn'] . '" border="0" /></a>',
+			'link_text' => '<a class="msn new_win" href="http://members.msn.com/' . $profile['msn'] . '" title="' . $txt['msn_title'] . ' - ' . $profile['msn'] . '">' . $profile['msn'] . '</a>'
 		) : array('name' => '', 'href' => '', 'link' => '', 'link_text' => ''),
 		'real_posts' => $profile['posts'],
 		'posts' => $profile['posts'] > 500000 ? $txt['geek'] : comma_format($profile['posts']),
