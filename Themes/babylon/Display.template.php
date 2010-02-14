@@ -673,7 +673,7 @@ function template_main()
 		<td class="windowbg" width="75%" align="center">
 			', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
 			', !$context['can_reply_approved'] && $context['require_verification'] ? '<br />' : '', '
-			<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
+			<form action="', $scripturl, '?action=post2', empty($context['current_board']) ? '' : ';board=' . $context['current_board'], '" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
 				<input type="hidden" name="topic" value="', $context['current_topic'], '" />
 				<input type="hidden" name="subject" value="', $context['response_prefix'], $context['subject'], '" />
 				<input type="hidden" name="icon" value="xx" />

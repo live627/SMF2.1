@@ -60,6 +60,8 @@ February 2010
  * Use 'Guest' as name if a post was reported by a guest. (ModerationCenter.php, Moderation template) [Bug 4158]
  ! The SQL function find_in_set wasn't being properly used in several cases, causing type conflicts in PostGreSQL. (several files) [Bug 4064]
  * Updated the findmember dialogue to match Curve's look and feel. (Help template) [Bug 4160]
+ ! The function setting a session cookie wasn't respecting the configured session timeout and domain. (Subs-Auth.php) [Bug 3915]
+ * Added board ID to the quick reply form to prevent session timeouts. (Display template) [Bug 3915]
 
 
 January 2010

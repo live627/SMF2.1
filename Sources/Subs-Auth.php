@@ -191,7 +191,10 @@ function setLoginCookie($cookie_length, $id, $password = '')
 
 		// Version 4.3.2 didn't store the cookie of the new session.
 		if (version_compare(PHP_VERSION, '4.3.2') === 0 || (isset($_COOKIE[session_name()]) && $_COOKIE[session_name()] != session_id()))
-			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', !empty($modSettings['secureCookies']));
+		{
+			$sessionCookieLifetime = @ini_get('session.cookie_lifetime');
+			setcookie(session_name(), session_id(), time() + (empty($sessionCookieLifetime) ? $cookie_length : $sessionCookieLifetime), $cookie_url[1], '', !empty($modSettings['secureCookies']));
+		}
 
 		$_SESSION['login_' . $cookiename] = $data;
 	}
