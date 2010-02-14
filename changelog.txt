@@ -57,6 +57,7 @@ February 2010
  & Reworded the description for the nested quotes removal feature. (Admin language file, Help language file) [Bug 3866]
  ! Don't use kick_guest when there aren't any template layers set. (Security.php) [Bug 3930]
  ! In the print topic view, redirect to the boardindex if no valid topic id is provided. (Printpage.php)
+ * Use 'Guest' as name if a post was reported by a guest. (ModerationCenter.php, Moderation template) [Bug 4158]
 
 
 January 2010

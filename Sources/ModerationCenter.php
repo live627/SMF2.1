@@ -523,7 +523,7 @@ function ModBlockGroupRequests()
 	return 'group_requests_block';
 }
 
-//!!! This needs to be given it's own file ;)
+//!!! This needs to be given its own file.
 // Browse all the reported posts...
 function ReportedPosts()
 {
@@ -685,9 +685,9 @@ function ReportedPosts()
 				'time' => timeformat($row['time_sent']),
 				'member' => array(
 					'id' => $row['id_member'],
-					'name' => $row['reporter'],
-					'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['reporter'] . '</a>' : $row['reporter'],
-					'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
+					'name' => empty($row['reporter']) ? $txt['guest'] : $row['reporter'],
+					'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['reporter'] . '</a>' : (empty($row['reporter']) ? $txt['guest'] : $row['reporter']),
+					'href' => $row['id_member'] ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
 				),
 			);
 		}
@@ -856,9 +856,9 @@ function ModReport()
 			'time' => timeformat($row['time_sent']),
 			'member' => array(
 				'id' => $row['id_member'],
-				'name' => $row['reporter'],
-				'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['reporter'] . '</a>' : $row['reporter'],
-				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
+				'name' => empty($row['reporter']) ? $txt['guest'] : $row['reporter'],
+				'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['reporter'] . '</a>' : (empty($row['reporter']) ? $txt['guest'] : $row['reporter']),
+				'href' => $row['id_member'] ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
 			),
 		);
 	}

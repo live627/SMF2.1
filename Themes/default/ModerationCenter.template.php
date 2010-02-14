@@ -283,7 +283,8 @@ function template_reported_posts()
 		// Prepare the comments...
 		$comments = array();
 		foreach ($report['comments'] as $comment)
-			$comments[] = '<a href="' . $comment['member']['href'] . '" title="' . $comment['message'] . '">' . $comment['member']['name'] . '</a>';
+			$comments[$comment['member']['id']] = '<a href="' . $comment['member']['href'] . '">' . $comment['member']['name'] . '</a>';
+
 		echo '
 					&#171; ', $txt['mc_reportedp_reported_by'], ': ', implode(', ', $comments), ' &#187;
 				</div>
