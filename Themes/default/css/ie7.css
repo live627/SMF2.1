@@ -49,7 +49,7 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 	padding-top: 1em;
 	float: none;
 }
-#content_section #forumposts h3.catbg
+#content_section #forumposts div.cat_bar
 {
 	margin-top: 8px;
 	clear: both;
