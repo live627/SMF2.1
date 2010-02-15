@@ -1011,10 +1011,27 @@ function template_statPanel()
 
 		// The labels.
 		foreach ($context['posts_by_time'] as $time_of_day)
+		{
 			echo '
-							<dt>', date('g a', mktime($time_of_day['hour'])), '</dt>
-							<dd class="statsbar"><span class="floatright">', !empty($time_of_day['posts_percent']) ? $time_of_day['posts_percent']: '0', '%</span><span class="statsbar"><span class="floatleft" style="width: ', !empty($time_of_day['posts_percent']) ? $time_of_day['posts_percent'] : '0', '%;"></span></span></dd>';
+							<dt>', $time_of_day['hour_format'], '</dt>
+							<dd class="statsbar">';
+
+			if (!empty($time_of_day['posts_percent']))
+				echo '
+								<span class="floatright">', $time_of_day['posts_percent'], '%</span>
+								<div class="bar">
+									<div style="width: ', $time_of_day['posts_percent'], 'px;"></div>
+								</div>';
+			else
+				echo '
+								<span class="floatright">0%</span>';
+
+			echo '
+							</dd>';
+		}
+
 		echo '
+		
 						</dl>';
 	}
 	echo '

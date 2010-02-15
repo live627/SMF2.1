@@ -66,6 +66,7 @@ February 2010
  ! The stylesheet preview iframe was not working correctly since the introduction of multiple stylesheets. (Themes template) [Bug 2717]
  * Re-introduced blue bars in the statistics center as the old bars felt out of place. (Stats template, index.css, rtl.css)
  * Divide the list of boards on the search and ignore boards screens by amount of boards, not categories. (Profile template, Search.php)
+ ! Date formatting was hardcoded in the View Stats area of the Profile section. (Profile-View.php, Profile template) [Bug 3835]
 
 
 January 2010
