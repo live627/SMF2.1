@@ -68,6 +68,7 @@ February 2010
  * Divide the list of boards on the search and ignore boards screens by amount of boards, not categories. (Profile template, Search.php)
  ! Date formatting was hardcoded in the View Stats area of the Profile section. (Profile-View.php, Profile template) [Bug 3835]
  * Core's GenericMenu template was still using tables, causing overflow problems. (Subs-Menu.php, GenericMenu template, index.css, rtl.css, compat.css)
+ * Replaced the 'my' icon in participation icons with some friendlier looking ones. (topic/my_*.gif)
 
 
 January 2010
