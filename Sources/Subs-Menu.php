@@ -200,7 +200,10 @@ function createMenu($menuData, $menuOptions = array())
 							// Set which one is last and selected in the group.
 							if (!empty($menu_context['sections'][$section_id]['areas'][$area_id]['subsections']))
 							{
-								$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa]['is_last'] = true;
+								$context['right_to_left'] ? reset($menu_context['sections'][$section_id]['areas'][$area_id]['subsections']) : end($menu_context['sections'][$section_id]['areas'][$area_id]['subsections']);
+								$key = key($menu_context['sections'][$section_id]['areas'][$area_id]['subsections']);
+								$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$key]['is_last'] = true;
+									
 								if ($menu_context['current_area'] == $area_id && !isset($menu_context['current_subsection']))
 									$menu_context['current_subsection'] = $first_sa;
 							}

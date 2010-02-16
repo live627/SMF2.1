@@ -349,6 +349,16 @@ ul.dropmenu li ul li:hover ul, ul.dropmenu li ul li.over ul
 	right: 5000px;
 }
 
+.generic_tab_strip
+{
+	margin: 0 1em 2em;
+}
+.generic_tab_strip .buttonlist
+{
+	float: left !important;
+}
+
+
 /* The linktree.
 ----------------- */
 ul.linktree
@@ -445,6 +455,7 @@ h4.catbg a.toggle img
 
 /* Styles for the board index.
 ------------------------------------------------- */
+
 p#stats
 {
 	text-align: right;
@@ -870,9 +881,10 @@ ul.postingbuttons li
 }
 #quickReplyOptions #quickReplyContent
 {
-	text-align: center;
+	text-align: right;
 	float: left;
-	width: 72%;
+	width: 67.5%;
+	padding: 1em;
 	border-left: 1px solid #aaa;
 }
 
@@ -920,21 +932,15 @@ ul.postingbuttons li
 ---------------------------------------------------- */
 form#postmodify .roundframe
 {
-	padding-left: 12%;
-}
-form#postmodify .roundframe .errorbox
-{
-	width: 84.5%;
+	padding: 0 12%;
 }
 #post_header
 {
 	margin-bottom: 0.5em;
 	border-bottom: 1px solid #666;
-	width: 85%;
 	padding: 0.5em;
 	overflow: hidden;
 }
-
 #post_header dt
 {
 	float: left;
@@ -944,7 +950,6 @@ form#postmodify .roundframe .errorbox
 	margin: .3em 0;
 	font-weight: bold;
 }
-
 #post_header dd
 {
 	float: left;
@@ -953,12 +958,10 @@ form#postmodify .roundframe .errorbox
 	width: 83%;
 	margin: .3em 0;
 }
-
 #post_header img
 {
 	vertical-align: middle;
 }
-
 ul.post_options
 {
 	margin: 0 0 0 1em;
@@ -966,14 +969,12 @@ ul.post_options
 	list-style: none;
 	overflow: hidden;
 }
-
 ul.post_options li
 {
 	margin: 0.2em 0;
 	width: 49%;
 	float: left;
 }
-
 #postAdditionalOptionsHeader
 {
 	margin-top: 1em;
@@ -983,7 +984,6 @@ ul.post_options li
 	border-bottom: 1px solid #666;
 	padding: 0.5em;
 }
-
 #postAttachment, #postAttachment2
 {
 	overflow: hidden;
@@ -992,35 +992,53 @@ ul.post_options li
 	border-bottom: 1px solid #666;
 	padding: 0.5em;
 }
-
 #postAttachment dd, #postAttachment2 dd
 {
 	margin: .3em 0 .3em 1em;
 }
-
 #postAttachment dt, #postAttachment2 dt
 {
 	font-weight: bold;
 }
-
 #postAttachment3
 {
 	margin-left: 1em;
 }
-
 #post_confirm_strip, #shortcuts
 {
 	padding: 1em 0 0 0;
 }
-
 .post_verification
 {
 	margin-top: .5em;
 }
-
 .post_verification #verification_control
 {
 	margin: .3em 0 .3em 1em;
+}
+/* The BBC buttons */
+#bbcBox_message
+{
+	margin: 1em 0 0.5em 0;
+}
+#bbcBox_message div
+{
+	margin: 0.2em 0;
+	vertical-align: top;
+}
+#bbcBox_message div img
+{
+	margin: 0 1px 0 0;
+	vertical-align: top;
+}
+#bbcBox_message select
+{
+	margin: 0 2px;
+}
+/* The smiley strip */
+#smileyBox_message
+{
+	margin: 0.75em 0 0.5em 0;
 }
 
 /* Styles for edit event section
@@ -1074,7 +1092,6 @@ ul.post_options li
 {
 	margin-bottom: 0.5em;
 	border: none;
-	width: 85%;
 	border-bottom: 1px solid #666;
 	padding: 0.5em;
 	clear: both;
@@ -1130,14 +1147,6 @@ ul.post_options li
 #move_topic dl
 {
 	margin-bottom: 0;
-}
-#move_topic dl.settings dt
-{
-    width: 40%;
-}
-#move_topic dl.settings dd
-{
-    width: 59%;
 }
 .move_topic
 {
@@ -1365,6 +1374,10 @@ tr.titlebg td
 {
 	padding: 1em;
 }
+#admin_login .centertext .error
+{
+	padding: 0 0 1em 0;
+}
 
 /* Styles for sidebar menus.
 ------------------------------------------------------- */
@@ -1376,9 +1389,12 @@ tr.titlebg td
 }
 #left_admsection
 {
+	background-color: #ecedf3;
+	padding: 1px;
+	border: 1px solid #ADADAD;
 	width: 160px;
 	float: left;
-	padding-right: 10px;
+	margin-right: 10px;
 }
 .adm_section h4.titlebg
 {
@@ -1392,9 +1408,6 @@ tr.titlebg td
 .left_admmenu
 {
 	margin-bottom: 1.1em;
-	padding: 0 0 0.5em 0;
-	background: #f0f0f0;
-	border: 1px solid #adadad;
 }
 #main_admsection
 {
@@ -1529,11 +1542,11 @@ dl
 {
 	border: none;
 }
-#profileview #basicinfo .content
+#basicinfo .content
 {
-	padding: 0.7em 0 0.7em 0.7em;
+	padding: 1em;
 }
-#profileview #detailedinfo .content
+#detailedinfo .content
 {
 	padding: 0.7em 1.2em;
 	border-left: 1px solid #aaa;
@@ -1773,20 +1786,31 @@ div#profile_success
 
 #activitytime div.content dt
 {
-	width: 50px;
+	width: 40%;
 	float: left;
 	margin: 0 0 3px 0;
 	padding: 0 3px 0 0;
 	font-weight: bold;
 	clear: both;
-	text-align: right;
+	text-align: left;
 }
 #activitytime div.content dd
 {
-	width: 70%;
+	width: 49%;
 	float: left;
 	margin: 0 0 3px 2px;
 	padding: 0;
+}
+#activitytime div.content dd div.bar
+{
+	float: left;
+	width: 100px;
+	height: 1em;
+}
+#activitytime div.content dd div.bar div
+{
+	height: 1em;
+	background: url(../images/bar.gif);
 }
 
 .profile_pie
@@ -1844,16 +1868,15 @@ div.core_posts div.content
 {
 	width: 40%;
 	float: left;
-	line-height: 1.2em;
-	margin: 0;
-	padding: 1%;
+	margin: 0 0 -500px;
+	padding: 1% 1% 500px;
 	clear: both;
 	border-top: 1px solid #fff;
 }
 
 #permissions dd
 {
-	width: 50%;
+	width: 56%;
 	float: left;
 	margin: 0;
 	padding: 1%;
@@ -1990,20 +2013,21 @@ dl.stats dd
 	line-height: 16px;
 	padding: 0;
 }
-span.statsbar, span.statsbar span
+.stats_bar
 {
-	height: 1.1em;
+	float: left;
+	background-image: url(../images/bar_stats.png);
+	height: 16px;
+	font-size: 0.9em;
 	display: block;
+	text-align: left;
+	color: #fff;
+	font-weight: bold;
+	background-position: top center;
 }
-span.statsbar
+.stats_bar span
 {
-	background: #fff;
-	border: 1px solid #888;
-	margin-right: 8em;
-}
-span.statsbar span
-{
-	background: #fe9540;
+	padding-left: 2px;
 }
 
 /* Styles for the calendar section.
@@ -2162,10 +2186,9 @@ span.memberstatsbar span
 
 /* Styles for the basic search section.
 ------------------------------------------------- */
-#searchform, #simple_search p
+#simple_search p
 {
 	padding: 0.5em;
-	margin: 0;
 }
 #simple_search, #simple_search p, #advanced_search
 {

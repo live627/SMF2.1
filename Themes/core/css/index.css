@@ -1034,6 +1034,16 @@ ul.quickbuttons li.inline_mod_check
 {
 	margin: 0 0 0 5px;
 }
+
+.generic_tab_strip
+{
+	margin: 0 1em 2em;
+}
+.generic_tab_strip .buttonlist
+{
+	float: left !important;
+}
+
 /* the navigation list */
 ul#navigation
 {
@@ -2352,9 +2362,12 @@ tr.titlebg td
 }
 #left_admsection
 {
+	background-color: #ecedf3;
+	padding: 1px;
+	border: 1px solid #ADADAD;
 	width: 160px;
 	float: left;
-	padding-right: 10px;
+	margin-right: 10px;
 }
 .adm_section h4.titlebg
 {
@@ -2504,7 +2517,7 @@ dl
 }
 #basicinfo .content
 {
-	padding: 0.7em 0 0.7em 0.7em;
+	padding: 1em;
 }
 #detailedinfo .content
 {
@@ -2746,20 +2759,31 @@ div#profile_success
 
 #activitytime div.content dt
 {
-	width: 50px;
+	width: 40%;
 	float: left;
 	margin: 0 0 3px 0;
 	padding: 0 3px 0 0;
 	font-weight: bold;
 	clear: both;
-	text-align: right;
+	text-align: left;
 }
 #activitytime div.content dd
 {
-	width: 70%;
+	width: 49%;
 	float: left;
 	margin: 0 0 3px 2px;
 	padding: 0;
+}
+#activitytime div.content dd div.bar
+{
+	float: left;
+	width: 100px;
+	height: 1em;
+}
+#activitytime div.content dd div.bar div
+{
+	height: 1em;
+	background: url(../images/bar.gif);
 }
 
 .profile_pie
@@ -2927,7 +2951,7 @@ div.core_posts div.content
 }
 #stats_left, #top_posters, #top_topics_replies, #top_topics_starter
 {
-	float:left;
+	float: left;
 	width: 49.5%;
 }
 #stats_right, #top_boards, #top_topics_views, #most_online
@@ -3336,123 +3360,6 @@ ul.basic_helplist
 
 /* Depreciated stuff from the old days.
 ------------------------------------------------- */
-
-/* definitions for the main tab, active means the tab reflects which page is displayed */
-.maintab_first, .maintab_back, .maintab_last, .maintab_active_first, .maintab_active_back, .maintab_active_last
-{
-	color: #fff;
-	text-transform: uppercase;
-	vertical-align: top;
-}
-.maintab_back, .maintab_active_back
-{
-	color: #fff;
-	text-decoration: none;
-	font-size: 9px;
-	vertical-align: top;
-	padding: 2px 6px 6px 6px;
-	font-family: tahoma, sans-serif;
-}
-
-.maintab_first
-{
-	background: url(../images/maintab_first_prev.gif) left bottom no-repeat;
-	width: 10px;
-}
-.maintab_back
-{
-	background: url(../images/maintab_back.gif) left bottom repeat-x;
-}
-.maintab_last
-{
-	background: url(../images/maintab_last_prev.gif) left bottom no-repeat;
-	width: 8px;
-}
-.maintab_active_first
-{
-	background: url(../images/maintab_active_first.gif) left bottom no-repeat;
-	width: 6px;
-}
-.maintab_active_back
-{
-	background: url(../images/maintab_active_back.gif) left bottom repeat-x;
-}
-.maintab_active_last
-{
-	background: url(../images/maintab_active_last.gif) left bottom no-repeat;
-	width: 8px;
-}
-
-/* how links behave in main tab. */
-.maintab_back a:link, .maintab_back a:visited, .maintab_active_back a:link, .maintab_active_back a:visited
-{
-	color: #fff;
-	text-decoration: none;
-}
-
-.maintab_back a:hover, .maintab_active_back a:hover
-{
-	color: #e0e0ff;
-	text-decoration: none;
-}
-/* definitions for the mirror tab */
-.mirrortab_first, .mirrortab_back, .mirrortab_last, .mirrortab_active_first, .mirrortab_active_back, .mirrortab_active_last
-{
-	color: #fff;
-	text-transform: uppercase;
-	vertical-align: top;
-}
-.mirrortab_back, .mirrortab_active_back
-{
-	color: #fff;
-	text-decoration: none;
-	font-size: 9px;
-	vertical-align: bottom;
-	padding: 6px 6px 2px 6px;
-	font-family: tahoma, sans-serif;
-}
-
-.mirrortab_first
-{
-	background: url(../images/mirrortab_first_prev.gif) no-repeat;
-	width: 10px;
-}
-.mirrortab_back
-{
-	background: url(../images/mirrortab_back.gif) repeat-x;
-}
-.mirrortab_last
-{
-	background: url(../images/mirrortab_last_prev.gif) no-repeat;
-	width: 6px;
-}
-.mirrortab_active_first
-{
-	background: url(../images/mirrortab_active_first.gif) no-repeat;
-	width: 6px;
-}
-.mirrortab_active_back
-{
-	background: url(../images/mirrortab_active_back.gif) repeat-x;
-}
-.mirrortab_active_last
-{
-	background: url(../images/mirrortab_active_last.gif) no-repeat;
-	width: 8px;
-}
-
-/* how links behave in mirror tab. */
-.mirrortab_back a:link, .mirrortab_back a:visited, .mirrortab_active_back a:link, .mirrortab_active_back a:visited
-{
-	color: #fff;
-	text-decoration: none;
-}
-
-.mirrortab_back a:hover, .mirrortab_active_back a:hover
-{
-	color: #e0e0ff;
-	text-decoration: none;
-}
 
 /* This style will make sure all headers use the same padding throughout. */
 .headerpadding

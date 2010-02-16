@@ -573,8 +573,8 @@ tr.titlebg td
 #left_admsection
 {
 	float: right;
-	padding-right: 0;
-	padding-left: 10px;
+	margin-right: 0;
+	margin-left: 10px;
 }
 .left_admmenu li
 {
@@ -582,8 +582,8 @@ tr.titlebg td
 }
 #main_admsection
 {
-	margin-left: 172px;
-	margin-right: 0;
+	margin-left: 0;
+	margin-right: 172px;
 }
 
 /* Styles for generic tables.
@@ -618,7 +618,7 @@ tr.titlebg td
 }
 #profileview #basicinfo .content
 {
-	padding: 0.7em 0.7em 0.7em 0;
+	padding: 1em;
 }
 #detailedinfo
 {
@@ -701,9 +701,19 @@ tr.titlebg td
 #activitytime div.content dt
 {
 	float: right;
-	text-align: left;
+	padding: 0 0 0 3px;
+	text-align: right;
 }
 #activitytime div.content dd
+{
+	float: right;
+	margin: 0 2px 3px 0;
+}
+#activitytime div.content dd div.bar
+{
+	float: right;
+}
+#activitytime div.content dd div.bar
 {
 	float: right;
 }
@@ -856,7 +866,7 @@ dl.stats dd
 	padding-left: 0;
 }
 
-/* Depreciated stuff from the old days.
+/* The admin menu 
 ------------------------------------------------- */
 
 ul.admin_menu li
@@ -896,62 +906,7 @@ ul.admin_menu li.chosen h4
 	background: url(../images/admintab_active_right.gif) top right no-repeat;
 	padding-right: 10px;
 }
-.maintab_first, .maintab_back, .maintab_last, .maintab_active_first, .maintab_active_back, .maintab_active_last
-{
-	color: #fff;
-	text-transform: uppercase;
-	vertical-align: top;
-}
-.maintab_back, .maintab_active_back
-{
-	color: #fff;
-	text-decoration: none;
-	font-size: 9px;
-	vertical-align: top;
-	padding: 2px 6px 6px 6px;
-	font-family: tahoma, sans-serif;
-}
-.maintab_first
-{
-	background: url(../images/maintab_last_prev.gif) left bottom no-repeat;
-	width: 8px;
-}
-.maintab_last
-{
-	background: url(../images/maintab_first_prev.gif) left bottom no-repeat;
-	width: 10px;
-}
-.maintab_active_first
-{
-	background: url(../images/maintab_active_last.gif) left bottom no-repeat;
-	width: 8px;
-}
-.maintab_active_last
-{
-	background: url(../images/maintab_active_first.gif) left bottom no-repeat;
-	width: 6px;
-}
-/* definitions for the mirror tab */
-.mirrortab_last
-{
-	background: url(../images/mirrortab_first_prev.gif) no-repeat;
-	width: 10px;
-}
-.mirrortab_first
-{
-	background: url(../images/mirrortab_last_prev.gif) no-repeat;
-	width: 6px;
-}
-.mirrortab_active_last
-{
-	background: url(../images/mirrortab_active_first.gif) no-repeat;
-	width: 6px;
-}
-.mirrortab_active_first
-{
-	background: url(../images/mirrortab_active_last.gif) no-repeat;
-	width: 8px;
-}
+
 .main_menu li.last.active
 {
 	float: right;
@@ -973,6 +928,11 @@ ul.horizlist li
 .buttonlist, .buttonlist_bottom
 {
 	margin-left: 1.5em !important;
+}
+
+.generic_tab_strip .buttonlist
+{
+	float: left !important;
 }
 
 /* Styles for the admincenter (reverse admin.css).

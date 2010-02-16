@@ -50,7 +50,7 @@ function template_summary()
 	<div id="basicinfo">
 		<div class="windowbg">
 		<span class="topslice"><span></span></span>
-		<div class="content">
+		<div class="content flow_auto">
 			<div class="username"><h4>', $context['member']['name'], ' <span class="position">', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '</span></h4></div>
 			', $context['member']['avatar']['image'], '
 			<ul class="reset">';
@@ -368,30 +368,35 @@ function template_showPosts()
 					', $post['body'], '
 					</div>
 				</div>';
-					if ($post['can_reply'] || $post['can_mark_notify'] || $post['can_delete'])
-					echo '
-							<div class="floatright">
-								<ul class="reset smalltext quickbuttons">';
-							// If they *can* reply?
-							if ($post['can_reply'])
-							echo '
-									<li class="reply_button"><a href="', $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'], '"><span>', $txt['reply'], '</span></a></li>
-									<li class="quote_button"><a href="', $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'] . ';quote=' . $post['id'] . ';' . $context['session_var'] . '=' . $context['session_id'], '"><span>', $txt['quote'], '</span></a></li>';
-							// Can we request notification of topics?
-							if ($post['can_mark_notify'])
-							echo '
-									<li class="notify_button"><a href="', $scripturl . '?action=notify;topic=' . $post['topic'] . '.' . $post['start'], '"><span>', $txt['notify'], '</span></a></li>';
-							// How about... even... remove it entirely?!
-							if ($post['can_delete'])
-							echo '
-									<li class="remove_button"><a href="', $scripturl . '?action=deletemsg;msg=' . $post['id'] . ';topic=' . $post['topic'] . ';recent;' . $context['session_var'] . '=' . $context['session_id'], '" onclick="return confirm(\'' . $txt['remove_message'] . '?\');"><span>', $txt['remove'], '</span></a></li>';
 
-					if ($post['can_reply'] || $post['can_mark_notify'] || $post['can_delete'])
-					echo '
-								</ul>
-							</div>';
+			if ($post['can_reply'] || $post['can_mark_notify'] || $post['can_delete'])
 				echo '
-						<br class="clear" />
+				<div class="floatright">
+					<ul class="reset smalltext quickbuttons">';
+
+			// If they *can* reply?
+			if ($post['can_reply'])
+				echo '
+						<li class="reply_button"><a href="', $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'], '"><span>', $txt['reply'], '</span></a></li>
+						<li class="quote_button"><a href="', $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'] . ';quote=' . $post['id'] . ';' . $context['session_var'] . '=' . $context['session_id'], '"><span>', $txt['quote'], '</span></a></li>';
+
+			// Can we request notification of topics?
+			if ($post['can_mark_notify'])
+				echo '
+						<li class="notify_button"><a href="', $scripturl . '?action=notify;topic=' . $post['topic'] . '.' . $post['start'], '"><span>', $txt['notify'], '</span></a></li>';
+
+			// How about... even... remove it entirely?!
+			if ($post['can_delete'])
+				echo '
+						<li class="remove_button"><a href="', $scripturl . '?action=deletemsg;msg=' . $post['id'] . ';topic=' . $post['topic'] . ';recent;' . $context['session_var'] . '=' . $context['session_id'], '" onclick="return confirm(\'' . $txt['remove_message'] . '?\');"><span>', $txt['remove'], '</span></a></li>';
+
+			if ($post['can_reply'] || $post['can_mark_notify'] || $post['can_delete'])
+				echo '
+					</ul>
+				</div>';
+
+			echo '
+				<br class="clear" />
 				<span class="botslice"><span></span></span>
 			</div>
 		</div>';
@@ -446,22 +451,15 @@ function template_showPosts()
 		</table>';
 	}
 
-	// Start the bottom bit.
-	echo '
-		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">';
-
 	// No posts? Just end the table with a informative message.
 	if ((isset($context['attachments']) && empty($context['attachments'])) || (!isset($context['attachments']) && empty($context['posts'])))
 		echo '
-			<tr class="windowbg2">
-				<td align="center">
-					', isset($context['attachments']) ? $txt['show_attachments_none'] : ($context['is_topics'] ? $txt['show_topics_none'] : $txt['show_posts_none']), '
-				</td>
-			</tr>';
+		<div class="tborder windowbg2 padding centertext">
+			', isset($context['attachments']) ? $txt['show_attachments_none'] : ($context['is_topics'] ? $txt['show_topics_none'] : $txt['show_posts_none']), '
+		</div>';
 
 	// Show more page numbers.
 	echo '
-		</table>
 		<div class="pagesection" style="margin-bottom: 0;">
 			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
 		</div>';
@@ -1830,7 +1828,7 @@ function template_ignoreboards()
 
 	echo '
 						</ul>
-						<div class="clear"><br /></div>';
+						<div class="clear_right"><br /></div>';
 
 	// Show the standard "Save Settings" profile button.
 	template_profile_save();
