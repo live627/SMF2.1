@@ -1293,7 +1293,7 @@ function AdminAccount()
 	$request = $smcFunc['db_query']('', '
 		SELECT id_member
 		FROM {db_prefix}members
-		WHERE id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups)
+		WHERE id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups) != 0
 		LIMIT 1',
 		array(
 			'db_error_skip' => true,
