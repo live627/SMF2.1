@@ -792,15 +792,14 @@ function ViewSubscribedUsers()
 			array(
 				'position' => 'top_of_list',
 				'value' => '
-					<div class="floatleft">
-						' . sprintf($txt['view_users_subscribed'], $row['name']) . '
+					<div class="title_bar">
+						<h3 class="titlebg">' . sprintf($txt['view_users_subscribed'], $row['name']) . '</h3>
 					</div>
 					<div class="floatright">
 						<input type="text" name="sub_search" value="" class="input_text" />
 						<input type="submit" name="ssearch" value="' . $txt['search_sub'] . '" class="button_submit" />
 					</div>
 				',
-				'class' => 'titlebg',
 			),
 		),
 	);
