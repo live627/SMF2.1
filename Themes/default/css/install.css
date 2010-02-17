@@ -6,6 +6,7 @@
 #upper_section
 {
 	margin-bottom: 0;
+	padding: 0;
 }
 #upper_section .user
 {
@@ -21,9 +22,9 @@
 }
 #main_screen h2
 {
-	font-size: 2em;
+	font-size: 1.5em;
 	border-bottom: 1px solid #d05800;
-	line-height: 2em;
+	line-height: 1.5em;
 	margin: 0 0 0.5em 0;
 	color: #d05800;
 }
@@ -31,7 +32,7 @@
 {
 	float: right;
 	width: 50%;
-	margin-top: -60px;
+	margin-top: -80px;
 }
 #main-steps h2
 {
@@ -50,7 +51,7 @@
 }
 #main-steps ul li
 {
-	padding: 2px 0;
+	padding: 1px 0;
 	font-size: 0.9em;
 }
 #main-steps ul li.stepdone

@@ -70,6 +70,7 @@ February 2010
  * Core's GenericMenu template was still using tables, causing overflow problems. (Subs-Menu.php, GenericMenu template, index.css, rtl.css, compat.css)
  * Replaced the 'my' icon in participation icons with some friendlier looking ones. (topic/my_*.gif)
  ! install.php was still using the old version of find_in_set(), causing a couple of warnings in PostgreSQL (install.php)
+ * Tweaked the installer to fit better on a small display (install.css) [Bug 3771]
 
 
 January 2010
