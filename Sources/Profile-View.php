@@ -686,7 +686,6 @@ function statPanel($memID)
 	$context['num_posts'] = comma_format($user_profile[$memID]['posts']);
 
 	// Number of topics started.
-	// !!!SLOW This query is sorta slow...
 	$result = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}topics
@@ -749,7 +748,6 @@ function statPanel($memID)
 		)
 	);
 	$context['popular_boards'] = array();
-	$max_percent = 0;
 	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
 		$context['popular_boards'][$row['id_board']] = array(
@@ -760,14 +758,8 @@ function statPanel($memID)
 			'posts_percent' => $row['num_posts'] == 0 ? 0 : ($row['message_count'] * 100) / $row['num_posts'],
 			'total_posts' => $row['num_posts'],
 		);
-
-		$max_percent = max($max_percent, $context['popular_boards'][$row['id_board']]['posts_percent']);
 	}
 	$smcFunc['db_free_result']($result);
-
-	// Now that we know the total, calculate the percentage.
-	foreach ($context['popular_boards'] as $id_board => $board_data)
-		$context['popular_boards'][$id_board]['posts_percent'] = $max_percent == 0 ? 0 : comma_format(($board_data['posts_percent'] / $max_percent) * 100, 0);
 
 	// Now get the 10 boards this user has most often participated in.
 	$result = $smcFunc['db_query']('', '

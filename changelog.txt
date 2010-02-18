@@ -71,6 +71,7 @@ February 2010
  * Replaced the 'my' icon in participation icons with some friendlier looking ones. (topic/my_*.gif)
  ! install.php was still using the old version of find_in_set(), causing a couple of warnings in PostgreSQL (install.php)
  * Tweaked the installer to fit better on a small display (install.css) [Bug 3771]
+ * The profile statistics center was calculating the amount of posts by board incorrectly, resulting in off pie charts. (Profile-View.php, Profile template, Profile language file) [Bug 3896]
 
 
 January 2010

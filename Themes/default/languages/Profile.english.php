@@ -129,6 +129,7 @@ $txt['statPanel_total_topics'] = 'Total Topics Started';
 $txt['statPanel_votes'] = 'votes';
 $txt['statPanel_polls'] = 'polls';
 $txt['statPanel_topBoards'] = 'Most Popular Boards By Posts';
+$txt['statPanel_topBoards_posts'] = '%1$d posts of the board\'s %2$d posts (%3$01.2f%%)';
 $txt['statPanel_topBoardsActivity'] = 'Most Popular Boards By Activity';
 $txt['statPanel_activityTime'] = 'Posting Activity By Time';
 $txt['statPanel_timeOfDay'] = 'Time of Day';

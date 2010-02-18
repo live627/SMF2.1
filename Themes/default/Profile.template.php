@@ -959,6 +959,7 @@ function template_statPanel()
 				<div class="windowbg2">
 					<span class="topslice"><span></span></span>
 					<div class="content">';
+
 	if (empty($context['popular_boards']))
 		echo '
 							<span>', $txt['statPanel_noPosts'], '</span>';
@@ -967,13 +968,15 @@ function template_statPanel()
 	{
 		echo '
 						<dl>';
+
 		// Draw a bar for every board.
 		foreach ($context['popular_boards'] as $board)
 		{
 			echo '
 							<dt>', $board['link'], '</dt>
-							<dd>', $board['posts'] > 0 ? '<div class="profile_pie" style="background-position: -' . ((int) ($board['posts_percent']/5)-1) * 20 . 'px 0;"></div>' : '&nbsp;', '<span>', empty($context['hide_num_posts']) ? $board['posts'] : '', '</span></dd>';
+							<dd>', $board['posts'] > 0 ? '<div class="profile_pie" style="background-position: -' . ((int) ($board['posts_percent'] / 5) - 1) * 20 . 'px 0;" title="' . sprintf($txt['statPanel_topBoards_posts'], $board['posts'], $board['total_posts'], $board['posts_percent']) . '"></div>' : '&nbsp;', '<span>', empty($context['hide_num_posts']) ? $board['posts'] : '', '</span></dd>';
 		}
+
 		echo '
 						</dl>';
 	}
@@ -1055,13 +1058,15 @@ function template_statPanel()
 	{
 		echo '
 						<dl>';
+
 		// Draw a bar for every board.
 		foreach ($context['board_activity'] as $activity)
 		{
 			echo '
 							<dt>', $activity['link'], '</dt>
-							<dd>', $activity['percent'] > 0 ? '<div class="profile_pie" style="background-position: -' . ((int)($activity['relative_percent']/5)-1)*20 . 'px 0;"></div>' : '&nbsp;', '<span>', $activity['percent'], '%</span></dd>';
+							<dd>', $activity['percent'] > 0 ? '<div class="profile_pie" style="background-position: -' . ((int)($activity['relative_percent'] / 5) - 1) * 20 . 'px 0;" title="' . $activity['percent'] . '%"></div>' : '&nbsp;', '<span>', $activity['percent'], '%</span></dd>';
 		}
+
 		echo '
 						</dl>';
 	}
