@@ -149,10 +149,6 @@ h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
 	word-wrap: break-word;
 }
 
-#ip_list li.header
-{
-	height: .1%;
-}
 /* Overrides for the personal messages template
 ------------------------------------------------------- */
 #personal_messages .postarea
@@ -161,6 +157,7 @@ h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
 	margin-right: 0;
 	float: right;
 }
+
 /* Overrides for the admin section of the register template
 ------------------------------------------------------- */
 #registration_agreement

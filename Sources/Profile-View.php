@@ -824,7 +824,7 @@ function statPanel($memID)
 		$context['posts_by_time'][$row['hour']] = array(
 			'hour' => $row['hour'],
 			'hour_format' => stripos($user_info['time_format'], '%p') === false ? $row['hour'] : date('g a', mktime($row['hour'])),
-			'posts_percent' => $row['post_count']
+			'posts_percent' => $row['post_count'],
 		);
 	}
 	$smcFunc['db_free_result']($result);
@@ -837,9 +837,13 @@ function statPanel($memID)
 					'hour' => $hour,
 					'hour_format' => stripos($user_info['time_format'], '%p') === false ? $hour : date('g a', mktime($hour)), 
 					'posts_percent' => 0,
+					'is_last' => $hour == 23,
 				);
 			else
+			{
 				$context['posts_by_time'][$hour]['posts_percent'] = round(($context['posts_by_time'][$hour]['posts_percent'] * 100) / $maxPosts);
+				$context['posts_by_time'][$hour]['is_last'] = $hour == 23;
+			}
 		}
 
 	// Put it in the right order.

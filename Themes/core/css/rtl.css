@@ -666,21 +666,9 @@ tr.titlebg td
 {
 	clear: right;
 }
-#generalstats
-{
-	float: right;
-}
-#activitytime
-{
-	float: right;
-	clear: right;
-}
-#popularposts, #popularactivity
-{
-	float: left;
-	padding-left: 0;
-	padding-right: 1%;
-}
+
+
+/* Profile statistics */
 #generalstats div.content dt
 {
 	float: right;
@@ -689,6 +677,35 @@ tr.titlebg td
 {
 	float: right;
 }
+
+/* Activity by time */
+#activitytime
+{
+	clear: right;
+}
+.activity_stats li
+{
+	float: right;
+}
+.activity_stats li span
+{
+	border-width: 1px 0 0 1px;
+}
+.activity_stats li.last span
+{
+	border-left: none;
+}
+
+/* Most popular boards by posts and activity */
+#popularposts
+{
+	float: right;
+}
+#popularactivity
+{
+	float: left;
+}
+
 #popularposts div.content dt, #popularactivity div.content dt
 {
 	float: right;
@@ -698,32 +715,14 @@ tr.titlebg td
 	float: right;
 }
 
-#activitytime div.content dt
-{
-	float: right;
-	padding: 0 0 0 3px;
-	text-align: right;
-}
-#activitytime div.content dd
-{
-	float: right;
-	margin: 0 2px 3px 0;
-}
-#activitytime div.content dd div.bar
-{
-	float: right;
-}
-#activitytime div.content dd div.bar
-{
-	float: right;
-}
 .profile_pie
 {
-	background-image: url(../images/stats_pie.png);
 	float: right;
 	margin-right: 0;
 	margin-left: 1em;
 }
+
+/* View posts */
 .time
 {
 	float: left;

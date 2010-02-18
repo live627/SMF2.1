@@ -2905,32 +2905,7 @@ div#profile_success
 	background: #efe;
 }
 
-#generalstats
-{
-	float: left;
-	width: 53%;
-}
-
-#activitytime
-{
-	width: 53%;
-	float: left;
-	clear: left;
-	margin-top: 3px;
-}
-
-#popularposts, #popularactivity
-{
-	width: 45%;
-	float: right;
-	padding-left: 1%;
-}
-
-#generalstats h4, #popularposts h4, #popularactivity h4, #activitytime h4
-{
-	margin: 3px 0;
-}
-
+/* Profile statistics */
 #generalstats div.content dt
 {
 	width: 50%;
@@ -2946,6 +2921,57 @@ div#profile_success
 	float: left;
 	margin: 0 0 3px 0;
 	padding: 0;
+}
+
+/* Activity by time */
+#activitytime
+{
+	clear: both;
+	margin: 6px 0;
+}
+.activity_stats
+{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.activity_stats li
+{
+	width: 4%;
+	float: left;
+}
+.activity_stats li span
+{
+	display: block;
+	border: solid #000;
+	border-width: 1px 1px 0 0;
+	text-align: center;
+}
+.activity_stats li.last span
+{
+	border-right: none;
+}
+.activity_stats li div.bar
+{
+	margin: 0 auto;
+	width: 15px;
+}
+.activity_stats li div.bar div
+{
+	background: #6294CE;
+	text-indent: -1000em;
+}
+
+/* Most popular boards by posts and activity */
+#popularposts
+{
+	width: 49.5%;
+	float: left;
+}
+#popularactivity
+{
+	width: 49.5%;
+	float: right;
 }
 
 #popularposts div.content dt, #popularactivity div.content dt
@@ -2965,23 +2991,6 @@ div#profile_success
 	padding: 0;
 }
 
-#activitytime div.content dt
-{
-	width: 40%;
-	float: left;
-	clear: both;
-	margin: 0 0 3px 0;
-	padding: 0 3px 0 0;
-	font-weight: bold;
-}
-#activitytime div.content dd
-{
-	width: 49%;
-	margin: 0 0 3px 2px;
-	padding: 0;
-	float: left;
-}
-
 .profile_pie
 {
 	background-image: url(../images/stats_pie.png);
@@ -2993,6 +3002,7 @@ div#profile_success
 	margin-right: 1em;
 }
 
+/* View posts */
 .topic .time
 {
 	float: right;

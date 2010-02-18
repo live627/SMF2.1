@@ -5,11 +5,7 @@ dl.settings dd, dl.stats dd, dl.register_form dd, #poll_options dl.options dd
 	float: none;
 	width: auto;
 }
-#profileview #basicinfo .content
-{
-	padding: 0.7em 0 0 0.7em;
-	height: 100%;
-}
+
 .signature
 {
 	padding: 0 0 0.8em 0;

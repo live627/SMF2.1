@@ -62,12 +62,14 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 {
 	padding: 0 0 0.8em 0;
 }
+
 /* Overrides for the profile template
 ------------------------------------------------------- */
 #basicinfo h4
 {
 	word-wrap: break-word;
 }
+
 /* Overrides for the calendar template
 ------------------------------------------------- */
 #main_grid table.weeklist h4.titlebg

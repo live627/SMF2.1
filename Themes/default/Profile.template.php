@@ -919,37 +919,82 @@ function template_statPanel()
 	// First, show a few text statistics such as post/topic count.
 	echo '
 	<div id="profileview">
-		<div class="flow_hidden">
-			<div id="generalstats">
-				<div class="cat_bar">
-					<h3 class="catbg">
-						<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/stats_info.gif" alt="" class="icon" />
-						', $txt['statPanel_generalStats'], ' - ', $context['member']['name'], '
-						</span>
-					</h3>
+		<div id="generalstats">
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/stats_info.gif" alt="" class="icon" />
+					', $txt['statPanel_generalStats'], ' - ', $context['member']['name'], '
+					</span>
+				</h3>
+			</div>
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<div class="content">
+					<dl>
+						<dt>', $txt['statPanel_total_time_online'], ':</dt>
+						<dd>', $context['time_logged_in'], '</dd>
+						<dt>', $txt['statPanel_total_posts'], ':</dt>
+						<dd>', $context['num_posts'], ' ', $txt['statPanel_posts'], '</dd>
+						<dt>', $txt['statPanel_total_topics'], ':</dt>
+						<dd>', $context['num_topics'], ' ', $txt['statPanel_topics'], '</dd>
+						<dt>', $txt['statPanel_users_polls'], ':</dt>
+						<dd>', $context['num_polls'], ' ', $txt['statPanel_polls'], '</dd>
+						<dt>', $txt['statPanel_users_votes'], ':</dt>
+						<dd>', $context['num_votes'], ' ', $txt['statPanel_votes'], '</dd>
+					</dl>
 				</div>
-				<div class="windowbg2">
-					<span class="topslice"><span></span></span>
-					<div class="content">
-						<dl>
-							<dt>', $txt['statPanel_total_time_online'], ':</dt>
-							<dd>', $context['time_logged_in'], '</dd>
-							<dt>', $txt['statPanel_total_posts'], ':</dt>
-							<dd>', $context['num_posts'], ' ', $txt['statPanel_posts'], '</dd>
-							<dt>', $txt['statPanel_total_topics'], ':</dt>
-							<dd>', $context['num_topics'], ' ', $txt['statPanel_topics'], '</dd>
-							<dt>', $txt['statPanel_users_polls'], ':</dt>
-							<dd>', $context['num_polls'], ' ', $txt['statPanel_polls'], '</dd>
-							<dt>', $txt['statPanel_users_votes'], ':</dt>
-							<dd>', $context['num_votes'], ' ', $txt['statPanel_votes'], '</dd>
-						</dl>
-					</div>
-					<span class="botslice"><span></span></span>
+				<span class="botslice"><span></span></span>
+			</div>
+		</div>';
+
+	// This next section draws a graph showing what times of day they post the most.
+	echo '
+		<div id="activitytime" class="flow_hidden">
+			<div class="cat_bar">
+				<h3 class="catbg">
+				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/stats_views.gif" alt="" class="icon" />', $txt['statPanel_activityTime'], '</span>
+				</h3>
+			</div>
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<div class="content">';
+
+	// If they haven't post at all, don't draw the graph.
+	if (empty($context['posts_by_time']))
+		echo '
+					<span>', $txt['statPanel_noPosts'], '</span>';
+	// Otherwise do!
+	else
+	{
+		echo '
+					<ul class="activity_stats flow_hidden">';
+
+		// The labels.
+		foreach ($context['posts_by_time'] as $time_of_day)
+		{
+			echo '
+						<li', $time_of_day['is_last'] ? ' class="last"' : '', '>
+							<div class="bar" style="padding-top: ', (100 - $time_of_day['posts_percent']), 'px;" title="', $time_of_day['posts_percent'], '%">
+								<div style="height: ', $time_of_day['posts_percent'], 'px;">', $time_of_day['posts_percent'], '%</div>
+							</div>
+							<span class="stats_hour">', $time_of_day['hour_format'], '</span>
+						</li>';
+		}
+
+		echo '
+		
+					</ul>';
+	}
+
+	echo '
 				</div>
-			</div>';
+				<span class="botslice"><span></span></span>
+			</div>
+		</div>';
 
 	// Two columns with the most popular boards by posts and activity (activity = users posts / total posts).
 	echo '
+		<div class="flow_hidden">
 			<div id="popularposts">
 				<div class="cat_bar">
 					<h3 class="catbg">
@@ -962,7 +1007,7 @@ function template_statPanel()
 
 	if (empty($context['popular_boards']))
 		echo '
-							<span>', $txt['statPanel_noPosts'], '</span>';
+						<span>', $txt['statPanel_noPosts'], '</span>';
 
 	else
 	{
@@ -984,63 +1029,7 @@ function template_statPanel()
 					</div>
 					<span class="botslice"><span></span></span>
 				</div>
-			</div>
-		</div>';
-
-	// This next section draws a graph showing what times of day they post the most.
-	echo '
-		<div class="flow_hidden">
-			<div id="activitytime">
-				<div class="cat_bar">
-					<h3 class="catbg">
-					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/stats_views.gif" alt="" class="icon" />', $txt['statPanel_activityTime'], '</span>
-					</h3>
-				</div>
-				<div class="windowbg2">
-					<span class="topslice"><span></span></span>
-					<div class="content">';
-
-	// If they haven't post at all, don't draw the graph.
-	if (empty($context['posts_by_time']))
-		echo '
-						<span>', $txt['statPanel_noPosts'], '</span>';
-	// Otherwise do!
-	else
-	{
-		echo '
-						<dl class="stats">';
-
-		// The labels.
-		foreach ($context['posts_by_time'] as $time_of_day)
-		{
-			echo '
-							<dt>', $time_of_day['hour_format'], '</dt>
-							<dd class="statsbar">';
-
-			if (!empty($time_of_day['posts_percent']))
-				echo '
-								<span class="floatright">', $time_of_day['posts_percent'], '%</span>
-								<div class="bar">
-									<div style="width: ', $time_of_day['posts_percent'], 'px;"></div>
-								</div>';
-			else
-				echo '
-								<span class="floatright">0%</span>';
-
-			echo '
-							</dd>';
-		}
-
-		echo '
-		
-						</dl>';
-	}
-	echo '
-					</div>
-					<span class="botslice"><span></span></span>
-				</div>
 			</div>';
-
 	echo '
 			<div id="popularactivity">
 				<div class="cat_bar">
@@ -1051,6 +1040,7 @@ function template_statPanel()
 				<div class="windowbg2">
 					<span class="topslice"><span></span></span>
 					<div class="content">';
+
 	if (empty($context['board_activity']))
 		echo '
 						<span>', $txt['statPanel_noPosts'], '</span>';
