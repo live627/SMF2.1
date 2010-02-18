@@ -73,7 +73,6 @@ February 2010
  * Tweaked the installer to fit better on a small display (install.css) [Bug 3771]
  * The profile statistics center was calculating the amount of posts by board incorrectly, resulting in off pie charts. (Profile-View.php, Profile template, Profile language file) [Bug 3896]
  * Vastly improved the usability of the profile statistics center by presenting its information more akin to SMF 1.1. (Profile-View.php, Profile template, index.css, rtl.css, compat.css, ie7.css) [Bug 4198]
- ! Prevent usage of %e on Windows servers, as strftime may fail altogether if we do. (Subs.php) [Bug 3892] 
 
 
 January 2010
