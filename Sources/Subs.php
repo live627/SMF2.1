@@ -733,7 +733,7 @@ function comma_format($number, $override_decimal_count = false)
 // Format a time to make it look purdy.
 function timeformat($log_time, $show_today = true, $offset_type = false)
 {
-	global $user_info, $txt, $modSettings, $smcFunc;
+	global $context, $user_info, $txt, $modSettings, $smcFunc;
 
 	// Offset the time.
 	if (!$offset_type)
@@ -793,6 +793,10 @@ function timeformat($log_time, $show_today = true, $offset_type = false)
 		if (strpos($str, '%p'))
 			$str = str_replace('%p', (strftime('%H', $time) < 12 ? 'am' : 'pm'), $str);
 	}
+
+	// Windows doesn't support %e; on some versions, strftime fails altogether if used, so let's prevent that.
+	if ($context['server']['is_windows'] && strpos($str, '%e') !== false)
+		$str = str_replace('%e', ltrim(strftime('%d', $time), '0'), $str);
 
 	// Format any other characters..
 	return strftime($str, $time);
