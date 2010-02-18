@@ -266,8 +266,7 @@ function UnapprovedPosts()
 		)
 	);
 	$context['unapproved_items'] = array();
-	$count = 1;
-	while ($row = $smcFunc['db_fetch_assoc']($request))
+	for ($i = 1; $row = $smcFunc['db_fetch_assoc']($request); $i++)
 	{
 		// Can delete is complicated, let's solve it first... is it their own post?
 		if ($row['id_member'] == $user_info['id'] && ($delete_own_boards == array(0) || in_array($row['id_board'], $delete_own_boards)))
@@ -283,7 +282,8 @@ function UnapprovedPosts()
 
 		$context['unapproved_items'][] = array(
 			'id' => $row['id_msg'],
-			'counter' => $context['start'] + $count++,
+			'alternate' => $i % 2,
+			'counter' => $context['start'] + $i,
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 			'subject' => $row['subject'],
 			'body' => parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']),

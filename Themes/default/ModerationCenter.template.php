@@ -362,7 +362,7 @@ function template_unapproved_posts()
 				<span class="smalltext align_right">', $txt['mc_unapproved_by'], ' ', $item['poster']['link'], ' ', $txt['on'], ': ', $item['time'], '</span>
 			</h3>
 		</div>
-		<div class="', $$item['alternate'] ? 'windowbg' : 'windowbg2', '">
+		<div class="', $item['alternate'] ? 'windowbg' : 'windowbg2', '">
 			<span class="topslice"><span></span></span>
 			<div class="content">
 				<div class="post">', $item['body'], '</div>
