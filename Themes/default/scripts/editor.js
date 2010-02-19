@@ -181,14 +181,13 @@ smc_Editor.prototype.init = function()
 		this.oFrameHandle.id = 'html_' + this.opt.sUniqueId;
 		this.oFrameHandle.className = 'rich_editor_frame';
 		this.oFrameHandle.style.display = 'none';
+		this.oFrameHandle.style.margin = '0px';
 		this.oFrameHandle.tabIndex = this.oTextHandle.tabIndex;
 		this.oTextHandle.parentNode.appendChild(this.oFrameHandle);
-
 
 		// Create some handy shortcuts.
 		this.oFrameDocument = this.oFrameHandle.contentDocument ? this.oFrameHandle.contentDocument : ('contentWindow' in this.oFrameHandle ? this.oFrameHandle.contentWindow.document : this.oFrameHandle.document);
 		this.oFrameWindow = 'contentWindow' in this.oFrameHandle ? this.oFrameHandle.contentWindow : this.oFrameHandle.document.parentWindow;
-
 
 		// Create the debug window... and stick this under the main frame - make it invisible by default.
 		this.oBreadHandle = document.createElement('div');
@@ -293,8 +292,8 @@ smc_Editor.prototype.init = function()
 				// Do something that is better than nothing.
 				this.oFrameDocument.body.style.color = 'black';
 				this.oFrameDocument.body.style.backgroundColor = 'white';
-				this.oFrameDocument.body.style.fontSize = 'small';
-				this.oFrameDocument.body.style.fontFamily = 'verdana';
+				this.oFrameDocument.body.style.fontSize = '78%';
+				this.oFrameDocument.body.style.fontFamily = '"Verdana", "Arial", "Helvetica", "sans-serif"';
 				this.oFrameDocument.body.style.border = 'none';
 				this.oFrameHandle.style.border = '1px solid #808080';
 			}
@@ -302,6 +301,10 @@ smc_Editor.prototype.init = function()
 
 		// Apply the class...
 		this.oFrameDocument.body.className = 'rich_editor';
+
+		// Set the frame padding/margin inside the editor.
+		this.oFrameDocument.body.style.padding = '1px';
+		this.oFrameDocument.body.style.margin = '0';
 
 		// Listen for input.
 		this.oFrameDocument.instanceRef = this;
@@ -1362,8 +1365,6 @@ smc_Editor.prototype.endResize = function (oEvent)
 	return false;
 }
 
-
-
 // *** smc_SmileyBox class.
 function smc_SmileyBox(oOptions)
 {
@@ -1717,4 +1718,3 @@ smc_BBCButtonBox.prototype.setSelect = function (sSelectName, sValue)
 		}
 	}
 }
-

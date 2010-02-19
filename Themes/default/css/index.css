@@ -22,7 +22,7 @@ table
 body
 {
 	background: #E9EEF2 url(../images/theme/backdrop.png) repeat-x;
-	font: 78%/130% verdana, Helvetica, sans-serif;
+	font: 78%/130% "Verdana", "Arial", "Helvetica", sans-serif;
 	margin: 0 auto;
 	padding: 15px 5%;
 }
@@ -380,12 +380,6 @@ code.bbc_code
 .meaction
 {
 	color: red;
-}
-
-/* The main post box - this makes it as wide as possible. */
-.editor
-{
-	width: 96%;
 }
 
 /* Highlighted text - such as search results. */

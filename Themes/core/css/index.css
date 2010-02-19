@@ -312,12 +312,6 @@ code.bbc_code
 	color: red;
 }
 
-/* The main post box - this makes it as wide as possible. */
-.editor
-{
-	width: 96%;
-}
-
 /* Highlighted text - such as search results. */
 .highlight
 {

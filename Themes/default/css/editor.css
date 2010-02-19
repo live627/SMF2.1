@@ -1,24 +1,17 @@
-/* This is the IFRAME that holds the editor. */
-.rich_editor_frame
+/* This is the editor's playground (textarea for non-wysiwyg, iframe for wysiwyg). */
+.editor, .rich_editor_frame
 {
 	border: 1px solid #808080;
-}
-
-/* This is the WYSIWYG editor */
-.rich_editor
-{
-	background-color: #fff;
-	color: #000;
-	font-family: verdana;
-	font-size: small;
-	border: none;
-}
-
-.rich_editor p
-{
+	padding: 2px !important;
 	margin: 0;
 }
 
+.rich_editor_frame
+{
+	background: #fff;
+}
+
+/* The resize handle. */
 .richedit_resize
 {
 	height: 5px;
