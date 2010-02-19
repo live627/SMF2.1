@@ -76,6 +76,7 @@ February 2010
  ! Prevent usage of %e on Windows servers, as strftime may fail altogether if we do. (Subs.php) [Bug 3892]
  * Updated the pie chart sprite image used in the profile stats center to blend in better. (stats_pie.png)
  * Tweaked the padding of the (wysiwyg) editor slightly, so it looks the same in both wysiwyg and non-wysiwyg mode. (editor.css, editor.js, index.css) [Bug 2178]
+ ! Hide contact details of users for guests by default on new installs. (install_2-0.mysql.sql, install_2-0.postgresql.sql, install_2-0.sqlite.sql)
 
 
 January 2010
