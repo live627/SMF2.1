@@ -952,7 +952,7 @@ function template_statPanel()
 		<div id="activitytime" class="flow_hidden">
 			<div class="cat_bar">
 				<h3 class="catbg">
-				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/stats_views.gif" alt="" class="icon" />', $txt['statPanel_activityTime'], '</span>
+				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/stats_history.gif" alt="" class="icon" />', $txt['statPanel_activityTime'], '</span>
 				</h3>
 			</div>
 			<div class="windowbg2">
@@ -974,8 +974,8 @@ function template_statPanel()
 		{
 			echo '
 						<li', $time_of_day['is_last'] ? ' class="last"' : '', '>
-							<div class="bar" style="padding-top: ', (100 - $time_of_day['posts_percent']), 'px;" title="', $time_of_day['posts_percent'], '%">
-								<div style="height: ', $time_of_day['posts_percent'], 'px;">', $time_of_day['posts_percent'], '%</div>
+							<div class="bar" style="padding-top: ', ((int) (100 - $time_of_day['posts_percent'])), 'px;" title="', $time_of_day['posts_percent'], '%">
+								<div style="height: ', (int) $time_of_day['posts_percent'], 'px;">', $time_of_day['posts_percent'], '%</div>
 							</div>
 							<span class="stats_hour">', $time_of_day['hour_format'], '</span>
 						</li>';
@@ -1019,7 +1019,12 @@ function template_statPanel()
 		{
 			echo '
 							<dt>', $board['link'], '</dt>
-							<dd>', $board['posts'] > 0 ? '<div class="profile_pie" style="background-position: -' . ((int) ($board['posts_percent'] / 5) - 1) * 20 . 'px 0;" title="' . sprintf($txt['statPanel_topBoards_posts'], $board['posts'], $board['total_posts'], $board['posts_percent']) . '"></div>' : '&nbsp;', '<span>', empty($context['hide_num_posts']) ? $board['posts'] : '', '</span></dd>';
+							<dd>
+								<div class="profile_pie" style="background-position: -', ((int) ($board['posts_percent'] / 5) * 20), 'px 0;" title="', sprintf($txt['statPanel_topBoards_posts'], $board['posts'], $board['total_posts'], $board['posts_percent']), '">
+									', sprintf($txt['statPanel_topBoards_posts'], $board['posts'], $board['total_posts'], $board['posts_percent']), '
+								</div>
+								<span>', empty($context['hide_num_posts']) ? $board['posts'] : '', '</span>
+							</dd>';
 		}
 
 		echo '
@@ -1054,7 +1059,12 @@ function template_statPanel()
 		{
 			echo '
 							<dt>', $activity['link'], '</dt>
-							<dd>', $activity['percent'] > 0 ? '<div class="profile_pie" style="background-position: -' . ((int)($activity['relative_percent'] / 5) - 1) * 20 . 'px 0;" title="' . $activity['percent'] . '%"></div>' : '&nbsp;', '<span>', $activity['percent'], '%</span></dd>';
+							<dd>
+								<div class="profile_pie" style="background-position: -', ((int) ($activity['relative_percent'] / 5) * 20), 'px 0;" title="', $activity['percent'], '%">
+									', $activity['percent'], '%
+								</div>
+								<span>', $activity['percent'], '%</span>
+							</dd>';
 		}
 
 		echo '
