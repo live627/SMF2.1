@@ -764,7 +764,8 @@ function statPanel($memID)
 	// Now get the 10 boards this user has most often participated in.
 	$result = $smcFunc['db_query']('', '
 		SELECT
-			b.id_board, MAX(b.name) AS name, CASE WHEN COUNT(*) > MAX(b.num_posts) THEN 1 ELSE COUNT(*) / MAX(b.num_posts) END * 100 AS percentage
+			b.id_board, MAX(b.name) AS name, b.num_posts, COUNT(*) AS message_count,
+			CASE WHEN COUNT(*) > MAX(b.num_posts) THEN 1 ELSE COUNT(*) / MAX(b.num_posts) END * 100 AS percentage
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE m.id_member = {int:current_member}
@@ -783,9 +784,12 @@ function statPanel($memID)
 		$max_percent = max($max_percent, $row['percentage']);
 		$context['board_activity'][$row['id_board']] = array(
 			'id' => $row['id_board'],
+			'posts' => $row['message_count'],
 			'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
 			'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>',
 			'percent' => comma_format((float) $row['percentage'], 2),
+			'posts_percent' => (float) $row['percentage'],
+			'total_posts' => $row['num_posts'],
 		);
 	}
 	$smcFunc['db_free_result']($result);

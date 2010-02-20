@@ -1060,8 +1060,8 @@ function template_statPanel()
 			echo '
 							<dt>', $activity['link'], '</dt>
 							<dd>
-								<div class="profile_pie" style="background-position: -', ((int) ($activity['relative_percent'] / 5) * 20), 'px 0;" title="', $activity['percent'], '%">
-									', $activity['percent'], '%
+								<div class="profile_pie" style="background-position: -', ((int) ($activity['relative_percent'] / 5) * 20), 'px 0;" title="', sprintf($txt['statPanel_topBoards_posts'], $activity['posts'], $activity['total_posts'], $activity['posts_percent']), '">
+									', sprintf($txt['statPanel_topBoards_posts'], $activity['posts'], $activity['total_posts'], $activity['posts_percent']), '
 								</div>
 								<span>', $activity['percent'], '%</span>
 							</dd>';
