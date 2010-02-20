@@ -132,6 +132,7 @@ $txt['statPanel_topBoards'] = 'Most Popular Boards By Posts';
 $txt['statPanel_topBoards_posts'] = '%1$d posts of the board\'s %2$d posts (%3$01.2f%%)';
 $txt['statPanel_topBoardsActivity'] = 'Most Popular Boards By Activity';
 $txt['statPanel_activityTime'] = 'Posting Activity By Time';
+$txt['statPanel_activityTime_posts'] = '%1$d posts (%2$d%%)';
 $txt['statPanel_timeOfDay'] = 'Time of Day';
 
 $txt['deleteAccount_warning'] = 'Warning - These actions are irreversible!';

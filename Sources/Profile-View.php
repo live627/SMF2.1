@@ -824,7 +824,9 @@ function statPanel($memID)
 		$context['posts_by_time'][$row['hour']] = array(
 			'hour' => $row['hour'],
 			'hour_format' => stripos($user_info['time_format'], '%p') === false ? $row['hour'] : date('g a', mktime($row['hour'])),
-			'posts_percent' => $row['post_count'],
+			'posts' => $row['post_count'],
+			'posts_percent' => 0,
+			'is_last' => $row['hour'] == 23,
 		);
 	}
 	$smcFunc['db_free_result']($result);
@@ -836,13 +838,15 @@ function statPanel($memID)
 				$context['posts_by_time'][$hour] = array(
 					'hour' => $hour,
 					'hour_format' => stripos($user_info['time_format'], '%p') === false ? $hour : date('g a', mktime($hour)), 
+					'posts' => 0,
 					'posts_percent' => 0,
+					'relative_percent' => 0,
 					'is_last' => $hour == 23,
 				);
 			else
 			{
-				$context['posts_by_time'][$hour]['posts_percent'] = round(($context['posts_by_time'][$hour]['posts_percent'] * 100) / $maxPosts);
-				$context['posts_by_time'][$hour]['is_last'] = $hour == 23;
+				$context['posts_by_time'][$hour]['posts_percent'] = round(($context['posts_by_time'][$hour]['posts'] * 100) / $user_profile[$memID]['posts']);
+				$context['posts_by_time'][$hour]['relative_percent'] = round(($context['posts_by_time'][$hour]['posts'] * 100) / $maxPosts);
 			}
 		}
 
