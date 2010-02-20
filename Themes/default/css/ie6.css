@@ -68,11 +68,6 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 {
 	padding: 0 !important;
 }
-.additional_row
-{
-	float: none;
-	padding: 0.5em 0 0.5em 0;
-}
 
 /* overflow: hidden doesn't help in IE6. */
 h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a

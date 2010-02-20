@@ -975,7 +975,9 @@ function template_statPanel()
 			echo '
 						<li', $time_of_day['is_last'] ? ' class="last"' : '', '>
 							<div class="bar" style="padding-top: ', ((int) (100 - $time_of_day['relative_percent'])), 'px;" title="', sprintf($txt['statPanel_activityTime_posts'], $time_of_day['posts'], $time_of_day['posts_percent']), '">
-								<div style="height: ', (int) $time_of_day['relative_percent'], 'px;">', sprintf($txt['statPanel_activityTime_posts'], $time_of_day['posts'], $time_of_day['posts_percent']), '</div>
+								<div style="height: ', (int) $time_of_day['relative_percent'], 'px;">
+									<span>', sprintf($txt['statPanel_activityTime_posts'], $time_of_day['posts'], $time_of_day['posts_percent']), '</span>
+								</div>
 							</div>
 							<span class="stats_hour">', $time_of_day['hour_format'], '</span>
 						</li>';
@@ -987,6 +989,7 @@ function template_statPanel()
 	}
 
 	echo '
+					<span class="clear" />
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

@@ -2931,7 +2931,9 @@ div#profile_success
 }
 .activity_stats li
 {
-	width: 4%;
+	margin: 0;
+	padding: 0;
+	width: 4.16%;
 	float: left;
 }
 .activity_stats li span
@@ -2953,7 +2955,12 @@ div#profile_success
 .activity_stats li div.bar div
 {
 	background: #6294CE;
-	text-indent: -1000em;
+}
+.activity_stats li div.bar span
+{
+	position: absolute;
+	top: -1000em;
+	left: -1000em;
 }
 
 /* Most popular boards by posts and activity */
