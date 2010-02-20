@@ -207,14 +207,15 @@ function ManageBoardsMain()
 				);
 
 				$difference = $boards[$boardid]['level'] - $prev_child_level;
-				if ($difference == 1 && !empty($context['categories'][$catid]['boards'][$prev_board]['move_links']))
-					array_push($stack, array_shift($context['categories'][$catid]['boards'][$prev_board]['move_links']));
+				if ($difference == 1)
+					array_push($stack, !empty($context['categories'][$catid]['boards'][$prev_board]['move_links']) ? array_shift($context['categories'][$catid]['boards'][$prev_board]['move_links']) : null);
 				elseif ($difference < 0)
 				{
 					if (empty($context['categories'][$catid]['boards'][$prev_board]['move_links']))
 						$context['categories'][$catid]['boards'][$prev_board]['move_links'] = array();
 					for ($i = 0; $i < -$difference; $i++)
-						array_unshift($context['categories'][$catid]['boards'][$prev_board]['move_links'], array_pop($stack));
+						if (($temp = array_pop($stack)) != null)
+							array_unshift($context['categories'][$catid]['boards'][$prev_board]['move_links'], $temp);
 				}
 
 				$prev_board = $boardid;
