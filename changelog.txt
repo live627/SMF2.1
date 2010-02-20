@@ -77,6 +77,7 @@ February 2010
  * Updated the pie chart sprite image used in the profile stats center to blend in better. (stats_pie.png)
  * Tweaked the padding of the (wysiwyg) editor slightly, so it looks the same in both wysiwyg and non-wysiwyg mode. (editor.css, editor.js, index.css) [Bug 2178]
  ! Hide contact details of users for guests by default on new installs. (install_2-0.mysql.sql, install_2-0.postgresql.sql, install_2-0.sqlite.sql)
+ ! In the popular boards panels, don't calculate percentages relative to the maximum activity; it only causes confusion as to what they represent. (Profile-View.php, Profile template)
 
 
 January 2010

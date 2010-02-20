@@ -778,10 +778,8 @@ function statPanel($memID)
 		)
 	);
 	$context['board_activity'] = array();
-	$max_percent = 0;
 	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
-		$max_percent = max($max_percent, $row['percentage']);
 		$context['board_activity'][$row['id_board']] = array(
 			'id' => $row['id_board'],
 			'posts' => $row['message_count'],
@@ -793,12 +791,6 @@ function statPanel($memID)
 		);
 	}
 	$smcFunc['db_free_result']($result);
-
-	foreach ($context['board_activity'] as $id_board => $board_data)
-	{
-		$context['board_activity'][$id_board]['relative_percent'] = $max_percent == 0 ? 0 : min(ceil(($board_data['percent'] / $max_percent) * 100), 100);
-		$context['board_activity'][$id_board]['percent'] = $board_data['percent'];
-	}
 
 	// Posting activity by time.
 	$result = $smcFunc['db_query']('user_activity_by_time', '
@@ -822,8 +814,7 @@ function statPanel($memID)
 		// Cast as an integer to remove the leading 0.
 		$row['hour'] = (int) $row['hour'];
 
-		if ($row['post_count'] > $maxPosts)
-			$maxPosts = $row['post_count'];
+		$maxPosts = max($row['post_count'], $maxPosts);
 
 		$context['posts_by_time'][$row['hour']] = array(
 			'hour' => $row['hour'],
