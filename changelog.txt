@@ -81,6 +81,7 @@ February 2010
  ! When moving boards, try to do a better job at determining whether move links are needed for a certain board. (ManageBoards.php) [Bug 3664]
  ! Upgrading still didn't work quite right in PostgreSQL (upgrade_2-0_postgresql.sql)
  ! inet_aton() croaked with invalid input in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 4063]
+ * Slight tweak to the button_strip template to make individual buttons more easy to target. (index template, Compat template)
 
 
 January 2010

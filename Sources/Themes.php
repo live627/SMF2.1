@@ -2194,6 +2194,10 @@ function template_init()
 		if this is defaults, images from the default theme will only be used with default templates.
 		if this is never, images from the default theme will not be used. */
 	$settings[\'use_default_images\'] = \'never\';
+
+	/* The version this template/theme is for.
+		This should probably be the version of SMF it was created for. */
+	$settings[\'theme_version\'] = \'2.0 RC1\';
 }
 
 // The main sub template above the content.

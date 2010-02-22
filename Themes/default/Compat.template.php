@@ -10,15 +10,14 @@ function template_button_strip($button_strip, $direction = 'top', $strip_options
 	if (!is_array($strip_options))
 		$strip_options = array();
 
-	// Right to left menu should be in reverse order.
-	if ($context['right_to_left'])
-		$button_strip = array_reverse($button_strip, true);
-
 	// Create the buttons...
 	$buttons = array();
 	foreach ($button_strip as $key => $value)
+	{
 		if (!isset($value['test']) || !empty($context[$value['test']]))
-			$buttons[] = '<a href="' . $value['url'] . '"' . (isset($value['active']) ? ' class="active"' : '') . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
+			$buttons[] = '
+				<li><a' . (isset($value['id']) ? ' id="button_strip_' . $value['id'] . '"' : '') . ' class="button_strip_' . $key . '' . (isset($value['active']) ? ' active' : '') . '" href="' . $value['url'] . '"' . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a></li>';
+	}
 
 	// No buttons? No button strip either.
 	if (empty($buttons))
@@ -30,7 +29,7 @@ function template_button_strip($button_strip, $direction = 'top', $strip_options
 	echo '
 		<div class="buttonlist', $direction != 'top' ? '_bottom' : '', '"', (empty($buttons) ? ' style="display: none;"' : ''), (!empty($strip_options['id']) ? ' id="' . $strip_options['id'] . '"': ''), '>
 			<ul class="reset clearfix">
-				<li>', implode('</li><li>', $buttons), '</li>
+				implode('', $buttons), '
 			</ul>
 		</div>';
 }
