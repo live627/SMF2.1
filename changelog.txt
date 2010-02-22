@@ -80,6 +80,7 @@ February 2010
  ! In the popular boards panels, don't calculate percentages relative to the maximum activity; it only causes confusion as to what they represent. (Profile-View.php, Profile template)
  ! When moving boards, try to do a better job at determining whether move links are needed for a certain board. (ManageBoards.php) [Bug 3664]
  ! Upgrading still didn't work quite right in PostgreSQL (upgrade_2-0_postgresql.sql)
+ ! inet_aton() croaked with invalid input in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 4063]
 
 
 January 2010

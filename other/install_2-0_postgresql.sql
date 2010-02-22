@@ -4,6 +4,7 @@
 #
 # Create PostgreSQL functions.
 # Some taken from http://www.xach.com/aolserver/mysql-functions.sql and http://pgfoundry.org/projects/mysqlcompat/.
+# IP Regex in inet_aton from http://www.mkyong.com/database/regular-expression-in-postgresql/.
 
 CREATE OR REPLACE FUNCTION FROM_UNIXTIME(integer) RETURNS timestamp AS
   'SELECT timestamp ''epoch'' + $1 * interval ''1 second'' AS result'
@@ -35,10 +36,14 @@ LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION INET_ATON(text) RETURNS bigint AS
   'SELECT
-    split_part($1, ''.'', 1)::int8 * (256 * 256 * 256) +
-    split_part($1, ''.'', 2)::int8 * (256 * 256) +
-    split_part($1, ''.'', 3)::int8 * 256 +
-    split_part($1, ''.'', 4)::int8 AS result'
+	CASE WHEN 
+		$1 !~ ''^[0-9]?[0-9]?[0-9]?\.[0-9]?[0-9]?[0-9]?\.[0-9]?[0-9]?[0-9]?\.[0-9]?[0-9]?[0-9]?$'' THEN 0 
+	ELSE
+		split_part($1, '.', 1)::int8 * (256 * 256 * 256) +
+		split_part($1, '.', 2)::int8 * (256 * 256) +
+		split_part($1, '.', 3)::int8 * 256 +
+		split_part($1, '.', 4)::int8
+	END AS result'
 LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION INET_NTOA(bigint) RETURNS text AS
