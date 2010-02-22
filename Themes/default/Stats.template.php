@@ -107,7 +107,7 @@ function template_main()
 
 		if (!empty($poster['post_percent']))
 			echo '
-									<div class="bar">
+									<div class="bar" style="width: ', $poster['post_percent'] + 4, 'px;">
 										<div style="width: ', $poster['post_percent'], 'px;"></div>
 									</div>';
 
@@ -146,7 +146,7 @@ function template_main()
 
 		if (!empty($board['post_percent']))
 			echo '
-									<div class="bar">
+									<div class="bar" style="width: ', $board['post_percent'] + 4, 'px;">
 										<div style="width: ', $board['post_percent'], 'px;"></div>
 									</div>';
 		echo '
@@ -185,7 +185,7 @@ function template_main()
 								<dd class="statsbar">';
 		if (!empty($topic['post_percent']))
 			echo '
-									<div class="bar">
+									<div class="bar" style="width: ', $topic['post_percent'] + 4, 'px;">
 										<div style="width: ', $topic['post_percent'], 'px;"></div>
 									</div>';
 
@@ -222,7 +222,7 @@ function template_main()
 
 		if (!empty($topic['post_percent']))
 			echo '
-								<div class="bar">
+								<div class="bar" style="width: ', $topic['post_percent'] + 4, 'px;">
 									<div style="width: ', $topic['post_percent'], 'px;"></div>
 								</div>';
 
@@ -263,7 +263,7 @@ function template_main()
 
 		if (!empty($poster['post_percent']))
 			echo '
-								<div class="bar">
+								<div class="bar" style="width: ', $poster['post_percent'] + 4, 'px;">
 									<div style="width: ', $poster['post_percent'], 'px;"></div>
 								</div>';
 
@@ -300,9 +300,9 @@ function template_main()
 							</dt>
 							<dd class="statsbar">';
 
-		if (!empty($poster['time_online']))
+		if (!empty($poster['time_percent']))
 			echo '
-								<div class="bar">
+								<div class="bar" style="width: ', $poster['time_percent'] + 4, 'px;">
 									<div style="width: ', $poster['time_percent'], 'px;"></div>
 								</div>';
 

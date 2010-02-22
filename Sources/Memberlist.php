@@ -89,7 +89,8 @@ function Memberlist()
 	$context['columns'] = array(
 		'is_online' => array(
 			'label' => $txt['status'],
-			'width' => '20'
+			'width' => '20',
+			'class' => 'first_th',
 		),
 		'real_name' => array(
 			'label' => $txt['username']
@@ -105,19 +106,19 @@ function Memberlist()
 		),
 		'icq' => array(
 			'label' => $txt['icq'],
-			'width' => '25'
+			'width' => '30'
 		),
 		'aim' => array(
 			'label' => $txt['aim'],
-			'width' => '25'
+			'width' => '30'
 		),
 		'yim' => array(
 			'label' => $txt['yim'],
-			'width' => '25'
+			'width' => '30'
 		),
 		'msn' => array(
 			'label' => $txt['msn'],
-			'width' => '25'
+			'width' => '30'
 		),
 		'id_group' => array(
 			'label' => $txt['position']
@@ -130,6 +131,7 @@ function Memberlist()
 			'width' => '115',
 			'colspan' => '2',
 			'default_sort_rev' => true,
+			'class' => 'last_th',
 		)
 	);
 

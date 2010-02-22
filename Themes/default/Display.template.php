@@ -35,9 +35,19 @@ function template_main()
 
 			// Show each option with its corresponding percentage bar.
 			foreach ($context['poll']['options'] as $option)
+			{
 				echo '
 						<dt class="middletext', $option['voted_this'] ? ' voted' : '', '">', $option['option'], '</dt>
-						<dd class="middletext', $option['voted_this'] ? ' voted' : '', '">', $context['allow_poll_view'] ? '<span class="percent">' . $option['votes'] . ' (' . $option['percent'] . '%)</span>' . $option['bar_ndt'] : '', '</dd>';
+						<dd class="middletext statsbar', $option['voted_this'] ? ' voted' : '', '">';
+
+				if ($context['allow_poll_view'])
+					echo '
+							', $option['bar_ndt'], '
+							<span class="percentage">', $option['votes'], ' (', $option['percent'], '%)</span>';
+
+				echo '
+						</dd>';
+			}
 
 			echo '
 					 </dl>';
@@ -753,9 +763,9 @@ function template_main()
 							bShowModify: ', $settings['show_modify'] ? 'true' : 'false', ',
 							iTopicId: ', $context['current_topic'], ',
 							sTemplateBodyEdit: ', JavaScriptEscape('
-								<div id="quick_edit_body_container">
+								<div id="quick_edit_body_container" style="width: 90%">
 									<div id="error_box" style="padding: 4px;" class="error"></div>
-									<textarea class="editor" name="message" rows="12" style="' . ($context['browser']['is_ie8'] ? 'max-width: 99%; min-width: 99%' : 'width: 99%') . '; margin-bottom: 10px;" tabindex="' . $context['tabindex']++ . '">%body%</textarea><br />
+									<textarea class="editor" name="message" rows="12" style="' . ($context['browser']['is_ie8'] ? 'max-width: 100%; min-width: 100%' : 'width: 100%') . '; margin-bottom: 10px;" tabindex="' . $context['tabindex']++ . '">%body%</textarea><br />
 									<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 									<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />
 									<input type="hidden" name="msg" value="%msg_id%" />

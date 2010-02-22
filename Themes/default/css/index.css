@@ -1758,7 +1758,7 @@ img.new_posts
 /* Events */
 .linked_events
 {
-	margin: 1em 0;
+	padding: 1em 0;
 }
 .edit_event
 {
@@ -1769,6 +1769,10 @@ img.new_posts
 #poll
 {
 	overflow: hidden;
+}
+#poll .content
+{
+	padding: 0 1em;
 }
 h4#pollquestion
 {
@@ -1797,6 +1801,7 @@ h4#pollquestion
 	border-width: 1px 0;
 	padding: 1em 2.5em 1em 2em;
 	margin: 0 1em 1em 0;
+	line-height: 1.1em !important;
 }
 
 #poll_options dl.options dt
@@ -1808,44 +1813,25 @@ h4#pollquestion
 	clear: left;
 }
 
-#poll_options dl.options dt.voted
+#poll_options dl.options .voted
 {
 	font-weight: bold;
 }
+
 #poll_options dl.options dd
 {
-	margin: 0;
-	padding: 0.3em 0 0.3em 2em;
+	margin: 0 0 0 2em;
+	padding: 0.1em 0 0 0;
 	width: 60%;
-	max-width: 500px;
+	max-width: 450px;
 	float: left;
 }
-#poll .content
+
+#poll_options dl.options .percentage
 {
-	padding: 0 1em;
-}
-span.pollbar, span.pollbar span, span.percent
-{
-	height: 1.1em;
 	display: block;
-}
-span.percent
-{
 	float: right;
-}
-span.pollbar
-{
-	background: #fff;
-	border: 1px solid #888;
-	margin-right: 7.5em;
-}
-span.pollbar span
-{
-	background: #fe9540;
-}
-#poll_options dd.voted span.pollbar span
-{
-	background: #ffc495;
+	padding: 0.2em 0 0.3em 0;
 }
 
 /* Poll notices */
@@ -3219,14 +3205,14 @@ dl.stats dd
 	float: left;
 	background: url(../images/bar_stats.png) no-repeat;
 	display: block;
-	margin: 0 6px;
+	margin: 0 4px;
 	height: 16px;
 }
 .statsbar div.bar div
 {
 	position: relative;
-	right: -6px;
-	padding: 0 6px 0 0;
+	right: -4px;
+	padding: 0 4px 0 0;
 	background: url(../images/bar_stats.png) no-repeat 100%;
 	height: 16px;
 }
@@ -3397,20 +3383,6 @@ span.hidelink
 {
 	margin: auto;
 	width: 500px;
-}
-span.memberstatsbar, span.memberstatsbar span
-{
-	height: 1.1em;
-	display: block;
-}
-span.memberstatsbar
-{
-	background: #fff;
-	border: 1px solid #888;
-}
-span.memberstatsbar span
-{
-	background: #fe9540;
 }
 
 /* Styles for the basic search section.

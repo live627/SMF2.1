@@ -24,7 +24,7 @@ function template_main()
 			</h4>
 		</div>
 		<div class="pagesection">
-		', template_button_strip($memberlist_buttons, 'right'), '
+			', template_button_strip($memberlist_buttons, 'right'), '
 			<div class="pagelinks align_left">', $txt['pages'], ': ', $context['page_index'], '</div>
 		</div>';
 
@@ -32,7 +32,7 @@ function template_main()
 		<div id="mlist" class="tborder topic_table">
 			<table class="table_grid" cellspacing="0" width="100%">
 			<thead>
-				<tr class="titlebg">';
+				<tr>';
 
 	// Display each of the column headers of the table.
 	foreach ($context['columns'] as $column)
@@ -40,17 +40,17 @@ function template_main()
 		// We're not able (through the template) to sort the search results right now...
 		if (isset($context['old_search']))
 			echo '
-					<th scope="col" class="smalltext"', isset($column['width']) ? ' width="' . $column['width'] . '"' : '', isset($column['colspan']) ? ' colspan="' . $column['colspan'] . '"' : '', '>
+					<th scope="col" class="smalltext', isset($column['class']) ? ' ' . $column['class'] : '', '"', isset($column['width']) ? ' width="' . $column['width'] . '"' : '', isset($column['colspan']) ? ' colspan="' . $column['colspan'] . '"' : '', '>
 						', $column['label'], '</th>';
 		// This is a selected solumn, so underline it or some such.
 		elseif ($column['selected'])
 			echo '
-					<th scope="col" class="smalltext" style="width: auto;"' . (isset($column['colspan']) ? ' colspan="' . $column['colspan'] . '"' : '') . ' nowrap="nowrap">
+					<th scope="col" class="smalltext', isset($column['class']) ? ' ' . $column['class'] : '', '" style="width: auto;"' . (isset($column['colspan']) ? ' colspan="' . $column['colspan'] . '"' : '') . ' nowrap="nowrap">
 						<a href="' . $column['href'] . '" rel="nofollow">' . $column['label'] . ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" /></a></th>';
 		// This is just some column... show the link and be done with it.
 		else
 			echo '
-					<th scope="col" class="smalltext"', isset($column['width']) ? ' width="' . $column['width'] . '"' : '', isset($column['colspan']) ? ' colspan="' . $column['colspan'] . '"' : '', '>
+					<th scope="col" class="smalltext', isset($column['class']) ? ' ' . $column['class'] : '', '"', isset($column['width']) ? ' width="' . $column['width'] . '"' : '', isset($column['colspan']) ? ' colspan="' . $column['colspan'] . '"' : '', '>
 						', $column['link'], '</th>';
 	}
 	echo '
@@ -101,12 +101,20 @@ function template_main()
 					<td class="windowbg" align="', $context['right_to_left'] ? 'right' : 'left', '">', $member['registered_date'], '</td>';
 
 		if (!isset($context['disabled_fields']['posts']))
+		{
 			echo '
 					<td class="windowbg2" width="15">', $member['posts'], '</td>
-					<td class="windowbg statsbar" width="120" align="', $context['right_to_left'] ? 'right' : 'left', '">
-						<span class="memberstatsbar"><span style="width: ', $member['post_percent'], '%;"></span></span>
-					</td>';
+					<td class="windowbg statsbar" width="120" align="', $context['right_to_left'] ? 'right' : 'left', '">';
 
+			if (!empty($member['post_percent']))
+				echo '
+						<div class="bar" style="width: ', $member['post_percent'] + 4, 'px;">
+							<div style="width: ', $member['post_percent'], 'px;"></div>
+						</div>';
+
+			echo '
+					</td>';
+		}
 		echo '
 				</tr>';
 		}

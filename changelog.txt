@@ -85,6 +85,11 @@ February 2010
  * In a topic, linked events were shown slightly off if the topic was also linked to a poll. (index.css, compat.css)
  ! Improve handling of tags inside the legalise_bbc function. (Subs-Editor.php)
  ! Added recursion protection of inline links in the parse_bbc function. (Subs.php) [Bug 3984]
+ * Aligned the quick modify template to the left. (Display template)
+ * IE7 requires us to add a width to the encapsulated elements of the stats bars, too. (Stats template)
+ * Replaced the rectangular poll bars with the blue stats bars used in other areas. (Display.php Display template, index.css, rtl.css)
+ * Updated the member list template to blend in better with Curve. (Memberlist template, index.css)
+ * Fixed some oddities with panel heights for the statistics center in IE6. (ie6.css)
 
 
 January 2010

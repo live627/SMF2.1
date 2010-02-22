@@ -127,6 +127,18 @@ h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
 	padding: 0 0 0.8em 0;
 }
 
+/* Styles for the statistics center.
+------------------------------------------------- */
+#statistics div.content
+{
+	height: 210px;
+	overflow: hidden;
+}
+#statistics div.top_row
+{
+	height: 150px;
+}
+
 /* Overrides for the admin template
 ------------------------------------------------------- */
 #main_admsection
@@ -137,6 +149,7 @@ h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
 {
 	width: 99%;
 }
+
 /* Overrides for the profile template
 ------------------------------------------------------- */
 #basicinfo h4
