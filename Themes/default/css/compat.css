@@ -694,10 +694,14 @@ form#infocenter_login ul.horizlist label
 
 /* Styles for the display template (topic view).
 ---------------------------------------------------- */
-
-#events .post
+.linked_events
 {
-	padding: 1em;
+	clear: both;
+	margin: 1em 0;
+}
+.linked_events .edit_event
+{
+	color: #f00;
 }
 #moderationbuttons
 {

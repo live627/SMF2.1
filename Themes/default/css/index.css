@@ -1756,7 +1756,11 @@ img.new_posts
 	overflow: hidden;
 }
 /* Events */
-#edit_event
+.linked_events
+{
+	margin: 1em 0;
+}
+.edit_event
 {
 	margin: 0 1em;
 	vertical-align: middle;

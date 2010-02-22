@@ -106,22 +106,24 @@ function template_main()
 	if (!empty($context['linked_calendar_events']))
 	{
 		echo '
-			<div id="events" class="marginbottom">
+			<div class="linked_events">
 				<div class="title_bar">
 					<h3 class="titlebg headerpadding">', $txt['calendar_linked_events'], '</h3>
 				</div>
 				<div class="windowbg">
 					<span class="topslice"><span></span></span>
-					<ul class="reset windowbg largepadding">';
+					<div class="content">
+						<ul class="reset">';
 
 		foreach ($context['linked_calendar_events'] as $event)
 			echo '
-						<li>
-							', ($event['can_edit'] ? '<a href="' . $event['modify_href'] . '"> <img src="' . $settings['images_url'] . '/icons/modify_small.gif" alt="" title="' . $txt['modify'] . '" id="edit_event" /></a> ' : ''), '<strong>', $event['title'], '</strong>: ', $event['start_date'], ($event['start_date'] != $event['end_date'] ? ' - ' . $event['end_date'] : ''), '
-						</li>';
+							<li>
+								', ($event['can_edit'] ? '<a href="' . $event['modify_href'] . '"> <img src="' . $settings['images_url'] . '/icons/modify_small.gif" alt="" title="' . $txt['modify'] . '" class="edit_event" /></a> ' : ''), '<strong>', $event['title'], '</strong>: ', $event['start_date'], ($event['start_date'] != $event['end_date'] ? ' - ' . $event['end_date'] : ''), '
+							</li>';
 
 		echo '
-					</ul>
+						</ul>
+					</div>
 					<span class="botslice"><span></span></span>
 				</div>
 			</div>';
