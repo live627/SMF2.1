@@ -762,7 +762,7 @@ if (empty($modSettings['dont_repeat_buddylists']))
 	// Make sure the pm_receive_from column has the right default value - early adoptors might have a '0' set here.
 	upgrade_query("
 		ALTER TABLE {$db_prefix}members
-		ALTER COLUMN pm_receive_from pm_receive_from smallint NOT NULL default '1'");
+		ALTER COLUMN pm_receive_from SET DEFAULT '1'");
 
 	// Update previous ignore lists if they're set to ignore all.
 	upgrade_query("
@@ -1087,7 +1087,7 @@ LANGUAGE 'sql';
 
 ---# Creating operator bool_not_eq_int()
 ---{
-$result = upgrade_query("SELECT oprname FROM pg_operator WHERE oprcode='bool_not_eq_int'");
+$result = upgrade_query("SELECT oprname FROM pg_operator WHERE oprcode='bool_not_eq_int'::regproc");
 if($smcFunc['db_num_rows']($result) == 0)
 {
 	upgrade_query("
@@ -1096,12 +1096,28 @@ if($smcFunc['db_num_rows']($result) == 0)
 ---}
 ---#
 
-
 ---# Recreating function FIND_IN_SET()
 ---{
-DROP FUNCTION IF EXISTS FIND_IN_SET(text, text);
-DROP FUNCTION IF EXISTS FIND_IN_SET(integer, character varying);
+if ($smcFunc['db_server_info'] < 8.2)
+{
+	$query = upgrade_query("SELECT * FROM pg_proc WHERE proname = 'find_in_set' AND proargtypes = '25 25'");
+	if ($smcFunc['db_num_rows']($query) != 0)
+	{
+		upgrade_query("DROP FUNCTION FIND_IN_SET(text, text)");
+	}
 
+	$query = upgrade_query("SELECT * FROM pg_proc WHERE proname = 'find_in_set' AND proargtypes = '23 1043'");
+	if ($smcFunc['db_num_rows']($query) != 0)
+	{
+		upgrade_query("DROP FUNCTION FIND_IN_SET(integer, character varying)");
+	}
+}
+else
+{
+	upgrade_query("DROP FUNCTION IF EXISTS FIND_IN_SET(text, text)");
+	upgrade_query("DROP FUNCTION IF EXISTS FIND_IN_SET(integer, character varying)");
+}
+---}
 CREATE OR REPLACE FUNCTION FIND_IN_SET(needle text, haystack text) RETURNS integer AS '
 	SELECT i AS result
 	FROM generate_series(1, array_upper(string_to_array($2,'',''), 1)) AS g(i)
@@ -1119,5 +1135,4 @@ CREATE OR REPLACE FUNCTION FIND_IN_SET(needle integer, haystack text) RETURNS in
 	SELECT 0
 	LIMIT 1'
 LANGUAGE 'sql';
----}
 ---#
