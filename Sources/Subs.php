@@ -1803,7 +1803,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				if (!$no_autolink_area)
 				{
 					// Parse any URLs.... have to get rid of the @ problems some things cause... stupid email addresses.
-					if (!isset($disabled['url']) && (strpos($data, '://') !== false || strpos($data, 'www.') !== false))
+					if (!isset($disabled['url']) && (strpos($data, '://') !== false || strpos($data, 'www.') !== false) && strpos($data, '[url') === false)
 					{
 						// Switch out quotes really quick because they can cause problems.
 						$data = strtr($data, array('&#039;' => '\'', '&nbsp;' => $context['utf8'] ? "\xC2\xA0" : "\xA0", '&quot;' => '>">', '"' => '<"<', '&lt;' => '<lt<'));
@@ -1822,7 +1822,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					}
 
 					// Next, emails...
-					if (!isset($disabled['email']) && strpos($data, '@') !== false)
+					if (!isset($disabled['email']) && strpos($data, '@') !== false && strpos($data, '[email') === false)
 					{
 						$data = preg_replace('~(?<=[\?\s' . $non_breaking_space . '\[\]()*\\\;>]|^)([\w\-\.]{1,80}@[\w\-]+\.[\w\-\.]+[\w\-])(?=[?,\s' . $non_breaking_space . '\[\]()*\\\]|$|<br />|&nbsp;|&gt;|&lt;|&quot;|&#039;|\.(?:\.|;|&nbsp;|\s|$|<br />))~' . ($context['utf8'] ? 'u' : ''), '[email]$1[/email]', $data);
 						$data = preg_replace('~(?<=<br />)([\w\-\.]{1,80}@[\w\-]+\.[\w\-\.]+[\w\-])(?=[?\.,;\s' . $non_breaking_space . '\[\]()*\\\]|$|<br />|&nbsp;|&gt;|&lt;|&quot;|&#039;)~' . ($context['utf8'] ? 'u' : ''), '[email]$1[/email]', $data);
