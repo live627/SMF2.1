@@ -2693,7 +2693,7 @@ tr.windowbg td, tr.windowbg2 td, tr.approvebg td, tr.highlight2 td
 	border: 1px solid #cc3344;
 	color: #000;
 	background-color: #ffe4e9;
-	margin: 1em 0;
+	margin-bottom: 1em;
 }
 .errorbox h3
 {
