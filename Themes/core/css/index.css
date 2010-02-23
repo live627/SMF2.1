@@ -2471,7 +2471,7 @@ tr.windowbg td, tr.windowbg2 td
 	border: 1px solid #cc3344;
 	color: #000;
 	background-color: #ffe4e9;
-	margin-bottom: 1em;
+	margin: 1em 0;
 }
 .errorbox h3
 {
