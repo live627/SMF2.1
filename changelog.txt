@@ -90,6 +90,7 @@ February 2010
  * Replaced the rectangular poll bars with the blue stats bars used in other areas. (Display.php Display template, index.css, rtl.css)
  * Updated the member list template to blend in better with Curve. (Memberlist template, index.css)
  * Fixed some oddities with panel heights for the statistics center in IE6. (ie6.css)
+ * Redirect as expected after removing a member's post via the Show Posts area of a profile. (RemoveTopic.php, Profile template) [Bug 4209]
 
 
 January 2010

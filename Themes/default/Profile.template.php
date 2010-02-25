@@ -377,18 +377,18 @@ function template_showPosts()
 			// If they *can* reply?
 			if ($post['can_reply'])
 				echo '
-						<li class="reply_button"><a href="', $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'], '"><span>', $txt['reply'], '</span></a></li>
-						<li class="quote_button"><a href="', $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'] . ';quote=' . $post['id'] . ';' . $context['session_var'] . '=' . $context['session_id'], '"><span>', $txt['quote'], '</span></a></li>';
+						<li class="reply_button"><a href="', $scripturl, '?action=post;topic=', $post['topic'], '.', $post['start'], '"><span>', $txt['reply'], '</span></a></li>
+						<li class="quote_button"><a href="', $scripturl . '?action=post;topic=', $post['topic'], '.', $post['start'], ';quote=', $post['id'], ';', $context['session_var'], '=', $context['session_id'], '"><span>', $txt['quote'], '</span></a></li>';
 
 			// Can we request notification of topics?
 			if ($post['can_mark_notify'])
 				echo '
-						<li class="notify_button"><a href="', $scripturl . '?action=notify;topic=' . $post['topic'] . '.' . $post['start'], '"><span>', $txt['notify'], '</span></a></li>';
+						<li class="notify_button"><a href="', $scripturl, '?action=notify;topic=', $post['topic'], '.', $post['start'], '"><span>', $txt['notify'], '</span></a></li>';
 
 			// How about... even... remove it entirely?!
 			if ($post['can_delete'])
 				echo '
-						<li class="remove_button"><a href="', $scripturl . '?action=deletemsg;msg=' . $post['id'] . ';topic=' . $post['topic'] . ';recent;' . $context['session_var'] . '=' . $context['session_id'], '" onclick="return confirm(\'' . $txt['remove_message'] . '?\');"><span>', $txt['remove'], '</span></a></li>';
+						<li class="remove_button"><a href="', $scripturl, '?action=deletemsg;msg=', $post['id'], ';topic=', $post['topic'], ';profile;u=', $context['member']['id'], ';start=', $context['start'], ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');"><span>', $txt['remove'], '</span></a></li>';
 
 			if ($post['can_reply'] || $post['can_mark_notify'] || $post['can_delete'])
 				echo '

@@ -59,7 +59,7 @@ $txt['smiley_set_modify_existing'] = 'Modify existing smiley set';
 $txt['smiley_set_modify'] = 'Modify';
 $txt['smiley_set_import_directory'] = 'Import smileys already in this directory';
 $txt['smiley_set_import_single'] = 'There is one smiley in this smiley set not yet imported. Click';
-$txt['smiley_set_import_multiple'] = 'There are %1$d smileys in the directory that have no yet been imported. Click';
+$txt['smiley_set_import_multiple'] = 'There are %1$d smileys in the directory that have not yet been imported. Click';
 $txt['smiley_set_to_import_single'] = 'to import it now.';
 $txt['smiley_set_to_import_multiple'] = 'to import them now.';
 

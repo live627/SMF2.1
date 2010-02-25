@@ -150,6 +150,8 @@ function DeleteMessage()
 	// We want to redirect back to recent action.
 	if (isset($_REQUEST['recent']))
 		redirectexit('action=recent');
+	elseif (isset($_REQUEST['profile'], $_REQUEST['start'], $_REQUEST['u']))
+		redirectexit('action=profile;u=' . $_REQUEST['u'] . ';area=showposts;start=' . $_REQUEST['start']);
 	elseif ($full_topic)
 		redirectexit('board=' . $board . '.0');
 	else
