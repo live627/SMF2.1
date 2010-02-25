@@ -742,7 +742,7 @@ function cache_getRecentEvents($eventOptions)
 			foreach ($cache_block[\'data\'][\'calendar_events\'] as $k => $event)
 			{
 				// Remove events that the user may not see or wants to ignore.
-				if ((count(array_intersect($user_info[\'groups\'], $event[\'allowed_groups\'])) === 0 && !allowedTo(\'admin_forum\')) || in_array($event[\'id_board\'], $user_info[\'ignoreboards\']))
+				if ((count(array_intersect($user_info[\'groups\'], $event[\'allowed_groups\'])) === 0 && !allowedTo(\'admin_forum\') && !empty($event[\'id_board\'])) || in_array($event[\'id_board\'], $user_info[\'ignoreboards\']))
 					unset($cache_block[\'data\'][\'calendar_events\'][$k]);
 				else
 				{

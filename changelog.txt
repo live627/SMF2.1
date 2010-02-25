@@ -91,6 +91,7 @@ February 2010
  * Updated the member list template to blend in better with Curve. (Memberlist template, index.css)
  * Fixed some oddities with panel heights for the statistics center in IE6. (ie6.css)
  * Redirect as expected after removing a member's post via the Show Posts area of a profile. (RemoveTopic.php, Profile template) [Bug 4209]
+ ! Calendar events not linked to a topic would not appear on the board index for non-admins. (Subs-Calendar.php) [Bug 4208]
 
 
 January 2010
