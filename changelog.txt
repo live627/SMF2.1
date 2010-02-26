@@ -93,6 +93,7 @@ February 2010
  * Redirect as expected after removing a member's post via the Show Posts area of a profile. (RemoveTopic.php, Profile template) [Bug 4209]
  ! Calendar events not linked to a topic would not appear on the board index for non-admins. (Subs-Calendar.php) [Bug 4208]
  ! Order custom profile fields alphabetically upon saving, as there currently isn't an option to prioritize them. (ManageSettings.php)
+ ! Redirect invalid post form requests. (Post.php)
 
 
 January 2010

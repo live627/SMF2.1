@@ -1202,6 +1202,12 @@ function Post2()
 	global $board, $topic, $txt, $modSettings, $sourcedir, $context;
 	global $user_info, $board_info, $options, $smcFunc;
 
+	// Sneaking off, are we?
+	if (empty($_POST) && empty($topic))
+		redirectexit('action=post;board=' . $board . '.0');
+	elseif (empty($_POST) && !empty($topic))
+		redirectexit('action=post;topic=' . $topic . '.0');
+
 	// No need!
 	$context['robot_no_index'] = true;
 
