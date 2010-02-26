@@ -2708,10 +2708,6 @@ div#profile_success
 }
 
 /* Activity by time */
-#activitytime
-{
-	clear: both;
-}
 .activity_stats
 {
 	margin: 0;
@@ -2833,17 +2829,18 @@ div.core_posts div.content
 
 #permissions dt
 {
-	width: 40%;
+	width: 48%;
 	float: left;
-	margin: 0 0 -500px;
-	padding: 1% 1% 500px;
+	line-height: 1.2em;
+	margin: 0;
+	padding: 1%;
 	clear: both;
 	border-top: 1px solid #fff;
 }
 
 #permissions dd
 {
-	width: 56%;
+	width: 48%;
 	float: left;
 	margin: 0;
 	padding: 1%;

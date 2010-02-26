@@ -2905,7 +2905,6 @@ div#profile_success
 /* Activity by time */
 #activitytime
 {
-	clear: both;
 	margin: 6px 0;
 }
 .activity_stats
@@ -3036,7 +3035,7 @@ div#profile_success
 
 #permissions dt
 {
-	width: 40%;
+	width: 48%;
 	float: left;
 	line-height: 1.2em;
 	margin: 0;
@@ -3047,7 +3046,7 @@ div#profile_success
 
 #permissions dd
 {
-	width: 50%;
+	width: 48%;
 	float: left;
 	margin: 0;
 	padding: 1%;
