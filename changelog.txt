@@ -95,6 +95,7 @@ February 2010
  ! Order custom profile fields alphabetically upon saving, as there currently isn't an option to prioritize them. (ManageSettings.php)
  ! Redirect invalid post form requests. (Post.php)
  * Made the poll options slightly more user friendly. (Post template, Poll template, index.css, rtl.css, compat.css, Post language file)
+ & Duplicate language key 'poll_results_expire'. (FixLanguage.php, Post language file, Post template, Poll template)
 
 
 January 2010
