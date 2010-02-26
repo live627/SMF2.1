@@ -133,15 +133,16 @@ $txt['post_visual_verification_desc'] = 'Please enter the code in the image abov
 
 $txt['poll_options'] = 'Poll Options';
 $txt['poll_run'] = 'Run the poll for';
-$txt['poll_run_days'] = 'days. (leave blank for no limit)';
+$txt['poll_run_limit'] = '(Leave blank for no limit.)';
+$txt['poll_results_visibility'] = 'Result visibility';
 $txt['poll_results_anyone'] = 'Show the poll\'s results to anyone.';
 $txt['poll_results_voted'] = 'Only show the results after someone has voted.';
 $txt['poll_results_expire'] = 'Only show the results after the poll has expired.';
-$txt['poll_max_votes'] = 'Maximum votes per user.';
-$txt['poll_do_change_vote'] = 'Allow user to change vote.';
+$txt['poll_max_votes'] = 'Maximum votes per user';
+$txt['poll_do_change_vote'] = 'Allow users to change vote';
 $txt['poll_too_many_votes'] = 'You selected too many options.  For this poll, you may only select %1$s options.';
 $txt['poll_add_option'] = 'Add Option';
-$txt['poll_guest_vote'] = 'Allow guests to vote.';
+$txt['poll_guest_vote'] = 'Allow guests to vote';
 
 $txt['spellcheck_done'] = 'Spell checking complete.';
 $txt['spellcheck_change_to'] = 'Change To:';

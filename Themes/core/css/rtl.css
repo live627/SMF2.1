@@ -481,9 +481,9 @@ ul.post_options li
 {
 	float: right;
 }
-#edit_poll ul.poll_main, ul.poll_options
+#edit_poll ul.poll_main, dl.poll_options
 {
-	padding: 0 .7em .7em 0;
+	padding: 0 .7em 0 0;
 }
 
 /* Styles for the recent messages section.
