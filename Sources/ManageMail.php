@@ -304,8 +304,6 @@ function ModifyMailSettings($return_config = false)
 			array('select', 'birthday_email', $emails, 'value' => empty($modSettings['birthday_email']) ? 'happy_birthday' : $modSettings['birthday_email'], 'javascript' => 'onchange="fetch_birthday_preview()"'),
 			'birthday_subject' => array('var_message', 'birthday_subject', 'var_message' => $birthdayEmails[empty($modSettings['birthday_email']) ? 'happy_birthday' : $modSettings['birthday_email']]['subject'], 'disabled' => true, 'size' => strlen($subject) + 3),
 			'birthday_body' => array('var_message', 'birthday_body', 'var_message' => nl2br($body), 'disabled' => true, 'size' => ceil(strlen($body) / 25)),
-		'',
-
 	);
 
 	if ($return_config)
@@ -344,8 +342,8 @@ function ModifyMailSettings($return_config = false)
 		$is_last = ++$i == count($birthdayEmails);
 		$context['settings_insert_above'] .= '
 			' . $index . ': {
-				subject: \'' . addslashes($email['subject']) . '\',
-				body: \'' . addslashes(str_replace("\n", '', nl2br($email['body']))) . '\'
+				subject: ' . JavaScriptEscape($email['subject']) . ',
+				body: ' . JavaScriptEscape($email['body']) . '
 			}' . (!$is_last ? ',' : '');
 	}
 	$context['settings_insert_above'] .= '
