@@ -80,14 +80,16 @@ function template_main()
 							<span class="smalltext pick_theme"><a href="', $scripturl, '?action=theme;sa=pick;u=0;', $context['session_var'], '=', $context['session_id'], '">', $txt['theme_select'], '</a></span>
 						</dd>
 					</dl>
-					<input type="submit" name="submit" value="' . $txt['save'] . '" class="button_submit" />
+					<div class="righttext">
+						<input type="submit" name="submit" value="' . $txt['save'] . '" class="button_submit" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>';
 
-	// And lastly, link to simplemachines.org for latest themes and info!
+	// Link to simplemachines.org for latest themes and info!
 	echo '
 		<br />
 		<div class="cat_bar">
@@ -153,7 +155,9 @@ function template_main()
 
 	echo '
 					</dl>
-					<input type="submit" name="submit" value="', $txt['theme_install_go'], '" class="button_submit" />
+					<div class="righttext">
+						<input type="submit" name="submit" value="', $txt['theme_install_go'], '" class="button_submit" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

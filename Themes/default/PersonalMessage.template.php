@@ -1490,12 +1490,13 @@ function template_add_rule()
 			function rebuildRuleDesc()
 			{
 				// Start with nothing.
-				text = "";
-				joinText = "";
-				actionText = "";
-				hadBuddy = false;
-				foundCriteria = false;
-				foundAction = false;
+				var text = "";
+				var joinText = "";
+				var actionText = "";
+				var hadBuddy = false;
+				var foundCriteria = false;
+				var foundAction = false;
+				var curNum, curVal, curDef;
 
 				for (var i = 0; i < document.forms.addrule.elements.length; i++)
 				{
@@ -1598,7 +1599,7 @@ function template_add_rule()
 	{
 		if (!$isFirst && $criteria['t'] == '')
 			echo '<div id="removeonjs1">';
-		else
+		elseif (!$isFirst)
 			echo '<br />';
 
 		echo '
@@ -1653,7 +1654,7 @@ function template_add_rule()
 	{
 		if (!$isFirst && $action['t'] == '')
 			echo '<div id="removeonjs2">';
-		else
+		elseif (!$isFirst)
 			echo '<br />';
 
 		echo '
