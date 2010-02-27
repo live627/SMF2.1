@@ -81,6 +81,11 @@ ALTER TABLE {$db_prefix}custom_fields
 ADD placement smallint NOT NULL default '0';
 ---#
 
+---# Fixing default value for the "show_profile" column
+ALTER TABLE {$db_prefix}custom_fields
+ALTER COLUMN show_profile DEFAULT 'forumprofile';
+---#
+
 /******************************************************************************/
 --- Adding new board specific features.
 /******************************************************************************/
@@ -744,6 +749,7 @@ ALTER COLUMN ip TYPE int8;
 $smcFunc['db_remove_index']($db_prefix . 'log_activity', $db_prefix . 'log_activity_hits');
 ---}
 ---#
+
 
 /******************************************************************************/
 --- Adding new personal message setting.

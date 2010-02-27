@@ -96,7 +96,8 @@ February 2010
  ! Redirect invalid post form requests. (Post.php)
  * Made the poll options slightly more user friendly. (Post template, Poll template, index.css, rtl.css, compat.css, Post language file)
  & Duplicate language key 'poll_results_expire'. (FixLanguage.php, Post language file, Post template, Poll template)
- * The 'Show permissions' area in the profile section was somewhat glitchy in the Core theme. (index.css, compat.css) 
+ * The 'Show permissions' area in the profile section was somewhat glitchy in the Core theme. (index.css, compat.css)
+ ! Custom profile fields in the "Forum Profile" section didn't work in PostgreSQL (Admin template, install SQL files, upgrade_2-0_*.sql)
 
 
 January 2010

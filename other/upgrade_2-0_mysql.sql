@@ -85,7 +85,7 @@ $nameChanges = array(
 		'fieldOptions' => 'fieldOptions field_options text NOT NULL',
 		'showReg' => 'showReg show_reg tinyint(3) NOT NULL default \'0\'',
 		'showDisplay' => 'showDisplay show_display tinyint(3) NOT NULL default \'0\'',
-		'showProfile' => 'showProfile show_profile varchar(20) NOT NULL default \'forumProfile\'',
+		'showProfile' => 'showProfile show_profile varchar(20) NOT NULL default \'forumprofile\'',
 		'defaultValue' => 'defaultValue default_value varchar(8) NOT NULL default \'0\'',
 	),
 	'group_moderators' => array(
@@ -828,7 +828,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}custom_fields (
 	mask varchar(255) NOT NULL default '',
 	show_reg tinyint(3) NOT NULL default '0',
 	show_display tinyint(3) NOT NULL default '0',
-	show_profile varchar(20) NOT NULL default 'forumProfile',
+	show_profile varchar(20) NOT NULL default 'forumprofile',
 	private tinyint(3) NOT NULL default '0',
 	active tinyint(3) NOT NULL default '1',
 	bbc tinyint(3) NOT NULL default '0',

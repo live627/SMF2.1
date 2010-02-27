@@ -57,6 +57,26 @@ $smcFunc['db_alter_table']('{db_prefix}custom_fields', array(
 ---}
 ---#
 
+---# Fixing default value for the "show_profile" column
+---{
+$smcFunc['db_alter_table']('{db_prefix}custom_fields', array(
+	'change' => array(
+		'show_profile' => array(
+			'name' => 'show_profile',
+			'null' => false,
+			'default' => 'forumprofile',
+			'type' => 'varchar(20)',
+			'auto' => false,
+		),
+	)
+));
+---}
+---#
+
+ALTER TABLE {$db_prefix}custom_fields
+ALTER COLUMN show_profile DEFAULT 'forumprofile';
+---#
+
 /******************************************************************************/
 --- Adding search engine tracking.
 /******************************************************************************/

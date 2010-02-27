@@ -742,7 +742,7 @@ CREATE TABLE {$db_prefix}custom_fields (
   mask varchar(255) NOT NULL,
   show_reg smallint NOT NULL default '0',
   show_display smallint NOT NULL default '0',
-  show_profile varchar(20) NOT NULL default 'forumProfile',
+  show_profile varchar(20) NOT NULL default 'forumprofile',
   private smallint NOT NULL default '0',
   active smallint NOT NULL default '1',
   bbc smallint NOT NULL default '0',
