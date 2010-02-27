@@ -3016,7 +3016,7 @@ function ReportMessage()
 	$context['page_title'] = $txt['pm_report_title'];
 
 	// If we're here, just send the user to the template, with a few useful context bits.
-	if (!isset($_REQUEST['report']))
+	if (!isset($_POST['report']))
 	{
 		$context['sub_template'] = 'report_message';
 
@@ -3042,6 +3042,9 @@ function ReportMessage()
 	// Otherwise, let's get down to the sending stuff.
 	else
 	{
+		// Check the session before proceeding any further!
+		checkSession('post');
+
 		// First, pull out the message contents, and verify it actually went to them!
 		$request = $smcFunc['db_query']('', '
 			SELECT pm.subject, pm.body, pm.msgtime, pm.id_member_from, IFNULL(m.real_name, pm.from_name) AS sender_name
@@ -3099,11 +3102,11 @@ function ReportMessage()
 			SELECT id_member, real_name, lngfile
 			FROM {db_prefix}members
 			WHERE (id_group = {int:admin_id} OR FIND_IN_SET({int:admin_id}, additional_groups) != 0)
-				' . (empty($_REQUEST['ID_ADMIN']) ? '' : 'AND id_member = {int:specific_admin}') . '
+				' . (empty($_POST['ID_ADMIN']) ? '' : 'AND id_member = {int:specific_admin}') . '
 			ORDER BY lngfile',
 			array(
 				'admin_id' => 1,
-				'specific_admin' => isset($_REQUEST['ID_ADMIN']) ? (int) $_REQUEST['ID_ADMIN'] : 0,
+				'specific_admin' => isset($_POST['ID_ADMIN']) ? (int) $_POST['ID_ADMIN'] : 0,
 			)
 		);
 
@@ -3127,7 +3130,7 @@ function ReportMessage()
 
 				// Make the body.
 				$report_body = str_replace(array('{REPORTER}', '{SENDER}'), array(un_htmlspecialchars($user_info['name']), $memberFromName), $txt['pm_report_pm_user_sent']);
-				$report_body .= "\n" . '[b]' . $_REQUEST['reason'] . '[/b]' . "\n\n";
+				$report_body .= "\n" . '[b]' . $_POST['reason'] . '[/b]' . "\n\n";
 				if (!empty($recipients))
 					$report_body .= $txt['pm_report_pm_other_recipients'] . ' ' . implode(', ', $recipients) . "\n\n";
 				$report_body .= $txt['pm_report_pm_unedited_below'] . "\n" . '[quote author=' . (empty($memberFromID) ? '&quot;' . $memberFromName . '&quot;' : $memberFromName . ' link=action=profile;u=' . $memberFromID . ' date=' . $time) . ']' . "\n" . un_htmlspecialchars($body) . '[/quote]';

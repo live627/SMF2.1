@@ -526,7 +526,7 @@ function template_subject_list()
 	<table width="100%" class="table_grid">
 	<thead>
 		<tr class="catbg">
-			<th align="center" width="4%">
+			<th align="center" width="4%" class="first_th">
 				<a href="', $scripturl, '?action=pm;view;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['sort_direction'] == 'up' ? '' : ';desc'), ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '"><img src="', $settings['images_url'], '/im_switch.gif" alt="', $txt['pm_change_view'], '" title="', $txt['pm_change_view'], '" width="16" height="16" /></a>
 			</th>
 			<th width="22%">
@@ -538,7 +538,7 @@ function template_subject_list()
 			<th>
 				<a href="', $scripturl, '?action=pm;f=', $context['folder'], ';start=', $context['start'], ';sort=name', $context['sort_by'] == 'name' && $context['sort_direction'] == 'up' ? ';desc' : '', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '">', ($context['from_or_to'] == 'from' ? $txt['from'] : $txt['to']), $context['sort_by'] == 'name' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a>
 			</th>
-			<th align="center" width="4%">
+			<th align="center" width="4%" class="last_th">
 				<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />
 			</th>
 		</tr>
@@ -777,9 +777,9 @@ function template_search_results()
 	<table width="100%" class="table_grid">
 	<thead>
 		<tr class="catbg">
-			<th class="smalltext" width="30%">', $txt['date'], '</th>
-			<th class="smalltext" width="50%">', $txt['subject'], '</th>
-			<th class="smalltext" width="20%">', $txt['from'], '</th>
+			<th class="first_th" width="30%">', $txt['date'], '</th>
+			<th width="50%">', $txt['subject'], '</th>
+			<th class="last_th" width="20%">', $txt['from'], '</th>
 		</tr>
 	</thead>
 	<tbody>';
@@ -791,7 +791,6 @@ function template_search_results()
 		// We showing it all?
 		if (!empty($context['search_params']['show_complete']))
 		{
-			// !!! This still needs to be made pretty.
 			echo '
 			<div class="title_bar">
 				<h3 class="titlebg">
@@ -1170,9 +1169,16 @@ function template_labels()
 		<table width="100%" class="table_grid">
 		<thead>
 			<tr class="catbg">
-				<th class="smalltext" colspan="2">
-					<div class="floatright centertext" style="width: 4%;"><input type="checkbox" class="input_check" onclick="invertAll(this, this.form);" /></div>
+				<th class="lefttext first_th">
 					', $txt['pm_label_name'], '
+				</th>
+				<th class="centertext last_th" width="4%">';
+
+	if (count($context['labels']) > 2)
+		echo '
+					<input type="checkbox" class="input_check" onclick="invertAll(this, this.form);" />';
+
+	echo '
 				</th>
 			</tr>
 		</thead>
@@ -1286,7 +1292,9 @@ function template_report_message()
 						<textarea name="reason" rows="4" cols="70" style="width: 80%;"></textarea>
 					</dd>
 				</dl>
-				<input type="submit" name="report" value="', $txt['pm_report_message'], '" class="button_submit" />
+				<div class="righttext">
+					<input type="submit" name="report" value="', $txt['pm_report_message'], '" class="button_submit" />
+				</div>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
@@ -1329,10 +1337,10 @@ function template_rules()
 		<table width="100%" class="table_grid">
 		<thead>
 			<tr class="catbg">
-				<th class="smalltext">
+				<th class="lefttext first_th">
 					', $txt['pm_rule_title'], '
 				</th>
-				<th width="4%" align="center">';
+				<th width="4%" class="centertext last_th">';
 
 	if (!empty($context['rules']))
 		echo '

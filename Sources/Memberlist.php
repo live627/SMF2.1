@@ -89,7 +89,7 @@ function Memberlist()
 	$context['columns'] = array(
 		'is_online' => array(
 			'label' => $txt['status'],
-			'width' => '20',
+			'width' => '60',
 			'class' => 'first_th',
 		),
 		'real_name' => array(
@@ -101,7 +101,7 @@ function Memberlist()
 		),
 		'website_url' => array(
 			'label' => $txt['website'],
-			'width' => '25',
+			'width' => '70',
 			'link_with' => 'website',
 		),
 		'icq' => array(
