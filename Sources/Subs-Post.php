@@ -1114,7 +1114,15 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			continue;
 		}
 
-		// Send a notification, if enabled - taking into account buddy list!.
+		// If the receiving account is banned (>=10) or pending deletion (4), refuse to send the PM.
+		if ($row['is_activated'] >= 10 || ($row['is_activated'] == 4 && !$user_info['is_admin']))
+		{
+			$log['failed'][$row['id_member']] = sprintf($txt['pm_error_user_cannot_read'], $row['real_name']);
+			unset($all_to[array_search($row['id_member'], $all_to)]);
+			continue;
+		}
+
+		// Send a notification, if enabled - taking the buddy list into account.
 		if (!empty($row['email_address']) && ($row['pm_email_notify'] == 1 || ($row['pm_email_notify'] > 1 && (!empty($modSettings['enable_buddylist']) && $row['is_buddy']))) && $row['is_activated'] == 1)
 			$notifications[empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']][] = $row['email_address'];
 

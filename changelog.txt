@@ -76,7 +76,7 @@ February 2010
  ! Prevent usage of %e on Windows servers, as strftime may fail altogether if we do. (Subs.php) [Bug 3892]
  * Updated the pie chart sprite image used in the profile stats center to blend in better. (stats_pie.png)
  * Tweaked the padding of the (wysiwyg) editor slightly, so it looks the same in both wysiwyg and non-wysiwyg mode. (editor.css, editor.js, index.css) [Bug 2178]
- ! Hide contact details of users for guests by default on new installs. (install_2-0.mysql.sql, install_2-0.postgresql.sql, install_2-0.sqlite.sql)
+ ! Hide contact details of users for guests by default on new installs. (install_2-0_mysql.sql, install_2-0_postgresql.sql, install_2-0_sqlite.sql)
  ! In the popular boards panels, don't calculate percentages relative to the maximum activity; it only causes confusion as to what they represent. (Profile-View.php, Profile template)
  ! When moving boards, try to do a better job at determining whether move links are needed for a certain board. (ManageBoards.php) [Bug 3664]
  ! Upgrading still didn't work quite right in PostgreSQL (upgrade_2-0_postgresql.sql)
@@ -97,7 +97,8 @@ February 2010
  * Made the poll options slightly more user friendly. (Post template, Poll template, index.css, rtl.css, compat.css, Post language file)
  & Duplicate language key 'poll_results_expire'. (FixLanguage.php, Post language file, Post template, Poll template)
  * The 'Show permissions' area in the profile section was somewhat glitchy in the Core theme. (index.css, compat.css)
- ! Custom profile fields in the "Forum Profile" section didn't work in PostgreSQL (Admin template, install SQL files, upgrade_2-0_*.sql)
+ ! Custom profile fields in the "Forum Profile" section didn't work in PostgreSQL (Admin template, install_2-0_*.sql, upgrade_2-0_*.sql)
+ ! Don't allow sending PMs to banned accounts or accounts pending deletion. (Subs-Post.php) [Bug 4073]
 
 
 January 2010
