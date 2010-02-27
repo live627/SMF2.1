@@ -104,6 +104,7 @@ February 2010
  * Added some curvy corners to table headers in various sections. (ManagePermissions template, Packages template, PersonalMessage template)
  * Made the various theme listings in the admin center more consistent. (Themes template)
  * Made the border color of fieldsets consistent throughout the Curve theme. (index.css)
+ * Removed the 'calendar_how_edit' help link from Curve's board index, as it's become very self-explanatory in Curve. (BoardIndex template)
 
 
 January 2010

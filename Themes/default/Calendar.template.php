@@ -120,7 +120,7 @@ function template_event_post()
 	}
 
 	echo '
-			<div>
+			<div class="windowbg">
 				<span class="upperframe"><span></span></span>
 				<div class="roundframe">
 					<fieldset id="event_main">
@@ -158,7 +158,10 @@ function template_event_post()
 	echo '
 							</select>
 						</div>
-					</fieldset>
+					</fieldset>';
+
+	if (!empty($modSettings['cal_allowspan']) || $context['event']['new'])
+		echo '
 					<fieldset id="event_options">
 						<legend>', $txt['calendar_event_options'], '</legend>
 						<div class="event_options smalltext">
@@ -207,21 +210,24 @@ function template_event_post()
 								</li>';
 	}
 
-	echo '
+	if (!empty($modSettings['cal_allowspan']) || $context['event']['new'])
+		echo '
 							</ul>
 						</div>
-					</fieldset>
-					<input type="submit" value="', empty($context['event']['new']) ? $txt['save'] : $txt['post'], '" class="button_submit" />';
+					</fieldset>';
+
+	echo '
+					<div class="righttext">
+						<input type="submit" value="', empty($context['event']['new']) ? $txt['save'] : $txt['post'], '" class="button_submit" />';
 	// Delete button?
 	if (empty($context['event']['new']))
 		echo '
-					<input type="submit" name="deleteevent" value="', $txt['event_delete'], '" onclick="return confirm(\'', $txt['calendar_confirm_delete'], '\');" class="button_submit" />';
+						<input type="submit" name="deleteevent" value="', $txt['event_delete'], '" onclick="return confirm(\'', $txt['calendar_confirm_delete'], '\');" class="button_submit" />';
 
 	echo '
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="hidden" name="eventid" value="', $context['event']['eventid'], '" />';
-
-	echo '
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+						<input type="hidden" name="eventid" value="', $context['event']['eventid'], '" />
+					</div>
 				</div>
 				<span class="lowerframe"><span></span></span>
 			</div>

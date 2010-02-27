@@ -2222,11 +2222,14 @@ ul.post_options li
 
 /* Styles for edit event section
 ---------------------------------------------------- */
+#post_event .roundframe
+{
+	padding: 0 12%;
+}
 #post_event fieldset
 {
 	margin-bottom: 0.5em;
 	border: none;
-	width: 85%;
 	border-bottom: 1px solid #cacdd3;
 	padding: 0.5em;
 	clear: both;
