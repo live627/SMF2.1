@@ -207,7 +207,6 @@ function MembergroupIndex()
 						// No explicit members for the moderator group.
 						return $rowData[\'id_group\'] == 3 ? $txt[\'membergroups_guests_na\'] : $rowData[\'num_members\'];
 					'),
-					'class' => 'windowbg',
 					'style' => 'text-align: center',
 				),
 				'sort' => array(
@@ -306,7 +305,6 @@ function MembergroupIndex()
 				),
 				'data' => array(
 					'db' => 'num_members',
-					'class' => 'windowbg',
 					'style' => 'text-align: center',
 				),
 				'sort' => array(
@@ -320,7 +318,6 @@ function MembergroupIndex()
 				),
 				'data' => array(
 					'db' => 'min_posts',
-					'class' => 'windowbg',
 					'style' => 'text-align: center',
 				),
 				'sort' => array(

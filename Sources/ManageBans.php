@@ -1434,7 +1434,6 @@ function BanLog()
 							'ip' => false,
 						),
 					),
-					'class' => 'windowbg',
 				),
 				'sort' => array(
 					'default' => 'lb.ip',
@@ -1465,7 +1464,6 @@ function BanLog()
 							'real_name' => false,
 						),
 					),
-					'class' => 'windowbg',
 				),
 				'sort' => array(
 					'default' => 'IFNULL(mem.real_name, 1=1), mem.real_name',

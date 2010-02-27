@@ -233,13 +233,11 @@ function PermissionIndex()
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($query))
 	{
-		// If it's inherited just add it as a child.
+		// If it's inherited, just add it as a child.
 		if ($row['id_parent'] != -2)
 		{
 			if (isset($context['groups'][$row['id_parent']]))
-			{
 				$context['groups'][$row['id_parent']]['children'][$row['id_group']] = $row['group_name'];
-			}
 			continue;
 		}
 

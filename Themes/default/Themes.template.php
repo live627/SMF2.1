@@ -232,10 +232,13 @@ function template_list_themes()
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
-					<ul class="reset">
-					<li class="reset"><div class="floatleft" style="width: 40%;">', $txt['themeadmin_list_theme_dir'], ':</div><strong style="white-space: nowrap;"', $theme['valid_path'] ? '' : ' class="error"', '>', $theme['theme_dir'], '</strong>', $theme['valid_path'] ? '' : ' ' . $txt['themeadmin_list_invalid'], '</li>
-					<li class="reset"><div class="floatleft" style="width: 40%;">', $txt['themeadmin_list_theme_url'], ':</div><strong style="white-space: nowrap;">', $theme['theme_url'], '</strong></li>
-					<li class="reset"><div class="floatleft" style="width: 40%;">', $txt['themeadmin_list_images_url'], ':</div><strong style="white-space: nowrap;">', $theme['images_url'], '</strong></li>
+					<dl class="settings themes_list">
+						<dt>', $txt['themeadmin_list_theme_dir'], ':</dt>
+						<dd', $theme['valid_path'] ? '' : ' class="error"', '>', $theme['theme_dir'], $theme['valid_path'] ? '' : ' ' . $txt['themeadmin_list_invalid'], '</dd>
+						<dt>', $txt['themeadmin_list_theme_url'], ':</dt>
+						<dd>', $theme['theme_url'], '</dd>
+						<dt>', $txt['themeadmin_list_images_url'], ':</dt>
+						<dd>', $theme['images_url'], '</dd>
 					</ul>
 				</div>
 				<span class="botslice"><span></span></span>
@@ -297,27 +300,23 @@ function template_reset_list()
 		$alternate = !$alternate;
 
 		echo '
+		<div class="title_bar">
+			<h3 class="titlebg">', $theme['name'], '</h3>
+		</div>
 		<div class="windowbg', $alternate ? '' : '2','">
 			<span class="topslice"><span></span></span>
 			<div class="content">
-				<dl>
-					<dt>
-						<strong><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=settings">', $theme['name'], '</a></strong>
-					</dt>
-					<dd>
-						<ul class="reset">
-							<li>
-								<a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=reset">', $txt['themeadmin_reset_defaults'], '</a> (', $theme['num_default_options'], ' ', $txt['themeadmin_reset_defaults_current'], ')
-							</li>
-							<li>
-								<a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=reset;who=1">', $txt['themeadmin_reset_members'], '</a>
-							</li>
-							<li>
-								<a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=reset;who=2" onclick="return confirm(\'', $txt['themeadmin_reset_remove_confirm'], '\');">', $txt['themeadmin_reset_remove'], '</a> (', $theme['num_members'], ' ', $txt['themeadmin_reset_remove_current'], ')
-							</li>
-						</ul>
-					</dd>
-				</dl>
+				<ul class="reset">
+					<li>
+						<a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=reset">', $txt['themeadmin_reset_defaults'], '</a> <em class="smalltext">(', $theme['num_default_options'], ' ', $txt['themeadmin_reset_defaults_current'], ')</em>
+					</li>
+					<li>
+						<a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=reset;who=1">', $txt['themeadmin_reset_members'], '</a>
+					</li>
+					<li>
+						<a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=reset;who=2" onclick="return confirm(\'', $txt['themeadmin_reset_remove_confirm'], '\');">', $txt['themeadmin_reset_remove'], '</a> <em class="smalltext">(', $theme['num_members'], ' ', $txt['themeadmin_reset_remove_current'], ')</em>
+					</li>
+				</ul>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>';
@@ -785,24 +784,23 @@ function template_edit_list()
 		$alternate = !$alternate;
 
 		echo '
-	<div class="windowbg', $alternate ? '' : '2','">
-		<span class="topslice"><span></span></span>
-		<div class="content">
-			<dl>
-				<dt>
-					<strong><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit">', $theme['name'], '</a></strong>', !empty($theme['version']) ? ' <em>(' . $theme['version'] . ')</em>' : '', '
-				</dt>
-				<dd>
-					<ul class="reset">
-						<li><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit">', $txt['themeadmin_edit_browse'], '</a></li>', $theme['can_edit_style'] ? '
-						<li><a href="' . $scripturl . '?action=admin;area=theme;th=' . $theme['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';sa=edit;directory=css">' . $txt['themeadmin_edit_style'] . '</a></li>' : '', '
-						<li><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=copy">', $txt['themeadmin_edit_copy_template'], '</a></li>
-					</ul>
-				</dd>
-			</dl>
+		<div class="title_bar">
+			<h3 class="titlebg">
+				<a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit">', $theme['name'], '</a>', !empty($theme['version']) ? '
+				<em>(' . $theme['version'] . ')</em>' : '', '
+			</h3>
 		</div>
-		<span class="botslice"><span></span></span>
-	</div>';
+		<div class="windowbg', $alternate ? '' : '2','">
+			<span class="topslice"><span></span></span>
+			<div class="content">
+				<ul class="reset">
+					<li><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit">', $txt['themeadmin_edit_browse'], '</a></li>', $theme['can_edit_style'] ? '
+					<li><a href="' . $scripturl . '?action=admin;area=theme;th=' . $theme['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';sa=edit;directory=css">' . $txt['themeadmin_edit_style'] . '</a></li>' : '', '
+					<li><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=copy">', $txt['themeadmin_edit_copy_template'], '</a></li>
+				</ul>
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>';
 	}
 
 	echo '

@@ -73,16 +73,26 @@ function template_show_list($list_id = null)
 			<table class="table_grid" cellspacing="0" width="', !empty($cur_list['width']) ? $cur_list['width'] : '100%', '">';
 
 	// Show the column headers.
-	if (!(count($cur_list['headers']) < 2 && empty($cur_list['headers'][0]['label'])))
+	$header_count = count($cur_list['headers']);
+	if (!($header_count < 2 && empty($cur_list['headers'][0]['label'])))
 	{
 		echo '
 			<thead>
 				<tr class="catbg">';
 
 		// Loop through each column and add a table header.
+		$i = 0;
 		foreach ($cur_list['headers'] as $col_header)
+		{
+			$i ++;
+			if (empty($col_header['class']) && $i == 1)
+				$col_header['class'] = 'first_th';
+			elseif (empty($col_header['class']) && $i == $header_count)
+				$col_header['class'] = 'last_th';
+
 			echo '
-					<th scope="col" class="smalltext"', empty($col_header['class']) ? '' : ' class="' . $col_header['class'] . '"', empty($col_header['style']) ? '' : ' style="' . $col_header['style'] . '"', empty($col_header['colspan']) ? '' : ' colspan="' . $col_header['colspan'] . '"', '>', empty($col_header['href']) ? '' : '<a href="' . $col_header['href'] . '" rel="nofollow">', empty($col_header['label']) ? '&nbsp;' : $col_header['label'], empty($col_header['href']) ? '' : '</a>', empty($col_header['sort_image']) ? '' : ' <img src="' . $settings['images_url'] . '/sort_' . $col_header['sort_image'] . '.gif" alt="" />', '</th>';
+					<th scope="col"', empty($col_header['class']) ? '' : ' class="' . $col_header['class'] . '"', empty($col_header['style']) ? '' : ' style="' . $col_header['style'] . '"', empty($col_header['colspan']) ? '' : ' colspan="' . $col_header['colspan'] . '"', '>', empty($col_header['href']) ? '' : '<a href="' . $col_header['href'] . '" rel="nofollow">', empty($col_header['label']) ? '&nbsp;' : $col_header['label'], empty($col_header['href']) ? '' : '</a>', empty($col_header['sort_image']) ? '' : ' <img src="' . $settings['images_url'] . '/sort_' . $col_header['sort_image'] . '.gif" alt="" />', '</th>';
+		}
 
 		echo '
 				</tr>
@@ -100,15 +110,20 @@ function template_show_list($list_id = null)
 	// Show the list rows.
 	elseif (!empty($cur_list['rows']))
 	{
+		$alternate = false;
 		foreach ($cur_list['rows'] as $id => $row)
 		{
 			echo '
-				<tr class="windowbg2" id="list_' . $list_id . '_' . $id. '">';
+				<tr class="windowbg', $alternate ? '2' : '', '" id="list_', $list_id, '_', $id, '">';
+
 			foreach ($row as $row_data)
 				echo '
 					<td', empty($row_data['class']) ? '' : ' class="' . $row_data['class'] . '"', empty($row_data['style']) ? '' : ' style="' . $row_data['style'] . '"', '>', $row_data['value'], '</td>';
+
 			echo '
 				</tr>';
+
+			$alternate = !$alternate;
 		}
 	}
 

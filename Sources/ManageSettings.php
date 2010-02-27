@@ -1305,7 +1305,6 @@ function ShowCustomProfiles()
 						$onClickHandler = $rowData[\'can_show_register\'] ? sprintf(\'onclick="document.getElementById(\\\'reg_%1$s\\\').disabled = !this.checked;"\', $rowData[\'id\']) : \'\';
 						return sprintf(\'<input type="checkbox" name="active[]" id="active_%1$s" value="%1$s" class="input_check"%2$s%3$s />\', $rowData[\'id\'], $isChecked, $onClickHandler);
 					'),
-					'class' => 'windowbg',
 					'style' => 'width: 20%; text-align: center;',
 				),
 			),
@@ -1319,7 +1318,6 @@ function ShowCustomProfiles()
 						$isDisabled = $rowData[\'can_show_register\'] ? \'\' : \' disabled="disabled"\';
 						return sprintf(\'<input type="checkbox" name="reg[]" id="reg_%1$s" value="%1$s" class="input_check"%2$s%3$s />\', $rowData[\'id\'], $isChecked, $isDisabled);
 					'),
-					'class' => 'windowbg',
 					'style' => 'width: 20%; text-align: center;',
 				),
 			),
@@ -1402,7 +1400,6 @@ function ShowCustomProfiles()
 
 						return $rowData[\'active\'] ? $txt[\'yes\'] : $txt[\'no\'];
 					'),
-					'class' => 'windowbg',
 					'style' => 'width: 8%; text-align: center;',
 				),
 				'sort' => array(
@@ -1420,7 +1417,6 @@ function ShowCustomProfiles()
 
 						return $txt[\'custom_profile_placement_\' . (empty($rowData[\'placement\']) ? \'standard\' : ($rowData[\'placement\'] == 1 ? \'withicons\' : \'abovesignature\'))];
 					'),
-					'class' => 'windowbg2',
 					'style' => 'width: 8%; text-align: center;',
 				),
 				'sort' => array(
@@ -1439,7 +1435,6 @@ function ShowCustomProfiles()
 							'id_field' => false,
 						),
 					),
-					'class' => 'windowbg',
 					'style' => 'width: 15%; text-align: center;',
 				),
 			),

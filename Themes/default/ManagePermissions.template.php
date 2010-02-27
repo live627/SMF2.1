@@ -17,7 +17,7 @@ function template_permission_index()
 		<form action="', $scripturl, '?action=admin;area=permissions;sa=quick" method="post" accept-charset="', $context['character_set'], '" name="permissionForm" id="permissionForm">';
 
 		if (!empty($context['profile']))
-		echo '
+			echo '
 			<div class="title_bar">
 				<h3 class="titlebg">', $txt['permissions_for_profile'], ': &quot;', $context['profile']['name'], '&quot;</h3>
 			</div>';
@@ -26,24 +26,33 @@ function template_permission_index()
 			<table width="100%" class="table_grid">
 			<thead>
 				<tr class="catbg">
-					<th valign="middle">', $txt['membergroups_name'], '</th>
-					<th class="smalltext" width="10%" align="center" valign="middle">', $txt['membergroups_members_top'], '</th>
-					<th class="smalltext" width="16%" align="center">
-						', empty($modSettings['permission_enable_deny']) ? $txt['membergroups_permissions'] : '
-						<div class="floatleft" style="width: 50%;">' . $txt['permissions_allowed'] . '</div> ' . $txt['permissions_denied'], '
+					<th class="first_th">', $txt['membergroups_name'], '</th>
+					<th width="10%" align="center" valign="middle">', $txt['membergroups_members_top'], '</th>';
+
+		if (empty($modSettings['permission_enable_deny']))
+			echo '
+					<th width="16%" align="center">', $txt['membergroups_permissions'], '</th>';
+		else
+			echo '
+					<th width="8%" align="center">', $txt['permissions_allowed'], '</th>
+					<th width="8%" align="center">', $txt['permissions_denied'], '</th>';
+
+		echo '
+					<th width="10%" align="center" valign="middle">', $context['can_modify'] ? $txt['permissions_modify'] : $txt['permissions_view'], '</th>
+					<th class="last_th" width="4%" align="center" valign="middle">
+						', $context['can_modify'] ? '<input type="checkbox" class="input_check" onclick="invertAll(this, this.form, \'group\');" />' : '', '
 					</th>
-					<th class="smalltext" width="10%" align="center" valign="middle">', $context['can_modify'] ? $txt['permissions_modify'] : $txt['permissions_view'], '</th>
-					<th class="smalltext" width="4%" align="center" valign="middle">
-						', $context['can_modify'] ? '<input type="checkbox" class="input_check" onclick="invertAll(this, this.form, \'group\');" />' : '', '</th>
 				</tr>
 			</thead>
 			<tbody>';
 
+	$alternate = false;
 	foreach ($context['groups'] as $group)
 	{
+		$alternate = !$alternate;
 		echo '
-				<tr>
-					<td class="windowbg2">
+				<tr class="windowbg', $alternate ? '2' : '', '">
+					<td>
 						', $group['name'], $group['id'] == -1 ? ' (<a href="' . $scripturl . '?action=helpadmin;help=membergroup_guests" onclick="return reqWin(this.href);">?</a>)' : ($group['id'] == 0 ? ' (<a href="' . $scripturl . '?action=helpadmin;help=membergroup_regular_members" onclick="return reqWin(this.href);">?</a>)' : ($group['id'] == 1 ? ' (<a href="' . $scripturl . '?action=helpadmin;help=membergroup_administrator" onclick="return reqWin(this.href);">?</a>)' : ($group['id'] == 3 ? ' (<a href="' . $scripturl . '?action=helpadmin;help=membergroup_moderator" onclick="return reqWin(this.href);">?</a>)' : '')));
 
 		if (!empty($group['children']))
@@ -52,18 +61,19 @@ function template_permission_index()
 
 		echo '
 					</td>
-					<td class="windowbg" align="center">', $group['can_search'] ? $group['link'] : $group['num_members'], '</td>
-					<td class="windowbg2" align="center"', $group['id'] == 1 ? ' style="font-style: italic;"' : '', '>';
+					<td align="center">', $group['can_search'] ? $group['link'] : $group['num_members'], '</td>';
+
 		if (empty($modSettings['permission_enable_deny']))
 			echo '
-						', $group['num_permissions']['allowed'];
+					<td width="16%" align="center">', $group['num_permissions']['allowed'], '</td>';
 		else
 			echo '
-						<div class="floatleft" style="width: 50%;">', $group['num_permissions']['allowed'], '</div> ', empty($group['num_permissions']['denied']) || $group['id'] == 1 ? $group['num_permissions']['denied'] : ($group['id'] == -1 ? '<em style="font-style: italic;">' . $group['num_permissions']['denied'] . '</em>' : '<em style="color: red;">' . $group['num_permissions']['denied'] . '</em>');
+					<td width="8%" align="center"', $group['id'] == 1 ? ' style="font-style: italic;"' : '', '>', $group['num_permissions']['allowed'], '</td>
+					<td width="8%" align="center"', $group['id'] == 1 || $group['id'] == -1 ? ' style="font-style: italic;"' : (!empty($group['num_permissions']['denied']) ? ' style="color: red;"' : ''), '>', $group['num_permissions']['denied'], '</td>';
+
 		echo '
-					</td>
-					<td class="windowbg2" align="center">', $group['allow_modify'] ? '<a href="' . $scripturl . '?action=admin;area=permissions;sa=modify;group=' . $group['id'] . (empty($context['profile']) ? '' : ';pid=' . $context['profile']['id']) . '">' . ($context['can_modify'] ? $txt['permissions_modify'] : $txt['permissions_view']). '</a>' : '', '</td>
-					<td class="windowbg" align="center">', $group['allow_modify'] && $context['can_modify'] ? '<input type="checkbox" name="group[]" value="' . $group['id'] . '" class="input_check" />' : '', '</td>
+					<td align="center">', $group['allow_modify'] ? '<a href="' . $scripturl . '?action=admin;area=permissions;sa=modify;group=' . $group['id'] . (empty($context['profile']) ? '' : ';pid=' . $context['profile']['id']) . '">' . ($context['can_modify'] ? $txt['permissions_modify'] : $txt['permissions_view']). '</a>' : '', '</td>
+					<td align="center">', $group['allow_modify'] && $context['can_modify'] ? '<input type="checkbox" name="group[]" value="' . $group['id'] . '" class="input_check" />' : '', '</td>
 				</tr>';
 	}
 
@@ -257,6 +267,12 @@ function template_by_board()
 				</h3>
 			</div>';
 
+	if (!$context['edit_all'])
+		echo '
+			<div class="righttext">
+				<a href="', $scripturl, '?action=admin;area=permissions;sa=board;edit;', $context['session_var'], '=', $context['session_id'], '">[', $txt['permissions_board_all'], ']</a>
+			</div>';
+
 	foreach ($context['categories'] as $category)
 	{
 		echo '
@@ -346,9 +362,9 @@ function template_edit_profiles()
 			<table width="100%" class="table_grid">
 			<thead>
 				<tr class="catbg">
-					<th>', $txt['permissions_profile_name'], '</th>
+					<th class="first_th">', $txt['permissions_profile_name'], '</th>
 					<th>', $txt['permissions_profile_used_by'], '</th>
-					<th width="5%">', $txt['delete'], '</th>
+					<th class="last_th" width="5%">', $txt['delete'], '</th>
 				</tr>
 			</thead>
 			<tbody>';
@@ -1070,22 +1086,22 @@ function template_postmod_permissions()
 
 	echo '
 				<div class="righttext padding">
-						', $txt['permissions_post_moderation_select'], ':
-						<select name="pid" onchange="document.forms.postmodForm.submit();">';
+					', $txt['permissions_post_moderation_select'], ':
+					<select name="pid" onchange="document.forms.postmodForm.submit();">';
 
 	foreach ($context['profiles'] as $profile)
 		if ($profile['can_modify'])
 			echo '
-							<option value="', $profile['id'], '" ', $profile['id'] == $context['current_profile'] ? 'selected="selected"' : '', '>', $profile['name'], '</option>';
+						<option value="', $profile['id'], '" ', $profile['id'] == $context['current_profile'] ? 'selected="selected"' : '', '>', $profile['name'], '</option>';
 
 	echo '
-						</select>
-						<input type="submit" value="', $txt['go'], '" class="button_submit" />
+					</select>
+					<input type="submit" value="', $txt['go'], '" class="button_submit" />
 			</div>
 			<table width="100%" class="table_grid">
 			<thead>
 				<tr class="catbg">
-					<th></th>
+					<th class="first_th"></th>
 					<th align="center" colspan="3">
 						', $txt['permissions_post_moderation_new_topics'], '
 					</th>
@@ -1095,7 +1111,7 @@ function template_postmod_permissions()
 					<th align="center" colspan="3">
 						', $txt['permissions_post_moderation_replies_any'], '
 					</th>
-					<th align="center" colspan="3">
+					<th class="last_th" align="center" colspan="3">
 						', $txt['permissions_post_moderation_attachments'], '
 					</th>
 				</tr>

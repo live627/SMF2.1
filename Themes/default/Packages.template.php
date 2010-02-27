@@ -1596,7 +1596,7 @@ function template_file_permissions()
 			var possibleTags = document.getElementsByTagName("tr");
 			var foundOne = false;
 
-			for (i = 0; i < possibleTags.length; i++)
+			for (var i = 0; i < possibleTags.length; i++)
 			{
 				if (possibleTags[i].id.indexOf("content_" + folderIdent + ":-:") == 0)
 				{
@@ -1868,13 +1868,13 @@ function template_file_permissions()
 		<table width="100%" class="table_grid">
 		<thead>
 			<tr class="catbg">
-				<td width="30%">', $txt['package_file_perms_name'], '</td>
-				<td width="30%">', $txt['package_file_perms_status'], '</td>
-				<td align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_read'], '</span></td>
-				<td align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_write'], '</span></td>
-				<td align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_execute'], '</span></td>
-				<td align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_custom'], '</span></td>
-				<td align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_no_change'], '</span></td>
+				<th class="first_th" width="30%">', $txt['package_file_perms_name'], '</th>
+				<th width="30%">', $txt['package_file_perms_status'], '</th>
+				<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_read'], '</span></th>
+				<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_write'], '</span></th>
+				<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_execute'], '</span></th>
+				<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_custom'], '</span></th>
+				<th class="last_th" align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_no_change'], '</span></th>
 			</tr>
 		</thead>
 		';

@@ -100,7 +100,10 @@ February 2010
  ! Custom profile fields in the "Forum Profile" section didn't work in PostgreSQL (Admin template, install_2-0_*.sql, upgrade_2-0_*.sql)
  ! Don't allow sending PMs to banned accounts or accounts pending deletion. (Subs-Post.php) [Bug 4073]
  ! Do not allow sending PM reports without doing a session check. (PersonalMessage.php)
- * Added some curvy corners to the table headers in the PM section. (PersonalMessage template) 
+ * Added row color alternation and curvy headers to generic lists; removed some hardcoded alternation. (GenericList template, various source files) 
+ * Added some curvy corners to table headers in various sections. (ManagePermissions template, Packages template, PersonalMessage template)
+ * Made the various theme listings in the admin center more consistent. (Themes template)
+ * Made the border color of fieldsets consistent throughout the Curve theme. (index.css)
 
 
 January 2010

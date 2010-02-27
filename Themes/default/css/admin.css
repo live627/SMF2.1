@@ -524,6 +524,20 @@ ul.theme_options li
 	white-space: pre;
 }
 
+dl.themes_list
+{
+	margin: 0;
+}
+dl.themes_list dt
+{
+	margin-bottom: 3px;
+}
+dl.themes_list dd
+{
+	font-style: italic;
+	white-space: nowrap;
+}
+
 /* Styles for the registration center.
 ------------------------------------------------- */
 .agreement, .reserved_names

@@ -243,7 +243,7 @@ function ScheduledTasks()
 			'run_now' => array(
 				'header' => array(
 					'value' => $txt['scheduled_tasks_run_now'],
-					'style' => 'width: 6%;',
+					'style' => 'width: 12%;',
 				),
 				'data' => array(
 					'sprintf' => array(
