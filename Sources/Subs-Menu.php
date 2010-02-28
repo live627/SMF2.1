@@ -166,11 +166,14 @@ function createMenu($menuData, $menuOptions = array())
 						if (!empty($area['subsections']))
 						{
 							$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'] = array();
-							$first_sa = 0;
+							$first_sa = $last_sa = null;
 							foreach ($area['subsections'] as $sa => $sub)
 							{
 								if ((empty($sub[1]) || allowedTo($sub[1])) && (!isset($sub['enabled']) || !empty($sub['enabled'])))
 								{
+									if ($first_sa == null)
+										$first_sa = $sa;
+
 									$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa] = array('label' => $sub[0]);
 									// Custom URL?
 									if (isset($sub['url']))
@@ -190,6 +193,8 @@ function createMenu($menuData, $menuOptions = array())
 										elseif (!isset($menu_context['current_subsection']) && !empty($sub[2]))
 											$menu_context['current_subsection'] = $sa;
 									}
+
+									// Let's assume this is the last, for now.
 									$last_sa = $sa;
 								}
 								// Mark it as disabled...
@@ -197,13 +202,12 @@ function createMenu($menuData, $menuOptions = array())
 									$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa]['disabled'] = true;
 							}
 
-							// Set which one is last and selected in the group.
+							// Set which one is first, last and selected in the group.
 							if (!empty($menu_context['sections'][$section_id]['areas'][$area_id]['subsections']))
 							{
-								$context['right_to_left'] ? reset($menu_context['sections'][$section_id]['areas'][$area_id]['subsections']) : end($menu_context['sections'][$section_id]['areas'][$area_id]['subsections']);
-								$key = key($menu_context['sections'][$section_id]['areas'][$area_id]['subsections']);
-								$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$key]['is_last'] = true;
-									
+								$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$context['right_to_left'] ? $last_sa : $first_sa]['is_first'] = true;
+								$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$context['right_to_left'] ? $first_sa : $last_sa]['is_last'] = true;
+
 								if ($menu_context['current_area'] == $area_id && !isset($menu_context['current_subsection']))
 									$menu_context['current_subsection'] = $first_sa;
 							}
