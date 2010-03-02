@@ -3,9 +3,11 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC3                                                      			 ???
 ================================================================================
-February 2010
+March 2010
 --------------------------------------------------------------------------------
  ! Counting the number of custom registration questions didn't work as expected (ManageSettings.php)
+ * Invalid XHTML (GenericControls template)
+ * Custom verification questions weren't properly aligned except in Curve (Core index.css, compat.css) [Bug 4212]
 
 
 February 2010

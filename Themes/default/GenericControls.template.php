@@ -285,7 +285,7 @@ function template_control_verification($verify_id, $display_type = 'all', $reset
 
 		if ($display_type != 'single')
 			echo '
-			<div id="verification_control">';
+			<div id="verification_control_', $i, '" class="verification_control">';
 
 		// Do the actual stuff - image first?
 		if ($i == 0 && $verify_context['show_visual'])
