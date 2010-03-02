@@ -773,10 +773,12 @@ function ModifySpamSettings($return_config = false)
 			// Already existed?
 			if (isset($context['question_answers'][$id]))
 			{
+				$count_questions++;
 				// Changed?
 				if ($context['question_answers'][$id]['question'] != $question || $context['question_answers'][$id]['answer'] != $answer)
 				{
 					if ($question == '' || $answer == '')
+					{
 						$smcFunc['db_query']('', '
 							DELETE FROM {db_prefix}log_comments
 							WHERE comment_type = {string:ver_test}
@@ -786,8 +788,9 @@ function ModifySpamSettings($return_config = false)
 								'ver_test' => 'ver_test',
 							)
 						);
+						$count_questions--;
+					}
 					else
-					{
 						$request = $smcFunc['db_query']('', '
 							UPDATE {db_prefix}log_comments
 							SET body = {string:question}, recipient_name = {string:answer}
@@ -800,8 +803,6 @@ function ModifySpamSettings($return_config = false)
 								'answer' => $answer,
 							)
 						);
-						$count_questions++;
-					}
 				}
 			}
 			// It's so shiney and new!
@@ -812,18 +813,20 @@ function ModifySpamSettings($return_config = false)
 					'body' => $question,
 					'recipient_name' => $answer,
 				);
-				$count_questions++;
 			}
 		}
 
 		// Any questions to insert?
 		if (!empty($questionInserts))
+		{
 			$smcFunc['db_insert']('',
 				'{db_prefix}log_comments',
 				array('comment_type' => 'string', 'body' => 'string-65535', 'recipient_name' => 'string-80'),
 				$questionInserts,
 				array('id_comment')
 			);
+			$count_questions++;
+		}
 
 		if (empty($count_questions) || $_POST['qa_verification_number'] > $count_questions)
 			$_POST['qa_verification_number'] = $count_questions;
