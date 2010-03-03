@@ -1756,13 +1756,16 @@ div#pollmoderation
 {
 	font-weight: normal;
 	padding: 0.4em;
+	overflow: hidden;
 }
 #forumposts h3.catbg3 img
 {
+	float: left;
 	vertical-align: middle;
 }
 #forumposts h3.catbg3 span
 {
+	float: left;
 	padding-left: 2%;
 }
 #forumposts h3.catbg3 span#top_subject
@@ -3013,6 +3016,7 @@ dl.stats dd
 	border: 1px solid #000;
 	height: 7px;
 	width: 75%;
+	margin: 0 auto;
 }
 #personal_messages .capacity_bar div
 {

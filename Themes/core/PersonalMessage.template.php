@@ -16,8 +16,8 @@ function template_pm_above()
 			<table width="100%" cellspacing="1" cellpadding="3" class="bordercolor" style="margin-bottom: 1em">
 				<tr class="titlebg2">
 					<td width="200" align="right"><strong>', $txt['pm_capacity'], ':</strong></td>
-					<td width="50%" align="center">
-						<div class="capacity_bar lefttext">
+					<td width="50%">
+						<div class="capacity_bar">
 							<div class="', $context['limit_bar']['percent'] > 85 ? 'full' : ($context['limit_bar']['percent'] > 40 ? 'filled' : 'empty'), '" style="width: ', $context['limit_bar']['bar'], '%;"></div>
 						</div>
 					</td>
