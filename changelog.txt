@@ -11,6 +11,7 @@ March 2010
  * Updated the Profile-related sections of the SMF User Help section. (Help template, index.css, compat.css)
  & Changed lots of language strings accordingly. (Manual language file)   
  * Added curvy headers to the group membership template. (Profile template)  
+ * Made Core's personal message template tableless too, reusing the markup from the Display template. (PersonalMessage template, index.css, compat.css) 
 
 
 February 2010

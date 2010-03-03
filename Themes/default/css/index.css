@@ -2840,7 +2840,7 @@ dl
 }
 #main_admsection #basicinfo img.avatar
 {
-	float: left;
+	float: right;
 	vertical-align: top;
 }
 #main_admsection #basicinfo ul

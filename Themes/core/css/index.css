@@ -2374,7 +2374,7 @@ tr.titlebg td
 }
 #main_admsection
 {
-	margin-left: 172px;
+	margin-left: 174px;
 }
 
 tr.windowbg td, tr.windowbg2 td, tr.approvebg td, tr.highlight2 td
@@ -2990,6 +2990,50 @@ dl.stats dd
 .stats_bar span
 {
 	padding-left: 2px;
+}
+
+/* Styles for the personal messages section.
+------------------------------------------------- */
+
+#personal_messages
+{
+	padding: 1px;
+}
+#personal_messages #top_subject
+{
+	padding-left: 11.75em !important;
+}
+#personal_messages div.labels
+{
+	padding: 0 1em 0 0;
+}
+#personal_messages .capacity_bar
+{
+	background: #fff;
+	border: 1px solid #000;
+	height: 7px;
+	width: 75%;
+}
+#personal_messages .capacity_bar div
+{
+	border: none;
+	height: 7px;
+}
+#personal_messages .capacity_bar div.empty
+{
+	background: #468008;
+}
+#personal_messages .capacity_bar div.filled
+{
+	background: #EEA800;
+}
+#personal_messages .capacity_bar div.full
+{
+	background: #A53D05;
+}
+#personal_messages .reportlinks
+{
+	padding: 0.5em 1.3em;
 }
 
 /* Styles for the calendar section.
