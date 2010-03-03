@@ -2306,24 +2306,6 @@ span.memberstatsbar span
 	padding: 1em;
 	border: 1px solid #696969;
 }
-#helpmain h1.section
-{
-	font-size: 18px;
-}
-#helpmain h2.section
-{
-	font-size: 18px;
-	border-bottom: 1px solid;
-	padding-bottom: 0.5em;
-	margin: 0 0 0.5em 0;
-}
-#helpmain h3.section
-{
-	font-size: 16px;
-	margin: 1em 0 0.5em 0;
-	font-weight: normal;
-	padding: 0 0 0.5em 0;
-}
 
 /* Samples should be easily distinguishable. */
 #helpmain .help_sample

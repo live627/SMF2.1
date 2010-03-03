@@ -393,7 +393,7 @@ code.bbc_code
 /* A more discreet highlight color, for selected membergroups etc. */
 .highlight2
 {
-	background-color: #b3f4b0;
+	background-color: #D1E1EF;
 	color: #000 !important;
 }
 
@@ -3503,24 +3503,6 @@ span.hidelink
 #helpmain
 {
 	padding: 0 1em;
-}
-#helpmain h1.section
-{
-	font-size: 18px;
-}
-#helpmain h2.section
-{
-	font-size: 18px;
-	border-bottom: 1px solid;
-	padding-bottom: 0.5em;
-	margin: 0 0 0.5em 0;
-}
-#helpmain h3.section
-{
-	font-size: 16px;
-	font-weight: normal;
-	margin: 2em 0 0.5em 0;
-	padding: 0 0 0.5em 0.5em;
 }
 
 /* Samples should be easily distinguishable. */

@@ -1073,501 +1073,291 @@ function template_manual_password_reminders()
 	<p>', $txt['manual_reminders_new_password'], '</p>';
 }
 
-// Profile info page.
-function template_manual_profile_info()
-{
-	// TODO : Write this.
-}
-
 // Profile summary page.
 function template_manual_profile_info_summary()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-	<p>', $txt['manual_profile_profile_screen'], '</p>
-	<p>', $txt['manual_profile_edit_profile_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_profile_edit_profile_link_index_main'], '</a>', $txt['manual_profile_edit_profile_part2'], '</p>
-	<ol>
-		<li>
-			<a href="', $scripturl, '?action=help;area=profile_summary#all">', $txt['manual_profile_available_to_all'], '</a>
-			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;area=profile_summary#info-all">', $txt['manual_profile_profile_info'], '</a></li>
-			</ol>
-		</li>
-		<li>
-			<a href="', $scripturl, '?action=help;area=modifying_profiles#owners">', $txt['manual_profile_sec_normal'], '</a>
-			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;area=modifying_profiles#edit-owners">', $txt['manual_profile_modify_profile'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;area=modifying_profiles#actions-owners">', $txt['manual_profile_actions'], '</a></li>
-			</ol>
-		</li>
-		<li>
-			<a href="', $scripturl, '?action=help;area=modifying_profiles#admins">', $txt['manual_profile_sec_settings'], '</a>
-			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;area=modifying_profiles#info-admins">', $txt['manual_profile_profile_info'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;area=modifying_profiles#edit-admins">', $txt['manual_profile_modify_profile'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;area=modifying_profiles#actions-admins">', $txt['manual_profile_actions'], '</a></li>
-			</ol>
-		</li>
-	</ol>
-	<h2 class="section" id="all">', $txt['manual_profile_available_to_all'], '</h2>
-	<h3 class="section" id="info-all">', $txt['manual_profile_profile_info'], '</h3>
+	<p>', $txt['manual_profile_summary_describe'], '</p>
 	<div class="help_sample">
-			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
-				<tr>
-					<td width="100%" valign="top">
-						<table border="0" cellpadding="4" cellspacing="1" align="center" class="bordercolor">
-							<tr class="titlebg">
-								<td align="left" width="420" height="26"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" border="0" align="top" />&nbsp; ', $txt['manual_profile_username'], ':&nbsp;', $txt['manual_profile_login_name'], '</td>
-								<td align="center" width="150">', $txt['manual_profile_pic_text'], '</td>
-							</tr>
-							<tr>
-								<td class="windowbg" width="420" align="left">
-									<table border="0" cellspacing="0" cellpadding="2" width="100%">
-										<tr>
-											<td><strong>', $txt['manual_profile_name'], ':</strong></td>
-											<td>', $txt['manual_profile_screen_name'], '</td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['manual_profile_posts'], ':</strong></td>
-											<td>', $txt['manual_profile_member_posts'], '</td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['manual_profile_position'], ':</strong></td>
-											<td>', $txt['manual_profile_membergroup'], '</td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['manual_profile_date_reg'], ':</strong></td>
-											<td>', $txt['manual_profile_date_time_reg'], '</td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['manual_profile_last_active'], ':</strong></td>
-											<td>', $txt['manual_profile_date_time_active'], '</td>
-										</tr>
-										<tr>
-											<td colspan="2">
-												<hr size="1" width="100%" class="hrcolor" />
-											</td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['icq'], ':</strong></td>
-											<td></td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['aim'], ':</strong></td>
-											<td></td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['msn'], ':</strong></td>
-											<td></td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['yim'], ':</strong></td>
-											<td></td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['manual_profile_email'], ':</strong></td>
-											<td><a href="mailto:', $txt['manual_profile_email_user'], '" class="board">', $txt['manual_profile_email_user'], '</a></td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['manual_profile_website'], ':</strong></td>
-											<td><a href="http://www.simplemachines.org/" target="_blank" class="new_win"></a></td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['manual_profile_status'], ':</strong></td>
-											<td><em><a href="', $scripturl, '?action=help;area=sending_pms" title="', $txt['manual_profile_pm'], ' (', $txt['manual_profile_online'], ')"><img src="', $settings['images_url'], '/useron.gif" border="0" align="middle" alt="', $txt['manual_profile_online'], '" /></a> <span class="smalltext">', $txt['manual_profile_online'], '</span></em></td>
-										</tr>
-										<tr>
-											<td colspan="2">
-												<hr size="1" width="100%" class="hrcolor" />
-											</td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['manual_profile_gender'], ':</strong></td>
-											<td></td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['manual_profile_age'], ':</strong></td>
-											<td>', $txt['manual_profile_n_a'], '</td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['manual_profile_location'], ':</strong></td>
-											<td></td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['manual_profile_local_time'], ':</strong></td>
-											<td>', $txt['manual_profile_current_date_time'], '</td>
-										</tr>
-										<tr>
-											<td><strong>', $txt['manual_profile_language'], ':</strong></td>
-											<td></td>
-										</tr>
-										<tr>
-											<td colspan="2">
-												<hr size="1" width="100%" class="hrcolor" />
-											</td>
-										</tr>
-										<tr>
-											<td colspan="2" height="25">
-												<table border="0">
-													<tr>
-														<td><strong>', $txt['manual_profile_sig'], ':</strong></td>
-													</tr>
-													<tr>
-														<td colspan="2"></td>
-													</tr>
-												</table>
-											</td>
-										</tr>
-									</table>
-								</td>
-								<td class="windowbg" valign="middle" align="center" width="150"><br />
-								<br /></td>
-							</tr>
-							<tr class="titlebg">
-								<td colspan="2" align="left">', $txt['manual_profile_other_info'], ':</td>
-							</tr>
-							<tr>
-								<td class="windowbg2" colspan="2" align="left"><a href="', $scripturl, '?action=help;area=profile_summary#all" class="board">', $txt['manual_profile_send_pm'], '</a><br />
-								<br />
-								<a href="', $scripturl, '?action=help;area=profile_summary#all" class="board">', $txt['manual_profile_show_member_posts'], '</a><br />
-								<a href="', $scripturl, '?action=help;area=profile_summary#all" class="board">', $txt['manual_profile_show_member_stats'], '</a><br />
-								<br /></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table><br />
+		<div id="profileview" class="flow_auto">
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />', $txt['manual_entry_profile_info_summary'], '</span>
+				</h3>
+			</div>
+			<div id="basicinfo">
+				<div class="windowbg">
+					<span class="topslice"><span></span></span>
+					<div class="content">
+						<div class="username"><h4>', $txt['manual_profile_summary_display_name'], ' <span class="position">', $txt['manual_topic_membergroup'], '</span></h4></div>
+						<img class="avatar" src="', $settings['default_images_url'], '/admin/smilies_and_messageicons.png" alt="" border="0" />
+						<ul class="reset">
+							<li><a href="#" title="', $txt['manual_register_email'], '" rel="nofollow"><img src="', $settings['images_url'], '/email_sm.gif" alt="', $txt['manual_register_email'], '" /></a></li>
+							<li><a href="#" title="', $txt['manual_profile_summary_website'], '" class="new_win"><img src="', $settings['images_url'], '/www_sm.gif" alt="', $txt['manual_profile_summary_website'], '" border="0" /></a></li>
+							<li><a class="aim" href="#" title="', $txt['manual_profile_summary_aim'], '"><img src="', $settings['images_url'], '/aim.gif" alt="', $txt['manual_profile_summary_aim'], '" border="0" /></a></li>
+							<li><a class="yim" href="#" title="', $txt['manual_profile_summary_yim'], '"><img src="http://opi.yahoo.com/online?u=YIM&amp;m=g&amp;t=0" alt="', $txt['manual_profile_summary_yim'], '" border="0" /></a></li>
+						</ul>
+						<span id="userstatus">
+							<a href="#" title="', $txt['manual_profile_summary_offline'], '" rel="nofollow"><img src="', $settings['images_url'], '/useroff.gif" alt="', $txt['manual_profile_summary_offline'], '" align="middle" /></a>
+							<span class="smalltext"> ', $txt['manual_profile_summary_offline'], '</span><br />
+							<a href="#">', $txt['manual_profile_summary_add_buddy'], '</a>
+						</span>
+						<p id="infolinks">
+							<a href="#">', $txt['manual_profile_summary_send_pm'], '</a><br />
+							<a href="#">', $txt['manual_entry_profile_info_posts'], '</a><br />
+							<a href="#">', $txt['manual_entry_profile_info_stats'], '</a>
+						</p>
+					</div>
+					<span class="botslice"><span></span></span>
+				</div>
+			</div>
+			<div id="detailedinfo">
+				<div class="windowbg2">
+					<span class="topslice"><span></span></span>
+					<div class="content">
+						<dl>
+							<dt>', $txt['manual_register_username'], ': </dt>
+							<dd>', $txt['manual_register_username'], '</dd>
+							<dt>', $txt['manual_profile_summary_post_title'], ': </dt>
+							<dd>', $txt['manual_profile_summary_posts_avg'], '</dd>
+							<dt>', $txt['manual_register_email'], ': </dt>
+							<dd><em><a href="#">', $txt['manual_register_email'], '</a></em></dd>
+							<dt>', $txt['manual_profile_summary_custom'], ': </dt>
+							<dd>', $txt['manual_profile_summary_custom'], '</dd>
+							<dt>', $txt['manual_profile_summary_personal'], ': </dt>
+							<dd>', $txt['manual_profile_summary_personal'], '</dd>
+							<dt>', $txt['manual_profile_summary_sex'], ': </dt>
+							<dd>', $txt['manual_profile_summary_sex'], '</dd>
+							<dt>', $txt['manual_profile_summary_old'], ':</dt>
+							<dd>', $txt['manual_profile_summary_old'], '</dd>
+							<dt>', $txt['manual_profile_summary_locate'], ':</dt>
+							<dd>', $txt['manual_profile_summary_locate'], '</dd>
+						</dl>
+						<dl class="noborder">
+							<dt>', $txt['manual_profile_summary_date_registered'], ': </dt>
+							<dd>', $txt['manual_profile_summary_mdyt'], '</dd>
+							<dt>', $txt['manual_profile_summary_local'], ':</dt>
+							<dd>', $txt['manual_profile_summary_mdyt'], '</dd>
+							<dt>', $txt['manual_profile_summary_last'], ': </dt>
+							<dd>', $txt['manual_profile_summary_mdyt'], '</dd>
+						</dl>
+						<div class="signature">
+							<h5>', $txt['manual_topic_signature'], ':</h5>
+							', $txt['manual_topic_signature'], '
+						</div>
+					</div>
+					<span class="botslice"><span></span></span>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
 	</div>
+	<p>', $txt['manual_profile_summary_how'], '</p>
 	<ul>
-		<li>', $txt['manual_profile_summary_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary#owners">', $txt['manual_profile_summary_link_owners'], '</a>', $txt['manual_profile_summary_part2'], '</li>
-		<li>', $txt['manual_profile_hide_email'], '</li>
-		<li>', $txt['manual_profile_empty_part1'], '<a href="', $scripturl, '?action=help;area=modifying_profiles">', $txt['manual_profile_empty_link_owners'], '</a>', $txt['manual_profile_empty_part2'], '</li>
-		<li>', $txt['manual_profile_send_member_pm_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms">', $txt['manual_profile_send_member_pm_link_pm'], '</a>', $txt['manual_profile_send_member_pm_part2'], '</li>
-		<li>', $txt['manual_profile_show_last_posts'], '</li>
-		<li>', $txt['manual_profile_show_member_stats2'], '</li>
+		<li>', $txt['manual_profile_summary_display'], '</li>
+		<li>', $txt['manual_profile_summary_membergroup'], '</li>
+		<li>', $txt['manual_profile_summary_communicate'], '</li>
+		<li>', $txt['manual_profile_summary_online'], '</li>
+		<li>', $txt['manual_profile_summary_buddy'], '</li>
+		<li>', $txt['manual_profile_summary_pm'], '</li>
+		<li>', $txt['manual_profile_summary_posts'], '</li>
+		<li>', $txt['manual_profile_summary_stats'], '</li>
+		<li>', $txt['manual_profile_summary_username'], '</li>
+		<li>', $txt['manual_profile_summary_posts'], '</li>
+		<li>', $txt['manual_profile_summary_email'], '</li>
+		<li>', $txt['manual_profile_summary_title'], '</li>
+		<li>', $txt['manual_profile_summary_text'], '</li>
+		<li>', $txt['manual_profile_summary_gender'], '</li>
+		<li>', $txt['manual_profile_summary_age'], '</li>
+		<li>', $txt['manual_profile_summary_locale'], '</li>
+		<li>', $txt['manual_profile_summary_registered'], '</li>
+		<li>', $txt['manual_profile_summary_time'], '</li>
+		<li>', $txt['manual_profile_summary_active'], '</li>
 	</ul>';
 }
 
 // Profile show posts page.
 function template_manual_profile_info_posts()
 {
-	// TODO : Write this.
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
+	<p>', $txt['manual_profile_posts_describe'], '</p>
+	<ul>
+		<li>', $txt['manual_profile_posts_messages'], '</li>
+		<li>', $txt['manual_profile_posts_topics'], '</li>
+		<li>', $txt['manual_profile_posts_attach'], '</li>
+	<ul>';
 }
 
 // Profile show stats page.
 function template_manual_profile_info_stats()
 {
-	// TODO : Write this.
-}
-
-// Modify profile page.
-function template_manual_modify_profile()
-{
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-		<p>', $txt['manual_profile_normal_desc'], '</p>
-		<ul class="basic_helplist">
-			<li>', $txt['manual_profile_account_related'], '</li>
-			<li>', $txt['manual_profile_forum_profile_info'], '</li>
-			<li>', $txt['manual_profile_look_layout'], '</li>
-		</ul>
-		<div class="help_sample">
-			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
-				<tr>
-					<td width="180" valign="top">
-						<table border="0" cellpadding="4" cellspacing="1" class="bordercolor" width="170">
-							<tr>
-								<td class="catbg">', $txt['manual_profile_profile_info2'], '</td>
-							</tr>
-							<tr class="windowbg2">
-								<td class="windowbg"><a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_summary2'], '</a><br />
-								<a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_show_stats'], '</a><br />
-								<a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_show_posts'], '</a><br />
-								<br /></td>
-							</tr>
-							<tr>
-								<td class="catbg">', $txt['manual_profile_modify_own_profile'], '</td>
-							</tr>
-							<tr class="windowbg2">
-								<td class="windowbg"><a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_acct_settings'], '</a><br />
-								<a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_forum_profile'], '</a><br />
-								<strong><a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_look_and_layout'], '</a></strong><br />
-								<a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_notify_email'], '</a><br />
-								<a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_pm_options1'], '</a><br />
-								<br /></td>
-							</tr>
-							<tr>
-								<td class="catbg">', $txt['manual_profile_actions'], '</td>
-							</tr>
-							<tr class="windowbg2">
-								<td class="windowbg"><a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_delete_account'], '</a><br />
-								<br /></td>
-							</tr>
-						</table>
-					</td>
-					<td width="100%" valign="top">
-						<form action="', $scripturl, '?action=help;area=profile_summary" method="post" accept-charset="', $context['character_set'], '">
-							<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
-								<tr class="titlebg">
-									<td height="26" align="left">&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" border="0" align="top" />&nbsp; ', $txt['manual_profile_edit_profile1'], '</td>
-								</tr>
-								<tr>
-									<td class="windowbg" height="25" align="left"><span class="smalltext"><br />
-									', $txt['manual_profile_look_layout_explanation'], '<br />
-									<br /></span></td>
-								</tr>
-								<tr>
-									<td class="windowbg2" align="left">
-										<table border="0" width="100%" cellpadding="3">
-											<tr>
-												<td colspan="2" width="40%"><strong>', $txt['manual_profile_current_theme'], ':</strong>&nbsp;', $txt['manual_profile_board_default'], '&nbsp;<a href="', $scripturl, '?action=help;area=modifying_profiles" class="board">(', $txt['manual_profile_change'], ')</a></td>
-											</tr>
-											<tr>
-												<td colspan="2">
-													<hr width="100%" size="1" class="hrcolor" />
-												</td>
-											</tr>
-											<tr>
-												<td width="40%"><strong>', $txt['manual_profile_time_format'], ':</strong><br />
-												<a href="', $scripturl, '/index.php?action=helpadmin;help=time_format" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['manual_profile_help'], '" border="0" align="left" style="padding-right: 1ex;" /></a> <span class="smalltext">', $txt['manual_profile_caption_date'], '</span></td>
-												<td><select style="margin-bottom: 4px;">
-													<option selected="selected">
-														(', $txt['manual_profile_date_option_select'], ')
-													</option>
-													<option>
-														', $txt['manual_profile_date_option_1'], '
-													</option>
-													<option>
-														', $txt['manual_profile_date_option_2'], '
-													</option>
-													<option>
-														', $txt['manual_profile_date_option_3'], '
-													</option>
-													<option>
-														', $txt['manual_profile_date_option_4'], '
-													</option>
-													<option>
-														', $txt['manual_profile_date_option_5'], '
-													</option>
-												</select><br />
-												<input type="text" value="" size="30" class="input_text" /></td>
-											</tr>
-											<tr>
-												<td width="40%">
-													<strong>', $txt['manual_profile_time_offset'], ':</strong>
-													<div class="smalltext">
-														', $txt['manual_profile_offset_hours'], '
-													</div>
-												</td>
-												<td class="smalltext"><input type="text" size="5" maxlength="5" value="0" class="input_text" /><br />
-												<em>(', $txt['manual_profile_forum_time'], ')</em></td>
-											</tr>
-											<tr>
-												<td colspan="2">
-													<hr width="100%" size="1" class="hrcolor" />
-												</td>
-											</tr>
-											<tr>
-												<td colspan="2">
-													<br />
-													<table width="100%" cellspacing="0" cellpadding="3">
-														<tr>
-															<td width="28"><input type="checkbox" class="input_check" /></td>
-															<td>', $txt['manual_profile_board_descriptions'], '</td>
-														</tr>
-														<tr>
-															<td width="28"><input type="checkbox" class="input_check" /></td>
-															<td>', $txt['manual_profile_show_child'], '</td>
-														</tr>
-														<tr>
-															<td width="28"><input type="checkbox" class="input_check" /></td>
-															<td>', $txt['manual_profile_no_ava'], '</td>
-														</tr>
-														<tr>
-															<td width="28"><input type="checkbox" class="input_check" /></td>
-															<td>', $txt['manual_profile_no_sig'], '</td>
-														</tr>
-														<tr>
-															<td width="28"><input type="checkbox" class="input_check" /></td>
-															<td>', $txt['manual_profile_return_to_topic'], '</td>
-														</tr>
-														<tr>
-															<td width="28"><input type="checkbox" class="input_check" /></td>
-															<td>', $txt['manual_profile_recent_posts'], '</td>
-														</tr>
-														<tr>
-															<td width="28"><input type="checkbox" class="input_check" /></td>
-															<td>', $txt['manual_profile_recent_pms'], '</td>
-														</tr>
-														<tr>
-															<td colspan="2">', $txt['manual_profile_first_day_week'], '
-															<select>
-																<option selected="selected">
-																	', $txt['manual_profile_sun'], '
-																</option>
-																<option>
-																	', $txt['manual_profile_mon'], '
-																</option>
-															</select></td>
-														</tr>
-														<tr>
-															<td colspan="2">', $txt['manual_profile_quick_reply'], ': <select>
-																<option selected="selected">
-																	', $txt['manual_profile_not_at_all'], '
-																</option>
-																<option>
-																	', $txt['manual_profile_off_default'], '
-																</option>
-																<option>
-																	', $txt['manual_profile_on_default'], '
-																</option>
-															</select></td>
-														</tr>
-														<tr>
-															<td colspan="2">', $txt['manual_profile_quick_mod'], '&nbsp; <select>
-																<option selected="selected">
-																	', $txt['manual_profile_no_quick_mod'], '.
-																</option>
-																<option>
-																	', $txt['manual_profile_check_quick_mod'], '.
-																</option>
-																<option>
-																	', $txt['manual_profile_icon_quick_mod'], '.
-																</option>
-															</select></td>
-														</tr>
-													</table>
-												</td>
-											</tr>
-											<tr>
-												<td colspan="2">
-													<hr width="100%" size="1" class="hrcolor" />
-												</td>
-											</tr>
-											<tr>
-												<td align="right" colspan="2"><input type="button" value="', $txt['manual_profile_change_profile'], '" class="button_submit" /></td>
-											</tr>
-										</table><br />
-									</td>
-								</tr>
-							</table>
-						</form>
-					</td>
-				</tr>
-			</table>
-			<br />
-		</div>
-		<ul class="basic_helplist">
-			<li>', $txt['manual_profile_notify_email_prefs'], '</li>
-			<li>', $txt['manual_profile_pm_options_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms">', $txt['manual_profile_pm_options_link_pm'], '</a>', $txt['manual_profile_pm_options_part2'], '</li>
-		</ul>
-		<h3 class="section" id="actions-owners">', $txt['manual_profile_sub_actions'], '</h3>
-		<ul>
-			<li>', $txt['manual_profile_confirm_delete_acct'], '</li>
-		</ul>
-		<br />
-		<h2 class="section" id="admins">', $txt['manual_profile_sec_settings'], '</h2>
-		<p>', $txt['manual_profile_settings_desc'], '</p>
-		<div>
-		<div style="width: 180px; float: left; border: none;">
-			<table border="0" cellpadding="4" cellspacing="1" class="bordercolor" width="170">
-				<tr>
-					<td class="catbg">', $txt['manual_profile_profile_info'], '</td>
-				</tr>
-				<tr class="windowbg2">
-					<td class="windowbg"><strong><a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_summary2'], '</a></strong><br />
-					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_show_stats'], '</a><br />
-					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_show_posts'], '</a><br />
-					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_track_user'], '</a><br />
-					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_track_ip'], '</a><br />
-					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_show_permissions'], '</a><br />
-					<br /></td>
-				</tr>
-				<tr>
-					<td class="catbg">', $txt['manual_profile_sub_modify_profile'], '</td>
-				</tr>
-				<tr class="windowbg2">
-					<td class="windowbg"><a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_acct_settings'], '</a><br />
-					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_forum_profile'], '</a><br />
-					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_look_and_layout'], '</a><br />
-					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_notify_email'], '</a><br />
-					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_pm_options1'], '</a><br />
-					<br /></td>
-				</tr>
-				<tr>
-					<td class="catbg">', $txt['manual_profile_actions'], '</td>
-				</tr>
-				<tr class="windowbg2">
-					<td class="windowbg"><a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_ban_user'], '</a><br />
-					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_delete_account'], '</a><br />
-					<br /></td>
-				</tr>
-			</table>
-		</div><br />
-		<div style="margin: -1.8em 20px 0 200px;">
-			<h3 class="section" id="info-admins">', $txt['manual_profile_sub_profile_info'], '</h3>
-			<ul>
-				<li>', $txt['manual_profile_sub_track_user'], '</li>
-				<li>', $txt['manual_profile_sub_track_ip'], '</li>
-				<li>', $txt['manual_profile_sub_show_permissions'], '</li>
-			</ul>
-			<h3 class="section" id="edit-admins">', $txt['manual_profile_sub_modify_profile'], '</h3>
-			<ul>
-				<li>', $txt['manual_profile_sub_acct_settings'], '</li>
-				<li>', $txt['manual_profile_sub_forum_profile_info'], '</li>
-			</ul>
-			<h3 class="section" id="actions-admins">', $txt['manual_profile_sub_actions2'], '</h3>
-			<ul>
-				<li>', $txt['manual_profile_sub_ban_user'], '</li>
-				<li>', $txt['manual_profile_sub_delete_acct'], '</li>
-			</ul>
-		</div>
-	</div><br clear="all" />';
-
+	<p>', $txt['manual_profile_stats_describe'], '</p>
+	<ul>
+		<li>', $txt['manual_profile_stats_online'], '</li>
+		<li>', $txt['manual_profile_stats_posts'], '</li>
+		<li>', $txt['manual_profile_stats_topics'], '</li>
+		<li>', $txt['manual_profile_stats_polls'], '</li>
+		<li>', $txt['manual_profile_stats_votes'], '</li>
+		<li>', $txt['manual_profile_stats_activity'], '</li>
+		<li>', $txt['manual_profile_stats_popular_posts'], '</li>
+		<li>', $txt['manual_profile_stats_popular_activity'], '</li>
+	</ul>';
 }
 
 // Modify profile account settings page.
 function template_manual_modify_profile_settings()
 {
-	// TODO : Write this.
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
+		<p>', $txt['manual_profile_settings_describe'], '</p>
+		<ul>
+			<li>', $txt['manual_profile_settings_name'], '</li>
+			<li>', $txt['manual_profile_settings_email'], '</li>
+			<li>', $txt['manual_profile_settings_allow'], '</li>
+			<li>', $txt['manual_profile_settings_show'], '</li>
+			<li>', $txt['manual_profile_settings_password'], '</li>
+			<li>', $txt['manual_profile_settings_question'], '</li>
+			<li>', $txt['manual_profile_settings_current'], '</li>
+		</ul>';
 }
 
 // Modify forum profile page.
 function template_manual_modify_profile_forum()
 {
-	// TODO : Write this.
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
+		<p>', $txt['manual_profile_forum_describe'], '</p>
+		<ul>
+			<li>', $txt['manual_profile_forum_avatar'], '</li>
+			<li>', $txt['manual_profile_forum_text'], '</li>
+			<li>', $txt['manual_profile_forum_birth'], '</li>
+			<li>', $txt['manual_profile_forum_location'], '</li>
+			<li>', $txt['manual_profile_forum_gender'], '</li>
+			<li>', $txt['manual_profile_forum_im'], '</li>
+			<li>', $txt['manual_profile_forum_title'], '</li>
+			<li>', $txt['manual_profile_forum_signature'], '</li>
+			<li>', $txt['manual_profile_forum_website'], '</li>
+		</ul>';
 }
 
 // Modify profile look and layout page.
 function template_manual_modify_profile_look()
 {
-	// TODO : Write this.
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
+		<p>', $txt['manual_profile_look_describe'], '</p>
+		<p>', $txt['manual_profile_look_theme'], '</p>
+		<p>', $txt['manual_profile_look_options'], '</p>
+		<ul>
+			<li>', $txt['manual_profile_look_descriptions'], '</li>
+			<li>', $txt['manual_profile_look_children'], '</li>
+			<li>', $txt['manual_profile_look_sides'], '</li>
+			<li>', $txt['manual_profile_look_avatars'], '</li>
+			<li>', $txt['manual_profile_look_signatures'], '</li>
+			<li>', $txt['manual_profile_look_return'], '</li>
+			<li>', $txt['manual_profile_look_warn'], '</li>
+			<li>', $txt['manual_profile_look_ignore'], '</li>
+			<li>', $txt['manual_profile_look_recent'], '</li>
+			<li>', $txt['manual_profile_look_wysiwyg'], '</li>
+		</ul>
+		<p>', $txt['manual_profile_look_quick'], '</p>';
+}
+
+// Modify forum authentication page.
+function template_manual_modify_profile_auth()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
+		<p>', $txt['manual_profile_auth_describe'], '</p>';
 }
 
 // Modify profile notifications page.
 function template_manual_modify_profile_notify()
 {
-	// TODO : Write this.
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
+		<p>', $txt['manual_profile_notify_describe'], '</p>
+		<ul>
+			<li>', $txt['manual_profile_notify_receive'], '</li>
+			<li>', $txt['manual_profile_notify_auto'], '</li>
+			<li>', $txt['manual_profile_notify_post'], '</li>
+		</ul>
+		<p>', $txt['manual_profile_notify_lists'], '</p>';
 }
 
 // Modify profile personal messages page.
 function template_manual_modify_profile_pm()
 {
-	// TODO : Write this.
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
+		<p>', $txt['manual_profile_pm_describe'], '</p>
+		<p>', $txt['manual_profile_pm_display'], '</p>
+		<p>', $txt['manual_proifle_pm_control'], '</p>
+		<p>', $txt['manual_profile_pm_notify'], '</p>
+		<p>', $txt['manual_profile_pm_last'], '</p>
+		<ul>
+			<li>', $txt['manual_profile_pm_save'], '</li>
+			<li>', $txt['manual_profile_pm_label'], '</li>
+		</ul>';
 }
 
 // Modify profile edit buddies page.
 function template_manual_modify_profile_buddies()
 {
-	// TODO : Write this.
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
+		<p>', $txt['manual_profile_buddies_describe'], '</p>
+		<ul>
+			<li>', $txt['manual_profile_buddies_edit'], '</li>
+			<li>', $txt['manual_profile_buddies_ignore'], '</li>
+		</ul>';
 }
 
 // Modify profile group membership page.
 function template_manual_modify_profile_groups()
 {
-	// TODO : Write this.
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
+		<p>', $txt['manual_profile_groups_describe'], '</p>
+		<div class="help_sample">
+			<table border="0" width="100%" cellspacing="0" cellpadding="4" class="table_grid">
+				<tr>
+					<th class="catbg first_th">', $txt['manual_profile_groups_available'], '</th>
+					<th class="catbg last_th"></th>
+				</tr>
+				<tr class="windowbg2">
+					<td>
+						<strong>', $txt['manual_profile_groups_free'], '</strong><br /><span class="smalltext">', $txt['manual_profile_groups_free_desc'], '</span>
+					</td>
+					<td class="righttext">
+						<a href="#">', $txt['manual_profile_groups_join'], '</a>
+					</td>
+				</tr>
+				<tr class="windowbg">
+					<td>
+						<strong>', $txt['manual_profile_groups_requestable'], '</strong><br /><span class="smalltext">', $txt['manual_profile_groups_requestable_desc'], '</span>
+					</td>
+					<td class="righttext">
+						<a href="#">', $txt['manual_profile_groups_request'], '</a>
+					</td>
+				</tr>
+			</table>
+		</div>';
 }
 
 // Posting screen page.

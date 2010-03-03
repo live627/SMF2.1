@@ -109,27 +109,30 @@ function ShowHelp()
 			'title' => $txt['manual_category_profile_features'],
 			'description' => '',
 			'areas' => array(
-				/*'profile_info' => array(
+				'profile_info' => array(
 					'label' => $txt['manual_section_profile_info'],
-					'template' => 'manual_profile_info',
+					'template' => 'manual_profile_info_summary',
+					'description' => $txt['manual_entry_profile_info_desc'],
 					'subsections' => array(
 						'summary' => array($txt['manual_entry_profile_info_summary'], 'manual_profile_info_summary'),
 						'posts' => array($txt['manual_entry_profile_info_posts'], 'manual_profile_info_posts'),
 						'stats' => array($txt['manual_entry_profile_info_stats'], 'manual_profile_info_stats'),
 					),
-				),*/
+				),
 				'modify_profile' => array(
 					'label' => $txt['manual_section_modify_profile'],
-					'template' => 'manual_modify_profile',
-					/*'subsections' => array(
+					'template' => 'manual_modify_profile_settings',
+					'description' => $txt['manual_entry_modify_profile_desc'],
+					'subsections' => array(
 						'settings' => array($txt['manual_entry_modify_profile_settings'], 'manual_modify_profile_settings'),
 						'forum' => array($txt['manual_entry_modify_profile_forum'], 'manual_modify_profile_forum'),
 						'look' => array($txt['manual_entry_modify_profile_look'], 'manual_modify_profile_look'),
+						'auth' => array($txt['manual_entry_modify_profile_auth'], 'manual_modify_profile_auth'),
 						'notify' => array($txt['manual_entry_modify_profile_notify'], 'manual_modify_profile_notify'),
 						'pm' => array($txt['manual_entry_modify_profile_pm'], 'manual_modify_profile_pm'),
 						'buddies' => array($txt['manual_entry_modify_profile_buddies'], 'manual_modify_profile_buddies'),
 						'groups' => array($txt['manual_entry_modify_profile_groups'], 'manual_modify_profile_groups'),
-					),*/
+					),
 				),
 				/*'actions' => array(
 					'label' => $txt['manual_section_profile_actions'],
@@ -243,7 +246,7 @@ function ShowHelp()
 		);
 
 	// Bring it on!
-	$context['sub_template'] = $manual_area_data['template'];
+	$context['sub_template'] = isset($manual_area_data['current_subsection'], $manual_area_data['subsections'][$manual_area_data['current_subsection']][1]) ? $manual_area_data['subsections'][$manual_area_data['current_subsection']][1] : $manual_area_data['template'];
 	$context['page_title'] = $manual_area_data['label'] . ' - ' . $txt['manual_smf_user_help'];
 
 	// Build the link tree.

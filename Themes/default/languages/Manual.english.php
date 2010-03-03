@@ -48,16 +48,19 @@ $txt['manual_section_bbc_hq'] = 'BBC: H-Q';
 $txt['manual_section_bbc_rz'] = 'BBC: R-Z';
 
 // Entries
+$txt['manual_entry_profile_info_desc'] = 'This section provides information about viewing member profiles.';
 $txt['manual_entry_profile_info_summary'] = 'Summary';
 $txt['manual_entry_profile_info_posts'] = 'Show Posts';
 $txt['manual_entry_profile_info_stats'] = 'Show Stats';
+$txt['manual_entry_modify_profile_desc'] = 'This section provides information about modifying member profiles.';
 $txt['manual_entry_modify_profile_settings'] = 'Account Settings';
 $txt['manual_entry_modify_profile_forum'] = 'Forum Profile';
 $txt['manual_entry_modify_profile_look'] = 'Look and Layout';
+$txt['manual_entry_modify_profile_auth'] = 'Authentication';
 $txt['manual_entry_modify_profile_notify'] = 'Notifications';
 $txt['manual_entry_modify_profile_pm'] = 'Personal Messaging';
 $txt['manual_entry_modify_profile_ignore_boards'] = 'Ignore Boards Options';
-$txt['manual_entry_modify_profile_buddies'] = 'Edit Buddies';
+$txt['manual_entry_modify_profile_buddies'] = 'Buddies/Ignore List';
 $txt['manual_entry_modify_profile_groups'] = 'Group Membership';
 $txt['manual_entry_profile_actions_subscriptions'] = 'Paid Subscriptions';
 $txt['manual_entry_profile_actions_delete'] = 'Delete this account';
@@ -278,6 +281,138 @@ $txt['manual_reminders_fingers'] = 'How many fingers am I holding up?';
 $txt['manual_reminders_answer'] = 'Answer';
 $txt['manual_reminders_save'] = 'Save';
 
+// Text for template: profile_info_summary
+$txt['manual_profile_summary_describe'] = 'The profile info summary screen displays basic forum information about a member, as well as any additional information they may wish to share. An SMF forum may be customized extensively by its administrator(s), so the information displayed may vary greatly between forums.';
+$txt['manual_profile_summary_how'] = 'A member may view their own profile summary at any time simply by selecting Profile from the main menu. A member may view another member\'s profile summary by selecting the member\'s name whenever it is displayed on the forum. The following is commonly displayed.';
+$txt['manual_profile_summary_display'] = '<strong>Display Name</strong> - A member may choose a display name that is different from their username.';
+$txt['manual_profile_summary_membergroup'] = '<strong>Membergroup</strong> - If a member has been assigned a primary membergroup, it is displayed. Othwerwise, their post-based membergroup is displayed.';
+$txt['manual_profile_summary_communicate'] = '<strong>Communication Icons</strong> - If a member provides information for various communication methods such as email, web site, ICQ, or AIM, it will be displayed in the form of icons.';
+$txt['manual_profile_summary_online'] = '<strong>Online Status</strong> - If a member has not chosen to hide their online status, it is displayed.';
+$txt['manual_profile_summary_buddy'] = '<strong>Add To Buddy List</strong> - If the forum administrator(s) have enabled buddy lists, members may add each other as buddies.';
+$txt['manual_profile_summary_pm'] = '<strong>Send PM</strong> - A member may send a private message to another member.';
+$txt['manual_profile_summary_posts'] = '<strong>Show Posts</strong> - A member may view a list of all of another member\'s posts that they can see.';
+$txt['manual_profile_summary_stats'] = '<strong>Show Stats</strong> - A member may view various stats related to another member.';
+$txt['manual_profile_summary_username'] = '<strong>Username</strong> - A member uses their username to login.';
+$txt['manual_profile_summary_posts'] = '<strong>Posts</strong> - The forum keeps track of the number of each member\'s post, as well as an average per day.';
+$txt['manual_profile_summary_email'] = '<strong>Email</strong> - A member may choose to hide their email, in which case it is not displayed.';
+$txt['manual_profile_summary_title'] = '<strong>Custom Title</strong> - If a member has been given a custom title, it is displayed.';
+$txt['manual_profile_summary_text'] = '<strong>Personal Text</strong> - If a member has chosen to enter personal text, it is displayed.';
+$txt['manual_profile_summary_gender'] = '<strong>Gender</strong> - A member may choose not to disclose their gender, in which case it is not displayed.';
+$txt['manual_profile_summary_age'] = '<strong>Age</strong> - If a member has filled in their birth date, their age is displayed.';
+$txt['manual_profile_summary_locale'] = '<strong>Location</strong> - If a member has chosen to disclose their location, it is displayed.';
+$txt['manual_profile_summary_registered'] = '<strong>Date Registered</strong> - The forum remembers when each member first registered.';
+$txt['manual_profile_summary_time'] = '<strong>Local Time</strong> - Since a member may be from any part of the world, their local time is displayed.';
+$txt['manual_profile_summary_active'] = '<strong>Last Active</strong> - The forum keeps track of when a member was last active.';
+$txt['manual_profile_summary_display_name'] = 'Display Name';
+$txt['manual_profile_summary_website'] = 'Website';
+$txt['manual_profile_summary_aim'] = 'AOL Instant Messenger - AIM';
+$txt['manual_profile_summary_yim'] = 'Yahoo Instant Messenger - YIM';
+$txt['manual_profile_summary_offline'] = 'Offline';
+$txt['manual_profile_summary_add_buddy'] = '[Add To Buddy List]';
+$txt['manual_profile_summary_send_pm'] = 'Send PM';
+$txt['manual_profile_summary_post_title'] = 'Posts';
+$txt['manual_profile_summary_posts_avg'] = 'Number of posts (average per day)';
+$txt['manual_profile_summary_custom'] = 'Custom Title';
+$txt['manual_profile_summary_personal'] = 'Personal Text';
+$txt['manual_profile_summary_sex'] = 'Gender';
+$txt['manual_profile_summary_old'] = 'Age';
+$txt['manual_profile_summary_locate'] = 'Location';
+$txt['manual_profile_summary_date_registered'] = 'Date Registered';
+$txt['manual_profile_summary_local'] = 'Local Time';
+$txt['manual_profile_summary_last'] = 'Last Active';
+$txt['manual_profile_summary_mdyt'] = 'Month, Day, Year, and Time';
+
+// Text for template: profile_info_posts
+$txt['manual_profile_posts_describe'] = 'All of the posts of a particular member, excluding those that have been removed, may be viewed by selecting <em>Show Posts</em> from the member\'s profile info summary. There are three formats that can be used.';
+$txt['manual_profile_posts_messages'] = '<strong>Messages</strong> - A list of all the member\'s individual posts is displayed.';
+$txt['manual_profile_posts_topics'] = '<strong>Topics</strong> - A list of the first posts from each of the topics that the member started is displayed.';
+$txt['manual_profile_posts_attach'] = '<strong>Attachments</strong> - A list of all the attachments the member has uploaded is displayed.';
+
+// Text for template: profile_info_stats
+$txt['manual_profile_stats_describe'] = 'The profile stats screen may be viewed by selecting <em>Show Stats</em> from a member\'s profile info summary. Some interesting information may be found here.';
+$txt['manual_profile_stats_online'] = '<strong>Total Time Spent Online</strong> - The forum keeps an approximation of the total amount of time each member has spent browsing the forum.';
+$txt['manual_profile_stats_posts'] = '<strong>Total Posts</strong> - Excluding removed posts, the forum calculates the total number of posts made by each member.';
+$txt['manual_profile_stats_topics'] = '<strong>Total Topics Started</strong> - Excluding removed topics, the forum calculates the total number of topics started by each member.';
+$txt['manual_profile_stats_polls'] = '<strong>Number of Polls Created</strong> - Excluding removed polls, the forum calculates the total number of polls created by each member.';
+$txt['manual_profile_stats_votes'] = '<strong>Number of Votes Cast</strong> - Excluding removed votes, the total number of votes cast by each member.';
+$txt['manual_profile_stats_activity'] = '<strong>Posting Activity By Time</strong> - The forum calculates the percentage of posts made by a member in each hour of the day.';
+$txt['manual_profile_stats_popular_posts'] = '<strong>Most Popular Boards By Posts</strong> - The forum generates a ranking of the boards most posted in by the member, relative to the <em>member</em>\'s total post count.';
+$txt['manual_profile_stats_popular_activity'] = '<strong>Most Popular Boards By Activity</strong> - The forum generates a ranking of the boards most posted in by the member, relative to the <em>board</em>\'s total post count.';
+
+// Text for template: modify_profile_settings
+$txt['manual_profile_settings_describe'] = 'Members may modify basic account settings by default. These settings control the member\'s access to their account, as well as when and how they are visible to other members browsing the forum. The following options are available to be modified.';
+$txt['manual_profile_settings_name'] = '<strong>Name</strong> - While their username cannot usually be changed, a member may change their display name at any time. Other members browsing the forum will see display names instead of usernames in most places.';
+$txt['manual_profile_settings_email'] = '<strong>Email</strong> - The email address associated with a member\'s account may be changed, however a valid email address is required.';
+$txt['manual_profile_settings_allow'] = '<strong>Allow users to email me</strong> - A member may choose to allow other members to contact them via email. The forum does not reveal the member\'s e-mail address, but instead provides a contact form.';
+$txt['manual_profile_settings_show'] = '<strong>Show others my online status</strong> - If selected, a member will be displayed in the forum\'s <em>Who\'s Online</em> list.';
+$txt['manual_profile_settings_password'] = '<strong>Change Password</strong> - A member\'s password may be changed at any time.';
+$txt['manual_profile_settings_question'] = '<strong>Secret Question</strong> - The secret question is used in the event that a member forgets their password. Providing the correct answer aids the member in retrieving the password.';
+$txt['manual_profile_settings_current'] = '<strong>Current Password</strong> - The member\'s current password is required to make any changes to their account settings.';
+
+// Text for template: modify_profile_forum
+$txt['manual_profile_forum_describe'] = 'In addition to basic account settings members also have the option of filling in additional, more personal information. None of these fields are required, and users often choose to leave some or all of them blank.';
+$txt['manual_profile_forum_avatar'] = '<strong>Avatar</strong> - An avatar is a small picture or graphic associated with a member. Some forums may allow members to upload or link to external avatars, while others may only allow members to select from a provided set of images.';
+$txt['manual_profile_forum_text'] = '<strong>Personal Text</strong> - The personal text is usually displayed directly underneath a member\'s avatar when they post.';
+$txt['manual_profile_forum_birth'] = '<strong>Birthdate</strong> - When a member provides their full birthdate, their age is calculated and displayed on their profile. If the calendar feature is enabled, it is also placed on the calendar. Particularly self-conscious members may choose to omit the year in which case their birthday will still be displayed on the calendar, but their age will not be calculated.';
+$txt['manual_profile_forum_location'] = '<strong>Location</strong> - A member may choose to give a general idea of their location. It is not encouraged (or wise) for members to give their specific location in the form of an address or lat/lon coordinates.';
+$txt['manual_profile_forum_gender'] = '<strong>Gender</strong> - If desired, a member may have their gender displayed. Selecting the blank line will prevent any gender from being displayed.';
+$txt['manual_profile_forum_im'] = '<strong>Messengers</strong> - Members may provide their various messenger usernames or numbers for clients such as ICQ, AIM, MSN, and YIM.';
+$txt['manual_profile_forum_title'] = '<strong>Custom Title</strong> - Forum administrators may allow a member to choose their own custom title. Custom titles are displayed below the member\'s name when posting.';
+$txt['manual_profile_forum_signature'] = '<strong>Signature</strong> - If provided, a member\'s signature is attached to the bottom of each of their posts.';
+$txt['manual_profile_forum_website'] = '<strong>Website</strong> - A member may advertise their own web site by providing its URL and a title.';
+
+// Text for template: modify_profile_look
+$txt['manual_profile_look_describe'] = 'By default, members may change many different options that affect look and layout to make their forum experience more enjoyable. Some forum administrators may choose to limit these options, but here are the basics.';
+$txt['manual_profile_look_theme'] = 'SMF provides the ability to create and use different themes. Provided there is more than one theme installed, a member may choose the theme that they prefer. They may also customize the time format that the theme uses to display dates and times. Additionally, setting a time offset allows the forum to display dates and times in the member\'s local time. The forum provides a handy auto-detect feature in case a member does not know what their offset should be.';
+$txt['manual_profile_look_options'] = 'The following options may be enabled or disabled by selecting their corresponding checkboxes.';
+$txt['manual_profile_look_descriptions'] = '<strong>Show board descriptions inside boards.</strong> - The description displayed on the board index will also be displayed on that board\'s message index.';
+$txt['manual_profile_look_children'] = '<strong>Show child boards on every page inside boards, not just the first.</strong> - Each page inside of a board will display a list of child boards if there are any. If disabled, the list will only be displayed on the first page.';
+$txt['manual_profile_look_sides'] = '<strong>Use sidebar menus instead of dropdown menus when possible.</strong> - If side menus are preferred, they can be used instead of the dropdown menus.';
+$txt['manual_profile_look_avatars'] = '<strong>Don\'t show users\' avatars.</strong> - Some users find avatars annoying, so they may choose to hide them altogether.';
+$txt['manual_profile_look_signatures'] = '<strong>Don\'t show users\' signatures.</strong> - Similar to avatars, signatures may also be hidden.';
+$txt['manual_profile_look_return'] = '<strong>Return to topics after posting by default.</strong> - If enabled, a member will be returned to the end of the topic in which they just posted. Otherwise, they will be returned to the message index for that particular board.';
+$txt['manual_profile_look_warn'] = '<strong>Don\'t warn on new replies made while posting.</strong> - When other users post while a member is preparing their post, a warning is generated. With this option enabled, those warnings will be hidden.';
+$txt['manual_profile_look_ignore'] = '<strong>Hide messages posted by members on my ignore list.</strong> - Posts from users on a member\'s ignore list will not be displayed.';
+$txt['manual_profile_look_recent'] = '<strong>Show most recent posts at the top.</strong> - The display order of posts is switched to reverse chronological when this option is enabled.';
+$txt['manual_profile_look_wysiwyg'] = '<strong>Show WYSIWYG editor on post page by default.</strong> - The WYSIWYG editor removes the need to know BBC. It may be enabled by default when posting.';
+$txt['manual_profile_look_quick'] = 'Members may also choose how many topics to display per page on a board\'s message index and how many posts to display per page within a topic. There are also options for using quick reply and quick moderation. Quick reply allows members to post to a topic without actually using the posting page. Quick moderation allows members to perform moderation actions on multiple posts or topics more quickly if they have the permissions to do so.';
+
+// Text for template: modify_profile_auth
+$txt['manual_profile_auth_describe'] = 'The forum allows a member to switch between using OpenID or a username and password combination to login. In order to switch, however, the account\'s current password is required.';
+
+// Text for template: modify_profile_notify
+$txt['manual_profile_notify_describe'] = 'SMF provides notification options that may prove useful to many members. In addition to the options available below, a member may choose to be notified instantly, daily, or weekly about replies, moderation actions, or both in topics for which they have requested notifications.';
+$txt['manual_profile_notify_receive'] = '<strong>Receive forum newsletters, announcements and important notifications by email.</strong> - Newsletters, announcements, and other notifications will be delivered to the member\'s email. Even if this option is disabled, forum administrators are able to override it in some instances.';
+$txt['manual_profile_notify_auto'] = '<strong>Turn notification on when you post or reply to a topic.</strong> - When a member posts a new topic or replies to an existing topic, notification for that topic will be turned on automatically when this option is enabled.';
+$txt['manual_profile_notify_post'] = '<strong>When sending notification of a reply to a topic, send the post in the email (but please don\'t reply to these emails.)</strong> - Email notifications will include the contents of the posts. These emails should not be responded to.';
+$txt['manual_profile_notify_lists'] = 'A member may also see lists of the topics and boards for which they have requested notification. If desired, they may turn notification off for some or all of them.';
+
+// Text for template: modify_profile_pm
+$txt['manual_profile_pm_describe'] = 'Personal messages allow private communication between two members. SMF provides a variety of options that allow a member to control how private messages are displayed, who is allowed to send them, and how a few more of the features function.';
+$txt['manual_profile_pm_display'] = 'The first two options address how private messages are displayed. If a member chooses <em>All at once</em>, a list of messages is displayed at the top with all of those messages displayed below the list. Selecting <em>One at a time</em> results in only one message being displayed at the top with a list of messages below it. <em>As a conversation</em> mimics the forum functionality, creating a topic-like list of replies. It is highly recommended that a member save their messages in their outbox if they choose to display messages as a conversation. The second option controls the order in which the messages are displayed.';
+$txt['manual_proifle_pm_control'] = 'Members may control who is allowed to send them private messages. It can be limited to members not on their ignore list, buddies and administrators, or only administrators.';
+$txt['manual_profile_pm_notify'] = 'Notification may be enabled in order to receive emails when private messages are received on the forum. Additionally, a popup message may also be enabled to notify a member of new messages.';
+$txt['manual_profile_pm_last'] = 'The last two available options are the following.';
+$txt['manual_profile_pm_save'] = '<strong>Save a copy of each personal message in my outbox by default.</strong> - When sending a message, a copy of it is saved in a member\'s outbox automatically. This option should be enabled when viewing messages as a conversation.';
+$txt['manual_profile_pm_label'] = '<strong>Remove the inbox label when applying another label</strong> - When a new label is applied to a message, the inbox lable is removed.';
+
+// Text for template: modify_profile_buddies
+$txt['manual_profile_buddies_describe'] = 'Inevitably, there will be times when members get along great and times when personalities clash. SMF provides a way to handle both instances. The buddy list allows members to keep track of users they enjoy talking to, while the ignore list hides users they don\'t want to see.';
+$txt['manual_profile_buddies_edit'] = '<strong>Edit Buddies</strong> - Members may add or delete other members from their buddy list.';
+$txt['manual_profile_buddies_ignore'] = '<strong>Edit Ignore List</strong> - Members may add or delete other members from their ignore list.';
+
+// Text for template: modify_profile_groups
+$txt['manual_profile_groups_describe'] = 'Some forums may provide free groups that can be joined whenever a member pleases, as well as special groups that require the member to submit a join request.';
+$txt['manual_profile_groups_available'] = 'Available Groups';
+$txt['manual_profile_groups_free'] = 'Free Group';
+$txt['manual_profile_groups_free_desc'] = 'This is a free group that may be joined or left at any time.';
+$txt['manual_profile_groups_join'] = 'Join Group';
+$txt['manual_profile_groups_requestable'] = 'Requestable Group';
+$txt['manual_profile_groups_requestable_desc'] = 'This is a requestable group that requires an approved request to join.';
+$txt['manual_profile_groups_request'] = 'Request Membership';
+
+// The text entries below are old and should be deleted before 2.0 gold.
+// Please do not remove this notice until all entries below have been removed.
 // Entries for template: pm.
 $txt['manual_pm_community'] = 'SMF is about community and communication. And there are many ways to communicate, such as posting to the boards, personal messaging, email, ICQ, AIM and YIM. But SMF\'s own personal message system, as available to registered members in most forums, is sometimes a more suitable option than any of these.';
 $txt['manual_pm_sec_pm'] = 'Personal Messaging';
@@ -658,133 +793,6 @@ $txt['manual_posting_smileys_help_name'] = 'Name';
 $txt['manual_posting_smileys_help_img'] = 'Image (click to insert)';
 $txt['manual_posting_smileys_help_code'] = 'Code (type to insert)';
 $txt['manual_posting_smiley_parse'] = 'Please note that not all of the smiley codes will be correctly parsed and converted to images unless their opening spaces are present.';
-
-// Entries for template: profile.
-$txt['manual_profile_profile_screen'] = 'The profile screen in the default theme normally consists of a single main pane, with an additional menu to the left to lead you through the editing options for your own profile. Please note that, because an SMF forum may be customized extensively by its administrator(s), the features and user permissions described here are typical rather than definitive.';
-$txt['manual_profile_edit_profile_part1'] = 'To edit your own profile, start by selecting <strong>Profile</strong> from the ';
-$txt['manual_profile_edit_profile_link_index_main'] = 'main menu';
-$txt['manual_profile_edit_profile_part2'] = ' or clicking your own username. You can also view (but not edit) other members\' profiles by clicking on their names.';
-$txt['manual_profile_available_to_all'] = 'Information Normally Available to all Members';
-$txt['manual_profile_profile_info'] = 'Profile Info';
-$txt['manual_profile_username'] = 'Username';
-$txt['manual_profile_login_name'] = 'Member\'s login name';
-$txt['manual_profile_pic_text'] = 'Picture/Text';
-$txt['manual_profile_name'] = 'Name';
-$txt['manual_profile_screen_name'] = 'Member\'s screen name';
-$txt['manual_profile_posts'] = 'Posts';
-$txt['manual_profile_member_posts'] = 'Member\'s number of posts';
-$txt['manual_profile_position'] = 'Position';
-$txt['manual_profile_membergroup'] = 'Member\'s member group or post group';
-$txt['manual_profile_date_reg'] = 'Date Registered';
-$txt['manual_profile_date_time_reg'] = 'Date and time of registration';
-$txt['manual_profile_last_active'] = 'Last Active';
-$txt['manual_profile_date_time_active'] = 'Date and time last active';
-$txt['manual_profile_email'] = 'Email';
-$txt['manual_profile_email_user'] = 'member@their.address';
-$txt['manual_profile_website'] = 'Website';
-$txt['manual_profile_status'] = 'Current Status';
-$txt['manual_profile_pm'] = 'Personal Message';
-$txt['manual_profile_online'] = 'Online';
-$txt['manual_profile_gender'] = 'Gender';
-$txt['manual_profile_age'] = 'Age';
-$txt['manual_profile_n_a'] = 'N/A';
-$txt['manual_profile_location'] = 'Location';
-$txt['manual_profile_local_time'] = 'Local Time';
-$txt['manual_profile_current_date_time'] = 'Current date and time in member\'s time zone';
-$txt['manual_profile_language'] = 'Language';
-$txt['manual_profile_sig'] = 'Signature';
-$txt['manual_profile_other_info'] = 'Additional Information';
-$txt['manual_profile_send_pm'] = 'Send this member a personal message.';
-$txt['manual_profile_show_member_posts'] = 'Show the last posts of this person.';
-$txt['manual_profile_show_member_stats'] = 'Show general statistics for this member.';
-$txt['manual_profile_summary_part1'] = 'This <strong>Summary</strong> screen is not only there to tell you about others, but also the first screen that you see when ';
-$txt['manual_profile_summary_link_owners'] = 'editing your own profile';
-$txt['manual_profile_summary_part2'] = '.';
-$txt['manual_profile_hide_email'] = 'Members may choose to hide their <strong>email address</strong> and/or <strong>online status</strong>.';
-$txt['manual_profile_empty_part1'] = 'The fields left empty here are not filled in by default, so you should ';
-$txt['manual_profile_empty_link_owners'] = 'edit your profile';
-$txt['manual_profile_empty_part2'] = ' if you wish to display this information.';
-$txt['manual_profile_send_member_pm_part1'] = 'You can send the profile owner a ';
-$txt['manual_profile_send_member_pm_link_pm'] = 'Personal Message';
-$txt['manual_profile_send_member_pm_part2'] = ' by clicking the <strong>Current Status</strong> <strong>On/Offline Icon</strong> or following the link from <strong>Additional Information</strong> below.';
-$txt['manual_profile_show_last_posts'] = '<strong>Show the last posts of this person</strong> links to a complete paginated listing of the member\'s posts.';
-$txt['manual_profile_show_member_stats2'] = '<strong>Show general statistics for this member</strong> links to a screen of statistics about the member\'s time online and posting activity.';
-$txt['manual_profile_sec_normal'] = 'Settings Normally Available to Profile Owners';
-$txt['manual_profile_normal_desc'] = 'While the <strong>Summary</strong> screen is the same as the one shown above and the <strong>Show Posts</strong> and <strong>Show Stats</strong> links are effectively duplicates, profile owners are also provided with the tools to customize their own profiles:';
-$txt['manual_profile_modify_profile'] = 'Modify Profile';
-$txt['manual_profile_account_related'] = '<strong>Account Related Settings</strong> enables you to make changes to your <strong>display name</strong> (your <strong>login</strong> or <strong>username</strong> can only be changed by an administrator), preferred <strong>language</strong> (if the forum administrators have installed alternative language packs), <strong>email</strong> and <strong>password</strong> settings.';
-$txt['manual_profile_forum_profile_info'] = '<strong>Forum Profile Information</strong> enables you to enter optional personal details such as <strong>gender</strong>, <strong>birthdate</strong>, <strong>location</strong>, <strong>website</strong> and <strong>instant messenger</strong> contact information. It\'s also where you go to enter your own <strong>personal text</strong> and <strong>signature</strong> and select an <strong>avatar</strong> (personal picture) from a list (if provided by the forum administrators) or link to one of your own on the web.';
-$txt['manual_profile_look_layout'] = '<strong>Look and Layout Preferences</strong> enables you to select your preferred <strong>theme</strong> (forum skin), time zone and format and other personal choices for <strong>layout settings</strong>. Note that the currently selected option in the menu pane is highlighted in bold type:';
-$txt['manual_profile_profile_info2'] = 'Profile Info';
-$txt['manual_profile_summary2'] = 'Summary';
-$txt['manual_profile_show_stats'] = 'Show Stats';
-$txt['manual_profile_show_posts'] = 'Show Posts';
-$txt['manual_profile_modify_own_profile'] = 'Modify Profile';
-$txt['manual_profile_edit_profile1'] = 'Edit Profile';
-$txt['manual_profile_acct_settings'] = 'Account Related Settings';
-$txt['manual_profile_forum_profile'] = 'Forum Profile Information';
-$txt['manual_profile_look_and_layout'] = 'Look and Layout Preferences';
-$txt['manual_profile_notify_email'] = 'Notifications and Email';
-$txt['manual_profile_pm_options1'] = 'Personal Message Options';
-$txt['manual_profile_actions'] = 'Actions';
-$txt['manual_profile_delete_account'] = 'Delete this account';
-$txt['manual_profile_look_layout_explanation'] = 'This section allows you to customize the look and layout of the forum.';
-$txt['manual_profile_current_theme'] = 'Current Theme';
-$txt['manual_profile_board_default'] = 'Forum or Board Default';
-$txt['manual_profile_change'] = 'change';
-$txt['manual_profile_time_format'] = 'Time Format';
-$txt['manual_profile_help'] = 'Help';
-$txt['manual_profile_caption_date'] = 'The format here will be used to show dates throughout this forum.';
-$txt['manual_profile_date_option_select'] = 'Forum Default';
-$txt['manual_profile_date_option_1'] = 'Month Day, Year, HH:MM:SS am/pm';
-$txt['manual_profile_date_option_2'] = 'Month Day, Year, HH:MM:SS (24 hour)';
-$txt['manual_profile_date_option_3'] = 'YYYY-MM-DD, HH:MM:SS';
-$txt['manual_profile_date_option_4'] = 'DD Month YYYY, HH:MM:SS';
-$txt['manual_profile_date_option_5'] = 'DD-MM-YYYY, HH:MM:SS';
-$txt['manual_profile_time_offset'] = 'Time Offset';
-$txt['manual_profile_offset_hours'] = 'Number of hours to +/- to make displayed time equal to your local time.';
-$txt['manual_profile_forum_time'] = 'Current forum time should be displayed here.';
-$txt['manual_profile_board_descriptions'] = 'Show board descriptions inside boards.';
-$txt['manual_profile_show_child'] = 'Show child boards on every page inside boards, not just the first.';
-$txt['manual_profile_no_ava'] = 'Don\'t show other user\'s avatars.';
-$txt['manual_profile_no_sig'] = 'Don\'t show other user\'s signatures.';
-$txt['manual_profile_return_to_topic'] = 'Return to topics after posting by default.';
-$txt['manual_profile_recent_posts'] = 'Show most recent posts at the top.';
-$txt['manual_profile_recent_pms'] = 'Show most recent personal messages at top.';
-$txt['manual_profile_quick_reply'] = 'Use quick reply on topic display';
-$txt['manual_profile_not_at_all'] = 'don\'t show at all';
-$txt['manual_profile_off_default'] = 'show, off by default';
-$txt['manual_profile_on_default'] = 'show, on by default';
-$txt['manual_profile_quick_mod'] = 'Show quick-moderation as';
-$txt['manual_profile_no_quick_mod'] = 'don\'t show';
-$txt['manual_profile_check_quick_mod'] = 'checkboxes';
-$txt['manual_profile_icon_quick_mod'] = 'icons';
-$txt['manual_profile_first_day_week'] = 'First day of the week on the calendar:';
-$txt['manual_profile_sun'] = 'Sunday';
-$txt['manual_profile_mon'] = 'Monday';
-$txt['manual_profile_change_profile'] = 'Change profile';
-$txt['manual_profile_notify_email_prefs'] = '<strong>Notifications and Email</strong> enables you to select personal preferences for <strong>notifications</strong> (emails about new topics/replies) and lists any notifications that you have set up.';
-$txt['manual_profile_pm_options_part1'] = '<strong>Personal Message Options</strong> enables you to set up an <strong>ignore list</strong> (blacklist) for ';
-$txt['manual_profile_pm_options_link_pm'] = 'Personal Messages';
-$txt['manual_profile_pm_options_part2'] = ', to request <strong>notification</strong> of new PMs by email and to <strong>save copies</strong> of your outgoing PMs by default.';
-$txt['manual_profile_sub_actions'] = 'Actions';
-$txt['manual_profile_confirm_delete_acct'] = '<strong>Delete this account</strong> does exactly what it says! Yes, there\'s a <strong>confirmation screen</strong>, but it really does <strong>delete your own account</strong>, so be careful...';
-$txt['manual_profile_sec_settings'] = 'Settings Normally Restricted to Admins';
-$txt['manual_profile_settings_desc'] = 'As well as being able to view/edit any of the details above from other members\' profiles, some further options are normally visible to (and executable by) admins only:';
-$txt['manual_profile_track_user'] = 'Track User';
-$txt['manual_profile_track_ip'] = 'Track IP';
-$txt['manual_profile_show_permissions'] = 'Show Permissions';
-$txt['manual_profile_ban_user'] = 'Ban this user';
-$txt['manual_profile_sub_profile_info'] = 'Profile Info';
-$txt['manual_profile_sub_track_user'] = '<strong>Track User</strong> provides a list of <strong>IP numbers</strong> used by the member, other members who might be in the same <strong>IP range</strong> and <strong>error messages</strong> generated/experienced by the member.';
-$txt['manual_profile_sub_track_ip'] = '<strong>Track IP</strong> provides tools for tracking <strong>members</strong>, <strong>messages</strong> and <strong>errors</strong> from any specified <strong>IP range</strong>.';
-$txt['manual_profile_sub_show_permissions'] = '<strong>Show Permissions</strong> lists the <strong>board permissions</strong> that have been granted to the member and who gave them.';
-$txt['manual_profile_sub_modify_profile'] = 'Modify Profile';
-$txt['manual_profile_sub_acct_settings'] = '<strong>Account Related Settings</strong> is basically the same screen as shown to profile owners, but with the additional option to assign members to <strong>member groups</strong>.';
-$txt['manual_profile_sub_forum_profile_info'] = '<strong>Forum Profile Information</strong> is basically the same screen as shown to profile owners, but with the additional option to specify <strong>custom titles</strong> for members.';
-$txt['manual_profile_sub_actions2'] = 'Actions';
-$txt['manual_profile_sub_ban_user'] = '<strong>Ban this user</strong> provides tools for <strong>banning</strong> users, configuring the <strong>level</strong> of the ban and maintaining a <strong>ban list</strong> noting the details of any bans in force.';
-$txt['manual_profile_sub_delete_acct'] = '<strong>Delete this account</strong> is similar to the screen of the same name available to all members, but the <strong>confirmation question</strong> is different when it\'s not your own account that\'s about to be deleted.';
 
 // Entries for template: searching.
 $txt['manual_searching_you_have_arrived'] = 'While SMF naturally incorporates a powerful search engine, knowing how to use it is not surprisingly the key to returning successful results!';

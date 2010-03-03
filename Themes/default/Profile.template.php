@@ -1622,9 +1622,9 @@ function template_groupMembership()
 	// The main containing header.
 	echo '
 		<form action="', $scripturl, '?action=profile;area=groupmembership;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
-			<div class="title_bar">
-				<h3 class="titlebg">
-				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />', $txt['profile'], '</span>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />', $txt['profile'], '</span>
 				</h3>
 			</div>
 			<p class="description">', $txt['groupMembership_info'], '</p>';
@@ -1632,12 +1632,9 @@ function template_groupMembership()
 	// Do we have an update message?
 	if (!empty($context['update_message']))
 		echo '
-			<p class="description error">
-				<strong>', $context['update_message'], '</strong>
-			</p>';
-
-	echo '
-			<br />';
+			<div id="profile_success">
+				', $context['update_message'], '.
+			</div>';
 
 	// Requesting membership to a group?
 	if (!empty($context['group_request']))
@@ -1649,12 +1646,12 @@ function template_groupMembership()
 				</div>
 				<span class="upperframe"><span></span></span>
 				<div class="roundframe"><div class="innerframe">
-				', $txt['request_group_membership_desc'], ':
-				<textarea name="reason" rows="4" style="width: 95%"></textarea>
-				<div class="righttext">
-					<input type="hidden" name="gid" value="', $context['group_request']['id'], '" />
-					<input type="submit" name="req" value="', $txt['submit_request'], '" class="button_submit" />
-				</div>
+					', $txt['request_group_membership_desc'], ':
+					<textarea name="reason" rows="4" style="width: 95%"></textarea>
+					<div class="righttext">
+						<input type="hidden" name="gid" value="', $context['group_request']['id'], '" />
+						<input type="submit" name="req" value="', $txt['submit_request'], '" class="button_submit" />
+					</div>
 				</div></div>
 				<span class="lowerframe"><span></span></span>
 			</div>';
@@ -1662,14 +1659,13 @@ function template_groupMembership()
 	else
 	{
 		echo '
-			<table border="0" width="100%" cellspacing="0" cellpadding="4" align="center" class="tborder">
-				<tr class="catbg">
-					<td colspan="2">
-						', $txt['current_membergroups'], '
-					</td>
+			<table border="0" width="100%" cellspacing="0" cellpadding="4" class="table_grid">
+				<tr>
+					<th class="catbg first_th" colspan="2">', $txt['current_membergroups'], '</th>
+					<th class="catbg last_th"></th>
 				</tr>';
 
-		$alternate = 0;
+		$alternate = true;
 		foreach ($context['groups']['member'] as $group)
 		{
 			echo '
@@ -1683,57 +1679,52 @@ function template_groupMembership()
 
 			echo '
 					<td>
-						<div class="floatleft">
-							<label for="primary_', $group['id'], '"><strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '</label>
-						</div>
-						<div class="floatright">';
+						<label for="primary_', $group['id'], '"><strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '</label>
+					</td>
+					<td width="15%" class="righttext">';
 
 			// Can they leave their group?
 			if ($group['can_leave'])
 				echo '
-							<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;' . $context['session_var'] . '=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['leave_group'] . '</a>';
+						<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;' . $context['session_var'] . '=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['leave_group'] . '</a>';
 			echo '
-						</div>
 					</td>
 				</tr>';
 			$alternate = !$alternate;
 		}
 
-		if ($context['can_edit_primary'])
-			echo '
-				<tr class="catbg">
-					<td colspan="2" align="right">
-						<input type="submit" value="', $txt['make_primary'], '" class="button_submit" />
-					</td>
-				</tr>';
-
 		echo '
 			</table>';
+
+		if ($context['can_edit_primary'])
+			echo '
+			<div class="padding righttext">
+				<input type="submit" value="', $txt['make_primary'], '" class="button_submit" />
+			</div>';
 
 		// Any groups they can join?
 		if (!empty($context['groups']['available']))
 		{
 			echo '
 			<br />
-			<table border="0" width="100%" cellspacing="0" cellpadding="4" align="center" class="tborder">
-				<tr class="catbg">
-					<td>
+			<table border="0" width="100%" cellspacing="0" cellpadding="4" class="table_grid">
+				<tr>
+					<th class="catbg first_th">
 						', $txt['available_groups'], '
-					</td>
+					</th>
+					<th class="catbg last_th"></th>
 				</tr>';
 
-			$alternate = 0;
+			$alternate = true;
 			foreach ($context['groups']['available'] as $group)
 			{
 				echo '
 				<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
 					<td>
-						<div class="floatleft">
-							<strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '
-						</div>
-						<div class="floatright">
-							', $group['type'] == 2 ? '<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;' . $context['session_var'] . '=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['join_group'] . '</a>' : ($group['pending'] ? $txt['approval_pending'] : '<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';area=groupmembership;request=' . $group['id'] . '">' . $txt['request_group'] . '</a>'), '
-						</div>
+						<strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '
+					</td>
+					<td width="15%" class="righttext">
+						', $group['type'] == 2 ? '<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;' . $context['session_var'] . '=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['join_group'] . '</a>' : ($group['pending'] ? $txt['approval_pending'] : '<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';area=groupmembership;request=' . $group['id'] . '">' . $txt['request_group'] . '</a>'), '
 					</td>
 				</tr>';
 				$alternate = !$alternate;

@@ -8,6 +8,9 @@ March 2010
  ! Counting the number of custom registration questions didn't work as expected (ManageSettings.php)
  * Invalid XHTML (GenericControls template)
  * Custom verification questions weren't properly aligned except in Curve (Core index.css, compat.css) [Bug 4212]
+ * Updated the Profile-related sections of the SMF User Help section. (Help template, index.css, compat.css)
+ & Changed lots of language strings accordingly. (Manual language file)   
+ * Added curvy headers to the group membership template. (Profile template)  
 
 
 February 2010
