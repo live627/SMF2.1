@@ -289,6 +289,7 @@ function ViewSubscriptions()
 			'pending' => array(
 				'header' => array(
 					'value' => $txt['paid_pending'],
+					'style' => 'width: 18%;',
 				),
 				'data' => array(
 					'db_htmlsafe' => 'pending',

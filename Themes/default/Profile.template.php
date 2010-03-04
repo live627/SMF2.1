@@ -1660,9 +1660,9 @@ function template_groupMembership()
 	{
 		echo '
 			<table border="0" width="100%" cellspacing="0" cellpadding="4" class="table_grid">
-				<tr>
-					<th class="catbg first_th" colspan="2">', $txt['current_membergroups'], '</th>
-					<th class="catbg last_th"></th>
+				<tr class="catbg">
+					<th class="first_th" colspan="2">', $txt['current_membergroups'], '</th>
+					<th class="last_th"></th>
 				</tr>';
 
 		$alternate = true;
@@ -1708,11 +1708,11 @@ function template_groupMembership()
 			echo '
 			<br />
 			<table border="0" width="100%" cellspacing="0" cellpadding="4" class="table_grid">
-				<tr>
-					<th class="catbg first_th">
+				<tr class="catbg">
+					<th class="first_th">
 						', $txt['available_groups'], '
 					</th>
-					<th class="catbg last_th"></th>
+					<th class="last_th"></th>
 				</tr>';
 
 			$alternate = true;

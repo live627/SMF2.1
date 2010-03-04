@@ -1360,6 +1360,78 @@ function template_manual_modify_profile_groups()
 		</div>';
 }
 
+// Profile actions subscriptions page.
+function template_manual_profile_actions_subscriptions()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
+		<p>', $txt['manual_profile_subscribe_describe'], '</p>
+		<div class="help_sample">
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['manual_profile_subscribe_example'], '</h3>
+			</div>
+			<div class="windowbg">
+				<span class="topslice"><span></span></span>
+				<div class="content">
+					<p><strong>', $txt['manual_profile_subscribe_example'], '</strong></p>
+					<p class="smalltext">', $txt['manual_profile_subscribe_example_desc'], '</p>
+					<div>', $txt['manual_profile_subscribe_duration'], '</div>
+					', $txt['manual_profile_subscribe_cost'], '<br />
+					<input type="submit" name="sub_id[1]" value="', $txt['manual_profile_subscribe_order'], '" class="button_submit" />
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>
+		</div>
+		<p>', $txt['manual_profile_subscribe_existing'], '</p>
+		<div class="help_sample">
+			<div class="title_bar">
+				<h3 class="titlebg">', $txt['manual_profile_subscribe_exist'], '</h3>
+			</div>
+			<div class="information">
+				', $txt['manual_profile_subscribe_extend'], '
+			</div>
+			<table width="100%" class="table_grid">
+				<thead>
+					<tr class="catbg">
+						<th class="first_th" width="30%">', $txt['manual_profile_subscribe_name'], '</th>
+						<th align="center">', $txt['manual_profile_subscribe_status'], '</th>
+						<th align="center">', $txt['manual_profile_subscribe_start'], '</th>
+						<th class="last_th" align="center">', $txt['manual_profile_subscribe_end'], '</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="windowbg">
+						<td align="center" colspan="4">', $txt['manual_profile_subscribe_none'], '</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>';
+}
+
+// Profile actions delete page.
+function template_manual_profile_actions_delete()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
+		<p>', $txt['manual_profile_delete_describe'], '</p>
+		<div class="help_sample">
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+					<div class="content">
+						<div class="alert">', $txt['manual_profile_delete_sure'], '</div>
+						<div>
+							<strong>', $txt['manual_profile_delete_password'], ' </strong>
+							<input type="password" name="oldpasswrd" size="20" class="input_password" />&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="submit" value="', $txt['manual_profile_delete_yes'], '" class="button_submit" />
+						</div>
+					</div>
+				<span class="botslice"><span></span></span>
+			</div>
+		</div>';
+}
+
 // Posting screen page.
 function template_manual_posting_screen()
 {
@@ -1746,10 +1818,10 @@ function template_manual_smileys()
 	<p>', $txt['manual_posting_smiley_parse'], '</p>
 	<table cellspacing="1" cellpadding="3" class="table_grid">
 		<thead>
-			<tr>
-				<th class="catbg first_th">', $txt['manual_posting_smileys_help_name'], '</th>
-				<th class="catbg">', $txt['manual_posting_smileys_help_img'], '</th>
-				<th class="catbg last_th">', $txt['manual_posting_smileys_help_code'], '</th>
+			<tr class="catbg">
+				<th class="first_th">', $txt['manual_posting_smileys_help_name'], '</th>
+				<th>', $txt['manual_posting_smileys_help_img'], '</th>
+				<th class="last_th">', $txt['manual_posting_smileys_help_code'], '</th>
 			</tr>
 		</thead>
 		<tbody>';
@@ -1779,12 +1851,12 @@ function template_manual_bbcode()
 	<p>', $txt['manual_posting_sub_smf_bbc_desc'], '</p>
 	<table cellspacing="1" cellpadding="3" class="table_grid">
 		<thead>
-			<tr>
-				<th class="catbg first_th">', $txt['manual_posting_header_name'], '</th>
-				<th class="catbg">', $txt['manual_posting_header_button'], '</th>
-				<th class="catbg">', $txt['manual_posting_header_code'], '</th>
-				<th class="catbg">', $txt['manual_posting_header_output'], '</th>
-				<th class="catbg last_th">', $txt['manual_posting_header_comments'], '</th>
+			<tr class="catbg">
+				<th class="first_th">', $txt['manual_posting_header_name'], '</th>
+				<th>', $txt['manual_posting_header_button'], '</th>
+				<th>', $txt['manual_posting_header_code'], '</th>
+				<th>', $txt['manual_posting_header_output'], '</th>
+				<th class="last_th">', $txt['manual_posting_header_comments'], '</th>
 			</tr>
 		</thead>
 		<tbody>

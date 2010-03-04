@@ -62,6 +62,7 @@ $txt['manual_entry_modify_profile_pm'] = 'Personal Messaging';
 $txt['manual_entry_modify_profile_ignore_boards'] = 'Ignore Boards Options';
 $txt['manual_entry_modify_profile_buddies'] = 'Buddies/Ignore List';
 $txt['manual_entry_modify_profile_groups'] = 'Group Membership';
+$txt['manual_entry_modify_profile_desc'] = 'This section provides information about certain actions that can be performed on accounts.';
 $txt['manual_entry_profile_actions_subscriptions'] = 'Paid Subscriptions';
 $txt['manual_entry_profile_actions_delete'] = 'Delete this account';
 
@@ -410,6 +411,28 @@ $txt['manual_profile_groups_join'] = 'Join Group';
 $txt['manual_profile_groups_requestable'] = 'Requestable Group';
 $txt['manual_profile_groups_requestable_desc'] = 'This is a requestable group that requires an approved request to join.';
 $txt['manual_profile_groups_request'] = 'Request Membership';
+
+// Text for template: profile_actions_subscriptions
+$txt['manual_profile_subscribe_describe'] = 'Some forum administrators may choose to utilize SMF\'s paid subscriptions feature. This feature makes it easier for members to order, pay for, and keep track of their paid services. They may subscribe to one of these services by simply selecting the <em>Order</em> button corresponding to the subscription they desire.';
+$txt['manual_profile_subscribe_example'] = 'Example Subscription';
+$txt['manual_profile_subscribe_example_desc'] = 'This is an example subscription.';
+$txt['manual_profile_subscribe_duration'] = '<strong>Duration:</strong> 365 Days';
+$txt['manual_profile_subscribe_cost'] = '<strong>Cost:</strong> $42.00';
+$txt['manual_profile_subscribe_order'] = 'Order';
+$txt['manual_profile_subscribe_existing'] = 'The forum also lists a member\'s existing subscriptions if they have any.';
+$txt['manual_profile_subscribe_exist'] = 'Existing Subscriptions';
+$txt['manual_profile_subscribe_extend'] = 'Below is a list of all your current and previous subscriptions. To extend an existing subscription simply select it from the list above.';
+$txt['manual_profile_subscribe_name'] = 'Name';
+$txt['manual_profile_subscribe_status'] = 'Status';
+$txt['manual_profile_subscribe_start'] = 'Start Date';
+$txt['manual_profile_subscribe_end'] = 'End Date';
+$txt['manual_profile_subscribe_none'] = 'You haven\'t set up any subscriptions yet.';
+
+// Text for template: profile_actions_delete
+$txt['manual_profile_delete_describe'] = 'Should a member decide that they no longer want to be part of a forum, they may delete their account. The member\'s current password is required to carry out this task. Also, some forum administrators may restrict members\' ability to delete their accounts.';
+$txt['manual_profile_delete_sure'] = 'Are you sure you want to delete your account?';
+$txt['manual_profile_delete_password'] = 'Current Password:';
+$txt['manual_profile_delete_yes'] = 'Yes';
 
 // The text entries below are old and should be deleted before 2.0 gold.
 // Please do not remove this notice until all entries below have been removed.

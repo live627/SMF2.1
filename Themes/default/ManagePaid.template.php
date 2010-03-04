@@ -470,10 +470,10 @@ function template_user_subscription()
 				<h3 class="catbg">', $subscription['name'], '</h3>
 			</div>
 			<div class="windowbg">
-			<span class="topslice"><span></span></span>
+				<span class="topslice"><span></span></span>
 				<div class="content">
-			<p><strong>', $subscription['name'], '</strong></p>
-			<p class="smalltext">', $subscription['desc'], '</p>';
+					<p><strong>', $subscription['name'], '</strong></p>
+					<p class="smalltext">', $subscription['desc'], '</p>';
 
 			if (!$subscription['flexible'])
 				echo '
@@ -528,10 +528,10 @@ function template_user_subscription()
 		<table width="100%" class="table_grid">
 		<thead>
 			<tr class="catbg">
-				<th width="30%">', $txt['paid_name'], '</th>
+				<th class="first_th" width="30%">', $txt['paid_name'], '</th>
 				<th align="center">', $txt['paid_status'], '</th>
 				<th align="center">', $txt['start_date'], '</th>
-				<th align="center">', $txt['end_date'], '</th>
+				<th class="last_th" align="center">', $txt['end_date'], '</th>
 			</tr>
 		</thead>
 		<tbody>';

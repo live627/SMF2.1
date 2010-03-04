@@ -1816,14 +1816,15 @@ ul.postingbuttons li
 	float: right;
 	margin: 0 0.5em 0.5em 0;
 }
+.attachments
+{
+	padding-top: 1em;
+	overflow: auto;
+}
 .attachments hr
 {
 	clear: both;
 	margin: 1em 0 1em 0;
-}
-.attachments
-{
-	padding-top: 1em;
 }
 .postfooter
 {

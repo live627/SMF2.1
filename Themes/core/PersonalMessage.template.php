@@ -180,7 +180,7 @@ function template_folder()
 
 			// Show information about the poster of this message.
 			echo '
-		<div class="bordercolor">
+		<div class="bordercolor" id="msg', $message['id'], '">
 			<div class="clearfix ', !$is_first_post ? 'topborder ' : '', ($message['alternate'] == 0 ? 'windowbg' : 'windowbg2'), ' largepadding">
 				<div class="floatleft poster">
 					<h4>', $message['member']['link'], '</h4>

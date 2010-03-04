@@ -12,6 +12,9 @@ March 2010
  & Changed lots of language strings accordingly. (Manual language file)   
  * Added curvy headers to the group membership template. (Profile template)  
  * Made Core's personal message template tableless too, reusing the markup from the Display template. (PersonalMessage template, index.css, compat.css) 
+ ! Force a reload of editor.js after upgrading by suffixing it with ?rc3, as browsers will keep it in their cache otherwise. (Subs-Editor.php)
+ * Removed the override stylesheet for Firefox, as it is no longer necessary. (index template, firefox.css)
+ ! Undefined index error in the help section for non-admins due to the createMenu function interpreting the second argument of subsection arrays for a permission key. (Help.php)
 
 
 February 2010
