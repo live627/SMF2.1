@@ -2529,22 +2529,4 @@ function template_manual_calendar()
 	// TODO : Write this.
 }
 
-// BBC reference page.
-function template_manual_bbc_ag()
-{
-	// TODO : Write this.
-}
-
-// BBC reference page.
-function template_manual_bbc_hq()
-{
-	// TODO : Write this.
-}
-
-// BBC reference page.
-function template_manual_bbc_rz()
-{
-	// TODO : Write this.
-}
-
 ?>

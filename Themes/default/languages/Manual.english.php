@@ -43,9 +43,6 @@ $txt['manual_section_pm_preferences'] = 'Preferences';
 $txt['manual_section_searching'] = 'Searching';
 $txt['manual_section_memberlist'] = 'Memberlist';
 $txt['manual_section_calendar'] = 'Calendar';
-$txt['manual_section_bbc_ag'] = 'BBC: A-G';
-$txt['manual_section_bbc_hq'] = 'BBC: H-Q';
-$txt['manual_section_bbc_rz'] = 'BBC: R-Z';
 
 // Entries
 $txt['manual_entry_profile_info_desc'] = 'This section provides information about viewing member profiles.';

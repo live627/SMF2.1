@@ -693,8 +693,7 @@ function EditPoll2()
 	$_POST['question'] = $smcFunc['truncate']($_POST['question'], 255);
 
 	$_POST['poll_hide'] = (int) $_POST['poll_hide'];
-	$_POST['poll_expire'] = (int) $_POST['poll_expire'];
-	$_POST['poll_expire'] = $_POST['poll_expire'] > 9999 ? 9999 : ($_POST['poll_expire'] < 0 ? 0 : $_POST['poll_expire']);
+	$_POST['poll_expire'] = isset($_POST['poll_expire']) ? (int) $_POST['poll_expire'] : 0;
 	$_POST['poll_change_vote'] = isset($_POST['poll_change_vote']) ? 1 : 0;
 	$_POST['poll_guest_vote'] = isset($_POST['poll_guest_vote']) ? 1 : 0;
 
@@ -710,6 +709,8 @@ function EditPoll2()
 	// Ensure that the number options allowed makes sense, and the expiration date is valid.
 	if (!$isEdit || allowedTo('moderate_board'))
 	{
+		$_POST['poll_expire'] = $_POST['poll_expire'] > 9999 ? 9999 : ($_POST['poll_expire'] < 0 ? 0 : $_POST['poll_expire']);
+
 		if (empty($_POST['poll_expire']) && $_POST['poll_hide'] == 2)
 			$_POST['poll_hide'] = 1;
 		elseif (!$isEdit || $_POST['poll_expire'] != ceil($bcinfo['expire_time'] <= time() ? -1 : ($bcinfo['expire_time'] - time()) / (3600 * 24)))
