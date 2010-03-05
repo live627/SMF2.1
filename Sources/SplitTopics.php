@@ -989,13 +989,6 @@ function MergeExecute($topics = array())
 	global $user_info, $txt, $context, $scripturl, $sourcedir;
 	global $smcFunc, $language, $modSettings;
 
-	// The parameters of MergeExecute were set, so this must've been an internal call.
-	if (!empty($topics))
-	{
-		isAllowedTo('merge_any');
-		loadTemplate('SplitTopics');
-	}
-
 	// Check the session.
 	checkSession('request');
 
@@ -1104,6 +1097,13 @@ function MergeExecute($topics = array())
 		fatal_lang_error('no_topic_id');
 
 	$boards = array_values(array_unique($boards));
+	
+	 // The parameters of MergeExecute were set, so this must've been an internal call.
+	if (!empty($topics))
+	{
+		isAllowedTo('merge_any', $boards);
+		loadTemplate('SplitTopics');
+	}
 
 	// Get the boards a user is allowed to merge in.
 	$merge_boards = boardsAllowedTo('merge_any');
