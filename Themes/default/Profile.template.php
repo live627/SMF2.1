@@ -1023,8 +1023,8 @@ function template_statPanel()
 			echo '
 							<dt>', $board['link'], '</dt>
 							<dd>
-								<div class="profile_pie" style="background-position: -', ((int) ($board['posts_percent'] / 5) * 20), 'px 0;" title="', sprintf($txt['statPanel_topBoards_posts'], $board['posts'], $board['total_posts'], $board['posts_percent']), '">
-									', sprintf($txt['statPanel_topBoards_posts'], $board['posts'], $board['total_posts'], $board['posts_percent']), '
+								<div class="profile_pie" style="background-position: -', ((int) ($board['posts_percent'] / 5) * 20), 'px 0;" title="', sprintf($txt['statPanel_topBoards_memberposts'], $board['posts'], $board['total_posts_member'], $board['posts_percent']), '">
+									', sprintf($txt['statPanel_topBoards_memberposts'], $board['posts'], $board['total_posts_member'], $board['posts_percent']), '
 								</div>
 								<span>', empty($context['hide_num_posts']) ? $board['posts'] : '', '</span>
 							</dd>';

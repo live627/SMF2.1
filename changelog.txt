@@ -17,6 +17,7 @@ March 2010
  ! Undefined index error in the help section for non-admins due to the createMenu function interpreting the second argument of subsection arrays for a permission key. (Help.php)
  * Increased the width of the submit button image as it was a bit too small for the registration page. (submit_bg.png)
  ! Possible undefined index error when editing polls without moderate_board permissions. (Poll.php) [Bug 4206]
+ * The pie charts in the profile stats section should be filled the opposite other way in RTL mode. (stats_pie.png, stats_pie_rtl.png, rtl.css)
 
 
 February 2010

@@ -755,8 +755,9 @@ function statPanel($memID)
 			'posts' => $row['message_count'],
 			'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
 			'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>',
-			'posts_percent' => $row['num_posts'] == 0 ? 0 : ($row['message_count'] * 100) / $row['num_posts'],
+			'posts_percent' => $user_profile[$memID]['posts'] == 0 ? 0 : ($row['message_count'] * 100) / $user_profile[$memID]['posts'],
 			'total_posts' => $row['num_posts'],
+			'total_posts_member' => $user_profile[$memID]['posts'],
 		);
 	}
 	$smcFunc['db_free_result']($result);

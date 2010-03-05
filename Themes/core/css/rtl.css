@@ -722,6 +722,7 @@ tr.titlebg td
 
 .profile_pie
 {
+	background-image: url(../images/stats_pie_rtl.png);
 	float: right;
 	margin-right: 0;
 	margin-left: 1em;
