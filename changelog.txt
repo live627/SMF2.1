@@ -18,7 +18,8 @@ March 2010
  * Increased the width of the submit button image as it was a bit too small for the registration page. (submit_bg.png)
  ! Possible undefined index error when editing polls without moderate_board permissions. (Poll.php) [Bug 4206]
  * The pie charts in the profile stats section should be filled the opposite other way in RTL mode. (stats_pie.png, stats_pie_rtl.png, rtl.css)
- ! Mergeing posts across different boards didn't work properly for non-admins (SplitTopic.php) [Bugs 3737, 4211]
+ ! Merging posts across different boards didn't work properly for non-admins (SplitTopic.php) [Bugs 3737, 4211]
+ ! (Re)naming a field could result in an error if the field name is a reserved name. (DbPackages-mysql.php) [Bug 4213]
 
 
 February 2010
