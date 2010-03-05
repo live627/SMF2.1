@@ -814,7 +814,7 @@ smc_Editor.prototype.insertLink = function(sType)
 			sText = 'mailto:' + sText;
 
 		// Check if we have text selected and if not force us to have some.
-		var oCurText = this.getSelect(true);
+		var oCurText = this.getSelect(true, true);
 
 		if (oCurText.toString().length != 0)
 		{

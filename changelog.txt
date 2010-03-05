@@ -20,6 +20,7 @@ March 2010
  * The pie charts in the profile stats section should be filled the opposite other way in RTL mode. (stats_pie.png, stats_pie_rtl.png, rtl.css)
  ! Merging posts across different boards didn't work properly for non-admins (SplitTopic.php) [Bugs 3737, 4211]
  ! (Re)naming a field could result in an error if the field name is a reserved name. (DbPackages-mysql.php) [Bug 4213]
+ ! It was not possible to hyperlink images (WYSIWYG-mode) in browsers other than IE (editor.js) [Bug 3336]
 
 
 February 2010
