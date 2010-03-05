@@ -428,7 +428,7 @@ function template_folder()
 				<div class="signature">', $message['member']['signature'], '</div>';
 
 		// Add an extra line at the bottom if we have labels enabled.
-		if ($context['folder'] != 'sent' && !empty($context['currently_using_labels']))
+		if ($context['folder'] != 'sent' && !empty($context['currently_using_labels']) && $context['display_mode'] != 2)
 		{
 			echo '
 				<div class="labels righttext">';
