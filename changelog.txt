@@ -22,6 +22,7 @@ March 2010
  ! (Re)naming a field could result in an error if the field name is a reserved name. (DbPackages-mysql.php) [Bug 4213]
  ! It was not possible to hyperlink images (WYSIWYG-mode) in browsers other than IE (editor.js) [Bug 3336]
  * Don't allow labels for a single pm if we are in conversion mode (PersonalMessage template) [Bug 2293]
+ ! Hide boards that do not contribute towards the post count in the 'Most popular boards by posts' panel, as the numbers may confuse users. (Profile-View.php)
 
 
 February 2010

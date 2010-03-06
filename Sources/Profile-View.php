@@ -739,12 +739,14 @@ function statPanel($memID)
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE m.id_member = {int:current_member}
+			AND b.count_posts = {int:count_enabled}
 			AND {query_see_board}
 		GROUP BY b.id_board
 		ORDER BY message_count DESC
 		LIMIT 10',
 		array(
 			'current_member' => $memID,
+			'count_enabled' => 0,
 		)
 	);
 	$context['popular_boards'] = array();
