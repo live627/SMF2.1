@@ -469,10 +469,6 @@ tr.titlebg th.smalltext, thead tr.titlebg th a:link, thead tr.titlebg th a:visit
 	overflow: hidden;
 	margin-bottom: 1px;
 }
-.pagesection span
-{
-	padding: 0 0.5em;
-}
 div.pagesection div.floatright input
 {
 	margin-top: 3px;
