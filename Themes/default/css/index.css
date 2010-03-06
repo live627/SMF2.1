@@ -3475,10 +3475,6 @@ span.hidelink
 
 /* Styles for the search results page.
 ------------------------------------------------- */
-#search_results form
-{
-	padding: 1em;
-}
 .topic_table td blockquote, .topic_table td .quoteheader
 {
 	margin: 0.5em;

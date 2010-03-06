@@ -225,40 +225,43 @@ function template_results()
 	if (isset($context['did_you_mean']) || empty($context['topics']))
 	{
 		echo '
-	<div class="tborder" id="search_results">
+	<div id="search_results">
 		<div class="cat_bar">
 			<h3 class="catbg">
 				', $txt['search_adjust_query'], '
 			</h3>
-		</div>';
+		</div>
+		<span class="upperframe"><span></span></span>
+		<div class="roundframe">';
 
 		// Did they make any typos or mistakes, perhaps?
 		if (isset($context['did_you_mean']))
 			echo '
-		<p>', $txt['search_did_you_mean'], ' <a href="', $scripturl, '?action=search2;params=', $context['did_you_mean_params'], '">', $context['did_you_mean'], '</a>.</p>';
+			<p>', $txt['search_did_you_mean'], ' <a href="', $scripturl, '?action=search2;params=', $context['did_you_mean_params'], '">', $context['did_you_mean'], '</a>.</p>';
 
 		echo '
-		<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
-			<strong>', $txt['search_for'], ':</strong>
-			<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" class="input_text" />
-			<input type="submit" name="submit" value="', $txt['search_adjust_submit'], '" class="button_submit" />
-
-			<input type="hidden" name="searchtype" value="', !empty($context['search_params']['searchtype']) ? $context['search_params']['searchtype'] : 0, '" />
-			<input type="hidden" name="userspec" value="', !empty($context['search_params']['userspec']) ? $context['search_params']['userspec'] : '', '" />
-			<input type="hidden" name="show_complete" value="', !empty($context['search_params']['show_complete']) ? 1 : 0, '" />
-			<input type="hidden" name="subject_only" value="', !empty($context['search_params']['subject_only']) ? 1 : 0, '" />
-			<input type="hidden" name="minage" value="', !empty($context['search_params']['minage']) ? $context['search_params']['minage'] : '0', '" />
-			<input type="hidden" name="maxage" value="', !empty($context['search_params']['maxage']) ? $context['search_params']['maxage'] : '9999', '" />
-			<input type="hidden" name="sort" value="', !empty($context['search_params']['sort']) ? $context['search_params']['sort'] : 'relevance', '" />';
+			<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
+				<strong>', $txt['search_for'], ':</strong>
+				<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" class="input_text" />
+				<input type="submit" name="submit" value="', $txt['search_adjust_submit'], '" class="button_submit" />
+				<input type="hidden" name="searchtype" value="', !empty($context['search_params']['searchtype']) ? $context['search_params']['searchtype'] : 0, '" />
+				<input type="hidden" name="userspec" value="', !empty($context['search_params']['userspec']) ? $context['search_params']['userspec'] : '', '" />
+				<input type="hidden" name="show_complete" value="', !empty($context['search_params']['show_complete']) ? 1 : 0, '" />
+				<input type="hidden" name="subject_only" value="', !empty($context['search_params']['subject_only']) ? 1 : 0, '" />
+				<input type="hidden" name="minage" value="', !empty($context['search_params']['minage']) ? $context['search_params']['minage'] : '0', '" />
+				<input type="hidden" name="maxage" value="', !empty($context['search_params']['maxage']) ? $context['search_params']['maxage'] : '9999', '" />
+				<input type="hidden" name="sort" value="', !empty($context['search_params']['sort']) ? $context['search_params']['sort'] : 'relevance', '" />';
 
 		if (!empty($context['search_params']['brd']))
 			foreach ($context['search_params']['brd'] as $board_id)
 				echo '
-			<input type="hidden" name="brd[', $board_id, ']" value="', $board_id, '" />';
+				<input type="hidden" name="brd[', $board_id, ']" value="', $board_id, '" />';
 
-	echo '
-		</form>
-	</div>';
+		echo '
+			</form>
+		</div>
+		<span class="lowerframe"><span></span></span>
+	</div><br />';
 	}
 
 	if ($context['compact'])
@@ -460,7 +463,7 @@ function template_results()
 					// Can we request notification of topics?
 					if ($topic['can_mark_notify'])
 					echo '
-									<li class="restore_button"><a href="', $scripturl . '?action=notify;topic=' . $topic['id'] . '.' . $message['start'], '">', $txt['notify'], '</a></li>';
+									<li class="notify_button"><a href="', $scripturl . '?action=notify;topic=' . $topic['id'] . '.' . $message['start'], '">', $txt['notify'], '</a></li>';
 
 					if ($topic['can_reply'] || $topic['can_mark_notify'])
 					echo '

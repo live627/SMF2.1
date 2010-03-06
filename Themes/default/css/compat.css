@@ -2316,10 +2316,6 @@ span.memberstatsbar span
 
 /* Styles for the search results page.
 ------------------------------------------------- */
-#search_results form
-{
-	padding: 1em;
-}
 .pagelinks
 {
 	padding: 0.5em;

@@ -3275,10 +3275,6 @@ fieldset#advanced_search .roundframe
 
 /* Styles for the search results page.
 ------------------------------------------------- */
-#search_results form
-{
-	padding: 1em;
-}
 .pagelinks
 {
 	padding: 0.5em;
