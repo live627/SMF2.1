@@ -39,10 +39,10 @@ CREATE OR REPLACE FUNCTION INET_ATON(text) RETURNS bigint AS
 	CASE WHEN 
 		$1 !~ ''^[0-9]?[0-9]?[0-9]?\.[0-9]?[0-9]?[0-9]?\.[0-9]?[0-9]?[0-9]?\.[0-9]?[0-9]?[0-9]?$'' THEN 0 
 	ELSE
-		split_part($1, '.', 1)::int8 * (256 * 256 * 256) +
-		split_part($1, '.', 2)::int8 * (256 * 256) +
-		split_part($1, '.', 3)::int8 * 256 +
-		split_part($1, '.', 4)::int8
+		split_part($1, ''.'', 1)::int8 * (256 * 256 * 256) +
+		split_part($1, ''.'', 2)::int8 * (256 * 256) +
+		split_part($1, ''.'', 3)::int8 * 256 +
+		split_part($1, ''.'', 4)::int8
 	END AS result'
 LANGUAGE 'sql';
 
