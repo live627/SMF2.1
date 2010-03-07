@@ -1,7 +1,7 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0 RC3                                                      			 ???
+SMF 2.0 RC3                                                         8 March 2010
 ================================================================================
 March 2010
 --------------------------------------------------------------------------------
@@ -24,6 +24,11 @@ March 2010
  * Don't allow labels for a single pm if we are in conversion mode (PersonalMessage template) [Bug 2293]
  ! Hide boards that do not contribute towards the post count in the 'Most popular boards by posts' panel, as the numbers may confuse users. (Profile-View.php)
  ! Forgot to escape single quotes (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql)
+ ! Added an extra check on the language environment variable of the installer. (install.php)
+ * Fixed the language selector not being selectable in the installer. (install.css)
+ ! Escape the URL being used for the header logo - reported by cicatriz.r00t. (Load.php, index template)
+ ! Remove session checks from modify and quote actions that don't require it - reported by WHK. (Post.php, Display template, MessageIndex template, Post template, Profile template, Recent template, Search template, Wireless template, topic.js)
+
 
 February 2010
 --------------------------------------------------------------------------------

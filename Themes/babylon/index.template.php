@@ -164,12 +164,12 @@ function template_body_above()
 	// This part is the logo and forum name.  You should be able to change this to whatever you want...
 	echo '
 					<img src="', $settings['images_url'], '/smflogo.gif" style="width: 250px; float: ', !$context['right_to_left'] ? 'right' : 'left', ';" alt="" />';
-	if (empty($settings['header_logo_url']))
+	if (empty($context['header_logo_url_html_safe']))
 		echo '
 					<span style="font-family: Georgia, sans-serif; font-size: xx-large;">', $context['forum_name_html_safe'], '</span>';
 	else
 		echo '
-					<img src="', $settings['header_logo_url'], '" alt="', $context['forum_name_html_safe'], '" border="0" />';
+					<img src="', $context['header_logo_url_html_safe'], '" alt="', $context['forum_name_html_safe'], '" border="0" />';
 
 	echo '
 				</td>

@@ -705,7 +705,6 @@ function Post()
 	// Editing a message...
 	elseif (isset($_REQUEST['msg']) && !empty($topic))
 	{
-		checkSession('get');
 		$_REQUEST['msg'] = (int) $_REQUEST['msg'];
 
 		// Get the existing message.
@@ -812,8 +811,6 @@ function Post()
 		// Posting a quoted reply?
 		if (!empty($topic) && !empty($_REQUEST['quote']))
 		{
-			checkSession('get');
-
 			// Make sure they _can_ quote this post, and if so get it.
 			$request = $smcFunc['db_query']('', '
 				SELECT m.subject, IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.body
@@ -2525,8 +2522,6 @@ function QuoteFast()
 	loadLanguage('Post');
 	if (!isset($_REQUEST['xml']))
 		loadTemplate('Post');
-
-	checkSession('get');
 
 	include_once($sourcedir . '/Subs-Post.php');
 

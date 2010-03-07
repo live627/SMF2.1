@@ -172,11 +172,11 @@ function template_body_above()
 			<img class="floatright" id="smflogo" src="', $settings['images_url'], '/smflogo.gif" alt="Simple Machines Forum" />
 			<h1 id="forum_name">';
 
-	if (empty($settings['header_logo_url']))
+	if (empty($context['header_logo_url_html_safe']))
 		echo $context['forum_name_html_safe'];
 	else
 		echo '
-				<img src="', $settings['header_logo_url'], '" alt="', $context['forum_name_html_safe'], '" />';
+				<img src="', $context['header_logo_url_html_safe'], '" alt="', $context['forum_name_html_safe'], '" />';
 
 	echo '
 			</h1>

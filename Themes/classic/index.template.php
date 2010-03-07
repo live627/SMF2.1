@@ -148,7 +148,7 @@ function template_body_above()
 	echo '
 	<table cellspacing="0" cellpadding="0" border="0" align="center" width="95%" class="tborder">
 		<tr style="background-color: #ffffff;">
-			<td valign="middle" align="left"><img src="', !empty($settings['header_logo_url']) ? $settings['header_logo_url'] : $settings['images_url'] . '/smflogo.gif', '" alt="" /></td>
+			<td valign="middle" align="left"><img src="', !empty($context['header_logo_url_html_safe']) ? $context['header_logo_url_html_safe'] : $settings['images_url'] . '/smflogo.gif', '" alt="" /></td>
 			<td valign="middle">';
 
 	// If the user is logged in, display stuff like their name, new messages, etc.
