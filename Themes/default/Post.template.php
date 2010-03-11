@@ -353,7 +353,7 @@ function template_main()
 								<dd>
 									<input type="checkbox" id="poll_change_vote" name="poll_change_vote"', !empty($context['poll']['change_vote']) ? ' checked="checked"' : '', ' class="input_check" />
 								</dd>';
-	
+
 		if ($context['poll_options']['guest_vote_enabled'])
 			echo '
 								<dt>
@@ -362,7 +362,7 @@ function template_main()
 								<dd>
 									<input type="checkbox" id="poll_guest_vote" name="poll_guest_vote"', !empty($context['poll_options']['guest_vote']) ? ' checked="checked"' : '', ' class="input_check" />
 								</dd>';
-	
+
 		echo '
 								<dt>
 									', $txt['poll_results_visibility'], ':

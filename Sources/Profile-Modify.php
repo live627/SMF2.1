@@ -2628,7 +2628,7 @@ function profileSaveAvatarData(&$value)
 					if (!reencodeImage($uploadDir . '/avatar_tmp_' . $memID))
 						return 'bad_avatar';
 				}
-				
+
 				$extensions = array(
 					'1' => 'gif',
 					'2' => 'jpg',

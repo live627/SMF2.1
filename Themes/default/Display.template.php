@@ -673,7 +673,7 @@ function template_main()
 							<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />
 							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 							<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />';
-							
+
 			// Guests just need more.
 			if ($context['user']['is_guest'])
 				echo '

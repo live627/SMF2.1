@@ -210,7 +210,7 @@ function template_select()
 								j = oListItems.length + 1;
 							}
 						}
-						
+
 						// Let\'s create a nice container for the message.
 						newItem = document.createElement("LI");
 						newItem.className = "windowbg2";

@@ -124,7 +124,7 @@ function template_wap_display()
 
 		echo '
 		<p><u>', $message['member']['name'], '</u>:', (!$message['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), '<br /></p>
- 		<p>', $message['body'], '<br /><br /></p>';
+		<p>', $message['body'], '<br /><br /></p>';
 	}
 
 	echo '

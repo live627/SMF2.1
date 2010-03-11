@@ -984,7 +984,7 @@ function template_statPanel()
 		}
 
 		echo '
-		
+
 					</ul>';
 	}
 

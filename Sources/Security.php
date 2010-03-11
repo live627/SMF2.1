@@ -223,7 +223,7 @@ function is_not_guest($message = '')
 		$context['sub_template'] = 'kick_guest';
 		$context['robot_no_index'] = true;
 	}
-	
+
 	// Use the kick_guest sub template...
 	$context['kick_message'] = $message;
 	$context['page_title'] = $txt['login'];

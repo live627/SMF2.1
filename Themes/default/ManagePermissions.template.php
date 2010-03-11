@@ -331,7 +331,7 @@ function template_by_board()
 
 	echo '
 			<div class="righttext">';
-	
+
 	if ($context['edit_all'])
 		echo '
 				<input type="submit" name="save_changes" value="', $txt['save'], '" class="button_submit" />';
@@ -531,7 +531,7 @@ function template_modify_group()
 			template_modify_group_simple('board');
 		else
 			template_modify_group_classic('board');
-		
+
 		echo '
 			</div>';
 	}

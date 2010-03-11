@@ -43,7 +43,7 @@ if (!defined('SMF'))
 
 	void VerificationCode()
 		// Show the verification code or let it hear.
-		
+
 	void RegisterCheckUsername()
 		// !!!
 */

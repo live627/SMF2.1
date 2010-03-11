@@ -919,7 +919,7 @@ function template_manual_topic_view()
 function template_manual_when_how_register()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
-	
+
 	echo '
 			<p>', $txt['manual_register_access_describe'], '</p>
 			<p>', $txt['manual_register_guest_describe'], '</p>

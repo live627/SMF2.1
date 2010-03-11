@@ -1097,7 +1097,7 @@ function MergeExecute($topics = array())
 		fatal_lang_error('no_topic_id');
 
 	$boards = array_values(array_unique($boards));
-	
+
 	 // The parameters of MergeExecute were set, so this must've been an internal call.
 	if (!empty($topics))
 	{

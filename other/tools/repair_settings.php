@@ -102,7 +102,7 @@ if (isset($_POST['submit']))
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
- 		<meta name="robots" content="noindex" />
+		<meta name="robots" content="noindex" />
 		<title>', $txt['smf_repair_settings'], '</title>
 		<script type="text/javascript" src="Themes/default/scripts/script.js"></script>
 		<style type="text/css">
@@ -985,7 +985,7 @@ function smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_pre
 
 		return $tables;
 	}
-	
+
 	// This function tries to work out additional error information from a back trace.
 	function smf_db_error_backtrace($error_message, $log_message = '', $error_type = false, $file = null, $line = null)
 	{

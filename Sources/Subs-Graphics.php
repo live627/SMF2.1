@@ -50,21 +50,21 @@ if (!defined('SMF'))
 		- create a thumbnail of the given source.
 		- uses the resizeImageURL function to achieve the resize.
 		- returns whether the thumbnail creation was successful.
-		
+
 	bool reencodeImage(string fileName)
 		- creates a copy of the file at the same location as fileName.
 		- makes sure that all non-essential image contents are disposed.
 		- returns true on success, false on failure.
-		
+
 	bool checkImageContents(string fileName)
 		- searches through the file to see if there's non-binary content.
 		- returns true on success, false on failure.
-		
+
 	bool checkGD()
 		- sets a global $gd2 variable needed by some functions to determine
 		  whetehr the GD2 library is present.
 		- returns whether or not GD1 is available.
-		
+
 	void resizeImageURL(string sourceURL, string destinationFile,
 			int max_width, int max_height)
 		- resizes an image from a remote location or a local file.
@@ -124,7 +124,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	// Just making sure there is a non-zero member.
 	if (empty($memID))
 		return false;
-		
+
 	require_once($sourcedir . '/ManageAttachments.php');
 	removeAttachments(array('id_member' => $memID));
 
@@ -243,16 +243,16 @@ function reencodeImage($fileName)
 	{
 		if (file_exists($fileName . '.tmp'))
 			unlink($fileName . '.tmp');
-			
+
 		return false;
 	}
-	
+
 	if (!unlink($fileName))
 		return false;
-	
+
 	if (!rename($fileName . '.tmp', $fileName))
 		return false;
-	
+
 	return true;		
 }
 
@@ -266,7 +266,7 @@ function checkImageContents($fileName)
 	while (!feof($fp))
 	{
 		$cur_chunk = fread($fp, 8192);
-		
+
 		// Though not an exhaustive list, better safe than sorry.
 		if (preg_match('~(iframe|\\<\\?|\\<%|html|eval|body|script\W|[CF]WS[\x01-\x0C])~i', $prev_chunk . $cur_chunk) === 1)
 		{
@@ -276,28 +276,28 @@ function checkImageContents($fileName)
 		$prev_chunk = $cur_chunk;
 	}
 	fclose($fp);
-	
+
 	return true;
 }
 
 function checkGD()
 {
 	global $gd2;
-	
+
 	// Check to see if GD is installed and what version.
 	if (($extensionFunctions = get_extension_funcs('gd')) === false)
 		return false;
-	
+
 	// Also determine if GD2 is installed and store it in a global.
 	$gd2 = in_array('imagecreatetruecolor', $extensionFunctions) && function_exists('imagecreatetruecolor');
-	
+
 	return true;
 }
 
 function resizeImageURL($sourceURL, $destinationFile, $max_width, $max_height)
 {
 	global $sourcedir;
-	
+
 	static $default_formats = array(
 		'1' => 'gif',
 		'2' => 'jpeg',
@@ -354,14 +354,14 @@ function resizeImageURL($sourceURL, $destinationFile, $max_width, $max_height)
 			$success = true;
 		}
 	}
-	
+
 	return $success;
 }
 
 function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $max_height, $force_resize = false)
 {
 	global $gd2, $modSettings;
-	
+
 	// Without GD, no image resizing at all.
 	if (!checkGD())
 		return false;

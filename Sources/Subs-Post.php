@@ -2260,7 +2260,7 @@ function createAttachment(&$attachmentOptions)
 
 	// Attempt to chmod it.
 	@chmod($attachmentOptions['destination'], 0644);
-	
+
 	$size = @getimagesize($attachmentOptions['destination']);
 	list ($attachmentOptions['width'], $attachmentOptions['height']) = empty($size) ? array(null, null, null) : $size;
 
@@ -2292,7 +2292,7 @@ function createAttachment(&$attachmentOptions)
 				)
 			);
 	}
-		
+
 	// Reencode it if it smells bad.
 	if (isset($validImageTypes[$size[2]]) && !checkImageContents($attachmentOptions['destination']))
 	{
@@ -2304,7 +2304,7 @@ function createAttachment(&$attachmentOptions)
 			));
 			$attachmentOptions['id'] = null;
 			$attachmentOptions['errors'][] = 'could_not_upload';
-			
+
 			return false;
 		}
 	}	
