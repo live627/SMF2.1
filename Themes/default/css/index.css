@@ -1611,7 +1611,7 @@ p.moderators
 	padding: 0 2em;
 	overflow: auto;
 	margin: 1em 0;
-	color: #575757;
+	color: #575757; /* shouldn't be shorthand style due to JS bug in IE! */
 }
 
 /* Styles for the info center on the board index.

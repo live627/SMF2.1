@@ -1,6 +1,13 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
+SMF 2.0
+================================================================================
+March 2010
+--------------------------------------------------------------------------------
+ * A typo in the compatibility template prevented it from being used properly. (Compat template)
+
+
 SMF 2.0 RC3                                                         8 March 2010
 ================================================================================
 March 2010

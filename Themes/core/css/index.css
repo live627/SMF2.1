@@ -1510,7 +1510,7 @@ table.boardsframe td.lastpost
 {
 	text-align: center;
 	overflow: auto;
-	color: #000000;
+	color: #000000; /* shouldn't be shorthand style due to JS bug in IE! */
 }
 
 /* Styles for the info center on the board index.
