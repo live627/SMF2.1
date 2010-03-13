@@ -8,8 +8,7 @@ function template_modify_subscription()
 
 	// Javascript for the duration stuff.
 	echo '
-	<script type="text/javascript"><!-- // --><![CDATA[
-
+		<script type="text/javascript"><!-- // --><![CDATA[
 			function toggleDuration(toChange)
 			{
 				if (toChange == \'fixed\')
@@ -21,7 +20,6 @@ function template_modify_subscription()
 				{
 					document.getElementById("fixed_area").style.display = "none";
 					document.getElementById("flexible_area").style.display = "inline";
-
 				}
 			}
 		// ]]></script>';
@@ -575,7 +573,7 @@ function template_choose_payment()
 	echo '
 	<div id="paid_subscription">
 		<div class="cat_bar">
-			<h3 class="titlebg">', $txt['paid_confirm_payment'], '</h3>
+			<h3 class="catbg">', $txt['paid_confirm_payment'], '</h3>
 		</div>
 		<div class="information">
 			', $txt['paid_confirm_desc'], '
