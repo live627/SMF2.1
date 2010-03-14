@@ -7,6 +7,7 @@ March 2010
 --------------------------------------------------------------------------------
  * A typo in the compatibility template prevented it from being used properly. (Compat template)
  * Fixed a class issue with the header in the Confirm Subscription screen. (ManagePaid template)
+ * The BBcode help page was calling the obsolete bbc_highlight function; added in a replacement. (Help template) 
 
 
 SMF 2.0 RC3                                                         8 March 2010

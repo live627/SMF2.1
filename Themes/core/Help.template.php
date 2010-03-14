@@ -1981,6 +1981,12 @@ function template_manual_bbcode()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
+	<script type="text/javascript">
+		function bbc_highlight(oButton, bToState)
+		{
+			oButton.style.backgroundImage = \'url("\' + smf_images_url + \'/bbc/\' + (bToState ? \'bbc_hoverbg.gif\' : \'bbc_bg.gif\') + \'")\';
+		}
+	</script>
 	<p>', $txt['manual_posting_sub_smf_bbc_desc'], '</p>
 	<table class="bordercolor" cellspacing="1" cellpadding="3">
 		<tr>
