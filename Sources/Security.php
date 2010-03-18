@@ -178,7 +178,7 @@ function validateSession()
 // Require a user who is logged in. (not a guest.)
 function is_not_guest($message = '')
 {
-	global $user_info, $txt, $context;
+	global $user_info, $txt, $context, $scripturl;
 
 	// Luckily, this person isn't a guest.
 	if (!$user_info['is_guest'])

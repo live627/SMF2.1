@@ -998,11 +998,11 @@ ul.quickbuttons li.remove_button
 }
 ul.quickbuttons li.modify_button
 {
-	background: url(../images/buttons/modify.gif) no-repeat 0 0 0;
+	background: url(../images/buttons/modify.gif) no-repeat 0 0;
 }
 ul.quickbuttons li.approve_button
 {
-	background: url(../images/buttons/approve.gif) no-repeat 0 0 0;
+	background: url(../images/buttons/approve.gif) no-repeat 0 0;
 }
 ul.quickbuttons li.restore_button
 {
