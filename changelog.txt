@@ -10,6 +10,7 @@ March 2010
  * The BBcode help page was calling the obsolete bbc_highlight function; added in a replacement. (Help template) 
  ! Missing global $scripturl causing undefined index errors. (Security.php)
  * Core theme: background-position takes two parameters, not three. (Core index.css)
+ * Allow a simpler customization of boards and categories (MessageIndex template, BoardIndex template) [Bug 4231]
 
 
 SMF 2.0 RC3                                                         8 March 2010

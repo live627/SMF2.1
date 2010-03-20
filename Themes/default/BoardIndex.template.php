@@ -89,7 +89,7 @@ function template_main()
 			continue;
 
 		echo '
-			<tbody class="header">
+			<tbody class="header" id="category_', $category['id'], '">
 				<tr>
 					<td colspan="4" class="catbg"><span class="left"></span>';
 
@@ -107,7 +107,7 @@ function template_main()
 					</td>
 				</tr>
 			</tbody>
-			<tbody class="content">';
+			<tbody class="content"  id="category_', $category['id'], '_boards">';
 
 		// Assuming the category hasn't been collapsed...
 		if (!$category['is_collapsed'])
@@ -119,7 +119,7 @@ function template_main()
 			foreach ($category['boards'] as $board)
 			{
 				echo '
-				<tr class="windowbg2">
+				<tr id="board_', $board['id'], '" class="windowbg2">
 					<td class="icon windowbg"', !empty($board['children']) ? ' rowspan="2"' : '', '>
 						<a href="', ($board['is_redirect'] || $context['user']['is_guest'] ? $board['href'] : $scripturl . '?action=unread;board=' . $board['id'] . '.0;children'), '">';
 
@@ -200,7 +200,7 @@ function template_main()
 						$children[] = $child['new'] ? '<strong>' . $child['link'] . '</strong>' : $child['link'];
 					}
 					echo '
-					<tr>
+					<tr id="board_', $board['id'], '_children">
 						<td colspan="3" class="children windowbg">
 							<strong>', $txt['parent_boards'], '</strong>: ', implode(', ', $children), '
 						</td>

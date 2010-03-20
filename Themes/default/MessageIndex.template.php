@@ -11,18 +11,18 @@ function template_main()
 	if (!empty($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
 	{
 		echo '
-<div class="tborder" id="childboards">
+<div class="tborder childboards" id="board_', $context['current_board'], '_childboards">
 	<div class="cat_bar">
 		<h3 class="catbg">', $txt['parent_boards'], '</h3>
 	</div>
 	<div class="table_frame">
 		<table class="table_list">
-			<tbody class="content">';
+			<tbody id="board_', $context['current_board'], '_children" class="content">';
 
 		foreach ($context['boards'] as $board)
 		{
 			echo '
-			<tr class="windowbg2">
+			<tr id="board_', $board['id'], '" class="windowbg2">
 				<td class="icon windowbg"', !empty($board['children']) ? ' rowspan="2"' : '', '>
 					<a href="', ($board['is_redirect'] || $context['user']['is_guest'] ? $board['href'] : $scripturl . '?action=unread;board=' . $board['id'] . '.0;children'), '">';
 
@@ -104,7 +104,7 @@ function template_main()
 					$children[] = $child['new'] ? '<strong>' . $child['link'] . '</strong>' : $child['link'];
 				}
 				echo '
-			<tr><td colspan="3" class="children windowbg"><strong>', $txt['parent_boards'], '</strong>: ', implode(', ', $children), '</td></tr>';
+			<tr id="board_', $board['id'], '_children"><td colspan="3" class="children windowbg"><strong>', $txt['parent_boards'], '</strong>: ', implode(', ', $children), '</td></tr>';
 			}
 		}
 		echo '
