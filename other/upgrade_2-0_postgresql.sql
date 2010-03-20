@@ -1065,7 +1065,16 @@ CREATE OR REPLACE FUNCTION INSTR(text, text) RETURNS integer AS
 LANGUAGE 'sql';
 ---#
 
----# Adding daty()
+---# Adding date_format()
+CREATE OR REPLACE FUNCTION DATE_FORMAT (timestamp, text) RETURNS text AS
+  'SELECT
+    REPLACE(
+        REPLACE($2, ''%m'', to_char($1, ''MM'')),
+    ''%d'', to_char($1, ''DD'')) AS result'
+LANGUAGE 'sql';
+---#
+
+---# Adding day()
 CREATE OR REPLACE FUNCTION day(date) RETURNS integer AS
   'SELECT EXTRACT(DAY FROM DATE($1))::integer AS result'
 LANGUAGE 'sql';
@@ -1146,3 +1155,10 @@ CREATE OR REPLACE FUNCTION FIND_IN_SET(needle integer, haystack text) RETURNS in
 	LIMIT 1'
 LANGUAGE 'sql';
 ---#
+
+CREATE OR REPLACE FUNCTION DATE_FORMAT (timestamp, text) RETURNS text AS
+  'SELECT
+    REPLACE(
+        REPLACE($2, ''%m'', to_char($1, ''MM'')),
+    ''%d'', to_char($1, ''DD'')) AS result'
+LANGUAGE 'sql';

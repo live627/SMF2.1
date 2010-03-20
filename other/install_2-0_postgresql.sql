@@ -102,9 +102,9 @@ LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION DATE_FORMAT (timestamp, text) RETURNS text AS
   'SELECT
-   	REPLACE(
-   		REPLACE($2, ''%m'', CAST (EXTRACT(MONTH FROM $1) AS text)),
-   	''%d'', CAST (EXTRACT(DAY FROM $1) AS text)) AS result'
+    REPLACE(
+        REPLACE($2, ''%m'', to_char($1, ''MM'')),
+    ''%d'', to_char($1, ''DD'')) AS result'
 LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION TO_DAYS (timestamp) RETURNS integer AS
