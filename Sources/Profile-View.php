@@ -765,7 +765,7 @@ function statPanel($memID)
 	$smcFunc['db_free_result']($result);
 
 	// Now get the 10 boards this user has most often participated in.
-	$result = $smcFunc['db_query']('', '
+	$result = $smcFunc['db_query']('profile_board_stats', '
 		SELECT
 			b.id_board, MAX(b.name) AS name, b.num_posts, COUNT(*) AS message_count,
 			CASE WHEN COUNT(*) > MAX(b.num_posts) THEN 1 ELSE COUNT(*) / MAX(b.num_posts) END * 100 AS percentage
@@ -773,7 +773,7 @@ function statPanel($memID)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE m.id_member = {int:current_member}
 			AND {query_see_board}
-		GROUP BY b.id_board
+		GROUP BY b.id_board, b.num_posts
 		ORDER BY percentage DESC
 		LIMIT 10',
 		array(

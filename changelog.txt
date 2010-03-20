@@ -11,6 +11,8 @@ March 2010
  ! Missing global $scripturl causing undefined index errors. (Security.php)
  * Core theme: background-position takes two parameters, not three. (Core index.css)
  * Allow a simpler customization of boards and categories (MessageIndex template, BoardIndex template) [Bug 4231]
+ ! Trying to view a user's stats resulted in a database error in PostgreSQL (Profile-View.php) [Bug 4229]
+ ! PostgreSQL truncates results when dividing integers, which messed up percentages in profile statistics (Profile-View.php, Subs-Db-Postgresql.php) [Bug 4233]
 
 
 SMF 2.0 RC3                                                         8 March 2010
