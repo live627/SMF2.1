@@ -14,6 +14,7 @@ March 2010
  ! Trying to view a user's stats resulted in a database error in PostgreSQL (Profile-View.php) [Bug 4229]
  ! PostgreSQL truncates results when dividing integers, which messed up percentages in profile statistics (Profile-View.php, Subs-Db-Postgresql.php) [Bug 4233]
  ! Birthdays and events were only showing on the boardindex for 2-digit months in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 4227]
+ ! A typo broke upgrading for PostgreSQL (upgrade_2-0_postgresql.sql) [Bug 4228]
 
 
 SMF 2.0 RC3                                                         8 March 2010
