@@ -268,6 +268,9 @@ function Who()
 
 	// Some people can't send personal messages...
 	$context['can_send_pm'] = allowedTo('pm_send');
+	
+	// any profile fields disabled?
+	$context['disabled_fields'] = isset($modSettings['disabled_profile_fields']) ? array_flip(explode(',', $modSettings['disabled_profile_fields'])) : array();
 
 }
 
