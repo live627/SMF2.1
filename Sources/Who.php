@@ -87,7 +87,7 @@ function Who()
 	$show_methods = array(
 		'members' => '(lo.id_member != 0)',
 		'guests' => '(lo.id_member = 0)',
-		'all' => '1',
+		'all' => '1=1',
 	);
 
 	// Store the sort methods and the show types for use in the template.
