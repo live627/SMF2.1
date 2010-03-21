@@ -300,7 +300,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 			'~(.)$~' => '$1 ORDER BY LENGTH(user_agent) DESC',
 		),
 		'unread_replies' => array(
-			'~t.id_topic~' => 't.id_topic, {raw:sort}',
+			'~SELECT\\s+DISTINCT\\s+t.id_topic~' => 'SELECT t.id_topic, {raw:sort}',
 		),
 		'profile_board_stats' => array(
 			'~COUNT\(\*\) \/ b.num_posts' => 'CAST(COUNT(*) AS DECIMAL) / CAST(b.num_posts AS DECIMAL)',

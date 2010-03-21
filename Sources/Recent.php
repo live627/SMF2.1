@@ -1062,7 +1062,7 @@ function UnreadTopics()
 					LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = {int:current_member})
 				WHERE t.' . $query_this_board . '
 					AND t.id_last_msg >= {int:min_message}
-					AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
+					AND (IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0))::int) < t.id_last_msg
 					AND t.approved = {int:is_approved}
 				ORDER BY {raw:order}
 				LIMIT {int:offset}, {int:limit}',
@@ -1073,6 +1073,7 @@ function UnreadTopics()
 					'order' => $_REQUEST['sort'] . ($ascending ? '' : ' DESC'),
 					'offset' => $_REQUEST['start'],
 					'limit' => $context['topics_per_page'],
+					'sort' => $_REQUEST['sort'],
 				))
 			);
 
