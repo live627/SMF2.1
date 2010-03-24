@@ -1279,7 +1279,7 @@ function template_downloaded()
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
-				<p>' . (!isset($context['package_server']) ? $txt['package_uploaded_successfully'] : $txt['package_downloaded_successfully']) . '</p>
+				<p>' . (empty($context['package_server']) ? $txt['package_uploaded_successfully'] : $txt['package_downloaded_successfully']) . '</p>
 					<ul class="reset">
 							<li class="reset"><span class="align_left"><strong>' . $context['package']['name'] . '</strong></span>
 								<span class="package_server align_right">' . $context['package']['list_files']['link'] . '</span>
