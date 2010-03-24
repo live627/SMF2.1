@@ -131,7 +131,6 @@ function Memberlist()
 			'width' => '115',
 			'colspan' => '2',
 			'default_sort_rev' => true,
-			'class' => 'last_th',
 		)
 	);
 
@@ -147,6 +146,10 @@ function Memberlist()
 
 		$context['colspan'] += isset($column['colspan']) ? $column['colspan'] : 1;
 	}
+
+	// Aesthetic stuff.
+	end($context['columns']);
+	$context['columns'][key($context['columns'])]['class'] = 'last_th';
 
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=mlist',

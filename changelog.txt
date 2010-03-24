@@ -18,6 +18,7 @@ March 2010
  ! Disabled profile fields were visible on Who's online template (Who template, Who.php) [Bug 4232]
  ! Trying to view unread replies caused a database error in PostgreSQL (Recent.php, Subs-Db-postgresql.php)
  ! Viewing Who's Online with a condition of "show=all" caused a database error in PostgreSQL (Who.php)
+ ! Make sure the memberlist headers end with a curve, even with the Posts field disabled. (Memberlist.php)
 
 
 SMF 2.0 RC3                                                         8 March 2010
