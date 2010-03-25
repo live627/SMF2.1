@@ -279,7 +279,9 @@ function template_view_package()
 	if (!$context['ftp_needed'] && (!empty($context['actions']) || !empty($context['database_changes'])))
 	{
 		echo '
-			<input type="submit" value="', $context['uninstalling'] ? $txt['package_uninstall_now'] : $txt['package_install_now'], '" onclick="return ', !empty($context['has_failure']) ? '(submitThisOnce(this) &amp;&amp; confirm(\'' . ($context['uninstalling'] ? $txt['package_will_fail_popup_uninstall'] : $txt['package_will_fail_popup']) . '\'))' : 'submitThisOnce(this)', ';" class="button_submit" />';
+			<div class="righttext padding">
+				<input type="submit" value="', $context['uninstalling'] ? $txt['package_uninstall_now'] : $txt['package_install_now'], '" onclick="return ', !empty($context['has_failure']) ? '(submitThisOnce(this) &amp;&amp; confirm(\'' . ($context['uninstalling'] ? $txt['package_will_fail_popup_uninstall'] : $txt['package_will_fail_popup']) . '\'))' : 'submitThisOnce(this)', ';" class="button_submit" />
+			</div>';
 	}
 	// If we need ftp information then demand it!
 	elseif ($context['ftp_needed'])
@@ -893,7 +895,9 @@ function template_browse()
 								<input type="text" name="version_emulate" id="ve" value="', $context['forum_version'], '" size="25" class="input_text" />
 							</dd>
 						</dl>
-						<input type="submit" value="', $txt['package_apply'], '" class="button_submit" />
+						<div class="righttext padding">
+							<input type="submit" value="', $txt['package_apply'], '" class="button_submit" />
+						</div>
 					</div>
 					<span class="botslice"><span></span></span>
 				</div>
@@ -1042,25 +1046,25 @@ function template_servers()
 			<h3 class="catbg">' . $txt['package_upload_title'] . '</h3>
 		</div>
 		<div class="windowbg">
-				<span class="topslice"><span></span></span>
-				<div class="content">
-					<form action="' . $scripturl . '?action=admin;area=packages;get;sa=upload" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data" style="margin-bottom: 0;">
-						<dl class="settings">
-							<dt>
-								<strong>' . $txt['package_upload_select'] . ':</strong>
-							</dt>
-							<dd>
-								<input type="file" name="package" size="38" class="input_file" />
-							</dd>
-						</dl>
-						<div class="righttext">
-							<input type="submit" value="' . $txt['package_upload'] . '" class="button_submit" />
-							<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
-						</div>
-					</form>
-				</div>
-				<span class="botslice"><span></span></span>
+			<span class="topslice"><span></span></span>
+			<div class="content">
+				<form action="' . $scripturl . '?action=admin;area=packages;get;sa=upload" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data" style="margin-bottom: 0;">
+					<dl class="settings">
+						<dt>
+							<strong>' . $txt['package_upload_select'] . ':</strong>
+						</dt>
+						<dd>
+							<input type="file" name="package" size="38" class="input_file" />
+						</dd>
+					</dl>
+					<div class="righttext">
+						<input type="submit" value="' . $txt['package_upload'] . '" class="button_submit" />
+						<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
+					</div>
+				</form>
 			</div>
+			<span class="botslice"><span></span></span>
+		</div>
 	</div>
 	<br class="clear" />';
 }
@@ -1274,20 +1278,20 @@ function template_downloaded()
 	echo '
 	<div id="admincenter">
 		<div class="cat_bar">
-			<h3 class="catbg">' . $context['page_title'] . '</h3>
+			<h3 class="catbg">', $context['page_title'], '</h3>
 		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
-				<p>' . (empty($context['package_server']) ? $txt['package_uploaded_successfully'] : $txt['package_downloaded_successfully']) . '</p>
+				<p>', (empty($context['package_server']) ? $txt['package_uploaded_successfully'] : $txt['package_downloaded_successfully']), '</p>
 					<ul class="reset">
-							<li class="reset"><span class="align_left"><strong>' . $context['package']['name'] . '</strong></span>
-								<span class="package_server align_right">' . $context['package']['list_files']['link'] . '</span>
-								<span class="package_server align_right">' . $context['package']['install']['link'] . '</span>
+							<li class="reset"><span class="align_left"><strong>', $context['package']['name'], '</strong></span>
+								<span class="package_server align_right">', $context['package']['list_files']['link'], '</span>
+								<span class="package_server align_right">', $context['package']['install']['link'], '</span>
 							</li>
 					</ul>
 				<br class="clear" /><br />
-				<p><a href="' . $scripturl . '?action=admin;area=packages;get' . (isset($context['package_server']) ? ';sa=browse;server=' . $context['package_server'] : '') . '">[ ' . $txt['back'] . ' ]</a></p>
+				<p><a href="', $scripturl, '?action=admin;area=packages;get', (isset($context['package_server']) ? ';sa=browse;server=' . $context['package_server'] : ''), '">[ ', $txt['back'], ' ]</a></p>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
@@ -1949,12 +1953,12 @@ function template_file_permissions()
 					<p>
 						', $txt['package_file_perms_ftp_details'], ':
 					</p>
-						', template_control_chmod(), '
-						<div class="information">', $txt['package_file_perms_ftp_retain'], '</div>';
+					', template_control_chmod(), '
+					<div class="information">', $txt['package_file_perms_ftp_retain'], '</div>';
 
 	echo '
 				<span id="test_ftp_placeholder_full"></span>
-				<div class="righttext">
+				<div class="righttext padding">
 					<input type="hidden" name="action_changes" value="1" />
 					<input type="submit" value="', $txt['package_file_perms_go'], '" name="go" class="button_submit" />
 				</div>
@@ -2136,7 +2140,9 @@ function template_action_permissions()
 	echo '
 					<input type="hidden" name="method" value="', $context['method'], '" />
 					<input type="hidden" name="action_changes" value="1" />
-					<input type="submit" name="go" id="cont" value="', $txt['not_done_continue'], '" class="button_submit" />
+					<div class="righttext padding">
+						<input type="submit" name="go" id="cont" value="', $txt['not_done_continue'], '" class="button_submit" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
