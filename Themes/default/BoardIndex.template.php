@@ -107,7 +107,7 @@ function template_main()
 					</td>
 				</tr>
 			</tbody>
-			<tbody class="content"  id="category_', $category['id'], '_boards">';
+			<tbody class="content" id="category_', $category['id'], '_boards">';
 
 		// Assuming the category hasn't been collapsed...
 		if (!$category['is_collapsed'])
