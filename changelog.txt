@@ -20,6 +20,7 @@ March 2010
  ! Viewing Who's Online with a condition of "show=all" caused a database error in PostgreSQL (Who.php)
  ! Make sure the memberlist headers end with a curve, even with the Posts field disabled. (Memberlist.php)
  * A wrong message was shown after uploading a package (Packages template) [Bug 4235]
+ * Invalid XHTML (ManageNews template) [Bug 4241]
 
 
 SMF 2.0 RC3                                                         8 March 2010
