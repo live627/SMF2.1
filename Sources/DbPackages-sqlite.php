@@ -329,7 +329,7 @@ function smf_db_add_index($table_name, $index_info, $parameters = array(), $if_e
 	if (empty($index_info['name']))
 	{
 		// No need for primary.
-		if ($index_info['type'] == 'primary')
+		if (isset($index_info['type']) && $index_info['type'] == 'primary')
 			$index_info['name'] = '';
 		else
 			$index_info['name'] = implode('_', $index_info['columns']);

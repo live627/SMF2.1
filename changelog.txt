@@ -6,6 +6,7 @@ SMF 2.0                                                                      ???
 April 2010
 --------------------------------------------------------------------------------
  ! Converting to UTF-8 didn't report conversion complete (ManageMaintenance.php) [Bug 4224]
+ ! smf_db_add_index could cause an undefined index 'type' error (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 4243]
 
 ================================================================================
 March 2010
