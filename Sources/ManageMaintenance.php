@@ -211,6 +211,10 @@ function ManageMaintenance()
 	// Any special activity?
 	if (isset($activity))
 		$subActions[$subAction]['activities'][$activity]();
+	
+	//converted to UTF-8? show a small maintenance info
+	if (isset($_GET['done']) && $_GET['done'] == 'convertutf8')
+		$context['maintenance_finished'] = $txt['utf8_title'];
 }
 
 // Supporting function for the database maintenance area.

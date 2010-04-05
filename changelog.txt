@@ -3,6 +3,11 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0                                                                      ???
 ================================================================================
+April 2010
+--------------------------------------------------------------------------------
+ ! Converting to UTF-8 didn't report conversion complete (ManageMaintenance.php) [Bug 4224]
+
+================================================================================
 March 2010
 --------------------------------------------------------------------------------
  * A typo in the compatibility template prevented it from being used properly. (Compat template)
