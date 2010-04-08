@@ -10,6 +10,7 @@ April 2010
  ! Properly handle auto linked FTP urls (Subs.php) [Bug 4238]
  ! A few integration functions have a return value mishandled (Subs-Post.php, Subs.php) [Bug 4246]
  ! HTML strict mode broke javascript targets (Subs.php) [Bug 4240]
+ ! Use a popup box since we may have a large list of files (upgrade.php) [Bug 4114]
 
 
 ================================================================================
