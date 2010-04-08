@@ -2701,7 +2701,7 @@ function redirectexit($setLocation = '', $refresh = false)
 	}
 
 	if (isset($modSettings['integrate_redirect']) && is_callable($modSettings['integrate_redirect']))
-		call_user_func(strpos($modSettings['integrate_redirect'], '::') === false ? $modSettings['integrate_redirect'] : explode('::', $modSettings['integrate_redirect']), $setLocation, $refresh);
+		$setLocation = call_user_func(strpos($modSettings['integrate_redirect'], '::') === false ? $modSettings['integrate_redirect'] : explode('::', $modSettings['integrate_redirect']), $setLocation, $refresh);
 
 	// We send a Refresh header only in special cases because Location looks better. (and is quicker...)
 	if ($refresh && !WIRELESS)

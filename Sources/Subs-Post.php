@@ -691,7 +691,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 	// pass this to the integration before we start modifying the output -- it'll make it easier later
 	if (isset($modSettings['integrate_outgoing_email']) && is_callable($modSettings['integrate_outgoing_email']))
 	{
-		if (call_user_func(strpos($modSettings['integrate_outgoing_email'], '::') === false ? $modSettings['integrate_outgoing_email'] : explode('::', $modSettings['integrate_outgoing_email']), $subject, $message, $headers) === false)
+		if (($message = call_user_func(strpos($modSettings['integrate_outgoing_email'], '::') === false ? $modSettings['integrate_outgoing_email'] : explode('::', $modSettings['integrate_outgoing_email']), $subject, $message, $headers)) === false)
 			return false;
 	}
 

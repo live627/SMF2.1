@@ -28,6 +28,7 @@ March 2010
  * A wrong message was shown after uploading a package (Packages template) [Bug 4235]
  * Invalid XHTML (ManageNews template) [Bug 4241]
  ! Properly handle auto linked FTP urls (Subs.php) [Bug 4238]
+ ! A few integration functions have a return value mishandled (Subs-Post.php, Subs.php) [Bug 4246] 
 
 
 SMF 2.0 RC3                                                         8 March 2010
