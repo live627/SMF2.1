@@ -7,6 +7,10 @@ April 2010
 --------------------------------------------------------------------------------
  ! Converting to UTF-8 didn't report conversion complete (ManageMaintenance.php) [Bug 4224]
  ! smf_db_add_index could cause an undefined index 'type' error (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 4243]
+ ! Properly handle auto linked FTP urls (Subs.php) [Bug 4238]
+ ! A few integration functions have a return value mishandled (Subs-Post.php, Subs.php) [Bug 4246]
+ ! HTML strict mode broke javascript targets (Subs.php) [Bug 4240]
+
 
 ================================================================================
 March 2010
@@ -27,8 +31,6 @@ March 2010
  ! Make sure the memberlist headers end with a curve, even with the Posts field disabled. (Memberlist.php)
  * A wrong message was shown after uploading a package (Packages template) [Bug 4235]
  * Invalid XHTML (ManageNews template) [Bug 4241]
- ! Properly handle auto linked FTP urls (Subs.php) [Bug 4238]
- ! A few integration functions have a return value mishandled (Subs-Post.php, Subs.php) [Bug 4246] 
 
 
 SMF 2.0 RC3                                                         8 March 2010

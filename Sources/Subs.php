@@ -2816,7 +2816,9 @@ function obExit($header = null, $do_footer = null, $from_index = false)
 			ob_start('ob_sessrewrite');
 		}
 
-		echo str_replace('target="_blank"', 'onclick="this.target=\'_blank\'"', $temp);
+		echo strtr($temp, array(
+			'var smf_iso_case_folding' => 'var target_blank = \'_blank\'; var smf_iso_case_folding',
+			'target="_blank"' => 'onclick="this.target=target_blank"'));
 	}
 
 	// Hand off the output to the portal, etc. we're integrated with.
