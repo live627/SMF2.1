@@ -167,6 +167,10 @@ function MessageMain()
 		);
 	}
 
+	// a previous message was sent successfully? show a small indication.
+	if (isset($_GET['done']) && ($_GET['done'] == 'sent'))
+		$context['pm_sent'] = true;
+
 	// Now we have the labels, and assuming we have unsorted mail, apply our rules!
 	if ($user_settings['new_pm'])
 	{
@@ -2237,6 +2241,10 @@ function MessagePost2()
 			'to' => array_intersect($recipientList['to'], $context['send_log']['failed']),
 			'bcc' => array_intersect($recipientList['bcc'], $context['send_log']['failed'])
 		));
+
+	//Message sent successfully? 
+	if (!empty($context['send_log']) && empty($context['send_log']['failed']))
+		$context['current_label_redirect'] = $context['current_label_redirect'] . ';done=sent';
 
 	// Go back to the where they sent from, if possible...
 	redirectexit($context['current_label_redirect']);

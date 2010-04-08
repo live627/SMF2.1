@@ -37,6 +37,7 @@ $txt['delete_conversation'] = 'Delete Conversation';
 
 $txt['pm_capacity'] = 'Capacity';
 $txt['pm_currently_using'] = '%1$s messages, %2$s%% full.';
+$txt['pm_sent'] = 'Your message has been sent successfully.';
 
 $txt['pm_error_user_not_found'] = 'Unable to find member \'%1$s\'.';
 $txt['pm_error_ignored_by_user'] = 'User \'%1$s\' has blocked your personal message.';

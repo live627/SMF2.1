@@ -11,6 +11,7 @@ April 2010
  ! A few integration functions have a return value mishandled (Subs-Post.php, Subs.php) [Bug 4246]
  ! HTML strict mode broke javascript targets (Subs.php) [Bug 4240]
  ! Use a popup box since we may have a large list of files (upgrade.php) [Bug 4114]
+ + Show a confirmation message after sending a PM (PersonalMessage.php, PersonalMessage template, PersonalMessage.english.php)[Bug 4219]
 
 
 ================================================================================

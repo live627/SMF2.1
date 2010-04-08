@@ -27,6 +27,12 @@ function template_pm_above()
 				</tr>
 			</table>';
 	}
+	//Message send? show a small indication
+	if (isset($context['pm_sent']))
+		echo'
+			<div class="windowbg" id="profile_success">
+				', $txt['pm_sent'], '
+			</div>';
 }
 
 // Just the end of the index bar, nothing special.
