@@ -431,19 +431,19 @@ function template_menu()
 					foreach ($childbutton['sub_buttons'] as $grandchildbutton)
 						echo '
 								<li>
-									<a', $grandchildbutton['active_button'] ? ' class="active"' : '', ' href="', $grandchildbutton['href'], '"', isset($grandchildbutton['target']) ? ' target="' . $grandchildbutton['target'] . '"' : '', '>
+									<a href="', $childbutton['href'], '"', isset($childbutton['target']) ? ' target="' . $childbutton['target'] . '"' : '', '>
 										<span', isset($grandchildbutton['is_last']) ? ' class="last"' : '', '>', $grandchildbutton['title'], '</span>
 									</a>
 								</li>';
 
 					echo '
-						</ul>';
+							</ul>';
 				}
 
 				echo '
 						</li>';
 			}
-			echo '
+				echo '
 					</ul>';
 		}
 		echo '

@@ -14,6 +14,7 @@ April 2010
  + Show a confirmation message after sending a PM (PersonalMessage.php, PersonalMessage template, PersonalMessage.english.php)[Bug 4219]
  * Invalid XHTML (Profile template)
  ! Checking for subscription files could cause an 'open_basedir' error (ManagePaid.php) [Bug 4251]
+ ! A third level drop menu item couldn't be limited by the 'show' permission check (Subs.php, Index template) [Bug 4252]
 
 
 ================================================================================

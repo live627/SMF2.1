@@ -4084,6 +4084,16 @@ function setupMenuContext()
 					{
 						if (empty($subbutton['show']))
 							unset($button['sub_buttons'][$key]);
+
+						// 2nd level sub buttons next
+						if(!empty($subbutton['sub_buttons']))
+						{
+							foreach($subbutton['sub_buttons'] as $key2 => $sub_button2)
+							{
+								if(empty($sub_button2['show']))
+									unset($button['sub_buttons'][$key]['sub_buttons'][$key2]);
+							}
+						}
 					}
 
 				$menu_buttons[$act] = $button;
