@@ -13,6 +13,7 @@ April 2010
  ! Use a popup box since we may have a large list of files (upgrade.php) [Bug 4114]
  + Show a confirmation message after sending a PM (PersonalMessage.php, PersonalMessage template, PersonalMessage.english.php)[Bug 4219]
  * Invalid XHTML (Profile template)
+ ! Checking for subscription files could cause an 'open_basedir' error (ManagePaid.php) [Bug 4251]
 
 
 ================================================================================
