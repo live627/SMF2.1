@@ -289,7 +289,7 @@ function template_summary()
 				$shown = true;
 				echo '
 			<div class="custom_fields_above_signature">
-				<ul class="reset nolist>';
+				<ul class="reset nolist">';
 			}
 			echo '
 					<li>', $field['output_html'], '</li>';
