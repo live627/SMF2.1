@@ -19,6 +19,7 @@ April 2010
  ! A few Integration bugs (Subs.php, Subs-Post.php) [Bug 4246]
  ! Signature image size checks repaired the wrong data (Profile-Modify.php) [Bug 4247]
  ! Do not unlock topics moved to the recycle bin (RemoveTopic.php) [Bug 4239]
+ ! Right to Left mode didn't work as expected for our rich editor (editor.js, GenericControls Template) [Bug 4248]
 
 
 ================================================================================

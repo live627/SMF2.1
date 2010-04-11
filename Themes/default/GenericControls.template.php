@@ -226,6 +226,7 @@ function template_control_richedit($editor_id, $smileyContainer = null, $bbcCont
 					sSessionVar: ', JavaScriptEscape($context['session_var']), ',
 					sFormId: ', JavaScriptEscape($editor_context['form']), ',
 					sUniqueId: ', JavaScriptEscape($editor_id), ',
+					bRTL: ', $txt['lang_rtl'] ? 'true' : 'false', ',
 					bWysiwyg: ', $editor_context['rich_active'] ? 'true' : 'false', ',
 					sText: ', JavaScriptEscape($editor_context['rich_active'] ? $editor_context['rich_value'] : ''), ',
 					sEditWidth: ', JavaScriptEscape($editor_context['width']), ',

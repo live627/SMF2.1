@@ -219,6 +219,13 @@ smc_Editor.prototype.init = function()
 			this.oFrameDocument.close();
 		}
 
+		// Right to left mode?
+		if (this.opt.bRTL)
+		{
+			this.oFrameDocument.dir = "rtl";
+			this.oFrameDocument.body.dir = "rtl";
+		}
+
 		// Mark it as editable...
 		if (this.oFrameDocument.body.contentEditable)
 			this.oFrameDocument.body.contentEditable = true;
