@@ -289,15 +289,14 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 			{
 				$recycleTopics[] = $row['id_topic'];
 
-				// Set the id_previous_board for this topic - and make it unlocked and not sticky.
+				// Set the id_previous_board for this topic - and make it not sticky.
 				$smcFunc['db_query']('', '
 					UPDATE {db_prefix}topics
-					SET id_previous_board = {int:id_previous_board}, locked = {int:not_locked}, is_sticky = {int:not_sticky}
+					SET id_previous_board = {int:id_previous_board}, is_sticky = {int:not_sticky}
 					WHERE id_topic = {int:id_topic}',
 					array(
 						'id_previous_board' => $row['id_board'],
 						'id_topic' => $row['id_topic'],
-						'not_locked' => 0,
 						'not_sticky' => 0,
 					)
 				);

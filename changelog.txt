@@ -18,6 +18,7 @@ April 2010
  ! Emails with plus signs to be banned (ManageBans.php) [Bug 3527]
  ! A few Integration bugs (Subs.php, Subs-Post.php) [Bug 4246]
  ! Signature image size checks repaired the wrong data (Profile-Modify.php) [Bug 4247]
+ ! Do not unlock topics moved to the recycle bin (RemoveTopic.php) [Bug 4239]
 
 
 ================================================================================
