@@ -2283,9 +2283,10 @@ function loadSession()
 		// This is here to stop people from using bad junky PHPSESSIDs.
 		if (isset($_REQUEST[session_name()]) && preg_match('~^[A-Za-z0-9]{16,32}$~', $_REQUEST[session_name()]) == 0 && !isset($_COOKIE[session_name()]))
 		{
-			$_REQUEST[session_name()] = md5(md5('smf_sess_' . time()) . mt_rand());
-			$_GET[session_name()] = md5(md5('smf_sess_' . time()) . mt_rand());
-			$_POST[session_name()] = md5(md5('smf_sess_' . time()) . mt_rand());
+			$session_id = md5(md5('smf_sess_' . time()) . mt_rand());
+			$_REQUEST[session_name()] = $session_id;
+			$_GET[session_name()] = $session_id;
+			$_POST[session_name()] = $session_id;
 		}
 
 		// Use database sessions? (they don't work in 4.1.x!)

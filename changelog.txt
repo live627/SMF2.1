@@ -15,6 +15,9 @@ April 2010
  * Invalid XHTML (Profile template)
  ! Checking for subscription files could cause an 'open_basedir' error (ManagePaid.php) [Bug 4251]
  ! A third level drop menu item couldn't be limited by the 'show' permission check (Subs.php, Index template) [Bug 4252]
+ ! Emails with plus signs to be banned (ManageBans.php) [Bug 3527]
+ ! A few Integration bugs (Subs.php, Subs-Post.php) [Bug 4246]
+ ! Signature image size checks repaired the wrong data (Profile-Modify.php) [Bug 4247]
 
 
 ================================================================================

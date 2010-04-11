@@ -479,7 +479,7 @@ function BanEdit()
 		}
 		elseif ($_POST['bantype'] == 'email_ban')
 		{
-			if (preg_match('/[^\w.\-*@]/', $_POST['email']) == 1)
+			if (preg_match('/[^\w.\-\+*@]/', $_POST['email']) == 1)
 				fatal_lang_error('invalid_email', false);
 			$_POST['email'] = strtolower(str_replace('*', '%', $_POST['email']));
 
@@ -676,7 +676,7 @@ function BanEdit()
 				}
 				if (in_array('email', $_POST['ban_suggestion']) && !empty($_POST['email']))
 				{
-					if (preg_match('/[^\w.\-*@]/', $_POST['email']) == 1)
+					if (preg_match('/[^\w.\-\+*@]/', $_POST['email']) == 1)
 						fatal_lang_error('invalid_email', false);
 					$_POST['email'] = strtolower(str_replace('*', '%', $_POST['email']));
 

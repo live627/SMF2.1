@@ -2841,7 +2841,7 @@ function profileValidateSignature(&$value)
 						$replaces[$image] = '[img' . ($width != -1 ? ' width=' . round($width) : '') . ($height != -1 ? ' height=' . round($height) : '') . ']' . $matches[7][$key] . '[/img]';
 				}
 				if (!empty($replaces))
-					$value = str_replace(array_keys($replaces), array_values($replaces), $unparsed_signature);
+					$value = str_replace(array_keys($replaces), array_values($replaces), $value);
 			}
 		}
 		// Any disabled BBC?
