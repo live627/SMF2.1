@@ -20,6 +20,11 @@ April 2010
  ! Signature image size checks repaired the wrong data (Profile-Modify.php) [Bug 4247]
  ! Do not unlock topics moved to the recycle bin (RemoveTopic.php) [Bug 4239]
  ! Right to Left mode didn't work as expected for our rich editor (editor.js, GenericControls Template) [Bug 4248]
+ ! A few missing globals (Wireless Template, Admin Temlate, Profile-Modify.php) [Bug 4257,4259,4260]
+ ! Safely special char our search string (Search.php) [Bug 1957]
+ ! Do not hash passwords on account reactivation (LogInOut.php) [Bug 4204]
+ ! Try to obtain more memory for resizing images (Subs-Graphics.php) [Bug 4234]
+ ! No [table] cleanup inside of [html] (Subs-Post.php) [Bug 2368]
 
 
 ================================================================================

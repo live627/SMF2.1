@@ -443,7 +443,7 @@ function template_imode_post()
 
 function template_imode_login()
 {
-	global $context, $settings, $options, $scripturl, $txt;
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
 		<form action="', $scripturl, '?action=login2;imode" method="post">

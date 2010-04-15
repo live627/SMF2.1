@@ -122,7 +122,7 @@ function PlushSearch1()
 		$context['search_params']['search'] = un_htmlspecialchars($_REQUEST['search']);
 
 	if (isset($context['search_params']['search']))
-		$context['search_params']['search'] = htmlspecialchars($context['search_params']['search']);
+		$context['search_params']['search'] = $smcFunc['htmlspecialchars']($context['search_params']['search']);
 	if (isset($context['search_params']['userspec']))
 		$context['search_params']['userspec'] = htmlspecialchars($context['search_params']['userspec']);
 	if (!empty($context['search_params']['searchtype']))

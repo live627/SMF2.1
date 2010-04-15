@@ -1556,7 +1556,7 @@ function template_add_language()
 // Download a new language file?
 function template_download_language()
 {
-	global $context, $settings, $options, $txt, $scripturl;
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	// Actually finished?
 	if (!empty($context['install_complete']))

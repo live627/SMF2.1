@@ -791,7 +791,7 @@ function loadProfileFields($force_reload = false)
 // Setup the context for a page load!
 function setupProfileContext($fields)
 {
-	global $profile_fields, $context, $cur_profile, $smcFunc;
+	global $profile_fields, $context, $cur_profile, $smcFunc, $txt;
 
 	// Make sure we have this!
 	loadProfileFields(true);

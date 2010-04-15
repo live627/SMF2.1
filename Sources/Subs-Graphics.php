@@ -307,6 +307,7 @@ function resizeImageURL($sourceURL, $destinationFile, $max_width, $max_height)
 	);
 
 	require_once($sourcedir . '/Subs-Package.php');
+	@ini_set('memory_limit', '90M');
 
 	$success = false;
 	$sizes = url_image_size($sourceURL);
