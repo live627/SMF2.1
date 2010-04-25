@@ -922,7 +922,7 @@ function AdminSearchInternal()
 			foreach ($item[0] as $term)
 			{
 				$lc_term = strtolower($term);
-				if (strpos($lc_term, $search_term) !== false || (isset($txt[$term]) && strpos($txt[$term], $search_term) !== false) || (isset($txt['setting_' . $term]) && strpos($txt['setting_' . $term], $search_term) !== false))
+				if (strpos($lc_term, $search_term) !== false || (isset($txt[$term]) && strpos(strtolower($txt[$term]), $search_term) !== false) || (isset($txt['setting_' . $term]) && strpos(strtolower($txt['setting_' . $term]), $search_term) !== false))
 				{
 					$found = $term;
 					break;

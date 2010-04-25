@@ -25,6 +25,7 @@ April 2010
  ! Do not hash passwords on account reactivation (LogInOut.php) [Bug 4204]
  ! Try to obtain more memory for resizing images (Subs-Graphics.php) [Bug 4234]
  ! No [table] cleanup inside of [html] (Subs-Post.php) [Bug 2368]
+ ! Admin search takes into account capitals correctly (Admin.php) [Bug 4271]
 
 
 ================================================================================
