@@ -26,6 +26,7 @@ April 2010
  ! Try to obtain more memory for resizing images (Subs-Graphics.php) [Bug 4234]
  ! No [table] cleanup inside of [html] (Subs-Post.php) [Bug 2368]
  ! Admin search takes into account capitals correctly (Admin.php) [Bug 4271]
+ ! Int columns were always unsigned (DbPackages-mysql.php) [Bug 4277]
 
 
 ================================================================================

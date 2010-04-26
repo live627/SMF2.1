@@ -277,7 +277,7 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 	list ($type, $size) = $smcFunc['db_calculate_type']($column_info['type'], $column_info['size']);
 
 	// Allow unsigned integers (mysql only)
-	$unsigned = in_array($type, array('int', 'tinyint', 'smallint', 'mediumint', 'bigint')) && !empty($column['unsigned']) ? 'unsigned ' : '';
+	$unsigned = in_array($type, array('int', 'tinyint', 'smallint', 'mediumint', 'bigint')) && !empty($column_info['unsigned']) ? 'unsigned ' : '';
 
 	if ($size !== null)
 		$type = $type . '(' . $size . ')';
