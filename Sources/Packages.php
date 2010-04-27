@@ -932,7 +932,7 @@ function PackageInstall()
 
 					// Gather the themes we installed into.
 					if (!empty($action['is_custom']))
-						$themes_installed[] = $action['theme'];
+						$themes_installed[] = $action['is_custom'];
 				}
 			}
 			elseif ($action['type'] == 'code' && !empty($action['filename']))

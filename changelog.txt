@@ -27,6 +27,7 @@ April 2010
  ! No [table] cleanup inside of [html] (Subs-Post.php) [Bug 2368]
  ! Admin search takes into account capitals correctly (Admin.php) [Bug 4271]
  ! Int columns were always unsigned (DbPackages-mysql.php) [Bug 4277]
+ ! Undefined errors on custom themes (Packages.php) [Bug 4270]
 
 
 ================================================================================
