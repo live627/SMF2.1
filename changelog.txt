@@ -28,6 +28,7 @@ April 2010
  ! Admin search takes into account capitals correctly (Admin.php) [Bug 4271]
  ! Int columns were always unsigned (DbPackages-mysql.php) [Bug 4277]
  ! Undefined errors on custom themes (Packages.php) [Bug 4270]
+ ! Log approvals from mod center to the moderation log (PostModeration.php)
 
 
 ================================================================================

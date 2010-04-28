@@ -125,7 +125,7 @@ function UnapprovedPosts()
 
 		// Now for each message work out whether it's actually a topic, and what board it's on.
 		$request = $smcFunc['db_query']('', '
-			SELECT m.id_msg, m.id_member, m.id_board, t.id_topic, t.id_first_msg, t.id_member_started
+			SELECT m.id_msg, m.id_member, m.id_board, m.subject, t.id_topic, t.id_first_msg, t.id_member_started
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 			LEFT JOIN {db_prefix}boards AS b ON (t.id_board = b.id_board)
@@ -138,6 +138,7 @@ function UnapprovedPosts()
 			)
 		);
 		$toAction = array();
+		$details = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			// If it's not within what our view is ignore it...
@@ -165,7 +166,15 @@ function UnapprovedPosts()
 			}
 
 			if ($can_add)
-				$toAction[] = $context['current_view'] == 'topics' ? $row['id_topic'] : $row['id_msg'];
+				$anItem = $context['current_view'] == 'topics' ? $row['id_topic'] : $row['id_msg'];
+			$toAction[] = $anItem;
+			
+			// All clear. What have we got now, what, what?
+			$details[$anItem] = array();
+			$details[$anItem]["subject"] = $row['subject'];
+			$details[$anItem]["topic"] = $row['id_topic'];
+			$details[$anItem]["member"] = ($context['current_view'] == 'topics') ? $row['id_member_started'] : $row['id_member'];
+			$details[$anItem]["board"] = $row['id_board'];
 		}
 		$smcFunc['db_free_result']($request);
 
@@ -174,11 +183,7 @@ function UnapprovedPosts()
 		{
 			if ($curAction == 'approve')
 			{
-				require_once($sourcedir . '/Subs-Post.php');
-				if ($context['current_view'] == 'topics')
-					approveTopics($toAction);
-				else
-					approvePosts($toAction);
+				approveMessages ($toAction, $details, $context['current_view']);
 			}
 			else
 			{
@@ -512,6 +517,32 @@ function ApproveMessage()
 	}
 
 	redirectexit('topic=' . $topic . '.msg' . $_REQUEST['msg']. '#msg' . $_REQUEST['msg']);
+}
+
+// Approve a batch of posts (or topics in their own right)
+function approveMessages($messages, $messageDetails, $current_view = 'replies')
+{
+	global $sourcedir;
+	
+	require_once($sourcedir . '/Subs-Post.php');
+	if ($current_view == 'topics')
+	{
+		approveTopics($messages);
+		// and tell the world about it
+		foreach ($messages as $topic)
+		{
+			logAction('approve_topic', array('topic' => $topic, 'subject' => $messageDetails[$topic]['subject'], 'member' => $messageDetails[$topic]['member'], 'board' => $messageDetails[$topic]['board']));
+		}
+	}
+	else
+	{
+		approvePosts($messages);
+		// and tell the world about it again
+		foreach ($messages as $post)
+		{
+			logAction('approve', array('topic' => $messageDetails[$post]['topic'], 'subject' => $messageDetails[$post]['subject'], 'member' => $messageDetails[$post]['member'], 'board' => $messageDetails[$post]['board']));
+		}
+	}
 }
 
 // This is a helper function - basically approve everything!
