@@ -32,6 +32,7 @@ April 2010
  ! Log removals from mod center to the moderation log (PostModeration.php) [Bug 4167]
  ! Fix a permissions check (RemoveTopic.php)
  ! Undefined index during UTF8 conversion (ManageMaintenance.php) [Bug 4281]
+ ! Fix for the broken search on the second page when using space in the search query (Search.php) [Bug 4275]
 
 
 ================================================================================
