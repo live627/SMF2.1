@@ -187,14 +187,7 @@ function UnapprovedPosts()
 			}
 			else
 			{
-				require_once($sourcedir . '/RemoveTopic.php');
-				if ($context['current_view'] == 'topics')
-					removeTopics($toAction);
-				else
-				{
-					foreach ($toAction as $id)
-						removeMessage($id);
-				}
+				removeMessages ($toAction, $details, $context['current_view']);
 			}
 		}
 	}
@@ -591,4 +584,28 @@ function approveAllData()
 	}
 }
 
+// remove a batch of messages (or topics)
+function removeMessages($messages, $messageDetails, $current_view = 'replies')
+{
+	global $sourcedir, $modSettings;
+	require_once($sourcedir . '/RemoveTopic.php');
+	if ($current_view == 'topics')
+	{
+		removeTopics($messages);
+		// and tell the world about it
+		foreach ($messages as $topic)
+			// Note, only log topic ID in native form if it's not gone forever.
+			logAction('remove', array(
+				(empty($modSettings['recycle_enable']) || $modSettings['recycle_board'] != $messageDetails[$topic]['board'] ? 'topic' : 'old_topic_id') => $topic, 'subject' => $messageDetails[$topic]['subject'], 'member' => $messageDetails[$topic]['member'], 'board' => $messageDetails[$topic]['board']));
+	}
+	else
+	{
+		foreach ($messages as $post)
+		{
+			removeMessage($post);
+			logAction('delete', array(
+				(empty($modSettings['recycle_enable']) || $modSettings['recycle_board'] != $messageDetails[$post]['board'] ? 'topic' : 'old_topic_id') => $messageDetails[$post]['topic'], 'subject' => $messageDetails[$post]['subject'], 'member' => $messageDetails[$post]['member'], 'board' => $messageDetails[$post]['board']));
+		}
+	}
+}
 ?>
