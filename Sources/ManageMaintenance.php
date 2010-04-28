@@ -721,7 +721,7 @@ function ConvertUtf8()
 	$smcFunc['db_free_result']($queryTables);
 
 	// Let the settings know we have a new character set.
-	updateSettings(array('global_character_set' => 'UTF-8', 'previousCharacterSet' => $translation_tables[$_POST['src_charset']]));
+	updateSettings(array('global_character_set' => 'UTF-8', 'previousCharacterSet' => (empty($translation_tables[$_POST['src_charset']])) ? $charsets[$_POST['src_charset']] : $translation_tables[$_POST['src_charset']]));
 
 	// Store it in Settings.php too because it's needed before db connection.
 	require_once($sourcedir . '/Subs-Admin.php');

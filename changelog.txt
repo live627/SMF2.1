@@ -31,6 +31,7 @@ April 2010
  ! Log approvals from mod center to the moderation log (PostModeration.php)
  ! Log removals from mod center to the moderation log (PostModeration.php) [Bug 4167]
  ! Fix a permissions check (RemoveTopic.php)
+ ! Undefined index during UTF8 conversion (ManageMaintenance.php) [Bug 4281]
 
 
 ================================================================================
