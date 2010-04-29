@@ -167,7 +167,7 @@ for ($i = 0, $n = count($options); $i < $n; $i++)
 	$rows[] = array(
 		'id_poll' => $id_poll,
 		'id_choice' => ($i + 1),
-		'label' => substr('" . addslashes($options[$i]) . "', 1, 255),
+		'label' => substr(addslashes($options[$i]), 1, 255),
 		'votes' => @$votes[$i],
 	);
 }
