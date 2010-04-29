@@ -292,7 +292,7 @@ for ($i = 0, $n = count($options); $i < $n; $i++)
 	$rows[] = array(
 		'id_poll' => $id_poll,
 		'id_choice' => ($i + 1),
-		'label' => substr('" . addslashes($options[$i]) . "', 1, 255),
+		'label' => substr(addslashes($options[$i]), 1, 255),
 		'votes' => (is_numeric($votes[$i]) ? $votes[$i] : 0),
 	);
 }
@@ -306,7 +306,7 @@ FROM {$from_prefix}poll;
 /******************************************************************************/
 
 ---* {$to_prefix}log_polls
-SELECT pollid AS id_poll, userid AS id_member, voteoption AS id_choice
+SELECT pollid AS id_poll, IFNULL(userid, 0) AS id_member, voteoption AS id_choice
 FROM {$from_prefix}pollvote;
 ---*
 
