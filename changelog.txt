@@ -6,6 +6,7 @@ SMF 2.0                                                                      ???
 May 2010
 --------------------------------------------------------------------------------
  ! Converting to UTF-8 might result in a syntax error in rare cases (ManageMaintenance.php) [Bug 2540]
+ ! Package manager required the wrong files/folders to be writable, when custom themes files were not writable. (Packages.php) [Bug 4236]
 
 
 ================================================================================

@@ -639,19 +639,20 @@ function PackageInstallTest()
 			{
 				if (isset($theme_data['theme_dir']) && $id != 1)
 				{
+					$real_path = $theme_data['theme_dir'] . $path;
 					// Confirm that we don't already have this dealt with by another entry.
-					if (!in_array(strtolower(strtr($theme_data['theme_dir'] . $path, array('\\' => '/'))), $themeFinds['other_themes']))
+					if (!in_array(strtolower(strtr($real_path, array('\\' => '/'))), $themeFinds['other_themes']))
 					{
 						// Check if we will need to chmod this.
-						if (!mktree(dirname($theme_data['theme_dir'] . $path), false))
+						if (!mktree(dirname($real_path), false))
 						{
-							$temp = dirname($action_data['destination']);
+							$temp = dirname($real_path);
 							while (!file_exists($temp) && strlen($temp) > 1)
 								$temp = dirname($temp);
 							$chmod_files[] = $temp;
 						}
-						if ($action_data['type'] == 'require-dir' && !is_writable($theme_data['theme_dir'] . $path) && (file_exists($theme_data['theme_dir'] . $path) || !is_writable(dirname($theme_data['theme_dir'] . $path))))
-							$chmod_files[] = $theme_data['theme_dir'] . $path;
+						if ($action_data['type'] == 'require-dir' && !is_writable($real_path) && (file_exists($real_path) || !is_writable(dirname($real_path))))
+							$chmod_files[] = $real_path;
 
 						if (!isset($context['theme_actions'][$id]))
 							$context['theme_actions'][$id] = array(
@@ -662,17 +663,17 @@ function PackageInstallTest()
 						if ($context['uninstalling'])
 							$context['theme_actions'][$id]['actions'][] = array(
 								'type' => $txt['package_delete'] . ' ' . ($action_data['type'] == 'require-dir' ? $txt['package_tree'] : $txt['package_file']),
-								'action' => strtr($theme_data['theme_dir'] . $path, array('\\' => '/', $boarddir => '.')),
+								'action' => strtr($real_path, array('\\' => '/', $boarddir => '.')),
 								'description' => '',
-								'value' => base64_encode(serialize(array('type' => $action_data['type'], 'orig' => $action_data['filename'], 'future' => $theme_data['theme_dir'] . $path, 'id' => $id))),
+								'value' => base64_encode(serialize(array('type' => $action_data['type'], 'orig' => $action_data['filename'], 'future' => $real_path, 'id' => $id))),
 								'not_mod' => true,
 							);
 						else
 							$context['theme_actions'][$id]['actions'][] = array(
 								'type' => $txt['package_extract'] . ' ' . ($action_data['type'] == 'require-dir' ? $txt['package_tree'] : $txt['package_file']),
-								'action' => strtr($theme_data['theme_dir'] . $path, array('\\' => '/', $boarddir => '.')),
+								'action' => strtr($real_path, array('\\' => '/', $boarddir => '.')),
 								'description' => '',
-								'value' => base64_encode(serialize(array('type' => $action_data['type'], 'orig' => $action_data['destination'], 'future' => $theme_data['theme_dir'] . $path, 'id' => $id))),
+								'value' => base64_encode(serialize(array('type' => $action_data['type'], 'orig' => $action_data['destination'], 'future' => $real_path, 'id' => $id))),
 								'not_mod' => true,
 							);
 					}
