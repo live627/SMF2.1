@@ -840,7 +840,8 @@ function ConvertEntities()
 		$smcFunc['db_free_result']($request);
 
 		// No primary key, no glory.
-		if (empty($primary_key))
+		// Same for columns. Just to be sure we've work to do!
+		if (empty($primary_key) || empty($columns))
 			continue;
 
 		// Get the maximum value for the primary key.

@@ -3,6 +3,12 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0                                                                      ???
 ================================================================================
+May 2010
+--------------------------------------------------------------------------------
+ ! Converting to UTF-8 might result in a syntax error in rare cases (ManageMaintenance.php) [Bug 2540]
+
+
+================================================================================
 April 2010
 --------------------------------------------------------------------------------
  ! Converting to UTF-8 didn't report conversion complete (ManageMaintenance.php) [Bug 4224]
