@@ -532,7 +532,6 @@ function Credits($in_admin = false)
 						'Jeremy &quot;SleePy&quot; Darwood',
 						'Justin &quot;metallica48423&quot; O\'Leary',
 						'Kindred',
-						'Motoko-chan',
 					),
 				),
 				array(
