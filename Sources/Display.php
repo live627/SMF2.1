@@ -301,7 +301,7 @@ function Display()
 					FROM {db_prefix}messages
 					WHERE poster_time < {int:timestamp}
 						AND id_topic = {int:current_topic}' . ($modSettings['postmod_active'] && $topicinfo['unapproved_posts'] && !allowedTo('approve_posts') ? '
-						AND (approved = {int:is_approved}' . ($user_info['is_guest'] ? '' : ' OR id_member = {int:current_member})') : ''),
+						AND (approved = {int:is_approved}' . ($user_info['is_guest'] ? '' : ' OR id_member = {int:current_member}') . ')' : ''),
 					array(
 						'current_topic' => $topic,
 						'current_member' => $user_info['id'],

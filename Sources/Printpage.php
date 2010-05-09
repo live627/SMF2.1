@@ -38,8 +38,8 @@ if (!defined('SMF'))
 
 function PrintTopic()
 {
-	global $topic, $txt, $scripturl, $context;
-	global $board_info, $smcFunc;
+	global $topic, $txt, $scripturl, $context, $user_info;
+	global $board_info, $smcFunc, $modSettings;
 
 	// Redirect to the boardindex if no valid topic id is provided.
 	if (empty($topic))
@@ -82,10 +82,13 @@ function PrintTopic()
 		SELECT subject, poster_time, body, IFNULL(mem.real_name, poster_name) AS poster_name
 		FROM {db_prefix}messages AS m
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE m.id_topic = {int:current_topic}
+		WHERE m.id_topic = {int:current_topic}' . ($modSettings['postmod_active'] && !allowedTo('approve_posts') ? '
+			AND (m.approved = {int:is_approved}' . ($user_info['is_guest'] ? '' : ' OR m.id_member = {int:current_member}') . ')' : '') . '
 		ORDER BY m.id_msg',
 		array(
 			'current_topic' => $topic,
+			'is_approved' => 1,
+			'current_member' => $user_info['id'],
 		)
 	);
 	$context['posts'] = array();
