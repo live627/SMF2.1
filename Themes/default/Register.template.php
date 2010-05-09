@@ -368,7 +368,7 @@ function template_after()
 	echo '
 		<div id="registration_success">
 			<div class="cat_bar">
-				<h3 class="catbg">', $txt['registration_successful'], '</h3>
+				<h3 class="catbg">', $context['title'], '</h3>
 			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>

@@ -510,6 +510,7 @@ function Register2($verifiedOpenID = false)
 
 		$context += array(
 			'page_title' => $txt['register'],
+			'title' => $txt['registration_successful'],
 			'sub_template' => 'after',
 			'description' => $modSettings['registration_method'] == 2 ? $txt['approval_after_registration'] : $txt['activate_after_registration']
 		);
