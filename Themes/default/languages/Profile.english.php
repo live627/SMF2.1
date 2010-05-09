@@ -462,5 +462,7 @@ $txt['trackEdit_action_real_name'] = 'Member Name';
 $txt['trackEdit_action_usertitle'] = 'Custom Title';
 $txt['trackEdit_action_member_name'] = 'Username';
 $txt['trackEdit_action_email_address'] = 'Email Address';
+$txt['trackEdit_action_id_group'] = 'Primary Membergroup';
+$txt['trackEdit_action_additional_groups'] = 'Additional Membergroups';
 
 ?>

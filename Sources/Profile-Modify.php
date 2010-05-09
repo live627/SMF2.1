@@ -349,6 +349,7 @@ function loadProfileFields($force_reload = false)
 			'callback_func' => 'group_manage',
 			'permission' => 'manage_membergroups',
 			'preload' => 'profileLoadGroups',
+			'log_change' => true,
 			'input_validate' => 'profileSaveGroups',
 		),
 		'id_theme' => array(
@@ -944,6 +945,48 @@ function saveProfileFields()
 					'new' => $_POST[$key],
 				);
 		}
+
+		// Logging group changes are a bit different...
+		if ($key == 'id_group' && $field['log_change'])
+		{
+			profileLoadGroups();
+
+			// Any changes to primary group?
+			if ($_POST['id_group'] != $old_profile['id_group'])
+			{
+				$context['log_changes']['id_group'] = array(
+					'previous' => !empty($old_profile[$key]) && isset($context['member_groups'][$old_profile[$key]]) ? $context['member_groups'][$old_profile[$key]]['name'] : '',
+					'new' => !empty($_POST[$key]) && isset($context['member_groups'][$_POST[$key]]) ? $context['member_groups'][$_POST[$key]]['name'] : '',
+				);
+			}
+
+			// Prepare additional groups for comparison.
+			$additional_groups = array(
+				'previous' => !empty($old_profile['additional_groups']) ? explode(',', $old_profile['additional_groups']) : array(),
+				'new' => !empty($_POST['additional_groups']) ? $_POST['additional_groups'] : array(),
+			);
+
+			sort($additional_groups['previous']);
+			sort($additional_groups['new']);
+
+			// What about additional groups?
+			if ($additional_groups['previous'] != $additional_groups['new'])
+			{
+				foreach ($additional_groups as $type => $groups)
+				{
+					foreach ($groups as $id => $group)
+					{
+						if (isset($context['member_groups'][$group]))
+							$additional_groups[$type][$id] = $context['member_groups'][$group]['name'];
+						else
+							unset($additional_groups[$type][$id]);
+					}
+					$additional_groups[$type] = implode(', ', $additional_groups[$type]);
+				}
+
+				$context['log_changes']['additional_groups'] = $additional_groups;
+			}
+ 		}
 	}
 
 	//!!! Temporary
