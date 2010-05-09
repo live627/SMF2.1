@@ -337,15 +337,15 @@ function template_body_below()
 		<p>', $txt['page_created'], $context['load_time'], $txt['seconds_with'], $context['load_queries'], $txt['queries'], '</p>';
 
 	echo '
-	</div></div>';
+	</div></div>', !empty($settings['forum_width']) ? '
+</div>' : '';
 }
 
 function template_html_below()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	echo !empty($settings['forum_width']) ? '
-</div>' : '', '
+	echo '
 </body></html>';
 }
 
