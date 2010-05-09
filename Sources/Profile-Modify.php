@@ -1422,7 +1422,7 @@ function editBuddies($memID)
 		{
 			$new_buddies[$k] = strtr(trim($new_buddies[$k]), array('\'' => '&#039;'));
 
-			if (strlen($new_buddies[$k]) == 0)
+			if (strlen($new_buddies[$k]) == 0 || in_array($new_buddies[$k], array($user_profile[$memID]['member_name'], $user_profile[$memID]['real_name'])))
 				unset($new_buddies[$k]);
 		}
 
@@ -1529,7 +1529,7 @@ function editIgnoreList($memID)
 		{
 			$new_entries[$k] = strtr(trim($new_entries[$k]), array('\'' => '&#039;'));
 
-			if (strlen($new_entries[$k]) == 0)
+			if (strlen($new_entries[$k]) == 0 || in_array($new_entries[$k], array($user_profile[$memID]['member_name'], $user_profile[$memID]['real_name'])))
 				unset($new_entries[$k]);
 		}
 

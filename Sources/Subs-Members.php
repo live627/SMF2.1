@@ -1198,8 +1198,8 @@ function BuddyListToggle()
 	// Remove if it's already there...
 	if (in_array($_REQUEST['u'], $user_info['buddies']))
 		$user_info['buddies'] = array_diff($user_info['buddies'], array($_REQUEST['u']));
-	// ...or add if it's not.
-	else
+	// ...or add if it's not and if it's not you.
+	elseif ($user_info['id'] != $_REQUEST['u'])
 		$user_info['buddies'][] = (int) $_REQUEST['u'];
 
 	// Update the settings.

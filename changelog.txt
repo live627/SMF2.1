@@ -7,6 +7,11 @@ May 2010
 --------------------------------------------------------------------------------
  ! Converting to UTF-8 might result in a syntax error in rare cases (ManageMaintenance.php) [Bug 2540]
  ! Package manager required the wrong files/folders to be writable, when custom themes files were not writable. (Packages.php) [Bug 4236]
+ ! Passwords were sent as plaintext when the forum was in maintenance mode (Login template) [Bug 3908]
+ ! Unapproved posts were displayed to everyone on print page (Printpage.php) [Bug 4297]
+ & Membergroup changes through profile were not being logged (Profile-Modify.php, Profile language file) [Bug 3953]
+ ! Package database functions were loaded more than once if initialized multiple times (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 4190]
+ ! Prevent adding self to buddy/ignore lists and always allow pms from self (Profile-Modify.php, Subs-Members.php, Subs-Post.php) [Bug 4267]
 
 
 ================================================================================
@@ -40,10 +45,6 @@ April 2010
  ! Fix a permissions check (RemoveTopic.php)
  ! Undefined index during UTF8 conversion (ManageMaintenance.php) [Bug 4281]
  ! Fix for the broken search on the second page when using space in the search query (Search.php) [Bug 4275]
- ! Passwords were sent as plaintext when the forum was in maintenance mode (Login Template) [Bug 3908]
- ! Unapproved posts were displayed to everyone on print page (Printpage.php) [Bug 4297]
- ! Membergroup changes through profile were not being logged (Profile-Modify.php, Profile.english.php) [Bug 3953]
- ! Package database functions were loaded more than once if initialized multiple times (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 4190]
 
 
 ================================================================================
