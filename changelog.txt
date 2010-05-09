@@ -15,6 +15,7 @@ May 2010
  ! Theme settings area listed current (active) theme variants instead of the variants of the theme being edited (Themes.php) [Bug 4295]
  & Correct sub template was not set for email activation notice on email change (Profile-Modify.php Register.php, Register template, Profile language file) [Bug 3950]
  * Forum width wrapper close tag was in tempate_html_below() sub template (index template) [Bug 4293]
+ ! url_image_size() was called for a filesystem path on image resizing (Subs-Graphics.php) [Bug 4278]
 
 
 ================================================================================

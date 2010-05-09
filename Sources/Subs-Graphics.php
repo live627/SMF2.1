@@ -48,7 +48,7 @@ if (!defined('SMF'))
 
 	bool createThumbnail(string source, int max_width, int max_height)
 		- create a thumbnail of the given source.
-		- uses the resizeImageURL function to achieve the resize.
+		- uses the resizeImageFile function to achieve the resize.
 		- returns whether the thumbnail creation was successful.
 
 	bool reencodeImage(string fileName)
@@ -65,10 +65,10 @@ if (!defined('SMF'))
 		  whetehr the GD2 library is present.
 		- returns whether or not GD1 is available.
 
-	void resizeImageURL(string sourceURL, string destinationFile,
+	void resizeImageFile(string source, string destination,
 			int max_width, int max_height)
 		- resizes an image from a remote location or a local file.
-		- puts the resized image at the destinationFile location.
+		- puts the resized image at the destination location.
 		- returns whether it succeeded.
 
 	void resizeImage(resource src_img, string destination_filename,
@@ -152,9 +152,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 
 	$destName = (empty($modSettings['custom_avatar_enabled']) ? (is_array($modSettings['attachmentUploadDir']) ? $modSettings['attachmentUploadDir'][$modSettings['currentAttachmentUploadDir']] : $modSettings['attachmentUploadDir']) : $modSettings['custom_avatar_dir']) . '/' . $destName . '.tmp';
 
-	$success = false;
-
-	$success = resizeImageURL($url, $destName, $max_width, $max_height);
+	$success = resizeImageFile($url, $destName, $max_width, $max_height);
 
 	// Remove the .tmp extension.
 	$destName = substr($destName, 0, -4);
@@ -222,7 +220,7 @@ function createThumbnail($source, $max_width, $max_height)
 	@ini_set('memory_limit', '90M');
 
 	// Do the actual resize.
-	$success = resizeImageURL($source, $destName, $max_width, $max_height);
+	$success = resizeImageFile($source, $destName, $max_width, $max_height);
 
 	// Okay, we're done with the temporary stuff.
 	$destName = substr($destName, 0, -4);
@@ -239,7 +237,7 @@ function createThumbnail($source, $max_width, $max_height)
 
 function reencodeImage($fileName)
 {
-	if (!resizeImageURL($fileName, $fileName . '.tmp', null, null))
+	if (!resizeImageFile($fileName, $fileName . '.tmp', null, null))
 	{
 		if (file_exists($fileName . '.tmp'))
 			unlink($fileName . '.tmp');
@@ -294,7 +292,7 @@ function checkGD()
 	return true;
 }
 
-function resizeImageURL($sourceURL, $destinationFile, $max_width, $max_height)
+function resizeImageFile($source, $destination, $max_width, $max_height)
 {
 	global $sourcedir;
 
@@ -310,19 +308,22 @@ function resizeImageURL($sourceURL, $destinationFile, $max_width, $max_height)
 	@ini_set('memory_limit', '90M');
 
 	$success = false;
-	$sizes = url_image_size($sourceURL);
 
-	$fp_destination = fopen($destinationFile, 'wb');
-	if ($fp_destination && substr($sourceURL, 0, 7) == 'http://')
+	$fp_destination = fopen($destination, 'wb');
+	if ($fp_destination && substr($source, 0, 7) == 'http://')
 	{
-		$fileContents = fetch_web_data($sourceURL);
+		$sizes = url_image_size($source);
+
+		$fileContents = fetch_web_data($source);
 
 		fwrite($fp_destination, $fileContents);
 		fclose($fp_destination);
 	}
 	elseif ($fp_destination)
 	{
-		$fp_source = fopen($sourceURL, 'rb');
+		$sizes = @getimagesize($source);
+
+		$fp_source = fopen($source, 'rb');
 		if ($fp_source !== false)
 		{
 			while (!feof($fp_source))
@@ -341,7 +342,7 @@ function resizeImageURL($sourceURL, $destinationFile, $max_width, $max_height)
 	if ($sizes[2] == 1 && !function_exists('imagecreatefromgif') && function_exists('imagecreatefrompng'))
 	{
 		// Download it to the temporary file... use the special gif library... and save as png.
-		if ($img = @gif_loadFile($destinationFile) && gif_outputAsPng($img, $destinationFile))
+		if ($img = @gif_loadFile($destination) && gif_outputAsPng($img, $destination))
 			$sizes[2] = 3;
 	}
 
@@ -349,9 +350,9 @@ function resizeImageURL($sourceURL, $destinationFile, $max_width, $max_height)
 	if (isset($default_formats[$sizes[2]]) && function_exists('imagecreatefrom' . $default_formats[$sizes[2]]))
 	{
 		$imagecreatefrom = 'imagecreatefrom' . $default_formats[$sizes[2]];
-		if ($src_img = @$imagecreatefrom($destinationFile))
+		if ($src_img = @$imagecreatefrom($destination))
 		{
-			resizeImage($src_img, $destinationFile, imagesx($src_img), imagesy($src_img), $max_width === null ? imagesx($src_img) : $max_width, $max_height === null ? imagesy($src_img) : $max_height, true);
+			resizeImage($src_img, $destination, imagesx($src_img), imagesy($src_img), $max_width === null ? imagesx($src_img) : $max_width, $max_height === null ? imagesy($src_img) : $max_height, true);
 			$success = true;
 		}
 	}
