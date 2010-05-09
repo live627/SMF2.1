@@ -161,7 +161,7 @@ function SplitIndex()
 
 	// Retrieve the subject and stuff of the specific topic/message.
 	$request = $smcFunc['db_query']('', '
-		SELECT m.subject, t.num_replies, t.id_first_msg, t.approved
+		SELECT m.subject, t.num_replies, t.unapproved_posts, t.id_first_msg, t.approved
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
 		WHERE m.id_msg = {int:split_at}' . (!$modSettings['postmod_active'] || allowedTo('approve_posts') ? '' : '
@@ -175,12 +175,16 @@ function SplitIndex()
 	);
 	if ($smcFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('cant_find_messages');
-	list ($_REQUEST['subname'], $num_replies, $id_first_msg, $approved) = $smcFunc['db_fetch_row']($request);
+	list ($_REQUEST['subname'], $num_replies, $unapproved_posts, $id_first_msg, $approved) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
 	// If not approved validate they can see it.
 	if ($modSettings['postmod_active'] && !$approved)
 		isAllowedTo('approve_posts');
+
+	// If this topic has unapproved posts, we need to count them too...
+	if ($modSettings['postmod_active'] && allowedTo('approve_posts'))
+		$num_replies += $unapproved_posts - ($approved ? 0 : 1);
 
 	// Check if there is more than one message in the topic.  (there should be.)
 	if ($num_replies < 1)
