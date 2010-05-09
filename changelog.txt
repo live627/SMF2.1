@@ -40,6 +40,7 @@ April 2010
  ! Fix a permissions check (RemoveTopic.php)
  ! Undefined index during UTF8 conversion (ManageMaintenance.php) [Bug 4281]
  ! Fix for the broken search on the second page when using space in the search query (Search.php) [Bug 4275]
+ ! Passwords were sent as plaintext when the forum was in maintenance mode. (Login Template) [Bug 3908]
 
 
 ================================================================================
