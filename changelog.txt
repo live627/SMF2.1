@@ -12,6 +12,7 @@ May 2010
  & Membergroup changes through profile were not being logged (Profile-Modify.php, Profile language file) [Bug 3953]
  ! Package database functions were loaded more than once if initialized multiple times (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 4190]
  ! Prevent adding self to buddy/ignore lists and always allow pms from self (Profile-Modify.php, Subs-Members.php, Subs-Post.php) [Bug 4267]
+ ! Theme settings area listed current (active) theme variants instead of the variants of the theme being edited (Themes.php) [Bug 4295]
 
 
 ================================================================================

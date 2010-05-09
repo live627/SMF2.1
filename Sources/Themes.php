@@ -784,6 +784,15 @@ function SetThemeSettings()
 	loadTemplate('Settings');
 	loadSubTemplate('settings');
 
+	// Load the variants separately...
+	$settings['theme_variants'] = array();
+	if (file_exists($settings['theme_dir'] . '/index.template.php'))
+	{
+		$file_contents = implode('', file($settings['theme_dir'] . '/index.template.php'));
+		if (preg_match('~\$settings\[\'theme_variants\'\]\s*=(.+?);~', $file_contents, $matches))
+				eval('global $settings;' . $matches[0]);
+	}
+
 	// Submitting!
 	if (isset($_POST['submit']))
 	{
