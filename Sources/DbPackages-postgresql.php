@@ -60,7 +60,7 @@ function db_packages_init()
 {
 	global $smcFunc, $reservedTables, $db_package_log, $db_prefix;
 
-	if (!isset($smcFunc['db_create_table']) || $smcFunc['db_create_table'] != 'db_create_table')
+	if (!isset($smcFunc['db_create_table']) || $smcFunc['db_create_table'] != 'smf_db_create_table')
 	{
 		$smcFunc += array(
 			'db_add_column' => 'smf_db_add_column',
