@@ -22,7 +22,7 @@ function template_main()
 			var icon_urls = {';
 	foreach ($context['icons'] as $icon)
 		echo '
-				', $icon['value'], ': \'', $icon['url'], '\'', $icon['is_last'] ? '' : ',';
+				\'', $icon['value'], '\': \'', $icon['url'], '\'', $icon['is_last'] ? '' : ',';
 	echo '
 			};';
 
