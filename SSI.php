@@ -49,6 +49,10 @@ foreach (array('db_character_set', 'cachedir') as $variable)
 // Get the forum's settings for database and file paths.
 require_once(dirname(__FILE__) . '/Settings.php');
 
+// Make absolutely sure the cache directory is defined.
+if ((empty($cachedir) || !file_exists($cachedir)) && file_exists($boarddir . '/cache'))
+	$cachedir = $boarddir . '/cache';
+
 $ssi_error_reporting = error_reporting(defined('E_STRICT') ? E_ALL | E_STRICT : E_ALL);
 /* Set this to one of three values depending on what you want to happen in the case of a fatal error.
 	false:	Default, will just load the error sub template and die - not putting any theme layers around it.
