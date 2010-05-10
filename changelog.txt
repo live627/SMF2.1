@@ -19,6 +19,7 @@ May 2010
  & It was not possible to split an unapproved post when it's the only reply in topic (Display.php, SplitTopics.php, Display template) [Bug 3552]
  & showimage() didn't work properly when message icon had hyphens in the file name (Post template) [Bug 4296]
  ! Make sure for SSI.php that the cache dir is defined (SSI.php)
+ ! Removed old holidays from the install database files (install_2-0_mysql.sql, install_2-0_postgresql.sql, install_2-0_sqlite.sql)
 
 
 ================================================================================

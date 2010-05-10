@@ -741,8 +741,6 @@ INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('April Foo
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Earth Day', '0004-04-22');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('United Nations Day', '0004-10-24');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Halloween', '0004-10-31');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Mother\'s Day', '2008-05-11');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Mother\'s Day', '2009-05-10');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Mother\'s Day', '2010-05-09');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Mother\'s Day', '2011-05-08');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Mother\'s Day', '2012-05-13');
@@ -754,8 +752,6 @@ INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Mother\'s
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Mother\'s Day', '2018-05-13');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Mother\'s Day', '2019-05-12');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Mother\'s Day', '2020-05-10');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Father\'s Day', '2008-06-15');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Father\'s Day', '2009-06-21');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Father\'s Day', '2010-06-20');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Father\'s Day', '2011-06-19');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Father\'s Day', '2012-06-17');
@@ -767,8 +763,6 @@ INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Father\'s
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Father\'s Day', '2018-06-17');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Father\'s Day', '2019-06-16');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Father\'s Day', '2020-06-21');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Summer Solstice', '2008-06-20');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Summer Solstice', '2009-06-20');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Summer Solstice', '2010-06-21');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Summer Solstice', '2011-06-21');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Summer Solstice', '2012-06-20');
@@ -780,8 +774,6 @@ INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Summer So
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Summer Solstice', '2018-06-21');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Summer Solstice', '2019-06-21');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Summer Solstice', '2020-06-20');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Vernal Equinox', '2008-03-19');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Vernal Equinox', '2009-03-20');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Vernal Equinox', '2010-03-20');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Vernal Equinox', '2011-03-20');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Vernal Equinox', '2012-03-20');
@@ -793,8 +785,6 @@ INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Vernal Eq
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Vernal Equinox', '2018-03-20');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Vernal Equinox', '2019-03-20');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Vernal Equinox', '2020-03-19');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Winter Solstice', '2008-12-21');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Winter Solstice', '2009-12-21');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Winter Solstice', '2010-12-21');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Winter Solstice', '2011-12-22');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Winter Solstice', '2012-12-21');
@@ -806,8 +796,6 @@ INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Winter So
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Winter Solstice', '2018-12-21');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Winter Solstice', '2019-12-21');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Winter Solstice', '2020-12-21');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Autumnal Equinox', '2008-09-22');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Autumnal Equinox', '2009-09-22');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Autumnal Equinox', '2010-09-22');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Autumnal Equinox', '2011-09-23');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Autumnal Equinox', '2012-09-22');
@@ -824,8 +812,6 @@ INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Cinco de 
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Flag Day', '0004-06-14');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Veterans Day', '0004-11-11');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Groundhog Day', '0004-02-02');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Thanksgiving', '2008-11-27');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Thanksgiving', '2009-11-26');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Thanksgiving', '2010-11-25');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Thanksgiving', '2011-11-24');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Thanksgiving', '2012-11-22');
@@ -837,8 +823,6 @@ INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Thanksgiv
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Thanksgiving', '2018-11-22');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Thanksgiving', '2019-11-21');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Thanksgiving', '2020-11-26');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Memorial Day', '2008-05-26');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Memorial Day', '2009-05-25');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Memorial Day', '2010-05-31');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Memorial Day', '2011-05-30');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Memorial Day', '2012-05-28');
@@ -850,8 +834,6 @@ INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Memorial 
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Memorial Day', '2018-05-28');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Memorial Day', '2019-05-27');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Memorial Day', '2020-05-25');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Labor Day', '2008-09-01');
-INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Labor Day', '2009-09-07');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Labor Day', '2010-09-06');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Labor Day', '2011-09-05');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Labor Day', '2012-09-03');
