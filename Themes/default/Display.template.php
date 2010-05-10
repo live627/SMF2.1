@@ -406,12 +406,12 @@ function template_main()
 									<li class="approve_button"><a href="', $scripturl, '?action=moderate;area=postmod;sa=approve;topic=', $context['current_topic'], '.', $context['start'], ';msg=', $message['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $txt['approve'], '</a></li>';
 
 		// Can they reply? Have they turned on quick reply?
-		if ($context['can_reply'] && !empty($options['display_quick_reply']))
+		if ($context['can_quote'] && !empty($options['display_quick_reply']))
 			echo '
 									<li class="quote_button"><a href="', $scripturl, '?action=post;quote=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';num_replies=', $context['num_replies'], '" onclick="return oQuickReply.quote(', $message['id'], ');">', $txt['quote'], '</a></li>';
 
 		// So... quick reply is off, but they *can* reply?
-		elseif ($context['can_reply'])
+		elseif ($context['can_quote'])
 			echo '
 									<li class="quote_button"><a href="', $scripturl, '?action=post;quote=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';num_replies=', $context['num_replies'], '">', $txt['quote'], '</a></li>';
 

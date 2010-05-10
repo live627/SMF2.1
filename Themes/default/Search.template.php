@@ -456,8 +456,11 @@ function template_results()
 					// If they *can* reply?
 					if ($topic['can_reply'])
 					echo '
-									<li class="reply_button"><a href="', $scripturl . '?action=post;topic=' . $topic['id'] . '.' . $message['start'], '">', $txt['reply'], '</a></li>
+									<li class="reply_button"><a href="', $scripturl . '?action=post;topic=' . $topic['id'] . '.' . $message['start'], '">', $txt['reply'], '</a></li>';
 
+					// If they *can* quote?
+					if ($topic['can_quote'])
+					echo '
 									<li class="quote_button"><a href="', $scripturl . '?action=post;topic=' . $topic['id'] . '.' . $message['start'] . ';quote=' . $message['id'] . '">', $txt['quote'], '</a></li>';
 
 					// Can we request notification of topics?

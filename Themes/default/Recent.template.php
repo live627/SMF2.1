@@ -38,7 +38,11 @@ function template_main()
 		// If they *can* reply?
 		if ($post['can_reply'])
 			echo '
-						<li class="reply_button"><a href="', $scripturl, '?action=post;topic=', $post['topic'], '.', $post['start'], '"><span>', $txt['reply'], '</span></a></li>
+						<li class="reply_button"><a href="', $scripturl, '?action=post;topic=', $post['topic'], '.', $post['start'], '"><span>', $txt['reply'], '</span></a></li>';
+
+		// If they *can* quote?
+		if ($post['can_quote'])
+			echo '
 						<li class="quote_button"><a href="', $scripturl, '?action=post;topic=', $post['topic'], '.', $post['start'], ';quote=', $post['id'], '"><span>', $txt['quote'], '</span></a></li>';
 
 		// Can we request notification of topics?

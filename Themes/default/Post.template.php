@@ -741,6 +741,7 @@ function template_main()
 			<span id="new_replies"></span>';
 
 		foreach ($context['previous_posts'] as $post)
+		{
 			echo '
 				<div class="', $post['alternate'] == 0 ? 'windowbg' : 'windowbg2', ' core_posts">
 				<span class="topslice"><span></span></span>
@@ -748,15 +749,23 @@ function template_main()
 					<div class="floatleft">
 						<h5>', $txt['posted_by'], ': ', $post['poster'], '</h5>
 						<span class="smalltext">&#171;&nbsp;<strong>', $txt['on'], ':</strong> ', $post['time'], '&nbsp;&#187;</span>
-					</div>
+					</div>';
+
+			if ($context['can_quote'])
+			{
+				echo '
 						<ul class="reset smalltext quickbuttons">
 							<li class="quote_button"><a href="#postmodify" onclick="return insertQuoteFast(', $post['id'], ');"><span>',$txt['bbc_quote'],'</span></a></li>
-						</ul>
+						</ul>';
+			}
+
+			echo '
 					<br class="clear" />
 					<div class="list_posts smalltext">', $post['message'], '</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';
+		}
 
 		echo '
 		</div>';

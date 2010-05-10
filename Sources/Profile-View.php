@@ -567,9 +567,13 @@ function showPosts($memID)
 		}
 	}
 
-	// Clean up after posts that cannot be deleted.
+	// Clean up after posts that cannot be deleted and quoted.
+	$quote_enabled = empty($modSettings['disabledBBC']) || !in_array('quote', explode(',', $modSettings['disabledBBC']));
 	foreach ($context['posts'] as $counter => $dummy)
+	{
 		$context['posts'][$counter]['can_delete'] &= $context['posts'][$counter]['delete_possible'];
+		$context['posts'][$counter]['can_quote'] = $context['posts'][$counter]['can_reply'] && $quote_enabled;
+	}
 }
 
 // Show all the attachments of a user.

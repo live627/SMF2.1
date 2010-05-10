@@ -224,6 +224,7 @@ function Post()
 	// You can only annouce topics that will get approved...
 	$context['can_announce'] = allowedTo('announce_topic') && $context['becomes_approved'];
 	$context['locked'] = !empty($locked) || !empty($_REQUEST['lock']);
+	$context['can_quote'] = empty($modSettings['disabledBBC']) || !in_array('quote', explode(',', $modSettings['disabledBBC']));
 
 	// Generally don't show the approval box... (Assume we want things approved)
 	$context['show_approval'] = false;

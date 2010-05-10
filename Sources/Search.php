@@ -1952,6 +1952,9 @@ function prepareSearchContext($reset = false)
 			$context['icon_sources'][$message['icon']] = 'images_url';
 	}
 
+	// Do we have quote tag enabled?
+	$quote_enabled = empty($modSettings['disabledBBC']) || !in_array('quote', explode(',', $modSettings['disabledBBC']));
+
 	$output = array_merge($context['topics'][$message['id_msg']], array(
 		'is_sticky' => !empty($modSettings['enableStickyTopics']) && !empty($message['is_sticky']),
 		'is_locked' => !empty($message['locked']),
@@ -1962,6 +1965,7 @@ function prepareSearchContext($reset = false)
 		'views' => $message['num_views'],
 		'replies' => $message['num_replies'],
 		'can_reply' => in_array($message['id_board'], $boards_can['post_reply_any']) || in_array(0, $boards_can['post_reply_any']),
+		'can_quote' => (in_array($message['id_board'], $boards_can['post_reply_any']) || in_array(0, $boards_can['post_reply_any'])) && $quote_enabled,
 		'can_mark_notify' => in_array($message['id_board'], $boards_can['mark_any_notify']) || in_array(0, $boards_can['mark_any_notify']) && !$context['user']['is_guest'],
 		'first_post' => array(
 			'id' => $message['first_msg'],

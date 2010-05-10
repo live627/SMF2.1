@@ -399,9 +399,15 @@ function RecentPosts()
 		}
 	}
 
-	// Some posts - the first posts - can't just be deleted.
+	$quote_enabled = empty($modSettings['disabledBBC']) || !in_array('quote', explode(',', $modSettings['disabledBBC']));
 	foreach ($context['posts'] as $counter => $dummy)
+	{
+		// Some posts - the first posts - can't just be deleted.
 		$context['posts'][$counter]['can_delete'] &= $context['posts'][$counter]['delete_possible'];
+
+		// And some cannot be quoted...
+		$context['posts'][$counter]['can_quote'] = $context['posts'][$counter]['can_reply'] && $quote_enabled;
+	}
 }
 
 // Find unread topics and replies.
