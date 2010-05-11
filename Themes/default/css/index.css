@@ -2374,7 +2374,6 @@ div#selected, div#not_selected
 }
 ul.split_messages li.windowbg, ul.split_messages li.windowbg2
 {
-	padding: 1em;
 	margin: 1px;
 }
 ul.split_messages li a.split_icon
