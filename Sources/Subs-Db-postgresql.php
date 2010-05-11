@@ -334,13 +334,10 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	$db_count = !isset($db_count) ? 1 : $db_count + 1;
 	$db_replace_result = 0;
 
-	// Overriding security? This is evil!
-	$security_override = $db_values === 'security_override' || !empty($db_values['security_override']);
-
-	if (empty($modSettings['disableQueryCheck']) && strpos($db_string, '\'') !== false && !$security_override)
+	if (empty($modSettings['disableQueryCheck']) && strpos($db_string, '\'') !== false && empty($db_values['security_override']))
 		smf_db_error_backtrace('Hacking attempt...', 'Illegal character (\') used in query...', true, __FILE__, __LINE__);
 
-	if (!$security_override && (!empty($db_values) || strpos($db_string, '{db_prefix}') !== false))
+	if (empty($db_values['security_override']) && (!empty($db_values) || strpos($db_string, '{db_prefix}') !== false))
 	{
 		// Pass some values to the global space for use in the callback function.
 		$db_callback = array($db_values, $connection);

@@ -218,11 +218,15 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 
 	// Do the table and indexes...
 	$smcFunc['db_query']('', $table_query,
-		'security_override'
+		array(
+			'security_override' => true,
+		)
 	);
 	foreach ($index_queries as $query)
 		$smcFunc['db_query']('', $query,
-		'security_override'
+		array(
+			'security_override' => true,
+		)
 	);
 
 	if (empty($parameters['skip_transaction']))
@@ -248,7 +252,9 @@ function smf_db_drop_table($table_name, $parameters = array(), $error = 'fatal')
 	{
 		$query = 'DROP TABLE ' . $table_name;
 		$smcFunc['db_query']('', $query,
-			'security_override'
+			array(
+				'security_override' => true,
+			)
 		);
 
 		return true;
@@ -364,7 +370,9 @@ function smf_db_add_index($table_name, $index_info, $parameters = array(), $if_e
 	{
 		$smcFunc['db_query']('', '
 			CREATE ' . (isset($index_info['type']) && $index_info['type'] == 'unique' ? 'UNIQUE' : '') . ' INDEX ' . $index_info['name'] . ' ON ' . $table_name . ' (' . $columns . ')',
-			'security_override'
+			array(
+				'security_override' => true,
+			)
 		);
 	}
 }
@@ -387,7 +395,9 @@ function smf_db_remove_index($table_name, $index_name, $parameters = array(), $e
 			// Drop the bugger...
 			$smcFunc['db_query']('', '
 				DROP INDEX ' . $index_name,
-				'security_override'
+				array(
+					'security_override' => true,
+				)
 			);
 
 			return true;
@@ -455,7 +465,9 @@ function smf_db_list_columns($table_name, $detail = false, $parameters = array()
 
 	$result = $smcFunc['db_query']('', '
 		PRAGMA table_info(' . $table_name . ')',
-		'security_override'
+		array(
+			'security_override' => true,
+		)
 	);
 	$columns = array();
 
@@ -512,7 +524,9 @@ function smf_db_list_indexes($table_name, $detail = false, $parameters = array()
 
 	$result = $smcFunc['db_query']('', '
 		PRAGMA index_list(' . $table_name . ')',
-		'security_override'
+		array(
+			'security_override' => true,
+		)
 	);
 	$indexes = array();
 	while ($row = $smcFunc['db_fetch_assoc']($result))
@@ -523,7 +537,9 @@ function smf_db_list_indexes($table_name, $detail = false, $parameters = array()
 		{
 			$result2 = $smcFunc['db_query']('', '
 				PRAGMA index_info(' . $row['name'] . ')',
-				'security_override'
+				array(
+					'security_override' => true,
+				)
 			);
 			while ($row2 = $smcFunc['db_fetch_assoc']($result2))
 			{

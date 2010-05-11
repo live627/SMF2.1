@@ -167,7 +167,9 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 		{
 			$smcFunc['db_query']('', '
 				CREATE SEQUENCE ' . $table_name . '_seq',
-				'security_override'
+				array(
+					'security_override' => true,
+				)
 			);
 			$default = 'default nextval(\'' . $table_name . '_seq\')';
 		}
@@ -211,12 +213,16 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 
 	// Create the table!
 	$smcFunc['db_query']('', $table_query,
-		'security_override'
+		array(
+			'security_override' => true,
+		)
 	);
 	// And the indexes...
 	foreach ($index_queries as $query)
 		$smcFunc['db_query']('', $query,
-		'security_override'
+		array(
+			'security_override' => true,
+		)
 	);
 
 	// Go, go power rangers!
@@ -245,7 +251,9 @@ function smf_db_drop_table($table_name, $parameters = array(), $error = 'fatal')
 		$query = 'DROP TABLE ' . $table_name;
 		$smcFunc['db_query']('',
 			$query,
-			'security_override'
+			array(
+				'security_override' => true,
+			)
 		);
 
 		return true;
@@ -288,7 +296,9 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 		ALTER TABLE ' . $table_name . '
 		ADD COLUMN ' . $column_info['name'] . ' ' . $type;
 	$smcFunc['db_query']('', $query,
-		'security_override'
+		array(
+			'security_override' => true,
+		)
 	);
 
 	// If there's more attributes they need to be done via a change on PostgreSQL.
@@ -316,13 +326,17 @@ function smf_db_remove_column($table_name, $column_name, $parameters = array(), 
 			if ($column['auto'])
 				$smcFunc['db_query']('',
 					'DROP SEQUENCE ' . $table_name . '_seq',
-					'security_override'
+					array(
+						'security_override' => true,
+					)
 				);
 
 			$smcFunc['db_query']('', '
 				ALTER TABLE ' . $table_name . '
 				DROP COLUMN ' . $column_name,
-				'security_override'
+				array(
+					'security_override' => true,
+				)
 			);
 
 			return true;
@@ -356,7 +370,9 @@ function smf_db_change_column($table_name, $old_column, $column_info, $parameter
 		$smcFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			RENAME COLUMN ' . $old_column . ' TO ' . $column_info['name'],
-			'security_override'
+			array(
+				'security_override' => true,
+			)
 		);
 	}
 	// Different default?
@@ -366,7 +382,9 @@ function smf_db_change_column($table_name, $old_column, $column_info, $parameter
 		$smcFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			ALTER COLUMN ' . $column_info['name'] . ' ' . $action,
-			'security_override'
+			array(
+				'security_override' => true,
+			)
 		);
 	}
 	// Is it null - or otherwise?
@@ -382,13 +400,17 @@ function smf_db_change_column($table_name, $old_column, $column_info, $parameter
 				UPDATE ' . $table_name . '
 				SET ' . $column_info['name'] . ' = \'' . $setTo . '\'
 				WHERE ' . $column_info['name'] . ' = NULL',
-				'security_override'
+				array(
+					'security_override' => true,
+				)
 			);
 		}
 		$smcFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			ALTER COLUMN ' . $column_info['name'] . ' ' . $action . ' NOT NULL',
-			'security_override'
+			array(
+				'security_override' => true,
+			)
 		);
 		$smcFunc['db_transaction']('commit');
 	}
@@ -405,22 +427,30 @@ function smf_db_change_column($table_name, $old_column, $column_info, $parameter
 		$smcFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			ADD COLUMN ' . $column_info['name'] . '_tempxx ' . $type,
-			'security_override'
+			array(
+				'security_override' => true,
+			)
 		);
 		$smcFunc['db_query']('', '
 			UPDATE ' . $table_name . '
 			SET ' . $column_info['name'] . '_tempxx = CAST(' . $column_info['name'] . ' AS ' . $type . ')',
-			'security_override'
+			array(
+				'security_override' => true,
+			)
 		);
 		$smcFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			DROP COLUMN ' . $column_info['name'],
-			'security_override'
+			array(
+				'security_override' => true,
+			)
 		);
 		$smcFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			RENAME COLUMN ' . $column_info['name'] . '_tempxx TO ' . $column_info['name'],
-			'security_override'
+			array(
+				'security_override' => true,
+			)
 		);
 		$smcFunc['db_transaction']('commit');
 	}
@@ -434,11 +464,15 @@ function smf_db_change_column($table_name, $old_column, $column_info, $parameter
 			$smcFunc['db_query']('', '
 				ALTER TABLE ' . $table_name . '
 				ALTER COLUMN ' . $column_info['name'] . ' SET DEFAULT \'0\'',
-				'security_override'
+				array(
+					'security_override' => true,
+				)
 			);
 			$smcFunc['db_query']('', '
 				DROP SEQUENCE ' . $table_name . '_seq',
-				'security_override'
+				array(
+					'security_override' => true,
+				)
 			);
 		}
 		// Otherwise add it!
@@ -446,12 +480,16 @@ function smf_db_change_column($table_name, $old_column, $column_info, $parameter
 		{
 			$smcFunc['db_query']('', '
 				CREATE SEQUENCE ' . $table_name . '_seq',
-				'security_override'
+				array(
+					'security_override' => true,
+				)
 			);
 			$smcFunc['db_query']('', '
 				ALTER TABLE ' . $table_name . '
 				ALTER COLUMN ' . $column_info['name'] . ' SET DEFAULT nextval(\'' . $table_name . '_seq\')',
-				'security_override'
+				array(
+					'security_override' => true,
+				)
 			);
 		}
 	}
@@ -505,14 +543,18 @@ function smf_db_add_index($table_name, $index_info, $parameters = array(), $if_e
 		$smcFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			ADD PRIMARY KEY (' . $columns . ')',
-			'security_override'
+			array(
+				'security_override' => true,
+			)
 		);
 	}
 	else
 	{
 		$smcFunc['db_query']('', '
 			CREATE ' . (isset($index_info['type']) && $index_info['type'] == 'unique' ? 'UNIQUE' : '') . ' INDEX ' . $index_info['name'] . ' ON ' . $table_name . ' (' . $columns . ')',
-			'security_override'
+			array(
+				'security_override' => true,
+			)
 		);
 	}
 }
@@ -538,7 +580,9 @@ function smf_db_remove_index($table_name, $index_name, $parameters = array(), $e
 			$smcFunc['db_query']('', '
 				ALTER TABLE ' . $table_name . '
 				DROP CONSTRAINT ' . $index['name'],
-				'security_override'
+				array(
+					'security_override' => true,
+				)
 			);
 
 			return true;
@@ -548,7 +592,9 @@ function smf_db_remove_index($table_name, $index_name, $parameters = array(), $e
 			// Drop the bugger...
 			$smcFunc['db_query']('', '
 				DROP INDEX ' . $index_name,
-				'security_override'
+				array(
+					'security_override' => true,
+				)
 			);
 
 			return true;
@@ -624,7 +670,9 @@ function smf_db_list_columns($table_name, $detail = false, $parameters = array()
 		FROM information_schema.columns
 		WHERE table_name = \'' . $table_name . '\'
 		ORDER BY ordinal_position',
-		'security_override'
+		array(
+			'security_override' => true,
+		)
 	);
 	$columns = array();
 	while ($row = $smcFunc['db_fetch_assoc']($result))
@@ -683,7 +731,9 @@ function smf_db_list_indexes($table_name, $detail = false, $parameters = array()
 		WHERE c.relname = \'' . $table_name . '\'
 			AND c.oid = i.indrelid
 			AND i.indexrelid = c2.oid',
-		'security_override'
+		array(
+			'security_override' => true,
+		)
 	);
 	$indexes = array();
 	while ($row = $smcFunc['db_fetch_assoc']($result))

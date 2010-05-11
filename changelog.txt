@@ -25,8 +25,10 @@ May 2010
  ! Fixed missing help icons on couple sections under Server Settings (ManageServer.php) [Bug 4265]
  * Made the template where you select what posts to split a bit more Curvy. (SplitTopics.template.php, index.css)
  ! On browse files for manage attachments set the topic link to the message of the attachment (ManageAttachments.php)
- * Minor Curvification of the News page in the admin panel. (ManageNews.template.php) 
- * Minor Curvification of the permission lists in "Simple" mode. (ManagePermissions.template.php) 
+ * Minor Curvification of the News page in the admin panel. (ManageNews.template.php)
+ * Minor Curvification of the permission lists in "Simple" mode. (ManagePermissions.template.php)
+ ! Make sure that $db_values parameter is passed as an array for security override option as well (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php, DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 3405]
+
  
 ================================================================================
 April 2010
