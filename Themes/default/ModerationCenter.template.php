@@ -700,7 +700,14 @@ function template_moderation_settings()
 								<option value="1" ', $context['mod_settings']['notify_report'] == 1 ? 'selected="selected"' : '', '>', $txt['mc_prefs_notify_report_moderator'], '</option>
 								<option value="2" ', $context['mod_settings']['notify_report'] == 2 ? 'selected="selected"' : '', '>', $txt['mc_prefs_notify_report_always'], '</option>
 							</select>
-						</dd>
+						</dd>';
+
+	}
+
+	if ($context['can_moderate_approvals'])
+	{
+		echo '
+
 						<dt>
 							<strong><label for="mod_notify_approval">', $txt['mc_prefs_notify_approval'], '</label>:</strong>
 						</dt>
@@ -708,6 +715,7 @@ function template_moderation_settings()
 							<input type="checkbox" id="mod_notify_approval" name="mod_notify_approval" ', $context['mod_settings']['notify_approval'] ? 'checked="checked"' : '', ' class="input_check" />
 						</dd>';
 	}
+
 	echo '
 					</dl>
 					<div class="righttext">

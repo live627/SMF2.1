@@ -38,8 +38,12 @@ function ModerationMain($dont_call = false)
 	if (isset($context['admin_area']))
 		return;
 
+	$context['can_moderate_boards'] = $user_info['mod_cache']['bq'] != '0=1';
+	$context['can_moderate_groups'] = $user_info['mod_cache']['gq'] != '0=1';
+	$context['can_moderate_approvals'] = $modSettings['postmod_active'] && !empty($user_info['mod_cache']['ap']);
+
 	// Everyone using this area must be allowed here!
-	if ($user_info['mod_cache']['gq'] == '0=1' && $user_info['mod_cache']['bq'] == '0=1' && !allowedTo('manage_membergroups'))
+	if (!$context['can_moderate_boards'] && !$context['can_moderate_groups'] && !$context['can_moderate_approvals'])
 		isAllowedTo('access_mod_center');
 
 	// We're gonna want a menu of some kind.
@@ -52,10 +56,6 @@ function ModerationMain($dont_call = false)
 	$context['admin_preferences'] = !empty($options['admin_preferences']) ? unserialize($options['admin_preferences']) : array();
 	$context['robot_no_index'] = true;
 
-	// Can they approve any posts?
-	if ($modSettings['postmod_active'])
-		$approve_boards = boardsAllowedTo('approve_posts');
-
 	// This is the menu structure - refer to Subs-Menu.php for the details.
 	$moderation_areas = array(
 		'main' => array(
@@ -66,8 +66,8 @@ function ModerationMain($dont_call = false)
 					'function' => 'ModerationHome',
 				),
 				'modlog' => array(
-					'enabled' => !empty($modSettings['modlog_enabled']),
 					'label' => $txt['modlog_view'],
+					'enabled' => !empty($modSettings['modlog_enabled']) && $context['can_moderate_boards'],
 					'file' => 'Modlog.php',
 					'function' => 'ViewModlog',
 				),
@@ -78,7 +78,7 @@ function ModerationMain($dont_call = false)
 				),
 				'warnings' => array(
 					'label' => $txt['mc_warnings'],
-					'enabled' => in_array('w', $context['admin_features']) && $modSettings['warning_settings'][0] == 1,
+					'enabled' => in_array('w', $context['admin_features']) && $modSettings['warning_settings'][0] == 1 && $context['can_moderate_boards'],
 					'function' => 'ViewWarnings',
 					'subsections' => array(
 						'log' => array($txt['mc_warning_log']),
@@ -87,6 +87,7 @@ function ModerationMain($dont_call = false)
 				),
 				'userwatch' => array(
 					'label' => $txt['mc_watched_users_title'],
+					'enabled' => in_array('w', $context['admin_features']) && $modSettings['warning_settings'][0] == 1 && $context['can_moderate_boards'],
 					'function' => 'ViewWatchedUsers',
 					'subsections' => array(
 						'member' => array($txt['mc_watched_users_member']),
@@ -97,11 +98,11 @@ function ModerationMain($dont_call = false)
 		),
 		'posts' => array(
 			'title' => $txt['mc_posts'],
-			'enabled' => $user_info['mod_cache']['bq'] != '0=1' || !empty($approve_boards),
+			'enabled' => $context['can_moderate_boards'] || $context['can_moderate_approvals'],
 			'areas' => array(
 				'postmod' => array(
 					'label' => $txt['mc_unapproved_posts'],
-					'enabled' => $modSettings['postmod_active'],
+					'enabled' => $context['can_moderate_approvals'],
 					'file' => 'PostModeration.php',
 					'function' => 'PostModerationMain',
 					'custom_url' => $scripturl . '?action=moderate;area=postmod;sa=posts',
@@ -112,14 +113,14 @@ function ModerationMain($dont_call = false)
 				),
 				'attachmod' => array(
 					'label' => $txt['mc_unapproved_attachments'],
-					'enabled' => $modSettings['postmod_active'],
+					'enabled' => $context['can_moderate_approvals'],
 					'file' => 'PostModeration.php',
 					'function' => 'PostModerationMain',
 					'custom_url' => $scripturl . '?action=moderate;area=attachmod;sa=attachments',
 				),
 				'reports' => array(
 					'label' => $txt['mc_reported_posts'],
-					'enabled' => $user_info['mod_cache']['bq'] != '0=1',
+					'enabled' => $context['can_moderate_boards'],
 					'file' => 'ModerationCenter.php',
 					'function' => 'ReportedPosts',
 					'subsections' => array(
@@ -131,7 +132,7 @@ function ModerationMain($dont_call = false)
 		),
 		'groups' => array(
 			'title' => $txt['mc_groups'],
-			'enabled' => $user_info['mod_cache']['gq'] != '0=1' || allowedTo('manage_membergroups'),
+			'enabled' => $context['can_moderate_groups'],
 			'areas' => array(
 				'groups' => array(
 					'label' => $txt['mc_group_requests'],
@@ -211,17 +212,21 @@ function ModerationHome()
 	$context['page_title'] = $txt['moderation_center'];
 	$context['sub_template'] = 'moderation_center';
 
-	// Load what blocks the user actually wants...
+	// Load what blocks the user actually can see...
 	$valid_blocks = array(
 		'n' => 'LatestNews',
 		'p' => 'Notes',
-		'w' => 'WatchedUsers',
-		'r' => 'ReportedPosts',
-		'g' => 'GroupRequests'
 	);
+	if ($context['can_moderate_groups'])
+		$valid_blocks['g'] = 'GroupRequests';
+	if ($context['can_moderate_boards'])
+	{
+		$valid_blocks['r'] = 'ReportedPosts';
+		$valid_blocks['w'] = 'WatchedUsers';
+	}
 
 	if (empty($user_settings['mod_prefs']))
-		$user_blocks = 'nw' . ($user_info['mod_cache']['bq'] == '0=1' ? '' : 'r') . ($user_info['mod_cache']['gq'] == '0=1' ? '' : 'g');
+		$user_blocks = 'n' . ($context['can_moderate_boards'] ? 'wr' : '') . ($context['can_moderate_groups'] ? 'g' : '');
 	else
 		list (, $user_blocks) = explode('|', $user_settings['mod_prefs']);
 
@@ -1945,25 +1950,23 @@ function ModerationSettings()
 	$context['page_title'] = $txt['mc_settings'];
 	$context['sub_template'] = 'moderation_settings';
 
-	// They can only change some settings if they can moderate boards/groups.
-	$context['can_moderate_boards'] = $user_info['mod_cache']['bq'] != '0=1';
-	$context['can_moderate_groups'] = $user_info['mod_cache']['gq'] != '0=1';
-
 	// What blocks can this user see?
 	$context['homepage_blocks'] = array(
 		'n' => $txt['mc_prefs_latest_news'],
 		'p' => $txt['mc_notes'],
-		'w' => $txt['mc_watched_users'],
 	);
 	if ($context['can_moderate_groups'])
 		$context['homepage_blocks']['g'] = $txt['mc_group_requests'];
 	if ($context['can_moderate_boards'])
+	{
 		$context['homepage_blocks']['r'] = $txt['mc_reported_posts'];
+		$context['homepage_blocks']['w'] = $txt['mc_watched_users'];
+	}
 
 	// Does the user have any settings yet?
 	if (empty($user_settings['mod_prefs']))
 	{
-		$mod_blocks = 'nw' . ($user_info['mod_cache']['bq'] == '0=1' ? '' : 'r') . ($user_info['mod_cache']['gq'] == '0=1' ? '' : 'g');
+		$mod_blocks = 'n' . ($context['can_moderate_boards'] ? 'wr' : '') . ($context['can_moderate_groups'] ? 'g' : '');
 		$pref_binary = 5;
 		$show_reports = 1;
 	}
@@ -1993,17 +1996,19 @@ function ModerationSettings()
 		if (!empty($_POST['mod_homepage']))
 			foreach ($_POST['mod_homepage'] as $k => $v)
 			{
-				// Sanitise my friend!
-				if (preg_match('~([a-zA-Z])~', $k, $matches))
-					$mod_blocks .= $matches[0];
+				// Make sure they can add this...
+				if (isset($context['homepage_blocks'][$k]))
+					$mod_blocks .= $k;
 			}
 
-		// Do we have the option of changing other settings?
+		// Now check other options!
+		$pref_binary = 0;
+
+		if ($context['can_moderate_approvals'] && !empty($_POST['mod_notify_approval']))
+			$pref_binary |= 4;
+
 		if ($context['can_moderate_boards'])
 		{
-			$pref_binary = 0;
-			if (!empty($_POST['mod_notify_approval']))
-				$pref_binary |= 4;
 			if (!empty($_POST['mod_notify_report']))
 				$pref_binary |= ($_POST['mod_notify_report'] == 2 ? 1 : 2);
 

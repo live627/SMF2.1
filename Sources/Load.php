@@ -523,18 +523,6 @@ function loadUserSettings()
 	else
 		$user_info['query_see_board'] = '(FIND_IN_SET(' . implode(', b.member_groups) != 0 OR FIND_IN_SET(', $user_info['groups']) . ', b.member_groups) != 0' . (isset($user_info['mod_cache']) ? ' OR ' . $user_info['mod_cache']['mq'] : '') . ')';
 
-	// Load the mod cache so we can know what additional boards they should see, but no sense in doing it for admins and guests
-	if (!$user_info['is_guest'] && !$user_info['is_admin'])
-	{
-		if (!isset($_SESSION['mc']) || $_SESSION['mc']['time'] <= $modSettings['settings_updated'])
-		{
-			require_once($sourcedir . '/Subs-Auth.php');
-			rebuildModCache();
-		}
-		else
-			$user_info['mod_cache'] = $_SESSION['mc'];
-	}
-
 	// Build the list of boards they WANT to see.
 	// This will take the place of query_see_boards in certain spots, so it better include the boards they can see also
 
@@ -901,6 +889,18 @@ function loadPermissions()
 
 	// Banned?  Watch, don't touch..
 	banPermissions();
+
+	// Load the mod cache so we can know what additional boards they should see, but no sense in doing it for guests
+	if (!$user_info['is_guest'] && !$user_info['is_admin'])
+	{
+		if (!isset($_SESSION['mc']) || $_SESSION['mc']['time'] <= $modSettings['settings_updated'])
+		{
+			require_once($sourcedir . '/Subs-Auth.php');
+			rebuildModCache();
+		}
+		else
+			$user_info['mod_cache'] = $_SESSION['mc'];
+	}
 }
 
 // Loads an array of users' data by ID or member_name.
@@ -1519,8 +1519,8 @@ function loadTheme($id_theme = 0, $initialize = true)
 		'is_guest' => &$user_info['is_guest'],
 		'is_admin' => &$user_info['is_admin'],
 		'is_mod' => &$user_info['is_mod'],
-		// A user can mod if they have permission to see the mod center, or they are a board/group moderator.
-		'can_mod' => allowedTo('access_mod_center') || (!$user_info['is_guest'] && ($user_info['mod_cache']['gq'] != '0=1' || $user_info['mod_cache']['bq'] != '0=1')),
+		// A user can mod if they have permission to see the mod center, or they are a board/group/approval moderator.
+		'can_mod' => allowedTo('access_mod_center') || (!$user_info['is_guest'] && ($user_info['mod_cache']['gq'] != '0=1' || $user_info['mod_cache']['bq'] != '0=1' || ($modSettings['postmod_active'] && !empty($user_info['mod_cache']['ap'])))),
 		'username' => $user_info['username'],
 		'language' => $user_info['language'],
 		'email' => $user_info['email'],

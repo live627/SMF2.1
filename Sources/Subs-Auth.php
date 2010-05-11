@@ -795,7 +795,7 @@ function rebuildModCache()
 
 	if ($board_query == '0=1')
 	{
-		$boards = boardsAllowedTo(array('moderate_board', 'approve_posts'), true);
+		$boards = boardsAllowedTo('moderate_board', true);
 
 		if (empty($boards))
 			$board_query = '0=1';
