@@ -565,21 +565,21 @@ function template_modify_group_simple($type)
 			<table width="100%" class="table_grid">
 			<thead>
 				<tr class="catbg">
-					<th colspan="2" width="100%" align="left"></th>';
+					<th colspan="2" width="100%" align="left" class="first_th"></th>';
 				if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
 					echo '
-						<th colspan="3" width="10">&nbsp;</th>';
+						<th colspan="3" width="9" class="last_th">&nbsp;</th>';
 				else
 					echo '
 						<th>', $txt['permissions_option_on'], '</th>
 						<th>', $txt['permissions_option_off'], '</th>
-						<th>', $txt['permissions_option_deny'], '</th>';
+						<th class="last_th">', $txt['permissions_option_deny'], '</th>';
 				echo '
 				</tr>
 			</thead>
 			<tbody>';
 
-			foreach ($permission_data as $id_group => $permissionGroup)
+	foreach ($permission_data as $id_group => $permissionGroup)
 	{
 		if (empty($permissionGroup['permissions']))
 			continue;
