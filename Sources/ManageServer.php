@@ -265,7 +265,7 @@ function ModifyDatabaseSettings($return_config = false)
 		array('ssi_db_user', $txt['ssi_db_user'], 'file', 'text', null, 'ssi_db_user'),
 		array('ssi_db_passwd', $txt['ssi_db_passwd'], 'file', 'password'),
 		'',
-		array('autoFixDatabase', $txt['autoFixDatabase'], 'db', 'check'),
+		array('autoFixDatabase', $txt['autoFixDatabase'], 'db', 'check', false, 'autoFixDatabase'),
 		array('autoOptMaxOnline', $txt['autoOptMaxOnline'], 'db', 'int'),
 		'',
 		array('boardurl', $txt['admin_url'], 'file', 'text', 36),
@@ -303,14 +303,14 @@ function ModifyCookieSettings($return_config = false)
 		// Cookies...
 		array('cookiename', $txt['cookie_name'], 'file', 'text', 20),
 		array('cookieTime', $txt['cookieTime'], 'db', 'int'),
-		array('localCookies', $txt['localCookies'], 'db', 'check'),
-		array('globalCookies', $txt['globalCookies'], 'db', 'check'),
-		array('secureCookies', $txt['secureCookies'], 'db', 'check', 'disabled' => !isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) != 'on'),
+		array('localCookies', $txt['localCookies'], 'db', 'check', false, 'localCookies'),
+		array('globalCookies', $txt['globalCookies'], 'db', 'check', false, 'globalCookies'),
+		array('secureCookies', $txt['secureCookies'], 'db', 'check', false, 'secureCookies',  'disabled' => !isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) != 'on'),
 		'',
 		// Sessions
-		array('databaseSession_enable', $txt['databaseSession_enable'], 'db', 'check'),
-		array('databaseSession_loose', $txt['databaseSession_loose'], 'db', 'check'),
-		array('databaseSession_lifetime', $txt['databaseSession_lifetime'], 'db', 'int'),
+		array('databaseSession_enable', $txt['databaseSession_enable'], 'db', 'check', false, 'databaseSession_enable'),
+		array('databaseSession_loose', $txt['databaseSession_loose'], 'db', 'check', false, 'databaseSession_loose'),
+		array('databaseSession_lifetime', $txt['databaseSession_lifetime'], 'db', 'int', false, 'databaseSession_lifetime'),
 	);
 
 	if ($return_config)
