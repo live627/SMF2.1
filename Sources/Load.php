@@ -891,7 +891,7 @@ function loadPermissions()
 	banPermissions();
 
 	// Load the mod cache so we can know what additional boards they should see, but no sense in doing it for guests
-	if (!$user_info['is_guest'] && !$user_info['is_admin'])
+	if (!$user_info['is_guest'])
 	{
 		if (!isset($_SESSION['mc']) || $_SESSION['mc']['time'] <= $modSettings['settings_updated'])
 		{
