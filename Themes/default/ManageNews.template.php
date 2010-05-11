@@ -12,9 +12,9 @@ function template_edit_news()
 			<table class="table_grid" width="100%">
 			<thead>
 				<tr class="catbg">
-					<th class="smalltext" width="50%">', $txt['admin_edit_news'], '</th>
+					<th class="smalltext first_th" width="50%">', $txt['admin_edit_news'], '</th>
 					<th class="smalltext" align="left" width="45%">', $txt['preview'], '</th>
-					<th class="smalltext" align="center" width="5%"><input type="checkbox" class="input_check" onclick="invertAll(this, this.form);" /></th>
+					<th class="smalltext last_th" align="center" width="5%"><input type="checkbox" class="input_check" onclick="invertAll(this, this.form);" /></th>
 				</tr>
 			</thead>
 			<tbody>';

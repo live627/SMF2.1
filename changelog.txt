@@ -23,7 +23,9 @@ May 2010
  & Quote button should not be displayed if quote BBC tag is disabled (Display.php, Post.php, Profile-View.php, Recent.php, Search.php, Display Template, Post Template, Profile Template, Recent Template, Search Template) [Bug 4298]
  ! Check for custom cache caching that all data was written in case of low disk space (Load.php) [Bug 4255]
  ! Fixed missing help icons on couple sections under Server Settings (ManageServer.php) [Bug 4265]
+ * Made the template where you select what posts to split a bit more Curvy. (SplitTopics.template.php, index.css)
  ! On browse files for manage attachments set the topic link to the message of the attachment (ManageAttachments.php)
+ * Minor Curvification of the News page in the admin panel. (ManageNews.template.php) 
  
 ================================================================================
 April 2010
