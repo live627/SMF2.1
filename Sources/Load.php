@@ -2565,9 +2565,16 @@ function cache_put_data($key, $value, $ttl = 120)
 			{
 				// Write the header.
 				@flock($fp, LOCK_EX);
-				fwrite($fp, '<' . '?' . 'php if (!defined(\'SMF\')) die; if (' . (time() + $ttl) . ' < time()) $expired = true; else{$expired = false; $value = \'' . addcslashes($value, '\\\'') . '\';}' . '?' . '>');
+				$cache_data = '<' . '?' . 'php if (!defined(\'SMF\')) die; if (' . (time() + $ttl) . ' < time()) $expired = true; else{$expired = false; $value = \'' . addcslashes($value, '\\\'') . '\';}' . '?' . '>';
+				$cache_bytes = fwrite($fp, $cache_data);
 				@flock($fp, LOCK_UN);
 				fclose($fp);
+				
+				// Check that the cache write was successful all the data should be written
+				// If it fails due to low diskspace remove the cache file
+				if ($cache_bytes != strlen($cache_data))
+					@unlink($cachedir . '/data_' . $key . '.php');
+				
 			}
 		}
 	}
