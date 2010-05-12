@@ -25,7 +25,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/* // Show a list of members or a selection of members.
+/*	Show a list of members or a selection of members.
 
 	void ViewMembers()
 		- the main entrance point for the Manage Members screen.

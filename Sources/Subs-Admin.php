@@ -26,6 +26,8 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 /*	This file contains functions that are specifically done by administrators.
+	The most important function in this file for mod makers happens to be the
+	updateSettingsFile() function, but it shouldn't be used often anyway.
 
 	void getServerVersions(array checkFor)
 		- get a list of versions that are currently installed on the server.

@@ -26,8 +26,6 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 /*	This file, unpredictable as this might be, handles basic administration.
-	The most important function in this file for mod makers happens to be the
-	updateSettingsFile() function, but it shouldn't be used often anyway.
 
 	void AdminMain()
 		- initialises all the basic context required for the admin center.
