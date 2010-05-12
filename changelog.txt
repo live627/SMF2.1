@@ -31,6 +31,7 @@ May 2010
  * Revised the access to moderation center (Load.php, ModerationCenter.php, Subs.php, Subs-Auth.php, ModerationCenter Template) [Bug 4058]
  & Guests reporting posts did not log email and ip, and did not support visual verification (Several source files, Several template files, Several language files, index css, install/upgrade sqls) [Bug 4158]
  ! Updated some comments (Admin.php, ManageMembers.php, Subs-Admin.php)
+ ! Mark boards as read at unread action if there are not any unread topics (Recent.php) [Bug 3231]
 
  
 ================================================================================

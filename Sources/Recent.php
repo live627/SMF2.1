@@ -800,6 +800,10 @@ function UnreadTopics()
 
 		if ($num_topics == 0)
 		{
+			// Mark the boards as read if there are no unread topics!
+			require_once($sourcedir . '/Subs-Boards.php');
+			markBoardsRead(empty($boards) ? $board : $boards);
+
 			$context['topics'] = array();
 			if ($context['querystring_board_limits'] == ';start=%1$d')
 				$context['querystring_board_limits'] = '';
@@ -877,6 +881,14 @@ function UnreadTopics()
 
 		if ($num_topics == 0)
 		{
+			// Is this an all topics query?
+			if ($context['showing_all_topics'])
+			{
+				// Since there are no unread topics, mark the boards as read!
+				require_once($sourcedir . '/Subs-Boards.php');
+				markBoardsRead(empty($boards) ? $board : $boards);
+			}
+
 			$context['topics'] = array();
 			if ($context['querystring_board_limits'] == ';start=%d')
 				$context['querystring_board_limits'] = '';
