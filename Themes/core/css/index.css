@@ -2173,6 +2173,22 @@ ul.split_messages div.post
 	border-top: 1px solid #fff;
 }
 
+/* Styles for the report topic section.
+---------------------------------------------------- */
+
+#report_topic dl
+{
+	margin-bottom: 0;
+}
+#report_topic dl.settings dt
+{
+    width: 20%;
+}
+#report_topic dl.settings dd
+{
+    width: 79%;
+}
+
 /* Styles for the merge topic section.
 ---------------------------------------------------- */
 

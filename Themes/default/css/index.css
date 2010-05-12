@@ -2365,6 +2365,22 @@ dl.send_mail dd
 	width: 64%;
 }
 
+/* Styles for the report topic section.
+---------------------------------------------------- */
+
+#report_topic dl
+{
+	margin-bottom: 0;
+}
+#report_topic dl.settings dt
+{
+    width: 20%;
+}
+#report_topic dl.settings dd
+{
+    width: 79%;
+}
+
 /* Styles for the split topic section.
 ---------------------------------------------------- */
 

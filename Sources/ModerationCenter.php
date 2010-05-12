@@ -844,7 +844,7 @@ function ModReport()
 
 	// So what bad things do the reporters have to say about it?
 	$request = $smcFunc['db_query']('', '
-		SELECT lrc.id_comment, lrc.id_report, lrc.time_sent, lrc.comment,
+		SELECT SELECT lrc.id_comment, lrc.id_report, lrc.time_sent, lrc.comment, lrc.member_ip,
 			IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lrc.membername) AS reporter
 		FROM {db_prefix}log_reported_comments AS lrc
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lrc.id_member)
@@ -864,6 +864,7 @@ function ModReport()
 				'name' => empty($row['reporter']) ? $txt['guest'] : $row['reporter'],
 				'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['reporter'] . '</a>' : (empty($row['reporter']) ? $txt['guest'] : $row['reporter']),
 				'href' => $row['id_member'] ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+				'ip' => !empty($row['member_ip']) && allowedTo('moderate_forum') ? '<a href="' . $scripturl . '?action=trackip;searchip=' . $row['member_ip'] . '">' . $row['member_ip'] . '</a>' : '',
 			),
 		);
 	}
@@ -1008,7 +1009,6 @@ function ModReport()
 	loadTemplate('ModerationCenter');
 	$context['page_title'] = sprintf($txt['mc_viewmodreport'], $context['report']['subject'], $context['report']['author']['name']);
 	$context['sub_template'] = 'viewmodreport';
-
 }
 
 // Show a notice sent to a user.

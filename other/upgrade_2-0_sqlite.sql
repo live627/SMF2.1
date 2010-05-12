@@ -817,3 +817,32 @@ if (empty($modSettings['installed_new_smiley_sets_20']))
 }
 ---}
 ---#
+
+/******************************************************************************/
+--- Adding extra columns to reported post comments
+/******************************************************************************/
+
+---# Adding email address and member ip columns...
+---{
+$smcFunc['db_alter_table']('{db_prefix}log_reported_comments', array(
+	'add' => array(
+		'email_address' => array(
+			'name' => 'email_address',
+			'null' => false,
+			'default' => '',
+			'type' => 'varchar',
+			'size' => 255,
+			'auto' => false,
+		),
+		'member_ip' => array(
+			'name' => 'member_ip',
+			'null' => false,
+			'default' => '',
+			'type' => 'varchar',
+			'size' => 255,
+			'auto' => false,
+		),
+	)
+));
+---}
+---#

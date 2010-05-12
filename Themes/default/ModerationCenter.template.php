@@ -283,7 +283,7 @@ function template_reported_posts()
 		// Prepare the comments...
 		$comments = array();
 		foreach ($report['comments'] as $comment)
-			$comments[$comment['member']['id']] = '<a href="' . $comment['member']['href'] . '">' . $comment['member']['name'] . '</a>';
+			$comments[$comment['member']['id']] = $comment['member']['link'];
 
 		echo '
 					&#171; ', $txt['mc_reportedp_reported_by'], ': ', implode(', ', $comments), ' &#187;
@@ -316,7 +316,8 @@ function template_reported_posts()
 			</div>
 		</div>
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-	</form>';
+	</form>
+	<br class="clear" />';
 }
 
 // Show a list of all the unapproved posts
@@ -532,7 +533,7 @@ function template_viewmodreport()
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
-					<p class="smalltext">', sprintf($txt['mc_modreport_whoreported_data'], $comment['member']['link'], $comment['time']), '</p>
+					<p class="smalltext">', sprintf($txt['mc_modreport_whoreported_data'], $comment['member']['link'] . (empty($comment['member']['id']) && !empty($comment['member']['ip']) ? ' (' . $comment['member']['ip'] . ')' : ''), $comment['time']), '</p>
 					<p>', $comment['message'], '</p>
 				</div>
 				<span class="botslice"><span></span></span>

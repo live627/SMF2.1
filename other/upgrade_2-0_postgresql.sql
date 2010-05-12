@@ -1162,3 +1162,56 @@ CREATE OR REPLACE FUNCTION DATE_FORMAT (timestamp, text) RETURNS text AS
         REPLACE($2, ''%m'', to_char($1, ''MM'')),
     ''%d'', to_char($1, ''DD'')) AS result'
 LANGUAGE 'sql';
+
+/******************************************************************************/
+--- Adding extra columns to reported post comments
+/******************************************************************************/
+
+---# Adding email address and member ip columns...
+---{
+if ($smcFunc['db_server_info'] < 8.0)
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_reported_comments
+		ADD COLUMN email_address varchar(255)");
+
+	upgrade_query("
+		UPDATE {$db_prefix}log_reported_comments
+		SET email_address = ''");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_reported_comments
+		ALTER COLUMN email_address SET NOT NULL");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_reported_comments
+		ALTER COLUMN email_address SET default ''");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_reported_comments
+		ADD COLUMN member_ip varchar(255)");
+
+	upgrade_query("
+		UPDATE {$db_prefix}log_reported_comments
+		SET member_ip = ''");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_reported_comments
+		ALTER COLUMN member_ip SET NOT NULL");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_reported_comments
+		ALTER COLUMN member_ip SET default ''");
+}
+else
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_reported_comments
+		ADD COLUMN email_address varchar(255) NOT NULL default ''");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_reported_comments
+		ADD COLUMN member_ip varchar(255) NOT NULL default ''");
+}
+---}
+---#

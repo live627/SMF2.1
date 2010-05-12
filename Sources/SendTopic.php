@@ -298,7 +298,7 @@ function CustomEmail()
 // Report a post to the moderator... ask for a comment.
 function ReportToModerator()
 {
-	global $txt, $topic, $modSettings, $user_info, $context, $smcFunc;
+	global $txt, $topic, $sourcedir, $modSettings, $user_info, $context, $smcFunc;
 
 	$context['robot_no_index'] = true;
 
@@ -306,15 +306,15 @@ function ReportToModerator()
 	isAllowedTo('report_any');
 
 	// If they're posting, it should be processed by ReportToModerator2.
-	if (isset($_POST[$context['session_var']]) || isset($_POST['submit']))
+	if ((isset($_POST[$context['session_var']]) || isset($_POST['submit'])) && empty($context['post_errors']))
 		ReportToModerator2();
 
 	// We need a message ID to check!
-	if (empty($_GET['msg']) && empty($_GET['mid']))
+	if (empty($_REQUEST['msg']) && empty($_REQUEST['mid']))
 		fatal_lang_error('no_access', false);
 
 	// For compatibility, accept mid, but we should be using msg. (not the flavor kind!)
-	$_GET['msg'] = empty($_GET['msg']) ? (int) $_GET['mid'] : (int) $_GET['msg'];
+	$_REQUEST['msg'] = empty($_REQUEST['msg']) ? (int) $_REQUEST['mid'] : (int) $_REQUEST['msg'];
 
 	// Check the message's ID - don't want anyone reporting a post they can't even see!
 	$result = $smcFunc['db_query']('', '
@@ -326,21 +326,36 @@ function ReportToModerator()
 		LIMIT 1',
 		array(
 			'current_topic' => $topic,
-			'id_msg' => $_GET['msg'],
+			'id_msg' => $_REQUEST['msg'],
 		)
 	);
 	if ($smcFunc['db_num_rows']($result) == 0)
 		fatal_lang_error('no_board', false);
-	list ($_GET['msg'], $member, $starter) = $smcFunc['db_fetch_row']($result);
+	list ($_REQUEST['msg'], $member, $starter) = $smcFunc['db_fetch_row']($result);
 	$smcFunc['db_free_result']($result);
+
+	// Do we need to show the visual verification image?
+	$context['require_verification'] = $user_info['is_guest'] && !empty($modSettings['guests_report_require_captcha']);
+	if ($context['require_verification'])
+	{
+		require_once($sourcedir . '/Subs-Editor.php');
+		$verificationOptions = array(
+			'id' => 'report',
+		);
+		$context['require_verification'] = create_control_verification($verificationOptions);
+		$context['visual_verification_id'] = $verificationOptions['id'];
+	}
 
 	// Show the inputs for the comment, etc.
 	loadLanguage('Post');
 	loadTemplate('SendTopic');
 
+	$context['comment_body'] = !isset($_POST['comment']) ? '' : trim($_POST['comment']);
+	$context['email_address'] = !isset($_POST['email']) ? '' : trim($_POST['email']);
+
 	// This is here so that the user could, in theory, be redirected back to the topic.
 	$context['start'] = $_REQUEST['start'];
-	$context['message_id'] = $_GET['msg'];
+	$context['message_id'] = $_REQUEST['msg'];
 
 	$context['page_title'] = $txt['report_to_mod'];
 	$context['sub_template'] = 'report';
@@ -351,14 +366,63 @@ function ReportToModerator2()
 {
 	global $txt, $scripturl, $topic, $board, $user_info, $modSettings, $sourcedir, $language, $context, $smcFunc;
 
-	// Check their session... don't want them redirected here without their knowledge.
-	checkSession();
+ 	// You must have the proper permissions!
+ 	isAllowedTo('report_any');
+ 
+	// Make sure they aren't spamming.
 	spamProtection('reporttm');
 
-	// You must have the proper permissions!
-	isAllowedTo('report_any');
+ 	require_once($sourcedir . '/Subs-Post.php');
+ 
+	// No errors, yet.
+	$post_errors = array();
 
-	require_once($sourcedir . '/Subs-Post.php');
+	// Check their session.
+	if (checkSession('post', '', false) != '')
+		$post_errors[] = 'session_timeout';
+
+	// Make sure we have a comment and it's clean.
+	if (!isset($_POST['comment']) || $smcFunc['htmltrim']($_POST['comment']) === '')
+		$post_errors[] = 'no_comment';
+	$poster_comment = strtr($smcFunc['htmlspecialchars']($_POST['comment']), array("\r" => '', "\n" => '', "\t" => ''));
+
+	// Guests need to provide their address!
+	if ($user_info['is_guest'])
+	{
+		$_POST['email'] = !isset($_POST['email']) ? '' : trim($_POST['email']);
+		if ($_POST['email'] === '')
+			$post_errors[] = 'no_email';
+		elseif (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $_POST['email']) == 0)
+			$post_errors[] = 'bad_email';
+
+		isBannedEmail($_POST['email'], 'cannot_post', sprintf($txt['you_are_post_banned'], $txt['guest_title']));
+
+		$user_info['email'] = htmlspecialchars($_POST['email']);
+	}
+
+	// Could they get the right verification code?
+	if ($user_info['is_guest'] && !empty($modSettings['guests_report_require_captcha']))
+	{
+		require_once($sourcedir . '/Subs-Editor.php');
+		$verificationOptions = array(
+			'id' => 'report',
+		);
+		$context['require_verification'] = create_control_verification($verificationOptions, true);
+		if (is_array($context['require_verification']))
+			$post_errors = array_merge($post_errors, $context['require_verification']);
+	}
+
+	// Any errors?
+	if (!empty($post_errors))
+	{
+		loadLanguage('Errors');
+
+		$context['post_errors'] = array();
+		foreach ($post_errors as $post_error)
+			$context['post_errors'][] = $txt['error_' . $post_error];
+
+		return ReportToModerator();
+	}
 
 	// Get the basic topic information, and make sure they can see it.
 	$_POST['msg'] = (int) $_POST['msg'];
@@ -463,15 +527,15 @@ function ReportToModerator2()
 		// Now just add our report...
 		if ($id_report)
 		{
-			$posterComment = strtr($smcFunc['htmlspecialchars']($_POST['comment']), array("\r" => '', "\n" => '', "\t" => ''));
-
 			$smcFunc['db_insert']('',
 				'{db_prefix}log_reported_comments',
 				array(
-					'id_report' => 'int', 'id_member' => 'int', 'membername' => 'string', 'comment' => 'string', 'time_sent' => 'int',
+					'id_report' => 'int', 'id_member' => 'int', 'membername' => 'string', 'email_address' => 'string',
+					'member_ip' => 'string', 'comment' => 'string', 'time_sent' => 'int',
 				),
 				array(
-					$id_report, $user_info['id'], $user_info['name'], $posterComment, time(),
+					$id_report, $user_info['id'], $user_info['name'], $user_info['email'],
+					$user_info['ip'], $poster_comment, time(),
 				),
 				array('id_comment')
 			);

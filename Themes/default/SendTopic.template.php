@@ -202,10 +202,60 @@ function template_report()
 				</div>
 				<div class="windowbg">
 					<span class="topslice"><span></span></span>
-					<div class="content">
+					<div class="content">';
+
+	if (!empty($context['post_errors']))
+	{
+		echo '
+				<div class="errorbox">
+					<ul>';
+
+		foreach ($context['post_errors'] as $error)
+			echo '
+						<li class="error">', $error, '</li>';
+
+		echo '
+					</ul>
+				</div>';
+	}
+
+	echo '
 						<p>', $txt['report_to_mod_func'], '</p>
 						<br />
-						<label for="report_comment">', $txt['enter_comment'], '</label>: <input type="text" id="report_comment" name="comment" size="50" maxlength="255" />
+						<dl class="settings" id="report_post">';
+
+	if ($context['user']['is_guest'])
+	{
+		echo '
+							<dt>
+								<label for="email_address">', $txt['email'], '</label>:
+							</dt>
+							<dd>
+								<input type="text" id="email_address" name="email" value="', $context['email_address'], '" size="25" maxlength="255" />
+							</dd>';
+	}
+
+	echo '
+							<dt>
+								<label for="report_comment">', $txt['enter_comment'], '</label>:
+							</dt>
+							<dd>
+								<input type="text" id="report_comment" name="comment" size="50" value="', $context['comment_body'], '" maxlength="255" />
+							</dd>';
+
+	if ($context['require_verification'])
+	{
+		echo '
+							<dt>
+								', $txt['verification'], ':
+							</dt>
+							<dd>
+								', template_control_verification($context['visual_verification_id'], 'all'), '
+							</dd>';
+	}
+
+	echo '
+						</dl>
 						<div class="righttext">
 							<input type="submit" name="submit" value="', $txt['rtm10'], '" style="margin-left: 1ex;" class="button_submit" />
 						</div>

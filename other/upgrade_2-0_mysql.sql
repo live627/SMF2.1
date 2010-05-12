@@ -2991,6 +2991,16 @@ DROP INDEX hits;
 ---#
 
 /******************************************************************************/
+--- Adding extra columns to reported post comments
+/******************************************************************************/
+
+---# Adding email address and member ip columns...
+ALTER TABLE {$db_prefix}log_reported_comments
+ADD COLUMN member_ip varchar(255) NOT NULL default '' AFTER membername,
+ADD COLUMN email_address varchar(255) NOT NULL default '' AFTER membername;
+---#
+
+/******************************************************************************/
 --- Final clean up...
 /******************************************************************************/
 
