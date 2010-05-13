@@ -37,6 +37,7 @@ May 2010
  ! When user does not have a valid id for validatePasswordFlood() try a redirect first (LogInOut.php) [Bug 2760]
  ! addMembersToGroup() 'auto' type assigned membergroup as both primary and additional group when primary group was available (Subs-Membergroups.php) [Bug 4274]
  ! Redirection boards were listed in list of boards for search (Search.php) [Bug 4301]
+ ! When a member edited their own post, the post was not marked as read for them (Subs-Post.php) [Bug 4262]
 
 
 ================================================================================

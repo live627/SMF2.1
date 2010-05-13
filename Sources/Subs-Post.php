@@ -2459,7 +2459,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		);
 	}
 
-	// Mark inserted topic as read.
+	// Mark the edited post as read.
 	if (!empty($topicOptions['mark_as_read']) && !$user_info['is_guest'])
 	{
 		// Since it's likely they *read* it before editing, let's try an UPDATE first.
@@ -2470,7 +2470,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 				AND id_topic = {int:id_topic}',
 			array(
 				'current_member' => $user_info['id'],
-				'id_msg' => $msgOptions['id'],
+				'id_msg' => $modSettings['maxMsgID'],
 				'id_topic' => $topicOptions['id'],
 			)
 		);
@@ -2482,7 +2482,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			$smcFunc['db_insert']('ignore',
 				'{db_prefix}log_topics',
 				array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
-				array($topicOptions['id'], $user_info['id'], $msgOptions['id']),
+				array($topicOptions['id'], $user_info['id'], $modSettings['maxMsgID']),
 				array('id_topic', 'id_member')
 			);
 		}
