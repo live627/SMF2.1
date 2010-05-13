@@ -509,10 +509,10 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}members
 			SET
+				id_group = CASE WHEN id_group = {int:regular_group} THEN {int:id_group} ELSE id_group END,
 				additional_groups = CASE WHEN id_group = {int:id_group} THEN additional_groups
 					WHEN additional_groups = {string:blank_string} THEN {string:id_group_string}
-					ELSE CONCAT(additional_groups, {string:id_group_string_extend}) END,
-				id_group = CASE WHEN id_group = {int:regular_group} THEN {int:id_group} ELSE id_group END
+					ELSE CONCAT(additional_groups, {string:id_group_string_extend}) END
 			WHERE id_member IN ({array_int:member_list})
 				AND id_group != {int:id_group}
 				AND FIND_IN_SET({int:id_group}, additional_groups) = 0',
