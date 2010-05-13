@@ -154,8 +154,10 @@ function PlushSearch1()
 		SELECT b.id_cat, c.name AS cat_name, b.id_board, b.name, b.child_level
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		WHERE {query_see_board}',
+		WHERE {query_see_board}
+			AND redirect = {string:empty_string}',
 		array(
+			'empty_string' => '',
 		)
 	);
 	$context['num_boards'] = $smcFunc['db_num_rows']($request);
@@ -529,11 +531,13 @@ function PlushSearch2()
 		$request = $smcFunc['db_query']('', '
 			SELECT b.id_board
 			FROM {db_prefix}boards AS b
-			WHERE {raw:boards_allowed_to_see}' . (empty($_REQUEST['brd']) ? (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+			WHERE {raw:boards_allowed_to_see}
+				AND redirect = {string:empty_string}' . (empty($_REQUEST['brd']) ? (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
 				AND b.id_board != {int:recycle_board_id}' : '') : '
 				AND b.id_board IN ({array_int:selected_search_boards})'),
 			array(
 				'boards_allowed_to_see' => $user_info[$see_board],
+				'empty_string' => '',
 				'selected_search_boards' => empty($_REQUEST['brd']) ? array() : $_REQUEST['brd'],
 				'recycle_board_id' => $modSettings['recycle_board'],
 			)
@@ -556,8 +560,10 @@ function PlushSearch2()
 		// If we've selected all boards, this parameter can be left empty.
 		$request = $smcFunc['db_query']('', '
 			SELECT COUNT(*)
-			FROM {db_prefix}boards',
+			FROM {db_prefix}boards
+			WHERE redirect = {string:empty_string}',
 			array(
+				'empty_string' => '',
 			)
 		);
 		list ($num_boards) = $smcFunc['db_fetch_row']($request);
