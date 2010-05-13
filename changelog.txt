@@ -33,7 +33,7 @@ May 2010
  ! Updated some comments (Admin.php, ManageMembers.php, Subs-Admin.php)
  ! Mark boards as read at unread action if there are not any unread topics (Recent.php) [Bug 3231]
  * Custom profile fields broke the profile layout if displayed "with icons" and if drop downs were enabled. (Profile.template.php, index.css) [Bug 4299]
-
+ ! Fixed extra Select query typo (ModerationCenter.php) [Bug 4300]
  
 ================================================================================
 April 2010

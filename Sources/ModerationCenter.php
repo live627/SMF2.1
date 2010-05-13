@@ -844,7 +844,7 @@ function ModReport()
 
 	// So what bad things do the reporters have to say about it?
 	$request = $smcFunc['db_query']('', '
-		SELECT SELECT lrc.id_comment, lrc.id_report, lrc.time_sent, lrc.comment, lrc.member_ip,
+		SELECT lrc.id_comment, lrc.id_report, lrc.time_sent, lrc.comment, lrc.member_ip,
 			IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lrc.membername) AS reporter
 		FROM {db_prefix}log_reported_comments AS lrc
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lrc.id_member)
