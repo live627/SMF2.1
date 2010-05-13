@@ -687,13 +687,6 @@ function moveTopics($topics, $toBoard)
 		);
 	}
 
-	// Update 'em pesky stats.
-	updateStats('topic');
-	updateStats('message');
-	updateSettings(array(
-		'calendar_updated' => time(),
-	));
-
 	// Update the cache?
 	if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 3)
 		foreach ($topics as $topic_id)
@@ -705,6 +698,13 @@ function moveTopics($topics, $toBoard)
 	$updates[] = $toBoard;
 
 	updateLastMessages(array_unique($updates));
+
+	// Update 'em pesky stats.
+	updateStats('topic');
+	updateStats('message');
+	updateSettings(array(
+		'calendar_updated' => time(),
+	));
 }
 
 ?>
