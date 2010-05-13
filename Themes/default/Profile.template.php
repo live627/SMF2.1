@@ -71,7 +71,7 @@ function template_summary()
 		foreach ($context['custom_fields'] as $field)
 			if ($field['placement'] == 1 || empty($field['output_html']))
 				echo '
-				<li>', $field['output_html'], '</li>';
+				<li class="custom_field">', $field['output_html'], '</li>';
 	}
 
 	echo '
