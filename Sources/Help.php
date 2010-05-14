@@ -252,12 +252,12 @@ function ShowHelp()
 	);
 	if (isset($manual_area_data['current_area']) && $manual_area_data['current_area'] != 'index')
 		$context['linktree'][] = array(
-			'url' => $scripturl . '?action=admin;area=' . $manual_area_data['current_area'],
+			'url' => $scripturl . '?action=help;area=' . $manual_area_data['current_area'],
 			'name' => $manual_area_data['label'],
 		);
 	if (!empty($manual_area_data['current_subsection']) && $manual_area_data['subsections'][$manual_area_data['current_subsection']][0] != $manual_area_data['label'])
 		$context['linktree'][] = array(
-			'url' => $scripturl . '?action=admin;area=' . $manual_area_data['current_area'] . ';sa=' . $manual_area_data['current_subsection'],
+			'url' => $scripturl . '?action=help;area=' . $manual_area_data['current_area'] . ';sa=' . $manual_area_data['current_subsection'],
 			'name' => $manual_area_data['subsections'][$manual_area_data['current_subsection']][0],
 		);
 
