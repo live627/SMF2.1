@@ -148,15 +148,16 @@ $context['linktree'] = array();
 
 // Load the user and their cookie, as well as their settings.
 loadUserSettings();
+
+// Load the current user's permissions....
+loadPermissions();
+
 // Load the current or SSI theme. (just use $ssi_theme = id_theme;)
 loadTheme(isset($ssi_theme) ? (int) $ssi_theme : 0);
 
 // Take care of any banning that needs to be done.
 if (isset($_REQUEST['ssi_ban']) || (isset($ssi_ban) && $ssi_ban === true))
 	is_not_banned();
-
-// Load the current user's permissions....
-loadPermissions();
 
 // Load the stuff like the menu bar, etc.
 if (isset($ssi_layers))
