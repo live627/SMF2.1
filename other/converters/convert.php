@@ -2662,11 +2662,13 @@ function convert_insert($table, $columns, $block, $type = 'insert', $no_prefix =
 }
 
 // Provide a easy way to give our converters an insert id.
-function convert_insert_id($result)
+function convert_insert_id($table, $no_prefix = false)
 {
-	global $smcFunc;
-
-	return $smcFunc['db_insert_id']($result);
+	global $smcFunc, $db_prefix;
+	
+	if (empty($no_prefix))
+		$table = $db_prefix . $table;
+	return $smcFunc['db_insert_id']($table);
 }
 
 // Provide a way to find the affected rows.
