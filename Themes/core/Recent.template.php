@@ -250,7 +250,6 @@ function template_unread()
 			</ul>
 			</div>
 			</div>
-		</div>
 	</div>';
 }
 
@@ -409,7 +408,6 @@ function template_replies()
 			</ul>
 			</div>
 			</div>
-		</div>
 	</div>';
 }
 

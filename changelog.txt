@@ -41,6 +41,7 @@ May 2010
  ! Restoring a recycled topic with new replies did not update board last message id properly (MoveTopic.php) [Bug 3742]
  ! Theme was loaded before user permissions were loaded in SSI.php (SSI.php) [Bug 4302]
  ! Linktree items in the help section pointed to the admin areas (Help.php)
+ * Core's Recent template had an extra div in two places, causing xHTML errors. (core/Recent.template.php)
 
 
 ================================================================================
