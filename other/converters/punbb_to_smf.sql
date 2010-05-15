@@ -241,7 +241,7 @@ while (true)
 			array("migrated_ban_" . $row['id'], $ban_time, $row['expire'], '', $row['message'], 1)
 		);
 
-		$id_ban_group = convert_insert_id();
+		$id_ban_group = convert_insert_id('ban_groups');
 
 		if (empty($id_ban_group))
 			continue;
