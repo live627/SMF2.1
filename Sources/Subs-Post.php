@@ -2295,21 +2295,51 @@ function createAttachment(&$attachmentOptions)
 			);
 	}
 
-	// Reencode it if it smells bad.
-	if (isset($validImageTypes[$size[2]]) && !checkImageContents($attachmentOptions['destination']))
+	// Security checks for images
+	// Do we have an image? If yes, we need to check it out!
+	if (isset($validImageTypes[$size[2]]))
 	{
-		if (!reencodeImage($attachmentOptions['destination']))
+		if (!checkImageContents($attachmentOptions['destination'], !empty($modSettings['attachment_image_paranoid'])))
 		{
-			require_once($sourcedir . '/ManageAttachments.php');
-			removeAttachments(array(
-				'id_attach' => $attachmentOptions['id'] 
-			));
-			$attachmentOptions['id'] = null;
-			$attachmentOptions['errors'][] = 'could_not_upload';
+			// It's bad. Last chance, maybe we can re-encode it?
+			if (empty($modSettings['attachment_image_reencode']) || (!reencodeImage($attachmentOptions['destination'], $size[2])))
+			{
+				// Nothing to do: not allowed or not successful re-encoding it.
+				require_once($sourcedir . '/ManageAttachments.php');
+				removeAttachments(array(
+					'id_attach' => $attachmentOptions['id']
+				));
+				$attachmentOptions['id'] = null;
+				$attachmentOptions['errors'][] = 'bad_attachment';
 
-			return false;
+				return false;
+			}
+			// Success! However, successes usually come for a price:
+			// we might get a new format for our image...
+			$old_format = $size[2];
+			$size = @getimagesize($attachmentOptions['destination']);
+			if (!(empty($size)) && ($size[2] != $old_format))
+			{
+				// Let's update the image information
+				// !!! This is becoming a mess: we keep coming back and update the database,
+				//  instead of getting it right the first time.
+				if (isset($validImageTypes[$size[2]]))
+				{
+					$attachmentOptions['mime_type'] = 'image/' . $validImageTypes[$size[2]];
+					$smcFunc['db_query']('', '
+						UPDATE {db_prefix}attachments
+						SET
+							mime_type = {string:mime_type}
+						WHERE id_attach = {int:id_attach}',
+						array(
+							'id_attach' => $attachmentOptions['id'],
+							'mime_type' => $attachmentOptions['mime_type'],
+						)
+					);
+				}
+			}
 		}
-	}	
+	}
 
 	if (!empty($attachmentOptions['skip_thumbnail']) || (empty($attachmentOptions['width']) && empty($attachmentOptions['height'])))
 		return true;

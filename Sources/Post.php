@@ -1797,6 +1797,11 @@ function Post2()
 					checkSubmitOnce('free');
 					fatal_lang_error('filename_exists');
 				}
+				if (in_array('bad_attachment', $attachmentOptions['errors']))
+				{
+					checkSubmitOnce('free');
+					fatal_lang_error('bad_attachment');
+				}
 			}
 		}
 	}

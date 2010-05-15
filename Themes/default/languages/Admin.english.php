@@ -355,7 +355,13 @@ $txt['attachmentDirSizeLimit'] = 'Max attachment folder space<div class="smallte
 $txt['attachmentPostLimit'] = 'Max attachment size per post<div class="smalltext">(0 for no limit)</div>';
 $txt['attachmentSizeLimit'] = 'Max size per attachment<div class="smalltext">(0 for no limit)</div>';
 $txt['attachmentNumPerPostLimit'] = 'Max number of attachments per post<div class="smalltext">(0 for no limit)</div>';
+$txt['attachment_gd_warning'] = 'The GD module is currently not installed. Image re-encoding is not possible.';
+$txt['attachment_image_reencode'] = 'Re-encode potentially dangerous image attachments and avatars';
+$txt['attachment_image_reencode_note'] = '(requires GD module)';
+$txt['attachment_image_paranoid_warning'] = 'The extensive security checks can result in a large number of rejected attachments.';
+$txt['attachment_image_paranoid'] = 'Perform extensive security checks on uploaded image attachments and avatars';
 $txt['attachmentThumbnails'] = 'Resize images when showing under posts';
+$txt['attachment_thumb_png'] = 'Save thumbnails as PNG';
 $txt['attachmentThumbWidth'] = 'Maximum width of thumbnails';
 $txt['attachmentThumbHeight'] = 'Maximum height of thumbnails';
 
@@ -407,6 +413,10 @@ $txt['custom_avatar_dir'] = 'Upload directory';
 $txt['custom_avatar_dir_desc'] = 'This should not be the same as the server-stored directory.';
 $txt['custom_avatar_url'] = 'Upload URL';
 $txt['custom_avatar_check_empty'] = 'The custom avatar directory you have specified may be empty or invalid. Please ensure these settings are correct.';
+$txt['avatar_reencode'] = 'Re-encode potentially dangerous avatars';
+$txt['avatar_reencode_note'] = '(requires GD module)';
+$txt['avatar_paranoid_warning'] = 'The extensive security checks can result in a large number of rejected avatars.';
+$txt['avatar_paranoid'] = 'Perform extensive security checks on uploaded avatars';
 
 $txt['repair_attachments'] = 'Maintain Attachments';
 $txt['repair_attachments_complete'] = 'Maintenance Complete';

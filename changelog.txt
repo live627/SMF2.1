@@ -42,6 +42,11 @@ May 2010
  ! Theme was loaded before user permissions were loaded in SSI.php (SSI.php) [Bug 4302]
  ! Linktree items in the help section pointed to the admin areas (Help.php)
  * Core's Recent template had an extra div in two places, causing xHTML errors. (core/Recent.template.php)
+ & Added a better error message for attachments failing security checks (Errors.english.php, Subs-Post.php, Post.php)
+ + Added configurable extensive security checks for attachments and avatars: default disabled (ManageAttachments.php, Subs-Post.php, Profile-Modify.php, language and help files)
+ + Added configurable image re-encoding for attachments and avatars, for security (ManageAttachments.php, Subs-Post.php, Profile-Modify.php, language and help files)
+ + Added option to create image attachments thumbnails as PNG (ManageAttachments.php, Subs-Post.php, language files)
+ ! A number of fixes of attachments and avatars re-encoding and re-sizing (multiple files: Subs-Graphics.php, Subs-Post.php, and others)
 
 
 ================================================================================

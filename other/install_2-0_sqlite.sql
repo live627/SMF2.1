@@ -1912,6 +1912,11 @@ INSERT INTO {$db_prefix}settings (variable, value) VALUES ('enable_buddylist', '
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('birthday_email', 'happy_birthday');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('dont_repeat_theme_core', '1');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('dont_repeat_smileys_20', '1');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('attachment_image_reencode', '1');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('attachment_image_paranoid', '0');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('attachment_thumb_png', '1');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('avatar_reencode', '1');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('avatar_paranoid', '0');
 COMMIT;
 
 # --------------------------------------------------------

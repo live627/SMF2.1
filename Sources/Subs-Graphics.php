@@ -41,7 +41,7 @@ if (!defined('SMF'))
 		- detects if GD2 is available.
 		- if GIF support isn't present in GD, handles GIFs with gif_loadFile()
 		  and gif_outputAsPng().
-		- uses resizeImage() to resize to max_width by max_height, if needed,
+		- uses resizeImageFile() to resize to max_width by max_height,
 		  and saves the result to a file.
 		- updates the database info for the member's avatar.
 		- returns whether the download and resize was successful.
@@ -51,13 +51,16 @@ if (!defined('SMF'))
 		- uses the resizeImageFile function to achieve the resize.
 		- returns whether the thumbnail creation was successful.
 
-	bool reencodeImage(string fileName)
+	bool reencodeImage(string fileName, int preferred_format = 0)
 		- creates a copy of the file at the same location as fileName.
+		- the file would have the format preferred_format if possible,
+		  otherwise the default format is jpeg.
 		- makes sure that all non-essential image contents are disposed.
 		- returns true on success, false on failure.
 
-	bool checkImageContents(string fileName)
+	bool checkImageContents(string fileName, bool extensiveCheck = false)
 		- searches through the file to see if there's non-binary content.
+		- if extensiveCheck is true, searches for asp/php short tags as well.
 		- returns true on success, false on failure.
 
 	bool checkGD()
@@ -66,19 +69,21 @@ if (!defined('SMF'))
 		- returns whether or not GD1 is available.
 
 	void resizeImageFile(string source, string destination,
-			int max_width, int max_height)
+			int max_width, int max_height, int preferred_format = 0)
 		- resizes an image from a remote location or a local file.
 		- puts the resized image at the destination location.
+		- the file would have the format preferred_format if possible,
+		  otherwise the default format is jpeg.
 		- returns whether it succeeded.
 
 	void resizeImage(resource src_img, string destination_filename,
-			int src_width, int src_height, int max_width, int max_height)
+			int src_width, int src_height, int max_width, int max_height,
+			int preferred_format)
 		- resizes src_img proportionally to fit within max_width and
 		  max_height limits if it is too large.
-		- if GD2 is present as detected in downloadAvatar(), it'll use it to
-		  achieve better quality.
+		- if GD2 is present, it'll use it to achieve better quality.
 		- saves the new image to destination_filename.
-		- saves as a PNG or JPEG depending on the avatar_download_png setting.
+		- saves as preferred_format if possible, default is jpeg.
 
 	void imagecopyresamplebicubic(resource dest_img, resource src_img,
 			int dest_x, int dest_y, int src_x, int src_y, int dest_w,
@@ -152,7 +157,11 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 
 	$destName = (empty($modSettings['custom_avatar_enabled']) ? (is_array($modSettings['attachmentUploadDir']) ? $modSettings['attachmentUploadDir'][$modSettings['currentAttachmentUploadDir']] : $modSettings['attachmentUploadDir']) : $modSettings['custom_avatar_dir']) . '/' . $destName . '.tmp';
 
-	$success = resizeImageFile($url, $destName, $max_width, $max_height);
+	// Resize it.
+	if (!empty($modSettings['avatar_download_png']))
+		$success = resizeImageFile($url, $destName, $max_width, $max_height, 3);
+	else
+		$success = resizeImageFile($url, $destName, $max_width, $max_height);
 
 	// Remove the .tmp extension.
 	$destName = substr($destName, 0, -4);
@@ -216,11 +225,11 @@ function createThumbnail($source, $max_width, $max_height)
 
 	$destName = $source . '_thumb.tmp';
 
-	// Ask for more memory: we need it for this, and it'll only happen once!
-	@ini_set('memory_limit', '90M');
-
 	// Do the actual resize.
-	$success = resizeImageFile($source, $destName, $max_width, $max_height);
+	if (!empty($modSettings['attachment_thumb_png']))
+		$success = resizeImageFile($source, $destName, $max_width, $max_height, 3);
+	else
+		$success = resizeImageFile($source, $destName, $max_width, $max_height);
 
 	// Okay, we're done with the temporary stuff.
 	$destName = substr($destName, 0, -4);
@@ -235,9 +244,13 @@ function createThumbnail($source, $max_width, $max_height)
 	}
 }
 
-function reencodeImage($fileName)
+function reencodeImage($fileName, $preferred_format = 0)
 {
-	if (!resizeImageFile($fileName, $fileName . '.tmp', null, null))
+	// There is nothing we can do without GD, sorry!
+	if (!checkGD())
+		return false;
+
+	if (!resizeImageFile($fileName, $fileName . '.tmp', null, null, $preferred_format))
 	{
 		if (file_exists($fileName . '.tmp'))
 			unlink($fileName . '.tmp');
@@ -251,10 +264,10 @@ function reencodeImage($fileName)
 	if (!rename($fileName . '.tmp', $fileName))
 		return false;
 
-	return true;		
+	return true;
 }
 
-function checkImageContents($fileName)
+function checkImageContents($fileName, $extensiveCheck = false)
 {
 	$fp = fopen($fileName, 'rb');
 	if (!$fp)
@@ -265,11 +278,24 @@ function checkImageContents($fileName)
 	{
 		$cur_chunk = fread($fp, 8192);
 
-		// Though not an exhaustive list, better safe than sorry.
-		if (preg_match('~(iframe|\\<\\?|\\<%|html|eval|body|script\W|[CF]WS[\x01-\x0C])~i', $prev_chunk . $cur_chunk) === 1)
+		// Though not exhaustive lists, better safe than sorry.
+		if (!empty($extensiveCheck))
 		{
-			fclose($fp);
-			return false;
+			// Paranoid check. Some like it that way.
+			if (preg_match('~(iframe|\\<\\?|\\<%|html|eval|body|script\W|[CF]WS[\x01-\x0C])~i', $prev_chunk . $cur_chunk) === 1)
+			{
+				fclose($fp);
+				return false;
+			}
+		}
+		else
+		{
+			// Check for potential infection
+			if (preg_match('~(iframe|html|eval|body|script\W|[CF]WS[\x01-\x0C])~i', $prev_chunk . $cur_chunk) === 1)
+			{
+				fclose($fp);
+				return false;
+			}
 		}
 		$prev_chunk = $cur_chunk;
 	}
@@ -292,9 +318,13 @@ function checkGD()
 	return true;
 }
 
-function resizeImageFile($source, $destination, $max_width, $max_height)
+function resizeImageFile($source, $destination, $max_width, $max_height, $preferred_format = 0)
 {
 	global $sourcedir;
+
+	// Nothing to do without GD
+	if (!checkGD())
+		return false;
 
 	static $default_formats = array(
 		'1' => 'gif',
@@ -309,6 +339,7 @@ function resizeImageFile($source, $destination, $max_width, $max_height)
 
 	$success = false;
 
+	// Get the image file, we have to work with something after all
 	$fp_destination = fopen($destination, 'wb');
 	if ($fp_destination && substr($source, 0, 7) == 'http://')
 	{
@@ -352,7 +383,7 @@ function resizeImageFile($source, $destination, $max_width, $max_height)
 		$imagecreatefrom = 'imagecreatefrom' . $default_formats[$sizes[2]];
 		if ($src_img = @$imagecreatefrom($destination))
 		{
-			resizeImage($src_img, $destination, imagesx($src_img), imagesy($src_img), $max_width === null ? imagesx($src_img) : $max_width, $max_height === null ? imagesy($src_img) : $max_height, true);
+			resizeImage($src_img, $destination, imagesx($src_img), imagesy($src_img), $max_width === null ? imagesx($src_img) : $max_width, $max_height === null ? imagesy($src_img) : $max_height, true, $preferred_format);
 			$success = true;
 		}
 	}
@@ -360,13 +391,15 @@ function resizeImageFile($source, $destination, $max_width, $max_height)
 	return $success;
 }
 
-function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $max_height, $force_resize = false)
+function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $max_height, $force_resize = false, $preferred_format = 0)
 {
 	global $gd2, $modSettings;
 
 	// Without GD, no image resizing at all.
 	if (!checkGD())
 		return false;
+
+	$success = false;
 
 	// Determine whether to resize to max width or to max height (depending on the limits.)
 	if (!empty($max_width) || !empty($max_height))
@@ -390,7 +423,8 @@ function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $
 			{
 				$dst_img = imagecreatetruecolor($dst_width, $dst_height);
 
-				if (!empty($modSettings['avatar_download_png']))
+				// Deal nicely with a PNG - because we can.
+				if ((!empty($preferred_format)) && ($preferred_format == 3))
 				{
 					imagealphablending($dst_img, false);
 					if (function_exists('imagesavealpha'))
@@ -412,16 +446,20 @@ function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $
 	else
 		$dst_img = $src_img;
 
-	// Save it!
-	if (!empty($modSettings['avatar_download_png']))
-		imagepng($dst_img, $destName);
-	else
-		imagejpeg($dst_img, $destName, 65);
+	// Save the image as ...
+	if ((!empty($preferred_format)) && ($preferred_format == 3) && (function_exists('imagepng')))
+		$success = imagepng($dst_img, $destName);
+	elseif ((!empty($preferred_format)) && ($preferred_format == 1) && (function_exists('imagegif')))
+		$success = imagegif($dst_img, $destName);
+	elseif (function_exists('imagejpeg'))
+		$success = imagejpeg($dst_img, $destName);
 
 	// Free the memory.
 	imagedestroy($src_img);
 	if ($dst_img != $src_img)
 		imagedestroy($dst_img);
+
+	return $success;
 }
 
 function imagecopyresamplebicubic($dst_img, $src_img, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h)

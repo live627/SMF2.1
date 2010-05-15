@@ -2665,10 +2665,15 @@ function profileSaveAvatarData(&$value)
 			{
 				// Now try to find an infection.
 				require_once($sourcedir . '/Subs-Graphics.php');
-				if (!checkImageContents($_FILES['attachment']['tmp_name']))
+				if (!checkImageContents($_FILES['attachment']['tmp_name'], $modSettings['avatar_paranoid']))
 				{
-					// If the contents are suspisious, reencode them, just to be sure.
-					if (!reencodeImage($uploadDir . '/avatar_tmp_' . $memID))
+					// It's bad. Try to re-encode the contents?
+					if (empty($modSettings['avatar_reencode']) || (!reencodeImage($_FILES['attachment']['tmp_name'], $sizes[2])))
+						return 'bad_avatar';
+					// We were successful. However, at what price?
+					$sizes = @getimagesize($_FILES['attachment']['tmp_name']);
+					// Hard to believe this would happen, but can you bet?
+					if ($sizes === false)
 						return 'bad_avatar';
 				}
 

@@ -809,6 +809,69 @@ if (empty($modSettings['dont_repeat_buddylists']))
 ---#
 
 /******************************************************************************/
+--- Adding settings for attachments and avatars.
+/******************************************************************************/
+
+---# Add new security settings for attachments and avatars...
+---{
+
+// Don't do this if we've done this already.
+if (!isset($modSettings['attachment_image_reencode']))
+{
+	// Enable image re-encoding by default.
+	upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('attachment_image_reencode', '1')");
+}
+if (!isset($modSettings['attachment_image_paranoid']))
+{
+	// Disable draconic checks by default.
+	upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('attachment_image_paranoid', '0')");
+}
+if (!isset($modSettings['avatar_reencode']))
+{
+	// Enable image re-encoding by default.
+	upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('avatar_reencode', '1')");
+}
+if (!isset($modSettings['avatar_paranoid']))
+{
+	// Disable draconic checks by default.
+	upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('avatar_paranoid', '0')");
+}
+
+---}
+---#
+
+---# Add other attachment settings...
+---{
+if (!isset($modSettings['attachment_thumb_png']))
+{
+	// Make image attachment thumbnail as PNG by default.
+	upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('attachment_thumb_png', '1')");
+}
+
+---}
+---#
+
+/******************************************************************************/
 --- Installing new default theme...
 /******************************************************************************/
 

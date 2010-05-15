@@ -165,6 +165,9 @@ function ManageAttachmentSettings($return_config = false)
 
 	$context['valid_upload_dir'] = is_dir($modSettings['attachmentUploadDir']) && is_writable($modSettings['attachmentUploadDir']);
 
+	// Perform a test to see if the GD module is installed.
+	$testGD = get_extension_funcs('gd');
+
 	$config_vars = array(
 		array('title', 'attachment_manager_settings'),
 			// Are attachments enabled?
@@ -182,9 +185,17 @@ function ManageAttachmentSettings($return_config = false)
 			array('text', 'attachmentSizeLimit', 6, 'postinput' => $txt['kilobyte']),
 			array('text', 'attachmentNumPerPostLimit', 6),
 		'',
+			// Image settings.
+			array('warning', empty($testGD) ? 'attachment_gd_warning' : ''),
+			array('check', 'attachment_image_reencode'),
+		'',
+			array('warning', 'attachment_image_paranoid_warning'),
+			array('check', 'attachment_image_paranoid'),
+		'',
 			// Thumbnail settings.
 			array('check', 'attachmentShowImages'),
 			array('check', 'attachmentThumbnails'),
+			array('check', 'attachment_thumb_png'),
 			array('text', 'attachmentThumbWidth', 6),
 			array('text', 'attachmentThumbHeight', 6),
 	);
@@ -248,6 +259,11 @@ function ManageAvatarSettings($return_config = false)
 			array('text', 'avatar_max_width_upload', 6),
 			array('text', 'avatar_max_height_upload', 6),
 			array('check', 'avatar_resize_upload', 'subtext' => $txt['avatar_resize_upload_note']),
+			array('check', 'avatar_reencode'),
+		'',
+			array('warning', 'avatar_paranoid_warning'),
+			array('check', 'avatar_paranoid'),
+		'',
 			array('check', 'avatar_download_png'),
 			array('select', 'custom_avatar_enabled', array($txt['option_attachment_dir'], $txt['option_specified_dir']), 'onchange' => 'fUpdateStatus();'),
 			array('text', 'custom_avatar_dir', 40, 'subtext' => $txt['custom_avatar_dir_desc'], 'invalid' => !$context['valid_custom_avatar_dir']),
