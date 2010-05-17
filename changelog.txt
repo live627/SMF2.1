@@ -47,6 +47,7 @@ May 2010
  + Added configurable image re-encoding for attachments and avatars, for security (ManageAttachments.php, Subs-Post.php, Profile-Modify.php, language and help files)
  + Added option to create image attachments thumbnails as PNG (ManageAttachments.php, Subs-Post.php, language files)
  ! A number of fixes of attachments and avatars re-encoding and re-sizing (multiple files: Subs-Graphics.php, Subs-Post.php, and others)
+ ! Added permissions check necessary for viewing memberlist (News.php) [Bug 4021]
 
 
 ================================================================================

@@ -521,6 +521,9 @@ function getXmlMembers($xml_format)
 {
 	global $scripturl, $smcFunc;
 
+	if (!allowedTo('view_mlist'))
+		return array();
+
 	// Find the most recent members.
 	$request = $smcFunc['db_query']('', '
 		SELECT id_member, member_name, real_name, date_registered, last_login
