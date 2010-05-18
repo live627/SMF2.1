@@ -2139,6 +2139,16 @@ function MessagePost2()
 		$post_errors[] = 'no_message';
 	elseif (!empty($modSettings['max_messageLength']) && $smcFunc['strlen']($_REQUEST['message']) > $modSettings['max_messageLength'])
 		$post_errors[] = 'long_message';
+	else
+	{
+		// Preparse the message.
+		$message = $_REQUEST['message'];
+		preparsecode($message);
+
+		// Make sure there's still some content left without the tags.
+		if ($smcFunc['htmltrim'](strip_tags(parse_bbc($message, false), '<img>')) === '' && (!allowedTo('admin_forum') || strpos($message, '[html]') === false))
+			$post_errors[] = 'no_message';
+	}
 
 	// Wrong verification code?
 	if (!$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'])
