@@ -390,7 +390,7 @@ Should you have any problems with activation, please visit {ACTIVATIONLINKWITHOU
 		*/
 		'subject' => 'New password for {FORUMNAME}',
 		'body' => 'Dear {REALNAME},
-This mail was sent because the \'forgot password\' function has been applied to your account. To set a new password click the following link:
+This mail was sent because the \'forgot password\' function has been applied to your account. To set a new password, click the following link:
 {REMINDLINK}
 
 IP: {IP}

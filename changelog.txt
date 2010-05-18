@@ -48,6 +48,7 @@ May 2010
  + Added option to create image attachments thumbnails as PNG (ManageAttachments.php, Subs-Post.php, language files)
  ! A number of fixes of attachments and avatars re-encoding and re-sizing (multiple files: Subs-Graphics.php, Subs-Post.php, and others)
  ! Added permissions check necessary for viewing memberlist (News.php) [Bug 4021]
+ & Fixed punctuation on reminder mail body. (EmailTemplates language file, Profile language file) [Bug 4305]
 
 
 ================================================================================
