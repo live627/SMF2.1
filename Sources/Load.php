@@ -793,7 +793,7 @@ function loadBoard()
 // Load this user's permissions.
 function loadPermissions()
 {
-	global $user_info, $board, $board_info, $modSettings, $smcFunc;
+	global $user_info, $board, $board_info, $modSettings, $smcFunc, $sourcedir;
 
 	if ($user_info['is_admin'])
 	{
