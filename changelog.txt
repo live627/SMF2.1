@@ -50,6 +50,7 @@ May 2010
  ! Added permissions check necessary for viewing memberlist (News.php) [Bug 4021]
  & Fixed punctuation on reminder mail body. (EmailTemplates language file, Profile language file) [Bug 4305]
  ! Prevent sending personal messages consisting only of BBC tags. (PersonalMessage.php) [Bug 4304]
+ & It was not possible to disallow smileys in signatures. (Load.php, ManageSettings.php, Profile-Modify.php, ManageSettings language file) [Bug 3254]
 
 
 ================================================================================

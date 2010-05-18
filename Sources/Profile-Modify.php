@@ -2780,7 +2780,7 @@ function profileValidateSignature(&$value)
 		// What about too many smileys!
 		$smiley_parsed = $unparsed_signature;
 		parsesmileys($smiley_parsed);
-		if (!empty($sig_limits[4]) && (substr_count(strtolower($smiley_parsed), '<img') - substr_count(strtolower($unparsed_signature), '<img')) > $sig_limits[4])
+		if (!empty($sig_limits[4]) && $sig_limits[4] > 0 && (substr_count(strtolower($smiley_parsed), '<img') - substr_count(strtolower($unparsed_signature), '<img')) > $sig_limits[4])
 		{
 			$txt['profile_error_signature_max_smileys'] = sprintf($txt['profile_error_signature_max_smileys'], $sig_limits[4]);
 			return 'signature_max_smileys';

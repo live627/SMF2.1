@@ -892,6 +892,7 @@ function ModifySignatureSettings($return_config = false)
 			array('int', 'signature_max_length'),
 			array('int', 'signature_max_lines'),
 			array('int', 'signature_max_font_size'),
+			array('check', 'signature_allow_smileys', 'onclick' => 'document.getElementById(\'signature_max_smileys\').disabled = !this.checked;'),
 			array('int', 'signature_max_smileys'),
 		'',
 			// Image settings.
@@ -908,6 +909,9 @@ function ModifySignatureSettings($return_config = false)
 	// Setup the template.
 	$context['page_title'] = $txt['signature_settings'];
 	$context['sub_template'] = 'show_settings';
+
+	// Disable the max smileys option if we don't allow smileys at all!
+	$context['settings_post_javascript'] = 'document.getElementById(\'signature_max_smileys\').disabled = !document.getElementById(\'signature_allow_smileys\').checked;';
 
 	// Load all the signature settings.
 	list ($sig_limits, $sig_bbc) = explode(':', $modSettings['signature_settings']);
@@ -962,10 +966,10 @@ function ModifySignatureSettings($return_config = false)
 					$count = 0;
 					for ($i = 0; $i < strlen($sig); $i++)
 					{
-						if ($sig{$i} == "\n")
+						if ($sig[$i] == "\n")
 						{
 							$count++;
-							if ($count > $sig_limits[2])
+							if ($count >= $sig_limits[2])
 								$sig = substr($sig, 0, $i) . strtr(substr($sig, $i), array("\n" => ' '));
 						}
 					}
@@ -1149,6 +1153,7 @@ function ModifySignatureSettings($return_config = false)
 		'max_length' => isset($sig_limits[1]) ? $sig_limits[1] : 0,
 		'max_lines' => isset($sig_limits[2]) ? $sig_limits[2] : 0,
 		'max_images' => isset($sig_limits[3]) ? $sig_limits[3] : 0,
+		'allow_smileys' => isset($sig_limits[4]) && $sig_limits[4] == -1 ? 0 : 1,
 		'max_smileys' => isset($sig_limits[4]) ? $sig_limits[4] : 0,
 		'max_image_width' => isset($sig_limits[5]) ? $sig_limits[5] : 0,
 		'max_image_height' => isset($sig_limits[6]) ? $sig_limits[6] : 0,
@@ -1179,7 +1184,14 @@ function ModifySignatureSettings($return_config = false)
 
 		$sig_limits = array();
 		foreach ($context['signature_settings'] as $key => $value)
-			$sig_limits[] = !empty($_POST['signature_' . $key]) ? max(1, (int) $_POST['signature_' . $key]) : 0;
+		{
+			if ($key == 'allow_smileys')
+				continue;
+			elseif ($key == 'max_smileys' && empty($_POST['signature_allow_smileys']))
+				$sig_limits[] = -1;
+			else
+				$sig_limits[] = !empty($_POST['signature_' . $key]) ? max(1, (int) $_POST['signature_' . $key]) : 0;
+		}
 
 		$_POST['signature_settings'] = implode(',', $sig_limits) . ':' . implode(',', array_diff($bbcTags, $_POST['signature_bbc_enabledTags']));
 
