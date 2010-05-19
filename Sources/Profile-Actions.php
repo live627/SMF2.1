@@ -75,7 +75,7 @@ function activateAccount($memID)
 	}
 
 	// Leave it be...
-	redirectexit('action=profile;area=summary;u=' . $memID);
+	redirectexit('action=profile;u=' . $memID . ';area=summary');
 }
 
 // Issue/manage a users warning status.
@@ -721,7 +721,7 @@ function subscriptions($memID)
 		$context['gateways'] = array();
 		foreach ($gateways as $id => $gateway)
 		{
-			$fields = $gateways[$id]->fetchGatewayFields($context['sub']['id'] . '+' . $memID, $context['sub'], $context['value'], $period, $scripturl . '?action=profile;area=subscriptions;u=' . $memID . ';sub_id=' . $context['sub']['id'] . ';done');
+			$fields = $gateways[$id]->fetchGatewayFields($context['sub']['id'] . '+' . $memID, $context['sub'], $context['value'], $period, $scripturl . '?action=profile;u=' . $memID . ';area=subscriptions;sub_id=' . $context['sub']['id'] . ';done');
 			if (!empty($fields['form']))
 				$context['gateways'][] = $fields;
 		}

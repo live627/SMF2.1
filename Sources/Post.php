@@ -122,7 +122,7 @@ function Post()
 		$context['preview_subject'] = '';
 	}
 
-	// No message is comlete without a topic.
+	// No message is complete without a topic.
 	if (empty($topic) && !empty($_REQUEST['msg']))
 	{
 		$request = $smcFunc['db_query']('', '
@@ -135,7 +135,7 @@ function Post()
 		if ($smcFunc['db_num_rows']($request) != 1)
 			unset($_REQUEST['msg'], $_POST['msg'], $_GET['msg']);
 		else
-			list($topic) = $smcFunc['db_fetch_row']($request);
+			list ($topic) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 	}
 
@@ -221,7 +221,7 @@ function Post()
 	$context['can_move'] = allowedTo('move_any');
 	$context['move'] = !empty($_REQUEST['move']);
 	$context['announce'] = !empty($_REQUEST['announce']);
-	// You can only annouce topics that will get approved...
+	// You can only announce topics that will get approved...
 	$context['can_announce'] = allowedTo('announce_topic') && $context['becomes_approved'];
 	$context['locked'] = !empty($locked) || !empty($_REQUEST['lock']);
 	$context['can_quote'] = empty($modSettings['disabledBBC']) || !in_array('quote', explode(',', $modSettings['disabledBBC']));

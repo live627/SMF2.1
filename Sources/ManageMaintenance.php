@@ -1440,10 +1440,7 @@ function AdminBoardRecount()
 		{
 			// The latest message is the latest of the current board and its children.
 			if (isset($lastModifiedMsg[$row['id_board']]))
-			{
 				$curLastModifiedMsg = max($row['local_last_msg'], $lastModifiedMsg[$row['id_board']]);
-
-			}
 			else
 				$curLastModifiedMsg = $row['local_last_msg'];
 

@@ -314,7 +314,7 @@ function MessageIndex()
 	$context['sort_direction'] = $ascending ? 'up' : 'down';
 
 	// Calculate the fastest way to get the topics.
-	$start = $_REQUEST['start'];
+	$start = (int) $_REQUEST['start'];
 	if ($start > ($board_info['total_topics'] - 1) / 2)
 	{
 		$ascending = !$ascending;

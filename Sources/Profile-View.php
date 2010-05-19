@@ -310,7 +310,7 @@ function showPosts($memID)
 		$info = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 
-		// Trying to remove message that doesn't exist.
+		// Trying to remove a message that doesn't exist.
 		if (empty($info))
 			redirectexit('action=profile;u=' . $memID . ';area=showposts;start=' . $_GET['start']);
 
@@ -629,7 +629,7 @@ function showAttachments($memID)
 	// Let's get ourselves a lovely page index.
 	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';area=showposts;sa=attach;sort=' . $context['sort_order'] . ($context['sort_direction'] == 'up' ? ';asc' : ''), $context['start'], $attachCount, $maxIndex);
 
-	// Retrieve a some attachments.
+	// Retrieve some attachments.
 	$request = $smcFunc['db_query']('', '
 		SELECT a.id_attach, a.id_msg, a.filename, a.downloads, a.approved, m.id_msg, m.id_topic,
 			m.id_board, m.poster_time, m.subject, b.name

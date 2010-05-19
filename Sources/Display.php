@@ -261,7 +261,7 @@ function Display()
 		// Redirect to the page and post with new messages, originally by Omar Bazavilvazo.
 		if ($_REQUEST['start'] == 'new')
 		{
-			// Guests automatically go to the last topic.
+			// Guests automatically go to the last post.
 			if ($user_info['is_guest'])
 			{
 				$context['start_from'] = $context['total_visible_posts'] - 1;

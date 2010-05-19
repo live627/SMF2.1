@@ -1849,7 +1849,7 @@ function notification($memID)
 		'width' => '100%',
 		'no_items_label' => $txt['notifications_boards_none'] . '<br /><br />' . $txt['notifications_boards_howto'],
 		'no_items_align' => 'left',
-		'base_href' => $scripturl . '?action=profile;area=notification;u=' . $memID,
+		'base_href' => $scripturl . '?action=profile;u=' . $memID . ';area=notification',
 		'default_sort_col' => 'board_name',
 		'get_items' => array(
 			'function' => 'list_getBoardNotifications',
@@ -1926,7 +1926,7 @@ function notification($memID)
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $txt['notifications_topics_none'] . '<br /><br />' . $txt['notifications_topics_howto'],
 		'no_items_align' => 'left',
-		'base_href' => $scripturl . '?action=profile;area=notification;u=' . $memID,
+		'base_href' => $scripturl . '?action=profile;u=' . $memID . ';area=notification',
 		'default_sort_col' => 'last_post',
 		'get_items' => array(
 			'function' => 'list_getTopicNotifications',

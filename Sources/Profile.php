@@ -461,13 +461,13 @@ function ModifyProfile($post_errors = array())
 
 	if (!empty($profile_include_data['label']))
 		$context['linktree'][] = array(
-			'url' => $scripturl . '?action=profile;area=' . $profile_include_data['current_area'] . ($memID != $user_info['id'] ? ';u=' . $memID : ''),
+			'url' => $scripturl . '?action=profile' . ($memID != $user_info['id'] ? ';u=' . $memID : '') . ';area=' . $profile_include_data['current_area'],
 			'name' => $profile_include_data['label'],
 		);
 
 	if (!empty($profile_include_data['current_subsection']) && $profile_include_data['subsections'][$profile_include_data['current_subsection']][0] != $profile_include_data['label'])
 		$context['linktree'][] = array(
-			'url' => $scripturl . '?action=profile;area=' . $profile_include_data['current_area'] . ';sa=' . $profile_include_data['current_subsection'] . ($memID != $user_info['id'] ? ';u=' . $memID : ''),
+			'url' => $scripturl . '?action=profile' . ($memID != $user_info['id'] ? ';u=' . $memID : '') . ';area=' . $profile_include_data['current_area'] . ';sa=' . $profile_include_data['current_subsection'],
 			'name' => $profile_include_data['subsections'][$profile_include_data['current_subsection']][0],
 		);
 

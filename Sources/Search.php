@@ -790,7 +790,7 @@ function PlushSearch2()
 		error_reporting($old);
 
 		if (!$pspell_link)
-			$pspell_link = pspell_new('en', '', '', '', PSPELL_FAST | PSPELL_RUN_TOGETHER);
+			$pspell_link = @pspell_new('en', '', '', '', PSPELL_FAST | PSPELL_RUN_TOGETHER);
 
 		ob_end_clean();
 

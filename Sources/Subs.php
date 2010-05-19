@@ -945,7 +945,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 			content: only available for unparsed_content, closed,
 			  unparsed_commas_content, and unparsed_equals_content.
-			  $1 is replaced with the content of  the tag.  Parameters
+			  $1 is replaced with the content of the tag.  Parameters
 			  are replaced in the form {param}.  For unparsed_commas_content,
 			  $2, $3, ..., $n are replaced.
 
@@ -1810,8 +1810,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 						// Only do this if the preg survives.
 						if (is_string($result = preg_replace(array(
-							'~(?<=[\s>\.(;\'"]|^)((?:http|https)://[\w\-_%@:|]+(?:\.[\w\-_%]+)*(?::\d+)?(?:/[\w\-_\~%\.@,\?&;=#(){}+:\'\\\\]*)*[/\w\-_\~%@\?;=#}\\\\])~i', 
-							'~(?<=[\s>\.(;\'"]|^)((?:ftp|ftps)://[\w\-_%@:|]+(?:\.[\w\-_%]+)*(?::\d+)?(?:/[\w\-_\~%\.@,\?&;=#(){}+:\'\\\\]*)*[/\w\-_\~%@\?;=#}\\\\])~i', 
+							'~(?<=[\s>\.(;\'"]|^)((?:http|https)://[\w\-_%@:|]+(?:\.[\w\-_%]+)*(?::\d+)?(?:/[\w\-_\~%\.@,\?&;=#(){}+:\'\\\\]*)*[/\w\-_\~%@\?;=#}\\\\])~i',
+							'~(?<=[\s>\.(;\'"]|^)((?:ftp|ftps)://[\w\-_%@:|]+(?:\.[\w\-_%]+)*(?::\d+)?(?:/[\w\-_\~%\.@,\?&;=#(){}+:\'\\\\]*)*[/\w\-_\~%@\?;=#}\\\\])~i',
 							'~(?<=[\s>(\'<]|^)(www(?:\.[\w\-_]+)+(?::\d+)?(?:/[\w\-_\~%\.@,\?&;=#(){}+:\'\\\\]*)*[/\w\-_\~%@\?;=#}\\\\])~i'
 						), array(
 							'[url]$1[/url]',
@@ -2285,7 +2285,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			$message = substr($message, 0, $pos) . "\n" . $tag['content'] . "\n" . substr($message, $pos2 + 1);
 			$pos += strlen($tag['content']) - 1 + 2;
 		}
-		// This one is sorta ugly... :/.  Unforunately, it's needed for flash.
+		// This one is sorta ugly... :/.  Unfortunately, it's needed for flash.
 		elseif ($tag['type'] == 'unparsed_commas_content')
 		{
 			$pos2 = strpos($message, ']', $pos1);
@@ -2701,7 +2701,7 @@ function redirectexit($setLocation = '', $refresh = false)
 	}
 
 	if (isset($modSettings['integrate_redirect']) && is_callable($modSettings['integrate_redirect']))
-		list($setLocation, $refresh) = call_user_func(strpos($modSettings['integrate_redirect'], '::') === false ? $modSettings['integrate_redirect'] : explode('::', $modSettings['integrate_redirect']), $setLocation, $refresh);
+		list ($setLocation, $refresh) = call_user_func(strpos($modSettings['integrate_redirect'], '::') === false ? $modSettings['integrate_redirect'] : explode('::', $modSettings['integrate_redirect']), $setLocation, $refresh);
 
 	// We send a Refresh header only in special cases because Location looks better. (and is quicker...)
 	if ($refresh && !WIRELESS)
@@ -3594,7 +3594,7 @@ function db_debug_junk()
 				echo sprintf($txt['debug_query_which_took_at'], round($qq['t'], 8), round($qq['s'], 8)) . '<br />';
 			elseif (isset($qq['t']))
 				echo sprintf($txt['debug_query_which_took'], round($qq['t'], 8)) . '<br />';
-		echo '
+			echo '
 	<br />';
 		}
 

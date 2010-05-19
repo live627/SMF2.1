@@ -87,7 +87,7 @@ function BoardIndex()
 	if (!empty($modSettings['trackStats']))
 		trackStatsUsersOnline($context['num_guests'] + $context['num_spiders'] + $context['num_users_online']);
 
-	// Retrieve the latests posts if the theme settings require it.
+	// Retrieve the latest posts if the theme settings require it.
 	if (isset($settings['number_recent_posts']) && $settings['number_recent_posts'] > 1)
 	{
 		$latestPostOptions = array(
