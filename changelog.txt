@@ -50,11 +50,16 @@ May 2010
  ! Added permissions check necessary for viewing memberlist (News.php) [Bug 4021]
  & Fixed punctuation on reminder mail body. (EmailTemplates language file, Profile language file) [Bug 4305]
  ! Prevent sending personal messages consisting only of BBC tags. (PersonalMessage.php) [Bug 4304]
+ ! Make sure that start variables in the URL are numbers. (MessageIndex.php)
+ ! Reordered some profile-related URLs to make it easier to rewrite them on the fly. (Profile-Actions.php, Profile-Modify.php, Profile.php)
+ ! Calling pspell_new() when doing a search could generate an error on badly configured servers. (Search.php)
+ & attachment_image_* entries shouldn't reference avatars, as they only deal with attached files. (Admin language file)
  & It was not possible to disallow smileys in signatures. (Load.php, ManageSettings.php, Profile-Modify.php, ManageSettings language file) [Bug 3254]
  ! Admin member search parameters query were broken when parameters contained wildcard characters. (ManageMembers.php) [Bug 4306]
  ! Do not rely on url_image_size() for image file type for external images. (Subs-Graphics.php) [Bug 3991]
  ! Pending account deletion notice did not show up unless registration method was set to admin approval. (Subs.php) [Bug 4269]
  & Warn the poster about silently attached temporary attachments on making a new post. (Post.php, Post language file) [Bug 4263]
+ * Harmonized Error Log header with the other log pages. (Errors.template.php)
 
 
 ================================================================================
