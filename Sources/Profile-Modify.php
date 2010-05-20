@@ -1849,7 +1849,7 @@ function notification($memID)
 		'width' => '100%',
 		'no_items_label' => $txt['notifications_boards_none'] . '<br /><br />' . $txt['notifications_boards_howto'],
 		'no_items_align' => 'left',
-		'base_href' => $scripturl . '?action=profile;u=' . $memID . ';area=notification',
+		'base_href' => $scripturl . '?action=profile;area=notification;u=' . $memID,
 		'default_sort_col' => 'board_name',
 		'get_items' => array(
 			'function' => 'list_getBoardNotifications',
@@ -1926,7 +1926,7 @@ function notification($memID)
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $txt['notifications_topics_none'] . '<br /><br />' . $txt['notifications_topics_howto'],
 		'no_items_align' => 'left',
-		'base_href' => $scripturl . '?action=profile;u=' . $memID . ';area=notification',
+		'base_href' => $scripturl . '?action=profile;area=notification;u=' . $memID,
 		'default_sort_col' => 'last_post',
 		'get_items' => array(
 			'function' => 'list_getTopicNotifications',
@@ -2780,7 +2780,13 @@ function profileValidateSignature(&$value)
 		// What about too many smileys!
 		$smiley_parsed = $unparsed_signature;
 		parsesmileys($smiley_parsed);
-		if (!empty($sig_limits[4]) && $sig_limits[4] > 0 && (substr_count(strtolower($smiley_parsed), '<img') - substr_count(strtolower($unparsed_signature), '<img')) > $sig_limits[4])
+		$smiley_count = substr_count(strtolower($smiley_parsed), '<img') - substr_count(strtolower($unparsed_signature), '<img');
+		if (!empty($sig_limits[4]) && $sig_limits[4] == -1 && $smiley_count > 0)
+		{
+			$txt['profile_error_signature_allow_smileys'] = $txt['profile_error_signature_allow_smileys'];
+			return 'signature_allow_smileys';
+		}
+		elseif (!empty($sig_limits[4]) && $sig_limits[4] > 0 && $smiley_count > $sig_limits[4])
 		{
 			$txt['profile_error_signature_max_smileys'] = sprintf($txt['profile_error_signature_max_smileys'], $sig_limits[4]);
 			return 'signature_max_smileys';

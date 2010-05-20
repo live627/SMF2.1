@@ -1066,7 +1066,7 @@ function loadMemberContext($user, $display_custom_fields = false)
 	global $memberContext, $user_profile, $txt, $scripturl, $user_info;
 	global $context, $modSettings, $board_info, $settings;
 	global $smcFunc;
-	static $dataLoaded = array(), $sig_limits;
+	static $dataLoaded = array();
 
 	// If this person's data is already loaded, skip it.
 	if (isset($dataLoaded[$user]))
@@ -1092,14 +1092,8 @@ function loadMemberContext($user, $display_custom_fields = false)
 
 	// Set things up to be used before hand.
 	$gendertxt = $profile['gender'] == 2 ? $txt['female'] : ($profile['gender'] == 1 ? $txt['male'] : '');
-
-	// Get signature limits...
-	if (!isset($sig_limits))
-		$sig_limits = explode(',', substr($modSettings['signature_settings'], 0, strpos($modSettings['signature_settings'], ':')));
-
-	// Prepare the signature for display!
 	$profile['signature'] = str_replace(array("\n", "\r"), array('<br />', ''), $profile['signature']);
-	$profile['signature'] = parse_bbc($profile['signature'], $sig_limits[4] != -1, 'sig' . $profile['id_member']);
+	$profile['signature'] = parse_bbc($profile['signature'], true, 'sig' . $profile['id_member']);
 
 	$profile['is_online'] = (!empty($profile['show_online']) || allowedTo('moderate_forum')) && $profile['is_online'] > 0;
 	$profile['stars'] = empty($profile['stars']) ? array('', '') : explode('#', $profile['stars']);

@@ -1154,7 +1154,7 @@ function ModifySignatureSettings($return_config = false)
 		'max_lines' => isset($sig_limits[2]) ? $sig_limits[2] : 0,
 		'max_images' => isset($sig_limits[3]) ? $sig_limits[3] : 0,
 		'allow_smileys' => isset($sig_limits[4]) && $sig_limits[4] == -1 ? 0 : 1,
-		'max_smileys' => isset($sig_limits[4]) ? $sig_limits[4] : 0,
+		'max_smileys' => isset($sig_limits[4]) && $sig_limits[4] != -1 ? $sig_limits[4] : 0,
 		'max_image_width' => isset($sig_limits[5]) ? $sig_limits[5] : 0,
 		'max_image_height' => isset($sig_limits[6]) ? $sig_limits[6] : 0,
 		'max_font_size' => isset($sig_limits[7]) ? $sig_limits[7] : 0,
