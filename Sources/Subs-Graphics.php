@@ -343,12 +343,12 @@ function resizeImageFile($source, $destination, $max_width, $max_height, $prefer
 	$fp_destination = fopen($destination, 'wb');
 	if ($fp_destination && substr($source, 0, 7) == 'http://')
 	{
-		$sizes = url_image_size($source);
-
 		$fileContents = fetch_web_data($source);
 
 		fwrite($fp_destination, $fileContents);
 		fclose($fp_destination);
+
+		$sizes = @getimagesize($destination);
 	}
 	elseif ($fp_destination)
 	{
