@@ -356,10 +356,10 @@ $txt['attachmentPostLimit'] = 'Max attachment size per post<div class="smalltext
 $txt['attachmentSizeLimit'] = 'Max size per attachment<div class="smalltext">(0 for no limit)</div>';
 $txt['attachmentNumPerPostLimit'] = 'Max number of attachments per post<div class="smalltext">(0 for no limit)</div>';
 $txt['attachment_gd_warning'] = 'The GD module is currently not installed. Image re-encoding is not possible.';
-$txt['attachment_image_reencode'] = 'Re-encode potentially dangerous image attachments and avatars';
+$txt['attachment_image_reencode'] = 'Re-encode potentially dangerous image attachments';
 $txt['attachment_image_reencode_note'] = '(requires GD module)';
 $txt['attachment_image_paranoid_warning'] = 'The extensive security checks can result in a large number of rejected attachments.';
-$txt['attachment_image_paranoid'] = 'Perform extensive security checks on uploaded image attachments and avatars';
+$txt['attachment_image_paranoid'] = 'Perform extensive security checks on uploaded image attachments';
 $txt['attachmentThumbnails'] = 'Resize images when showing under posts';
 $txt['attachment_thumb_png'] = 'Save thumbnails as PNG';
 $txt['attachmentThumbWidth'] = 'Maximum width of thumbnails';
