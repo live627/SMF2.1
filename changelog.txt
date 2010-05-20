@@ -53,6 +53,7 @@ May 2010
  & It was not possible to disallow smileys in signatures. (Load.php, ManageSettings.php, Profile-Modify.php, ManageSettings language file) [Bug 3254]
  ! Admin member search parameters query were broken when parameters contained wildcard characters. (ManageMembers.php) [Bug 4306]
  ! Do not rely on url_image_size() for image file type for external images. (Subs-Graphics.php) [Bug 3991]
+ ! Pending account deletion notice did not show up unless registration method was set to admin approval. (Subs.php) [Bug 4269]
 
 
 ================================================================================
