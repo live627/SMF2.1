@@ -925,6 +925,13 @@ function Post()
 		$temp_start = 0;
 
 		if (!empty($_SESSION['temp_attachments']))
+		{
+			if ($context['current_action'] != 'post2' || !empty($_POST['from_qr']))
+			{
+				$context['post_error']['messages'][] = $txt['error_temp_attachments'];
+				$context['error_type'] = 'minor';
+			}
+
 			foreach ($_SESSION['temp_attachments'] as $attachID => $name)
 			{
 				$temp_start++;
@@ -952,6 +959,7 @@ function Post()
 					'approved' => 1,
 				);
 			}
+		}
 
 		if (!empty($_POST['attach_del']))
 		{
@@ -1664,7 +1672,7 @@ function Post2()
 	}
 
 	// ...or attach a new file...
-	if (isset($_FILES['attachment']['name']) || !empty($_SESSION['temp_attachments']))
+	if (isset($_FILES['attachment']['name']) || (!empty($_SESSION['temp_attachments']) && empty($_POST['from_qr'])))
 	{
 		// Verify they can post them!
 		if (!$modSettings['postmod_active'] || !allowedTo('post_unapproved_attachments'))
