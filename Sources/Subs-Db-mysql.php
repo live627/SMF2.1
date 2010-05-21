@@ -71,13 +71,9 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 	if (!$connection)
 	{
 		if (!empty($db_options['non_fatal']))
-		{
 			return null;
-		}
 		else
-		{
 			db_fatal_error();
-		}
 	}
 
 	// Select the database, unless told not to
@@ -87,15 +83,15 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 	// This makes it possible to have SMF automatically change the sql_mode and autocommit if needed.
 	if (isset($mysql_set_mode) && $mysql_set_mode === true)
 		$smcFunc['db_query']('', 'SET sql_mode = \'\', AUTOCOMMIT = 1',
-		array(
-		), false
+		array(),
+		false
 	);
 
 	return $connection;
 }
 
 // Extend the database functionality.
-function db_extend ($type = 'extra')
+function db_extend($type = 'extra')
 {
 	global $sourcedir, $db_type;
 
@@ -105,7 +101,7 @@ function db_extend ($type = 'extra')
 }
 
 // Fix up the prefix so it doesn't require the database to be selected.
-function db_fix_prefix (&$db_prefix, $db_name)
+function db_fix_prefix(&$db_prefix, $db_name)
 {
 	$db_prefix = is_numeric(substr($db_prefix, 0, 1)) ? $db_name . '.' . $db_prefix : '`' . $db_name . '`.' . $db_prefix;
 }

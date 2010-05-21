@@ -142,7 +142,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 			'id_folder' => 'int',
 		),
 		array(
-			$memID, (empty($modSettings['custom_avatar_enabled']) ? 0 : 1), $destName, $avatar_hash, $ext, 1,
+			$memID, empty($modSettings['custom_avatar_enabled']) ? 0 : 1, $destName, $avatar_hash, $ext, 1,
 			$id_folder,
 		),
 		array('id_attach')
@@ -447,9 +447,9 @@ function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $
 		$dst_img = $src_img;
 
 	// Save the image as ...
-	if ((!empty($preferred_format)) && ($preferred_format == 3) && (function_exists('imagepng')))
+	if (!empty($preferred_format) && ($preferred_format == 3) && function_exists('imagepng'))
 		$success = imagepng($dst_img, $destName);
-	elseif ((!empty($preferred_format)) && ($preferred_format == 1) && (function_exists('imagegif')))
+	elseif (!empty($preferred_format) && ($preferred_format == 1) && function_exists('imagegif'))
 		$success = imagegif($dst_img, $destName);
 	elseif (function_exists('imagejpeg'))
 		$success = imagejpeg($dst_img, $destName);

@@ -1481,14 +1481,15 @@ function SpellCheck()
 	// See, first, some windows machines don't load pspell properly on the first try.  Dumb, but this is a workaround.
 	pspell_new('en');
 
-	// Next, the dictionary in question may not exist.  So, we try it... but...
+	// Next, the dictionary in question may not exist. So, we try it... but...
 	$pspell_link = pspell_new($txt['lang_dictionary'], $txt['lang_spelling'], '', strtr($context['character_set'], array('iso-' => 'iso', 'ISO-' => 'iso')), PSPELL_FAST | PSPELL_RUN_TOGETHER);
-	error_reporting($old);
-	ob_end_clean();
 
-	// Most people don't have anything but english installed... so we use english as a last resort.
+	// Most people don't have anything but English installed... So we use English as a last resort.
 	if (!$pspell_link)
 		$pspell_link = pspell_new('en', '', '', '', PSPELL_FAST | PSPELL_RUN_TOGETHER);
+
+	error_reporting($old);
+	ob_end_clean();
 
 	if (!isset($_POST['spellstring']) || !$pspell_link)
 		die;
@@ -1854,7 +1855,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			)
 		);
 
-	// Insert a new topic (if the topicID was left empty.
+	// Insert a new topic (if the topicID was left empty.)
 	if ($new_topic)
 	{
 		$smcFunc['db_insert']('',

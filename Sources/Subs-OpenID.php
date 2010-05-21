@@ -32,7 +32,6 @@ if (!defined('SMF'))
 		- Determines the IDP server and delegation
 		- optional array of fields to restore when validation complete.
 		- Redirects the user to the IDP for validation
-
 */
 
 function smf_openID_validate($openid_uri, $return = false, $save_fields = array(), $return_action = null)
@@ -67,7 +66,7 @@ function smf_openID_validate($openid_uri, $return = false, $save_fields = array(
 		'openid.return_to=' . urlencode($scripturl . '?action=openidreturn&sa=' . (!empty($return_action) ? $return_action : $_REQUEST['action']) . '&t=' . $request_time . (!empty($save_fields) ? '&sf=' . base64_encode(serialize($save_fields)) : '')),
 	);
 
-	// If they are logging in but don't yet have an account or they are registering, lets request some additional information
+	// If they are logging in but don't yet have an account or they are registering, let's request some additional information
 	if (($_REQUEST['action'] == 'login2' && !smf_openid_member_exists($openid_url)) || ($_REQUEST['action'] == 'register' || $_REQUEST['action'] == 'register2'))
 	{
 		// Email is required.

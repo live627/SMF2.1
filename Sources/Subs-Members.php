@@ -955,7 +955,7 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 				return true;
 	}
 
-	// Charaters we just shouldn't allow, regardless.
+	// Characters we just shouldn't allow, regardless.
 	foreach (array('*') as $char)
 		if (strpos($checkName, $char) !== false)
 			if ($fatal)
