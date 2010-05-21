@@ -254,7 +254,7 @@ function createMenu($menuData, $menuOptions = array())
 	{
 		// Never happened!
 		$context['max_menu_id']--;
-		if ($context['max_menu_id'] == 0)
+		if ($context['max_menu_id'] == 0 && !empty($context['max_menu_id']))
 			unset($context['max_menu_id']);
 
 		return false;
