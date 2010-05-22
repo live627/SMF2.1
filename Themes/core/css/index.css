@@ -3481,3 +3481,8 @@ ul.nolist li
 	border: 1px solid #696969;
 	background-color: #fff;
 }
+/* If some random peep decides to use a description class within a tborder (happened to me!) */
+.tborder .description
+{
+	margin-bottom: 0;
+}

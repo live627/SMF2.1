@@ -61,6 +61,7 @@ May 2010
  & Warn the poster about silently attached temporary attachments on making a new post. (Post.php, Post language file) [Bug 4263]
  * Harmonized Error Log header with the other log pages. (Errors.template.php)
  ! If an user without permission to view profiles manually navigated to a profile, an undefined index error could occur. (Subs-Menu.php) [Bug 4307]
+ * Making life easier for those random mod authors. If .description was used within .tborder (i.e, when trying to make something look good in Core) the bottom margin broke the layout. (core/css/index.css)
 
 
 ================================================================================
