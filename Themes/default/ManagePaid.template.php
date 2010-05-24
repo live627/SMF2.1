@@ -276,7 +276,7 @@ function template_modify_user_subscription()
 				</h3>
 			</div>
 			<div class="windowbg">
-			<span class="topslice"><span></span></span>
+				<span class="topslice"><span></span></span>
 				<div class="content">
 					<dl class="settings">';
 

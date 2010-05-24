@@ -295,16 +295,16 @@ function template_body_above()
 			});
 		// ]]></script>';
 
-		// Show the menu here, according to the menu sub template.
-		template_menu();
+	// Show the menu here, according to the menu sub template.
+	template_menu();
 
 	echo '
-			<br class="clear" />';
+		<br class="clear" />';
 
-		// Show the navigation tree.
-		theme_linktree();
+	// Show the navigation tree.
+	theme_linktree();
 
-		echo '
+	echo '
 	</div></div>';
 
 	// The main content should go here.

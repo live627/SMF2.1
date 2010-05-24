@@ -1419,14 +1419,14 @@ function template_manual_profile_actions_delete()
 		<div class="help_sample">
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
-					<div class="content">
-						<div class="alert">', $txt['manual_profile_delete_sure'], '</div>
-						<div>
-							<strong>', $txt['manual_profile_delete_password'], ' </strong>
-							<input type="password" name="oldpasswrd" size="20" class="input_password" />&nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="submit" value="', $txt['manual_profile_delete_yes'], '" class="button_submit" />
-						</div>
+				<div class="content">
+					<div class="alert">', $txt['manual_profile_delete_sure'], '</div>
+					<div>
+						<strong>', $txt['manual_profile_delete_password'], ' </strong>
+						<input type="password" name="oldpasswrd" size="20" class="input_password" />&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="submit" value="', $txt['manual_profile_delete_yes'], '" class="button_submit" />
 					</div>
+				</div>
 				<span class="botslice"><span></span></span>
 			</div>
 		</div>';

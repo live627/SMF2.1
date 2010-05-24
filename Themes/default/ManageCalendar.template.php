@@ -89,17 +89,17 @@ function template_edit_holiday()
 
 	if ($context['is_new'])
 		echo '
-				<input type="submit" value="', $txt['holidays_button_add'], '" class="button_submit" />';
+					<input type="submit" value="', $txt['holidays_button_add'], '" class="button_submit" />';
 	else
 		echo '
-				<input type="submit" name="edit" value="', $txt['holidays_button_edit'], '" class="button_submit" />
-				<input type="submit" name="delete" value="', $txt['holidays_button_remove'], '" class="button_submit" />
-				<input type="hidden" name="holiday" value="', $context['holiday']['id'], '" />';
+					<input type="submit" name="edit" value="', $txt['holidays_button_edit'], '" class="button_submit" />
+					<input type="submit" name="delete" value="', $txt['holidays_button_remove'], '" class="button_submit" />
+					<input type="hidden" name="holiday" value="', $context['holiday']['id'], '" />';
 	echo '
-				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+				</div>
+				<span class="botslice"><span></span></span>
 			</div>
-			<span class="botslice"><span></span></span>
-		</div>
 		</form>
 	</div>
 	<br class="clear" />';

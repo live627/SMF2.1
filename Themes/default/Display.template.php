@@ -209,7 +209,7 @@ function template_main()
 		// Show the message anchor and a "new" anchor if this message is new.
 		if ($message['id'] != $context['first_message'])
 			echo '
-					<a id="msg', $message['id'], '"></a>', $message['first_new'] ? '<a id="new"></a>' : '';
+				<a id="msg', $message['id'], '"></a>', $message['first_new'] ? '<a id="new"></a>' : '';
 
 		echo '
 				<div class="', $message['approved'] ? ($message['alternate'] == 0 ? 'windowbg' : 'windowbg2') : 'approvebg', '">
@@ -320,11 +320,11 @@ function template_main()
 			if ($message['member']['has_messenger'] && $message['member']['can_view_profile'])
 				echo '
 								<li class="im_icons">
-									<ul>
-										', !empty($message['member']['icq']['link']) ? '<li>' . $message['member']['icq']['link'] . '</li>' : '', '
-										', !empty($message['member']['msn']['link']) ? '<li>' . $message['member']['msn']['link'] . '</li>' : '', '
-										', !empty($message['member']['aim']['link']) ? '<li>' . $message['member']['aim']['link'] . '</li>' : '', '
-										', !empty($message['member']['yim']['link']) ? '<li>' . $message['member']['yim']['link'] . '</li>' : '', '
+									<ul>', !empty($message['member']['icq']['link']) ? '
+										<li>' . $message['member']['icq']['link'] . '</li>' : '', !empty($message['member']['msn']['link']) ? '
+										<li>' . $message['member']['msn']['link'] . '</li>' : '', !empty($message['member']['aim']['link']) ? '
+										<li>' . $message['member']['aim']['link'] . '</li>' : '', !empty($message['member']['yim']['link']) ? '
+										<li>' . $message['member']['yim']['link'] . '</li>' : '', '
 									</ul>
 								</li>';
 
@@ -526,10 +526,10 @@ function template_main()
 						<div class="moderatorbar">
 							<div class="smalltext modified" id="modified_', $message['id'], '">';
 
-		// Show "ï¿½ Last Edit: Time by Person ï¿½" if this post was edited.
+		// Show "« Last Edit: Time by Person »" if this post was edited.
 		if ($settings['show_modify'] && !empty($message['modified']['name']))
 			echo '
-								&#171; <em>', $txt['last_edit'], ': ', $message['modified']['time'], ' ', $txt['by'], ' ', $message['modified']['name'], '</em> &#187;';
+								&#171; <em>', $txt['last_edit'], ' ', $message['modified']['time'], $message['modified']['name'] !== $message['member']['name'] ? ' ' . $txt['by'] . ' ' . $message['modified']['name'] : '', '</em> &#187;';
 
 		echo '
 							</div>
@@ -601,7 +601,7 @@ function template_main()
 					</div>
 					<span class="botslice"><span></span></span>
 				</div>
-					<hr class="post_separator" />';
+				<hr class="post_separator" />';
 	}
 
 	echo '
@@ -657,12 +657,12 @@ function template_main()
 				<div id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
 					<span class="upperframe"><span></span></span>
 					<div class="roundframe">
-						<p class="smalltext lefftext">', $txt['quick_reply_desc'], '</p>
+						<p class="smalltext lefttext">', $txt['quick_reply_desc'], '</p>
 						', $context['is_locked'] ? '<p class="alert smalltext">' . $txt['quick_reply_warning'] . '</p>' : '',
 						$context['oldTopicError'] ? '<p class="alert smalltext">' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</p>' : '', '
 						', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
 						', !$context['can_reply_approved'] && $context['require_verification'] ? '<br />' : '', '
-						<form action="', $scripturl, '?action=post2', empty($context['current_board']) ? '' : ';board=' . $context['current_board'], '" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
+						<form action="', $scripturl, '?', empty($context['current_board']) ? '' : 'board=' . $context['current_board'] . ';', 'action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
 							<input type="hidden" name="topic" value="', $context['current_topic'], '" />
 							<input type="hidden" name="subject" value="', $context['response_prefix'], $context['subject'], '" />
 							<input type="hidden" name="icon" value="xx" />

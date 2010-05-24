@@ -79,7 +79,7 @@ function template_main()
 						</dl>
 						<div class="clear"></div>
 					</div>
-				<span class="botslice"><span></span></span>
+					<span class="botslice"><span></span></span>
 				</div>
 			</div>
 		</div>
@@ -120,7 +120,7 @@ function template_main()
 							</dl>
 							<div class="clear"></div>
 						</div>
-					<span class="botslice"><span></span></span>
+						<span class="botslice"><span></span></span>
 					</div>
 			</div>
 			<div id="top_boards">

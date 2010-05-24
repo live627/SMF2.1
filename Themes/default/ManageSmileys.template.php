@@ -17,10 +17,10 @@ function template_editsets()
 			<h3 class="catbg">', $txt['smiley_sets_latest'], '</h3>
 		</div>
 		<div class="windowbg">
-				<span class="topslice"><span></span></span>
-				<div class="content">
-					<div id="smileysLatest">', $txt['smiley_sets_latest_fetch'], '</div>
-				</div>
+			<span class="topslice"><span></span></span>
+			<div class="content">
+				<div id="smileysLatest">', $txt['smiley_sets_latest_fetch'], '</div>
+			</div>
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
@@ -359,13 +359,13 @@ function template_addsmiley()
 	echo '
 					</dl>
 				</div>
-			<span class="botslice"><span></span></span>
+				<span class="botslice"><span></span></span>
 			</div>
-		<br />
-		<div class="cat_bar">
-			<h3 class="catbg">', $txt['smiley_new'], '</h3>
-		</div>
-		<div class="windowbg">
+			<br />
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['smiley_new'], '</h3>
+			</div>
+			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
 					<dl class="settings">

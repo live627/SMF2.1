@@ -59,7 +59,7 @@ function template_admin()
 					<div class="content">
 						<div id="smfAnnouncements">', $txt['lfyi'], '</div>
 					</div>
-				<span class="botslice"><span></span></span>
+					<span class="botslice"><span></span></span>
 				</div>
 			</div>';
 
@@ -116,21 +116,21 @@ function template_admin()
 	echo '
 		<div class="windowbg2 clear_right">
 			<span class="topslice"><span></span></span>
-				<div class="content">
-					<ul id="quick_tasks" class="flow_hidden">';
+			<div class="content">
+				<ul id="quick_tasks" class="flow_hidden">';
 
 	foreach ($context['quick_admin_tasks'] as $task)
 		echo '
-						<li>
-							', (!empty($task['icon']) ? '<a href="' . $task['href'] . '"><img src="' . $settings['default_images_url'] . '/admin/' . $task['icon'] . '" alt="" class="home_image png_fix" /></a>' : ''), '
-							<h5>', $task['link'], '</h5>
-							<span class="task">', $task['description'],'</span>
-						</li>';
+					<li>
+						', !empty($task['icon']) ? '<a href="' . $task['href'] . '"><img src="' . $settings['default_images_url'] . '/admin/' . $task['icon'] . '" alt="" class="home_image png_fix" /></a>' : '', '
+						<h5>', $task['link'], '</h5>
+						<span class="task">', $task['description'],'</span>
+					</li>';
 
 	echo '
-					</ul>
-				</div>
-				<span class="botslice clear"><span></span></span>
+				</ul>
+			</div>
+			<span class="botslice clear"><span></span></span>
 		</div>
 	</div>
 	<br class="clear" />';
@@ -207,7 +207,7 @@ function template_manage_copyright()
 				</h3>
 			</div>
 			<div class="windowbg">
-			<span class="topslice"><span></span></span>
+				<span class="topslice"><span></span></span>
 				<div class="content">
 					<span class="smalltext">', $txt['copyright_removal_desc'], '</span>
 					<dl class="settings">
@@ -222,7 +222,7 @@ function template_manage_copyright()
 						<input type="submit" value="', $txt['copyright_proceed'], '" class="button_submit" />
 					</p>
 				</div>
-			<span class="botslice"><span></span></span>
+				<span class="botslice"><span></span></span>
 			</div>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
@@ -245,7 +245,7 @@ function template_credits()
 			</h3>
 		</div>
 		<div class="windowbg">
-		<span class="topslice"><span></span></span>
+			<span class="topslice"><span></span></span>
 			<div class="content">
 				<strong>', $txt['support_versions'], ':</strong><br />
 					', $txt['support_versions_forum'], ':
@@ -260,8 +260,8 @@ function template_credits()
 				<em>', $version['version'], '</em><br />';
 
 	echo '
-		</div>
-		<span class="botslice"><span></span></span>
+			</div>
+			<span class="botslice"><span></span></span>
 		</div>
 	';
 
@@ -274,10 +274,10 @@ function template_credits()
 		</div>
 		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
-				<div class="content">
-					<p>', $txt['support_resources_p1'], '</p>
-					<p>', $txt['support_resources_p2'], '</p>
-				</div>
+			<div class="content">
+				<p>', $txt['support_resources_p1'], '</p>
+				<p>', $txt['support_resources_p2'], '</p>
+			</div>
 			<span class="botslice"><span></span></span>
 		</div>';
 
@@ -290,9 +290,9 @@ function template_credits()
 		</div>
 		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
-				<div class="content">
-					<div id="latestSupport">', $txt['support_latest_fetch'], '</div>
-				</div>
+			<div class="content">
+				<div id="latestSupport">', $txt['support_latest_fetch'], '</div>
+			</div>
 			<span class="botslice"><span></span></span>
 		</div>';
 
@@ -305,38 +305,39 @@ function template_credits()
 		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
-				<div class="content">';
+			<div class="content">';
 
 	foreach ($context['credits'] as $section)
 	{
 		if (isset($section['pretext']))
 			echo '
-					<p>', $section['pretext'], '</p>';
+				<p>', $section['pretext'], '</p>';
 
 		echo '
-					<dl>';
+				<dl>';
 
 		foreach ($section['groups'] as $group)
 		{
 			if (isset($group['title']))
 				echo '
-						<dt>
-							<strong>', $group['title'], ':</strong>
-						</dt><dd>';
+					<dt>
+						<strong>', $group['title'], ':</strong>
+					</dt>';
 
-			echo implode(', ', $group['members']), '</dd>';
+			echo '
+					<dd>', implode(', ', $group['members']), '</dd>';
 		}
 
 		echo '
-					</dl>';
+				</dl>';
 
 		if (isset($section['posttext']))
 			echo '
-					<p>', $section['posttext'], '</p>';
+				<p>', $section['posttext'], '</p>';
 	}
 
 	echo '
-				</div>
+			</div>
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
@@ -658,30 +659,30 @@ function template_edit_censored()
 						<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" class="input_text" /> => <input type="text" name="censor_proper[]" size="20" class="input_text" /></div>
 					</noscript>
 					<div id="moreCensoredWords"></div><div style="margin-top: 1ex; display: none;" id="moreCensoredWords_link"><a href="#;" onclick="addNewWord(); return false;">', $txt['censor_clickadd'], '</a></div>
-						<script type="text/javascript"><!-- // --><![CDATA[
-							document.getElementById("moreCensoredWords_link").style.display = "";
+					<script type="text/javascript"><!-- // --><![CDATA[
+						document.getElementById("moreCensoredWords_link").style.display = "";
 
-							function addNewWord()
-							{
-								setOuterHTML(document.getElementById("moreCensoredWords"), \'<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" class="input_text" /> => <input type="text" name="censor_proper[]" size="20" class="input_text" /><\' + \'/div><div id="moreCensoredWords"><\' + \'/div>\');
-							}
-						// ]]></script>
-						<hr width="100%" size="1" class="hrcolor" />
-						<dl class="settings">
-							<dt>
-								<strong><label for="censorWholeWord_check">', $txt['censor_whole_words'], ':</label></strong>
-							</dt>
-							<dd>
-								<input type="checkbox" name="censorWholeWord" value="1" id="censorWholeWord_check"', empty($modSettings['censorWholeWord']) ? '' : ' checked="checked"', ' class="input_check" />
-							</dd>
-							<dt>
-								<strong><label for="censorIgnoreCase_check">', $txt['censor_case'], ':</label></strong>
-							</dt>
-							<dd>
-								<input type="checkbox" name="censorIgnoreCase" value="1" id="censorIgnoreCase_check"', empty($modSettings['censorIgnoreCase']) ? '' : ' checked="checked"', ' class="input_check" />
-							</dd>
-						</dl>
-						<input type="submit" name="save_censor" value="', $txt['save'], '" class="button_submit" />
+						function addNewWord()
+						{
+							setOuterHTML(document.getElementById("moreCensoredWords"), \'<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" class="input_text" /> => <input type="text" name="censor_proper[]" size="20" class="input_text" /><\' + \'/div><div id="moreCensoredWords"><\' + \'/div>\');
+						}
+					// ]]></script>
+					<hr width="100%" size="1" class="hrcolor" />
+					<dl class="settings">
+						<dt>
+							<strong><label for="censorWholeWord_check">', $txt['censor_whole_words'], ':</label></strong>
+						</dt>
+						<dd>
+							<input type="checkbox" name="censorWholeWord" value="1" id="censorWholeWord_check"', empty($modSettings['censorWholeWord']) ? '' : ' checked="checked"', ' class="input_check" />
+						</dd>
+						<dt>
+							<strong><label for="censorIgnoreCase_check">', $txt['censor_case'], ':</label></strong>
+						</dt>
+						<dd>
+							<input type="checkbox" name="censorIgnoreCase" value="1" id="censorIgnoreCase_check"', empty($modSettings['censorIgnoreCase']) ? '' : ' checked="checked"', ' class="input_check" />
+						</dd>
+					</dl>
+					<input type="submit" name="save_censor" value="', $txt['save'], '" class="button_submit" />
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';
@@ -724,33 +725,33 @@ function template_not_done()
 		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
-				<div class="content">
-					', $txt['not_done_reason'];
+			<div class="content">
+				', $txt['not_done_reason'];
 
 	if (!empty($context['continue_percent']))
 		echo '
-					<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
-						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
-							<div style="padding-top: ', $context['browser']['is_webkit'] || $context['browser']['is_konqueror'] ? '2pt' : '1pt', '; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['continue_percent'], '%</div>
-							<div style="width: ', $context['continue_percent'], '%; height: 12pt; z-index: 1; background-color: red;">&nbsp;</div>
-						</div>
-					</div>';
+				<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
+					<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
+						<div style="padding-top: ', $context['browser']['is_webkit'] || $context['browser']['is_konqueror'] ? '2pt' : '1pt', '; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['continue_percent'], '%</div>
+						<div style="width: ', $context['continue_percent'], '%; height: 12pt; z-index: 1; background-color: red;">&nbsp;</div>
+					</div>
+				</div>';
 
 	if (!empty($context['substep_enabled']))
 		echo '
-					<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
-						<span class="smalltext">', $context['substep_title'], '</span>
-						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
-							<div style="padding-top: ', $context['browser']['is_webkit'] || $context['browser']['is_konqueror'] ? '2pt' : '1pt', '; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['substep_continue_percent'], '%</div>
-							<div style="width: ', $context['substep_continue_percent'], '%; height: 12pt; z-index: 1; background-color: blue;">&nbsp;</div>
-						</div>
-					</div>';
+				<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
+					<span class="smalltext">', $context['substep_title'], '</span>
+					<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
+						<div style="padding-top: ', $context['browser']['is_webkit'] || $context['browser']['is_konqueror'] ? '2pt' : '1pt', '; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['substep_continue_percent'], '%</div>
+						<div style="width: ', $context['substep_continue_percent'], '%; height: 12pt; z-index: 1; background-color: blue;">&nbsp;</div>
+					</div>
+				</div>';
 
 	echo '
-			<form action="', $scripturl, $context['continue_get_data'], '" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;" name="autoSubmit" id="autoSubmit">
-				<div style="margin: 1ex; text-align: right;"><input type="submit" name="cont" value="', $txt['not_done_continue'], '" class="button_submit" /></div>
-				', $context['continue_post_data'], '
-			</form>
+				<form action="', $scripturl, $context['continue_get_data'], '" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;" name="autoSubmit" id="autoSubmit">
+					<div style="margin: 1ex; text-align: right;"><input type="submit" name="cont" value="', $txt['not_done_continue'], '" class="button_submit" /></div>
+					', $context['continue_post_data'], '
+				</form>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
@@ -944,15 +945,11 @@ function template_show_settings()
 				}
 				// Text area?
 				elseif ($config_var['type'] == 'large_text')
-				{
 					echo '
 							<textarea rows="', ($config_var['size'] ? $config_var['size'] : 4), '" cols="30" ', $javascript, $disabled, ' name="', $config_var['name'], '" id="', $config_var['name'], '">', $config_var['value'], '</textarea>';
-				}
 				// Permission group?
 				elseif ($config_var['type'] == 'permissions')
-				{
 					theme_inline_permissions($config_var['name']);
-				}
 				// BBC selection?
 				elseif ($config_var['type'] == 'bbc')
 				{
@@ -984,7 +981,7 @@ function template_show_settings()
 
 				echo isset($config_var['postinput']) ? '
 							' . $config_var['postinput'] : '',
-					'</dd>';
+						'</dd>';
 			}
 		}
 
@@ -1006,18 +1003,18 @@ function template_show_settings()
 
 	if ($is_open)
 		echo '
-						</dl>';
+					</dl>';
 
 	if (empty($context['settings_save_dont_show']))
 		echo '
-						<hr class="hrcolor" />
-						<div class="righttext">
-							<input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), (!empty($context['settings_save_onclick']) ? ' onclick="' . $context['settings_save_onclick'] . '"' : ''), ' class="button_submit" />
-						</div>';
+					<hr class="hrcolor" />
+					<div class="righttext">
+						<input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), (!empty($context['settings_save_onclick']) ? ' onclick="' . $context['settings_save_onclick'] . '"' : ''), ' class="button_submit" />
+					</div>';
 
 	if ($is_open)
 		echo '
-					</div>
+				</div>
 				<span class="botslice"><span></span></span>
 			</div>';
 

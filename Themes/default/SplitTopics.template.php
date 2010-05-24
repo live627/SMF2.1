@@ -249,7 +249,7 @@ function template_merge_done()
 				<h3 class="catbg">', $txt['merge'], '</h3>
 			</div>
 			<div class="windowbg">
-			<span class="topslice"><span></span></span>
+				<span class="topslice"><span></span></span>
 				<div class="content">
 					<p>', $txt['merge_successful'], '</p>
 					<br />
@@ -262,7 +262,7 @@ function template_merge_done()
 						</li>
 					</ul>
 				</div>
-			<span class="botslice"><span></span></span>
+				<span class="botslice"><span></span></span>
 			</div>
 		</div>
 	<br class="clear" />';
@@ -281,7 +281,7 @@ function template_merge()
 				', $txt['merge_desc'], '
 			</div>
 			<div class="windowbg">
-			<span class="topslice"><span></span></span>
+				<span class="topslice"><span></span></span>
 				<div class="content">
 					<dl class="settings merge_topic">
 						<dt>

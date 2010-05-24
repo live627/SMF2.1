@@ -42,7 +42,7 @@ function template_main()
 			echo '
 					<th scope="col" class="smalltext', isset($column['class']) ? ' ' . $column['class'] : '', '"', isset($column['width']) ? ' width="' . $column['width'] . '"' : '', isset($column['colspan']) ? ' colspan="' . $column['colspan'] . '"' : '', '>
 						', $column['label'], '</th>';
-		// This is a selected solumn, so underline it or some such.
+		// This is a selected column, so underline it or some such.
 		elseif ($column['selected'])
 			echo '
 					<th scope="col" class="smalltext', isset($column['class']) ? ' ' . $column['class'] : '', '" style="width: auto;"' . (isset($column['colspan']) ? ' colspan="' . $column['colspan'] . '"' : '') . ' nowrap="nowrap">
@@ -103,7 +103,7 @@ function template_main()
 		if (!isset($context['disabled_fields']['posts']))
 		{
 			echo '
-					<td class="windowbg2" width="15">', $member['posts'], '</td>
+					<td class="windowbg2" style="white-space: nowrap" width="15">', $member['posts'], '</td>
 					<td class="windowbg statsbar" width="120" align="', $context['right_to_left'] ? 'right' : 'left', '">';
 
 			if (!empty($member['post_percent']))
@@ -115,6 +115,7 @@ function template_main()
 			echo '
 					</td>';
 		}
+
 		echo '
 				</tr>';
 		}

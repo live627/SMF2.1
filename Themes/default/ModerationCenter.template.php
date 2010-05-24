@@ -367,21 +367,21 @@ function template_unapproved_posts()
 			<span class="topslice"><span></span></span>
 			<div class="content">
 				<div class="post">', $item['body'], '</div>
-					<span class="align_right">
-						<a href="', $scripturl, '?action=moderate;area=postmod;sa=', $context['current_view'], ';start=', $context['start'], ';', $context['session_var'], '=', $context['session_id'], ';approve=', $item['id'], '">', $approve_button, '</a>';
+				<span class="align_right">
+					<a href="', $scripturl, '?action=moderate;area=postmod;sa=', $context['current_view'], ';start=', $context['start'], ';', $context['session_var'], '=', $context['session_id'], ';approve=', $item['id'], '">', $approve_button, '</a>';
 
 			if ($item['can_delete'])
 				echo '
-						', $context['menu_separator'], '
-						<a href="', $scripturl, '?action=moderate;area=postmod;sa=', $context['current_view'], ';start=', $context['start'], ';', $context['session_var'], '=', $context['session_id'], ';delete=', $item['id'], '">', $remove_button, '</a>';
+					', $context['menu_separator'], '
+					<a href="', $scripturl, '?action=moderate;area=postmod;sa=', $context['current_view'], ';start=', $context['start'], ';', $context['session_var'], '=', $context['session_id'], ';delete=', $item['id'], '">', $remove_button, '</a>';
 
 			echo '
-						<input type="checkbox" name="item[]" value="', $item['id'], '" checked="checked" class="input_check" /> ';
+					<input type="checkbox" name="item[]" value="', $item['id'], '" checked="checked" class="input_check" /> ';
 
 			echo '
-					</span>
-					<br class="clear" />
-				</div>
+				</span>
+				<br class="clear" />
+			</div>
 			<span class="botslice"><span></span></span>
 		</div>';
 	}
@@ -545,7 +545,7 @@ function template_viewmodreport()
 				<h3 class="catbg">', $txt['mc_modreport_mod_comments'], '</h3>
 			</div>
 			<div class="windowbg2">
-			<span class="topslice"><span></span></span>
+				<span class="topslice"><span></span></span>
 				<div class="content">';
 
 	if (empty($context['report']['mod_comments']))
@@ -562,7 +562,7 @@ function template_viewmodreport()
 						<input type="submit" name="add_comment" value="', $txt['mc_modreport_add_mod_comment'], '" class="button_submit" />
 					</div>
 				</div>
-			<span class="botslice"><span></span></span>
+				<span class="botslice"><span></span></span>
 			</div>
 			<br />';
 
@@ -667,7 +667,7 @@ function template_moderation_settings()
 				', $txt['mc_prefs_desc'], '
 			</div>
 			<div class="windowbg2">
-			<span class="topslice"><span></span></span>
+				<span class="topslice"><span></span></span>
 				<div class="content">
 					<dl class="settings">
 						<dt>

@@ -660,33 +660,33 @@ function template_pick()
 	foreach ($context['available_themes'] as $theme)
 	{
 		echo '
-		<div class="cat_bar">
-			<h3 class="catbg">
-				<a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $theme['name'], '</a>
-			</h3>
-		</div>
-		<div class="', $theme['selected'] ? 'windowbg' : 'windowbg2', '">
-			<span class="topslice"><span></span></span>
-			<div class="flow_hidden content">
-				<div class="floatright"><a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';theme=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '" id="theme_thumb_preview_', $theme['id'], '" title="', $txt['theme_preview'], '"><img src="', $theme['thumbnail_href'], '" id="theme_thumb_', $theme['id'], '" alt="" class="padding" /></a></div>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $theme['name'], '</a>
+				</h3>
+			</div>
+			<div class="', $theme['selected'] ? 'windowbg' : 'windowbg2', '">
+				<span class="topslice"><span></span></span>
+				<div class="flow_hidden content">
+					<div class="floatright"><a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';theme=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '" id="theme_thumb_preview_', $theme['id'], '" title="', $txt['theme_preview'], '"><img src="', $theme['thumbnail_href'], '" id="theme_thumb_', $theme['id'], '" alt="" class="padding" /></a></div>
 					<p>', $theme['description'], '</p>';
 
 		if (!empty($theme['variants']))
 		{
 			echo '
-						<label for="variant', $theme['id'], '"><strong>', $theme['pick_label'], '</strong></label>:
-						<select id="variant', $theme['id'], '" name="vrt[', $theme['id'], ']" onchange="changeVariant', $theme['id'], '(this.value);">';
+					<label for="variant', $theme['id'], '"><strong>', $theme['pick_label'], '</strong></label>:
+					<select id="variant', $theme['id'], '" name="vrt[', $theme['id'], ']" onchange="changeVariant', $theme['id'], '(this.value);">';
 
 			foreach ($theme['variants'] as $key => $variant)
 			{
 				echo '
-							<option value="', $key, '" ', $theme['selected_variant'] == $key ? 'selected="selected"' : '', '>', $variant['label'], '</option>';
+						<option value="', $key, '" ', $theme['selected_variant'] == $key ? 'selected="selected"' : '', '>', $variant['label'], '</option>';
 			}
 			echo '
-						</select>
-						<noscript>
-							<input type="submit" name="save[', $theme['id'], ']" value="', $txt['save'], '" class="button_submit" />
-						</noscript>';
+					</select>
+					<noscript>
+						<input type="submit" name="save[', $theme['id'], ']" value="', $txt['save'], '" class="button_submit" />
+					</noscript>';
 		}
 
 		echo '
@@ -710,31 +710,31 @@ function template_pick()
 		if (!empty($theme['variants']))
 		{
 			echo '
-		<script type="text/javascript"><!-- // --><![CDATA[
-		var sBaseUseUrl = smf_prepareScriptUrl(smf_scripturl) + \'action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '\';
-		var sBasePreviewUrl = smf_prepareScriptUrl(smf_scripturl) + \'action=theme;sa=pick;u=', $context['current_member'], ';theme=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '\';
-		var oThumbnails', $theme['id'], ' = {';
+			<script type="text/javascript"><!-- // --><![CDATA[
+			var sBaseUseUrl = smf_prepareScriptUrl(smf_scripturl) + \'action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '\';
+			var sBasePreviewUrl = smf_prepareScriptUrl(smf_scripturl) + \'action=theme;sa=pick;u=', $context['current_member'], ';theme=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '\';
+			var oThumbnails', $theme['id'], ' = {';
 
 			// All the variant thumbnails.
 			$count = 1;
 			foreach ($theme['variants'] as $key => $variant)
 			{
 				echo '
-			', $key, ': \'', $variant['thumbnail'], '\'', (count($theme['variants']) == $count ? '' : ',');
-			$count++;
+				', $key, ': \'', $variant['thumbnail'], '\'', (count($theme['variants']) == $count ? '' : ',');
+				$count++;
 			}
 
 			echo '
-		}
+			}
 
-		function changeVariant', $theme['id'], '(sVariant)
-		{
-			document.getElementById(\'theme_thumb_', $theme['id'], '\').src = oThumbnails', $theme['id'], '[sVariant];
-			document.getElementById(\'theme_use_', $theme['id'], '\').href = sBaseUseUrl + \';vrt=\' + sVariant;
-			document.getElementById(\'theme_thumb_preview', $theme['id'], '\').href = sBasePreviewUrl + \';vrt=\' + sVariant + \';variant=\' + sVariant;
-			document.getElementById(\'theme_preview_', $theme['id'], '\').href = sBasePreviewUrl + \';vrt=\' + sVariant + \';variant=\' + sVariant;
-		}
-		// ]]></script>';
+			function changeVariant', $theme['id'], '(sVariant)
+			{
+				document.getElementById(\'theme_thumb_', $theme['id'], '\').src = oThumbnails', $theme['id'], '[sVariant];
+				document.getElementById(\'theme_use_', $theme['id'], '\').href = sBaseUseUrl + \';vrt=\' + sVariant;
+				document.getElementById(\'theme_thumb_preview', $theme['id'], '\').href = sBasePreviewUrl + \';vrt=\' + sVariant + \';variant=\' + sVariant;
+				document.getElementById(\'theme_preview_', $theme['id'], '\').href = sBasePreviewUrl + \';vrt=\' + sVariant + \';variant=\' + sVariant;
+			}
+			// ]]></script>';
 		}
 	}
 
@@ -827,8 +827,7 @@ function template_copy_template()
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
-				<ul class="theme_options">
-			';
+				<ul class="theme_options">';
 
 	$alternate = false;
 	foreach ($context['available_templates'] as $template)
@@ -836,9 +835,9 @@ function template_copy_template()
 		$alternate = !$alternate;
 
 		echo '
-			<li class="reset flow_hidden windowbg', $alternate ? '2' : '', '">
-				<span class="align_left">', $template['filename'], $template['already_exists'] ? ' <span class="error">(' . $txt['themeadmin_edit_exists'] . ')</span>' : '', '</span>
-				<span class="align_right">';
+					<li class="reset flow_hidden windowbg', $alternate ? '2' : '', '">
+						<span class="align_left">', $template['filename'], $template['already_exists'] ? ' <span class="error">(' . $txt['themeadmin_edit_exists'] . ')</span>' : '', '</span>
+						<span class="align_right">';
 
 		if ($template['can_copy'])
 			echo '<a href="', $scripturl, '?action=admin;area=theme;th=', $context['theme_id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=copy;template=', $template['value'], '" onclick="return confirm(\'', $template['already_exists'] ? $txt['themeadmin_edit_overwrite_confirm'] : $txt['themeadmin_edit_copy_confirm'], '\');">', $txt['themeadmin_edit_do_copy'], '</a>';
@@ -846,8 +845,8 @@ function template_copy_template()
 			echo $txt['themeadmin_edit_no_copy'];
 
 		echo '
-				</span>
-			</li>';
+						</span>
+					</li>';
 	}
 
 	echo '

@@ -24,13 +24,13 @@ function template_main()
 		echo '
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
-				<div class="content centertext">
-					', $txt['mboards_no_cats'], '
-				</div>
+			<div class="content centertext">
+				', $txt['mboards_no_cats'], '
+			</div>
 			<span class="botslice"><span></span></span>
 		</div>';
 
-	// Loop through every categories, listing the boards in each as we go.
+	// Loop through every category, listing the boards in each as we go.
 	foreach ($context['categories'] as $category)
 	{
 		// Link to modify the category.
@@ -45,7 +45,7 @@ function template_main()
 		echo '
 		<form action="', $scripturl, '?action=admin;area=manageboards;sa=newboard;cat=', $category['id'], '" method="post" accept-charset="', $context['character_set'], '">
 			<div class="windowbg">
-			<span class="topslice"><span></span></span>
+				<span class="topslice"><span></span></span>
 				<div class="content">
 					<ul id="category_', $category['id'], '">';
 
@@ -61,7 +61,7 @@ function template_main()
 			$alternate = !$alternate;
 
 			echo '
-						<li', !empty($modSettings['recycle_board']) && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board['id'] ? ' id="recycle_board"' : ' ', ' class="windowbg', $alternate ? '' : '2', '" style="padding-' . ($context['right_to_left'] ? 'right' : 'left') . ': ', 5 + 30 * $board['child_level'], 'px;', $board['move'] ? 'color: red;' : '', '"><span class="align_left">', $board['name'], !empty($modSettings['recycle_board']) && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board['id'] ? '<a href="' . $scripturl . '?action=admin;area=manageboards;sa=settings"> <img src="' . $settings['images_url'] . '/post/recycled.gif" alt="' . $txt['recycle_board'] . '" border="0" /></a></span>' : '</span>', '
+						<li', !empty($modSettings['recycle_board']) && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board['id'] ? ' id="recycle_board"' : ' ', ' class="windowbg', $alternate ? '' : '2', '" style="padding-' . ($context['right_to_left'] ? 'right' : 'left') . ': ', 5 + 30 * $board['child_level'], 'px;', $board['move'] ? 'color: red;' : '', '"><span class="align_left"><a href="', $scripturl, '?board=', $board['id'], '">', $board['name'], '</a>', !empty($modSettings['recycle_board']) && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board['id'] ? '<a href="' . $scripturl . '?action=admin;area=manageboards;sa=settings"> <img src="' . $settings['images_url'] . '/post/recycled.gif" alt="' . $txt['recycle_board'] . '" border="0" /></a></span>' : '</span>', '
 							<span class="align_right">', $context['can_manage_permissions'] ? '<span class="modify_boards"><a href="' . $scripturl . '?action=admin;area=permissions;sa=index;pid=' . $board['permission_profile'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '">' . $txt['mboards_permissions'] . '</a></span>' : '', '
 							<span class="modify_boards"><a href="', $scripturl, '?action=admin;area=manageboards;move=', $board['id'], '">', $txt['mboards_move'], '</a></span>
 							<span class="modify_boards"><a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], '">', $txt['mboards_modify'], '</a></span></span><br style="clear: right;" />
@@ -198,14 +198,14 @@ function template_confirm_category_delete()
 				<span class="topslice"><span></span></span>
 				<div class="content">
 					<p>', $txt['mboards_delete_cat_contains'], ':</p>
-						<ul>';
+					<ul>';
 
 	foreach ($context['category']['children'] as $child)
 		echo '
-							<li>', $child, '</li>';
+						<li>', $child, '</li>';
 
 	echo '
-						</ul>
+					</ul>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
@@ -368,7 +368,7 @@ function template_modify_board()
 						</dt>
 						<dd>
 							<input type="text" name="moderators" id="moderators" value="', $context['board']['moderator_list'], '" size="30" class="input_text" />
-								<div id="moderator_container"></div>
+							<div id="moderator_container"></div>
 						</dd>
 					</dl>
 					<hr class="hrcolor" />';
@@ -386,14 +386,15 @@ function template_modify_board()
 						</dl>';
 
 	if (!empty($context['board']['is_recycle']))
-		echo '<div class="information">', $txt['mboards_redirect_disabled_recycle'], '</div>';
+		echo '
+					<div class="information">', $txt['mboards_redirect_disabled_recycle'], '</div>';
 
 	if (empty($context['board']['is_recycle']) && !empty($context['board']['topics']))
 		echo '
-						<div class="information">
-							<strong>', $txt['mboards_redirect'],'</strong><br />
-							', $txt['mboards_redirect_disabled'], '
-						</div>';
+					<div class="information">
+						<strong>', $txt['mboards_redirect'],'</strong><br />
+						', $txt['mboards_redirect_disabled'], '
+					</div>';
 
 	if (!$context['board']['topics'] && empty($context['board']['is_recycle']))
 	{
@@ -497,7 +498,7 @@ function template_modify_board()
 					<span', $context['board']['is_recycle'] ? ' style="visibility:hidden">' : '>', '<input type="submit" name="delete" value="', $txt['mboards_delete_board'], '" onclick="return confirm(\'', $txt['boardConfirm'], '\');"', ' class="button_submit" /></span>';
 	echo '
 				</div>
-			<span class="botslice"><span></span></span>
+				<span class="botslice"><span></span></span>
 			</div>
 		</form>
 	</div>
@@ -537,14 +538,12 @@ function template_modify_board()
 		{
 			var redirect = document.getElementById("redirect_enable")
 			if (redirect)
-			{
 				var redirectEnabled = document.getElementById("redirect_enable").checked;
-			}
 			var nonDefaultTheme = document.getElementById("boardtheme").value == 0 ? false : true;
 
 			// What to show?
 			document.getElementById("override_theme_div").style.display = redirectEnabled || !nonDefaultTheme ? "none" : "";
-			document.getElementById("board_theme_div").style.display = redirectEnabled? "none" : "";
+			document.getElementById("board_theme_div").style.display = redirectEnabled ? "none" : "";
 			document.getElementById("count_posts_div").style.display = redirectEnabled ? "none" : "";';
 
 	if (!$context['board']['topics'] && empty($context['board']['is_recycle']))
@@ -590,7 +589,7 @@ function template_confirm_board_delete()
 	echo '
 						</ul>
 				</div>
-			<span class="botslice"><span></span></span>
+				<span class="botslice"><span></span></span>
 			</div>
 			<div class="cat_bar">
 				<h3 class="catbg">', $txt['mboards_delete_what_do'], '</h3>
@@ -616,7 +615,7 @@ function template_confirm_board_delete()
 					<input type="hidden" name="confirmation" value="1" />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</div>
-			<span class="botslice"><span></span></span>
+				<span class="botslice"><span></span></span>
 			</div>
 		</form>
 	</div>

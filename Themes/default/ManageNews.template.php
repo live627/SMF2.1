@@ -100,92 +100,92 @@ function template_email_members()
 				<span class="topslice"><span></span></span>
 				<div class="content">
 					<dl class="settings">
-					<dt>
-						<strong>', $txt['admin_news_select_group'], ':</strong><br />
-						<span class="smalltext">', $txt['admin_news_select_group_desc'], '</span>
-					</dt>
-					<dd>';
+						<dt>
+							<strong>', $txt['admin_news_select_group'], ':</strong><br />
+							<span class="smalltext">', $txt['admin_news_select_group_desc'], '</span>
+						</dt>
+						<dd>';
 
 	foreach ($context['groups'] as $group)
 				echo '
-						<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[', $group['id'], ']" id="groups_', $group['id'], '" value="', $group['id'], '" checked="checked" class="input_check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em><br />';
+							<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[', $group['id'], ']" id="groups_', $group['id'], '" value="', $group['id'], '" checked="checked" class="input_check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em><br />';
 
 	echo '
-						<br />
-						<label for="checkAllGroups"><input type="checkbox" id="checkAllGroups" checked="checked" onclick="invertAll(this, this.form, \'groups\');" class="input_check" /> <em>', $txt['check_all'], '</em></label>';
+							<br />
+							<label for="checkAllGroups"><input type="checkbox" id="checkAllGroups" checked="checked" onclick="invertAll(this, this.form, \'groups\');" class="input_check" /> <em>', $txt['check_all'], '</em></label>';
 
 	echo '
-					</dd>
-				</dl>
+						</dd>
+					</dl>
+				</div>
+				<span class="botslice"><span></span></span>
 			</div>
-			<span class="botslice"><span></span></span>
-		</div>
-		<br />
+			<br />
 
-		<div class="cat_bar">
-			<h3 class="catbg" id="advanced_select_div" style="display: none;">
-				<span class="ie6_header floatleft">
-					<a href="#" onclick="toggleAdvanced(1); return false;" id="goadvanced"><img src="', $settings['images_url'], '/selected.gif" alt="', $txt['advanced'], '" />&nbsp;<strong>', $txt['advanced'], '</strong></a>
-					<a href="#" onclick="toggleAdvanced(0); return false;" id="gosimple" style="display: none;"><img src="', $settings['images_url'], '/sort_down.gif" alt="', $txt['simple'], '" />&nbsp;<strong>', $txt['simple'], '</strong></a>
-				</span>
-			</h3>
-		</div>
+			<div class="cat_bar">
+				<h3 class="catbg" id="advanced_select_div" style="display: none;">
+					<span class="ie6_header floatleft">
+						<a href="#" onclick="toggleAdvanced(1); return false;" id="goadvanced"><img src="', $settings['images_url'], '/selected.gif" alt="', $txt['advanced'], '" />&nbsp;<strong>', $txt['advanced'], '</strong></a>
+						<a href="#" onclick="toggleAdvanced(0); return false;" id="gosimple" style="display: none;"><img src="', $settings['images_url'], '/sort_down.gif" alt="', $txt['simple'], '" />&nbsp;<strong>', $txt['simple'], '</strong></a>
+					</span>
+				</h3>
+			</div>
 
-		<div class="windowbg2" id="advanced_settings_div" style="display: none;">
-			<span class="topslice"><span></span></span>
-			<div class="content">
-				<dl class="settings">
-					<dt>
-						<strong>', $txt['admin_news_select_email'], ':</strong><br />
-						<span class="smalltext">', $txt['admin_news_select_email_desc'], '</span>
-					</dt>
-					<dd>
-						<textarea name="emails" rows="5" cols="30" style="width: 98%;"></textarea>
-					</dd>
-					<dt>
-						<strong>', $txt['admin_news_select_members'], ':</strong><br />
-						<span class="smalltext">', $txt['admin_news_select_members_desc'], '</span>
-					</dt>
-					<dd>
-						<input type="text" name="members" id="members" value="" size="30" class="input_text" />
-						<span id="members_container"></span>
-					</dd>
-				</dl>
-				<hr class="bordercolor" />
-				<dl class="settings">
-					<dt>
-						<strong>', $txt['admin_news_select_excluded_groups'], ':</strong><br />
-						<span class="smalltext">', $txt['admin_news_select_excluded_groups_desc'], '</span>
-					</dt>
-					<dd>';
+			<div class="windowbg2" id="advanced_settings_div" style="display: none;">
+				<span class="topslice"><span></span></span>
+				<div class="content">
+					<dl class="settings">
+						<dt>
+							<strong>', $txt['admin_news_select_email'], ':</strong><br />
+							<span class="smalltext">', $txt['admin_news_select_email_desc'], '</span>
+						</dt>
+						<dd>
+							<textarea name="emails" rows="5" cols="30" style="width: 98%;"></textarea>
+						</dd>
+						<dt>
+							<strong>', $txt['admin_news_select_members'], ':</strong><br />
+							<span class="smalltext">', $txt['admin_news_select_members_desc'], '</span>
+						</dt>
+						<dd>
+							<input type="text" name="members" id="members" value="" size="30" class="input_text" />
+							<span id="members_container"></span>
+						</dd>
+					</dl>
+					<hr class="bordercolor" />
+					<dl class="settings">
+						<dt>
+							<strong>', $txt['admin_news_select_excluded_groups'], ':</strong><br />
+							<span class="smalltext">', $txt['admin_news_select_excluded_groups_desc'], '</span>
+						</dt>
+						<dd>';
 
 	foreach ($context['groups'] as $group)
 				echo '
-						<label for="exclude_groups_', $group['id'], '"><input type="checkbox" name="exclude_groups[', $group['id'], ']" id="exclude_groups_', $group['id'], '" value="', $group['id'], '" class="input_check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em><br />';
+							<label for="exclude_groups_', $group['id'], '"><input type="checkbox" name="exclude_groups[', $group['id'], ']" id="exclude_groups_', $group['id'], '" value="', $group['id'], '" class="input_check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em><br />';
 
 	echo '
-						<br />
-						<label for="checkAllGroupsExclude"><input type="checkbox" id="checkAllGroupsExclude" onclick="invertAll(this, this.form, \'exclude_groups\');" class="input_check" /> <em>', $txt['check_all'], '</em></label><br />
-					</dd>
-					<dt>
-						<strong>', $txt['admin_news_select_excluded_members'], ':</strong><br />
-						<span class="smalltext">', $txt['admin_news_select_excluded_members_desc'], '</span>
-					</dt>
-					<dd>
-						<input type="text" name="exclude_members" id="exclude_members" value="" size="30" class="input_text" />
-						<span id="exclude_members_container"></span>
-					</dd>
-				</dl>
-				<hr class="bordercolor" />
-				<dl class="settings">
-					<dt>
-						<label for="email_force"><strong>', $txt['admin_news_select_override_notify'], ':</strong></label><br />
-						<span class="smalltext">', $txt['email_force'], '</span>
-					</dt>
-					<dd>
-						<input type="checkbox" name="email_force" id="email_force" value="1" class="input_check" />
-					</dd>
-				</dl>
+							<br />
+							<label for="checkAllGroupsExclude"><input type="checkbox" id="checkAllGroupsExclude" onclick="invertAll(this, this.form, \'exclude_groups\');" class="input_check" /> <em>', $txt['check_all'], '</em></label><br />
+						</dd>
+						<dt>
+							<strong>', $txt['admin_news_select_excluded_members'], ':</strong><br />
+							<span class="smalltext">', $txt['admin_news_select_excluded_members_desc'], '</span>
+						</dt>
+						<dd>
+							<input type="text" name="exclude_members" id="exclude_members" value="" size="30" class="input_text" />
+							<span id="exclude_members_container"></span>
+						</dd>
+					</dl>
+					<hr class="bordercolor" />
+					<dl class="settings">
+						<dt>
+							<label for="email_force"><strong>', $txt['admin_news_select_override_notify'], ':</strong></label><br />
+							<span class="smalltext">', $txt['email_force'], '</span>
+						</dt>
+						<dd>
+							<input type="checkbox" name="email_force" id="email_force" value="1" class="input_check" />
+						</dd>
+					</dl>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

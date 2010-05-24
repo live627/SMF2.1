@@ -94,7 +94,7 @@ function template_permission_index()
 				</h3>
 			</div>
 			<div id="permissions_panel_advanced" class="windowbg">
-			<span class="topslice"><span></span></span>
+				<span class="topslice"><span></span></span>
 				<div class="content">
 					<fieldset>
 						<legend>', $txt['permissions_with_selection'], '</legend>
