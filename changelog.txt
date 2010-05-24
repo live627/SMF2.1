@@ -62,7 +62,16 @@ May 2010
  * Harmonized Error Log header with the other log pages. (Errors.template.php)
  ! If a member without permission to view profiles manually navigated to a profile, an undefined index error could occur. (Profile.php) [Bug 4307]
  * Making life easier for those random mod authors. If .description was used within .tborder (i.e, when trying to make something look good in Core) the bottom margin broke the layout. (core/css/index.css)
-
+ * Lots of indentation fixes. Really. (Admin, Display, Help, index, ManageBoards, ManageCalendar, ManageMail, ManageMaintenance, ManageNews, ManagePaid, ManagePermissions, ManageSmileys, Memberlist, MessageIndex, ModerationCenter, Packages, PersonalMessage, Post, Profile, Recent, Search, SplitTopics, Stats and Themes templates)
+ * In the credits area, validation could be broken if a group title wasn't set. (Admin template)
+ * If a member didn't have all 4 messenger fields filled, ugly blank lines would show up in the topic and profile source code. (Display and Profile templates)
+ * Don't waste time showing who made the last edit on a message if it's the message author. Sounds logical. (Display template)
+ * A class in Quick Reply was called 'lefftext' instead of 'lefttext'. (Display template)
+ * Modified Quick Reply target URL to allow for proper URL rewriting and avoid errors in rare cases where using subdomains for board URLs. (Display template)
+ * Link to board URLs when listing boards in the Manage Boards section. (ManageBoards template)
+ * A <div class="content"> was missing from the Convert Entities template, breaking it. (ManageMaintenance template)
+ * In memberlist, specific number formatting and busy boards could end up breaking post numbers into two lines. (Memberlist template)
+ * Searching with Complete Posts option enabled would mess up div ordering. (Search template)
 
 ================================================================================
 April 2010

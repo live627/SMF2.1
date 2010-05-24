@@ -114,60 +114,60 @@ function template_summary()
 
 	if ($context['user']['is_owner'] || $context['user']['is_admin'])
 		echo '
-				<dt>', $txt['username'], ': </dt>
-				<dd>', $context['member']['username'], '</dd>';
+					<dt>', $txt['username'], ': </dt>
+					<dd>', $context['member']['username'], '</dd>';
 
 	if (!isset($context['disabled_fields']['posts']))
 		echo '
-				<dt>', $txt['profile_posts'], ': </dt>
-				<dd>', $context['member']['posts'], ' (', $context['member']['posts_per_day'], ' ', $txt['posts_per_day'], ')</dd>';
+					<dt>', $txt['profile_posts'], ': </dt>
+					<dd>', $context['member']['posts'], ' (', $context['member']['posts_per_day'], ' ', $txt['posts_per_day'], ')</dd>';
 
 	// Only show the email address fully if it's not hidden - and we reveal the email.
 	if ($context['member']['show_email'] == 'yes')
 		echo '
-				<dt>', $txt['email'], ': </dt>
-				<dd><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '">', $context['member']['email'], '</a></dd>';
+					<dt>', $txt['email'], ': </dt>
+					<dd><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '">', $context['member']['email'], '</a></dd>';
 
 	// ... Or if the one looking at the profile is an admin they can see it anyway.
 	elseif ($context['member']['show_email'] == 'yes_permission_override')
 		echo '
-				<dt>', $txt['email'], ': </dt>
-				<dd><em><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '">', $context['member']['email'], '</a></em></dd>';
+					<dt>', $txt['email'], ': </dt>
+					<dd><em><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '">', $context['member']['email'], '</a></em></dd>';
 
 	if (!empty($modSettings['titlesEnable']) && !empty($context['member']['title']))
 		echo '
-				<dt>', $txt['custom_title'], ': </dt>
-				<dd>', $context['member']['title'], '</dd>';
+					<dt>', $txt['custom_title'], ': </dt>
+					<dd>', $context['member']['title'], '</dd>';
 
 	if (!empty($context['member']['blurb']))
 		echo '
-				<dt>', $txt['personal_text'], ': </dt>
-				<dd>', $context['member']['blurb'], '</dd>';
+					<dt>', $txt['personal_text'], ': </dt>
+					<dd>', $context['member']['blurb'], '</dd>';
 
 	// If karma enabled show the members karma.
 	if ($modSettings['karmaMode'] == '1')
 		echo '
-				<dt>', $modSettings['karmaLabel'], ' </dt>
-				<dd>', ($context['member']['karma']['good'] - $context['member']['karma']['bad']), '</dd>';
+					<dt>', $modSettings['karmaLabel'], ' </dt>
+					<dd>', ($context['member']['karma']['good'] - $context['member']['karma']['bad']), '</dd>';
 
 	elseif ($modSettings['karmaMode'] == '2')
 		echo '
-				<dt>', $modSettings['karmaLabel'], ' </dt>
-				<dd>+', $context['member']['karma']['good'], '/-', $context['member']['karma']['bad'], '</dd>';
+					<dt>', $modSettings['karmaLabel'], ' </dt>
+					<dd>+', $context['member']['karma']['good'], '/-', $context['member']['karma']['bad'], '</dd>';
 
 	if (!isset($context['disabled_fields']['gender']) && !empty($context['member']['gender']['name']))
 		echo '
-				<dt>', $txt['gender'], ': </dt>
-				<dd>', $context['member']['gender']['name'], '</dd>';
+					<dt>', $txt['gender'], ': </dt>
+					<dd>', $context['member']['gender']['name'], '</dd>';
 
 	echo '
-				<dt>', $txt['age'], ':</dt>
-				<dd>', $context['member']['age'] . ($context['member']['today_is_birthday'] ? ' &nbsp; <img src="' . $settings['images_url'] . '/cake.png" alt="" />' : ''), '</dd>';
+					<dt>', $txt['age'], ':</dt>
+					<dd>', $context['member']['age'] . ($context['member']['today_is_birthday'] ? ' &nbsp; <img src="' . $settings['images_url'] . '/cake.png" alt="" />' : ''), '</dd>';
 
 	if (!isset($context['disabled_fields']['location']) && !empty($context['member']['location']))
 		echo '
-				<dt>', $txt['location'], ':</dt>
-				<dd>', $context['member']['location'], '</dd>';
+					<dt>', $txt['location'], ':</dt>
+					<dd>', $context['member']['location'], '</dd>';
 
 	echo '
 				</dl>';
@@ -189,8 +189,8 @@ function template_summary()
 			}
 
 			echo '
-				<dt>', $field['name'], ':</dt>
-				<dd>', $field['output_html'], '</dd>';
+					<dt>', $field['name'], ':</dt>
+					<dd>', $field['output_html'], '</dd>';
 		}
 
 		if (!empty($shown))
@@ -205,17 +205,17 @@ function template_summary()
 	if ($context['can_view_warning'] && $context['member']['warning'])
 	{
 		echo '
-				<dt>', $txt['profile_warning_level'], ': </dt>
-				<dd>
-					<a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=', $context['can_issue_warning'] ? 'issuewarning' : 'viewwarning', '">', $context['member']['warning'], '%</a>';
+					<dt>', $txt['profile_warning_level'], ': </dt>
+					<dd>
+						<a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=', $context['can_issue_warning'] ? 'issuewarning' : 'viewwarning', '">', $context['member']['warning'], '%</a>';
 
 		// Can we provide information on what this means?
 		if (!empty($context['warning_status']))
 			echo '
-					<span class="smalltext">(', $context['warning_status'], ')</span>';
+						<span class="smalltext">(', $context['warning_status'], ')</span>';
 
 		echo '
-				</dd>';
+					</dd>';
 	}
 
 	// Is this member requiring activation and/or banned?
@@ -225,55 +225,55 @@ function template_summary()
 		// If the person looking at the summary has permission, and the account isn't activated, give the viewer the ability to do it themselves.
 		if (!empty($context['activate_message']))
 			echo '
-				<dt class="clear"><span class="alert">', $context['activate_message'], '</span>&nbsp;(<a href="' . $scripturl . '?action=profile;save;area=activateaccount;u=' . $context['id_member'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '"', ($context['activate_type'] == 4 ? ' onclick="return confirm(\'' . $txt['profileConfirm'] . '\');"' : ''), '>', $context['activate_link_text'], '</a>)</dt>';
+					<dt class="clear"><span class="alert">', $context['activate_message'], '</span>&nbsp;(<a href="' . $scripturl . '?action=profile;save;area=activateaccount;u=' . $context['id_member'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '"', ($context['activate_type'] == 4 ? ' onclick="return confirm(\'' . $txt['profileConfirm'] . '\');"' : ''), '>', $context['activate_link_text'], '</a>)</dt>';
 
 		// If the current member is banned, show a message and possibly a link to the ban.
 		if (!empty($context['member']['bans']))
 		{
 			echo '
-				<dt class="clear"><span class="alert">', $txt['user_is_banned'], '</span>&nbsp;[<a href="#" onclick="document.getElementById(\'ban_info\').style.display = document.getElementById(\'ban_info\').style.display == \'none\' ? \'\' : \'none\';return false;">' . $txt['view_ban'] . '</a>]</dt>
-				<dt class="clear" id="ban_info" style="display: none;">
-					<strong>', $txt['user_banned_by_following'], ':</strong>';
+					<dt class="clear"><span class="alert">', $txt['user_is_banned'], '</span>&nbsp;[<a href="#" onclick="document.getElementById(\'ban_info\').style.display = document.getElementById(\'ban_info\').style.display == \'none\' ? \'\' : \'none\';return false;">' . $txt['view_ban'] . '</a>]</dt>
+					<dt class="clear" id="ban_info" style="display: none;">
+						<strong>', $txt['user_banned_by_following'], ':</strong>';
 
 			foreach ($context['member']['bans'] as $ban)
 				echo '
-					<br /><span class="smalltext">', $ban['explanation'], '</span>';
+						<br /><span class="smalltext">', $ban['explanation'], '</span>';
 
 			echo '
-				</dt>';
+					</dt>';
 		}
 	}
 
 	echo '
-				<dt>', $txt['date_registered'], ': </dt>
-				<dd>', $context['member']['registered'], '</dd>';
+					<dt>', $txt['date_registered'], ': </dt>
+					<dd>', $context['member']['registered'], '</dd>';
 
 	// If the person looking is allowed, they can check the members IP address and hostname.
 	if ($context['can_see_ip'])
 	{
 		if (!empty($context['member']['ip']))
 		echo '
-				<dt>', $txt['ip'], ': </dt>
-				<dd><a href="', $scripturl, '?action=profile;area=tracking;sa=ip;searchip=', $context['member']['ip'], ';u=', $context['member']['id'], '">', $context['member']['ip'], '</a></dd>';
+					<dt>', $txt['ip'], ': </dt>
+					<dd><a href="', $scripturl, '?action=profile;area=tracking;sa=ip;searchip=', $context['member']['ip'], ';u=', $context['member']['id'], '">', $context['member']['ip'], '</a></dd>';
 
 		if (empty($modSettings['disableHostnameLookup']) && !empty($context['member']['ip']))
 			echo '
-				<dt>', $txt['hostname'], ': </dt>
-				<dd>', $context['member']['hostname'], '</dd>';
+					<dt>', $txt['hostname'], ': </dt>
+					<dd>', $context['member']['hostname'], '</dd>';
 	}
 
 	echo '
-				<dt>', $txt['local_time'], ':</dt>
-				<dd>', $context['member']['local_time'], '</dd>';
+					<dt>', $txt['local_time'], ':</dt>
+					<dd>', $context['member']['local_time'], '</dd>';
 
 	if (!empty($modSettings['userLanguage']) && !empty($context['member']['language']))
 		echo '
-				<dt>', $txt['language'], ':</dt>
-				<dd>', $context['member']['language'], '</dd>';
+					<dt>', $txt['language'], ':</dt>
+					<dd>', $context['member']['language'], '</dd>';
 
 	echo '
-				<dt>', $txt['lastLoggedIn'], ': </dt>
-				<dd>', $context['member']['last_login'], '</dd>
+					<dt>', $txt['lastLoggedIn'], ': </dt>
+					<dd>', $context['member']['last_login'], '</dd>
 				</dl>';
 
 	// Are there any custom profile fields for the summary?
