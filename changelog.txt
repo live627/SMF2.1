@@ -72,6 +72,7 @@ May 2010
  * A <div class="content"> was missing from the Convert Entities template, breaking it. (ManageMaintenance template)
  * In memberlist, specific number formatting and busy boards could end up breaking post numbers into two lines. (Memberlist template)
  * Searching with Complete Posts option enabled would mess up div ordering. (Search template)
+ * replaceText() and surroundText() functions didn't work correctly in Opera. (script.js) [Bug 2964]
 
 ================================================================================
 April 2010
