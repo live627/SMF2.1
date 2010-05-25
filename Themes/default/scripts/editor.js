@@ -1050,6 +1050,8 @@ smc_Editor.prototype.setFocus = function(force_both)
 {
 	if (!this.bRichTextEnabled)
 		this.oTextHandle.focus();
+	else if (is_ff || is_opera)
+		this.oFrameHandle.focus();
 	else
 		this.oFrameWindow.focus();
 }
