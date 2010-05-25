@@ -79,6 +79,7 @@ May 2010
  * setInnerHTML and getInnerHTML are deprecated, as innerHTML has been supported by all browsers since IE4... (script.js)
  * Opera had trouble loading a function in window.onload if it had to be eval'd first. (script.js)
  ! The redirectEnabled variable was always used, but not always set in the first place. (ManageBoards template)
+ * When using the auto-suggest popup and pressing the Enter key, Opera would submit the entire form. (suggest.js) [Bug 3546,4059]
 
 ================================================================================
 April 2010

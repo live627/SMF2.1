@@ -45,7 +45,7 @@ function smc_AutoSuggest(oOptions)
 	addLoadEvent(this.opt.sSelf + '.init();');
 }
 
-smc_AutoSuggest.prototype.init = function init()
+smc_AutoSuggest.prototype.init = function()
 {
 	if (!window.XMLHttpRequest)
 		return false;
@@ -68,9 +68,10 @@ smc_AutoSuggest.prototype.init = function init()
 
 	this.oTextHandle.instanceRef = this;
 
-	this.oTextHandle.onkeydown = function (oEvent) {
+	var fOnKeyDown = function (oEvent) {
 		return this.instanceRef.handleKey(oEvent);
 	};
+	is_opera ? this.oTextHandle.onkeypress = fOnKeyDown : this.oTextHandle.onkeydown = fOnKeyDown;
 
 	this.oTextHandle.onkeyup = function (oEvent) {
 		return this.instanceRef.autoSuggestUpdate(oEvent);
@@ -100,12 +101,8 @@ smc_AutoSuggest.prototype.init = function init()
 	}
 
 	if (this.aListItems.length > 0)
-	{
 		for (var i = 0, n = this.aListItems.length; i < n; i++)
-		{
 			this.addItemLink(this.aListItems[i].sItemId, this.aListItems[i].sItemName);
-		}
-	}
 
 	return true;
 }
