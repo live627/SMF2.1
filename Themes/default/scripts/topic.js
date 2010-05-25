@@ -331,7 +331,11 @@ QuickModify.prototype.onModifyDone = function (XMLDoc)
 	// If we didn't get a valid document, just cancel.
 	if (!XMLDoc || !XMLDoc.getElementsByTagName('smf')[0])
 	{
-		this.modifyCancel();
+		// Mozilla will nicely tell us what's wrong.
+		if (XMLDoc.childNodes.length > 0 && XMLDoc.firstChild.nodeName == 'parsererror')
+			setInnerHTML(document.getElementById('error_box'), XMLDoc.firstChild.textContent);
+		else
+			this.modifyCancel();
 		return;
 	}
 

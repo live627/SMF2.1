@@ -1,7 +1,7 @@
 // *** smc_Editor class.
 function smc_Editor(oOptions)
 {
-	this.opt = oOptions
+	this.opt = oOptions;
 
 	// Create some links to the editor object.
 	this.oTextHandle = null;

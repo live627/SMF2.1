@@ -251,7 +251,7 @@ function ssi_logout($redirect_to = '', $output_method = 'echo')
 }
 
 // Recent post list:   [board] Subject by Poster	Date
-function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $include_boards = null, $output_method = 'echo')
+function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $include_boards = null, $output_method = 'echo', $limit_body = true)
 {
 	global $context, $settings, $scripturl, $txt, $db_prefix, $user_info;
 	global $modSettings, $smcFunc;
@@ -290,7 +290,7 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $include_board
 	);
 
 	// Past to this simpleton of a function...
-	return ssi_queryPosts($query_where, $query_where_params, $num_recent, 'm.id_msg DESC', $output_method, true);
+	return ssi_queryPosts($query_where, $query_where_params, $num_recent, 'm.id_msg DESC', $output_method, $limit_body);
 }
 
 // Fetch a post with a particular ID. By default will only show if you have permission to the see the board in question - this can be overriden.
@@ -344,11 +344,12 @@ function ssi_queryPosts($query_where = '', $query_where_params = array(), $query
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
-		$preview = strip_tags(strtr($row['body'], array('<br />' => '&#10;')));
 
 		// Censor it!
 		censorText($row['subject']);
 		censorText($row['body']);
+
+		$preview = strip_tags(strtr($row['body'], array('<br />' => '&#10;')));
 
 		// Build the array.
 		$posts[] = array(
@@ -375,6 +376,7 @@ function ssi_queryPosts($query_where = '', $query_where_params = array(), $query
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . ';topicseen#new',
 			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'] . '" rel="nofollow">' . $row['subject'] . '</a>',
 			'new' => !empty($row['is_read']),
+			'is_new' => empty($row['is_read']),
 			'new_from' => $row['new_from'],
 		);
 	}
@@ -395,7 +397,7 @@ function ssi_queryPosts($query_where = '', $query_where_params = array(), $query
 				<td valign="top">
 					<a href="', $post['href'], '">', $post['subject'], '</a>
 					', $txt['by'], ' ', $post['poster']['link'], '
-					', $post['new'] ? '' : '<a href="' . $scripturl . '?topic=' . $post['topic'] . '.msg' . $post['new_from'] . ';topicseen#new" rel="nofollow"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" border="0" /></a>', '
+					', $post['is_new'] ? '<a href="' . $scripturl . '?topic=' . $post['topic'] . '.msg' . $post['new_from'] . ';topicseen#new" rel="nofollow"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" border="0" /></a>' : '', '
 				</td>
 				<td align="right" nowrap="nowrap">
 					', $post['time'], '

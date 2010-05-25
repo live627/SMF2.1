@@ -73,6 +73,9 @@ May 2010
  * In memberlist, specific number formatting and busy boards could end up breaking post numbers into two lines. (Memberlist template)
  * Searching with Complete Posts option enabled would mess up div ordering. (Search template)
  * replaceText() and surroundText() functions didn't work correctly in Opera. (script.js) [Bug 2964]
+ ! Allow ssi_recentPosts() to specify a limit_body flag. (SSI.php)
+ ! In ssi_queryPosts(), parse the body through censorText() before generating a preview. (SSI.php)
+ * When an error happens early in the Quick Edit process, Mozilla can tell us what happened, so we may show the error message. (topic.js)
 
 ================================================================================
 April 2010
