@@ -473,20 +473,15 @@ function submitThisOnce(oControl)
 	return !smf_formSubmitted;
 }
 
-// Set the "inside" HTML of an element.
+// Deprecated, as innerHTML is supported everywhere.
 function setInnerHTML(oElement, sToValue)
 {
-	// IE has this built in...
-	if ('innerHTML' in oElement)
-		oElement.innerHTML = sToValue;
-	// Otherwise, try createContextualFragment().
-	else
-	{
-		var range = document.createRange();
-		range.selectNodeContents(oElement);
-		range.deleteContents();
-		oElement.appendChild(range.createContextualFragment(sToValue));
-	}
+	oElement.innerHTML = sToValue;
+}
+
+function getInnerHTML(oElement)
+{
+	return oElement.innerHTML;
 }
 
 // Set the "outer" HTML of an element.
@@ -499,21 +494,6 @@ function setOuterHTML(oElement, sToValue)
 		var range = document.createRange();
 		range.setStartBefore(oElement);
 		oElement.parentNode.replaceChild(range.createContextualFragment(sToValue), oElement);
-	}
-}
-
-// Get the inner HTML of an element.
-function getInnerHTML(oElement)
-{
-	if ('innerHTML' in oElement)
-		return oElement.innerHTML;
-	else
-	{
-		var sReturnValue = '';
-		for (var i = 0; i < oElement.childNodes.length; i++)
-			sReturnValue += getOuterHTML(oElement.childNodes[i]);
-
-		return sReturnValue;
 	}
 }
 
@@ -1375,11 +1355,11 @@ var aOnloadEvents = new Array();
 function addLoadEvent(fNewOnload)
 {
 	// If there's no event set, just set this one
-	if (!('onload' in window) || typeof(window.onload) != 'function')
+	if (typeof(fNewOnload) == 'function' && (!('onload' in window) || typeof(window.onload) != 'function'))
 		window.onload = fNewOnload;
 
 	// If there's just one event, setup the array.
-	else if(aOnloadEvents.length == 0)
+	else if (aOnloadEvents.length == 0)
 	{
 		aOnloadEvents[0] = window.onload;
 		aOnloadEvents[1] = fNewOnload;

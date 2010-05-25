@@ -536,9 +536,8 @@ function template_modify_board()
 	<script type="text/javascript"><!-- // --><![CDATA[
 		function refreshOptions()
 		{
-			var redirect = document.getElementById("redirect_enable")
-			if (redirect)
-				var redirectEnabled = document.getElementById("redirect_enable").checked;
+			var redirect = document.getElementById("redirect_enable");
+			var redirectEnabled = redirect ? redirect.checked : false;
 			var nonDefaultTheme = document.getElementById("boardtheme").value == 0 ? false : true;
 
 			// What to show?

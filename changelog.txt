@@ -76,6 +76,9 @@ May 2010
  ! Allow ssi_recentPosts() to specify a limit_body flag. (SSI.php)
  ! In ssi_queryPosts(), parse the body through censorText() before generating a preview. (SSI.php)
  * When an error happens early in the Quick Edit process, Mozilla can tell us what happened, so we may show the error message. (topic.js)
+ * setInnerHTML and getInnerHTML are deprecated, as innerHTML has been supported by all browsers since IE4... (script.js)
+ * Opera had trouble loading a function in window.onload if it had to be eval'd first. (script.js)
+ ! The redirectEnabled variable was always used, but not always set in the first place. (ManageBoards template)
 
 ================================================================================
 April 2010
