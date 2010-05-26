@@ -6,3 +6,9 @@ Causes issues in IE browsers in (and cached search engines pages it breaks them)
 {
 	clear: right;
 }
+
+.table_grid thead th
+{
+	height: 26px;
+	line-height: 26px;
+}

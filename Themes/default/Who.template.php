@@ -15,14 +15,27 @@ function template_main()
 			</div>
 			<div class="topic_table" id="mlist">
 				<div class="pagesection">
-					<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>
+					<div class="pagelinks align_left">', $txt['pages'], ': ', $context['page_index'], '</div>';
+		echo '
+					<div class="selectbox align_right">', $txt['who_show1'], '
+						<select name="showtop" onchange="document.forms.whoFilter.submit();">';
+
+		foreach ($context['show_methods'] as $value => $label)
+			echo '
+							<option value="', $value, '" ', $value == $context['show_by'] ? ' selected="selected"' : '', '>', $label, '</option>';
+		echo '
+						</select>
+						<noscript>
+							<input type="submit" value="', $txt['go'], '" class="button_submit" />
+						</noscript>
+					</div>					
 				</div>
 				<table class="table_grid" cellspacing="0">
 					<thead>
 						<tr class="catbg">
-							<th scope="col" class="smalltext" width="40%"><a href="', $scripturl, '?action=who;start=', $context['start'], ';show=', $context['show_by'], ';sort=user', $context['sort_direction'] != 'down' && $context['sort_by'] == 'user' ? '' : ';asc', '" rel="nofollow">', $txt['who_user'], ' ', $context['sort_by'] == 'user' ? '<img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
+							<th scope="col" class="smalltext first_th" width="40%"><a href="', $scripturl, '?action=who;start=', $context['start'], ';show=', $context['show_by'], ';sort=user', $context['sort_direction'] != 'down' && $context['sort_by'] == 'user' ? '' : ';asc', '" rel="nofollow">', $txt['who_user'], ' ', $context['sort_by'] == 'user' ? '<img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
 							<th scope="col" class="smalltext" width="10%"><a href="', $scripturl, '?action=who;start=', $context['start'], ';show=', $context['show_by'], ';sort=time', $context['sort_direction'] == 'down' && $context['sort_by'] == 'time' ? ';asc' : '', '" rel="nofollow">', $txt['who_time'], ' ', $context['sort_by'] == 'time' ? '<img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
-							<th scope="col" class="smalltext" width="50%">', $txt['who_action'], '</th>
+							<th scope="col" class="smalltext last_th" width="50%">', $txt['who_action'], '</th>
 						</tr>
 					</thead>
 					<tbody>';

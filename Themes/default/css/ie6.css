@@ -25,10 +25,7 @@ h3.catbg span.ie6_header, h4.catbg span.ie6_header, h3.titlebg span.ie6_header, 
 }
 /* The dropdown menus
 ------------------------------------------------------- */
-#main_menu
-{
-	overflow: auto;
-}
+
 .dropmenu li
 {
 	width: 1px;

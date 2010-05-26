@@ -320,7 +320,7 @@ function template_modify_board()
 							<span class="smalltext">', $txt['mboards_description_desc'], '</span>
 						</dt>
 						<dd>
-							<textarea name="desc" rows="3" cols="35" style="width: 100%">', $context['board']['description'], '</textarea>
+							<textarea name="desc" rows="3" cols="35" style="width: 99%">', $context['board']['description'], '</textarea>
 						</dd>
 						<dt>
 							<strong>', $txt['permission_profile'], ':</strong><br />
