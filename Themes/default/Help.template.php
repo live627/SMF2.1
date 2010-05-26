@@ -148,10 +148,7 @@ function template_manual_above()
 
 	echo '
 		<div class="cat_bar">
-			<h3 class="catbg">', $txt['help'], '</h3>
-		</div>
-		<div class="title_bar">
-			<h4 class="titlebg">', $context['manual_area_data']['label'], '</h4>
+			<h3 class="catbg">', $txt['help'], ':&nbsp;', $context['manual_area_data']['label'], '</h3>
 		</div>
 		<div id="help_container">
 			<div class="windowbg2">
@@ -327,10 +324,14 @@ function template_manual_board_index()
 			<table class="table_list">
 				<tbody class="header">
 					<tr>
-						<td colspan="4" class="catbg"><span class="left"></span>
-							<a class="collapse" href="javascript:collapseExpandCategory();"><img src="', $settings['images_url'], '/collapse.gif" alt="-" border="0" id="collapseArrow" name="collapseArrow" /></a>
-							<a class="unreadlink" href="#">', $txt['view_unread_category'], '</a>
-							<a href="#">', $txt['manual_board_index_category_name'], '</a>
+						<td colspan="4">
+							<div class="cat_bar">
+								<h3 class="catbg">
+									<a class="collapse" href="javascript:collapseExpandCategory();"><img src="', $settings['images_url'], '/collapse.gif" alt="-" border="0" id="collapseArrow" name="collapseArrow" /></a>
+									<a class="unreadlink" href="#">', $txt['view_unread_category'], '</a>
+									<a href="#">', $txt['manual_board_index_category_name'], '</a>
+								</h3>
+							</div>
 						</td>
 					</tr>
 				</tbody>
@@ -1019,9 +1020,11 @@ function template_manual_password_reminders()
 	<p>', $txt['manual_reminders_describe'], '</p>
 	<div class="help_sample">
 		<div class="tborder login">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['manual_reminders_auth'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['manual_reminders_auth'], '
+				</h3>
+			</div>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
 				<p class="smalltext centertext">', $txt['manual_reminders_start'], '</p>
@@ -1038,9 +1041,11 @@ function template_manual_password_reminders()
 	<p>', $txt['manual_reminders_secret'], '</p>
 	<div class="help_sample">
 		<div class="tborder login">
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['manual_reminders_auth'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['manual_reminders_auth'], '
+				</h3>
+			</div>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
 				<p class="smalltext">', $txt['manual_reminders_instruct'], '</p>
@@ -2425,9 +2430,11 @@ function template_manual_searching()
 	<p>', $txt['manual_searching_adv_desc'], '</p>
 	<div class="help_sample">
 		<form id="searchform" action="', $scripturl, '?action=help;area=searching" method="post" accept-charset="', $context['character_set'], '">
-			<h3 class="catbg"><span class="left"></span>
-				', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />' : '', $txt['manual_searching_search_param'], '
-			</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />' : '', $txt['manual_searching_search_param'], '
+				</h3>
+			</div>
 			<fieldset id="advanced_search">
 				<span class="upperframe"><span></span></span>
 				<div class="roundframe">

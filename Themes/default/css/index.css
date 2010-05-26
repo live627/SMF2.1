@@ -743,7 +743,7 @@ dl.settings dt a img
 
 /* Styles for rounded headers.
 ------------------------------------------------------- */
-h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg, h4.catbg, .table_list tbody.header td
+h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg, h4.catbg
 {
 	overflow: hidden;
 	height: 31px;
@@ -788,36 +788,16 @@ h4.catbg a.toggle img
 	vertical-align: middle;
 	margin: -2px 5px 0 5px;
 }
-h4.catbg span.left, h4.catbg2 span.left, h3.catbg span.left, h3.catbg2 span.left, .table_list tbody.header td span.left
-{
-	float: left;
-	display: block;
-	width: 9px;
-	height: 31px;
-	background: url(../images/theme/main_block.png) no-repeat 0 -160px;
-}
-
 h4.catbg, h4.catbg2 , h3.catbg , h3.catbg2 , .table_list tbody.header td.catbg
 {
 	background: url(../images/theme/main_block.png) no-repeat 100% -160px;
 	padding-right: 9px;
 }
-
-h4.titlebg span.left, h3.titlebg span.left
-{
-	float: left;
-	display: block;
-	width: 9px;
-	height: 31px;
-	background: url(../images/theme/main_block.png) no-repeat 0 -200px;
-}
-
 h4.titlebg, h3.titlebg
 {
 	background: url(../images/theme/main_block.png) no-repeat 100% -200px;
 	padding-right: 9px;
 }
-
 h4.titlebg img.icon
 {
 	float: left;
@@ -826,7 +806,7 @@ h4.titlebg img.icon
 div.cat_bar
 {
 	background: url(../images/theme/main_block.png) no-repeat 0 -160px;
-	padding-left: 9px;
+	padding-left: 9px; 	height: 32px;
 	overflow: hidden;
 }
 div.title_bar
@@ -842,17 +822,10 @@ div.title_barIC
 	overflow: hidden;
 }
 /* rounded bars needs a different background here */
-#upshrinkHeaderIC h3.catbg span.left, #upshrinkHeaderIC h3.catbg2 span.left
-{
-	background: url(../images/theme/main_block.png) no-repeat 0 -160px;
-}
+
 #upshrinkHeaderIC h3.catbg, #upshrinkHeaderIC h3.catbg2
 {
 	background: url(../images/theme/main_block.png) no-repeat 100% -160px;
-}
-#upshrinkHeaderIC h4.titlebg span.left
-{
-	background: url(../images/theme/main_block.png) no-repeat 0 -120px;
 }
 #upshrinkHeaderIC h4.titlebg
 {
@@ -878,7 +851,7 @@ table.table_list a.collapse
 }
 
 /* The half-round header bars for some tables. */
-.table_grid thead th
+.table_grid th
 {
 	height: 28px;
 	color: #fff;
@@ -887,7 +860,7 @@ table.table_list a.collapse
 	font-weight: bold;
 	background: url(../images/theme/main_block.png) no-repeat -10px -160px;
 }
-.table_grid thead th a:link, .table_grid thead th a:visited
+.table_grid th a:link, .table_grid th a:visited
 {
 	color: #fff;
 }
@@ -1850,13 +1823,17 @@ div#pollmoderation
 	clear: both;
 }
 /* author and topic informaton */
-#forumposts h3 span#author, #forumposts h3 span#top_subject
+#forumposts h3 span#author/*, #forumposts h3 span#top_subject*/
 {
 	float: left;
 }
-#forumposts h3 span#top_subject
+/*#forumposts h3 span#top_subject
 {
 	margin: 0 0 0 7.7em;
+}*/
+*#forumposts h3 span#author
+{
+	margin: 0 7.7em 0 0;
 }
 #forumposts h3 img
 {
@@ -2578,12 +2555,12 @@ tr.titlebg td
 
 /* Styles for sidebar menus.
 ------------------------------------------------------- */
-#left_admsection h4.catbg span.left,
+/*#left_admsection h4.catbg span.left,
 #left_admsection h4.catbg span.right
 {
 	width: 9px;
 	height: 31px;
-}
+}*/
 .left_admmenu, .left_admmenu ul, .left_admmenu li
 {
 	padding: 0;
@@ -3300,9 +3277,13 @@ dl.stats dd
 	text-align: center;
 	float: left;
 }
+#month_grid div.cat_bar
+{
+	height: 25px;
+}
 #month_grid h3.catbg
 {
-	height: 23px;
+	height: 25px;
 	line-height: 27px;
 }
 #month_grid table
@@ -3358,7 +3339,7 @@ dl.stats dd
 }
 #main_grid table.weeklist h4.titlebg
 {
-	margin: 2px 0 0 0;
+	margin: 0 0 0 0;
 	height: 23px;
 	line-height: 27px;
 }
@@ -3509,7 +3490,7 @@ span.hidelink
 
 #help_container
 {
-	margin: 8px 0 0 0;
+	margin: 4px 0 0 0;
 	padding: 0 0 8px 0;
 }
 #helpmain

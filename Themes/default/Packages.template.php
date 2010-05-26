@@ -1289,7 +1289,7 @@ function template_downloaded()
 								<span class="package_server align_right">', $context['package']['install']['link'], '</span>
 							</li>
 					</ul>
-				<br class="clear" /><br />
+				<br /><br />
 				<p><a href="', $scripturl, '?action=admin;area=packages;get', (isset($context['package_server']) ? ';sa=browse;server=' . $context['package_server'] : ''), '">[ ', $txt['back'], ' ]</a></p>
 			</div>
 			<span class="botslice"><span></span></span>

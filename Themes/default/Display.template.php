@@ -163,7 +163,7 @@ function template_main()
 					<h3 class="catbg">
 						<img src="', $settings['images_url'], '/topic/', $context['class'], '.gif" align="bottom" alt="" />
 						<span id="author">', $txt['author'], '</span>
-						<span id="top_subject">', $txt['topic'], ': ', $context['subject'], ' &nbsp;(', $txt['read'], ' ', $context['num_views'], ' ', $txt['times'], ')</span>
+						', $txt['topic'], ': ', $context['subject'], ' &nbsp;(', $txt['read'], ' ', $context['num_views'], ' ', $txt['times'], ')
 					</h3>
 				</div>';
 

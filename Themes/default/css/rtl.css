@@ -339,13 +339,17 @@ span.percent
 }
 
 /* author and topic informaton */
-#forumposts h3 span#author, #forumposts h3 span#top_subject
+#forumposts h3 span#author/*, #forumposts h3 span#top_subject*/
 {
 	float: right;
 }
-#forumposts h3 span#top_subject
+/*#forumposts h3 span#top_subject
 {
 	margin: 0 7.7em 0 0;
+}*/
+#forumposts h3 span#author
+{
+	margin: 0 0 0 7.7em;
 }
 #forumposts h3 img
 {

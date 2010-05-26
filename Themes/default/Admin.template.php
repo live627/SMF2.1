@@ -174,9 +174,11 @@ function template_admin()
 				sUpdateNotificationDefaultTitle: ', JavaScriptEscape($txt['update_available']), ',
 				sUpdateNotificationDefaultMessage: ', JavaScriptEscape($txt['update_message']), ',
 				sUpdateNotificationTemplate: ', JavaScriptEscape('
-					<h3 id="update_title" class="catbg"><span class="left"></span><span class="right"></span>
-						%title%
-					</h3>
+					<div class="cat_bar">
+						<h3 id="update_title" class="catbg">
+							%title%
+						</h3>
+					</div>
 					<div class="windowbg">
 						<span class="topslice"><span></span></span>
 						<div class="content">

@@ -216,7 +216,8 @@ function template_generic_menu_tabs(&$menu_context)
 	$tab_context = &$menu_context['tab_data'];
 
 	echo '
-	<h3 class="catbg"><span class="left"></span>';
+	<div class="cat_bar">
+		<h3 class="catbg">';
 
 	// Exactly how many tabs do we have?
 	foreach ($context['tabs'] as $id => $tab)
@@ -274,7 +275,8 @@ function template_generic_menu_tabs(&$menu_context)
 	}
 
 	echo '
-	</h3>';
+		</h3>
+	</div>';
 
 	// Shall we use the tabs?
 	if (!empty($settings['use_tabs']))
