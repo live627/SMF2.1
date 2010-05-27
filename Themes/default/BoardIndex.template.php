@@ -95,16 +95,16 @@ function template_main()
 						<div class="cat_bar">
 							<h3 class="catbg">';
 
-				// If this category even can collapse, show a link to collapse it.
-				if ($category['can_collapse'])
-					echo '
+		// If this category even can collapse, show a link to collapse it.
+		if ($category['can_collapse'])
+			echo '
 								<a class="collapse" href="', $category['collapse_href'], '">', $category['collapse_image'], '</a>';
 
-				if (!$context['user']['is_guest'] && !empty($category['show_unread']))
-					echo '
+		if (!$context['user']['is_guest'] && !empty($category['show_unread']))
+			echo '
 								<a class="unreadlink" href="', $scripturl, '?action=unread;c=', $category['id'], '">', $txt['view_unread_category'], '</a>';
 
-				echo '
+		echo '
 								', $category['link'], '
 							</h3>
 						</div>

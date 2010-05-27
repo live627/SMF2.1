@@ -263,7 +263,7 @@ form#ic_login ul li
 	width: 20%;
 }
 
-/*the small stats*/
+/* the small stats */
 #index_common_stats
 {
 	text-align: left;
@@ -338,17 +338,10 @@ span.percent
 	float: left;
 }
 
-/* author and topic informaton */
-#forumposts h3 span#author/*, #forumposts h3 span#top_subject*/
-{
-	float: right;
-}
-/*#forumposts h3 span#top_subject
-{
-	margin: 0 7.7em 0 0;
-}*/
+/* author and topic information */
 #forumposts h3 span#author
 {
+	float: right;
 	margin: 0 0 0 7.7em;
 }
 #forumposts h3 img
@@ -1000,7 +993,7 @@ dl.stats dd
 	margin-left: 0;
 	margin-right: 50px;
 }
-/*ManageBoards*/
+/* ManageBoards */
 #manage_boards ul
 {
 	overflow: hidden;
@@ -1018,7 +1011,7 @@ span.search_weight
 {
 	text-align: left;
 }
-/*Manage Bans*/
+/* Manage Bans */
 .ban_restriction
 {
 	margin: 0.2em 2.2em 0.2em 0;
@@ -1030,7 +1023,7 @@ span.search_weight
 	background: url(../images/admin/boards.gif) no-repeat;
 	background-position: 100% 0;
 }
- /* Styles for the moderation center.
+/* Styles for the moderation center.
 ------------------------------------------------- */
 .modblock_left
 {

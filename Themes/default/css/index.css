@@ -1076,7 +1076,7 @@ span.lowerframe span
 	padding: 0 0 0 5px;
 	font-size: 0.9em;
 }
-/* the backgrounds first level only*/
+/* the background's first level only */
 .dropmenu li a.firstlevel
 {
 	margin-right: 8px;
@@ -1148,7 +1148,7 @@ span.lowerframe span
 {
 	background: url(../images/theme/menu_gfx.png) no-repeat 0 -30px;
 }
-/* the hover effects on level2 and 3*/
+/* the hover effects on level2 and 3 */
 .dropmenu li li a:hover, .dropmenu li li:hover>a
 {
 	background: #d4dbe4;
@@ -1584,7 +1584,7 @@ p.moderators
 	padding: 0 2em;
 	overflow: auto;
 	margin: 1em 0;
-	color: #575757; /* shouldn't be shorthand style due to JS bug in IE! */
+	color: #575757; /* shouldn't be shorthand style due to a JS bug in IE! */
 }
 
 /* Styles for the info center on the board index.
@@ -1648,7 +1648,7 @@ form#ic_login ul li label
 	display: block;
 }
 
-/*the small stats*/
+/* the small stats */
 #index_common_stats
 {
 	display: block;
@@ -1822,17 +1822,10 @@ div#pollmoderation
 {
 	clear: both;
 }
-/* author and topic informaton */
-#forumposts h3 span#author/*, #forumposts h3 span#top_subject*/
+/* author and topic information */
+#forumposts h3 span#author
 {
 	float: left;
-}
-/*#forumposts h3 span#top_subject
-{
-	margin: 0 0 0 7.7em;
-}*/
-*#forumposts h3 span#author
-{
 	margin: 0 7.7em 0 0;
 }
 #forumposts h3 img
@@ -2055,7 +2048,7 @@ ul.quickbuttons li.inline_mod_check
 /* Styles for the quick reply area.
 ---------------------------------------------------- */
 
-/* The quick-reply area. Horizontal alignments go a bit wonky in IE6 and IE7 but I'm not sure it's worth worrying about. */
+/* The quick-reply area. Horizontal alignments go a bit wonky in IE6 and IE7 but is it really worth worrying about? */
 
 #quickReplyOptions .roundframe
 {
@@ -2555,12 +2548,6 @@ tr.titlebg td
 
 /* Styles for sidebar menus.
 ------------------------------------------------------- */
-/*#left_admsection h4.catbg span.left,
-#left_admsection h4.catbg span.right
-{
-	width: 9px;
-	height: 31px;
-}*/
 .left_admmenu, .left_admmenu ul, .left_admmenu li
 {
 	padding: 0;
@@ -3111,7 +3098,7 @@ div#profile_success
 	margin: 10px 0;
 	padding: 0;
 }
-/*Paid Subscriptions*/
+/* Paid Subscriptions */
 #paid_subscription
 {
 	width: 100%;
@@ -3124,7 +3111,7 @@ div#profile_success
 {
 	margin-bottom: 4px;
 }
-/*pick theme*/
+/* Pick theme */
 #pick_theme
 {
 	width: 100%;
