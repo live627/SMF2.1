@@ -82,7 +82,8 @@ May 2010
  * When using the auto-suggest popup and pressing the Enter key, Opera would submit the entire form. (suggest.js) [Bug 3546,4059]
  * When writing a message and switching from normal to WYSIWYG mode, Firefox and Opera would lose focus. (editor.js) [Bug 2177]
  * Fixed several minor glitches here and there (index.css, rtl.css, webkit.css, ie6.css, ManageBoards.template.php, Who.template.php)
- * More minor template/css bugs fixed. (Admin,BoardIndex,Calendar,Display,GenericControls,GenericMenu,Help,Packages,Post templates,index.css,webkit.css,rtl.css)
+ * More minor template/css bugs fixed. (Admin, BoardIndex, Calendar, Display, GenericControls, GenericMenu, Help, Packages, Post templates, index.css, webkit.css, rtl.css)
+ * Correct indentation is good. Correct indentation can fix validation bugs. Like here. (ManagePermissions template)
 
 ================================================================================
 April 2010
