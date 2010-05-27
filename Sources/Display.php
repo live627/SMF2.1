@@ -591,7 +591,7 @@ function Display()
 				'start_date' => timeformat($start_date, $date_string, 'none'),
 				'start_timestamp' => $start_date,
 				'end_date' => timeformat($end_date, $date_string, 'none'),
-				'end_timestamp' => $start_date,
+				'end_timestamp' => $end_date,
 				'is_last' => false
 			);
 		}

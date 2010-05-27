@@ -86,6 +86,7 @@ May 2010
  * Correct indentation is good. Correct indentation can fix validation bugs. Like here. (ManagePermissions template)
  * Sidebar menu did not use menu toggle URL. (GenericMenu Template) [Bug 4309]
  ! Linked events got unnecessary time offset added on message display. (Display.php) [Bug 3699]
+ ! Event end date timestamp was set incorrectly in Display.php. (Display.php)
 
 
 ================================================================================
