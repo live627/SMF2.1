@@ -1283,12 +1283,12 @@ function template_downloaded()
 			<span class="topslice"><span></span></span>
 			<div class="content">
 				<p>', (empty($context['package_server']) ? $txt['package_uploaded_successfully'] : $txt['package_downloaded_successfully']), '</p>
-					<ul class="reset">
-							<li class="reset"><span class="align_left"><strong>', $context['package']['name'], '</strong></span>
-								<span class="package_server align_right">', $context['package']['list_files']['link'], '</span>
-								<span class="package_server align_right">', $context['package']['install']['link'], '</span>
-							</li>
-					</ul>
+				<ul class="reset">
+					<li class="reset"><span class="align_left"><strong>', $context['package']['name'], '</strong></span>
+						<span class="package_server align_right">', $context['package']['list_files']['link'], '</span>
+						<span class="package_server align_right">', $context['package']['install']['link'], '</span>
+					</li>
+				</ul>
 				<br /><br />
 				<p><a href="', $scripturl, '?action=admin;area=packages;get', (isset($context['package_server']) ? ';sa=browse;server=' . $context['package_server'] : ''), '">[ ', $txt['back'], ' ]</a></p>
 			</div>

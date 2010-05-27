@@ -375,15 +375,15 @@ function template_modify_board()
 
 	if (empty($context['board']['is_recycle']) && empty($context['board']['topics']))
 		echo '
-						<dl class="settings">
-							<dt>
-								<strong', $context['board']['topics'] ? ' style="color: gray;"' : '', '>', $txt['mboards_redirect'], ':</strong><br />
-								<span class="smalltext">', $txt['mboards_redirect_desc'], '</span><br />
-							</dt>
-							<dd>
-								<input type="checkbox" id="redirect_enable" name="redirect_enable"', $context['board']['topics'] ? ' disabled="disabled"' : '', $context['board']['redirect'] != '' ? ' checked="checked"' : '', ' onclick="refreshOptions();" class="input_check" />
-							</dd>
-						</dl>';
+					<dl class="settings">
+						<dt>
+							<strong', $context['board']['topics'] ? ' style="color: gray;"' : '', '>', $txt['mboards_redirect'], ':</strong><br />
+							<span class="smalltext">', $txt['mboards_redirect_desc'], '</span><br />
+						</dt>
+						<dd>
+							<input type="checkbox" id="redirect_enable" name="redirect_enable"', $context['board']['topics'] ? ' disabled="disabled"' : '', $context['board']['redirect'] != '' ? ' checked="checked"' : '', ' onclick="refreshOptions();" class="input_check" />
+						</dd>
+					</dl>';
 
 	if (!empty($context['board']['is_recycle']))
 		echo '
