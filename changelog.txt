@@ -88,6 +88,7 @@ May 2010
  ! Linked events got unnecessary time offset added on message display. (Display.php) [Bug 3699]
  ! Event end date timestamp was set incorrectly in Display.php. (Display.php)
  ! size BBC did not allow double digits after decimal separator. (Subs.php) [Bug 4308]
+ ! anchor tags without content (which are valid) were being removed with BBC clean up. (Subs-Editor.php) [Bug 2198]
 
 
 ================================================================================

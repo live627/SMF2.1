@@ -1101,7 +1101,7 @@ function legalise_bbc($text)
 	}
 
 	// Quickly remove any tags which are back to back.
-	$backToBackPattern = '~\\[(' . implode('|', array_diff(array_keys($valid_tags), array('td'))) . ')[^<>\\[\\]]*\\]\s*\\[/\\1\\]~';
+	$backToBackPattern = '~\\[(' . implode('|', array_diff(array_keys($valid_tags), array('td', 'anchor'))) . ')[^<>\\[\\]]*\\]\s*\\[/\\1\\]~';
 	$lastlen = 0;
 	while (strlen($text) !== $lastlen)
 		$lastlen = strlen($text = preg_replace($backToBackPattern, '', $text));
