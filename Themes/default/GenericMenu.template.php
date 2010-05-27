@@ -29,7 +29,7 @@ function template_generic_menu_sidebar_above()
 			{
 				echo '
 						<span class="ie6_header floatleft">', $section['title'],'
-						<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], (!empty($menu_context['current_subsection']) ? ';sa=' . $menu_context['current_subsection'] : ''), $menu_context['extra_parameters'], ';togglebar=0"><img style="margin: 0 0 0 5px; vertical-align: middle;" src="', $context['menu_image_path'], '/change_menu', $context['right_to_left'] ? '' : '2', '.png" alt="!" /></a>
+						<a href="', $menu_context['toggle_url'], '"><img style="margin: 0 0 0 5px; vertical-align: middle;" src="', $context['menu_image_path'], '/change_menu', $context['right_to_left'] ? '' : '2', '.png" alt="!" /></a>
 						</span>';
 			}
 

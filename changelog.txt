@@ -16,11 +16,11 @@ May 2010
  & Correct sub template was not set for email activation notice on email change (Profile-Modify.php Register.php, Register template, Profile language file) [Bug 3950]
  * Forum width wrapper close tag was in tempate_html_below() sub template (index template) [Bug 4293]
  ! url_image_size() was called for a filesystem path on image resizing (Subs-Graphics.php) [Bug 4278]
- & It was not possible to split an unapproved post when it's the only reply in topic (Display.php, SplitTopics.php, Display template) [Bug 3552]
- & showimage() didn't work properly when message icon had hyphens in the file name (Post template) [Bug 4296]
+ * It was not possible to split an unapproved post when it's the only reply in topic (Display.php, SplitTopics.php, Display template) [Bug 3552]
+ * showimage() didn't work properly when message icon had hyphens in the file name (Post template) [Bug 4296]
  ! Make sure for SSI.php that the cache dir is defined (SSI.php)
  ! Removed old holidays from the install database files (install_2-0_mysql.sql, install_2-0_postgresql.sql, install_2-0_sqlite.sql)
- & Quote button should not be displayed if quote BBC tag is disabled (Display.php, Post.php, Profile-View.php, Recent.php, Search.php, Display Template, Post Template, Profile Template, Recent Template, Search Template) [Bug 4298]
+ * Quote button should not be displayed if quote BBC tag is disabled (Display.php, Post.php, Profile-View.php, Recent.php, Search.php, Display Template, Post Template, Profile Template, Recent Template, Search Template) [Bug 4298]
  ! Check for custom cache caching that all data was written in case of low disk space (Load.php) [Bug 4255]
  ! Fixed missing help icons on couple sections under Server Settings (ManageServer.php) [Bug 4265]
  * Made the template where you select what posts to split a bit more Curvy. (SplitTopics.template.php, index.css)
@@ -84,6 +84,8 @@ May 2010
  * Fixed several minor glitches here and there (index.css, rtl.css, webkit.css, ie6.css, ManageBoards.template.php, Who.template.php)
  * More minor template/css bugs fixed. (Admin, BoardIndex, Calendar, Display, GenericControls, GenericMenu, Help, Packages, Post templates, index.css, webkit.css, rtl.css)
  * Correct indentation is good. Correct indentation can fix validation bugs. Like here. (ManagePermissions template)
+ * Sidebar menu did not use menu toggle URL. (GenericMenu Template) [Bug 4309]
+
 
 ================================================================================
 April 2010
