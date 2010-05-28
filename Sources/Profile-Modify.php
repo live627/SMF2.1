@@ -986,7 +986,7 @@ function saveProfileFields()
 
 				$context['log_changes']['additional_groups'] = $additional_groups;
 			}
- 		}
+		}
 	}
 
 	//!!! Temporary

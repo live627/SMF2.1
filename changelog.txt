@@ -88,7 +88,8 @@ May 2010
  ! Linked events got unnecessary time offset added on message display. (Display.php) [Bug 3699]
  ! Event end date timestamp was set incorrectly in Display.php. (Display.php)
  ! size BBC did not allow double digits after decimal separator. (Subs.php) [Bug 4308]
- ! anchor tags without content (which are valid) were being removed with BBC clean up. (Subs-Editor.php) [Bug 2198]
+ ! Anchor tags without content (which are valid) were being removed with BBC clean up. (Subs-Editor.php) [Bug 2198]
+ * Fixed an awful lot of extra tabs, spaces, etc in dozens of files. (changelog, convert.php, phpmyforum_to_smf.sql, install_2-0_postgresql.sql, ssi_examples.php, repair_settings.php, upgrade.php, upgrade_2-0_postgresql.sql, latest-news.js, Display.php, Load.php, ManageMaintenance.php, ManageSettings.php, PersonalMessage.php, Poll.php, PostModeration.php, Profile-Modify.php, Profile-View.php, SendTopic.php, SplitTopics.php, Themes.php, Who.php, index.css, rtl.css, PersonalMessage template in Core, compat.css, ie6.css, index.css, Display template, editor.js, stats.js, suggest.js, SplitTopics template, Who template in Curve)
 
 
 ================================================================================
@@ -129,7 +130,7 @@ March 2010
 --------------------------------------------------------------------------------
  * A typo in the compatibility template prevented it from being used properly. (Compat template)
  * Fixed a class issue with the header in the Confirm Subscription screen. (ManagePaid template)
- * The BBcode help page was calling the obsolete bbc_highlight function; added in a replacement. (Help template) 
+ * The BBcode help page was calling the obsolete bbc_highlight function; added in a replacement. (Help template)
  ! Missing global $scripturl causing undefined index errors. (Security.php)
  * Core theme: background-position takes two parameters, not three. (Core index.css)
  * Allow a simpler customization of boards and categories (MessageIndex template, BoardIndex template) [Bug 4231]
@@ -153,9 +154,9 @@ March 2010
  * Invalid XHTML (GenericControls template)
  * Custom verification questions weren't properly aligned except in Curve (Core index.css, compat.css) [Bug 4212]
  * Updated the Profile-related sections of the SMF User Help section. (Help template, index.css, compat.css)
- & Changed lots of language strings accordingly. (Manual language file)   
- * Added curvy headers to the group membership template. (Profile template)  
- * Made Core's personal message template tableless too, reusing the markup from the Display template. (PersonalMessage template, index.css, compat.css) 
+ & Changed lots of language strings accordingly. (Manual language file)
+ * Added curvy headers to the group membership template. (Profile template)
+ * Made Core's personal message template tableless too, reusing the markup from the Display template. (PersonalMessage template, index.css, compat.css)
  ! Force a reload of editor.js after upgrading by suffixing it with ?rc3, as browsers will keep it in their cache otherwise. (Subs-Editor.php)
  * Removed the override stylesheet for Firefox, as it is no longer necessary. (index template, firefox.css)
  ! Undefined index error in the help section for non-admins due to the createMenu function interpreting the second argument of subsection arrays for a permission key. (Help.php)

@@ -806,7 +806,8 @@ h4.titlebg img.icon
 div.cat_bar
 {
 	background: url(../images/theme/main_block.png) no-repeat 0 -160px;
-	padding-left: 9px; 	height: 32px;
+	padding-left: 9px;
+	height: 32px;
 	overflow: hidden;
 }
 div.title_bar
@@ -2294,11 +2295,11 @@ ul.post_options li
 }
 #move_topic dl.settings dt
 {
-    width: 40%;
+	width: 40%;
 }
 #move_topic dl.settings dd
 {
-    width: 59%;
+	width: 59%;
 }
 .move_topic
 {
@@ -2344,11 +2345,11 @@ dl.send_mail dd
 }
 #report_topic dl.settings dt
 {
-    width: 20%;
+	width: 20%;
 }
 #report_topic dl.settings dd
 {
-    width: 79%;
+	width: 79%;
 }
 
 /* Styles for the split topic section.
@@ -2967,7 +2968,7 @@ div#profile_success
 	width: 20px;
 	margin: 0 1em 0 0;
 	padding: 0;
-	text-indent: -1000em; 
+	text-indent: -1000em;
 }
 
 /* View posts */

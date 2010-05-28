@@ -7,7 +7,7 @@ function template_pm_above()
 	global $context, $settings, $options, $txt;
 
 	echo '
-	<div id="personal_messages">'; 
+	<div id="personal_messages">';
 
 	// Show the capacity bar, if available.
 	if (!empty($context['limit_bar']))

@@ -213,7 +213,7 @@ smf_StatsCenter.prototype.onDocReceived = function (oXMLDoc)
 			for (var iCellIndex = 0, iNumCells = this.opt.aDataCells.length; iCellIndex < iNumCells; iCellIndex++)
 			{
 				var oCurCell = oCurRow.insertCell(-1);
-				
+
 				if (this.opt.aDataCells[iCellIndex] == 'date')
 					oCurCell.style.paddingLeft = '6ex';
 				else

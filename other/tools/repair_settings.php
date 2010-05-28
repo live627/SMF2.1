@@ -992,7 +992,7 @@ function smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_pre
 		if (empty($log_message))
 			$log_message = $error_message;
 
-		// 	A special case - we want the file and line numbers for debugging.
+		// A special case - we want the file and line numbers for debugging.
 		if ($error_type == 'return')
 			return array($file, $line);
 

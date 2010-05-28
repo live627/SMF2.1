@@ -307,7 +307,7 @@ $latest_news = array(
 		'author_english' => 'Meriadoc',
 
 		'subject_german' => 'SMF 1.0.2',
- 		'message_german' => 'Ein paar kleine Fehler wurden in SMF gefunden, die meisten jedoch nur Server betreffend und einer im Paket-Manager. Ein Update wird dringend empfohlen! Im Paket-Manager oder auf der Downloadseite von Simplemachines finden Sie das neue Update..',
+		'message_german' => 'Ein paar kleine Fehler wurden in SMF gefunden, die meisten jedoch nur Server betreffend und einer im Paket-Manager. Ein Update wird dringend empfohlen! Im Paket-Manager oder auf der Downloadseite von Simplemachines finden Sie das neue Update..',
 
 		'subject_finnish' => 'SMF 1.0.2',
 
@@ -364,7 +364,7 @@ $latest_news = array(
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=22008.0',
 		'author_english' =>  'Peter Duggan',
 
- 		'subject_german' => 'Eine PHP Sicherheitsl&uuml;cke!',
+		'subject_german' => 'Eine PHP Sicherheitsl&uuml;cke!',
 		'message_german' => 'Eine neue Sicherheitsl&uuml;cke wurde in PHP gefunden (Programmiersprache von SMF). Fragen Sie bei Ihrem Host an, ob er so bald wie m&ouml;glich auf PHP 4.3.10 oder 5.0.3 aktualisiert. Sie k&ouml;nnen bis dahin auch einen Patch installieren, den Sie im Paket-Manager finden.',
 	),
 

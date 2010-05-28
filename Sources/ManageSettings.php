@@ -488,7 +488,7 @@ function ModifyBasicSettings($return_config = false)
 	{
 		checkSession();
 
-		// Prevent absurd boundaries here - make it a day tops. 
+		// Prevent absurd boundaries here - make it a day tops.
 		if (isset($_POST['lastActive']))
 			$_POST['lastActive'] = min((int) $_POST['lastActive'], 1440);
 

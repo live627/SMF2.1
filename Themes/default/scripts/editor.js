@@ -719,7 +719,6 @@ smc_Editor.prototype.handleButtonClick = function (oButtonProperties)
 
 	// Finally set the focus.
 	this.setFocus();
-	
 }
 
 // Changing a select box?
@@ -750,7 +749,7 @@ smc_Editor.prototype.handleSelectChange = function (oSelectProperties)
 	{
 		// Are we in boring mode?
 		if (!this.bRichTextEnabled)
-		{		
+		{
 			surroundText('[size=' + this.aFontSizes[sValue] + 'pt]', '[/size]', this.oTextHandle);
 			oSelectProperties.oSelect.selectedIndex = 0;
 		}
@@ -1580,7 +1579,7 @@ smc_BBCButtonBox.prototype.init = function ()
 				case 'button':
 					if (!oCurControl.bEnabled)
 						break;
-				
+
 					oCurControl.oImg = document.getElementById(this.opt.sUniqueId.php_htmlspecialchars() + '_button_' + iButtonRowIndex.toString() + '_' + iButtonIndex.toString());
 					oCurControl.oImg.style.cursor = 'pointer';
 					if ('sButtonBackgroundImage' in this.opt)

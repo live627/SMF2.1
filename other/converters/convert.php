@@ -2665,7 +2665,7 @@ function convert_insert($table, $columns, $block, $type = 'insert', $no_prefix =
 function convert_insert_id($table, $no_prefix = false)
 {
 	global $smcFunc, $db_prefix;
-	
+
 	if (empty($no_prefix))
 		$table = $db_prefix . $table;
 	return $smcFunc['db_insert_id']($table);

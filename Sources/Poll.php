@@ -610,7 +610,7 @@ function EditPoll2()
 
 	// Sneaking off, are we?
 	if (empty($_POST))
-		redirectexit('action=editpoll;topic=' . $topic . '.0'); 
+		redirectexit('action=editpoll;topic=' . $topic . '.0');
 
 	if (checkSession('post', '', false) != '')
 		$poll_errors[] = 'session_timeout';

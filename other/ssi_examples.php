@@ -171,7 +171,7 @@ template_ssi_above();
 				<h3>Code (show by number of replies)</h3>
 				<div class="codeheader">Code: <a href="javascript:void(0);" onclick="return smfSelectText(this);" class="codeoperation">[Select]</a></div><code class="bbc_code">&lt;?php ssi_topTopicsReplies(); ?&gt;</code>
 				<h3>Result</h3>
-				<div class="ssi_result"><?php ssi_topTopicsReplies(); flush(); ?></div>			
+				<div class="ssi_result"><?php ssi_topTopicsReplies(); flush(); ?></div>
 			</div>
 
 			<div class="ssi_preview" id="ssi_topPoll">
@@ -269,7 +269,7 @@ template_ssi_above();
 				<div class="ssi_result"><?php ssi_todaysCalendar(); flush(); ?></div>
 
 				<h2>Today's Birthdays Function</h2>
-				<h3>Code</h3>	
+				<h3>Code</h3>
 				<div class="codeheader">Code: <a href="javascript:void(0);" onclick="return smfSelectText(this);" class="codeoperation">[Select]</a></div><code class="bbc_code">&lt;?php ssi_todaysBirthdays(); ?&gt;</code>
 				<h3>Result</h3>
 				<div class="ssi_result"><?php ssi_todaysBirthdays(); flush(); ?></div>
@@ -360,7 +360,7 @@ template_ssi_above();
 				<h2>Show Single Poll</h2>
 				<p>Shows a poll in the specified topic.</p>
 
-				<h3>Code</h3>	
+				<h3>Code</h3>
 				<div class="codeheader">Code: <a href="javascript:void(0);" onclick="return smfSelectText(this);" class="codeoperation">[Select]</a></div><code class="bbc_code">&lt;?php ssi_showPoll($topicID); ?&gt;</code>
 				<h3>Result</h3>
 				<div class="ssi_result"><i>Not shown because it needs specific topic ID that contains a poll.</i></div>

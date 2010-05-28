@@ -2182,11 +2182,11 @@ ul.split_messages div.post
 }
 #report_topic dl.settings dt
 {
-    width: 20%;
+	width: 20%;
 }
 #report_topic dl.settings dd
 {
-    width: 79%;
+	width: 79%;
 }
 
 /* Styles for the merge topic section.
@@ -2829,7 +2829,7 @@ div.core_posts
 	border: 1px solid #adadad;
 	margin-bottom: 3px;
 }
-div.core_posts div.content 
+div.core_posts div.content
 {
 	background: none;
 	border: none;

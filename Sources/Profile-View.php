@@ -839,7 +839,7 @@ function statPanel($memID)
 			if (!isset($context['posts_by_time'][$hour]))
 				$context['posts_by_time'][$hour] = array(
 					'hour' => $hour,
-					'hour_format' => stripos($user_info['time_format'], '%p') === false ? $hour : date('g a', mktime($hour)), 
+					'hour_format' => stripos($user_info['time_format'], '%p') === false ? $hour : date('g a', mktime($hour)),
 					'posts' => 0,
 					'posts_percent' => 0,
 					'relative_percent' => 0,

@@ -2252,7 +2252,7 @@ function MessagePost2()
 			'bcc' => array_intersect($recipientList['bcc'], $context['send_log']['failed'])
 		));
 
-	//Message sent successfully? 
+	// Message sent successfully?
 	if (!empty($context['send_log']) && empty($context['send_log']['failed']))
 		$context['current_label_redirect'] = $context['current_label_redirect'] . ';done=sent';
 

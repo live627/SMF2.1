@@ -28,7 +28,7 @@ function template_main()
 						<noscript>
 							<input type="submit" value="', $txt['go'], '" class="button_submit" />
 						</noscript>
-					</div>					
+					</div>
 				</div>
 				<table class="table_grid" cellspacing="0">
 					<thead>

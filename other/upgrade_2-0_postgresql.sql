@@ -714,8 +714,8 @@ while ($request && $row = $smcFunc['db_fetch_assoc']($request))
 ---# Changing inet_aton function to use bigint instead of int...
 CREATE OR REPLACE FUNCTION INET_ATON(text) RETURNS bigint AS
   'SELECT
-	CASE WHEN 
-		$1 !~ ''^[0-9]?[0-9]?[0-9]?\.[0-9]?[0-9]?[0-9]?\.[0-9]?[0-9]?[0-9]?\.[0-9]?[0-9]?[0-9]?$'' THEN 0 
+	CASE WHEN
+		$1 !~ ''^[0-9]?[0-9]?[0-9]?\.[0-9]?[0-9]?[0-9]?\.[0-9]?[0-9]?[0-9]?\.[0-9]?[0-9]?[0-9]?$'' THEN 0
 	ELSE
 		split_part($1, ''.'', 1)::int8 * (256 * 256 * 256) +
 		split_part($1, ''.'', 2)::int8 * (256 * 256) +

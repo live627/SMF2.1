@@ -366,14 +366,14 @@ function ReportToModerator2()
 {
 	global $txt, $scripturl, $topic, $board, $user_info, $modSettings, $sourcedir, $language, $context, $smcFunc;
 
- 	// You must have the proper permissions!
- 	isAllowedTo('report_any');
- 
+	// You must have the proper permissions!
+	isAllowedTo('report_any');
+
 	// Make sure they aren't spamming.
 	spamProtection('reporttm');
 
- 	require_once($sourcedir . '/Subs-Post.php');
- 
+	require_once($sourcedir . '/Subs-Post.php');
+
 	// No errors, yet.
 	$post_errors = array();
 

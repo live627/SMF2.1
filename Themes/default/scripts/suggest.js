@@ -344,7 +344,7 @@ smc_AutoSuggest.prototype.addItemLink = function (sItemId, sItemName, bFromSubmi
 {
 	// Increase the internal item count.
 	this.iItemCount ++;
-	
+
 	// If there's a callback then call it.
 	if ('oCallback' in this && 'onBeforeAddItem' in this.oCallback && typeof(this.oCallback.onBeforeAddItem) == 'string')
 	{

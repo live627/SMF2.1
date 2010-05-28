@@ -1102,7 +1102,7 @@ function MergeExecute($topics = array())
 
 	$boards = array_values(array_unique($boards));
 
-	 // The parameters of MergeExecute were set, so this must've been an internal call.
+	// The parameters of MergeExecute were set, so this must've been an internal call.
 	if (!empty($topics))
 	{
 		isAllowedTo('merge_any', $boards);

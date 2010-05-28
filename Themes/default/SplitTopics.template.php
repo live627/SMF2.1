@@ -136,7 +136,7 @@ function template_select()
 							</div>
 							<div class="post">', $message['body'], '</div>
 						</div>
-						<span class="botslice"><span></span></span>						
+						<span class="botslice"><span></span></span>
 					</li>';
 
 	echo '

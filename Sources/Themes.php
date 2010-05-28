@@ -983,7 +983,7 @@ function PickTheme()
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=theme;sa=pick;u=' . (!empty($_REQUEST['u']) ? (int) $_REQUEST['u'] : 0),
 		'name' => $txt['theme_pick'],
-	); 
+	);
 
 	$_SESSION['id_theme'] = 0;
 

@@ -50,7 +50,7 @@ function template_main()
 			}
 
 			echo '
-					 </dl>';
+					</dl>';
 
 			if ($context['allow_poll_view'])
 				echo '

@@ -22,7 +22,7 @@ SELECT
 	SUBSTRING(u.pass, 1, 64) AS passwd,
 	u.gender AS gender,
 	SUBSTRING(u.email, 1, 255) AS email_address,
-	SUBSTRING(u.icq, 1, 255) AS icq, 
+	SUBSTRING(u.icq, 1, 255) AS icq,
 	u.last_login AS last_login, u.reg AS date_registered, u.posts,
 	u.geb AS birthdate,
 	IF (u.group_id = 1, 1, 0) AS id_group,
@@ -38,7 +38,7 @@ FROM {$from_prefix}user AS u;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT 
+SELECT
 	id AS id_cat, name AS name, rang AS cat_order
 FROM {$from_prefix}board
 WHERE is_board = '0';
@@ -55,7 +55,7 @@ TRUNCATE {$to_prefix}boards;
 $ignore_slashes = true;
 ---}
 SELECT
-	id AS id_board, SUBSTRING(name, 1, 255) AS name, '-1,0,1,2' AS member_groups, 
+	id AS id_board, SUBSTRING(name, 1, 255) AS name, '-1,0,1,2' AS member_groups,
 	SUBSTRING(info, 1, 65534) AS description, rang AS board_order,
 	posts AS num_posts, topics AS num_topics, parent_id AS id_cat, parent_id AS id_parent
 FROM {$from_prefix}board
@@ -76,11 +76,11 @@ TRUNCATE {$to_prefix}log_polls;
 
 ---* {$to_prefix}topics
 SELECT
-	t.id AS id_topic, t.board_id AS id_board, 
-	t.top AS is_sticky, t.views AS num_views, 
-	t.user_id AS id_member_started, 
-	t.user_id AS id_member_updated, 
-	MIN(p.id) AS id_first_msg, MAX(p.id) AS id_last_msg, 
+	t.id AS id_topic, t.board_id AS id_board,
+	t.top AS is_sticky, t.views AS num_views,
+	t.user_id AS id_member_started,
+	t.user_id AS id_member_updated,
+	MIN(p.id) AS id_first_msg, MAX(p.id) AS id_last_msg,
 	t.closed AS locked
 FROM {$from_prefix}topic AS t
 	INNER JOIN {$from_prefix}post AS p ON (p.topic_id = t.id)
@@ -132,13 +132,13 @@ array(
 ---}
 SELECT
 	p.id AS id_msg, p.topic_id AS id_topic,
-	t.board_id  AS id_board, p.post_date AS poster_time, 
+	t.board_id  AS id_board, p.post_date AS poster_time,
 	p.user_id AS id_member,	p.edit_time AS id_msg_MODIFIED,
 	t.name AS subject,
-	u.name AS poster_name, 
-	u.email AS poster_email,	p.ip AS poster_ip, 
-	'1' AS smileys_enabled, p.edit_time AS modified_time, 
-	IF (p.edit_time > 0 , u.name, '') AS modified_name, p.text AS body, 'xx' AS icon
+	u.name AS poster_name,
+	u.email AS poster_email, p.ip AS poster_ip,
+	'1' AS smileys_enabled, p.edit_time AS modified_time,
+	IF (p.edit_time > 0, u.name, '') AS modified_name, p.text AS body, 'xx' AS icon
 FROM {$from_prefix}post AS p
 	INNER JOIN {$from_prefix}topic AS t ON (t.id = p.topic_id)
 	LEFT JOIN {$from_prefix}user AS u ON (u.id = p.user_id)
@@ -151,7 +151,7 @@ GROUP BY p.id;
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
-SELECT 
+SELECT
 	user_id AS id_member, topic_id AS id_topic
 FROM {$from_prefix}topic_abo;
 ---*
@@ -162,7 +162,7 @@ FROM {$from_prefix}topic_abo;
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
-SELECT 
+SELECT
 	user_id AS id_member, board_id AS id_board
 FROM {$from_prefix}board_abo;
 ---*
@@ -174,7 +174,7 @@ FROM {$from_prefix}board_abo;
 TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
-SELECT 
+SELECT
 	user_id AS id_member, board_ID AS id_board
 FROM {$from_prefix}board_mod;
 ---*
@@ -235,7 +235,7 @@ FROM {$from_prefix}private AS pm
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT 
+SELECT
 	id AS id_pm, to_id AS id_member, view AS is_read,
 	del AS deleted, '-1' AS labels
 FROM {$from_prefix}private;
@@ -272,7 +272,7 @@ SELECT
 	t.user_id AS id_member, p.days  AS expire_time,
 	SUBSTRING(IFNULL(u.name, ''), 1, 255) AS poster_name,
 	'1' AS max_votes
-FROM {$from_prefix}poll AS p 
+FROM {$from_prefix}poll AS p
 	LEFT JOIN {$from_prefix}topic AS t ON (p.topic_id = t.id)
 	LEFT JOIN {$from_prefix}user AS u ON (u.id = t.user_id);
 ---*
@@ -282,8 +282,8 @@ FROM {$from_prefix}poll AS p
 /******************************************************************************/
 
 ---* {$to_prefix}poll_choices
-SELECT 
-	poll_id AS id_poll, rang AS id_choice, SUBSTRING(text, 1, 255) AS label, 
+SELECT
+	poll_id AS id_poll, rang AS id_choice, SUBSTRING(text, 1, 255) AS label,
 	votes AS votes
 FROM {$from_prefix}poll_option;
 ---*
@@ -296,7 +296,7 @@ FROM {$from_prefix}poll_option;
 ---{
 $ignore = true;
 ---}
-SELECT 
+SELECT
 	o.poll_id AS id_poll, v.user_id AS id_member, '1' AS id_choice
 FROM {$from_prefix}poll_vote AS v
 	INNER JOIN {$from_prefix}poll_option AS o ON (v.option_id = o.id);
@@ -324,7 +324,7 @@ if (!isset($smf_smileys_directory))
 	list ($smf_smileys_directory) = convert_fetch_row($request);
 	convert_free_result($request);
 }
-	
+
 /* enable custom smileys */
 $request = convert_query("
 	SELECT value
@@ -333,34 +333,33 @@ $request = convert_query("
 	LIMIT 1");
 
 list ($smiley_enable) = convert_fetch_row($request);
-convert_free_result($request);	
-	
+convert_free_result($request);
+
 if (isset($smiley_enable))
 	convert_query("
 		UPDATE {$to_prefix}settings
-		SET value = '1' 
+		SET value = '1'
 		WHERE variable='smiley_enable'");
-	
 else
 	convert_query("
 		REPLACE INTO {$to_prefix}settings
 			(variable, value)
 		VALUES ('smiley_enable','1')");
 
-$row['filename'] = substr(strrchr($row['filename'], '/'),1);		
-$row['description'] = htmlspecialchars($row['description'],ENT_QUOTES);			
+$row['filename'] = substr(strrchr($row['filename'], '/'),1);
+$row['description'] = htmlspecialchars($row['description'],ENT_QUOTES);
 
-if (is_file($_POST['path_from'] . '/images/default/smilies/'. $row['filename'])) 
+if (is_file($_POST['path_from'] . '/images/default/smilies/'. $row['filename']))
 {
  	copy($_POST['path_from'] . '/images/default/smilies/'. $row['filename'] , $smf_smileys_directory . '/default/'.$row['filename']);
-	
+
 	$request2 = convert_query("
 		INSERT IGNORE INTO {$to_prefix}smileys
 			(code, filename, description, hidden)
 		VALUES ('$row[code]','$row[filename]', '$row[description]','0')");
 }
 ---}
-SELECT 
+SELECT
 	filename AS filename, code AS code, name AS description
 FROM {$from_prefix}smilie;
 ---*
@@ -379,7 +378,6 @@ $newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 
 if (copy($_POST['path_from'] . '/attachments/' . $row['id_attach'] , $attachmentUploadDir . '/' . $newfilename))
 	$rows[] = "$row[id_attach], " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
-	
 ---}
 SELECT
 	id AS id_attach, post_id AS id_msg, views AS downloads, filename AS filename
@@ -408,11 +406,10 @@ $keys = array('id_attach', 'size', 'filename', 'id_member');
 $row['filename'] = substr(strrchr($row['avatar'], ':'),1);
 $newfilename = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
 
-if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/images/avatars/' . $row['filename'] , $attachmentUploadDir . '/' . $newfilename)) 
+if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/images/avatars/' . $row['filename'] , $attachmentUploadDir . '/' . $newfilename))
 	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($newfilename) . "', $row[id_member]";
-	
 ---}
-SELECT 
+SELECT
 	id AS id_member, avatar
 FROM {$from_prefix}user
 WHERE avatar LIKE 'upload:%';

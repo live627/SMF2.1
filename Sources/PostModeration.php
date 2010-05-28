@@ -168,7 +168,7 @@ function UnapprovedPosts()
 			if ($can_add)
 				$anItem = $context['current_view'] == 'topics' ? $row['id_topic'] : $row['id_msg'];
 			$toAction[] = $anItem;
-			
+
 			// All clear. What have we got now, what, what?
 			$details[$anItem] = array();
 			$details[$anItem]["subject"] = $row['subject'];
@@ -516,7 +516,7 @@ function ApproveMessage()
 function approveMessages($messages, $messageDetails, $current_view = 'replies')
 {
 	global $sourcedir;
-	
+
 	require_once($sourcedir . '/Subs-Post.php');
 	if ($current_view == 'topics')
 	{
