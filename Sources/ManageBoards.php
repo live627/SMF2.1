@@ -371,7 +371,7 @@ function EditCategory2()
 	redirectexit('action=admin;area=manageboards');
 }
 
-// Modify a specific board..
+// Modify a specific board...
 function EditBoard()
 {
 	global $txt, $context, $cat_tree, $boards, $boardList, $sourcedir, $smcFunc, $modSettings;
@@ -608,6 +608,7 @@ function EditBoard2()
 		$boardOptions['override_theme'] = isset($_POST['override_theme']);
 		$boardOptions['board_theme'] = (int) $_POST['boardtheme'];
 		$boardOptions['access_groups'] = array();
+
 		if (!empty($_POST['groups']))
 			foreach ($_POST['groups'] as $group)
 				$boardOptions['access_groups'][] = (int) $group;

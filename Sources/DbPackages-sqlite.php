@@ -106,6 +106,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 	// With or without the database name, the fullname looks like this.
 	$real_prefix = preg_match('~^(`?)(.+?)\\1\\.(.*?)$~', $db_prefix, $match) === 1 ? $match[3] : $db_prefix;
 	$full_table_name = str_replace('{db_prefix}', $real_prefix, $table_name);
+	$short_table_name = substr(strrchr($full_table_name, '.'), 1);
 	$table_name = str_replace('{db_prefix}', $db_prefix, $table_name);
 
 	// First - no way do we touch SMF tables.
@@ -118,45 +119,15 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 	// Log that we'll want to remove this on uninstall.
 	$db_package_log[] = array('remove_table', $table_name);
 
-	// This table not exist?
+	// Does this table exist or not?
 	$tables = $smcFunc['db_list_tables']();
-	if (in_array($full_table_name, $tables))
+	if (in_array($full_table_name, $tables) || (!empty($short_table_name) && in_array($short_table_name, $tables)))
 	{
-		// This is a sad day... drop the table?
+		// This is a sad day... drop the table? If not, return false (error) by default.
 		if ($if_exists == 'overwrite')
 			$smcFunc['db_drop_table']($table_name);
-		elseif ($if_exists == 'ignore')
-			return true;
-		elseif ($if_exists == 'error')
-			return false;
-		// Otherwise we have to sort through the columns and add/remove ones which are wrong!
 		else
-		{
-			$old_columns = $smcFunc['db_list_columns']($table_name, false);
-			foreach ($old_columns as $k => $v)
-				$old_columns[$k] = strtolower($v);
-			foreach ($columns as $column)
-			{
-				// Already exists?
-				if (in_array(strtolower($column['name']), $old_columns))
-				{
-					$k = array_search(strtolower($column['name']), $old_columns);
-					unset($old_columns[$k]);
-				}
-				// Doesn't - add it!
-				else
-					$smcFunc['db_add_column']($table_name, $column);
-			}
-			// Whatever is left needs to be removed.
-			if ($if_exists == 'update_remove')
-			{
-				foreach ($old_columns as $column)
-					$smcFunc['db_remove_column']($table_name, $column);
-			}
-
-			// All done!
-			return true;
-		}
+			return $if_exists == 'ignore';
 	}
 
 	// Righty - let's do the damn thing!
