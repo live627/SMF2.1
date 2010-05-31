@@ -60,7 +60,7 @@ if (!defined('SMF'))
 		- adding new ban triggers:
 			- is accessed by ?action=admin;area=ban;sa=edittrigger;bg=x
 			- uses the ban_edit_trigger sub template of ManageBans.
-		-editing existing ban triggers:
+		- editing existing ban triggers:
 			- is accessed by ?action=admin;area=ban;sa=edittrigger;bg=x;bi=y
 			- uses the ban_edit_trigger sub template of ManageBans.
 
@@ -87,6 +87,11 @@ if (!defined('SMF'))
 	array ip2range(string $fullip)
 		- converts a given IP string to an array.
 		- reverse function of range2ip().
+
+	array checkExistingTriggerIP(array $ip_array, string $fullip)
+		- checks whether a given IP range already exists in the trigger list.
+		- if yes, it returns an error message. Otherwise, it returns
+		  an array optimized for the database.
 
 	void updateBanMembers()
 		- updates the members table to match the new bans.
@@ -215,7 +220,6 @@ function BanList()
 				),
 				'data' => array(
 					'db' => 'name',
-					'class' => 'windowbg',
 				),
 				'sort' => array(
 					'default' => 'bg.name',
@@ -284,7 +288,6 @@ function BanList()
 						else
 							return sprintf(\'%1$d&nbsp;%2$s\', ceil(($rowData[\'expire_time\'] - time()) / (60 * 60 * 24)), $txt[\'ban_days\']);
 					'),
-					'class' => 'windowbg',
 				),
 				'sort' => array(
 					'default' => 'IFNULL(bg.expire_time, 1=1) DESC, bg.expire_time DESC',
@@ -297,7 +300,6 @@ function BanList()
 				),
 				'data' => array(
 					'db' => 'num_triggers',
-					'class' => 'windowbg',
 					'style' => 'text-align: center;',
 				),
 				'sort' => array(
@@ -450,18 +452,12 @@ function BanEdit()
 
 		if ($_POST['bantype'] == 'ip_ban')
 		{
-			$ip_parts = ip2range(trim($_POST['ip']));
-			if (count($ip_parts) != 4)
+			$ip = trim($_POST['ip']);
+			$ip_parts = ip2range($ip);
+			$ip_check = checkExistingTriggerIP($ip_parts, $ip);
+			if (!$ip_check)
 				fatal_lang_error('invalid_ip', false);
-
-			$values['ip_low1'] = $ip_parts[0]['low'];
-			$values['ip_high1'] = $ip_parts[0]['high'];
-			$values['ip_low2'] = $ip_parts[1]['low'];
-			$values['ip_high2'] = $ip_parts[1]['high'];
-			$values['ip_low3'] = $ip_parts[2]['low'];
-			$values['ip_high3'] = $ip_parts[2]['high'];
-			$values['ip_low4'] = $ip_parts[3]['low'];
-			$values['ip_high4'] = $ip_parts[3]['high'];
+			$values = array_merge($values, $ip_check);
 
 			$modlogInfo['ip_range'] = $_POST['ip'];
 		}
@@ -611,7 +607,6 @@ function BanEdit()
 				'new_ban_name' => $_POST['ban_name'],
 			)
 		);
-		// !!! Separate the sprintf?
 		if ($smcFunc['db_num_rows']($request) == 1)
 			fatal_lang_error('ban_name_exists', false, array($_POST['ban_name']));
 		$smcFunc['db_free_result']($request);
@@ -634,23 +629,24 @@ function BanEdit()
 				$ban_logs = array();
 				if (in_array('main_ip', $_POST['ban_suggestion']) && !empty($_POST['main_ip']))
 				{
-					$ip_parts = ip2range(trim($_POST['main_ip']));
-					if (count($ip_parts) != 4)
+					$ip = trim($_POST['main_ip']);
+					$ip_parts = ip2range($ip);
+					if (!checkExistingTriggerIP($ip_parts, $ip))
 						fatal_lang_error('invalid_ip', false);
 
-						$ban_triggers[] = array(
-							$ip_parts[0]['low'],
-							$ip_parts[0]['high'],
-							$ip_parts[1]['low'],
-							$ip_parts[1]['high'],
-							$ip_parts[2]['low'],
-							$ip_parts[2]['high'],
-							$ip_parts[3]['low'],
-							$ip_parts[3]['high'],
-							'',
-							'',
-							0,
-						);
+					$ban_triggers[] = array(
+						$ip_parts[0]['low'],
+						$ip_parts[0]['high'],
+						$ip_parts[1]['low'],
+						$ip_parts[1]['high'],
+						$ip_parts[2]['low'],
+						$ip_parts[2]['high'],
+						$ip_parts[3]['low'],
+						$ip_parts[3]['high'],
+						'',
+						'',
+						0,
+					);
 
 					$ban_logs[] = array(
 						'ip_range' => $_POST['main_ip'],
@@ -734,6 +730,7 @@ function BanEdit()
 					// Don't add the main IP again.
 					if (in_array('main_ip', $_POST['ban_suggestion']))
 						$_POST['ban_suggestion']['ips'] = array_diff($_POST['ban_suggestion']['ips'], array($_POST['main_ip']));
+
 					foreach ($_POST['ban_suggestion']['ips'] as $ip)
 					{
 						$ip_parts = ip2range($ip);
@@ -782,17 +779,11 @@ function BanEdit()
 			{
 				// Put in the ban group ID.
 				foreach ($ban_triggers as $k => $trigger)
-				{
 					array_unshift($ban_triggers[$k], $_REQUEST['bg']);
-				}
 
 				// Log what we are doing!
 				foreach ($ban_logs as $log_details)
-				{
-					logAction('ban', $log_details + array(
-						'new' => 1,
-					));
-				}
+					logAction('ban', $log_details + array('new' => 1));
 
 				$smcFunc['db_insert']('',
 					'{db_prefix}ban_items',
@@ -857,6 +848,7 @@ function BanEdit()
 		);
 		if ($smcFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('ban_not_found', false);
+
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			if (!isset($context['ban']))
@@ -969,9 +961,7 @@ function BanEdit()
 				)
 			);
 			if ($smcFunc['db_num_rows']($request) > 0)
-			{
 				list ($context['ban_suggestions']['member']['id'], $context['ban_suggestions']['member']['name'], $context['ban_suggestions']['main_ip'], $context['ban_suggestions']['email']) = $smcFunc['db_fetch_row']($request);
-			}
 			$smcFunc['db_free_result']($request);
 
 			if (!empty($context['ban_suggestions']['member']['id']))
@@ -1033,10 +1023,8 @@ function BanEdit()
 	{
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_ban_edit';
 		foreach ($context['template_layers'] as $k => $v)
-		{
 			if (strpos($v, 'generic_menu') === 0)
 				unset($context['template_layers'][$k]);
-		}
 	}
 	else
 		$context['sub_template'] = 'ban_edit';
@@ -1201,7 +1189,6 @@ function BanBrowseTriggers()
 				),
 				'data' => array(
 					'db' => 'hits',
-					'class' => 'windowbg',
 					'style' => 'text-align: center;',
 				),
 				'sort' => array(
@@ -1609,6 +1596,49 @@ function ip2range($fullip)
 	}
 
 	return $ip_array;
+}
+
+function checkExistingTriggerIP($ip_array, $fullip = '')
+{
+	global $smcFunc, $scripturl;
+
+	if (count($ip_array) == 4)
+		$values = array(
+			'ip_low1' => $ip_array[0]['low'],
+			'ip_high1' => $ip_array[0]['high'],
+			'ip_low2' => $ip_array[1]['low'],
+			'ip_high2' => $ip_array[1]['high'],
+			'ip_low3' => $ip_array[2]['low'],
+			'ip_high3' => $ip_array[2]['high'],
+			'ip_low4' => $ip_array[3]['low'],
+			'ip_high4' => $ip_array[3]['high'],
+		);
+	else
+		return false;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT bg.id_ban_group, bg.name
+		FROM {db_prefix}ban_groups AS bg
+		INNER JOIN {db_prefix}ban_items AS bi ON
+			(bi.id_ban_group = bg.id_ban_group)
+			AND ip_low1 = {int:ip_low1} AND ip_high1 = {int:ip_high1}
+			AND ip_low2 = {int:ip_low2} AND ip_high2 = {int:ip_high2}
+			AND ip_low3 = {int:ip_low3} AND ip_high3 = {int:ip_high3}
+			AND ip_low4 = {int:ip_low4} AND ip_high4 = {int:ip_high4}
+		LIMIT 1',
+		$values
+	);
+	if ($smcFunc['db_num_rows']($request) != 0)
+	{
+		list ($error_id_ban, $error_ban_name) = $smcFunc['db_fetch_row']($request);
+		fatal_lang_error('ban_trigger_already_exists', false, array(
+			$fullip,
+			'<a href="' . $scripturl . '?action=admin;area=ban;sa=edit;bg=' . $error_id_ban . '">' . $error_ban_name . '</a>',
+		));
+	}
+	$smcFunc['db_free_result']($request);
+
+	return $values;
 }
 
 function updateBanMembers()
