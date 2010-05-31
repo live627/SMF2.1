@@ -106,7 +106,6 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 	// With or without the database name, the fullname looks like this.
 	$real_prefix = preg_match('~^(`?)(.+?)\\1\\.(.*?)$~', $db_prefix, $match) === 1 ? $match[3] : $db_prefix;
 	$full_table_name = str_replace('{db_prefix}', $real_prefix, $table_name);
-	$short_table_name = substr(strrchr($full_table_name, '.'), 1);
 	$table_name = str_replace('{db_prefix}', $db_prefix, $table_name);
 
 	// First - no way do we touch SMF tables.
@@ -121,7 +120,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 
 	// Does this table exist or not?
 	$tables = $smcFunc['db_list_tables']();
-	if (in_array($full_table_name, $tables) || (!empty($short_table_name) && in_array($short_table_name, $tables)))
+	if (in_array($full_table_name, $tables))
 	{
 		// This is a sad day... drop the table? If not, return false (error) by default.
 		if ($if_exists == 'overwrite')

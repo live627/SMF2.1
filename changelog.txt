@@ -91,8 +91,7 @@ May 2010
  ! Anchor tags without content (which are valid) were being removed with BBC clean up. (Subs-Editor.php) [Bug 2198]
  * Fixed an awful lot of extra tabs, spaces, etc in dozens of files. (changelog, convert.php, phpmyforum_to_smf.sql, install_2-0_postgresql.sql, ssi_examples.php, repair_settings.php, upgrade.php, upgrade_2-0_postgresql.sql, latest-news.js, Display.php, Load.php, ManageMaintenance.php, ManageSettings.php, PersonalMessage.php, Poll.php, PostModeration.php, Profile-Modify.php, Profile-View.php, SendTopic.php, SplitTopics.php, Themes.php, Who.php, index.css, rtl.css, PersonalMessage template in Core, compat.css, ie6.css, index.css, Display template, editor.js, stats.js, suggest.js, SplitTopics template, Who template in Curve)
  ! Removed column addition code from db_create_table(), as it was only doing half the work and could mislead mod developers. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 3561]
- ! Added an extra test in db_create_table() to avoid script crashes when trying to create a table by using $db_query instead of {db_query}, as in earlier Betas and RC1. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 4311]
- ! Added checkExistingTriggerIP() function to test whether an IP address is already in the ban trigger list. (ManageBans.php)
+ ! Added checkExistingTriggerIP() function to test whether an IP address is already in the ban trigger list. (ManageBans.php) [Bug 4310]
  & Added language entry for that feature. Also fixed a typo and a missing sprintf in $txt['ban_name_exists']. (Errors language)
 
 ================================================================================
