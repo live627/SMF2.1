@@ -176,14 +176,14 @@ function reloadSettings()
 	}
 
 	// UTF-8 in regular expressions is unsupported on PHP(win) versions < 4.2.3.
-	$utf8 = (empty($modSettings['global_character_set']) ? $txt['lang_character_set'] : $modSettings['global_character_set']) === 'UTF-8' && (strpos(strtolower(PHP_OS), 'win') === false || @version_compare(PHP_VERSION, '4.2.3') != -1);
+	$utf8 = (empty($modSettings['global_character_set']) ? $txt['lang_character_set'] : $modSettings['global_character_set']) === 'UTF-8' && (strpos(strtolower(PHP_OS), 'win') === false || version_compare(PHP_VERSION, '4.2.3') !== -1);
 
 	// Set a list of common functions.
 	$ent_list = empty($modSettings['disableEntityCheck']) ? '&(#\d{1,7}|quot|amp|lt|gt|nbsp);' : '&(#021|quot|amp|lt|gt|nbsp);';
 	$ent_check = empty($modSettings['disableEntityCheck']) ? array('preg_replace(\'~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e\', \'$smcFunc[\\\'entity_fix\\\'](\\\'\\2\\\')\', ', ')') : array('', '');
 
 	// Preg_replace can handle complex characters only for higher PHP versions.
-	$space_chars = $utf8 ? (@version_compare(PHP_VERSION, '4.3.3') != -1 ? '\x{A0}\x{AD}\x{2000}-\x{200F}\x{201F}\x{202F}\x{3000}\x{FEFF}' : "\xC2\xA0\xC2\xAD\xE2\x80\x80-\xE2\x80\x8F\xE2\x80\x9F\xE2\x80\xAF\xE2\x80\x9F\xE3\x80\x80\xEF\xBB\xBF") : '\x00-\x08\x0B\x0C\x0E-\x19\xA0';
+	$space_chars = $utf8 ? (version_compare(PHP_VERSION, '4.3.3') !== -1 ? '\x{A0}\x{AD}\x{2000}-\x{200F}\x{201F}\x{202F}\x{3000}\x{FEFF}' : "\xC2\xA0\xC2\xAD\xE2\x80\x80-\xE2\x80\x8F\xE2\x80\x9F\xE2\x80\xAF\xE2\x80\x9F\xE3\x80\x80\xEF\xBB\xBF") : '\x00-\x08\x0B\x0C\x0E-\x19\xA0';
 
 	$smcFunc += array(
 		'entity_fix' => create_function('$string', '
@@ -264,7 +264,7 @@ function reloadSettings()
 	{
 		if (($modSettings['load_average'] = cache_get_data('loadavg', 90)) == null)
 		{
-			$modSettings['load_average'] = @file_get_contents('/proc/loadavg');
+			$modSettings['load_average'] = file_get_contents('/proc/loadavg');
 			if (!empty($modSettings['load_average']) && preg_match('~^([^ ]+?) ([^ ]+?) ([^ ]+)~', $modSettings['load_average'], $matches) != 0)
 				$modSettings['load_average'] = (float) $matches[1];
 			elseif (($modSettings['load_average'] = @`uptime`) != null && preg_match('~load average[s]?: (\d+\.\d+), (\d+\.\d+), (\d+\.\d+)~i', $modSettings['load_average'], $matches) != 0)
@@ -1562,7 +1562,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 		'is_cgi' => isset($_SERVER['SERVER_SOFTWARE']) && strpos(php_sapi_name(), 'cgi') !== false,
 		'is_windows' => strpos(PHP_OS, 'WIN') === 0,
 		'iso_case_folding' => ord(strtolower(chr(138))) === 154,
-		'complex_preg_chars' => @version_compare(PHP_VERSION, '4.3.3') != -1,
+		'complex_preg_chars' => version_compare(PHP_VERSION, '4.3.3') !== -1,
 	);
 	// A bug in some versions of IIS under CGI (older ones) makes cookie setting not work with Location: headers.
 	$context['server']['needs_login_fix'] = $context['server']['is_cgi'] && $context['server']['is_iis'];
@@ -1703,14 +1703,14 @@ function loadTheme($id_theme = 0, $initialize = true)
 
 	// Set the character set from the template.
 	$context['character_set'] = empty($modSettings['global_character_set']) ? $txt['lang_character_set'] : $modSettings['global_character_set'];
-	$context['utf8'] = $context['character_set'] === 'UTF-8' && (strpos(strtolower(PHP_OS), 'win') === false || @version_compare(PHP_VERSION, '4.2.3') != -1);
+	$context['utf8'] = $context['character_set'] === 'UTF-8' && (strpos(strtolower(PHP_OS), 'win') === false || version_compare(PHP_VERSION, '4.2.3') !== -1);
 	$context['right_to_left'] = !empty($txt['lang_rtl']);
 
 	$context['tabindex'] = 1;
 
 	// Fix font size with HTML 4.01, etc.
 	if (isset($settings['doctype']))
-		$context['browser']['needs_size_fix'] |= $settings['doctype'] == 'html' && $context['browser']['is_ie6'];
+		$context['browser']['needs_size_fix'] |= $settings['doctype'] === 'html' && $context['browser']['is_ie6'];
 
 	// Compatibility.
 	if (!isset($settings['theme_version']))
@@ -2068,7 +2068,7 @@ function template_include($filename, $once = false)
 	static $templates = array();
 
 	// We want to be able to figure out any errors...
-	@ini_set('track_errors', '1');
+	ini_set('track_errors', '1');
 
 	// Don't include the file more than once, if $once is true.
 	if ($once && in_array($filename, $templates))
@@ -2097,7 +2097,7 @@ function template_include($filename, $once = false)
 	{
 		ob_end_clean();
 		if (!empty($modSettings['enableCompressedOutput']))
-			@ob_start('ob_gzhandler');
+			ob_start('ob_gzhandler');
 		else
 			ob_start();
 
@@ -2258,26 +2258,26 @@ function loadSession()
 	global $HTTP_SESSION_VARS, $modSettings, $boardurl, $sc;
 
 	// Attempt to change a few PHP settings.
-	@ini_set('session.use_cookies', true);
-	@ini_set('session.use_only_cookies', false);
-	@ini_set('url_rewriter.tags', '');
-	@ini_set('session.use_trans_sid', false);
-	@ini_set('arg_separator.output', '&amp;');
+	ini_set('session.use_cookies', true);
+	ini_set('session.use_only_cookies', false);
+	ini_set('url_rewriter.tags', '');
+	ini_set('session.use_trans_sid', false);
+	ini_set('arg_separator.output', '&amp;');
 
 	if (!empty($modSettings['globalCookies']))
 	{
 		$parsed_url = parse_url($boardurl);
 
 		if (preg_match('~^\d{1,3}(\.\d{1,3}){3}$~', $parsed_url['host']) == 0 && preg_match('~(?:[^\.]+\.)?([^\.]{2,}\..+)\z~i', $parsed_url['host'], $parts) == 1)
-			@ini_set('session.cookie_domain', '.' . $parts[1]);
+			ini_set('session.cookie_domain', '.' . $parts[1]);
 	}
 	// !!! Set the session cookie path?
 
 	// If it's already been started... probably best to skip this.
-	if ((@ini_get('session.auto_start') == 1 && !empty($modSettings['databaseSession_enable'])) || session_id() == '')
+	if ((ini_get('session.auto_start') == 1 && !empty($modSettings['databaseSession_enable'])) || session_id() === '')
 	{
 		// Attempt to end the already-started session.
-		if (@ini_get('session.auto_start') == 1)
+		if (ini_get('session.auto_start') == 1)
 			@session_write_close();
 
 		// This is here to stop people from using bad junky PHPSESSIDs.
@@ -2290,16 +2290,16 @@ function loadSession()
 		}
 
 		// Use database sessions? (they don't work in 4.1.x!)
-		if (!empty($modSettings['databaseSession_enable']) && @version_compare(PHP_VERSION, '4.2.0') != -1)
+		if (!empty($modSettings['databaseSession_enable']) && version_compare(PHP_VERSION, '4.2.0') !== -1)
 		{
 			session_set_save_handler('sessionOpen', 'sessionClose', 'sessionRead', 'sessionWrite', 'sessionDestroy', 'sessionGC');
-			@ini_set('session.gc_probability', '1');
+			ini_set('session.gc_probability', '1');
 		}
-		elseif (@ini_get('session.gc_maxlifetime') <= 1440 && !empty($modSettings['databaseSession_lifetime']))
-			@ini_set('session.gc_maxlifetime', max($modSettings['databaseSession_lifetime'], 60));
+		elseif (ini_get('session.gc_maxlifetime') <= 1440 && !empty($modSettings['databaseSession_lifetime']))
+			ini_set('session.gc_maxlifetime', max($modSettings['databaseSession_lifetime'], 60));
 
 		// Use cache setting sessions?
-		if (empty($modSettings['databaseSession_enable']) && !empty($modSettings['cache_enable']) && php_sapi_name() != 'cli')
+		if (empty($modSettings['databaseSession_enable']) && !empty($modSettings['cache_enable']) && php_sapi_name() !== 'cli')
 		{
 			if (function_exists('mmcache_set_session_handlers'))
 				mmcache_set_session_handlers();
@@ -2315,7 +2315,7 @@ function loadSession()
 	}
 
 	// While PHP 4.1.x should use $_SESSION, it seems to need this to do it right.
-	if (@version_compare(PHP_VERSION, '4.2.0') == -1)
+	if (version_compare(PHP_VERSION, '4.2.0') === -1)
 		$HTTP_SESSION_VARS['php_412_bugfix'] = true;
 
 	// Set the randomly generated code.
@@ -2341,7 +2341,7 @@ function sessionRead($session_id)
 {
 	global $smcFunc;
 
-	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) == 0)
+	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) === 0)
 		return false;
 
 	// Look for it in the database.
@@ -2364,7 +2364,7 @@ function sessionWrite($session_id, $data)
 {
 	global $smcFunc;
 
-	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) == 0)
+	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) === 0)
 		return false;
 
 	// First try to update an existing row...
@@ -2380,7 +2380,7 @@ function sessionWrite($session_id, $data)
 	);
 
 	// If that didn't work, try inserting a new one.
-	if ($smcFunc['db_affected_rows']() == 0)
+	if ($smcFunc['db_affected_rows']() === 0)
 		$result = $smcFunc['db_insert']('ignore',
 			'{db_prefix}sessions',
 			array('session_id' => 'string', 'data' => 'string', 'last_update' => 'int'),
@@ -2395,7 +2395,7 @@ function sessionDestroy($session_id)
 {
 	global $smcFunc;
 
-	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) == 0)
+	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) === 0)
 		return false;
 
 	// Just delete the row...
@@ -2445,14 +2445,14 @@ function loadDatabase()
 
 	// Either we aren't in SSI mode, or it failed.
 	if (empty($db_connection))
-		$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('persist' => $db_persist, 'dont_select_db' => SMF == 'SSI'));
+		$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('persist' => $db_persist, 'dont_select_db' => SMF === 'SSI'));
 
 	// Safe guard here, if there isn't a valid connection lets put a stop to it.
 	if (!$db_connection)
 		db_fatal_error();
 
 	// If in SSI mode fix up the prefix.
-	if (SMF == 'SSI')
+	if (SMF === 'SSI')
 		db_fix_prefix($db_prefix, $db_name);
 }
 
@@ -2502,7 +2502,7 @@ function cache_put_data($key, $value, $ttl = 120)
 	$value = $value === null ? null : serialize($value);
 
 	// The simple yet efficient memcached.
-	if (function_exists('memcache_set') && isset($modSettings['cache_memcached']) && trim($modSettings['cache_memcached']) != '')
+	if (function_exists('memcache_set') && isset($modSettings['cache_memcached']) && trim($modSettings['cache_memcached']) !== '')
 	{
 		// Not connected yet?
 		if (empty($memcached))

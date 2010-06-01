@@ -727,7 +727,7 @@ function DisplayAdminFile()
 {
 	global $context, $modSettings, $smcFunc;
 
-	@ini_set('memory_limit', '32M');
+	ini_set('memory_limit', '32M');
 
 	if (empty($_REQUEST['filename']) || !is_string($_REQUEST['filename']))
 		fatal_lang_error('no_access', false);
@@ -758,11 +758,11 @@ if (!(\'smfForum_sessionvar\' in window))
 
 	$context['template_layers'] = array();
 	// Lets make sure we aren't going to output anything nasty.
-	@ob_end_clean();
+	ob_end_clean();
 	if (!empty($modSettings['enableCompressedOutput']))
-		@ob_start('ob_gzhandler');
+		ob_start('ob_gzhandler');
 	else
-		@ob_start();
+		ob_start();
 
 	// Make sure they know what type of file we are.
 	header('Content-Type: ' . $filetype);
@@ -812,7 +812,7 @@ function AdminSearchInternal()
 	global $context, $txt, $helptxt, $scripturl, $sourcedir;
 
 	// Try to get some more memory.
-	@ini_set('memory_limit', '128M');
+	ini_set('memory_limit', '128M');
 
 	// Load a lot of language files.
 	$language_files = array(

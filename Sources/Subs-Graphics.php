@@ -335,13 +335,13 @@ function resizeImageFile($source, $destination, $max_width, $max_height, $prefer
 	);
 
 	require_once($sourcedir . '/Subs-Package.php');
-	@ini_set('memory_limit', '90M');
+	ini_set('memory_limit', '90M');
 
 	$success = false;
 
 	// Get the image file, we have to work with something after all
 	$fp_destination = fopen($destination, 'wb');
-	if ($fp_destination && substr($source, 0, 7) == 'http://')
+	if ($fp_destination && substr($source, 0, 7) === 'http://')
 	{
 		$fileContents = fetch_web_data($source);
 
@@ -676,7 +676,7 @@ function gif_loadFile($lpszFileName, $iIndex = 0)
 
 function gif_outputAsPng($gif, $lpszFileName, $background_color = -1)
 {
-	if (!isset($gif) || @get_class($gif) != 'cgif' || !$gif->loaded || $lpszFileName == '')
+	if (!isset($gif) || @get_class($gif) !== 'cgif' || !$gif->loaded || $lpszFileName == '')
 		return false;
 
 	$fd = $gif->get_png_data($background_color);
@@ -686,9 +686,9 @@ function gif_outputAsPng($gif, $lpszFileName, $background_color = -1)
 	if (!($fh = @fopen($lpszFileName, 'wb')))
 		return false;
 
-	@fwrite($fh, $fd, strlen($fd));
-	@fflush($fh);
-	@fclose($fh);
+	fwrite($fh, $fd, strlen($fd));
+	flush($fh);
+	fclose($fh);
 
 	return true;
 }

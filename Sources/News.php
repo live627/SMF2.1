@@ -254,17 +254,17 @@ function ShowXmlFeed()
 	// This is an xml file....
 	ob_end_clean();
 	if (!empty($modSettings['enableCompressedOutput']))
-		@ob_start('ob_gzhandler');
+		ob_start('ob_gzhandler');
 	else
 		ob_start();
 
-	if ($xml_format == 'smf' || isset($_REQUEST['debug']))
+	if ($xml_format === 'smf' || isset($_REQUEST['debug']))
 		header('Content-Type: text/xml; charset=' . (empty($context['character_set']) ? 'ISO-8859-1' : $context['character_set']));
-	elseif ($xml_format == 'rss' || $xml_format == 'rss2' || $xml_format == 'webslice')
+	elseif ($xml_format === 'rss' || $xml_format === 'rss2' || $xml_format === 'webslice')
 		header('Content-Type: application/rss+xml; charset=' . (empty($context['character_set']) ? 'ISO-8859-1' : $context['character_set']));
-	elseif ($xml_format == 'atom')
+	elseif ($xml_format === 'atom')
 		header('Content-Type: application/atom+xml; charset=' . (empty($context['character_set']) ? 'ISO-8859-1' : $context['character_set']));
-	elseif ($xml_format == 'rdf')
+	elseif ($xml_format === 'rdf')
 		header('Content-Type: ' . ($context['browser']['is_ie'] ? 'text/xml' : 'application/rdf+xml') . '; charset=' . (empty($context['character_set']) ? 'ISO-8859-1' : $context['character_set']));
 
 	// First, output the xml header.
@@ -383,7 +383,7 @@ function fix_possible_url($val)
 	if (isset($modSettings['integrate_fix_url']) && is_callable($modSettings['integrate_fix_url']))
 		$val = call_user_func(strpos($modSettings['integrate_fix_url'], '::') === false ? $modSettings['integrate_fix_url'] : explode('::', $modSettings['integrate_fix_url']), $val);
 
-	if (empty($modSettings['queryless_urls']) || ($context['server']['is_cgi'] && @ini_get('cgi.fix_pathinfo') == 0 && @get_cfg_var('cgi.fix_pathinfo') == 0) || (!$context['server']['is_apache'] && !$context['server']['is_lighttpd']))
+	if (empty($modSettings['queryless_urls']) || ($context['server']['is_cgi'] && ini_get('cgi.fix_pathinfo') == 0 && get_cfg_var('cgi.fix_pathinfo') == 0) || (!$context['server']['is_apache'] && !$context['server']['is_lighttpd']))
 		return $val;
 
 	$val = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+)(#[^"]*)?$/e', '\'\' . $scripturl . \'/\' . strtr(\'$1\', \'&;=\', \'//,\') . \'.html$2\'', $val);

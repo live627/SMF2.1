@@ -1455,12 +1455,12 @@ function ThemeInstall()
 		$theme_name = preg_replace(array('/\s/', '/\.[\.]+/', '/[^\w_\.\-]/'), array('_', '.', ''), $theme_name);
 		$theme_dir = $boarddir . '/Themes/' . $theme_name;
 
-		if (isset($_FILES['theme_gz']) && is_uploaded_file($_FILES['theme_gz']['tmp_name']) && (@ini_get('open_basedir') != '' || file_exists($_FILES['theme_gz']['tmp_name'])))
+		if (isset($_FILES['theme_gz']) && is_uploaded_file($_FILES['theme_gz']['tmp_name']) && (ini_get('open_basedir') != '' || file_exists($_FILES['theme_gz']['tmp_name'])))
 			$extracted = read_tgz_file($_FILES['theme_gz']['tmp_name'], $boarddir . '/Themes/' . $theme_name, false, true);
 		elseif (isset($_REQUEST['theme_gz']))
 		{
 			// Check that the theme is from simplemachines.org, for now... maybe add mirroring later.
-			if (preg_match('~^http://[\w_\-]+\.simplemachines\.org/~', $_REQUEST['theme_gz']) == 0 || strpos($_REQUEST['theme_gz'], 'dlattach') !== false)
+			if (preg_match('~^http://[\w_\-]+\.simplemachines\.org/~', $_REQUEST['theme_gz']) === 0 || strpos($_REQUEST['theme_gz'], 'dlattach') !== false)
 				fatal_lang_error('not_on_simplemachines');
 
 			$extracted = read_tgz_file($_REQUEST['theme_gz'], $boarddir . '/Themes/' . $theme_name, false, true);
@@ -1853,7 +1853,7 @@ function EditTheme()
 			$_POST['entire_file'] = rtrim(strtr($_POST['entire_file'], array("\r" => '', '   ' => "\t")));
 
 			// Check for a parse error!
-			if (substr($_REQUEST['filename'], -13) == '.template.php' && is_writable($theme_dir) && @ini_get('display_errors'))
+			if (substr($_REQUEST['filename'], -13) === '.template.php' && is_writable($theme_dir) && ini_get('display_errors'))
 			{
 				$request = $smcFunc['db_query']('', '
 					SELECT value
@@ -1875,7 +1875,7 @@ function EditTheme()
 
 				// !!! Use fetch_web_data()?
 				$error = @file_get_contents($theme_url . '/tmp_' . session_id() . '.php');
-				if (preg_match('~ <b>(\d+)</b><br( /)?' . '>$~i', $error) != 0)
+				if (preg_match('~ <b>(\d+)</b><br( /)?' . '>$~i', $error) !== 0)
 					$error_file = $theme_dir . '/tmp_' . session_id() . '.php';
 				else
 					unlink($theme_dir . '/tmp_' . session_id() . '.php');
@@ -1926,7 +1926,7 @@ function EditTheme()
 			$file_data = file($theme_dir . '/' . $_REQUEST['filename']);
 		else
 		{
-			if (preg_match('~(<b>.+?</b>:.+?<b>).+?(</b>.+?<b>\d+</b>)<br( /)?' . '>$~i', $error, $match) != 0)
+			if (preg_match('~(<b>.+?</b>:.+?<b>).+?(</b>.+?<b>\d+</b>)<br( /)?' . '>$~i', $error, $match) !== 0)
 				$context['parse_error'] = $match[1] . $_REQUEST['filename'] . $match[2];
 			$file_data = file($error_file);
 			unlink($error_file);
@@ -1936,7 +1936,7 @@ function EditTheme()
 		$context['file_parts'] = array(array('lines' => 0, 'line' => 1, 'data' => ''));
 		for ($i = 0, $n = count($file_data); $i < $n; $i++)
 		{
-			if (isset($file_data[$i + 1]) && substr($file_data[$i + 1], 0, 9) == 'function ')
+			if (isset($file_data[$i + 1]) && substr($file_data[$i + 1], 0, 9) === 'function ')
 			{
 				// Try to format the functions a little nicer...
 				$context['file_parts'][$j]['data'] = trim($context['file_parts'][$j]['data']) . "\n";

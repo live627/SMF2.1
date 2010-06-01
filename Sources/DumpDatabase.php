@@ -58,21 +58,21 @@ function DumpDatabase2()
 	db_extend();
 
 	// Attempt to stop from dying...
-	@set_time_limit(600);
-	if (@ini_get('memory_limit') < 256)
-		@ini_set('memory_limit', '256M');
+	set_time_limit(600);
+	if (ini_get('memory_limit') < 256)
+		ini_set('memory_limit', '256M');
 
 	// Start saving the output... (don't do it otherwise for memory reasons.)
 	if (isset($_REQUEST['compress']) && function_exists('gzencode'))
 	{
 		// Make sure we're gzipping output, but then say we're not in the header ^_^.
 		if (empty($modSettings['enableCompressedOutput']))
-			@ob_start('ob_gzhandler');
+			ob_start('ob_gzhandler');
 		// Try to clean any data already outputted.
 		elseif (ob_get_length() != 0)
 		{
 			ob_end_clean();
-			@ob_start('ob_gzhandler');
+			ob_start('ob_gzhandler');
 		}
 
 		// Send faked headers so it will just save the compressed output as a gzip.

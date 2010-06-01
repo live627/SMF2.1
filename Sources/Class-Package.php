@@ -80,7 +80,7 @@ class xmlArray
 	public function __construct($data, $auto_trim = false, $level = null, $is_clone = false)
 	{
 		// If we're using this try to get some more memory.
-		@ini_set('memory_limit', '32M');
+		ini_set('memory_limit', '32M');
 
 		// Set the debug level.
 		$this->debug_level = $level !== null ? $level : error_reporting();
@@ -817,7 +817,7 @@ if (!class_exists('ftp_connection'))
 				return false;
 
 			// Request a passive connection - this means, we'll talk to you, you don't talk to us.
-			@fwrite($this->connection, 'PASV' . "\r\n");
+			fwrite($this->connection, 'PASV' . "\r\n");
 			$time = time();
 			do
 				$response = fgets($this->connection, 1024);
@@ -920,14 +920,14 @@ if (!class_exists('ftp_connection'))
 				$listing = $this->list_dir('', true);
 			$listing = explode("\n", $listing);
 
-			@fwrite($this->connection, 'PWD' . "\r\n");
+			fwrite($this->connection, 'PWD' . "\r\n");
 			$time = time();
 			do
 				$response = fgets($this->connection, 1024);
-			while (substr($response, 3, 1) != ' ' && time() - $time < 5);
+			while ($response[3] !== ' ' && time() - $time < 5);
 
 			// Check for 257!
-			if (preg_match('~^257 "(.+?)" ~', $response, $match) != 0)
+			if (preg_match('~^257 "(.+?)" ~', $response, $match) !== 0)
 				$current_dir = strtr($match[1], array('""' => '"'));
 			else
 				$current_dir = '';
@@ -943,7 +943,7 @@ if (!class_exists('ftp_connection'))
 				// Okay, this file's name is:
 				$listing[$i] = $current_dir . '/' . trim(strlen($listing[$i]) > 30 ? strrchr($listing[$i], ' ') : $listing[$i]);
 
-				if (substr($file, 0, 1) == '*' && substr($listing[$i], -(strlen($file) - 1)) == substr($file, 1))
+				if ($file[0]) === '*' && substr($listing[$i], -(strlen($file) - 1)) == substr($file, 1))
 					return $listing[$i];
 				if (substr($file, -1) == '*' && substr($listing[$i], 0, strlen($file) - 1) == substr($file, 0, -1))
 					return $listing[$i];

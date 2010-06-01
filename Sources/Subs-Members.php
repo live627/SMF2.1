@@ -96,10 +96,10 @@ function deleteMembers($users, $check_not_admin = false)
 	global $sourcedir, $modSettings, $user_info, $smcFunc;
 
 	// Try give us a while to sort this out...
-	@set_time_limit(600);
+	set_time_limit(600);
 	// Try to get some more memory.
-	if (@ini_get('memory_limit') < 128)
-		@ini_set('memory_limit', '128M');
+	if (ini_get('memory_limit') < 128)
+		ini_set('memory_limit', '128M');
 
 	// If it's not an array, make it so!
 	if (!is_array($users))
