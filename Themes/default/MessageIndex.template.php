@@ -29,11 +29,11 @@ function template_main()
 			// If the board or children is new, show an indicator.
 			if ($board['new'] || $board['children_new'])
 				echo '
-						<img src="', $settings['images_url'], '/' .$context['theme_variant_url'], 'on', $board['new'] ? '' : '2', '.png" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" border="0" />';
+						<img src="', $settings['images_url'], '/' .$context['theme_variant_url'], 'on', $board['new'] ? '' : '2', '.png" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" />';
 			// Is it a redirection board?
 			elseif ($board['is_redirect'])
 				echo '
-						<img src="', $settings['images_url'], '/' .$context['theme_variant_url'], 'redirect.png" alt="*" title="*" border="0" />';
+						<img src="', $settings['images_url'], '/' .$context['theme_variant_url'], 'redirect.png" alt="*" title="*" />';
 			// No new posts at all! The agony!!
 			else
 				echo '
@@ -57,7 +57,7 @@ function template_main()
 			// Show the "Moderators: ". Each has name, href, link, and id. (but we're gonna use link_moderators.)
 			if (!empty($board['moderators']))
 				echo '
-					<p class="moderators">', count($board['moderators']) == 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</p>';
+					<p class="moderators">', count($board['moderators']) === 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</p>';
 
 			// Show some basic information about the number of posts, etc.
 				echo '
@@ -192,7 +192,7 @@ function template_main()
 						<tr class="windowbg2 whos_viewing">
 							<td colspan="', !empty($context['can_quick_mod']) ? '6' : '5', '" class="smalltext">';
 			if ($settings['display_who_viewing'] == 1)
-				echo count($context['view_members']), ' ', count($context['view_members']) == 1 ? $txt['who_member'] : $txt['members'];
+				echo count($context['view_members']), ' ', count($context['view_members']) === 1 ? $txt['who_member'] : $txt['members'];
 			else
 				echo empty($context['view_members_list']) ? '0 ' . $txt['members'] : implode(', ', $context['view_members_list']) . ((empty($context['view_num_hidden']) or $context['can_moderate_forum']) ? '' : ' (+ ' . $context['view_num_hidden'] . ' ' . $txt['hidden'] . ')');
 			echo $txt['who_and'], $context['view_num_guests'], ' ', $context['view_num_guests'] == 1 ? $txt['guest'] : $txt['guests'], $txt['who_viewing_board'], '

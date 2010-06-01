@@ -247,7 +247,7 @@ function template_create_list_menu($list_menu, $direction = 'top')
 		if (!empty($settings['use_tabs']))
 		{
 			echo '
-		<table cellpadding="0" cellspacing="0" border="0" style="margin-', $list_menu['position'], ': 10px; width: 100%;">
+		<table cellpadding="0" cellspacing="0" style="margin-', $list_menu['position'], ': 10px; width: 100%;">
 			<tr>', $list_menu['position'] == 'right' ? '
 				<td>&nbsp;</td>' : '', '
 				<td align="', $list_menu['position'], '">
@@ -303,7 +303,7 @@ function template_create_list_menu($list_menu, $direction = 'top')
 			$links[] = '<a href="' . $link['href'] . '">' . $link['label'] . '</a>';
 
 		echo '
-		<table cellpadding="0" cellspacing="0" border="0" style="margin-', $list_menu['position'], ': 10px; width: 100%;">
+		<table cellpadding="0" cellspacing="0" style="margin-', $list_menu['position'], ': 10px; width: 100%;">
 			<tr>', $list_menu['position'] == 'right' ? '
 				<td>&nbsp;</td>' : '', '
 				<td align="', $list_menu['position'], '">

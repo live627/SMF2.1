@@ -237,7 +237,7 @@ function template_body_above()
 		echo '
 			</div>
 			<div class="news normaltext">
-				<form id="search_form" style="margin: 0;" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
+				<form id="search_form" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
 					<input type="text" name="search" value="" class="input_text" />&nbsp;
 					<input type="submit" name="submit" value="', $txt['search'], '" class="button_submit" />
 					<input type="hidden" name="advanced" value="0" />';
