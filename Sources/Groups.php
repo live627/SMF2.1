@@ -130,7 +130,7 @@ function GroupList()
 			'color' => $row['online_color'],
 			'type' => $row['group_type'],
 			'num_members' => 0,
-			'stars' => !empty($row['stars'][0]) && !empty($row['stars'][1]) ? str_repeat('<img src="' . $settings['images_url'] . '/' . $row['stars'][1] . '" alt="*" border="0" />', $row['stars'][0]) : '',
+			'stars' => !empty($row['stars'][0]) && !empty($row['stars'][1]) ? str_repeat('<img src="' . $settings['images_url'] . '/' . $row['stars'][1] . '" alt="*" />', $row['stars'][0]) : '',
 		);
 
 		$context['can_moderate'] |= $row['can_moderate'];
@@ -287,7 +287,7 @@ function list_getGroups($start, $items_per_page, $sort)
 			'type' => $row['group_type'],
 			'num_members' => 0,
 			'moderators' => array(),
-			'stars' => !empty($row['stars'][0]) && !empty($row['stars'][1]) ? str_repeat('<img src="' . $settings['images_url'] . '/' . $row['stars'][1] . '" alt="*" border="0" />', $row['stars'][0]) : '',
+			'stars' => !empty($row['stars'][0]) && !empty($row['stars'][1]) ? str_repeat('<img src="' . $settings['images_url'] . '/' . $row['stars'][1] . '" alt="*" />', $row['stars'][0]) : '',
 		);
 
 		$context['can_moderate'] |= $row['can_moderate'];
@@ -406,7 +406,7 @@ function MembergroupMembers()
 
 	// Fix the stars.
 	$context['group']['stars'] = explode('#', $context['group']['stars']);
-	$context['group']['stars'] = !empty($context['group']['stars'][0]) && !empty($context['group']['stars'][1]) ? str_repeat('<img src="' . $settings['images_url'] . '/' . $context['group']['stars'][1] . '" alt="*" border="0" />', $context['group']['stars'][0]) : '';
+	$context['group']['stars'] = !empty($context['group']['stars'][0]) && !empty($context['group']['stars'][1]) ? str_repeat('<img src="' . $settings['images_url'] . '/' . $context['group']['stars'][1] . '" alt="*" />', $context['group']['stars'][0]) : '';
 	$context['group']['can_moderate'] = allowedTo('manage_membergroups');
 
 	$context['linktree'][] = array(

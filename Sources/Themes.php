@@ -2241,8 +2241,8 @@ function theme_linktree($force_show = false)
 		if (empty($settings[\'linktree_inline\']))
 		{
 			if ($link_num > 0)
-				echo str_repeat(\'<img src="\' . $settings[\'images_url\'] . \'/icons/linktree_main.gif" alt="| " border="0" />\', $link_num - 1), \'<img src="\' . $settings[\'images_url\'] . \'/icons/linktree_side.gif" alt="|-" border="0" />\';
-			echo \'<img src="\' . $settings[\'images_url\'] . \'/icons/folder_open.gif" alt="+" border="0" />&nbsp; \';
+				echo str_repeat(\'<img src="\' . $settings[\'images_url\'] . \'/icons/linktree_main.gif" alt="| " />\', $link_num - 1), \'<img src="\' . $settings[\'images_url\'] . \'/icons/linktree_side.gif" alt="|-" />\';
+			echo \'<img src="\' . $settings[\'images_url\'] . \'/icons/folder_open.gif" alt="+" />&nbsp; \';
 		}
 
 		if (isset($tree[\'extra_before\']))
@@ -2278,7 +2278,7 @@ function template_menu()
 		$classes = implode(\' \', $classes);
 
 		echo \'
-				<a id="button_\', $act, \'"\', !empty($classes) ? \' class="\' . $classes . \'"\' : \'\', \' title="\', !empty($button[\'alttitle\']) ? $button[\'alttitle\'] : $button[\'title\'], \'" href="\', $button[\'href\'], \'">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/home.gif" alt="\' . $txt[\'home\'] . \'" border="0" />\' : $txt[\'home\']), \'</a>\', (empty($button[\'is_last\']) ? $context[\'menu_separator\'] : \'\');
+				<a id="button_\', $act, \'"\', !empty($classes) ? \' class="\' . $classes . \'"\' : \'\', \' title="\', !empty($button[\'alttitle\']) ? $button[\'alttitle\'] : $button[\'title\'], \'" href="\', $button[\'href\'], \'">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/home.gif" alt="\' . $txt[\'home\'] . \'" />\' : $txt[\'home\']), \'</a>\', (empty($button[\'is_last\']) ? $context[\'menu_separator\'] : \'\');
 
 	}
 }

@@ -1100,7 +1100,7 @@ function template_manual_profile_info_summary()
 						<img class="avatar" src="', $settings['default_images_url'], '/admin/smilies_and_messageicons.png" alt="" />
 						<ul class="reset">
 							<li><a href="#" title="', $txt['manual_register_email'], '" rel="nofollow"><img src="', $settings['images_url'], '/email_sm.gif" alt="', $txt['manual_register_email'], '" /></a></li>
-							<li><a href="#" title="', $txt['manual_profile_summary_website'], '" class="new_win"><img src="', $settings['images_url'], '/www_sm.gif" alt="', $txt['manual_profile_summary_website'], '" border="0" /></a></li>
+							<li><a href="#" title="', $txt['manual_profile_summary_website'], '" class="new_win"><img src="', $settings['images_url'], '/www_sm.gif" alt="', $txt['manual_profile_summary_website'], '" /></a></li>
 							<li><a class="aim" href="#" title="', $txt['manual_profile_summary_aim'], '"><img src="', $settings['images_url'], '/aim.gif" alt="', $txt['manual_profile_summary_aim'], '" /></a></li>
 							<li><a class="yim" href="#" title="', $txt['manual_profile_summary_yim'], '"><img src="http://opi.yahoo.com/online?u=YIM&amp;m=g&amp;t=0" alt="', $txt['manual_profile_summary_yim'], '" /></a></li>
 						</ul>
@@ -1744,7 +1744,7 @@ function template_manual_posting_topics()
 						<td class="windowbg">
 							<table border="0" cellpadding="3" width="100%">
 								<tr>
-									<td colspan="2" style="padding-left: 5ex;"><a href="javascript:swapOptions();"><img src="', $settings['images_url'], '/expand.gif" alt="+" border="0" id="postMoreExpand" name="postMoreExpand" /></a> <a href="javascript:swapOptions();" class="board"><strong>', $txt['manual_posting_sec_additional_options'], '...</strong></a></td>
+									<td colspan="2" style="padding-left: 5ex;"><a href="javascript:swapOptions();"><img src="', $settings['images_url'], '/expand.gif" alt="+" id="postMoreExpand" name="postMoreExpand" /></a> <a href="javascript:swapOptions();" class="board"><strong>', $txt['manual_posting_sec_additional_options'], '...</strong></a></td>
 								</tr>
 								<tr>
 									<td></td>
