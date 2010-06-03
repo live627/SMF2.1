@@ -145,6 +145,9 @@ if (isset($_GET['ssi']))
 }
 
 // All the non-SSI stuff.
+if (!function_exists('ip2range'))
+	require_once($sourcedir . '/Subs.php');
+
 if (!function_exists('un_htmlspecialchars'))
 {
 	function un_htmlspecialchars($string)
@@ -4314,7 +4317,7 @@ function template_database_changes()
 		<strong id="info1">Executing upgrade script <span id="file_done">', $upcontext['cur_file_num'], '</span> of ', $upcontext['file_count'], '.</strong>';
 
 		echo '
-		<h3 id="info2"><strong>Executing:</strong> &quot;<span id="cur_item_name">', $upcontext['current_item_name'], '</span>&quot; (<span id="item_num">', $upcontext['current_item_num'], '</span> of <span id="total_items"><span id="item_count">', $upcontext['total_items'], '</span>', $upcontext['file_count'] > 1 ? ' - of this script' : '', ').</span></h3>
+		<h3 id="info2"><strong>Executing:</strong> &quot;<span id="cur_item_name">', $upcontext['current_item_name'], '</span>&quot; (<span id="item_num">', $upcontext['current_item_num'], '</span> of <span id="total_items"><span id="item_count">', $upcontext['total_items'], '</span>', $upcontext['file_count'] > 1 ? ' - of this script' : '', ')</span></h3>
 		<br /><span id="commess" style="font-weight: bold; display: ', !empty($upcontext['changes_complete']) || $upcontext['current_debug_item_num'] == $upcontext['debug_items'] ? 'inline' : 'none', ';">Database Updates Complete! Click Continue to Proceed.</span>';
 
 		if ($is_debug)
@@ -4517,7 +4520,7 @@ function template_database_changes()
 			echo '
 				if (bIsComplete)
 				{
-					// Give it consistant dots.
+					// Give it consistent dots.
 					dots = sDebugName.match(/\./g);
 					numDots = dots ? dots.length : 0;
 					for (var i = numDots; i < 3; i++)

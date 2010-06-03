@@ -397,7 +397,7 @@ function ssi_queryPosts($query_where = '', $query_where_params = array(), $query
 				<td valign="top">
 					<a href="', $post['href'], '">', $post['subject'], '</a>
 					', $txt['by'], ' ', $post['poster']['link'], '
-					', $post['is_new'] ? '<a href="' . $scripturl . '?topic=' . $post['topic'] . '.msg' . $post['new_from'] . ';topicseen#new" rel="nofollow"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" border="0" /></a>' : '', '
+					', $post['is_new'] ? '<a href="' . $scripturl . '?topic=' . $post['topic'] . '.msg' . $post['new_from'] . ';topicseen#new" rel="nofollow"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" /></a>' : '', '
 				</td>
 				<td align="right" nowrap="nowrap">
 					', $post['time'], '
@@ -508,7 +508,7 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $include_boar
 			'new' => !empty($row['is_read']),
 			'is_new' => empty($row['is_read']),
 			'new_from' => $row['new_from'],
-			'icon' => '<img src="' . $settings[$icon_sources[$row['icon']]] . '/post/' . $row['icon'] . '.gif" align="middle" alt="' . $row['icon'] . '" border="0" />',
+			'icon' => '<img src="' . $settings[$icon_sources[$row['icon']]] . '/post/' . $row['icon'] . '.gif" align="middle" alt="' . $row['icon'] . '" />',
 		);
 	}
 	$smcFunc['db_free_result']($request);
@@ -528,7 +528,7 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $include_boar
 				<td valign="top">
 					<a href="', $post['href'], '">', $post['subject'], '</a>
 					', $txt['by'], ' ', $post['poster']['link'], '
-					', !$post['is_new'] ? '' : '<a href="' . $scripturl . '?topic=' . $post['topic'] . '.msg' . $post['new_from'] . ';topicseen#new" rel="nofollow"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" border="0" /></a>', '
+					', !$post['is_new'] ? '' : '<a href="' . $scripturl . '?topic=' . $post['topic'] . '.msg' . $post['new_from'] . ';topicseen#new" rel="nofollow"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" /></a>', '
 				</td>
 				<td align="right" nowrap="nowrap">
 					', $post['time'], '
@@ -623,7 +623,7 @@ function ssi_topBoards($num_top = 10, $output_method = 'echo')
 	foreach ($boards as $board)
 		echo '
 			<tr>
-				<td>', $board['link'], $board['new'] ? ' <a href="' . $board['href'] . '"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" border="0" /></a>' : '', '</td>
+				<td>', $board['link'], $board['new'] ? ' <a href="' . $board['href'] . '"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" /></a>' : '', '</td>
 				<td align="right">', comma_format($board['num_topics']), '</td>
 				<td align="right">', comma_format($board['num_posts']), '</td>
 			</tr>';

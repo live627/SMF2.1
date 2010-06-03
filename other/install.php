@@ -537,7 +537,7 @@ function CheckFilesWritable()
 	{
 		foreach ($writable_files as $file)
 		{
-			// Folders can't be opened for write... but the index.php in them can ;).
+			// Folders can't be opened for write... but the index.php in them can ;)
 			if (is_dir(dirname(__FILE__) . '/' . $file))
 				$file .= '/index.php';
 
@@ -824,7 +824,7 @@ function DatabaseSettings()
 		$needsDB = !empty($databases[$db_type]['always_has_db']);
 		$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
 
-		// No dice?  Let's try adding the prefix they specified, just in case they misread the instructions ;).
+		// No dice?  Let's try adding the prefix they specified, just in case they misread the instructions ;)
 		if ($db_connection == null)
 		{
 			$db_error = @$smcFunc['db_error']();
@@ -1094,7 +1094,7 @@ function DatabasePopulation()
 				$exists[] = $match[1];
 				$incontext['sql_results']['table_dups']++;
 			}
-			// Don't error on duplicate indexes (or duplicate operators in PostgreSQL).
+			// Don't error on duplicate indexes (or duplicate operators in PostgreSQL.)
 			elseif (!preg_match('~^\s*CREATE( UNIQUE)? INDEX ([^\n\r]+?)~', $current_statement, $match) && !($db_type == 'postgresql' && preg_match('~^\s*CREATE OPERATOR (^\n\r]+?)~', $current_statement, $match)))
 			{
 				$incontext['failures'][$count] = $smcFunc['db_error']();
@@ -1467,7 +1467,7 @@ function DeleteInstall()
 		array('date')
 	);
 
-	// Automatically log them in ;).
+	// Automatically log them in ;)
 	if (isset($incontext['member_id']) && isset($incontext['member_salt']))
 		setLoginCookie(3153600 * 60, $incontext['member_id'], sha1(sha1(strtolower($_POST['username']) . $_POST['password1']) . $incontext['member_salt']));
 
@@ -1648,7 +1648,7 @@ class ftp_connection
 		if (!is_resource($this->connection))
 			return false;
 
-		// Convert the chmod value from octal (0777) to text ("777").
+		// Convert the chmod value from octal (0777) to text ("777")
 		fwrite($this->connection, 'SITE CHMOD ' . decoct($chmod) . ' ' . $ftp_file . "\r\n");
 		if (!$this->check_response(200))
 		{
@@ -1721,7 +1721,7 @@ class ftp_connection
 			return false;
 		}
 
-		// This is pretty simple - store it for later use ;).
+		// This is pretty simple - store it for later use ;)
 		$this->pasv = array('ip' => $match[1] . '.' . $match[2] . '.' . $match[3] . '.' . $match[4], 'port' => $match[5] * 256 + $match[6]);
 
 		return true;
@@ -1966,7 +1966,7 @@ function updateSettingsFile($vars)
 
 	$fp = fopen(dirname(__FILE__) . '/Settings.php', 'r+');
 
-	// Gotta have one of these ;).
+	// Gotta have one of these ;)
 	if (trim($settingsArray[0]) != '<?php')
 		fwrite($fp, "<?php\n");
 
@@ -2387,7 +2387,7 @@ function template_database_settings()
 	elseif (count($incontext['supported_databases']) < 2)
 		echo '
 			var showAll = false;';
-	// If we have more than one DB including SQLite what should we be doing?
+	// If we have more than one DB including SQLite, what should we be doing?
 	else
 		echo '
 			var showAll = document.getElementById(\'db_type_input\').value == \'sqlite\' ? false : true;';

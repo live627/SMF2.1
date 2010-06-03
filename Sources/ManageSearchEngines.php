@@ -232,7 +232,6 @@ function ViewSpiders()
 
 						return sprintf(\'<a href="%1$s?action=admin;area=sengines;sa=editspiders;sid=%2$d">%3$s</a>\', $scripturl, $rowData[\'id_spider\'], htmlspecialchars($rowData[\'spider_name\']));
 					'),
-					'class' => 'windowbg',
 				),
 				'sort' => array(
 					'default' => 'spider_name',
@@ -249,7 +248,6 @@ function ViewSpiders()
 
 						return isset($context[\'spider_last_seen\'][$rowData[\'id_spider\']]) ? timeformat($context[\'spider_last_seen\'][$rowData[\'id_spider\']]) : $txt[\'spider_last_never\'];
 					'),
-					'class' => 'windowbg',
 				),
 			),
 			'user_agent' => array(
@@ -258,7 +256,6 @@ function ViewSpiders()
 				),
 				'data' => array(
 					'db_htmlsafe' => 'user_agent',
-					'class' => 'windowbg',
 				),
 				'sort' => array(
 					'default' => 'user_agent',
@@ -643,32 +640,6 @@ function consolidateSpiderStats()
 	);
 }
 
-//!!! Move this somewhere as duplicated in ManageBans.php
-function ip2range($fullip)
-{
-	// Pretend that 'unknown' is 255.255.255.255. (since that can't be an IP anyway.)
-	if ($fullip == 'unknown')
-		$fullip = '255.255.255.255';
-
-	$ip_parts = explode('.', $fullip);
-	$ip_array = array();
-
-	if (count($ip_parts) != 4)
-		return array();
-
-	for ($i = 0; $i < 4; $i++)
-	{
-		if ($ip_parts[$i] == '*')
-			$ip_array[$i] = array('low' => '0', 'high' => '255');
-		elseif (preg_match('/^(\d{1,3})\-(\d{1,3})$/', $ip_parts[$i], $range) == 1)
-			$ip_array[$i] = array('low' => $range[1], 'high' => $range[2]);
-		elseif (is_numeric($ip_parts[$i]))
-			$ip_array[$i] = array('low' => $ip_parts[$i], 'high' => $ip_parts[$i]);
-	}
-
-	return $ip_array;
-}
-
 // See what spiders have been up to.
 function SpiderLogs()
 {
@@ -714,7 +685,6 @@ function SpiderLogs()
 				),
 				'data' => array(
 					'db' => 'spider_name',
-					'class' => 'windowbg',
 				),
 				'sort' => array(
 					'default' => 's.spider_name',
@@ -729,7 +699,6 @@ function SpiderLogs()
 					'function' => create_function('$rowData', '
 						return timeformat($rowData[\'log_time\']);
 					'),
-					'class' => 'windowbg',
 				),
 				'sort' => array(
 					'default' => 'sl.id_hit DESC',
@@ -742,7 +711,6 @@ function SpiderLogs()
 				),
 				'data' => array(
 					'db' => 'url',
-					'class' => 'windowbg',
 				),
 			),
 		),
@@ -923,7 +891,6 @@ function SpiderStats()
 				),
 				'data' => array(
 					'db' => 'stat_date',
-					'class' => 'windowbg',
 				),
 				'sort' => array(
 					'default' => 'stat_date',
@@ -936,7 +903,6 @@ function SpiderStats()
 				),
 				'data' => array(
 					'db' => 'spider_name',
-					'class' => 'windowbg',
 				),
 				'sort' => array(
 					'default' => 's.spider_name',
@@ -949,7 +915,6 @@ function SpiderStats()
 				),
 				'data' => array(
 					'db' => 'page_hits',
-					'class' => 'windowbg',
 				),
 				'sort' => array(
 					'default' => 'ss.page_hits',

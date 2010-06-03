@@ -77,16 +77,10 @@ if (!defined('SMF'))
 		- also handles deletion of (a selection of) log entries.
 
 	string range2ip(array $low, array $high)
-		- converts a given array of ip numbers to a single string
-		- internal function used to convert a format suitable for the database
-		   to a user-readable format.
+		- reverse function of ip2range().
+		- converts a given array of IP numbers to a single string
 		- range2ip(array(10, 10, 10, 0), array(10, 10, 20, 255)) returns
 		   '10.10.10-20.*
-		- returns 'unknown' if the ip in the input was '255.255.255.255'.
-
-	array ip2range(string $fullip)
-		- converts a given IP string to an array.
-		- reverse function of range2ip().
 
 	array checkExistingTriggerIP(array $ip_array, string $fullip)
 		- checks whether a given IP range already exists in the trigger list.
@@ -1570,32 +1564,6 @@ function range2ip($low, $high)
 		return 'unknown';
 
 	return implode('.', $ip);
-}
-
-// Convert a single IP to a ranged IP.
-function ip2range($fullip)
-{
-	// Pretend that 'unknown' is 255.255.255.255. (since that can't be an IP anyway.)
-	if ($fullip == 'unknown')
-		$fullip = '255.255.255.255';
-
-	$ip_parts = explode('.', $fullip);
-	$ip_array = array();
-
-	if (count($ip_parts) != 4)
-		return array();
-
-	for ($i = 0; $i < 4; $i++)
-	{
-		if ($ip_parts[$i] == '*')
-			$ip_array[$i] = array('low' => '0', 'high' => '255');
-		elseif (preg_match('/^(\d{1,3})\-(\d{1,3})$/', $ip_parts[$i], $range) == 1)
-			$ip_array[$i] = array('low' => $range[1], 'high' => $range[2]);
-		elseif (is_numeric($ip_parts[$i]))
-			$ip_array[$i] = array('low' => $ip_parts[$i], 'high' => $ip_parts[$i]);
-	}
-
-	return $ip_array;
 }
 
 function checkExistingTriggerIP($ip_array, $fullip = '')
