@@ -3,6 +3,14 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0                                                                      ???
 ================================================================================
+June 2010
+--------------------------------------------------------------------------------
+ ! Reverted an invalid change in the upgrader from December 2007, as ip2range() may be used by the SMF1 upgrade script. (upgrade.php) [Bug 1127,4312]
+ ! Moved ip2range() from ManageBans and ManageSearchEngines to Subs.php (ManageBans.php, ManageSearchEngines.php, Subs.php) [Bug 4312]
+ ! When requesting messages rather than topics in the Search feature, SMF never returned more than one message per topic. (Search.php) [Bug 2201]
+
+
+================================================================================
 May 2010
 --------------------------------------------------------------------------------
  ! Converting to UTF-8 might result in a syntax error in rare cases (ManageMaintenance.php) [Bug 2540]
@@ -93,8 +101,6 @@ May 2010
  ! Removed column addition code from db_create_table(), as it was only doing half the work and could mislead mod developers. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 3561]
  ! Added checkExistingTriggerIP() function to test whether an IP address is already in the ban trigger list. (ManageBans.php) [Bug 4310]
  & Added language entry for that feature. Also fixed a typo and a missing sprintf in $txt['ban_name_exists']. (Errors language)
- ! Reverted an invalid change in the upgrader from December 2007, as ip2range() may be used by the SMF1 upgrade script. (upgrade.php) [Bug 1127,4312]
- ! Moved ip2range() from ManageBans and ManageSearchEngines to Subs.php (ManageBans.php, ManageSearchEngines.php, Subs.php) [Bug 4312]
 
 
 ================================================================================

@@ -1170,7 +1170,7 @@ function PlushSearch2()
 					),
 				);
 
-				if (empty($search_params['topic']))
+				if (empty($search_params['topic']) && empty($search_params['show_complete']))
 				{
 					$main_query['select']['id_topic'] = 't.id_topic';
 					$main_query['select']['id_msg'] = 'MAX(m.id_msg) AS id_msg';
@@ -1199,8 +1199,13 @@ function PlushSearch2()
 						'first_message' => 'CASE WHEN m.id_msg = t.id_first_msg THEN 1 ELSE 0 END',
 					);
 
-					$main_query['where'][] = 't.id_topic = {int:topic}';
-					$main_query['parameters']['topic'] = $search_params['topic'];
+					if (!empty($search_params['topic']))
+					{
+						$main_query['where'][] = 't.id_topic = {int:topic}';
+						$main_query['parameters']['topic'] = $search_params['topic'];
+					}
+					if (!empty($search_params['show_complete']))
+						$main_query['group_by'][] = 'm.id_msg';
 				}
 
 				// *** Get the subject results.
@@ -1779,7 +1784,7 @@ function PlushSearch2()
 				'limit' => count($context['topics']),
 			)
 		);
-		// Note that the reg-exp slows things alot, but makes things make a lot more sense.
+		// Note that the reg-exp slows things a lot, but makes things make a lot more sense.
 
 		// If there are no results that means the things in the cache got deleted, so pretend we have no topics any more.
 		if ($smcFunc['db_num_rows']($messages_request) == 0)
