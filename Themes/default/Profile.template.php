@@ -1769,6 +1769,7 @@ function template_groupMembership()
 function template_ignoreboards()
 {
 	global $context, $txt, $settings, $scripturl;
+
 	// The main containing header.
 	echo '
 	<script type="text/javascript"><!-- // --><![CDATA[
@@ -1785,64 +1786,67 @@ function template_ignoreboards()
 	// ]]></script>
 
 	<form action="', $scripturl, '?action=profile;area=ignoreboards;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
-			<div class="title_bar">
-				<h3 class="titlebg">
-					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />', $txt['profile'], '</span>
-				</h3>
-			</div>
-			<p class="description">', $txt['ignoreboards_info'], '</p>
-			<div class="windowbg2">
-				<span class="topslice"><span></span></span>
-				<div class="content">
-					<ul class="ignoreboards floatleft">';
+		<div class="title_bar">
+			<h3 class="titlebg">
+				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />', $txt['profile'], '</span>
+			</h3>
+		</div>
+		<p class="description">', $txt['ignoreboards_info'], '</p>
+		<div class="windowbg2">
+			<span class="topslice"><span></span></span>
+			<div class="content">
+				<ul class="ignoreboards floatleft">';
 
 	$i = 0;
-	$limit = ceil($context['num_boards'] / 2);
+	$limit = ceil(($context['num_boards'] + count($context['categories'])) / 2);
 	foreach ($context['categories'] as $category)
 	{
+		if ($i != $limit)
+			$i++;
 		echo '
-						<li class="category">
-							<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $category['child_ids']), ']); return false;">', $category['name'], '</a>
-							<ul>';
+					<li class="category">
+						<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $category['child_ids']), ']); return false;">', $category['name'], '</a>
+						<ul>';
 
 		foreach ($category['boards'] as $board)
 		{
 			if ($i == $limit)
 				echo '
-							</ul>
-						</li>
-					</ul>
-					<ul class="ignoreboards floatright">
-						<li class="category">
-							<ul>';
+						</ul>
+					</li>
+				</ul>
+				<ul class="ignoreboards floatright">
+					<li class="category">
+						<ul>';
 
 			echo '
-								<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left', ': ', $board['child_level'], 'em;">
-									<label for="ignore_brd', $board['id'], '"><input type="checkbox" id="ignore_brd', $board['id'], '" name="ignore_brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="input_check" /> ', $board['name'], '</label>
-								</li>';
+							<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left', ': ', $board['child_level'], 'em;">
+								<label for="ignore_brd', $board['id'], '"><input type="checkbox" id="ignore_brd', $board['id'], '" name="ignore_brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="input_check" /> ', $board['name'], '</label>
+							</li>';
 
-			$i ++;
+			$i++;
 		}
 
 		echo '
-							</ul>
-						</li>';
+						</ul>
+					</li>';
 	}
 
 	echo '
-					</ul>
-					<div class="clear_right"><br /></div>';
+				</ul>
+			</div>
+			<div class="clear"><br /></div>';
 
 	// Show the standard "Save Settings" profile button.
 	template_profile_save();
 
 	echo '
-				</div>
-				<span class="botslice"><span></span></span>
-			</div>
-		</form>
-		<br />';
+			<span class="botslice"><span></span></span>
+		</div>
+	</form>
+	<br />';
 }
+
 
 // Simple load some theme variables common to several warning templates.
 function template_load_warning_variables()

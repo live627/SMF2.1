@@ -8,6 +8,7 @@ June 2010
  ! Reverted an invalid change in the upgrader from December 2007, as ip2range() may be used by the SMF1 upgrade script. (upgrade.php) [Bug 1127,4312]
  ! Moved ip2range() from ManageBans and ManageSearchEngines to Subs.php (ManageBans.php, ManageSearchEngines.php, Subs.php) [Bug 4312]
  ! When requesting messages rather than topics in the Search feature, SMF never returned more than one message per topic. (Search.php) [Bug 2201]
+ * In Ignore Boards section, having many categories could break the submit button's layout and the board list columns could be unbalanced. (Profile template)
 
 
 ================================================================================
