@@ -554,7 +554,7 @@ function ModifyProfile($post_errors = array())
 			$msg = groupMembership2($profile_vars, $post_errors, $memID);
 
 			// Whatever we've done, we have nothing else to do here...
-			redirectexit('action=profile;u=' . $memID . ';area=groupmembership' . (!empty($msg) ? ';msg=' . $msg : ''));
+			redirectexit('action=profile' . ($context['user']['is_owner'] ? '' : ';u=' . $memID) . ';area=groupmembership' . (!empty($msg) ? ';msg=' . $msg : ''));
 		}
 		// Authentication changes?
 		elseif ($current_area == 'authentication')
@@ -646,7 +646,7 @@ function ModifyProfile($post_errors = array())
 	elseif (!empty($profile_vars) && $context['user']['is_owner'])
 		redirectexit('action=profile;area=' . $current_area . ';updated');
 	elseif (!empty($force_redirect))
-		redirectexit('action=profile;u=' . $memID . ';area=' . $current_area);
+		redirectexit('action=profile' . ($context['user']['is_owner'] ? '' : ';u=' . $memID) . ';area=' . $current_area);
 
 	// Call the appropriate subaction function.
 	$profile_include_data['function']($memID);

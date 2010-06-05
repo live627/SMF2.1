@@ -2221,7 +2221,7 @@ function ignoreboards($memID)
 		WHERE {query_see_board}
 			AND redirect = {string:empty_string}',
 		array(
-			'ignore_boards' => !empty($cur_profile['ignore_boards']) ? explode(',',$cur_profile['ignore_boards']) : array(),
+			'ignore_boards' => !empty($cur_profile['ignore_boards']) ? explode(',', $cur_profile['ignore_boards']) : array(),
 			'empty_string' => '',
 		)
 	);

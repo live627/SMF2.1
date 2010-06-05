@@ -429,7 +429,7 @@ $helptxt['guest_hideContacts'] = 'If selected this option will hide the email ad
 $helptxt['registration_method'] = 'This option determines what method of registration is used for people wishing to join your forum. You can select from:<br /><br />
 	<ul class="normallist">
 		<li>
-			<strong>Registration Disabled:</strong><br />
+			<strong>Registration Disabled</strong><br />
 				Disables the registration process, which means that no new members can register to join your forum.<br />
 		</li><li>
 			<strong>Immediate Registration</strong><br />

@@ -460,7 +460,7 @@ function UnreadTopics()
 		if (!empty($board))
 			$boards[] = (int) $board;
 
-		// The easist thing is to just get all the boards they can see, but since we've specified the top of tree we ignore some of them
+		// The easiest thing is to just get all the boards they can see, but since we've specified the top of tree we ignore some of them
 		$request = $smcFunc['db_query']('', '
 			SELECT b.id_board, b.id_parent
 			FROM {db_prefix}boards AS b
@@ -1132,6 +1132,7 @@ function UnreadTopics()
 
 	$context['topics'] = array();
 	$topic_ids = array();
+
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		if ($row['id_poll'] > 0 && $modSettings['pollMode'] == '0')

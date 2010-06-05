@@ -9,6 +9,8 @@ June 2010
  ! Moved ip2range() from ManageBans and ManageSearchEngines to Subs.php (ManageBans.php, ManageSearchEngines.php, Subs.php) [Bug 4312]
  ! When requesting messages rather than topics in the Search feature, SMF never returned more than one message per topic. (Search.php) [Bug 2201]
  * In Ignore Boards section, having many categories could break the submit button's layout and the board list columns could be unbalanced. (Profile template)
+ ! When redirecting internally inside a profile, don't specify the user ID in the URL if it's oneself. (Profile.php)
+ & Moved the question mark in 'Did you miss your activation email?' out of the link. (index language)
 
 
 ================================================================================
