@@ -3535,3 +3535,18 @@ ul.basic_helplist
 {
 	clear: right;
 }
+
+/* Styles for print media.
+------------------------------------------------------- */
+@media print
+{
+	#headerarea
+	{
+		display: none;
+	}
+
+	.tborder
+	{
+		border: none;
+	}
+}

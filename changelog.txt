@@ -11,6 +11,7 @@ June 2010
  * In Ignore Boards section, having many categories could break the submit button's layout and the board list columns could be unbalanced. (Profile template)
  ! When redirecting internally inside a profile, don't specify the user ID in the URL if it's oneself. (Profile.php)
  & Moved the question mark in 'Did you miss your activation email?' out of the link. (index language)
+ * Moved print media CSS to index.css and removed print.css. (index template file, index.css)
 
 
 ================================================================================
@@ -40,7 +41,7 @@ May 2010
  * Minor Curvification of the permission lists in "Simple" mode. (ManagePermissions.template.php)
  ! Make sure that $db_values parameter is passed as an array for security override option as well (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php, DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 3405]
  * Revised the access to moderation center (Load.php, ModerationCenter.php, Subs.php, Subs-Auth.php, ModerationCenter Template) [Bug 4058]
- & Guests reporting posts did not log email and ip, and did not support visual verification (Several source files, Several template files, Several language files, index css, install/upgrade sqls) [Bug 4158]
+ & Guests reporting posts did not log email and ip, and did not support visual verification (Several source files, Several template files, Several language files, index.css, install/upgrade sqls) [Bug 4158]
  ! Updated some comments (Admin.php, ManageMembers.php, Subs-Admin.php)
  ! Mark boards as read at unread action if there are not any unread topics (Recent.php) [Bug 3231]
  * Custom profile fields broke the profile layout if displayed "with icons" and if drop downs were enabled. (Profile.template.php, index.css) [Bug 4299]

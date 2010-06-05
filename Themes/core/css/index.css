@@ -3486,3 +3486,18 @@ ul.nolist li
 {
 	margin-bottom: 0;
 }
+
+/* Styles for print media.
+------------------------------------------------------- */
+@media print
+{
+	#headerarea
+	{
+		display: none;
+	}
+
+	.tborder
+	{
+		border: none;
+	}
+}

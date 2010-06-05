@@ -91,8 +91,7 @@ function template_html_above()
 
 	// The ?rc3 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index', $context['theme_variant'], '.css?rc3" />
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc3" media="print" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index', $context['theme_variant'], '.css?rc3" />';
 
 	// Show all the relative links, such as help, search, contents, and the like.
 	echo '
