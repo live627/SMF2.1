@@ -30,7 +30,11 @@ if (!defined('SMF'))
 	in the forum destroying itself in a firey fury.
 
 	void ModifySettings()
-		// !!!
+		- Sets up all the available sub-actions.
+		- Requires the admin_forum permission.
+		- Uses the edit_settings adminIndex.
+		- Sets up all the tabs and selects the appropriate one based on the sub-action.
+		- Redirects to the appropriate function based on the sub-action.
 
 	void ModifyGeneralSettings()
 		- shows an interface for the settings in Settings.php to be changed.
@@ -61,7 +65,11 @@ if (!defined('SMF'))
 		// !!!
 
 	void DownloadLanguage()
-		// !!!
+		- Uses the ManageSettings template and the download_language sub-template.
+		- Requires a valid download ID ("did") in the URL.
+		- Also handles installing language files.
+		- Attempts to chmod things as needed.
+		- Uses a standard list to display information about all the files and where they'll be put.
 
 	void ManageLanguages()
 		// !!!
@@ -73,7 +81,9 @@ if (!defined('SMF'))
 		// !!!
 
 	array list_getLanguages()
-		// !!!
+		- Callback for $listOptions['get_items']['function'] in ManageLanguageSettings.
+		- Determines which languages are available by looking for the "index.{language}.php" file.
+		- Also figures out how many users are using a particular language.
 
 	void ModifyLanguageSettings()
 		// !!!
@@ -404,8 +414,31 @@ function ModifyLoadBalancingSettings($return_config = false)
 {
 	global $txt, $scripturl, $context, $settings, $modSettings;
 
-	// Setup a warning message.
-	$context['settings_message'] = $txt['loadavg_warning'];
+	// Setup a warning message, but disabled by default.
+	$disabled = true;
+	$context['settings_message'] = $txt['loadavg_disabled_conf'];
+
+	if (strpos(PHP_OS, 'WIN') === 0)
+	{
+		$disabled = true;
+		$context['settings_message'] = $txt['loadavg_disabled_windows'];
+	}
+	else
+	{
+		$modSettings['load_average'] = @file_get_contents('/proc/loadavg');
+		if (!empty($modSettings['load_average']) && preg_match('~^([^ ]+?) ([^ ]+?) ([^ ]+)~', $modSettings['load_average'], $matches) !== 0)
+			$modSettings['load_average'] = (float) $matches[1];
+		elseif (($modSettings['load_average'] = @`uptime`) !== null && preg_match('~load average[s]?: (\d+\.\d+), (\d+\.\d+), (\d+\.\d+)~i', $modSettings['load_average'], $matches) !== 0)
+			$modSettings['load_average'] = (float) $matches[1];
+		else
+			unset($modSettings['load_average']);
+
+		if (!empty($modSettings['load_average']))
+		{
+			$context['settings_message'] = sprintf($txt['loadavg_warning'], $modSettings['load_average']);
+			$disabled = false;
+		}
+	}
 
 	// Start with a simple checkbox.
 	$config_vars = array(
@@ -427,7 +460,7 @@ function ModifyLoadBalancingSettings($return_config = false)
 	{
 		// Use the default value if the setting isn't set yet.
 		$value = !isset($modSettings[$name]) ? $value : $modSettings[$name];
-		$config_vars[] = array('text', $name, 'value' => $value);
+		$config_vars[] = array('text', $name, 'value' => $value, 'disabled' => $disabled);
 	}
 
 	if ($return_config)
@@ -442,7 +475,7 @@ function ModifyLoadBalancingSettings($return_config = false)
 		// Stupidity is not allowed.
 		foreach ($_POST as $key => $value)
 		{
-			if (substr($key, 0, 7) != 'loadavg' || $key == 'loadavg_enable')
+			if (strpos($key, 'loadavg') === 0 || $key === 'loadavg_enable')
 				continue;
 			elseif ($key == 'loadavg_auto_opt' && $value <= 1)
 				$_POST['loadavg_auto_opt'] = '1.0';

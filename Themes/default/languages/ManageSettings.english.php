@@ -126,7 +126,7 @@ $txt['cache_level2'] = 'Level 2 Caching';
 $txt['cache_level3'] = 'Level 3 Caching (Not Recommended)';
 $txt['cache_memcached'] = 'Memcache settings';
 
-$txt['loadavg_warning'] = '<span class="error">Please note: the settings below are to be edited with care. Setting any of them too low may render your forum <strong>unusable</strong>!</span>';
+$txt['loadavg_warning'] = '<span class="error">Please note: the settings below are to be edited with care. Setting any of them too low may render your forum <strong>unusable</strong>! The current load average is <strong>%01.2f</strong></span>';
 $txt['loadavg_enable'] = 'Enable load balancing by load averages';
 $txt['loadavg_auto_opt'] = 'Threshold to disabling automatic database optimization';
 $txt['loadavg_search'] = 'Threshold to disabling search';
@@ -134,6 +134,8 @@ $txt['loadavg_allunread'] = 'Threshold to disabling all unread topics';
 $txt['loadavg_unreadreplies'] = 'Threshold to disabling unread replies';
 $txt['loadavg_show_posts'] = 'Threshold to disabling showing user posts';
 $txt['loadavg_forum'] = 'Threshold to disabling the forum <strong>completely</strong>';
+$txt['loadavg_disabled_windows'] = '<span class="error">Load balancing support is not available on Windows.</span>';
+$txt['loadavg_disabled_conf'] = '<span class="error">Load balancing support is disabled by your host configuration.</span>';
 
 $txt['setting_password_strength'] = 'Required strength for user passwords';
 $txt['setting_password_strength_low'] = 'Low - 4 character minimum';
