@@ -1,7 +1,7 @@
 // *** smc_Editor class.
 function smc_Editor(oOptions)
 {
-	this.opt = oOptions
+	this.opt = oOptions;
 
 	// Create some links to the editor object.
 	this.oTextHandle = null;
@@ -14,7 +14,7 @@ function smc_Editor(oOptions)
 	this.showDebug = false;
 	this.bRichTextEnabled = 'bWysiwyg' in this.opt && this.opt.bWysiwyg;
 	// This doesn't work on Opera as they cannot restore focus after clicking a BBC button.
-	this.bRichTextPossible = ((is_ie5up && !is_ie50) || is_ff || is_opera95up || is_safari || is_chrome) && !this.opt.bRichEditOff;
+	this.bRichTextPossible = !this.opt.bRichEditOff && ((is_ie5up && !is_ie50) || is_ff || is_opera95up || is_safari || is_chrome) && !(is_iphone || is_android);
 
 	this.oFrameHandle = null;
 	this.oFrameDocument = null;
@@ -181,14 +181,13 @@ smc_Editor.prototype.init = function()
 		this.oFrameHandle.id = 'html_' + this.opt.sUniqueId;
 		this.oFrameHandle.className = 'rich_editor_frame';
 		this.oFrameHandle.style.display = 'none';
+		this.oFrameHandle.style.margin = '0px';
 		this.oFrameHandle.tabIndex = this.oTextHandle.tabIndex;
 		this.oTextHandle.parentNode.appendChild(this.oFrameHandle);
-
 
 		// Create some handy shortcuts.
 		this.oFrameDocument = this.oFrameHandle.contentDocument ? this.oFrameHandle.contentDocument : ('contentWindow' in this.oFrameHandle ? this.oFrameHandle.contentWindow.document : this.oFrameHandle.document);
 		this.oFrameWindow = 'contentWindow' in this.oFrameHandle ? this.oFrameHandle.contentWindow : this.oFrameHandle.document.parentWindow;
-
 
 		// Create the debug window... and stick this under the main frame - make it invisible by default.
 		this.oBreadHandle = document.createElement('div');
@@ -218,6 +217,13 @@ smc_Editor.prototype.init = function()
 			this.oFrameDocument.open();
 			this.oFrameDocument.write('');
 			this.oFrameDocument.close();
+		}
+
+		// Right to left mode?
+		if (this.opt.bRTL)
+		{
+			this.oFrameDocument.dir = "rtl";
+			this.oFrameDocument.body.dir = "rtl";
 		}
 
 		// Mark it as editable...
@@ -293,8 +299,8 @@ smc_Editor.prototype.init = function()
 				// Do something that is better than nothing.
 				this.oFrameDocument.body.style.color = 'black';
 				this.oFrameDocument.body.style.backgroundColor = 'white';
-				this.oFrameDocument.body.style.fontSize = 'small';
-				this.oFrameDocument.body.style.fontFamily = 'verdana';
+				this.oFrameDocument.body.style.fontSize = '78%';
+				this.oFrameDocument.body.style.fontFamily = '"Verdana", "Arial", "Helvetica", "sans-serif"';
 				this.oFrameDocument.body.style.border = 'none';
 				this.oFrameHandle.style.border = '1px solid #808080';
 			}
@@ -302,6 +308,10 @@ smc_Editor.prototype.init = function()
 
 		// Apply the class...
 		this.oFrameDocument.body.className = 'rich_editor';
+
+		// Set the frame padding/margin inside the editor.
+		this.oFrameDocument.body.style.padding = '1px';
+		this.oFrameDocument.body.style.margin = '0';
 
 		// Listen for input.
 		this.oFrameDocument.instanceRef = this;
@@ -710,7 +720,6 @@ smc_Editor.prototype.handleButtonClick = function (oButtonProperties)
 
 	// Finally set the focus.
 	this.setFocus();
-	
 }
 
 // Changing a select box?
@@ -719,6 +728,8 @@ smc_Editor.prototype.handleSelectChange = function (oSelectProperties)
 	this.setFocus();
 
 	var sValue = oSelectProperties.oSelect.value;
+	if (sValue == '')
+		return true;
 
 	// Changing font face?
 	if (oSelectProperties.sName == 'sel_face')
@@ -727,7 +738,8 @@ smc_Editor.prototype.handleSelectChange = function (oSelectProperties)
 		if (!this.bRichTextEnabled)
 		{
 			sValue = sValue.replace(/"/, '');
-			surroundText('[font=' + sValue + ']', '[/font]', this.oTextHandle)
+			surroundText('[font=' + sValue + ']', '[/font]', this.oTextHandle);
+			oSelectProperties.oSelect.selectedIndex = 0;
 		}
 		else
 			this.smf_execCommand('fontname', false, sValue);
@@ -738,7 +750,10 @@ smc_Editor.prototype.handleSelectChange = function (oSelectProperties)
 	{
 		// Are we in boring mode?
 		if (!this.bRichTextEnabled)
-			surroundText('[size=' + this.aFontSizes[sValue] + 'pt]', '[/size]', this.oTextHandle)
+		{
+			surroundText('[size=' + this.aFontSizes[sValue] + 'pt]', '[/size]', this.oTextHandle);
+			oSelectProperties.oSelect.selectedIndex = 0;
+		}
 
 		else
 			this.smf_execCommand('fontsize', false, sValue);
@@ -748,7 +763,10 @@ smc_Editor.prototype.handleSelectChange = function (oSelectProperties)
 	{
 		// Are we in boring mode?
 		if (!this.bRichTextEnabled)
-			surroundText('[color=' + sValue + ']', '[/color]', this.oTextHandle)
+		{
+			surroundText('[color=' + sValue + ']', '[/color]', this.oTextHandle);
+			oSelectProperties.oSelect.selectedIndex = 0;
+		}
 
 		else
 			this.smf_execCommand('forecolor', false, sValue);
@@ -803,7 +821,7 @@ smc_Editor.prototype.insertLink = function(sType)
 			sText = 'mailto:' + sText;
 
 		// Check if we have text selected and if not force us to have some.
-		var oCurText = this.getSelect(true);
+		var oCurText = this.getSelect(true, true);
 
 		if (oCurText.toString().length != 0)
 		{
@@ -1032,6 +1050,8 @@ smc_Editor.prototype.setFocus = function(force_both)
 {
 	if (!this.bRichTextEnabled)
 		this.oTextHandle.focus();
+	else if (is_ff || is_opera)
+		this.oFrameHandle.focus();
 	else
 		this.oFrameWindow.focus();
 }
@@ -1227,18 +1247,13 @@ smc_Editor.prototype.shortcutCheck = function(oEvent)
 
 			bCancelEvent = true;
 		}
-
-		if (sFoundCode == 'preview')
+		else if (sFoundCode == 'preview')
 		{
 			previewPost();
 			bCancelEvent = true;
 		}
-
-		if (document.getElementById('cmd_' + sFoundCode))
-		{
-			this.oBBCBox.emulateClick(sFoundCode);
-			bCancelEvent = true;
-		}
+		else
+			bCancelEvent = this.opt.oBBCBox.emulateClick(sFoundCode);
 
 		if (bCancelEvent)
 		{
@@ -1358,8 +1373,6 @@ smc_Editor.prototype.endResize = function (oEvent)
 
 	return false;
 }
-
-
 
 // *** smc_SmileyBox class.
 function smc_SmileyBox(oOptions)
@@ -1567,7 +1580,7 @@ smc_BBCButtonBox.prototype.init = function ()
 				case 'button':
 					if (!oCurControl.bEnabled)
 						break;
-				
+
 					oCurControl.oImg = document.getElementById(this.opt.sUniqueId.php_htmlspecialchars() + '_button_' + iButtonRowIndex.toString() + '_' + iButtonIndex.toString());
 					oCurControl.oImg.style.cursor = 'pointer';
 					if ('sButtonBackgroundImage' in this.opt)
@@ -1690,9 +1703,13 @@ smc_BBCButtonBox.prototype.emulateClick = function (sCode)
 		{
 			var oCurControl = this.opt.aButtonRows[iButtonRowIndex][iButtonIndex];
 			if (oCurControl.sType == 'button' && oCurControl.sCode == sCode)
+			{
 				eval(this.opt.sButtonClickHandler + '(oCurControl)');
+				return true;
+			}
 		}
 	}
+	return false;
 }
 
 smc_BBCButtonBox.prototype.setSelect = function (sSelectName, sValue)
@@ -1710,4 +1727,3 @@ smc_BBCButtonBox.prototype.setSelect = function (sSelectName, sValue)
 		}
 	}
 }
-
