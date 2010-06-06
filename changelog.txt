@@ -12,6 +12,7 @@ June 2010
  ! When redirecting internally inside a profile, don't specify the user ID in the URL if it's oneself. (Profile.php)
  & Moved the question mark in 'Did you miss your activation email?' out of the link. (index language)
  * Moved print media CSS to index.css and removed print.css. (index template file, index.css)
+ ! Reverted a SMF2 change that could corrupt the query string in some cases. (QueryString.php) [Bug 2669]
 
 
 ================================================================================

@@ -132,11 +132,11 @@ function cleanRequest()
 	// Are we going to need to parse the ; out?
 	if ((strpos(ini_get('arg_separator.input'), ';') === false || version_compare(PHP_VERSION, '4.2.0') == -1) && !empty($_SERVER['QUERY_STRING']))
 	{
-		// Get rid of the old one!  You don't know where it's been!
+		// Get rid of the old one! You don't know where it's been!
 		$_GET = array();
 
-		// Was this redirected?  If so, get the REDIRECT_QUERY_STRING.
-		$_SERVER['QUERY_STRING'] = substr($_SERVER['QUERY_STRING'], 0, 5) === 'url=/' ? $_SERVER['REDIRECT_QUERY_STRING'] : $_SERVER['QUERY_STRING'];
+		// Was this redirected? If so, get the REDIRECT_QUERY_STRING.
+		$_SERVER['QUERY_STRING'] = urldecode(substr($_SERVER['QUERY_STRING'], 0, 5) === 'url=/' ? $_SERVER['REDIRECT_QUERY_STRING'] : $_SERVER['QUERY_STRING']);
 
 		// Replace ';' with '&' and '&something&' with '&something=&'.  (this is done for compatibility...)
 		// !!! smflib
@@ -190,14 +190,14 @@ function cleanRequest()
 		if (strpos($request, basename($scripturl) . '/') !== false)
 		{
 			parse_str(substr(preg_replace('/&(\w+)(?=&|$)/', '&$1=', strtr(preg_replace('~/([^,/]+),~', '/$1=', substr($request, strpos($request, basename($scripturl)) + strlen(basename($scripturl)))), '/', '&')), 1), $temp);
-			if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc() != 0 && empty($modSettings['integrate_magic_quotes']))
+			if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() != 0 && empty($modSettings['integrate_magic_quotes']))
 				$temp = $removeMagicQuoteFunction($temp);
 			$_GET += $temp;
 		}
 	}
 
 	// If magic quotes is on we have some work...
-	if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc() != 0)
+	if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() != 0)
 	{
 		$_ENV = $removeMagicQuoteFunction($_ENV);
 		$_POST = $removeMagicQuoteFunction($_POST);
