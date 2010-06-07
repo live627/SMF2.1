@@ -419,16 +419,13 @@ function ModifyLoadBalancingSettings($return_config = false)
 	$context['settings_message'] = $txt['loadavg_disabled_conf'];
 
 	if (strpos(PHP_OS, 'WIN') === 0)
-	{
-		$disabled = true;
 		$context['settings_message'] = $txt['loadavg_disabled_windows'];
-	}
 	else
 	{
 		$modSettings['load_average'] = @file_get_contents('/proc/loadavg');
 		if (!empty($modSettings['load_average']) && preg_match('~^([^ ]+?) ([^ ]+?) ([^ ]+)~', $modSettings['load_average'], $matches) !== 0)
 			$modSettings['load_average'] = (float) $matches[1];
-		elseif (($modSettings['load_average'] = @`uptime`) !== null && preg_match('~load average[s]?: (\d+\.\d+), (\d+\.\d+), (\d+\.\d+)~i', $modSettings['load_average'], $matches) !== 0)
+		elseif (($modSettings['load_average'] = @`uptime`) !== null && preg_match('~load averages?: (\d+\.\d+), (\d+\.\d+), (\d+\.\d+)~i', $modSettings['load_average'], $matches) !== 0)
 			$modSettings['load_average'] = (float) $matches[1];
 		else
 			unset($modSettings['load_average']);
