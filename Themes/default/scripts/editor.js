@@ -1593,7 +1593,7 @@ smc_BBCButtonBox.prototype.init = function ()
 						this.instanceRef.handleButtonMouseOut(this);
 					};
 					oCurControl.oImg.onclick = function () {
-						this.instanceRef.handleButtonClick(this)
+						this.instanceRef.handleButtonClick(this);
 					};
 
 					oCurControl.oImg.bIsActive = false;
