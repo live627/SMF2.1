@@ -13,6 +13,7 @@
 		public init()
 		public loadViewVersions
 		public swapOption(oSendingElement, sName)
+		public compareVersions(sCurrent, sTarget)
 		public determineVersions()
 	}
 */
@@ -140,6 +141,57 @@ smf_ViewVersions.prototype.swapOption = function (oSendingElement, sName)
 	return false;
 }
 
+smf_ViewVersions.prototype.compareVersions = function (sCurrent, sTarget)
+{
+	// Are they equal, maybe?
+	if (sCurrent == sTarget)
+		return false;
+
+	var aCurrentVersion = sCurrent.split('.');
+	var aTargetVersion = sTarget.split('.');
+
+	for (var i = 0, n = (aCurrentVersion.length > aTargetVersion.length ? aCurrentVersion.length : aTargetVersion.length); i < n; i++)
+	{
+		// Make sure both are set.
+		if (typeof(aCurrentVersion[i]) == 'undefined')
+			aCurrentVersion[i] = '0';
+		else if (typeof(aTargetVersion[i]) == 'undefined')
+			aTargetVersion[i] = '0';
+
+		// If they are same, move to the next set.
+		if (aCurrentVersion[i] == aTargetVersion[i])
+			continue;
+
+		var aCurrentDev = null;
+		var aTargetDev = null;
+
+		if (aCurrentVersion[i].indexOf('Beta') != -1 || aCurrentVersion[i].indexOf('RC') != -1)
+			aCurrentDev = aCurrentVersion[i].match(/(\d+)\s*(Beta|RC)\s*(\d+)/);
+		if (aTargetVersion[i].indexOf('Beta') != -1 || aTargetVersion[i].indexOf('RC') != -1)
+			aTargetDev = aTargetVersion[i].match(/(\d+)\s*(Beta|RC)\s*(\d+)/);
+
+		// Did we get a dev version? This is bad...
+		if (aCurrentDev != null || aTargetDev != null)
+		{
+			if (aCurrentDev == null)
+				return (parseInt(aCurrentVersion[i]) < parseInt(aTargetDev[1]));
+			else if (aTargetDev == null)
+				return (parseInt(aCurrentDev[1]) <= parseInt(aTargetVersion[i]));
+			else if (aCurrentDev[1] != aTargetDev[1])
+				return (parseInt(aCurrentDev[1]) < parseInt(aTargetDev[1]));
+			else if (aCurrentDev[2] != aTargetDev[2])
+				return (aTargetDev[2] == 'RC');
+			else
+				return (parseInt(aCurrentDev[3]) < parseInt(aTargetDev[3]));
+		}
+		// Otherwise a simple comparison...
+		else
+			return (parseInt(aCurrentVersion[i]) < parseInt(aTargetVersion[i]));
+	}
+
+	return false;
+}
+
 smf_ViewVersions.prototype.determineVersions = function ()
 {
 	var oHighYour = {
@@ -208,18 +260,18 @@ smf_ViewVersions.prototype.determineVersions = function ()
 
 		if (typeof(sCurVersionType) != 'undefined')
 		{
-			if ((oHighYour[sCurVersionType] < sYourVersion || oHighYour[sCurVersionType] == '??') && !oLowVersion[sCurVersionType])
+			if ((this.compareVersions(oHighYour[sCurVersionType], sYourVersion) || oHighYour[sCurVersionType] == '??') && !oLowVersion[sCurVersionType])
 				oHighYour[sCurVersionType] = sYourVersion;
-			if (oHighCurrent[sCurVersionType] < smfVersions[sFilename] || oHighCurrent[sCurVersionType] == '??')
+			if (this.compareVersions(oHighCurrent[sCurVersionType], smfVersions[sFilename]) || oHighCurrent[sCurVersionType] == '??')
 				oHighCurrent[sCurVersionType] = smfVersions[sFilename];
 
-			if (sYourVersion < smfVersions[sFilename])
+			if (this.compareVersions(sYourVersion, smfVersions[sFilename]))
 			{
 				oLowVersion[sCurVersionType] = sYourVersion;
 				document.getElementById('your' + sFilename).style.color = 'red';
 			}
 		}
-		else if (sYourVersion < smfVersions[sFilename])
+		else if (this.compareVersions(sYourVersion, smfVersions[sFilename]))
 			oLowVersion[sCurVersionType] = sYourVersion;
 
 		setInnerHTML(document.getElementById('current' + sFilename), smfVersions[sFilename]);
@@ -241,12 +293,12 @@ smf_ViewVersions.prototype.determineVersions = function ()
 			sYourVersion = getInnerHTML(document.getElementById('your' + sFilename + this.opt.aKnownLanguages[i]));
 			setInnerHTML(document.getElementById('your' + sFilename + this.opt.aKnownLanguages[i]), sYourVersion);
 
-			if ((oHighYour.Languages < sYourVersion || oHighYour.Languages == '??') && !oLowVersion.Languages)
+			if ((this.compareVersions(oHighYour.Languages, sYourVersion) || oHighYour.Languages == '??') && !oLowVersion.Languages)
 				oHighYour.Languages = sYourVersion;
-			if (oHighCurrent.Languages < smfLanguageVersions[sFilename] || oHighCurrent.Languages == '??')
+			if (this.compareVersions(oHighCurrent.Languages, smfLanguageVersions[sFilename]) || oHighCurrent.Languages == '??')
 				oHighCurrent.Languages = smfLanguageVersions[sFilename];
 
-			if (sYourVersion < smfLanguageVersions[sFilename])
+			if (this.compareVersions(sYourVersion, smfLanguageVersions[sFilename]))
 			{
 				oLowVersion.Languages = sYourVersion;
 				document.getElementById('your' + sFilename + this.opt.aKnownLanguages[i]).style.color = 'red';

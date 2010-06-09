@@ -14,6 +14,7 @@ June 2010
  * Moved print media CSS to index.css and removed print.css. (index template file, index.css)
  ! Reverted a SMF2 change that could corrupt the query string in some cases. (QueryString.php) [Bug 2669]
  ! When dealing with RSS feeds, rely on the database rather than URL variables to determine the number of boards. (News.php)
+ * Detailed Version Check could not handle version comparison properly. (script.js) [Bug 3603]
 
 
 ================================================================================
