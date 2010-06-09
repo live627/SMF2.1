@@ -214,7 +214,7 @@ function MLAll()
 				list($memberlist_cache['index'][$i]) = $smcFunc['db_fetch_row']($request);
 			}
 			$smcFunc['db_data_seek']($request, $memberlist_cache['num_members'] - 1);
-			list($memberlist_cache['index'][$i]) = $smcFunc['db_fetch_row']($request);
+			list ($memberlist_cache['index'][$i]) = $smcFunc['db_fetch_row']($request);
 			$smcFunc['db_free_result']($request);
 
 			// Now we've got the cache...store it.

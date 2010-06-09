@@ -152,14 +152,15 @@ function ShowXmlFeed()
 		);
 
 		// Either the board specified doesn't exist or you have no access.
-		if ($smcFunc['db_num_rows']($request) == 0)
+		$num_boards = $smcFunc['db_num_rows']($request);
+		if ($num_boards == 0)
 			fatal_lang_error('no_board');
 
 		$total_posts = 0;
 		$boards = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
-			if (count($_REQUEST['boards']) == 1)
+			if ($num_boards == 1)
 				$feed_title = ' - ' . strip_tags($row['name']);
 
 			$boards[] = $row['id_board'];

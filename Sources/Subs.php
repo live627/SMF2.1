@@ -3428,7 +3428,7 @@ function theme_copyright($get_it = false)
 			echo '-->';
 	}
 
-	// Fool me once, same on me. Fool me twice, shame on you.
+	// Fool me once, shame on me. Fool me twice, shame on you.
 	if (strpos($forum_copyright, '<!--') !== false)
 		$forum_copyright = preg_replace('~<!--(.+?)-->~is', '$1', $forum_copyright);
 	if (strpos($forum_copyright, '<div') !== false)

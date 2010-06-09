@@ -105,6 +105,7 @@ function Display()
 			if (!in_array($k, array('topic', 'board', 'start', session_name())))
 				$context['robot_no_index'] = true;
 		}
+
 	if (!empty($_REQUEST['start']) && (!is_numeric($_REQUEST['start']) || $_REQUEST['start'] % $context['messages_per_page'] != 0))
 		$context['robot_no_index'] = true;
 

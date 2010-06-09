@@ -766,9 +766,10 @@ function loadBoard()
 		// The linktree should not give the game away mate!
 		$context['linktree'] = array(
 			array(
-			'url' => $scripturl,
-			'name' => $context['forum_name_html_safe']
-		));
+				'url' => $scripturl,
+				'name' => $context['forum_name_html_safe']
+			)
+		);
 
 		// If it's a prefetching agent or we're requesting an attachment.
 		if ((isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch') || (!empty($_REQUEST['action']) && $_REQUEST['action'] === 'dlattach'))
