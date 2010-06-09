@@ -687,6 +687,27 @@ function PackageUpload()
 		loadLanguage('Errors');
 		fatal_lang_error('package_upload_error_broken', false, $txt[$context['package']]);
 	}
+	// Is it already uploaded, maybe?
+	elseif ($dir = @opendir($boarddir . '/Packages'))
+	{
+		while ($package = readdir($dir))
+		{
+			if ($package == '.' || $package == '..' || $package == 'temp' || $package == $packageName || (!(is_dir($boarddir . '/Packages/' . $package) && file_exists($boarddir . '/Packages/' . $package . '/package-info.xml')) && substr(strtolower($package), -7) != '.tar.gz' && substr(strtolower($package), -4) != '.tgz' && substr(strtolower($package), -4) != '.zip'))
+				continue;
+
+			$packageInfo = getPackageInfo($package);
+			if (!is_array($packageInfo))
+				continue;
+
+			if ($packageInfo['id'] == $context['package']['id'] && $packageInfo['version'] == $context['package']['version'])
+			{
+				@unlink($destination);
+				loadLanguage('Errors');
+				fatal_lang_error('package_upload_error_exists');
+			}
+		}
+		closedir($dir);
+	}
 
 	if ($context['package']['type'] === 'modification')
 		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['install_mod'] . ' ]</a>';

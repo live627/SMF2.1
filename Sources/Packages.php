@@ -983,7 +983,7 @@ function PackageInstall()
 
 		// See if this is already installed, and change it's state as required.
 		$request = $smcFunc['db_query']('', '
-			SELECT id_install, install_state
+			SELECT package_id, install_state, db_changes
 			FROM {db_prefix}log_packages
 			WHERE install_state != {int:not_installed}
 				AND package_id = {string:current_package}
@@ -1006,24 +1006,31 @@ function PackageInstall()
 					UPDATE {db_prefix}log_packages
 					SET install_state = {int:not_installed}, member_removed = {string:member_name}, id_member_removed = {int:current_member},
 						time_removed = {int:current_time}
-					WHERE id_install = {int:install_id}',
+					WHERE package_id = {string:package_id}',
 					array(
 						'current_member' => $user_info['id'],
 						'not_installed' => 0,
 						'current_time' => time(),
-						'install_id' => $row['id_install'],
+						'package_id' => $row['package_id'],
 						'member_name' => $user_info['name'],
 					)
 				);
 			}
 			// Otherwise must be an upgrade.
 			else
+			{
 				$is_upgrade = true;
+				$old_db_changes = empty($row['db_changes']) ? array() : unserialize($row['db_changes']);
+			}
 		}
 
 		// Assuming we're not uninstalling, add the entry.
 		if (!$context['uninstalling'])
 		{
+			// Any db changes from older version?
+			if (!empty($old_db_changes))
+				$db_package_log = empty($db_package_log) ? $old_db_changes : array_merge($old_db_changes, $db_package_log);
+
 			// If there are some database changes we might want to remove then filter them out.
 			if (!empty($db_package_log))
 			{
