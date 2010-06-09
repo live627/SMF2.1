@@ -126,7 +126,7 @@ else
 {
 	if (isset($_COOKIE[session_name()]) || isset($_REQUEST[session_name()]))
 	{
-		// Make a stab at it, but ignore the E_WARNINGs generted because we can't send headers.
+		// Make a stab at it, but ignore the E_WARNINGs generated because we can't send headers.
 		$temp = error_reporting(error_reporting() & !E_WARNING);
 		loadSession();
 		error_reporting($temp);

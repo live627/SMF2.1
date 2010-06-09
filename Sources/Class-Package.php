@@ -943,7 +943,7 @@ if (!class_exists('ftp_connection'))
 				// Okay, this file's name is:
 				$listing[$i] = $current_dir . '/' . trim(strlen($listing[$i]) > 30 ? strrchr($listing[$i], ' ') : $listing[$i]);
 
-				if ($file[0]) === '*' && substr($listing[$i], -(strlen($file) - 1)) == substr($file, 1))
+				if ($file[0] === '*' && substr($listing[$i], -(strlen($file) - 1)) == substr($file, 1))
 					return $listing[$i];
 				if (substr($file, -1) == '*' && substr($listing[$i], 0, strlen($file) - 1) == substr($file, 0, -1))
 					return $listing[$i];

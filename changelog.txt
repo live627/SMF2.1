@@ -17,6 +17,7 @@ June 2010
  * Detailed Version Check could not handle version comparison properly. (admin.js) [Bug 3603]
  ! Uninstalling an upgrade did not set older versions as uninstalled. (Packages.php) [Bug 925]
  ! It was possible to upload two packages with the same id and version. (PackageGet.php) [Bug 925]
+ ! An extra bracket broke the language handler in the admin area. (Class-Package.php) [Bug 4324]
 
 
 ================================================================================
