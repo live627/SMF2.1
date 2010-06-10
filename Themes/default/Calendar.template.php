@@ -280,15 +280,15 @@ function template_show_month_grid($grid_name)
 	if (empty($calendar_data['disable_day_titles']))
 	{
 		echo '
-					<tr>';
+					<tr class="titlebg2">';
 
 		if (!empty($calendar_data['show_week_links']))
 			echo '
-						<td class="titlebg2">&nbsp;</td>';
+						<th>&nbsp;</th>';
 
 		foreach ($calendar_data['week_days'] as $day)
 			echo '
-						<th class="titlebg2 days" scope="col" ', $calendar_data['size'] == 'small' ? 'style="font-size: x-small;"' : '', '>', !empty($calendar_data['short_day_titles']) ? substr($txt['days'][$day], 0, 1) : $txt['days'][$day], '</th>';
+						<th class="days" scope="col" ', $calendar_data['size'] == 'small' ? 'style="font-size: x-small;"' : '', '>', !empty($calendar_data['short_day_titles']) ? substr($txt['days'][$day], 0, 1) : $txt['days'][$day], '</th>';
 
 		echo '
 					</tr>';

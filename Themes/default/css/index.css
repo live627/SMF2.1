@@ -400,7 +400,7 @@ code.bbc_code
 /* Generic, mostly color-related, classes.
 ------------------------------------------------------- */
 
-.titlebg, .titlebg2, thead tr.titlebg th, tr.titlebg td, tr.titlebg2 td
+.titlebg, .titlebg2, tr.titlebg th, tr.titlebg td, tr.titlebg2 td
 {
 	color: #000;
 	font-family: arial, helvetica, sans-serif;
@@ -438,10 +438,20 @@ tr.catbg th.smalltext
 {
 	font-size: 0.9em;
 }
-tr.titlebg th.smalltext, thead tr.titlebg th a:link, thead tr.titlebg th a:visited
+tr.titlebg th.smalltext, tr.titlebg th a:link, tr.titlebg th a:visited
 {
 	color: #000;
 	font-size: 0.95em;
+}
+
+tr.titlebg th, tr.titlebg td, tr.titlebg2 td
+{
+	background: #efe8f0 url(../images/theme/titlebg.png) repeat-x;
+}
+
+tr.catbg td, tr.catbg2 td, tr.catbg th, tr.catbg2 th
+{
+	background: #a8bace url(../images/theme/catbg.png) repeat-x;
 }
 
 /* Alternating backgrounds for posts, and several other sections of the forum. */

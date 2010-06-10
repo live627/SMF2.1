@@ -1341,9 +1341,9 @@ function template_manual_modify_profile_groups()
 		<p>', $txt['manual_profile_groups_describe'], '</p>
 		<div class="help_sample">
 			<table border="0" width="100%" cellspacing="0" cellpadding="4" class="table_grid">
-				<tr>
-					<th class="catbg first_th">', $txt['manual_profile_groups_available'], '</th>
-					<th class="catbg last_th"></th>
+				<tr class="catbg">
+					<th class="first_th">', $txt['manual_profile_groups_available'], '</th>
+					<th class="last_th"></th>
 				</tr>
 				<tr class="windowbg2">
 					<td>
@@ -2311,8 +2311,8 @@ function template_manual_pm_messages()
 				<table width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
 					<td width="125" valign="top">
 						<table border="0" cellpadding="4" cellspacing="1" class="bordercolor" width="100">
-							<tr>
-								<td class="catbg">', $txt['manual_pm_messages'], '</td>
+							<tr class="catbg">
+								<td>', $txt['manual_pm_messages'], '</td>
 							</tr>
 							<tr class="windowbg">
 								<td class="smalltext" style="padding-bottom: 2ex;">
@@ -2346,8 +2346,8 @@ function template_manual_pm_messages()
 									<tr>
 										<td class="windowbg" style="padding: 2px;" align="right" colspan="6"></td>
 									</tr>
-									<tr>
-										<td colspan="6" class="catbg" height="25">
+									<tr class="catbg">
+										<td colspan="6" height="25">
 											<div class="floatleft"><strong>', $txt['manual_pm_pages'], ':</strong> [<strong>1</strong>]</div>
 											<div class="floatright">&nbsp;<input type="button" value="', $txt['manual_pm_delete_selected'], '" class="button_submit" /></div>
 										</td>

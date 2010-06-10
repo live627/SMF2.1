@@ -203,8 +203,8 @@ function template_unread()
 
 	if (empty($settings['use_tabs']) && !empty($mark_read))
 		echo '
-					<tr>
-						<td class="catbg" colspan="', $showCheckboxes ? '6' : '5', '" align="right">
+					<tr class="catbg">
+						<td colspan="', $showCheckboxes ? '6' : '5', '" align="right">
 							', template_button_strip($mark_read, 'top'), '
 						</td>
 					</tr>';
@@ -385,8 +385,8 @@ function template_replies()
 
 	if (empty($settings['use_tabs']) && !empty($mark_read))
 		echo '
-					<tr>
-						<td class="catbg" colspan="', $showCheckboxes ? '6' : '5', '" align="right">
+					<tr class="catbg">
+						<td colspan="', $showCheckboxes ? '6' : '5', '" align="right">
 							', template_button_strip($mark_read, 'top'), '
 						</td>
 					</tr>';
