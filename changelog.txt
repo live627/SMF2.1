@@ -18,6 +18,7 @@ June 2010
  ! Uninstalling an upgrade did not set older versions as uninstalled. (Packages.php) [Bug 925]
  ! It was possible to upload two packages with the same id and version. (PackageGet.php) [Bug 925]
  ! An extra bracket broke the language handler in the admin area. (Class-Package.php) [Bug 4324]
+ & More 'seperate' misspellings were fixed. (changelog, Reports.php, Subs-Calendar.php, Subs.php, MessageIndex template, Reports template, Help language)
 
 
 ================================================================================
@@ -3209,7 +3210,6 @@ November 2007
  ! Added the option to view user posts on a particular board. (Profile.php)
  ! Added a BBC tag to act like the bidirectional override tag. (Subs.php)
  * The help template should output the pre bbc tag example as shown in the example. (Help template)
- & More 'seperate' misspellings were fixed. (changelog, Reports.php, Subs-Calendar.php, Subs.php, MessageIndex template, Reports template, Help language)
 
 
 October 2007
