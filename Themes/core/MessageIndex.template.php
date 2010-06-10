@@ -211,7 +211,7 @@ function template_main()
 
 		foreach ($context['topics'] as $topic)
 		{
-			// Do we want to seperate the sticky and lock status out?
+			// Do we want to separate the sticky and lock status out?
 			if (!empty($settings['separate_sticky_lock']) && strpos($topic['class'], 'sticky') !== false)
 				$topic['class'] = substr($topic['class'], 0, strrpos($topic['class'], '_sticky'));
 			if (!empty($settings['separate_sticky_lock']) && strpos($topic['class'], 'locked') !== false)

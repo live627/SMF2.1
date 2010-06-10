@@ -726,7 +726,7 @@ function cache_getRecentEvents($eventOptions)
 			$return_data['calendar_events'] = array_merge($return_data['calendar_events'], $cached_data['events'][$loop_date]);
 	}
 
-	// Mark the last item so that a list seperator can be used in the template.
+	// Mark the last item so that a list separator can be used in the template.
 	for ($i = 0, $n = count($return_data['calendar_birthdays']); $i < $n; $i++)
 		$return_data['calendar_birthdays'][$i]['is_last'] = !isset($return_data['calendar_birthdays'][$i + 1]);
 	for ($i = 0, $n = count($return_data['calendar_events']); $i < $n; $i++)

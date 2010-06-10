@@ -85,11 +85,11 @@ if (!defined('SMF'))
 		  required key is present in the incoming data. If this data is missing
 		  the current tables default value will be used.
 		- if any key in the incoming data begins with '#sep#', the function
-		  will add a seperator accross the table at this point.
+		  will add a separator accross the table at this point.
 		- once the incoming data has been sanitized, it is added to the table.
 
 	void addSeparator(string title = '', int custom_table = null)
-		- adds a seperator with title given by attribute "title" after the
+		- adds a separator with title given by attribute "title" after the
 		  current row in the table.
 		- if there are no existing tables, will create one with default
 		  attributes.
@@ -416,7 +416,7 @@ function BoardPermissionsReport()
 		// Add the header row - shows all the membergroups.
 		addData($member_groups);
 
-		// Add the seperator.
+		// Add the separator.
 		addSeparator($txt['board_perms_permission']);
 
 		// Here cycle through all the detected permissions.
@@ -629,7 +629,7 @@ function GroupPermissionsReport()
 	// Show all the groups
 	addData($groups);
 
-	// Add a seperator
+	// Add a separator
 	addSeparator($txt['board_perms_permission']);
 
 	// Now the big permission fetch!
@@ -851,9 +851,9 @@ function addData($inc_data, $custom_table = null)
 			$data[$key] = array(
 				'v' => empty($inc_data[$key]) ? $context['tables'][$table]['default_value'] : $inc_data[$key],
 			);
-			// Special "hack" the adding seperators when doing data by column.
+			// Special "hack" the adding separators when doing data by column.
 			if (substr($key, 0, 5) == '#sep#')
-				$data[$key]['seperator'] = true;
+				$data[$key]['separator'] = true;
 		}
 	}
 	else
@@ -865,7 +865,7 @@ function addData($inc_data, $custom_table = null)
 				'v' => $value,
 			);
 			if (substr($key, 0, 5) == '#sep#')
-				$data[$key]['seperator'] = true;
+				$data[$key]['separator'] = true;
 		}
 	}
 
@@ -883,7 +883,7 @@ function addData($inc_data, $custom_table = null)
 	}
 }
 
-// Add a seperator row, only really used when adding data by rows.
+// Add a separator row, only really used when adding data by rows.
 function addSeparator($title = '', $custom_table = null)
 {
 	global $context;
@@ -900,9 +900,9 @@ function addSeparator($title = '', $custom_table = null)
 	else
 		$table = $context['current_table'];
 
-	// Plumb in the seperator
+	// Plumb in the separator
 	$context['tables'][$table]['data'][] = array(0 => array(
-		'seperator' => true,
+		'separator' => true,
 		'v' => $title
 	));
 }

@@ -105,8 +105,8 @@ function template_main()
 
 			foreach ($row as $key => $data)
 			{
-				// If this is a special seperator, skip over!
-				if (!empty($data['seperator']) && $column_number == 0)
+				// If this is a special separator, skip over!
+				if (!empty($data['separator']) && $column_number == 0)
 				{
 					echo '
 				<td colspan="', $table['column_count'], '" class="catbg smalltext">
@@ -195,8 +195,8 @@ function template_print()
 			$column_number = 0;
 			foreach ($row as $key => $data)
 			{
-				// If this is a special seperator, skip over!
-				if (!empty($data['seperator']) && $column_number == 0)
+				// If this is a special separator, skip over!
+				if (!empty($data['separator']) && $column_number == 0)
 				{
 					echo '
 					<td colspan="', $table['column_count'], '" class="catbg">

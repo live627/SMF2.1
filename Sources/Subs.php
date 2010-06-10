@@ -2850,7 +2850,7 @@ function logAction($action, $extra = array(), $log_type = 'moderate')
 	if (!is_array($extra))
 		trigger_error('logAction(): data is not an array with action \'' . $action . '\'', E_USER_NOTICE);
 
-	// Pull out the parts we want to store seperatly, but also make sure that the data is proper
+	// Pull out the parts we want to store separately, but also make sure that the data is proper
 	if (isset($extra['topic']))
 	{
 		if (!is_numeric($extra['topic']))
