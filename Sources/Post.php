@@ -291,7 +291,7 @@ function Post()
 		if (!$context['event']['new'] && !isset($_REQUEST['subject']))
 		{
 			// If the user doesn't have permission to edit the post in this topic, redirect them.
-			if (($ID_MEMBER_POSTER != $user_info['id'] || !allowedTo('modify_own')) && !allowedTo('modify_any'))
+			if ((empty($ID_MEMBER_POSTER) || $ID_MEMBER_POSTER != $user_info['id'] || !allowedTo('modify_own')) && !allowedTo('modify_any'))
 			{
 				require_once($sourcedir . '/Calendar.php');
 				return CalendarPost();
