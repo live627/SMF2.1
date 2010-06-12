@@ -1379,7 +1379,7 @@ function Download()
 		else
 			return chr(240 | $n >> 18) . chr(128 | $n >> 12 & 63) . chr(128 | $n >> 6 & 63) . chr(128 | $n & 63);');
 
-	$disposition = !isset($_REQUEST['image']) ? 'attachment' : 'inline' ;
+	$disposition = !isset($_REQUEST['image']) ? 'attachment' : 'inline';
 
 	// Different browsers like different standards...
 	if ($context['browser']['is_firefox'])

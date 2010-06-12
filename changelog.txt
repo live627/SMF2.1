@@ -19,6 +19,9 @@ June 2010
  ! It was possible to upload two packages with the same id and version. (PackageGet.php) [Bug 925]
  ! An extra bracket broke the language handler in the admin area. (Class-Package.php) [Bug 4324]
  & More 'seperate' misspellings were fixed. (changelog, Reports.php, Subs-Calendar.php, Subs.php, MessageIndex template, Reports template, Help language)
+ * Moved all .titlebg/.titlebg2/.catbg classes to tr tags in case they were attached to a td or th tag. (Calendar, Errors, Help and Recent templates)
+ * Title backgrounds could be broken when text was too long. (index.css, titlebg.png, catbg.png) [Bug 3716]
+ * Improved 'Registration done' confirmation message. (Register template)
 
 
 ================================================================================

@@ -22,9 +22,9 @@ function template_pm_above()
 				</h3>
 			</div>';
 
-	//Message send? show a small indication
+	// Message sent? Show a small indication.
 	if (isset($context['pm_sent']))
-		echo'
+		echo '
 			<div class="windowbg" id="profile_success">
 				', $txt['pm_sent'], '
 			</div>';

@@ -525,9 +525,13 @@ function template_admin_register()
 				}
 			// ]]></script>
 			<div class="content" id="register_screen">';
+
 	if (!empty($context['registration_done']))
 		echo '
-				<p>', $context['registration_done'], '</p><hr />';
+				<div class="windowbg" id="profile_success">
+					', $context['registration_done'], '
+				</div>';
+
 	echo '
 				<dl class="register_form" id="admin_register_form">
 					<dt>
@@ -565,6 +569,7 @@ function template_admin_register()
 		foreach ($context['member_groups'] as $id => $name)
 			echo '
 							<option value="', $id, '">', $name, '</option>';
+
 		echo '
 						</select>
 					</dd>';
