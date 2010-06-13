@@ -24,6 +24,7 @@ June 2010
  * Improved 'Registration done' confirmation message. (Register template)
  ! Editing and quick quoting a post could turn &#38; into &#38;#38; when inside html tags. (Subs-Post.php) [Bug 3736]
  ! Editing a calendar event with no topic associated would generate an error in the error log. [Bug 4329]
+ & Add a confirmation for sending a report. (MessageIndex.php, SendTopic.php, MessageIndex template, index language)
 
 
 ================================================================================

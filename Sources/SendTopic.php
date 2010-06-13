@@ -587,7 +587,7 @@ function ReportToModerator2()
 	updateSettings(array('last_mod_report_action' => time()));
 
 	// Back to the board! (you probably don't want to see the post anymore..)
-	redirectexit('board=' . $board . '.0');
+	redirectexit('board=' . $board . '.0;sent=done');
 }
 
 ?>
