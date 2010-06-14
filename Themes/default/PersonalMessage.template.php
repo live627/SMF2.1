@@ -12,22 +12,22 @@ function template_pm_above()
 	// Show the capacity bar, if available.
 	if (!empty($context['limit_bar']))
 		echo '
-			<div class="title_bar">
-				<h3 class="titlebg">
-					<span class="floatleft">', $txt['pm_capacity'], ':</span>
-					<span class="floatleft capacity_bar">
-						<span class="', $context['limit_bar']['percent'] > 85 ? 'full' : ($context['limit_bar']['percent'] > 40 ? 'filled' : 'empty'), '" style="width: ', $context['limit_bar']['percent'] / 10, 'em;"></span>
-					</span>
-					<span class="align_right', $context['limit_bar']['percent'] > 90 ? ' alert' : '', '">', $context['limit_bar']['text'], '</span>
-				</h3>
-			</div>';
+		<div class="title_bar">
+			<h3 class="titlebg">
+				<span class="floatleft">', $txt['pm_capacity'], ':</span>
+				<span class="floatleft capacity_bar">
+					<span class="', $context['limit_bar']['percent'] > 85 ? 'full' : ($context['limit_bar']['percent'] > 40 ? 'filled' : 'empty'), '" style="width: ', $context['limit_bar']['percent'] / 10, 'em;"></span>
+				</span>
+				<span class="align_right', $context['limit_bar']['percent'] > 90 ? ' alert' : '', '">', $context['limit_bar']['text'], '</span>
+			</h3>
+		</div>';
 
 	// Message sent? Show a small indication.
 	if (isset($context['pm_sent']))
 		echo '
-			<div class="windowbg" id="profile_success">
-				', $txt['pm_sent'], '
-			</div>';
+		<div class="windowbg" id="profile_success">
+			', $txt['pm_sent'], '
+		</div>';
 }
 
 // Just the end of the index bar, nothing special.

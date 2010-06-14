@@ -7,12 +7,12 @@ function template_main()
 
 	if ($context['report_sent'])
 		echo '
-			<div class="windowbg" id="profile_success">
-				', $txt['report_sent'], '
-			</div>';
+	<div class="windowbg" id="profile_success">
+		', $txt['report_sent'], '
+	</div>';
 
 	echo '
-		<a id="top"></a>';
+	<a id="top"></a>';
 
 	if (!empty($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
 	{
