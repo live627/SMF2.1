@@ -381,6 +381,7 @@ smc_Editor.prototype.init = function()
 
 	// Finally, register shortcuts.
 	this.registerDefaultShortcuts();
+	this.updateEditorControls();
 }
 
 // Return the current text.
