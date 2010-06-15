@@ -155,7 +155,7 @@ function html_to_bbc($text)
 	global $modSettings, $smcFunc, $sourcedir, $scripturl, $context;
 
 	// Replace newlines with spaces, as that's how browsers usually interpret them.
-	$text = strtr($text, array("\n" => ' ', "\r" => ' '));
+	$text = preg_replace("~\s*[\r\n]+\s*~", ' ', $text);
 
 	// Though some of us love paragraphs, the parser will do better with breaks.
 	$text = preg_replace('~</p>\s*?<p~i', '</p><br /><p', $text);

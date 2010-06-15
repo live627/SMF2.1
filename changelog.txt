@@ -26,6 +26,7 @@ June 2010
  ! Editing a calendar event with no topic associated would generate an error in the error log. [Bug 4329]
  & Added a confirmation for sending a report. (MessageIndex.php, SendTopic.php, MessageIndex template, index language) [Bug 4327]
  * Even when Wysiwyg mode was enabled by default, its icon wouldn't follow suit. (editor.js) [Bug 4319]
+ ! Converting rich text to BBC would sometimes add extra spaces where not needed. (Subs-Editor.php) [Bug 4200]
 
 
 ================================================================================
