@@ -25,9 +25,8 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*	This file has a single job - database backup.  Note that, because of the
-	nature of its output, it uses the $smcFunc['db_query']() function without __FILE__ or
-	__LINE__ so errors won't be outputted.
+/*
+	This file has a single job - database backup.
 
 	void DumpDatabase2()
 		- writes all of the database to standard output.
