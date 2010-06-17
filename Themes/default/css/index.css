@@ -2090,14 +2090,14 @@ form#postmodify .roundframe
 {
 	padding: 0 12%;
 }
-#post_header
+#post_header, .postbox
 {
 	margin-bottom: 0.5em;
 	border-bottom: 1px solid #cacdd3;
 	padding: 0.5em;
 	overflow: hidden;
 }
-#post_header dt
+#post_header dt, .postbox dt
 {
 	float: left;
 	margin: 0;
@@ -2106,7 +2106,7 @@ form#postmodify .roundframe
 	margin: .3em 0;
 	font-weight: bold;
 }
-#post_header dd
+#post_header dd, .postbox dd
 {
 	float: left;
 	margin: 0;
