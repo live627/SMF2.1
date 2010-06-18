@@ -268,9 +268,8 @@ function smf_db_table_sql($tableName)
 	// Start the create table...
 	$schema_create = '';
 	$index_create = '';
-	$seq_create = '';
 
-	// Lets get the create statement directly from SQLite.
+	// Let's get the create statement directly from SQLite.
 	$result = $smcFunc['db_query']('', '
 		SELECT sql
 		FROM sqlite_master
@@ -304,7 +303,7 @@ function smf_db_table_sql($tableName)
 	$index_create .= implode(';' . $crlf, $indexes);
 	$schema_create = empty($indexes) ? rtrim($schema_create) : $schema_create . ';' . $crlf . $crlf;
 
-	return $seq_create . $schema_create . $index_create;
+	return $schema_create . $index_create;
 }
 
 // Get the version number.
