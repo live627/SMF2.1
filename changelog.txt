@@ -27,6 +27,8 @@ June 2010
  & Added a confirmation for sending a report. (MessageIndex.php, SendTopic.php, MessageIndex template, index language) [Bug 4327]
  * Even when Wysiwyg mode was enabled by default, its icon wouldn't follow suit. (editor.js) [Bug 4319]
  ! Converting rich text to BBC would sometimes add extra spaces where not needed. (Subs-Editor.php) [Bug 4200]
+ ! Database backup may fail for columns with reserved names. (DbExtra-mysql.php, DbExtra-postgresql.php, DbExtra-sqlite.php) [Bug 4261]
+ ! Default value isn't escaped in create table/change column/add column. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 4326]
 
 
 ================================================================================

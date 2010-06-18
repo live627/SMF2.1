@@ -142,7 +142,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 			$default = 'auto_increment';
 		}
 		elseif (isset($column['default']) && $column['default'] !== null)
-			$default = 'default \'' . $column['default'] . '\'';
+			$default = 'default \'' . $smcFunc['db_escape_string']($column['default']) . '\'';
 		else
 			$default = '';
 
@@ -260,7 +260,7 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 	$query = '
 		ALTER TABLE ' . $table_name . '
 		ADD `' . $column_info['name'] . '` ' . $type . ' ' . (!empty($unsigned) ? $unsigned : '') . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
-			(!isset($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'') . ' ' .
+			(!isset($column_info['default']) ? '' : 'default \'' . $smcFunc['db_escape_string']($column_info['default']) . '\'') . ' ' .
 			(empty($column_info['auto']) ? '' : 'auto_increment') . ' ';
 	$smcFunc['db_query']('', $query,
 		array(
@@ -343,7 +343,7 @@ function smf_db_change_column($table_name, $old_column, $column_info, $parameter
 	$smcFunc['db_query']('', '
 		ALTER TABLE ' . $table_name . '
 		CHANGE COLUMN `' . $old_column . '` `' . $column_info['name'] . '` ' . $type . ' ' . (!empty($unsigned) ? $unsigned : '') . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
-			(!isset($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'') . ' ' .
+			(!isset($column_info['default']) ? '' : 'default \'' . $smcFunc['db_escape_string']($column_info['default']) . '\'') . ' ' .
 			(empty($column_info['auto']) ? '' : 'auto_increment') . ' ',
 		array(
 			'security_override' => true,

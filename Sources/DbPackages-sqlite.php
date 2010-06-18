@@ -103,7 +103,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 {
 	global $reservedTables, $smcFunc, $db_package_log, $db_prefix;
 
-	// With or without the database name, the fullname looks like this.
+	// With or without the database name, the full name looks like this.
 	$real_prefix = preg_match('~^(`?)(.+?)\\1\\.(.*?)$~', $db_prefix, $match) === 1 ? $match[3] : $db_prefix;
 	$full_table_name = str_replace('{db_prefix}', $real_prefix, $table_name);
 	$table_name = str_replace('{db_prefix}', $db_prefix, $table_name);
@@ -142,7 +142,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 			continue;
 		}
 		elseif (isset($column['default']) && $column['default'] !== null)
-			$default = 'default \'' . $column['default'] . '\'';
+			$default = 'default \'' . $smcFunc['db_escape_string']($column['default']) . '\'';
 		else
 			$default = '';
 
@@ -165,7 +165,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 		// Is it the primary?
 		if (isset($index['type']) && $index['type'] == 'primary')
 		{
-			// IF we've done the primary via auto_inc don't do it again!
+			// If we've done the primary via auto_inc, don't do it again!
 			if (!$done_primary)
 				$table_query .= "\n\t" . 'PRIMARY KEY (' . implode(',', $index['columns']) . '),';
 		}
@@ -548,13 +548,13 @@ function smf_db_alter_table($table_name, $columns)
 
 	$table_name = str_replace('{db_prefix}', $db_prefix, $table_name);
 
-	// Lets get the current columns for the table.
+	// Let's get the current columns for the table.
 	$current_columns = $smcFunc['db_list_columns']($table_name, true);
 
-	// Lets get a list of columns for the temp table.
+	// Let's get a list of columns for the temp table.
 	$temp_table_columns = array();
 
-	// Lets see if we have columns to remove or columns that are being added that already exists.
+	// Let's see if we have columns to remove or columns that are being added that already exist.
 	foreach ($current_columns as $key => $column)
 	{
 		$exists = false;
@@ -574,12 +574,12 @@ function smf_db_alter_table($table_name, $columns)
 					break;
 				}
 
-		// Doesn't exists then we 'remove'.
+		// Doesn't exist then we 'remove'.
 		if (!$exists)
 			$temp_table_columns[] = $column['name'];
 	}
 
-	// If they are equal then that means that the column that we are adding exists or it doesn't exists and we are not looking to change any one of them.
+	// If they are equal then that means that the column that we are adding exists or it doesn't exist and we are not looking to change any one of them.
 	if (count($temp_table_columns) == count($current_columns) && empty($columns['change']) && empty($columns['add']))
 		return true;
 
@@ -592,7 +592,7 @@ function smf_db_alter_table($table_name, $columns)
 		)
 	);
 
-	// Lets make a backup of the current database.
+	// Let's make a backup of the current database.
 	// We only want the first backup of a table modification.  So if there is a backup file and older than an hour just delete and back up again
 	$db_backup_file = $boarddir . '/Packages/backups/backup_' . $table_name . '_' . basename($db_file) . md5($table_name . $db_file);
 	if (file_exists($db_backup_file) && time() - filemtime($db_backup_file) > 3600)
@@ -610,7 +610,7 @@ function smf_db_alter_table($table_name, $columns)
 	// Start
 	$smcFunc['db_transaction']('begin');
 
-	// Lets create the temporary table.
+	// Let's create the temporary table.
 	$createTempTable = $smcFunc['db_query']('', '
 		CREATE TEMPORARY TABLE {raw:temp_table_name}
 		(
@@ -652,11 +652,11 @@ function smf_db_alter_table($table_name, $columns)
 	if (!$dropTable)
 		return false;
 
-	// We need to keep tract of the structure for the current columns and the new columns.
+	// We need to keep track of the structure for the current columns and the new columns.
 	$new_columns = array();
 	$column_names = array();
 
-	// Lets get the ones that we already have first.
+	// Let's get the ones that we already have first.
 	foreach ($current_columns as $name => $column)
 	{
 		if (in_array($name, $temp_table_columns))
@@ -688,7 +688,7 @@ function smf_db_alter_table($table_name, $columns)
 				'default' => isset($add['default']) ? $add['default'] : '',
 			);
 
-			// Lets keep track of the name for the column.
+			// Let's keep track of the name for the column.
 			$column_names[$add['name']] = strstr('int', $add['type']) ? ' 0 AS ' . $add['name'] : ' {string:empty_string} AS ' . $add['name'];
 		}
 
@@ -705,7 +705,7 @@ function smf_db_alter_table($table_name, $columns)
 					'default' => isset($change['default']) ? $change['default'] : '',
 				);
 
-	// Now lets create the table.
+	// Now let's create the table.
 	$createTable = $smcFunc['db_create_table']($table_name, $new_columns, array(), array('skip_transaction' => true));
 
 	// Did it create correctly?
@@ -743,7 +743,7 @@ function smf_db_alter_table($table_name, $columns)
 	// Commit or else there is no point in doing the previous steps.
 	$smcFunc['db_transaction']('commit');
 
-	// We got here so we good.  The temp table should be deleted ir not it will be gone later on >:D.
+	// We got here so we're good.  The temp table should be deleted, if not it will be gone later on >:D.
 	return true;
 }
 

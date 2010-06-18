@@ -144,7 +144,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 			$default = 'default nextval(\'' . $table_name . '_seq\')';
 		}
 		elseif (isset($column['default']) && $column['default'] !== null)
-			$default = 'default \'' . $column['default'] . '\'';
+			$default = 'default \'' . $smcFunc['db_escape_string']($column['default']) . '\'';
 		else
 			$default = '';
 
@@ -348,7 +348,7 @@ function smf_db_change_column($table_name, $old_column, $column_info, $parameter
 	// Different default?
 	if (isset($column_info['default']) && $column_info['default'] != $old_info['default'])
 	{
-		$action = $column_info['default'] !== null ? 'SET DEFAULT \'' . $column_info['default'] . '\'' : 'DROP DEFAULT';
+		$action = $column_info['default'] !== null ? 'SET DEFAULT \'' . $smcFunc['db_escape_string']($column_info['default']) . '\'' : 'DROP DEFAULT';
 		$smcFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			ALTER COLUMN ' . $column_info['name'] . ' ' . $action,
@@ -661,9 +661,7 @@ function smf_db_list_columns($table_name, $detail = false, $parameters = array()
 				$auto = true;
 			}
 			elseif (trim($row['column_default']) != '')
-			{
 				$default = strpos($row['column_default'], '::') === false ? $row['column_default'] : substr($row['column_default'], 0, strpos($row['column_default'], '::'));
-			}
 			else
 				$default = null;
 
