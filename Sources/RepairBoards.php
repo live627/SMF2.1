@@ -60,7 +60,7 @@ function RepairBoards()
 	isAllowedTo('admin_forum');
 
 	// Try secure more memory.
-	ini_set('memory_limit', '128M');
+	@ini_set('memory_limit', '128M');
 
 	// Print out the top of the webpage.
 	$context['page_title'] = $txt['admin_repair'];
@@ -140,7 +140,7 @@ function pauseRepairProcess($to_fix, $current_step_description, $max_substep = 0
 	global $context, $txt, $time_start, $db_temp_cache, $db_cache;
 
 	// More time, I need more time!
-	set_time_limit(600);
+	@set_time_limit(600);
 	if (function_exists('apache_reset_timeout'))
 		@apache_reset_timeout();
 

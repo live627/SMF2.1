@@ -575,7 +575,7 @@ function AddSmiley()
 		// Uploading just one smiley for all of them?
 		if (isset($_POST['sameall']) && isset($_FILES['uploadSmiley']['name']) && $_FILES['uploadSmiley']['name'] != '')
 		{
-			if (!is_uploaded_file($_FILES['uploadSmiley']['tmp_name']) || (ini_get('open_basedir') == '' && !file_exists($_FILES['uploadSmiley']['tmp_name'])))
+			if (!is_uploaded_file($_FILES['uploadSmiley']['tmp_name']) || (@ini_get('open_basedir') == '' && !file_exists($_FILES['uploadSmiley']['tmp_name'])))
 				fatal_lang_error('smileys_upload_error');
 
 			// Sorry, no spaces, dots, or anything else but letters allowed.
@@ -646,7 +646,7 @@ function AddSmiley()
 					continue;
 
 				// Got one...
-				if (!is_uploaded_file($_FILES['individual_' . $set['name']]['tmp_name']) || (ini_get('open_basedir') == '' && !file_exists($_FILES['individual_' . $set['name']]['tmp_name'])))
+				if (!is_uploaded_file($_FILES['individual_' . $set['name']]['tmp_name']) || (@ini_get('open_basedir') == '' && !file_exists($_FILES['individual_' . $set['name']]['tmp_name'])))
 					fatal_lang_error('smileys_upload_error');
 
 				// Sorry, no spaces, dots, or anything else but letters allowed.
@@ -1373,7 +1373,7 @@ function InstallSmileySet()
 	$name = preg_replace(array('/\s/', '/\.[\.]+/', '/[^\w_\.\-]/'), array('_', '.', ''), $name);
 
 	// !!! Decide: overwrite or not?
-	if (isset($_FILES['set_gz']) && is_uploaded_file($_FILES['set_gz']['tmp_name']) && (ini_get('open_basedir') != '' || file_exists($_FILES['set_gz']['tmp_name'])))
+	if (isset($_FILES['set_gz']) && is_uploaded_file($_FILES['set_gz']['tmp_name']) && (@ini_get('open_basedir') != '' || file_exists($_FILES['set_gz']['tmp_name'])))
 		$extracted = read_tgz_file($_FILES['set_gz']['tmp_name'], $boarddir . '/Smileys/' . $name);
 	elseif (isset($_REQUEST['set_gz']))
 	{

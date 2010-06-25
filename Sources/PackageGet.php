@@ -264,7 +264,7 @@ function PackageGBrowse()
 		fatal_lang_error('couldnt_connect', false);
 
 	// In safe mode or on lycos?  Try this URL. (includes package-list for informational purposes ;).)
-	//if (ini_get('safe_mode'))
+	//if (@ini_get('safe_mode'))
 	//	redirectexit($url . '/index.php?package-list&language=' . $context['user']['language'] . '&ref=' . $boardurl);
 
 	// Attempt to connect.  If unsuccessful... try the URL.
@@ -654,13 +654,13 @@ function PackageUpload()
 	// Check the file was even sent!
 	if (!isset($_FILES['package']['name']) || $_FILES['package']['name'] == '')
 		fatal_lang_error('package_upload_error_nofile');
-	elseif (!is_uploaded_file($_FILES['package']['tmp_name']) || (ini_get('open_basedir') == '' && !file_exists($_FILES['package']['tmp_name'])))
+	elseif (!is_uploaded_file($_FILES['package']['tmp_name']) || (@ini_get('open_basedir') == '' && !file_exists($_FILES['package']['tmp_name'])))
 		fatal_lang_error('package_upload_error_failure');
 
 	// Make sure it has a sane filename.
 	$_FILES['package']['name'] = preg_replace(array('/\s/', '/\.[\.]+/', '/[^\w_\.\-]/'), array('_', '.', ''), $_FILES['package']['name']);
 
-	if (strtolower(substr($_FILES['package']['name'], -4)) !== '.zip' && strtolower(substr($_FILES['package']['name'], -4)) !== '.tgz' && strtolower(substr($_FILES['package']['name'], -7)) !== '.tar.gz')
+	if (strtolower(substr($_FILES['package']['name'], -4)) != '.zip' && strtolower(substr($_FILES['package']['name'], -4)) != '.tgz' && strtolower(substr($_FILES['package']['name'], -7)) != '.tar.gz')
 		fatal_lang_error('package_upload_error_supports', false, array('zip, tgz, tar.gz'));
 
 	// We only need the filename...
@@ -709,11 +709,11 @@ function PackageUpload()
 		closedir($dir);
 	}
 
-	if ($context['package']['type'] === 'modification')
+	if ($context['package']['type'] == 'modification')
 		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['install_mod'] . ' ]</a>';
-	elseif ($context['package']['type'] === 'avatar')
+	elseif ($context['package']['type'] == 'avatar')
 		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['use_avatars'] . ' ]</a>';
-	elseif ($context['package']['type'] === 'language')
+	elseif ($context['package']['type'] == 'language')
 		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['add_languages'] . ' ]</a>';
 	else
 		$context['package']['install']['link'] = '';

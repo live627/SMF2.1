@@ -584,7 +584,7 @@ class gif_file
 		if ($iIndex < 0)
 			return false;
 
-		$this->data = file_get_contents($filename);
+		$this->data = @file_get_contents($filename);
 		if ($this->data === false)
 			return false;
 

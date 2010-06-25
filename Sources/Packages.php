@@ -388,11 +388,11 @@ function PackageInstallTest()
 			}
 
 			if ($action['boardmod'])
-				$mod_actions = parseBoardMod(file_get_contents($boarddir . '/Packages/temp/' . $context['base_path'] . $action['filename']), true, $action['reverse'], $theme_paths);
+				$mod_actions = parseBoardMod(@file_get_contents($boarddir . '/Packages/temp/' . $context['base_path'] . $action['filename']), true, $action['reverse'], $theme_paths);
 			else
-				$mod_actions = parseModification(file_get_contents($boarddir . '/Packages/temp/' . $context['base_path'] . $action['filename']), true, $action['reverse'], $theme_paths);
+				$mod_actions = parseModification(@file_get_contents($boarddir . '/Packages/temp/' . $context['base_path'] . $action['filename']), true, $action['reverse'], $theme_paths);
 
-			if (count($mod_actions) === 1 && isset($mod_actions[0]) && $mod_actions[0]['type'] === 'error' && $mod_actions[0]['filename'] === '-')
+			if (count($mod_actions) == 1 && isset($mod_actions[0]) && $mod_actions[0]['type'] == 'error' && $mod_actions[0]['filename'] == '-')
 				$mod_actions[0]['filename'] = $action['filename'];
 
 			foreach ($mod_actions as $key => $mod_action)
@@ -1514,9 +1514,9 @@ function ViewOperations()
 
 	// Boardmod?
 	if (isset($_REQUEST['boardmod']))
-		$mod_actions = parseBoardMod(file_get_contents($boarddir . '/Packages/temp/' . $context['base_path'] . $_REQUEST['filename']), true, $reverse, $theme_paths);
+		$mod_actions = parseBoardMod(@file_get_contents($boarddir . '/Packages/temp/' . $context['base_path'] . $_REQUEST['filename']), true, $reverse, $theme_paths);
 	else
-		$mod_actions = parseModification(file_get_contents($boarddir . '/Packages/temp/' . $context['base_path'] . $_REQUEST['filename']), true, $reverse, $theme_paths);
+		$mod_actions = parseModification(@file_get_contents($boarddir . '/Packages/temp/' . $context['base_path'] . $_REQUEST['filename']), true, $reverse, $theme_paths);
 
 	// Ok lets get the content of the file.
 	$context['operations'] = array(
@@ -1546,8 +1546,8 @@ function PackagePermissions()
 	}
 
 	// This is a memory eat.
-	ini_set('memory_limit', '128M');
-	set_time_limit(600);
+	@ini_set('memory_limit', '128M');
+	@set_time_limit(600);
 
 	// Load up some FTP stuff.
 	create_chmod_control();

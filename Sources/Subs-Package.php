@@ -178,7 +178,7 @@ if (!defined('SMF'))
 // Get the data from the file and extract it.
 function read_tgz_file($gzfilename, $destination, $single_file = false, $overwrite = false, $files_to_extract = null)
 {
-	if (substr($gzfilename, 0, 7) === 'http://')
+	if (substr($gzfilename, 0, 7) == 'http://')
 	{
 		$data = fetch_web_data($gzfilename);
 
@@ -187,7 +187,7 @@ function read_tgz_file($gzfilename, $destination, $single_file = false, $overwri
 	}
 	else
 	{
-		$data = file_get_contents($gzfilename);
+		$data = @file_get_contents($gzfilename);
 
 		if ($data === false)
 			return false;

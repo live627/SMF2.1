@@ -2512,7 +2512,7 @@ function highlight_php_code($code)
 	$oldlevel = error_reporting(0);
 
 	// It's easier in 4.2.x+.
-	if (version_compare(PHP_VERSION, '4.2.0') === -1)
+	if (@version_compare(PHP_VERSION, '4.2.0') == -1)
 	{
 		ob_start();
 		@highlight_string($code);
@@ -2698,7 +2698,7 @@ function redirectexit($setLocation = '', $refresh = false)
 	elseif (isset($_GET['debug']))
 		$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\\??/', $scripturl . '?debug;', $setLocation);
 
-	if (!empty($modSettings['queryless_urls']) && (empty($context['server']['is_cgi']) || ini_get('cgi.fix_pathinfo') == 1 || get_cfg_var('cgi.fix_pathinfo') == 1) && (!empty($context['server']['is_apache']) || !empty($context['server']['is_lighttpd'])))
+	if (!empty($modSettings['queryless_urls']) && (empty($context['server']['is_cgi']) || @ini_get('cgi.fix_pathinfo') == 1 || @get_cfg_var('cgi.fix_pathinfo') == 1) && (!empty($context['server']['is_apache']) || !empty($context['server']['is_lighttpd'])))
 	{
 		if (defined('SID') && SID != '')
 			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?(?:' . SID . '(?:;|&|&amp;))((?:board|topic)=[^#]+?)(#[^"]*?)?$/e', "\$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2?' . SID", $setLocation);
@@ -3731,11 +3731,11 @@ function host_from_ip($ip)
 	$t = microtime();
 
 	// If we can't access nslookup/host, PHP 4.1.x might just crash.
-	if (version_compare(PHP_VERSION, '4.2.0') === -1)
+	if (@version_compare(PHP_VERSION, '4.2.0') == -1)
 		$host = false;
 
 	// Try the Linux host command, perhaps?
-	if (!isset($host) && (strpos(strtolower(PHP_OS), 'win') === false || strpos(strtolower(PHP_OS), 'darwin') !== false) && mt_rand(0, 1) === 1)
+	if (!isset($host) && (strpos(strtolower(PHP_OS), 'win') === false || strpos(strtolower(PHP_OS), 'darwin') !== false) && mt_rand(0, 1) == 1)
 	{
 		if (!isset($modSettings['host_to_dis']))
 			$test = @shell_exec('host -W 1 ' . @escapeshellarg($ip));
@@ -3863,7 +3863,7 @@ function loadClassFile($filename)
 		fatal_lang_error('error_bad_file', 'general', array($sourcedir . '/' . $filename));
 
 	// Using a version below PHP 5.0? Do a compatibility conversion.
-	if (version_compare(PHP_VERSION, '5.0.0') !== 1)
+	if (@version_compare(PHP_VERSION, '5.0.0') != 1)
 	{
 		// Check if it was included before.
 		if (in_array($filename, $files_included))
@@ -4147,15 +4147,15 @@ function setupMenuContext()
 
 	if (isset($context['menu_buttons'][$context['current_action']]))
 		$current_action = $context['current_action'];
-	elseif ($context['current_action'] === 'search2')
+	elseif ($context['current_action'] == 'search2')
 		$current_action = 'search';
-	elseif ($context['current_action'] === 'theme')
-		$current_action = isset($_REQUEST['sa']) && $_REQUEST['sa'] === 'pick' ? 'profile' : 'admin';
-	elseif ($context['current_action'] === 'register2')
+	elseif ($context['current_action'] == 'theme')
+		$current_action = isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'pick' ? 'profile' : 'admin';
+	elseif ($context['current_action'] == 'register2')
 		$current_action = 'register';
-	elseif ($context['current_action'] === 'login2' || ($user_info['is_guest'] && $context['current_action'] === 'reminder'))
+	elseif ($context['current_action'] == 'login2' || ($user_info['is_guest'] && $context['current_action'] == 'reminder'))
 		$current_action = 'login';
-	elseif ($context['current_action'] === 'groups' && $context['allow_moderation_center'])
+	elseif ($context['current_action'] == 'groups' && $context['allow_moderation_center'])
 		$current_action = 'moderate';
 
 	$context['menu_buttons'][$current_action]['active_button'] = true;
@@ -4179,7 +4179,7 @@ function smf_seed_generator()
 		updateSettings(array('rand_seed' => $modSettings['rand_seed']));
 	}
 
-	if (version_compare(PHP_VERSION, '4.2.0') === -1)
+	if (@version_compare(PHP_VERSION, '4.2.0') == -1)
 	{
 		$seed = ($modSettings['rand_seed'] + ((double) microtime() * 1000003)) & 0x7fffffff;
 		mt_srand($seed);
