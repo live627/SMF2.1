@@ -350,7 +350,7 @@ function template_unapproved_posts()
 	else
 		echo '
 			<div class="pagesection">
-				<span>', $txt['pages'], ': ', $context['page_index'], '</span>
+				<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>
 			</div>';
 
 	foreach ($context['unapproved_items'] as $item)
@@ -387,14 +387,24 @@ function template_unapproved_posts()
 	}
 
 	echo '
-		<div class="pagesection righttext">
-			<select name="do" onchange="if (this.value != 0 &amp;&amp; confirm(\'', $txt['mc_unapproved_sure'], '\')) submit();">
-				<option value="0">', $txt['with_selected'], ':</option>
-				<option value="0">-------------------</option>
-				<option value="approve">&nbsp;--&nbsp;', $txt['approve'], '</option>
-				<option value="delete">&nbsp;--&nbsp;', $txt['delete'], '</option>
-			</select>
-			<noscript><input type="submit" name="submit" value="', $txt['go'], '" class="button_submit" /></noscript>
+		<div class="pagesection">
+			<div class="align_right">
+				<select name="do" onchange="if (this.value != 0 &amp;&amp; confirm(\'', $txt['mc_unapproved_sure'], '\')) submit();">
+					<option value="0">', $txt['with_selected'], ':</option>
+					<option value="0">-------------------</option>
+					<option value="approve">&nbsp;--&nbsp;', $txt['approve'], '</option>
+					<option value="delete">&nbsp;--&nbsp;', $txt['delete'], '</option>
+				</select>
+				<noscript><input type="submit" name="submit" value="', $txt['go'], '" class="button_submit" /></noscript>
+			</div>';
+
+	if (!empty($context['unapproved_items']))
+		echo '
+			<div class="align_left">
+				<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>
+			</div>';
+
+	echo '
 		</div>
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>
@@ -432,7 +442,7 @@ function template_unapproved_attachments()
 	else
 		echo '
 			<div class="pagesection">
-				', $txt['pages'], ': ', $context['page_index'], '
+				<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>
 			</div>
 			<table class="table_grid" width="100%">
 			<thead>
@@ -471,14 +481,24 @@ function template_unapproved_attachments()
 	echo '
 			</tbody>
 			</table>
-			<div class="pagesection righttext">
-				<select name="do" onchange="if (this.value != 0 &amp;&amp; confirm(\'', $txt['mc_unapproved_sure'], '\')) submit();">
-					<option value="0">', $txt['with_selected'], ':</option>
-					<option value="0">-------------------</option>
-					<option value="approve">&nbsp;--&nbsp;', $txt['approve'], '</option>
-					<option value="delete">&nbsp;--&nbsp;', $txt['delete'], '</option>
-				</select>
-				<noscript><input type="submit" name="submit" value="', $txt['go'], '" class="button_submit" /></noscript>
+			<div class="pagesection">
+				<div class="align_right">
+					<select name="do" onchange="if (this.value != 0 &amp;&amp; confirm(\'', $txt['mc_unapproved_sure'], '\')) submit();">
+						<option value="0">', $txt['with_selected'], ':</option>
+						<option value="0">-------------------</option>
+						<option value="approve">&nbsp;--&nbsp;', $txt['approve'], '</option>
+						<option value="delete">&nbsp;--&nbsp;', $txt['delete'], '</option>
+					</select>
+					<noscript><input type="submit" name="submit" value="', $txt['go'], '" class="button_submit" /></noscript>
+				</div>';
+
+	if (!empty($context['unapproved_items']))
+		echo '
+				<div class="align_left">
+					<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>
+				</div>';
+
+	echo '
 			</div>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>

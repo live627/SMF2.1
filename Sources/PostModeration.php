@@ -427,10 +427,11 @@ function UnapprovedAttachments()
 		)
 	);
 	$context['unapproved_items'] = array();
-	while ($row = $smcFunc['db_fetch_assoc']($request))
+	for ($i = 1; $row = $smcFunc['db_fetch_assoc']($request); $i++)
 	{
 		$context['unapproved_items'][] = array(
 			'id' => $row['id_attach'],
+			'alternate' => $i % 2,
 			'filename' => $row['filename'],
 			'size' => round($row['size'] / 1024, 2),
 			'time' => timeformat($row['poster_time']),

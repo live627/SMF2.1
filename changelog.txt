@@ -31,6 +31,8 @@ June 2010
  ! Default value isn't escaped in create table/change column/add column. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 4326]
  ! Rollback 9945 (Multiple files)
  ! Custom field value was not set for required on registration check, when it was not a text field. (Register.php) [Bug 4337]
+ ! 'alternate' value for Unapproved Attachments list was not set. (PostModeration.php)
+ * Unapproved Posts and Unapproved Attachments areas were missing bottom page index. (ModerationCenter template) [Bug 4334]
 
 
 May 2010
