@@ -417,10 +417,12 @@ function Register2($verifiedOpenID = false)
 		if (!$row['show_reg'])
 			continue;
 
+		// Prepare the value!
+		$value = isset($_POST['customfield'][$row['col_name']]) ? trim($_POST['customfield'][$row['col_name']]) : '';
+
 		// We only care for text fields as the others are valid to be empty.
 		if (!in_array($row['field_type'], array('check', 'select', 'radio')))
 		{
-			$value = isset($_POST['customfield'][$row['col_name']]) ? trim($_POST['customfield'][$row['col_name']]) : '';
 			// Is it too long?
 			if ($row['field_length'] && $row['field_length'] < $smcFunc['strlen']($value))
 				$custom_field_errors[] = array('custom_field_too_long', array($row['field_name'], $row['field_length']));

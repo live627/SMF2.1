@@ -30,9 +30,9 @@ June 2010
  ! Database backup may fail for columns with reserved names. (DbExtra-mysql.php, DbExtra-postgresql.php, DbExtra-sqlite.php) [Bug 4261]
  ! Default value isn't escaped in create table/change column/add column. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 4326]
  ! Rollback 9945 (Multiple files)
+ ! Custom field value was not set for required on registration check, when it was not a text field. (Register.php) [Bug 4337]
 
 
-================================================================================
 May 2010
 --------------------------------------------------------------------------------
  ! Converting to UTF-8 might result in a syntax error in rare cases (ManageMaintenance.php) [Bug 2540]
@@ -125,7 +125,6 @@ May 2010
  & Added language entry for that feature. Also fixed a typo and a missing sprintf in $txt['ban_name_exists']. (Errors language)
 
 
-================================================================================
 April 2010
 --------------------------------------------------------------------------------
  ! Converting to UTF-8 didn't report conversion complete (ManageMaintenance.php) [Bug 4224]
@@ -158,7 +157,6 @@ April 2010
  ! Fix for the broken search on the second page when using space in the search query (Search.php) [Bug 4275]
 
 
-================================================================================
 March 2010
 --------------------------------------------------------------------------------
  * A typo in the compatibility template prevented it from being used properly. (Compat template)
