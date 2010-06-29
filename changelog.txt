@@ -33,6 +33,7 @@ June 2010
  ! Custom field value was not set for required on registration check, when it was not a text field. (Register.php) [Bug 4337]
  ! 'alternate' value for Unapproved Attachments list was not set. (PostModeration.php)
  * Unapproved Posts and Unapproved Attachments areas were missing bottom page index. (ModerationCenter template) [Bug 4334]
+ ! Divison by zero error in profile stats area with members having zero post count but have posts. (Profile-View.php) [Bug 4336]
 
 
 May 2010

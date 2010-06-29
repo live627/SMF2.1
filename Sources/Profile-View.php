@@ -814,7 +814,7 @@ function statPanel($memID)
 			'time_offset' => (($user_info['time_offset'] + $modSettings['time_offset']) * 3600),
 		)
 	);
-	$maxPosts = 0;
+	$maxPosts = $realPosts = 0;
 	$context['posts_by_time'] = array();
 	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
@@ -822,6 +822,7 @@ function statPanel($memID)
 		$row['hour'] = (int) $row['hour'];
 
 		$maxPosts = max($row['post_count'], $maxPosts);
+		$realPosts += $row['post_count'];
 
 		$context['posts_by_time'][$row['hour']] = array(
 			'hour' => $row['hour'],
@@ -847,7 +848,7 @@ function statPanel($memID)
 				);
 			else
 			{
-				$context['posts_by_time'][$hour]['posts_percent'] = round(($context['posts_by_time'][$hour]['posts'] * 100) / $user_profile[$memID]['posts']);
+				$context['posts_by_time'][$hour]['posts_percent'] = round(($context['posts_by_time'][$hour]['posts'] * 100) / $realPosts);
 				$context['posts_by_time'][$hour]['relative_percent'] = round(($context['posts_by_time'][$hour]['posts'] * 100) / $maxPosts);
 			}
 		}
