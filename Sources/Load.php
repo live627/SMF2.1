@@ -1763,8 +1763,6 @@ function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
 {
 	global $context, $settings, $txt, $scripturl, $boarddir, $db_show_debug;
 
-	$loaded = false;
-
 	// Do any style sheets first, cause we're easy with those.
 	if (!empty($style_sheets))
 	{
@@ -1782,7 +1780,7 @@ function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
 			{
 				$context['html_headers'] .= "\n\t" . '<link rel="stylesheet" type="text/css" id="' . $sheet . '_css" href="' . $settings[$sheet_path] . '/css/' . $sheet . '.css" />';
 				if ($db_show_debug === true)
-					$context['debug']['sheets'][] = $sheet . '(' . basename($settings[$sheet_path]) . ')';
+					$context['debug']['sheets'][] = $sheet . ' (' . basename($settings[$sheet_path]) . ')';
 			}
 		}
 	}
@@ -1791,13 +1789,13 @@ function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
 	if ($template_name === false)
 		return true;
 
+	$loaded = false;
 	foreach ($settings['template_dirs'] as $template_dir)
 	{
 		if (file_exists($template_dir . '/' . $template_name . '.template.php'))
 		{
 			$loaded = true;
 			template_include($template_dir . '/' . $template_name . '.template.php', true);
-			$actual_template = $template_name . ' (' . basename($template_dir) . ')';
 			break;
 		}
 	}
@@ -1809,7 +1807,7 @@ function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
 			loadTemplate('Compat');
 
 		if ($db_show_debug === true)
-			$context['debug']['templates'][] = $actual_template;
+			$context['debug']['templates'][] = $template_name . ' (' . basename($template_dir) . ')';
 
 		// If they have specified an initialization function for this template, go ahead and call it now.
 		if (function_exists('template_' . $template_name . '_init'))
