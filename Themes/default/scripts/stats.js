@@ -137,6 +137,10 @@ smf_StatsCenter.prototype.init = function ()
 			oCurYear.oToggle.opt.aSwappableContainers[oCurYear.oToggle.opt.aSwappableContainers.length] = aRows[i].id;
 		}
 	}
+
+	// Collapse all collapsed years!
+	for (i = 0; i < this.opt.aCollapsedYears.length; i++)
+		this.oYears[this.opt.aCollapsedYears[i]].oToggle.toggle();
 }
 
 smf_StatsCenter.prototype.onBeforeCollapseYear = function (oToggle)

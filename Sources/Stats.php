@@ -613,15 +613,21 @@ function DisplayStats()
 
 	krsort($context['yearly']);
 
+	$context['collapsed_years'] = array();
 	foreach ($context['yearly'] as $year => $data)
 	{
 		// This gets rid of the filesort on the query ;).
 		krsort($context['yearly'][$year]['months']);
+
 		$context['yearly'][$year]['new_topics'] = comma_format($data['new_topics']);
 		$context['yearly'][$year]['new_posts'] = comma_format($data['new_posts']);
 		$context['yearly'][$year]['new_members'] = comma_format($data['new_members']);
 		$context['yearly'][$year]['most_members_online'] = comma_format($data['most_members_online']);
 		$context['yearly'][$year]['hits'] = comma_format($data['hits']);
+
+		// Keep a list of collapsed years.
+		if (!$data['expanded'] && !$data['current_year'])
+			$context['collapsed_years'][] = $year;
 	}
 
 	if (empty($_SESSION['expanded_stats']))

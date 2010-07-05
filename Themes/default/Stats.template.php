@@ -352,7 +352,7 @@ function template_main()
 			echo '
 			<tr class="windowbg2" valign="middle" id="year_', $id, '">
 				<th class="lefttext" width="25%">
-					<img id="year_img_', $id, '" src="', $settings['images_url'], '/', $year['expanded'] ? 'collapse.gif' : 'expand.gif', '" alt="*" /> <a href="#year_', $id, '" id="year_link_', $id, '">', $year['year'], '</a>
+					<img id="year_img_', $id, '" src="', $settings['images_url'], '/collapse.gif" alt="*" /> <a href="#year_', $id, '" id="year_link_', $id, '">', $year['year'], '</a>
 				</th>
 				<th align="center" width="15%">', $year['new_topics'], '</th>
 				<th align="center" width="15%">', $year['new_posts'], '</th>
@@ -369,7 +369,7 @@ function template_main()
 			foreach ($year['months'] as $month)
 			{
 				echo '
-			<tr class="windowbg2" valign="middle" id="tr_month_', $month['id'], '"', !$year['expanded'] ? ' style="display: none"' : '', '>
+			<tr class="windowbg2" valign="middle" id="tr_month_', $month['id'], '">
 				<th class="lefttext" width="25%" style="padding-', ($context['right_to_left'] ? 'right' : 'left'), ': 3ex;">
 					<img src="', $settings['images_url'], '/', $month['expanded'] ? 'collapse.gif' : 'expand.gif', '" alt="" id="img_', $month['id'], '" /> <a id="m', $month['id'], '" href="', $month['href'], '" onclick="return doingExpandCollapse;">', $month['month'], ' ', $month['year'], '</a>
 				</th>
@@ -432,6 +432,17 @@ function template_main()
 			reDayPattern: /tr_day_(\d+-\d+-\d+)/,
 			sDayRowClassname: \'windowbg2\',
 			sDayRowIdPrefix: \'tr_day_\',
+
+			aCollapsedYears: [';
+
+		foreach ($context['collapsed_years'] as $id => $year)
+		{
+			echo '
+				\'', $year, '\'', $id != count($context['collapsed_years']) - 1 ? ',' : '';
+		}
+
+		echo '
+			],
 
 			aDataCells: [
 				\'date\',
