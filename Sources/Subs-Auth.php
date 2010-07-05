@@ -692,8 +692,7 @@ function resetPassword($memID, $username = null)
 	else
 		updateMemberData($memID, array('passwd' => $newPassword_sha1));
 
-	if (isset($modSettings['integrate_reset_pass']) && is_callable($modSettings['integrate_reset_pass']))
-		call_user_func(strpos($modSettings['integrate_reset_pass'], '::') === false ? $modSettings['integrate_reset_pass'] : explode('::', $modSettings['integrate_reset_pass']), $old_user, $user, $newPassword);
+	call_integration_hook('integrate_reset_pass', array($old_user, $user, $newPassword));
 
 	$replacements = array(
 		'USERNAME' => $user,

@@ -313,9 +313,9 @@ function loadUserSettings()
 	global $modSettings, $user_settings, $sourcedir, $smcFunc;
 	global $cookiename, $user_info, $language;
 
- 	// Check first the integration, then the cookie, and last the session.
+	// Check first the integration, then the cookie, and last the session.
 	if (count($integration_ids = call_integration_hook('integrate_verify_user')) > 0)
- 	{
+	{
 		$id_member = 0;
 		foreach ($integration_ids as $integration_id)
 		{
@@ -327,9 +327,9 @@ function loadUserSettings()
 				break;
 			}
 		}
- 	}
- 	else
- 		$id_member = 0;
+	}
+	else
+		$id_member = 0;
 
 	if (empty($id_member) && isset($_COOKIE[$cookiename]))
 	{

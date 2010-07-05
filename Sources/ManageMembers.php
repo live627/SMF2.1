@@ -1132,10 +1132,10 @@ function AdminApprove()
 
 		// Do we have to let the integration code know about the activations?
 		if (!empty($modSettings['integrate_activate']))
- 		{
- 			foreach ($member_info as $member)
+		{
+			foreach ($member_info as $member)
 				call_integration_hook('integrate_activate', array($member['username']));
- 		}
+		}
 
 		// Check for email.
 		if ($_POST['todo'] == 'okemail')
