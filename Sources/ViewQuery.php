@@ -55,8 +55,7 @@ function ViewQuery()
 			redirectexit($_SESSION['old_url']);
 	}
 
-	if (isset($modSettings['integrate_egg_nog']) && is_callable($modSettings['integrate_egg_nog']))
-		call_user_func(strpos($modSettings['integrate_egg_nog'], '::') === false ? $modSettings['integrate_egg_nog'] : explode('::', $modSettings['integrate_egg_nog']));
+	call_integration_hook('integrate_egg_nog');
 
 	$query_id = isset($_REQUEST['qq']) ? (int) $_REQUEST['qq'] - 1 : -1;
 

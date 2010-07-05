@@ -519,8 +519,7 @@ function Register2($verifiedOpenID = false)
 	}
 	else
 	{
-		if (isset($modSettings['integrate_login']) && is_callable($modSettings['integrate_login']))
-			call_user_func(strpos($modSettings['integrate_login'], '::') === false ? $modSettings['integrate_login'] : explode('::', $modSettings['integrate_login']), $regOptions['register_vars']['member_name'], $regOptions['register_vars']['passwd'], $modSettings['cookieTime']);
+		call_integration_hook('integrate_activate', array($row['member_name']));
 
 		setLoginCookie(60 * $modSettings['cookieTime'], $memberID, sha1(sha1(strtolower($regOptions['username']) . $regOptions['password']) . $regOptions['register_vars']['password_salt']));
 
@@ -654,8 +653,7 @@ function Activate()
 	}
 
 	// Let the integration know that they've been activated!
-	if (isset($modSettings['integrate_activate']) && is_callable($modSettings['integrate_activate']))
-		call_user_func(strpos($modSettings['integrate_activate'], '::') === false ? $modSettings['integrate_activate'] : explode('::', $modSettings['integrate_activate']), $row['member_name']);
+	call_integration_hook('integrate_activate', array($row['member_name']));
 
 	// Validation complete - update the database!
 	updateMemberData($row['id_member'], array('is_activated' => 1, 'validation_code' => ''));

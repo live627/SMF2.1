@@ -285,13 +285,26 @@ function reloadSettings()
 
 	// Integration is cool.
 	if (defined('SMF_INTEGRATION_SETTINGS'))
-		$modSettings = unserialize(SMF_INTEGRATION_SETTINGS) + $modSettings;
+	{
+		$integration_settings = unserialize(SMF_INTEGRATION_SETTINGS);
+		foreach ($integration_settings as $hook => $function)
+			add_integration_function($hook, $function, false);
+	}
 
-	if (isset($modSettings['integrate_pre_include']) && file_exists(strtr($modSettings['integrate_pre_include'], array('$boarddir' => $boarddir))))
-		require_once(strtr($modSettings['integrate_pre_include'], array('$boarddir' => $boarddir)));
+	// Any files to pre include?
+	if (!empty($modSettings['integrate_pre_include']))
+	{
+		$pre_includes = explode(',', $modSettings['integrate_pre_include']);
+		foreach ($pre_includes as $include)
+		{
+			$include = strtr(trim($include), array('$boarddir' => $boarddir));
+			if (file_exists($include))
+				require_once($include);
+		}
+	}
 
-	if (isset($modSettings['integrate_pre_load']) && is_callable($modSettings['integrate_pre_load']))
-		call_user_func(strpos($modSettings['integrate_pre_load'], '::') === false ? $modSettings['integrate_pre_load'] : explode('::', $modSettings['integrate_pre_load']));
+	// Call pre load integration functions.
+	call_integration_hook('integrate_pre_load');
 }
 
 // Load all the important user information...
@@ -300,14 +313,23 @@ function loadUserSettings()
 	global $modSettings, $user_settings, $sourcedir, $smcFunc;
 	global $cookiename, $user_info, $language;
 
-	// Check first the integration, then the cookie, and last the session.
-	if (isset($modSettings['integrate_verify_user']) && is_callable($modSettings['integrate_verify_user']))
-	{
-		$id_member = (int) call_user_func(strpos($modSettings['integrate_verify_user'], '::') === false ? $modSettings['integrate_verify_user'] : explode('::', $modSettings['integrate_verify_user']));
-		$already_verified = $id_member > 0;
-	}
-	else
+ 	// Check first the integration, then the cookie, and last the session.
+	if (count($integration_ids = call_integration_hook('integrate_verify_user')) > 0)
+ 	{
 		$id_member = 0;
+		foreach ($integration_ids as $integration_id)
+		{
+			$integration_id = (int) $integration_id;
+			if ($integration_id > 0)
+			{
+				$id_member = $integration_id;
+				$already_verified = true;
+				break;
+			}
+		}
+ 	}
+ 	else
+ 		$id_member = 0;
 
 	if (empty($id_member) && isset($_COOKIE[$cookiename]))
 	{
@@ -1751,8 +1773,8 @@ function loadTheme($id_theme = 0, $initialize = true)
 		}
 	}
 
-	if (isset($modSettings['integrate_load_theme']) && is_callable($modSettings['integrate_load_theme']))
-		call_user_func(strpos($modSettings['integrate_load_theme'], '::') === false ? $modSettings['integrate_load_theme'] : explode('::', $modSettings['integrate_load_theme']));
+	// Call load theme integration functions.
+	call_integration_hook('integrate_load_theme');
 
 	// We are ready to go.
 	$context['theme_loaded'] = true;

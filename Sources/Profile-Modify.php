@@ -1789,8 +1789,7 @@ function authentication($memID, $saving = false)
 			if (empty($post_errors))
 			{
 				// Integration?
-				if (isset($modSettings['integrate_reset_pass']) && is_callable($modSettings['integrate_reset_pass']))
-					call_user_func(strpos($modSettings['integrate_reset_pass'], '::') === false ? $modSettings['integrate_reset_pass'] : explode('::', $modSettings['integrate_reset_pass']), $cur_profile['member_name'], $cur_profile['member_name'], $_POST['passwrd1']);
+				call_integration_hook('integrate_reset_pass', array($cur_profile['member_name'], $cur_profile['member_name'], $_POST['passwrd1']));
 
 				// Go then.
 				$passwd = sha1(strtolower($cur_profile['member_name']) . un_htmlspecialchars($_POST['passwrd1']));

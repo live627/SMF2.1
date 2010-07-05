@@ -172,8 +172,7 @@ function deleteMembers($users, $check_not_admin = false)
 	foreach ($user_log_details as $user)
 	{
 		// Integration rocks!
-		if (isset($modSettings['integrate_delete_member']) && is_callable($modSettings['integrate_delete_member']))
-			call_user_func(strpos($modSettings['integrate_delete_member'], '::') === false ? $modSettings['integrate_delete_member'] : explode('::', $modSettings['integrate_delete_member']), $user[0]);
+		call_integration_hook('integrate_delete_member', array($user[0]));
 
 		// Add it to the administration log for future reference.
 		$log_inserts[] = array(
@@ -744,8 +743,7 @@ function registerMember(&$regOptions, $return_errors = false)
 			$theme_vars[$var] = $value;
 
 	// Call an optional function to validate the users' input.
-	if (isset($modSettings['integrate_register']) && is_callable($modSettings['integrate_register']))
-		call_user_func(strpos($modSettings['integrate_register'], '::') === false ? $modSettings['integrate_register'] : explode('::', $modSettings['integrate_register']), $regOptions, $theme_vars);
+	call_integration_hook('integrate_register', array(&$regOptions, &$theme_vars));
 
 	// Right, now let's prepare for insertion.
 	$knownInts = array(

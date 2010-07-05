@@ -349,8 +349,17 @@ function determineActions($urls, $preferred_prefix = false)
 			{
 				$data[$k] = $txt['who_index'];
 				// ...or maybe it's just integrated into another system...
-				if (isset($modSettings['integrate_whos_online']) && is_callable($modSettings['integrate_whos_online']))
-					$data[$k] = call_user_func(strpos($modSettings['integrate_whos_online'], '::') === false ? $modSettings['integrate_whos_online'] : explode('::', $modSettings['integrate_whos_online']), $actions);
+				if (count($integrate_actions = call_integration_hook('integrate_whos_online', array($actions))) > 0)
+				{
+					foreach ($integrate_actions as $integrate_action)
+					{
+						if (!empty($integrate_action))
+						{
+							$data[$k] = $integrate_action;
+							break;
+						}
+					}
+				}
 			}
 		}
 		// Probably an error or some goon?

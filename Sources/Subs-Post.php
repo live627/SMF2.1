@@ -689,13 +689,9 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 		$headers .= 'Message-ID: <' . md5($scripturl . microtime()) . '-' . $message_id . strstr(empty($modSettings['mail_from']) ? $webmaster_email : $modSettings['mail_from'], '@') . '>' . $line_break;
 	$headers .= 'X-Mailer: SMF' . $line_break;
 
-	// pass this to the integration before we start modifying the output -- it'll make it easier later
-	if (isset($modSettings['integrate_outgoing_email']) && is_callable($modSettings['integrate_outgoing_email']))
-	{
-		list ($subject, $message, $headers) = call_user_func(strpos($modSettings['integrate_outgoing_email'], '::') === false ? $modSettings['integrate_outgoing_email'] : explode('::', $modSettings['integrate_outgoing_email']), $subject, $message, $headers);
-		if ($message === false)
-			return false;
-	}
+	// Pass this to the integration before we start modifying the output -- it'll make it easier later.
+	if (in_array(false, call_integration_hook('integrate_outgoing_email', array(&$subject, &$message, &$headers)), true))
+		return false;
 
 	// Save the original message...
 	$orig_message = $message;
@@ -914,8 +910,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	preparsecode($htmlmessage);
 
 	// Integrated PMs
-	if (isset($modSettings['integrate_personal_message']) && is_callable($modSettings['integrate_personal_message']))
-		call_user_func(strpos($modSettings['integrate_personal_message'], '::') === false ? $modSettings['integrate_personal_message'] : explode('::', $modSettings['integrate_personal_message']), $recipients, $from['username'], $subject, $message);
+	call_integration_hook('integrate_personal_message', array($recipients, $from['username'], $subject, $message));
 
 	// Get a list of usernames and convert them to IDs.
 	$usernames = array();
@@ -1905,9 +1900,9 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 		updateStats('topic', true);
 		updateStats('subject', $topicOptions['id'], $msgOptions['subject']);
-		//What if we want to export new topics out to a CMS?
-		if (isset($modSettings['integrate_create_topic']) && is_callable($modSettings['integrate_create_topic']))
-			call_user_func(strpos($modSettings['integrate_create_topic'], '::') === false ? $modSettings['integrate_create_topic'] : explode('::', $modSettings['integrate_create_topic']), $msgOptions, $topicOptions, $posterOptions);
+
+		// What if we want to export new topics out to a CMS?
+		call_integration_hook('integrate_create_topic', array($msgOptions, $topicOptions, $posterOptions));
 	}
 	// The topic already exists, it only needs a little updating.
 	else

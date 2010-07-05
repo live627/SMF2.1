@@ -214,6 +214,20 @@ if (!defined('SMF'))
 
 	void clean_cache(type = '')
 		// !!!
+
+	array call_integration_hook(string hook, array parameters = array())
+		- calls all functions of the given hook.
+		- supports static class method calls.
+		- returns the results of the functions as an array.
+
+	void add_integration_function(string hook, string function, bool permanent = true)
+		- adds the given function to the given hook.
+		- does nothing if the functions is already added.
+		- if permanent parameter is true, updates the value in settings table.
+
+	void remove_integration_function(string hook, string function)
+		- removes the given function from the given hook.
+		- does nothing if the functions is not available.
 */
 
 // Update some basic statistics...
@@ -440,7 +454,7 @@ function updateMemberData($members, $data)
 		$parameters['member'] = $members;
 	}
 
-	if (isset($modSettings['integrate_change_member_data']) && is_callable($modSettings['integrate_change_member_data']))
+	if (!empty($modSettings['integrate_change_member_data']))
 	{
 		// Only a few member variables are really interesting for integration.
 		$integration_vars = array(
@@ -483,7 +497,7 @@ function updateMemberData($members, $data)
 
 			if (!empty($member_names))
 				foreach ($vars_to_integrate as $var)
-					call_user_func(strpos($modSettings['integrate_change_member_data'], '::') === false ? $modSettings['integrate_change_member_data'] : explode('::', $modSettings['integrate_change_member_data']), $member_names, $var, $data[$var]);
+					call_integration_hook('integrate_change_member_data', array($member_names, $var, $data[$var]));
 		}
 	}
 
@@ -2706,8 +2720,8 @@ function redirectexit($setLocation = '', $refresh = false)
 			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?$/e', "\$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2'", $setLocation);
 	}
 
-	if (isset($modSettings['integrate_redirect']) && is_callable($modSettings['integrate_redirect']))
-		list ($setLocation, $refresh) = call_user_func(strpos($modSettings['integrate_redirect'], '::') === false ? $modSettings['integrate_redirect'] : explode('::', $modSettings['integrate_redirect']), $setLocation, $refresh);
+	// Maybe integrations wants to change where we are heading?
+	call_integration_hook('integrate_redirect', array(&$setLocation, &$refresh));
 
 	// We send a Refresh header only in special cases because Location looks better. (and is quicker...)
 	if ($refresh && !WIRELESS)
@@ -2828,8 +2842,7 @@ function obExit($header = null, $do_footer = null, $from_index = false)
 	}
 
 	// Hand off the output to the portal, etc. we're integrated with.
-	if (isset($modSettings['integrate_exit']) && is_callable($modSettings['integrate_exit']))
-		call_user_func(strpos($modSettings['integrate_exit'], '::') === false ? $modSettings['integrate_exit'] : explode('::', $modSettings['integrate_exit']), $do_footer && !WIRELESS);
+	call_integration_hook('integrate_exit', array($do_footer && !WIRELESS));
 
 	// Don't exit if we're coming from index.php; that will pass through normally.
 	if (!$from_index || WIRELESS)
@@ -4187,6 +4200,68 @@ function smf_seed_generator()
 
 	// Change the seed.
 	updateSettings(array('rand_seed' => mt_rand()));
+}
+
+// Process functions of an integration hook.
+function call_integration_hook($hook, $parameters = array())
+{
+	global $modSettings;
+
+	$results = array();
+	if (empty($modSettings[$hook]))
+		return $results;
+
+	$functions = explode(',', $modSettings[$hook]);
+
+	// Loop through each function.
+	foreach ($functions as $function)
+	{
+		$function = trim($function);
+		$call = strpos($function, '::') !== false ? explode('::', $function) : $function;
+
+		// Is it valid?
+		if (is_callable($call))
+			$results[$function] = call_user_func_array($call, $parameters);
+	}
+
+	return $results;
+}
+
+// Add a function for integration hook.
+function add_integration_function($hook, $function, $permanent = true)
+{
+	global $modSettings;
+
+	$functions = empty($modSettings[$hook]) ? array() : explode(',', $modSettings[$hook]);
+
+	// Do nothing, if it's already there.
+	if (in_array($function, $functions))
+		return;
+
+	$functions[] = $function;
+
+	// Add it!
+	if ($permanent)
+		updateSettings(array($hook => implode(',', $functions)));
+	else
+		$modSettings[$hook] = implode(',', $functions);
+}
+
+// Remove an integration hook function.
+function remove_integration_function($hook, $function)
+{
+	global $modSettings;
+
+	$functions = empty($modSettings[$hook]) ? array() : explode(',', $modSettings[$hook]);
+
+	// You can only remove it's available.
+	if (!in_array($function, $functions))
+		return;
+
+	$functions = array_diff($functions, array($function));
+
+	// Now officially, it's no longer a part of our family...
+	updateSettings(array($hook => implode(',', $functions)));
 }
 
 ?>

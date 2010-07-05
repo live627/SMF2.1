@@ -1131,11 +1131,11 @@ function AdminApprove()
 		);
 
 		// Do we have to let the integration code know about the activations?
-		if (isset($modSettings['integrate_activate']) && is_callable($modSettings['integrate_activate']))
-		{
-			foreach ($member_info as $member)
-				call_user_func(strpos($modSettings['integrate_activate'], '::') === false ? $modSettings['integrate_activate'] : explode('::', $modSettings['integrate_activate']), $member['username']);
-		}
+		if (!empty($modSettings['integrate_activate']))
+ 		{
+ 			foreach ($member_info as $member)
+				call_integration_hook('integrate_activate', array($member['username']));
+ 		}
 
 		// Check for email.
 		if ($_POST['todo'] == 'okemail')
