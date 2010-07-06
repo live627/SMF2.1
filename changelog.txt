@@ -15,6 +15,8 @@ July 2010
  ! version_compare doesn't need 'PHP' in the comparison string. (Subs-OpenID.php)
  ! If user provides an OpenID url that doesn't exist, consider they filled it in by mistake, and fall back to a regular username/password check. (LogInOut.php, Subs-OpenID.php) [Bug 2978]
  ! $no_engine_support was wrongfully computed. (DbExtra-mysql.php, DbPackages-mysql.php, DbSearch-mysql.php) [Bug 4342]
+ ! Languages were not correctly listed in language management area due to caching. (Load.php, ManageServer.php)
+ ! Adding UTF-8 languages caused the English ISO pack to be listed as UTF-8. (ManageServer.php) [Bug 3656]
 
 
 June 2010

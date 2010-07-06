@@ -924,7 +924,10 @@ function DownloadLanguage()
 
 	// Kill the cache, as it is now invalid..
 	if (!empty($modSettings['cache_enable']))
+	{
 		cache_put_data('known_languages', null, !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] < 1 ? 86400 : 3600);
+		cache_put_data('known_languages_all', null, !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] < 1 ? 86400 : 3600);
+	}
 
 	require_once($sourcedir . '/Subs-List.php');
 	createList($listOptions);
@@ -1061,7 +1064,7 @@ function list_getNumLanguages()
 	global $settings;
 
 	// Return how many we have.
-	return count(getLanguages());
+	return count(getLanguages(true, false));
 }
 
 // Fetch the actual language information.
@@ -1088,7 +1091,7 @@ function list_getLanguages()
 	foreach ($context['languages'] as $lang)
 	{
 		// Load the file to get the character set.
-		require_once($settings['default_theme_dir'] . '/languages/index.' . $lang['filename'] . '.php');
+		require($settings['default_theme_dir'] . '/languages/index.' . $lang['filename'] . '.php');
 
 		$languages[$lang['filename']] = array(
 			'id' => $lang['filename'],
@@ -1307,7 +1310,10 @@ function ModifyLanguage()
 
 		// Fifth, update getLanguages() cache.
 		if (!empty($modSettings['cache_enable']))
+		{
 			cache_put_data('known_languages', null, !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] < 1 ? 86400 : 3600);
+			cache_put_data('known_languages_all', null, !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] < 1 ? 86400 : 3600);
+		}
 
 		// Sixth, if we deleted the default language, set us back to english?
 		if ($context['lang_id'] == $language)
