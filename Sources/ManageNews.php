@@ -605,16 +605,13 @@ function SendMailing($clean_only = false)
 		'{$member.name}'
 	);
 
-	// If we still have emails do these first!
+	// If we still have emails, do them first!
 	$i = 0;
 	foreach ($context['recipients']['emails'] as $k => $email)
 	{
 		// Done as many as we can?
 		if ($i >= $num_at_once)
 			break;
-
-		// Done another...
-		$i++;
 
 		// Don't sent it twice!
 		unset($context['recipients']['emails'][$k]);
@@ -631,6 +628,9 @@ function SendMailing($clean_only = false)
 		);
 
 		sendmail($email, str_replace($from_member, $to_member, $_POST['subject']), str_replace($from_member, $to_member, $_POST['message']), null, null, !empty($_POST['send_html']), 5);
+
+		// Done another...
+		$i++;
 	}
 
 	// Got some more to send this batch?
@@ -691,10 +691,11 @@ function SendMailing($clean_only = false)
 				AND ' . $sendQuery . '
 				AND mem.is_activated = {int:is_activated}
 			ORDER BY mem.id_member ASC
-			LIMIT ' . ($num_at_once - $i),
+			LIMIT {int:atonce}',
 			array_merge($sendParams, array(
 				'min_id_member' => $context['start'],
 				'max_id_member' => $context['start'] + $num_at_once - $i,
+				'atonce' => $num_at_once - $i,
 				'regular_group' => 0,
 				'notify_announcements' => 1,
 				'is_activated' => 1,
