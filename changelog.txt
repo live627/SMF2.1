@@ -10,6 +10,7 @@ July 2010
  ! Static class methods could not be handled properly by integration hooks. (Many files)
  ! It was not possible to pass variables by reference for integration functions. (Many files) [Bug 4246]
  * Years did not automatically collapse in statistics center. (Stats.php, Stats template, stats.js) [Bug 4011]
+ ! Custom selectbox fields did not provide an empty option (Profile.php) [Bug 4345]
 
 
 June 2010
