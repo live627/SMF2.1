@@ -2720,7 +2720,7 @@ function redirectexit($setLocation = '', $refresh = false)
 			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?$/e', "\$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2'", $setLocation);
 	}
 
-	// Maybe integrations wants to change where we are heading?
+	// Maybe integrations want to change where we are heading?
 	call_integration_hook('integrate_redirect', array(&$setLocation, &$refresh));
 
 	// We send a Refresh header only in special cases because Location looks better. (and is quicker...)

@@ -558,8 +558,7 @@ function DisplayStats()
 			YEAR(date) AS stats_year, MONTH(date) AS stats_month, SUM(hits) AS hits, SUM(registers) AS registers, SUM(topics) AS topics, SUM(posts) AS posts, MAX(most_on) AS most_on, COUNT(*) AS num_days
 		FROM {db_prefix}log_activity
 		GROUP BY stats_year, stats_month',
-		array(
-		)
+		array()
 	);
 
 	$context['yearly'] = array();
