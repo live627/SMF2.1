@@ -2390,16 +2390,16 @@ function template_manual_pm_messages()
 		<p>', $txt['manual_pm_community'], '</p>
 	<ol>
 		<li>
-			<a href="', $scripturl, '?action=help;area=sending_pms#pm">', $txt['manual_pm_sec_pm'], '</a>
+			<a href="', $scripturl, '?action=help;area=messages#pm">', $txt['manual_pm_sec_pm'], '</a>
 			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;area=sending_pms#description">', $txt['manual_pm_pm_desc'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;area=sending_pms#reading">', $txt['manual_pm_reading'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=messages#description">', $txt['manual_pm_pm_desc'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=messages#reading">', $txt['manual_pm_reading'], '</a></li>
 			</ol>
 		</li>
 		<li>
-			<a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_sec_pm2'], '</a>
+			<a href="', $scripturl, '?action=help;area=messages#interface">', $txt['manual_pm_sec_pm2'], '</a>
 			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;area=sending_pms#starting">', $txt['manual_pm_start_reply'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=messages#starting">', $txt['manual_pm_start_reply'], '</a></li>
 			</ol>
 		</li>
 	</ol>

@@ -18,6 +18,7 @@ July 2010
  ! Languages were not correctly listed in language management area due to caching. (Load.php, ManageServer.php)
  ! Adding UTF-8 languages caused the English ISO pack to be listed as UTF-8. (ManageServer.php) [Bug 3656]
  ! Incorrect language file was being forced on language changes via profile. (Profile-Modify.php) [Bug 3658]
+ * Links in the Messages section of Help area had incorrect URLs. (Help template) [Bug 4331]
 
 
 June 2010
