@@ -105,7 +105,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 
 	// We check for engine support this way to save time repeatedly performing this check.
 	if (is_null($no_engine_support))
-		$no_engine_support = version_compare('4', $smcFunc['db_get_version']) > 0;
+		$no_engine_support = version_compare('4', $smcFunc['db_get_version']()) > 0;
 
 	// Strip out the table name, we might not need it in some cases
 	$real_prefix = preg_match('~^(`?)(.+?)\\1\\.(.*?)$~', $db_prefix, $match) === 1 ? $match[3] : $db_prefix;
