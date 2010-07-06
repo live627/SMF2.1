@@ -192,7 +192,8 @@ function Login2()
 	if (!empty($_REQUEST['openid_identifier']) && !empty($modSettings['enableOpenID']))
 	{
 		require_once($sourcedir . '/Subs-OpenID.php');
-		return smf_openID_validate($_REQUEST['openid_identifier']);
+		if (($open_id = smf_openID_validate($_REQUEST['openid_identifier'])) !== 'no_data')
+			return $open_id;
 	}
 
 	// You forgot to type your username, dummy!

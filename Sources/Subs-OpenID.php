@@ -41,6 +41,8 @@ function smf_openID_validate($openid_uri, $return = false, $save_fields = array(
 	$openid_url = smf_openID_canonize($openid_uri);
 
 	$response_data = smf_openID_getServerInfo($openid_url);
+	if ($response_data === false)
+		return 'no_data';
 
 	if (($assoc = smf_openID_getAssociation($response_data['server'])) == null)
 		$assoc = smf_openID_makeAssociation($response_data['server']);
@@ -492,6 +494,9 @@ function smf_openID_getServerInfo($openid_url)
 	// Get the html and parse it for the openid variable which will tell us where to go.
 	$webdata = fetch_web_data($openid_url);
 
+	if (empty($webdata))
+		return false;
+
 	$response_data = array();
 
 	// Some OpenID servers have strange but still valid HTML which makes our job hard.
@@ -535,7 +540,7 @@ function sha1_hmac($data, $key)
 
 function sha1_raw($text)
 {
-	if (version_compare(PHP_VERSION, 'PHP 5.0.0') >= 0)
+	if (version_compare(PHP_VERSION, '5.0.0') >= 0)
 		return sha1($text, true);
 
 	$hex = sha1($text);
@@ -543,7 +548,7 @@ function sha1_raw($text)
 	for ($i = 0; $i < 40; $i += 2)
 	{
 		$hexcode = substr($hex, $i, 2);
-		$charcode = (int)base_convert($hexcode, 16, 10);
+		$charcode = (int) base_convert($hexcode, 16, 10);
 		$raw .= chr($charcode);
 	}
 
