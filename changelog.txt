@@ -11,6 +11,9 @@ July 2010
  ! It was not possible to pass variables by reference for integration functions. (Many files) [Bug 4246]
  * Years did not automatically collapse in statistics center. (Stats.php, Stats template, stats.js) [Bug 4011]
  ! Custom selectbox fields did not provide an empty option (Profile.php) [Bug 4345]
+ * Indenting was to be redone entirely in MessageIndex template.
+ ! version_compare doesn't need 'PHP' in the comparison string. (Subs-OpenID.php)
+ ! If user provides an OpenID url that doesn't exist, consider they filled it in by mistake, and fall back to a regular username/password check. (LogInOut.php, Subs-OpenID.php) [Bug 2978]
 
 
 June 2010
