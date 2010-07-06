@@ -578,7 +578,8 @@ function ModifyProfile($post_errors = array())
 		elseif (!empty($profile_vars))
 		{
 			// If we've changed the password, notify any integration that may be listening in.
-			call_integration_hook('integrate_reset_pass', array($cur_profile['member_name'], $cur_profile['member_name'], $_POST['passwrd2']));
+			if (isset($profile_vars['passwd']))
+				call_integration_hook('integrate_reset_pass', array($cur_profile['member_name'], $cur_profile['member_name'], $_POST['passwrd2']));
 
 			updateMemberData($memID, $profile_vars);
 
