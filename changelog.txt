@@ -17,6 +17,7 @@ July 2010
  ! $no_engine_support was wrongfully computed. (DbExtra-mysql.php, DbPackages-mysql.php, DbSearch-mysql.php) [Bug 4342]
  ! Languages were not correctly listed in language management area due to caching. (Load.php, ManageServer.php)
  ! Adding UTF-8 languages caused the English ISO pack to be listed as UTF-8. (ManageServer.php) [Bug 3656]
+ ! Incorrect language file was being forced on language changes via profile. (Profile-Modify.php) [Bug 3658]
 
 
 June 2010
