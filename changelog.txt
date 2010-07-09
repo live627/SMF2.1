@@ -22,7 +22,7 @@ July 2010
  * Post content is lost when using the Back button in Firefox. (Post template) [Bug 4346]
  ! Fixed regression from rev 9948 where topic IDs were sometimes corrupted. (Search.php) [Bug 2201]
  ! When writing a cache file, disable file buffering and minimize time spent writing it. (Load.php) [Bug 4330]
-
+ * Spell checking was broken on quick edit. (Display template)
 
 June 2010
 --------------------------------------------------------------------------------
