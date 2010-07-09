@@ -2581,18 +2581,18 @@ function cache_put_data($key, $value, $ttl = 120)
 			@unlink($cachedir . '/data_' . $key . '.php');
 		else
 		{
+			$cache_data = '<' . '?' . 'php if (!defined(\'SMF\')) die; if (' . (time() + $ttl) . ' < time()) $expired = true; else{$expired = false; $value = \'' . addcslashes($value, '\\\'') . '\';}' . '?' . '>';
 			$fp = @fopen($cachedir . '/data_' . $key . '.php', 'w');
 			if ($fp)
 			{
-				// Write the header.
-				@flock($fp, LOCK_EX);
-				$cache_data = '<' . '?' . 'php if (!defined(\'SMF\')) die; if (' . (time() + $ttl) . ' < time()) $expired = true; else{$expired = false; $value = \'' . addcslashes($value, '\\\'') . '\';}' . '?' . '>';
+				// Write the file.
+				set_file_buffer($fp, 0);
+				flock($fp, LOCK_EX);
 				$cache_bytes = fwrite($fp, $cache_data);
-				@flock($fp, LOCK_UN);
 				fclose($fp);
 
-				// Check that the cache write was successful all the data should be written
-				// If it fails due to low diskspace remove the cache file
+				// Check that the cache write was successful; all the data should be written
+				// If it fails due to low diskspace, remove the cache file
 				if ($cache_bytes != strlen($cache_data))
 					@unlink($cachedir . '/data_' . $key . '.php');
 			}
