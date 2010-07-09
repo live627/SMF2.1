@@ -1568,6 +1568,7 @@ function PlushSearch2()
 						LIMIT ' . $modSettings['search_max_results']),
 						$main_query['parameters']
 					);
+
 					// We love to handle non-good databases that don't support our ignore!
 					if (!$smcFunc['db_support_ignore'])
 					{
@@ -1673,8 +1674,8 @@ function PlushSearch2()
 					$_SESSION['search_cache']['num_results'] = 0;
 			}
 		}
-		// *** Retrieve the results to be shown on the page
 
+		// *** Retrieve the results to be shown on the page
 		$participants = array();
 		$request = $smcFunc['db_search_query']('', '
 			SELECT ' . (empty($search_params['topic']) ? 'lsr.id_topic' : $search_params['topic'] . ' AS id_topic') . ', lsr.id_msg, lsr.relevance, lsr.num_matches
@@ -1690,7 +1691,6 @@ function PlushSearch2()
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			$context['topics'][$row['id_msg']] = array(
-				'id' => $row['id_topic'],
 				'relevance' => round($row['relevance'] / 10, 1) . '%',
 				'num_matches' => $row['num_matches'],
 				'matches' => array(),
@@ -1713,7 +1713,7 @@ function PlushSearch2()
 		);
 
 		// How's about some quick moderation?
-		if (!empty($options['display_quick_mod']) && !empty($context['topics']))
+		if (!empty($options['display_quick_mod']))
 		{
 			$boards_can['lock_any'] = boardsAllowedTo('lock_any');
 			$boards_can['lock_own'] = boardsAllowedTo('lock_own');
@@ -1784,9 +1784,8 @@ function PlushSearch2()
 				'limit' => count($context['topics']),
 			)
 		);
-		// Note that the reg-exp slows things a lot, but makes things make a lot more sense.
 
-		// If there are no results that means the things in the cache got deleted, so pretend we have no topics any more.
+		// If there are no results that means the things in the cache got deleted, so pretend we have no topics anymore.
 		if ($smcFunc['db_num_rows']($messages_request) == 0)
 			$context['topics'] = array();
 
@@ -1968,6 +1967,7 @@ function prepareSearchContext($reset = false)
 	$quote_enabled = empty($modSettings['disabledBBC']) || !in_array('quote', explode(',', $modSettings['disabledBBC']));
 
 	$output = array_merge($context['topics'][$message['id_msg']], array(
+		'id' => $message['id_topic'],
 		'is_sticky' => !empty($modSettings['enableStickyTopics']) && !empty($message['is_sticky']),
 		'is_locked' => !empty($message['locked']),
 		'is_poll' => $modSettings['pollMode'] == '1' && $message['id_poll'] > 0,

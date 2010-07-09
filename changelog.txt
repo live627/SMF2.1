@@ -20,6 +20,7 @@ July 2010
  ! Incorrect language file was being forced on language changes via profile. (Profile-Modify.php) [Bug 3658]
  * Links in the Messages section of Help area had incorrect URLs. (Help template) [Bug 4331]
  * Post content is lost when using the Back button in Firefox. (Post template) [Bug 4346]
+ ! Fixed regression from rev 9948 where topic IDs were sometimes corrupted. (Search.php) [Bug 2201]
 
 
 June 2010
