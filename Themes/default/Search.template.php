@@ -435,7 +435,7 @@ function template_results()
 		{
 			foreach ($topic['matches'] as $message)
 			{
-			echo '
+				echo '
 			<div class="search_results_posts">
 				<div class="', $message['alternate'] == 0 ? 'windowbg' : 'windowbg2', ' core_posts">
 					<span class="topslice"><span></span></span>
@@ -447,27 +447,27 @@ function template_results()
 						</div>
 						<div class="list_posts">', $message['body_highlighted'], '</div>';
 
-					if ($topic['can_reply'] || $topic['can_mark_notify'])
+				if ($topic['can_reply'] || $topic['can_mark_notify'])
 					echo '
 						<div class="quickbuttons_wrap">
 							<ul class="reset smalltext quickbuttons">';
 
-					// If they *can* reply?
-					if ($topic['can_reply'])
+				// If they *can* reply?
+				if ($topic['can_reply'])
 					echo '
 								<li class="reply_button"><a href="', $scripturl . '?action=post;topic=' . $topic['id'] . '.' . $message['start'], '">', $txt['reply'], '</a></li>';
 
-					// If they *can* quote?
-					if ($topic['can_quote'])
+				// If they *can* quote?
+				if ($topic['can_quote'])
 					echo '
 								<li class="quote_button"><a href="', $scripturl . '?action=post;topic=' . $topic['id'] . '.' . $message['start'] . ';quote=' . $message['id'] . '">', $txt['quote'], '</a></li>';
 
-					// Can we request notification of topics?
-					if ($topic['can_mark_notify'])
+				// Can we request notification of topics?
+				if ($topic['can_mark_notify'])
 					echo '
 								<li class="notify_button"><a href="', $scripturl . '?action=notify;topic=' . $topic['id'] . '.' . $message['start'], '">', $txt['notify'], '</a></li>';
 
-					if ($topic['can_reply'] || $topic['can_mark_notify'])
+				if ($topic['can_reply'] || $topic['can_mark_notify'])
 					echo '
 							</ul>
 						</div>';
