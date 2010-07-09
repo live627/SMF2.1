@@ -13,12 +13,13 @@ July 2010
  ! Custom selectbox fields did not provide an empty option (Profile.php) [Bug 4345]
  * Indenting was to be redone entirely in MessageIndex template.
  ! version_compare doesn't need 'PHP' in the comparison string. (Subs-OpenID.php)
- ! If user provides an OpenID url that doesn't exist, consider they filled it in by mistake, and fall back to a regular username/password check. (LogInOut.php, Subs-OpenID.php) [Bug 2978]
+ ! If user provides an OpenID URL that doesn't exist, consider they filled it in by mistake, and fall back to a regular username/password check. (LogInOut.php, Subs-OpenID.php) [Bug 2978]
  ! $no_engine_support was wrongfully computed. (DbExtra-mysql.php, DbPackages-mysql.php, DbSearch-mysql.php) [Bug 4342]
  ! Languages were not correctly listed in language management area due to caching. (Load.php, ManageServer.php)
  ! Adding UTF-8 languages caused the English ISO pack to be listed as UTF-8. (ManageServer.php) [Bug 3656]
  ! Incorrect language file was being forced on language changes via profile. (Profile-Modify.php) [Bug 3658]
  * Links in the Messages section of Help area had incorrect URLs. (Help template) [Bug 4331]
+ * Post content is lost when using the Back button in Firefox. (Post template) [Bug 4346]
 
 
 June 2010
@@ -47,11 +48,10 @@ June 2010
  ! Converting rich text to BBC would sometimes add extra spaces where not needed. (Subs-Editor.php) [Bug 4200]
  ! Database backup may fail for columns with reserved names. (DbExtra-mysql.php, DbExtra-postgresql.php, DbExtra-sqlite.php) [Bug 4261]
  ! Default value isn't escaped in create table/change column/add column. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 4326]
- ! Rollback 9945 (Multiple files)
  ! Custom field value was not set for required on registration check, when it was not a text field. (Register.php) [Bug 4337]
  ! 'alternate' value for Unapproved Attachments list was not set. (PostModeration.php)
  * Unapproved Posts and Unapproved Attachments areas were missing bottom page index. (ModerationCenter template) [Bug 4334]
- ! Divison by zero error in profile stats area with members having zero post count but have posts. (Profile-View.php) [Bug 4336]
+ ! Division by zero error in profile stats area with members having posts but a post count of zero. (Profile-View.php) [Bug 4336]
 
 
 May 2010
