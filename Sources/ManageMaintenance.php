@@ -1534,8 +1534,12 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 	if ($can_write)
 	{
 		$fh = fopen($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php', 'w');
-		@flock($fh, LOCK_EX);
-		fwrite($fh, '<' . '?php' . "\n");
+		if ($fh)
+		{
+			set_file_buffer($fh, 0);
+			flock($fh, LOCK_EX);
+			fwrite($fh, '<' . '?php' . "\n");
+		}
 	}
 
 	// For each file open it up and write it out!
@@ -1572,7 +1576,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 			if (file_exists($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php'))
 			{
 				// Are we caching?
-				if ($can_write)
+				if ($can_write && $fh)
 				{
 					foreach (file($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php') as $line)
 					{
@@ -1613,10 +1617,9 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 			unset($language_url);
 	}
 
-	if ($can_write)
+	if ($can_write && $fh)
 	{
 		fwrite($fh, '?' . '>');
-		@flock($fh, LOCK_UN);
 		fclose($fh);
 
 		// If we couldn't find the file don't cache it!
