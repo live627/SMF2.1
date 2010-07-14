@@ -819,15 +819,15 @@ function Display()
 	);
 
 	$messages = array();
-	$posters = array();
+	$all_posters = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		if (!empty($row['id_member']))
-			$posters[] = $row['id_member'];
+			$all_posters[$row['id_msg']] = $row['id_member'];
 		$messages[] = $row['id_msg'];
 	}
 	$smcFunc['db_free_result']($request);
-	$posters = array_unique($posters);
+	$posters = array_unique($all_posters);
 
 	// Guests can't mark topics read or for notifications, just can't sorry.
 	if (!$user_info['is_guest'])
@@ -951,8 +951,7 @@ function Display()
 				FROM {db_prefix}attachments AS a' . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : '
 					LEFT JOIN {db_prefix}attachments AS thumb ON (thumb.id_attach = a.id_thumb)') . '
 				WHERE a.id_msg IN ({array_int:message_list})
-					AND a.attachment_type = {int:attachment_type}' . (!$modSettings['postmod_active'] || allowedTo('approve_posts') ? '' : '
-					AND a.approved = {int:is_approved}'),
+					AND a.attachment_type = {int:attachment_type}',
 				array(
 					'message_list' => $messages,
 					'attachment_type' => 0,
@@ -962,6 +961,9 @@ function Display()
 			$temp = array();
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 			{
+				if (!$row['approved'] && $modSettings['postmod_active'] && !allowedTo('approve_posts') && $all_posters[$row['id_msg']] != $user_info['id'])
+					continue;
+
 				$temp[$row['id_attach']] = $row;
 
 				if (!isset($attachments[$row['id_msg']]))
@@ -1256,7 +1258,7 @@ function Download()
 		// Make sure this attachment is on this board.
 		// NOTE: We must verify that $topic is the attachment's topic, or else the permission check above is broken.
 		$request = $smcFunc['db_query']('', '
-			SELECT a.id_folder, a.filename, a.file_hash, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved
+			SELECT a.id_folder, a.filename, a.file_hash, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved, m.id_member
 			FROM {db_prefix}attachments AS a
 				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg AND m.id_topic = {int:current_topic})
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
@@ -1270,11 +1272,11 @@ function Download()
 	}
 	if ($smcFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_access', false);
-	list ($id_folder, $real_filename, $file_hash, $file_ext, $id_attach, $attachment_type, $mime_type, $is_approved) = $smcFunc['db_fetch_row']($request);
+	list ($id_folder, $real_filename, $file_hash, $file_ext, $id_attach, $attachment_type, $mime_type, $is_approved, $id_member) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
 	// If it isn't yet approved, do they have permission to view it?
-	if (!$is_approved && ($attachment_type == 0 || $attachment_type == 3))
+	if (!$is_approved && $user_info['id'] != $id_member && ($attachment_type == 0 || $attachment_type == 3))
 		isAllowedTo('approve_posts');
 
 	// Update the download counter (unless it's a thumbnail).

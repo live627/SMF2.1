@@ -489,7 +489,12 @@ function template_main()
 					$last_approved_state = 0;
 					echo '
 									<fieldset>
-										<legend>', $txt['attach_awaiting_approve'], '&nbsp;[<a href="', $scripturl, '?action=attachapprove;sa=all;mid=', $message['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $txt['approve_all'], '</a>]</legend>';
+										<legend>', $txt['attach_awaiting_approve'];
+
+					if ($context['can_approve'])
+						echo '&nbsp;[<a href="', $scripturl, '?action=attachapprove;sa=all;mid=', $message['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $txt['approve_all'], '</a>]';
+
+					echo '</legend>';
 				}
 
 				if ($attachment['is_image'])
@@ -504,7 +509,7 @@ function template_main()
 				echo '
 										<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" />&nbsp;' . $attachment['name'] . '</a> ';
 
-				if (!$attachment['is_approved'])
+				if (!$attachment['is_approved'] && $context['can_approve'])
 					echo '
 										[<a href="', $scripturl, '?action=attachapprove;sa=approve;aid=', $attachment['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $txt['approve'], '</a>]&nbsp;|&nbsp;[<a href="', $scripturl, '?action=attachapprove;sa=reject;aid=', $attachment['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $txt['delete'], '</a>] ';
 				echo '
