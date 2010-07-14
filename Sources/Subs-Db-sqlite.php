@@ -559,7 +559,8 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 					UPDATE ' . $table . '
 					SET ' . $updateData . '
 					' . (empty($where) ? '' : ' WHERE ' . $where),
-					$entry, $connection
+					array_merge($entry, array('db_error_skip' => $table === $db_prefix . 'log_errors')),
+					$connection
 				);
 
 				// Make a note that the replace actually overwrote.
@@ -598,6 +599,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 					' . $entry,
 				array(
 					'security_override' => true,
+					'db_error_skip' => $table === $db_prefix . 'log_errors',
 				),
 				$connection
 			);
