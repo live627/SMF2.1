@@ -2321,6 +2321,15 @@ dl.register_form dd
 	border: 1px solid #000;
 }
 
+.valid_input
+{
+	background-color: #f5fff0;
+}
+.invalid_input
+{
+	background-color: #fff0f0;
+}
+
 /* Styles for maintenance mode.
 ------------------------------------------------------- */
 #maintenance_mode

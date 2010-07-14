@@ -24,6 +24,7 @@ July 2010
  ! When writing a cache file, disable file buffering and minimize time spent writing it. (Load.php, ManageMaintenance.php) [Bug 4330]
  * Clicking the Spell Check button was broken when quick modifying a post. (Display template)
  * Posters could not see their own unapproved attachments. (Display.php, Display template) [Bug 4344]
+ * JavaScript verification for registration form did not use CSS for background colors. (index.css, register.js) [Bug 3844]
 
 
 June 2010
