@@ -157,7 +157,7 @@ function RecentPosts()
 		if ($total_cat_posts > 100 && $total_cat_posts > $modSettings['totalMessages'] / 15)
 		{
 			$query_this_board .= '
-			AND m.id_msg >= {int:max_id_msg}';
+					AND m.id_msg >= {int:max_id_msg}';
 			$query_parameters['max_id_msg'] = max(0, $modSettings['maxMsgID'] - 400 - $_REQUEST['start'] * 7);
 		}
 
@@ -199,7 +199,7 @@ function RecentPosts()
 		if ($total_posts > 100 && $total_posts > $modSettings['totalMessages'] / 12)
 		{
 			$query_this_board .= '
-			AND m.id_msg >= {int:max_id_msg}';
+					AND m.id_msg >= {int:max_id_msg}';
 			$query_parameters['max_id_msg'] = max(0, $modSettings['maxMsgID'] - 500 - $_REQUEST['start'] * 9);
 		}
 
@@ -226,7 +226,7 @@ function RecentPosts()
 		if ($total_posts > 80 && $total_posts > $modSettings['totalMessages'] / 10)
 		{
 			$query_this_board .= '
-			AND m.id_msg >= {int:max_id_msg}';
+					AND m.id_msg >= {int:max_id_msg}';
 			$query_parameters['max_id_msg'] = max(0, $modSettings['maxMsgID'] - 600 - $_REQUEST['start'] * 10);
 		}
 
@@ -235,8 +235,8 @@ function RecentPosts()
 	else
 	{
 		$query_this_board = '{query_wanna_see_board}' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-			AND b.id_board != {int:recycle_board}' : ''). '
-			AND m.id_msg >= {int:max_id_msg}';
+					AND b.id_board != {int:recycle_board}' : ''). '
+					AND m.id_msg >= {int:max_id_msg}';
 		$query_parameters['max_id_msg'] = max(0, $modSettings['maxMsgID'] - 100 - $_REQUEST['start'] * 6);
 		$query_parameters['recycle_board'] = $modSettings['recycle_board'];
 
@@ -249,28 +249,48 @@ function RecentPosts()
 		'name' => $context['page_title']
 	);
 
-	// Find the 10 most recent messages they can *view*.
-	// !!!SLOW This query is really slow still, probably?
-	$request = $smcFunc['db_query']('', '
-		SELECT m.id_msg
-		FROM {db_prefix}messages AS m
-			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-		WHERE ' . $query_this_board . '
-			AND m.approved = {int:is_approved}
-		ORDER BY m.id_msg DESC
-		LIMIT {int:offset}, {int:limit}',
-		array_merge($query_parameters, array(
-			'is_approved' => 1,
-			'offset' => $_REQUEST['start'],
-			'limit' => 10,
-		))
-	);
-	$messages = array();
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$messages[] = $row['id_msg'];
-	$smcFunc['db_free_result']($request);
+	$key = 'recent-' . $user_info['id'] . '-' . md5(serialize(array_diff_key($query_parameters, array('max_id_msg' => 0)))) . '-' . (int) $_REQUEST['start'];
+	if (empty($modSettings['cache_enable']) || ($messages = cache_get_data($key, 120)) == null)
+	{
+		$done = false;
+		while (!$done)
+		{
+			// Find the 10 most recent messages they can *view*.
+			// !!!SLOW This query is really slow still, probably?
+			$request = $smcFunc['db_query']('', '
+				SELECT m.id_msg
+				FROM {db_prefix}messages AS m
+					INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
+				WHERE ' . $query_this_board . '
+					AND m.approved = {int:is_approved}
+				ORDER BY m.id_msg DESC
+				LIMIT {int:offset}, {int:limit}',
+				array_merge($query_parameters, array(
+					'is_approved' => 1,
+					'offset' => $_REQUEST['start'],
+					'limit' => 10,
+				))
+			);
+			// If we don't have 10 results, try again with an unoptimized version covering all rows, and cache the result.
+			if (isset($query_parameters['max_id_msg']) && $smcFunc['db_num_rows']($request) < 10)
+			{
+				$smcFunc['db_free_result']($request);
+				$query_this_board = str_replace('AND m.id_msg >= {int:max_id_msg}', '', $query_this_board);
+				$cache_results = true;
+				unset($query_parameters['max_id_msg']);
+			}
+			else
+				$done = true;
+		}
+		$messages = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$messages[] = $row['id_msg'];
+		$smcFunc['db_free_result']($request);
+		if (!empty($cache_results))
+			cache_put_data($key, $messages, 120);
+	}
 
-	// Looks like nothin's happen here... or, at least, nothin' you can see...
+	// Nothing here... Or at least, nothing you can see...
 	if (empty($messages))
 	{
 		$context['posts'] = array();

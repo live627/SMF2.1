@@ -86,6 +86,9 @@ function ShowXmlFeed()
 
 	// Handle the cases where a board, boards, or category is asked for.
 	$query_this_board = 1;
+	$context['optimize_msg'] = array(
+		'highest' => 'm.id_msg <= b.id_last_msg',
+	);
 	if (!empty($_REQUEST['c']) && empty($board))
 	{
 		$_REQUEST['c'] = explode(',', $_REQUEST['c']);
@@ -131,8 +134,7 @@ function ShowXmlFeed()
 
 		// Try to limit the number of messages we look through.
 		if ($total_cat_posts > 100 && $total_cat_posts > $modSettings['totalMessages'] / 15)
-			$query_this_board .= '
-			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 400 - $_GET['limit'] * 5);
+			$context['optimize_msg']['lowest'] = 'm.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 400 - $_GET['limit'] * 5);
 	}
 	elseif (!empty($_REQUEST['boards']))
 	{
@@ -173,8 +175,7 @@ function ShowXmlFeed()
 
 		// The more boards, the more we're going to look through...
 		if ($total_posts > 100 && $total_posts > $modSettings['totalMessages'] / 12)
-			$query_this_board .= '
-			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 500 - $_GET['limit'] * 5);
+			$context['optimize_msg']['lowest'] = 'm.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 500 - $_GET['limit'] * 5);
 	}
 	elseif (!empty($board))
 	{
@@ -196,14 +197,13 @@ function ShowXmlFeed()
 
 		// Try to look through just a few messages, if at all possible.
 		if ($total_posts > 80 && $total_posts > $modSettings['totalMessages'] / 10)
-			$query_this_board .= '
-			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 600 - $_GET['limit'] * 5);
+			$context['optimize_msg']['lowest'] = 'm.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 600 - $_GET['limit'] * 5);
 	}
 	else
 	{
 		$query_this_board = '{query_see_board}' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-			AND b.id_board != ' . $modSettings['recycle_board'] : ''). '
-			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 100 - $_GET['limit'] * 5);
+			AND b.id_board != ' . $modSettings['recycle_board'] : '');
+		$context['optimize_msg']['lowest'] = 'm.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 100 - $_GET['limit'] * 5);
 	}
 
 	// Show in rss or proprietary format?
@@ -238,16 +238,18 @@ function ShowXmlFeed()
 		if (isset($_REQUEST[$var]))
 			$cachekey[] = $_REQUEST[$var];
 	$cachekey = md5(serialize($cachekey) . (!empty($query_this_board) ? $query_this_board : ''));
+	$cache_t = microtime();
 
 	// Get the associative array representing the xml.
-	if ($user_info['is_guest'] && !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 3)
-		$xml = cache_get_data('xmlfeed-' . $xml_format . ':' . $cachekey, 240);
+	if (!empty($modSettings['cache_enable']) && (!$user_info['is_guest'] || $modSettings['cache_enable'] >= 3))
+		$xml = cache_get_data('xmlfeed-' . $xml_format . ':' . ($user_info['is_guest'] ? '' : $user_info['id'] . '-') . $cachekey, 240);
 	if (empty($xml))
 	{
 		$xml = $subActions[$_GET['sa']][0]($xml_format);
 
-		if ($user_info['is_guest'] && !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 3)
-			cache_put_data('xmlfeed-' . $xml_format . ':' . $cachekey, $xml, 240);
+		if (!empty($modSettings['cache_enable']) && (($user_info['is_guest'] && $modSettings['cache_enable'] >= 3)
+		|| (!$user_info['is_guest'] && (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $cache_t)) > 0.2))))
+			cache_put_data('xmlfeed-' . $xml_format . ':' . ($user_info['is_guest'] ? '' : $user_info['id'] . '-') . $cachekey, $xml, 240);
 	}
 
 	$feed_title = htmlspecialchars(strip_tags($context['forum_name'])) . (isset($feed_title) ? $feed_title : '');
@@ -583,29 +585,51 @@ function getXmlNews($xml_format)
 		- are on an any board OR in a specified board.
 		- can be seen by this user.
 		- are actually the latest posts. */
-	$request = $smcFunc['db_query']('', '
-		SELECT
-			m.smileys_enabled, m.poster_time, m.id_msg, m.subject, m.body, m.modified_time,
-			m.icon, t.id_topic, t.id_board, t.num_replies,
-			b.name AS bname,
-			mem.hide_email, IFNULL(mem.id_member, 0) AS id_member,
-			IFNULL(mem.email_address, m.poster_email) AS poster_email,
-			IFNULL(mem.real_name, m.poster_name) AS poster_name
-		FROM {db_prefix}topics AS t
-			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
-			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE ' . $query_this_board . (empty($board) ? '' : '
-			AND t.id_board = {int:current_board}') . ($modSettings['postmod_active'] ? '
-			AND t.approved = {int:is_approved}' : '') . '
-		ORDER BY t.id_first_msg DESC
-		LIMIT {int:limit}',
-		array(
-			'current_board' => $board,
-			'is_approved' => 1,
-			'limit' => $_GET['limit'],
-		)
-	);
+
+	$done = false;
+	$loops = 0;
+	while (!$done)
+	{
+		$optimize_msg = implode(' AND ', $context['optimize_msg']);
+		$request = $smcFunc['db_query']('', '
+			SELECT
+				m.smileys_enabled, m.poster_time, m.id_msg, m.subject, m.body, m.modified_time,
+				m.icon, t.id_topic, t.id_board, t.num_replies,
+				b.name AS bname,
+				mem.hide_email, IFNULL(mem.id_member, 0) AS id_member,
+				IFNULL(mem.email_address, m.poster_email) AS poster_email,
+				IFNULL(mem.real_name, m.poster_name) AS poster_name
+			FROM {db_prefix}topics AS t
+				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
+			WHERE ' . $query_this_board . (empty($optimize_msg) ? '' : '
+				AND {raw:optimize_msg}') . (empty($board) ? '' : '
+				AND t.id_board = {int:current_board}') . ($modSettings['postmod_active'] ? '
+				AND t.approved = {int:is_approved}' : '') . '
+			ORDER BY t.id_first_msg DESC
+			LIMIT {int:limit}',
+			array(
+				'current_board' => $board,
+				'is_approved' => 1,
+				'limit' => $_GET['limit'],
+				'optimize_msg' => $optimize_msg,
+			)
+		);
+		// If we don't have $_GET['limit'] results, try again with an unoptimized version covering all rows.
+		if ($loops < 2 && $smcFunc['db_num_rows']($request) < $_GET['limit'])
+		{
+			$smcFunc['db_free_result']($request);
+			if (empty($_REQUEST['boards']) && empty($board))
+				unset($context['optimize_msg']['lowest']);
+			else
+				$context['optimize_msg']['lowest'] = 'm.id_msg >= b.id_first_msg';
+			$context['optimize_msg']['highest'] = 'm.id_msg <= b.id_last_msg';
+			$loops++;
+		}
+		else
+			$done = true;
+	}
 	$data = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
@@ -683,21 +707,41 @@ function getXmlRecent($xml_format)
 	global $user_info, $scripturl, $modSettings, $board;
 	global $query_this_board, $smcFunc, $settings, $context;
 
-	$request = $smcFunc['db_query']('', '
-		SELECT m.id_msg
-		FROM {db_prefix}messages AS m
-			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-		WHERE ' . $query_this_board . (empty($board) ? '' : '
-			AND m.id_board = {int:current_board}') . ($modSettings['postmod_active'] ? '
-			AND m.approved = {int:is_approved}' : '') . '
-		ORDER BY m.id_msg DESC
-		LIMIT {int:limit}',
-		array(
-			'limit' => $_GET['limit'],
-			'current_board' => $board,
-			'is_approved' => 1,
-		)
-	);
+	$done = false;
+	$loops = 0;
+	while (!$done)
+	{
+		$optimize_msg = implode(' AND ', $context['optimize_msg']);
+		$request = $smcFunc['db_query']('', '
+			SELECT m.id_msg
+			FROM {db_prefix}messages AS m
+				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
+			WHERE ' . $query_this_board . (empty($optimize_msg) ? '' : '
+				AND {raw:optimize_msg}') . (empty($board) ? '' : '
+				AND m.id_board = {int:current_board}') . ($modSettings['postmod_active'] ? '
+				AND m.approved = {int:is_approved}' : '') . '
+			ORDER BY m.id_msg DESC
+			LIMIT {int:limit}',
+			array(
+				'limit' => $_GET['limit'],
+				'current_board' => $board,
+				'is_approved' => 1,
+				'optimize_msg' => $optimize_msg,
+			)
+		);
+		// If we don't have $_GET['limit'] results, try again with an unoptimized version covering all rows.
+		if ($loops < 2 && $smcFunc['db_num_rows']($request) < $_GET['limit'])
+		{
+			$smcFunc['db_free_result']($request);
+			if (empty($_REQUEST['boards']) && empty($board))
+				unset($context['optimize_msg']['lowest']);
+			else
+				$context['optimize_msg']['lowest'] = $loops ? 'm.id_msg >= b.id_first_msg' : 'm.id_msg >= (b.id_last_msg - b.id_first_msg) / 2';
+			$loops++;
+		}
+		else
+			$done = true;
+	}
 	$messages = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$messages[] = $row['id_msg'];
