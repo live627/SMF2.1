@@ -28,6 +28,7 @@ July 2010
  ! Crashed log_errors table caused infinite loop. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 4294]
  ! RSS and Recent Posts features sometimes showed less posts than expected. [Bug 3605]
  ! Fix for table headers breaking sometimes (main_block.png, index.css) [Bug 3716]
+ * Fixed several validation/markup/layout issues (Admin.template.php, Packages.template.php, index.css, admin.css) 
 
 
 June 2010

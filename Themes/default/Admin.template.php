@@ -14,8 +14,8 @@ function template_admin()
 
 	if ($context['user']['is_admin'])
 		echo '
-			<div id="quick_search" class="align_right">
-				<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '">
+			<object id="quick_search">	
+				<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" class="floatright">
 					<img src="', $settings['images_url'] , '/filter.gif" alt="" />
 					<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" class="input_text" />
 					<select name="search_type">
@@ -23,9 +23,9 @@ function template_admin()
 						<option value="member"', (!empty($context['admin_preferences']['sb']) && $context['admin_preferences']['sb'] == 'member' ? ' selected="selected"' : ''), '>', $txt['admin_search_type_member'], '</option>
 						<option value="online"', (!empty($context['admin_preferences']['sb']) && $context['admin_preferences']['sb'] == 'online' ? ' selected="selected"' : ''), '>', $txt['admin_search_type_online'], '</option>
 					</select>
-					<input type="submit" name="search_go" value="', $txt['admin_search_go'], '" class="button_submit" />
+					<input type="submit" name="search_go" id="search_go" value="', $txt['admin_search_go'], '" class="button_submit" />
 				</form>
-			</div>';
+			</object>';
 
 	echo $txt['admin_center'], '
 			</h3>

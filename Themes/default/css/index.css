@@ -888,6 +888,11 @@ table.table_list a.collapse
 	margin: 0 2px;
 }
 
+.table_grid th.lefttext
+{
+	padding: 0 0.6em;
+}
+
 /* Common styles used to add corners to divisions.
 ------------------------------------------------------- */
 .windowbg span.topslice

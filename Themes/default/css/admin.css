@@ -1,13 +1,12 @@
 /* Styles for the admin quick search.
 ------------------------------------------------------- */
-#quick_search
+
+#quick_search form
 {
+	padding: 7px;
 	line-height: 0.9em;
-	margin-top: 7px;
-	margin-right: 5px;
-	vertical-align: top;
 }
-div#quick_search input, div#quick_search select
+#quick_search input, #quick_search select
 {
 	font-size: 0.8em !important;
 }
@@ -117,7 +116,7 @@ ol.search_results li
 	list-style-type: none;
 	margin: 0;
 	padding: 0.5em 0;
-	width: 50%;
+	width: 49.5%;
 	height: 4.5em;
 }
 .quick_task

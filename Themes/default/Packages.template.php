@@ -108,9 +108,9 @@ function template_view_package()
 				<tr class="catbg">
 					<th scope="col" width="20"></th>
 					<th scope="col" width="30"></th>
-					<th scope="col">', $txt['package_install_type'], '</th>
-					<th scope="col" width="50%">', $txt['package_install_action'], '</th>
-					<th scope="col" width="20%">', $txt['package_install_desc'], '</th>
+					<th scope="col" class="lefttext">', $txt['package_install_type'], '</th>
+					<th scope="col" class="lefttext" width="50%">', $txt['package_install_action'], '</th>
+					<th scope="col" class="lefttext" width="20%">', $txt['package_install_desc'], '</th>
 				</tr>
 			</thead>
 			<tbody>';
@@ -146,7 +146,7 @@ function template_view_package()
 				$operation_num = 1;
 				foreach ($packageaction['operations'] as $operation)
 				{
-					// Determine the possition text.
+					// Determine the position text.
 					$operation_text = $operation['position'] == 'replace' ? 'operation_replace' : ($operation['position'] == 'before' ? 'operation_after' : 'operation_before');
 
 					echo '
@@ -185,7 +185,7 @@ function template_view_package()
 			<br />
 			<div class="cat_bar">
 				<h3 class="catbg">
-					<a href="#" onclick="return swap_theme_actions();"><img id="swap_theme_image" src="', $settings['images_url'], '/', (empty($context['themes_locked']) ? 'expand.gif' : 'collapse.gif'), '" alt="', $txt['package_other_themes'], '" /></a> ', $context['uninstalling'] ? $txt['package_other_themes_uninstall'] : $txt['package_other_themes'], '
+					', $context['uninstalling'] ? $txt['package_other_themes_uninstall'] : $txt['package_other_themes'], '
 				</h3>
 			</div>
 			<div id="custom_changes">
@@ -203,7 +203,7 @@ function template_view_package()
 				echo '
 					<tr class="catbg">
 						<td></td>
-						<td>';
+						<td align="center">';
 				if (!empty($context['themes_locked']))
 					echo '
 							<input type="hidden" name="custom_theme[]" value="', $id, '" />';
@@ -220,7 +220,7 @@ function template_view_package()
 					echo '
 					<tr class="windowbg', $alternate ? '' : '2', '">
 						<td>', isset($packageaction['operations']) ? '<img id="operation_img_' . $action_num . '" src="' . $settings['images_url'] . '/sort_down.gif" alt="*" style="display: none;" />' : '', '</td>
-						<td width="30">
+						<td width="30" align="center">
 							<input type="checkbox" name="theme_changes[]" value="', !empty($action['value']) ? $action['value'] : '', '" id="dummy_theme_', $id, '" class="input_check" ', (!empty($action['not_mod']) ? '' : 'disabled="disabled"'), ' ', !empty($context['themes_locked']) ? 'checked="checked"' : '', '/>
 						</td>
 						<td>', $action['type'], '</td>
@@ -333,25 +333,6 @@ function template_view_package()
 		}
 
 	echo '
-	// ]]></script>';
-
-	// Some javascript for collapsing/expanded theme section.
-	if (!empty($context['theme_actions']))
-		echo '
-	<script type="text/javascript"><!-- // --><![CDATA[
-		var theme_action_area = document.getElementById(\'custom_changes\');
-		var theme_action_area_info = document.getElementById(\'custom_changes_info\');
-		var swap_theme_image = document.getElementById(\'swap_theme_image\');
-		var vis = ', empty($context['themes_locked']) ? 'false' : 'true', ';
-		theme_action_area.style.display = vis ? "" : "none";
-
-		function swap_theme_actions()
-		{
-			vis = !vis;
-			theme_action_area.style.display = vis ? "" : "none";
-			swap_theme_image.src = "', $settings['images_url'], '/" + (vis ? "collapse" : "expand") + ".gif";
-			return false;
-		}
 	// ]]></script>';
 
 	// And a bit more for database changes.
@@ -641,8 +622,8 @@ function template_browse()
 		<thead>
 			<tr class="catbg">
 				<th width="32"></th>
-				<th class="smalltext" width="25%">', $txt['mod_name'], '</th>
-				<th class="smalltext" width="25%">', $txt['mod_version'], '</th>
+				<th class="smalltext lefttext" width="25%">', $txt['mod_name'], '</th>
+				<th class="smalltext lefttext" width="25%">', $txt['mod_version'], '</th>
 				<th class="smalltext" width="49%"></th>
 			</tr>
 		</thead>
@@ -1871,8 +1852,8 @@ function template_file_permissions()
 		<table width="100%" class="table_grid">
 		<thead>
 			<tr class="catbg">
-				<th class="first_th" width="30%">', $txt['package_file_perms_name'], '</th>
-				<th width="30%">', $txt['package_file_perms_status'], '</th>
+				<th class="first_th lefttext" width="30%">&nbsp;', $txt['package_file_perms_name'], '&nbsp;</th>
+				<th width="30%" class="lefttext">', $txt['package_file_perms_status'], '</th>
 				<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_read'], '</span></th>
 				<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_write'], '</span></th>
 				<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_execute'], '</span></th>
@@ -1970,7 +1951,7 @@ function template_file_permissions()
 		echo '
 			<input type="hidden" name="back_look[]" value="', $path, '" />';
 	echo '
-	</form>';
+	</form><br />';
 }
 
 function template_permission_show_contents($ident, $contents, $level, $has_more = false)
