@@ -954,7 +954,7 @@ function getXmlProfile($xml_format)
 			);
 
 		if ($profile['group'] != '')
-			$data['postition'] = cdata_parse($profile['group']);
+			$data['position'] = cdata_parse($profile['group']);
 
 		if (!empty($modSettings['karmaMode']))
 			$data['karma'] = array(
