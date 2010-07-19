@@ -27,6 +27,7 @@ July 2010
  * JavaScript verification for registration form did not use CSS for background colors. (index.css, register.js) [Bug 3844]
  ! Crashed log_errors table caused infinite loop. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 4294]
  ! RSS and Recent Posts features sometimes showed less posts than expected. [Bug 3605]
+ ! Fix for table headers breaking sometimes (main_block.png, index.css) [Bug 3716]
 
 
 June 2010
