@@ -358,16 +358,16 @@ function template_unapproved_posts()
 		echo '
 		<div class="cat_bar">
 			<h3 class="catbg">
-				<span class="smalltext align_left">', $item['counter'], '</span>
-				<span class="smalltext align_left"><a href="', $scripturl, '#c', $item['category']['id'], '">', $item['category']['name'], '</a> / <a href="', $scripturl, '?board=', $item['board']['id'], '.0">', $item['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $item['topic']['id'], '.msg', $item['id'], '#msg', $item['id'], '">', $item['subject'], '</a></span>
-				<span class="smalltext align_right">', $txt['mc_unapproved_by'], ' ', $item['poster']['link'], ' ', $txt['on'], ': ', $item['time'], '</span>
+				<span class="smalltext floatleft">', $item['counter'], '</span>
+				<span class="smalltext floatleft"><a href="', $scripturl, '#c', $item['category']['id'], '">', $item['category']['name'], '</a> / <a href="', $scripturl, '?board=', $item['board']['id'], '.0">', $item['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $item['topic']['id'], '.msg', $item['id'], '#msg', $item['id'], '">', $item['subject'], '</a></span>
+				<span class="smalltext floatright">', $txt['mc_unapproved_by'], ' ', $item['poster']['link'], ' ', $txt['on'], ': ', $item['time'], '</span>
 			</h3>
 		</div>
 		<div class="', $item['alternate'] ? 'windowbg' : 'windowbg2', '">
 			<span class="topslice"><span></span></span>
 			<div class="content">
 				<div class="post">', $item['body'], '</div>
-				<span class="align_right">
+				<span class="floatright">
 					<a href="', $scripturl, '?action=moderate;area=postmod;sa=', $context['current_view'], ';start=', $context['start'], ';', $context['session_var'], '=', $context['session_id'], ';approve=', $item['id'], '">', $approve_button, '</a>';
 
 			if ($item['can_delete'])
@@ -388,7 +388,7 @@ function template_unapproved_posts()
 
 	echo '
 		<div class="pagesection">
-			<div class="align_right">
+			<div class="floatright">
 				<select name="do" onchange="if (this.value != 0 &amp;&amp; confirm(\'', $txt['mc_unapproved_sure'], '\')) submit();">
 					<option value="0">', $txt['with_selected'], ':</option>
 					<option value="0">-------------------</option>
@@ -400,7 +400,7 @@ function template_unapproved_posts()
 
 	if (!empty($context['unapproved_items']))
 		echo '
-			<div class="align_left">
+			<div class="floatleft">
 				<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>
 			</div>';
 
@@ -482,7 +482,7 @@ function template_unapproved_attachments()
 			</tbody>
 			</table>
 			<div class="pagesection">
-				<div class="align_right">
+				<div class="floatright">
 					<select name="do" onchange="if (this.value != 0 &amp;&amp; confirm(\'', $txt['mc_unapproved_sure'], '\')) submit();">
 						<option value="0">', $txt['with_selected'], ':</option>
 						<option value="0">-------------------</option>
@@ -494,7 +494,7 @@ function template_unapproved_attachments()
 
 	if (!empty($context['unapproved_items']))
 		echo '
-				<div class="align_left">
+				<div class="floatleft">
 					<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>
 				</div>';
 

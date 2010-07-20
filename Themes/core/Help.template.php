@@ -581,7 +581,7 @@ function template_manual_message_view()
 								<img src="', $settings['images_url'], '/post/thumbup.gif" alt="" />
 							</td>
 							<td class="subject windowbg3" valign="middle">
-								<img alt="" class="align_right" src="', $settings['images_url'], '/icons/show_sticky.gif">
+								<img alt="" class="floatright" src="', $settings['images_url'], '/icons/show_sticky.gif">
 								<strong><span id="msg_2"><a href="', $scripturl, '?action=help;area=topic_view">', $txt['manual_message_index_sticky_topic'], '</a></span></strong>
 							</td>
 							<td class="windowbg2 starter" valign="middle" width="14%">
@@ -633,7 +633,7 @@ function template_manual_message_view()
 								<img src="', $settings['images_url'], '/post/xx.gif" alt="" />
 							</td>
 							<td class="subject windowbg">
-								<img alt="" class="align_right" src="', $settings['images_url'], '/icons/quick_lock.gif">
+								<img alt="" class="floatright" src="', $settings['images_url'], '/icons/quick_lock.gif">
 								<span id="msg_3"><a href="', $scripturl, '?action=help;area=topic_view">', $txt['manual_message_index_locked_topic'], '</a></span>
 							</td>
 							<td class="windowbg2 starter" valign="middle" width="14%">

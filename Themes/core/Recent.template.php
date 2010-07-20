@@ -79,7 +79,7 @@ function template_main()
 
 	echo '
 		<div class="pagesection">
-			<div class="align_left">', $txt['pages'], ': ', $context['page_index'], '</div>
+			<div class="floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>
 		</div>
 	</div>';
 }

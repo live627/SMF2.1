@@ -141,7 +141,7 @@ function template_main()
 	{
 		echo '
 	<div class="pagesection">
-		<div class="pagelinks align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#bot"><strong>' . $txt['go_down'] . '</strong></a>' : '', '</div>
+		<div class="pagelinks floatleft">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#bot"><strong>' . $txt['go_down'] . '</strong></a>' : '', '</div>
 		', template_button_strip($normal_buttons, 'right'), '
 	</div>';
 
@@ -374,7 +374,7 @@ function template_main()
 	echo '
 	<div class="tborder" id="topic_icons">
 		<div class="description">
-			<p class="align_right" id="message_index_jump_to">&nbsp;</p>';
+			<p class="floatright" id="message_index_jump_to">&nbsp;</p>';
 
 	if (!$context['no_topic_listing'])
 		echo '

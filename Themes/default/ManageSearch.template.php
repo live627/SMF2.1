@@ -133,7 +133,7 @@ function template_select_search_method()
 					</dl>
 					', $context['double_index'] ? '<div class="information">
 					' . $txt['search_double_index'] . '</div>' : '', '
-					<fieldset class="search_settings align_left">
+					<fieldset class="search_settings floatleft">
 						<legend>', $txt['search_index'], '</legend>
 						<dl>
 							<dt><input type="radio" name="search_index" value=""', empty($modSettings['search_index']) ? ' checked="checked"' : '', ' class="input_radio" />
@@ -208,7 +208,7 @@ function template_select_search_method()
 	echo '
 						</dl>
 					</fieldset>
-					<fieldset class="search_settings align_right">
+					<fieldset class="search_settings floatright">
 					<legend>', $txt['search_method'], '</legend>
 						<input type="checkbox" name="search_force_index" id="search_force_index_check" value="1"', empty($modSettings['search_force_index']) ? '' : ' checked="checked"', ' class="input_check" /><label for="search_force_index_check">', $txt['search_force_index'], '</label><br />
 						<input type="checkbox" name="search_match_words" id="search_match_words_check" value="1"', empty($modSettings['search_match_words']) ? '' : ' checked="checked"', ' class="input_check" /><label for="search_match_words_check">', $txt['search_match_words'], '</label>

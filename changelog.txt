@@ -30,6 +30,7 @@ July 2010
  ! Fix for table headers breaking sometimes (main_block.png, index.css) [Bug 3716]
  * Fixed several validation/markup/layout issues (Admin.template.php, Packages.template.php, index.css, admin.css)
  * Got rid of remnants of align_left and align_right classes. Replaced with floatleft and floatright. (Quite a lot of files)
+ * And these are the ones I missed. This should be merged with 10011 (Quite a lot of files)
 
 
 June 2010

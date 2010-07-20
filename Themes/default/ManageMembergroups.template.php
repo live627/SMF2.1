@@ -489,11 +489,11 @@ function template_group_members()
 	echo '
 			</table>
 			<div class="pagesection flow_hidden">
-				<div class="align_left">', $txt['pages'], ': ', $context['page_index'], '</div>';
+				<div class="floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 	if (!empty($context['group']['assignable']))
 		echo '
-				<div class="align_right"><input type="submit" name="remove" value="', $txt['membergroups_members_remove'], '" class="button_submit" /></div>';
+				<div class="floatright"><input type="submit" name="remove" value="', $txt['membergroups_members_remove'], '" class="button_submit" /></div>';
 	echo '
 			</div>
 			<br />';

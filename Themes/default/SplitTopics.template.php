@@ -78,7 +78,7 @@ function template_select()
 	echo '
 	<div id="split_topics">
 		<form action="', $scripturl, '?action=splittopics;sa=splitSelection;board=', $context['current_board'], '.0" method="post" accept-charset="', $context['character_set'], '">
-			<div id="not_selected" class="align_left">
+			<div id="not_selected" class="floatleft">
 				<div class="cat_bar">
 					<h3 class="catbg">', $txt['split'], ' - ', $txt['select_split_posts'], '</h3>
 				</div>
@@ -109,7 +109,7 @@ function template_select()
 					<li class="dummy" />
 				</ul>
 			</div>
-			<div id="selected" class="align_right">
+			<div id="selected" class="floatright">
 				<div class="cat_bar">
 					<h3 class="catbg">
 						', $txt['split_selected_posts'], ' (<a href="', $scripturl, '?action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=reset;msg=0" onclick="return select(\'reset\', 0);">', $txt['split_reset_selection'], '</a>)

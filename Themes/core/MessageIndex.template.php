@@ -242,8 +242,8 @@ function template_main()
 
 			if (!empty($settings['separate_sticky_lock']))
 				echo '
-								', $topic['is_locked'] ? '<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" class="align_right" alt="" id="lockicon' . $topic['first_post']['id'] . '" style="margin: 0;" />' : '', '
-								', $topic['is_sticky'] ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" class="align_right" alt="" id="stickyicon' . $topic['first_post']['id'] . '" style="margin: 0;" />' : '';
+								', $topic['is_locked'] ? '<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" class="floatright" alt="" id="lockicon' . $topic['first_post']['id'] . '" style="margin: 0;" />' : '', '
+								', $topic['is_sticky'] ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" class="floatright" alt="" id="stickyicon' . $topic['first_post']['id'] . '" style="margin: 0;" />' : '';
 
 			echo '
 								', $topic['is_sticky'] ? '<strong>' : '', '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], (!$context['can_approve_posts'] && !$topic['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), '</span>', $topic['is_sticky'] ? '</strong>' : '';

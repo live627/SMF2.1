@@ -242,7 +242,7 @@ function template_unread()
 
 	echo '
 		<div class="description " id="topic_icons">
-			<p class="smalltext align_left">
+			<p class="smalltext floatleft">
 				', !empty($modSettings['enableParticipation']) ? '
 				<img src="' . $settings['images_url'] . '/topic/my_normal_post.gif" alt="" align="middle" /> ' . $txt['participation_caption'] . '<br />' : '', '
 				<img src="', $settings['images_url'], '/topic/normal_post.gif" alt="" align="middle" /> ', $txt['normal_topic'], '<br />
@@ -420,7 +420,7 @@ function template_replies()
 
 	echo '
 		<div class="description flow_auto" id="topic_icons">
-			<p class="smalltext align_left">
+			<p class="smalltext floatleft">
 				', !empty($modSettings['enableParticipation']) ? '
 				<img src="' . $settings['images_url'] . '/topic/my_normal_post.gif" alt="" align="middle" /> ' . $txt['participation_caption'] . '<br />' : '', '
 				<img src="', $settings['images_url'], '/topic/normal_post.gif" alt="" align="middle" /> ', $txt['normal_topic'], '<br />

@@ -15,9 +15,9 @@ function template_main()
 			</div>
 			<div class="topic_table" id="mlist">
 				<div class="pagesection">
-					<div class="pagelinks align_left">', $txt['pages'], ': ', $context['page_index'], '</div>';
+					<div class="pagelinks floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>';
 		echo '
-					<div class="selectbox align_right">', $txt['who_show1'], '
+					<div class="selectbox floatright">', $txt['who_show1'], '
 						<select name="showtop" onchange="document.forms.whoFilter.submit();">';
 
 		foreach ($context['show_methods'] as $value => $label)
@@ -95,10 +95,10 @@ function template_main()
 				</table>
 			</div>
 			<div class="pagesection">
-				<div class="pagelinks align_left">', $txt['pages'], ': ', $context['page_index'], '</div>';
+				<div class="pagelinks floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 	echo '
-				<div class="selectbox align_right">', $txt['who_show1'], '
+				<div class="selectbox floatright">', $txt['who_show1'], '
 					<select name="show" onchange="document.forms.whoFilter.submit();">';
 
 	foreach ($context['show_methods'] as $value => $label)

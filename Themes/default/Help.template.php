@@ -401,9 +401,9 @@ function template_manual_board_index()
 		</div>
 		<div id="posting_icons">
 			<ul class="reset">
-				<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'new_some.png" alt="" /> ', $txt['new_posts'], '</li>
-				<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'new_none.png" alt="" /> ', $txt['old_posts'], '</li>
-				<li class="align_left"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'new_redirect.png" alt="" /> ', $txt['redirect_board'], '</li>
+				<li class="floatleft"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'new_some.png" alt="" /> ', $txt['new_posts'], '</li>
+				<li class="floatleft"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'new_none.png" alt="" /> ', $txt['old_posts'], '</li>
+				<li class="floatleft"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'new_redirect.png" alt="" /> ', $txt['redirect_board'], '</li>
 			</ul>
 		</div>';
 
@@ -503,8 +503,8 @@ function template_manual_message_view()
 
 	echo '
 		<div class="pagesection">
-			<div class="pagelinks align_left">', $txt['manual_message_index_pages'], '</div>
-			<div class="buttonlist align_right">', template_button_strip($mindex_buttons, 'bottom'), '</div>
+			<div class="pagelinks floatleft">', $txt['manual_message_index_pages'], '</div>
+			<div class="buttonlist floatright">', template_button_strip($mindex_buttons, 'bottom'), '</div>
 		</div>
 		<div class="tborder topic_table" id="messageindex">
 			<table class="table_grid" cellspacing="0">
@@ -590,8 +590,8 @@ function template_manual_message_view()
 			</table>
 		</div>
 		<div class="pagesection">
-			<div class="pagelinks align_left">', $txt['manual_message_index_pages'], '</div>
-			<div class="buttonlist align_right">', template_button_strip($mindex_buttons, 'bottom'), '</div>
+			<div class="pagelinks floatleft">', $txt['manual_message_index_pages'], '</div>
+			<div class="buttonlist floatright">', template_button_strip($mindex_buttons, 'bottom'), '</div>
 			<br />
 		</div>
 	</div>
@@ -652,7 +652,7 @@ function template_manual_topic_view()
 			</ul>
 		</div>
 		<div class="pagesection">
-			<div class="buttonlist align_right">', template_button_strip($display_buttons, 'bottom'), '</div>
+			<div class="buttonlist floatright">', template_button_strip($display_buttons, 'bottom'), '</div>
 			<div class="pagelinks floatleft">', $txt['manual_message_index_pages'], '</div>
 		</div>
 		<div id="forumposts">
@@ -725,7 +725,7 @@ function template_manual_topic_view()
 		</div>
 		<div class="pagesection">
 			<div class="pagelinks floatleft">', $txt['manual_message_index_pages'], '</div>
-			<div class="buttonlist align_right">', template_button_strip($display_buttons, 'bottom'), '</div>
+			<div class="buttonlist floatright">', template_button_strip($display_buttons, 'bottom'), '</div>
 		</div>
 		<div class="navigate_section clear">
 			<ul>

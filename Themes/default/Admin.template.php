@@ -48,7 +48,7 @@ function template_admin()
 
 	// Display the "live news" from simplemachines.org.
 	echo '
-			<div id="live_news" class="align_left">
+			<div id="live_news" class="floatleft">
 				<div class="cat_bar">
 					<h3 class="catbg">
 						<span class="ie6_header floatleft"><a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" /></a> ', $txt['live'], '</span>
@@ -65,7 +65,7 @@ function template_admin()
 
 	// Show the user version information from their server.
 	echo '
-			<div id="supportVersionsTable" class="align_right">
+			<div id="supportVersionsTable" class="floatright">
 				<div class="cat_bar">
 					<h3 class="catbg">
 						<a href="', $scripturl, '?action=admin;area=credits">', $txt['support_title'], '</a>
@@ -964,7 +964,7 @@ function template_show_settings()
 					{
 						foreach ($bbcColumn as $bbcTag)
 							echo '
-										<li class="list_bbc align_left">
+										<li class="list_bbc floatleft">
 											<input type="checkbox" name="', $config_var['name'], '_enabledTags[]" id="tag_', $config_var['name'], '_', $bbcTag['tag'], '" value="', $bbcTag['tag'], '"', !in_array($bbcTag['tag'], $context['bbc_sections'][$config_var['name']]['disabled']) ? ' checked="checked"' : '', ' class="input_check" /> <label for="tag_', $config_var['name'], '_', $bbcTag['tag'], '">', $bbcTag['tag'], '</label>', $bbcTag['show_help'] ? ' (<a href="' . $scripturl . '?action=helpadmin;help=tag_' . $bbcTag['tag'] . '" onclick="return reqWin(this.href);">?</a>)' : '', '
 										</li>';
 					}
@@ -1317,7 +1317,7 @@ function template_admin_search_results()
 	echo '
 		<div class="title_bar">
 			<h3 class="titlebg">
-				<div id="quick_search" class="align_right">
+				<div id="quick_search" class="floatright">
 					<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" style="font-weight: normal; display: inline;">
 						<input type="text" name="search_term" value="', $context['search_term'], '" class="input_text" />
 						<input type="hidden" name="search_type" value="', $context['search_type'], '" />
@@ -1859,7 +1859,7 @@ function template_modify_language_entries()
 					', $txt['edit_language_entries'], '
 				</h3>
 			</div>
-			<div id="taskpad" class="align_right">
+			<div id="taskpad" class="floatright">
 				', $txt['edit_language_entries_file'], ':
 					<select name="tfid" onchange="if (this.value != -1) document.forms.entry_form.submit();">';
 	foreach ($context['possible_files'] as $id_theme => $theme)

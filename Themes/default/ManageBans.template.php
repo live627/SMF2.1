@@ -45,7 +45,7 @@ function template_ban_edit()
 							<textarea name="notes" cols="50" rows="3">', $context['ban']['notes'], '</textarea>
 						</dd>
 					</dl>
-					<fieldset class="ban_settings align_left">
+					<fieldset class="ban_settings floatleft">
 						<legend>
 							', $txt['ban_expiration'], '
 						</legend>
@@ -53,7 +53,7 @@ function template_ban_edit()
 						<input type="radio" name="expiration" value="one_day" id="expires_one_day" onclick="fUpdateStatus();"', $context['ban']['expiration']['status'] == 'still_active_but_we_re_counting_the_days' ? ' checked="checked"' : '', ' class="input_radio" /> <label for="expires_one_day">', $txt['ban_will_expire_within'], '</label>: <input type="text" name="expire_date" id="expire_date" size="3" value="', $context['ban']['expiration']['days'], '" class="input_text" /> ', $txt['ban_days'], '<br />
 						<input type="radio" name="expiration" value="expired" id="already_expired" onclick="fUpdateStatus();"', $context['ban']['expiration']['status'] == 'expired' ? ' checked="checked"' : '', ' class="input_radio" /> <label for="already_expired">', $txt['ban_expired'], '</label>
 					</fieldset>
-					<fieldset class="ban_settings align_right">
+					<fieldset class="ban_settings floatright">
 						<legend>
 							', $txt['ban_restriction'], '
 						</legend>
@@ -214,10 +214,10 @@ function template_ban_edit()
 				</tbody>
 				</table>
 				<div class="additional_rows">
-					<div class="align_left">
+					<div class="floatleft">
 						[<a href="', $scripturl, '?action=admin;area=ban;sa=edittrigger;bg=', $context['ban']['id'], '">', $txt['ban_add_trigger'], '</a>]
 					</div>
-					<div class="align_right">
+					<div class="floatright">
 						<input type="submit" name="remove_selection" value="', $txt['ban_remove_selected_triggers'], '" class="button_submit" />
 					</div>
 				</div>

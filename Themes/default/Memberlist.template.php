@@ -16,16 +16,16 @@ function template_main()
 	<div class="main_section" id="memberlist">
 		<div class="cat_bar">
 			<h4 class="catbg">
-				<span class="align_left">', $txt['members_list'], '</span>';
+				<span class="floatleft">', $txt['members_list'], '</span>';
 		if (!isset($context['old_search']))
 				echo '
-				<span class="align_right">', $context['letter_links'], '</span>';
+				<span class="floatright">', $context['letter_links'], '</span>';
 		echo '
 			</h4>
 		</div>
 		<div class="pagesection">
 			', template_button_strip($memberlist_buttons, 'right'), '
-			<div class="pagelinks align_left">', $txt['pages'], ': ', $context['page_index'], '</div>
+			<div class="pagelinks floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>
 		</div>';
 
 	echo '
@@ -135,12 +135,12 @@ function template_main()
 
 	echo '
 		<div class="pagesection">
-			<div class="pagelinks align_left">', $txt['pages'], ': ', $context['page_index'], '</div>';
+			<div class="pagelinks floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 	// If it is displaying the result of a search show a "search again" link to edit their criteria.
 	if (isset($context['old_search']))
 		echo '
-			<div class="align_right">
+			<div class="floatright">
 				<a href="', $scripturl, '?action=mlist;sa=search;search=', $context['old_search_value'], '">', $txt['mlist_search_again'], '</a>
 			</div>';
 	echo '
@@ -181,7 +181,7 @@ function template_search()
 							<strong>', $txt['search_for'], ':</strong>
 							<input type="text" name="search" value="', $context['old_search'], '" size="35" class="input_text" /> <input type="submit" name="submit" value="' . $txt['search'] . '" class="button_submit" />
 						</div>
-						<span class="align_left">';
+						<span class="floatleft">';
 
 	$count = 0;
 	foreach ($context['search_fields'] as $id => $title)
@@ -192,7 +192,7 @@ function template_search()
 		if (round(count($context['search_fields']) / 2) == ++$count)
 			echo '
 						</span>
-						<span class="align_left">';
+						<span class="floatleft">';
 	}
 		echo '
 						</span>

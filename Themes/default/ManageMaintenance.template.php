@@ -419,7 +419,7 @@ function template_maintain_topics()
 						<a href="#rotLink" onclick="swapRot();"><img src="', $settings['images_url'], '/expand.gif" alt="+" id="rotIcon" /></a> <a href="#rotLink" onclick="swapRot();" id="rotText" style="font-weight: bold;">', $txt['maintain_old_all'], '</a>
 					</p>
 					<div style="display: none;" id="rotPanel" class="flow_hidden">
-						<div class="align_left" style="width: 49%">';
+						<div class="floatleft" style="width: 49%">';
 
 	// This is the "middle" of the list.
 	$middle = ceil(count($context['categories']) / 2);
@@ -445,7 +445,7 @@ function template_maintain_topics()
 		if (++$i == $middle)
 			echo '
 						</div>
-						<div class="align_right" style="width: 49%;">';
+						<div class="floatright" style="width: 49%;">';
 	}
 
 	echo '

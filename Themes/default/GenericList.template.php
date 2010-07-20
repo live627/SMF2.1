@@ -50,7 +50,7 @@ function template_show_list($list_id = null)
 		// Show the page index (if this list doesn't intend to show all items).
 		if (!empty($cur_list['items_per_page']))
 			echo '
-				<div class="align_left">
+				<div class="floatleft">
 					<div class="pagesection">', $txt['pages'], ': ', $cur_list['page_index'], '</div>
 				</div>';
 
@@ -139,7 +139,7 @@ function template_show_list($list_id = null)
 		// Show the page index (if this list doesn't intend to show all items).
 		if (!empty($cur_list['items_per_page']))
 			echo '
-				<div class="align_left">
+				<div class="floatleft">
 					<div class="pagesection">', $txt['pages'], ': ', $cur_list['page_index'], '</div>
 				</div>';
 

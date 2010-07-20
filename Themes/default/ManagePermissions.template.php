@@ -262,8 +262,8 @@ function template_by_board()
 		</div>
 		<div class="title_bar">
 			<h3 id="board_permissions" class="titlebg flow_hidden">
-				<span class="perm_name align_left">', $txt['board_name'], '</span>
-				<span class="perm_profile align_left">', $txt['permission_profile'], '</span>
+				<span class="perm_name floatleft">', $txt['board_name'], '</span>
+				<span class="perm_profile floatleft">', $txt['permission_profile'], '</span>
 			</h3>
 		</div>';
 
@@ -296,10 +296,10 @@ function template_by_board()
 			echo '
 
 					<li class="flow_hidden' ,' windowbg', $alternate ? '' : '2','">
-						<span class="perm_board align_left">
+						<span class="perm_board floatleft">
 							<a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], ';rid=permissions;', $context['session_var'], '=', $context['session_id'], '">', str_repeat('-', $board['child_level']), ' ', $board['name'], '</a>
 						</span>
-						<span class="perm_boardprofile align_left">';
+						<span class="perm_boardprofile floatleft">';
 			if ($context['edit_all'])
 			{
 				echo '
@@ -849,7 +849,7 @@ function template_modify_group_classic($type)
 	foreach ($permission_type['columns'] as $column)
 	{
 		echo '
-					<table width="49%" class="table_grid perm_classic align_left">';
+					<table width="49%" class="table_grid perm_classic floatleft">';
 
 		foreach ($column as $permissionGroup)
 		{

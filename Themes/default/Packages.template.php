@@ -844,12 +844,12 @@ function template_browse()
 
 	echo '
 		<div class="flow_auto">
-			<div class="padding smalltext align_left">
+			<div class="padding smalltext floatleft">
 				', $txt['package_installed_key'], '
 				<img src="', $settings['images_url'], '/icons/package_installed.gif" alt="" align="middle" style="margin-left: 1ex;" /> ', $txt['package_installed_current'], '
 				<img src="', $settings['images_url'], '/icons/package_old.gif" alt="" align="middle" style="margin-left: 2ex;" /> ', $txt['package_installed_old'], '
 			</div>
-			<div class="padding smalltext align_right">
+			<div class="padding smalltext floatright">
 				<a href="#" onclick="document.getElementById(\'advanced_box\').style.display = document.getElementById(\'advanced_box\').style.display == \'\' ? \'none\' : \'\'; return false;">', $txt['package_advanced_button'], '</a>
 			</div>
 		</div>
@@ -965,9 +965,9 @@ function template_servers()
 	foreach ($context['servers'] as $server)
 		echo '
 						<li class="flow_auto">
-							<span class="align_left">' . $server['name'] . '</span>
-							<span class="package_server align_right"><a href="' . $scripturl . '?action=admin;area=packages;get;sa=remove;server=' . $server['id'] . ';', $context['session_var'], '=', $context['session_id'], '">[ ' . $txt['delete'] . ' ]</a></span>
-							<span class="package_server align_right"><a href="' . $scripturl . '?action=admin;area=packages;get;sa=browse;server=' . $server['id'] . '">[ ' . $txt['package_browse'] . ' ]</a></span>
+							<span class="floatleft">' . $server['name'] . '</span>
+							<span class="package_server floatright"><a href="' . $scripturl . '?action=admin;area=packages;get;sa=remove;server=' . $server['id'] . ';', $context['session_var'], '=', $context['session_id'], '">[ ' . $txt['delete'] . ' ]</a></span>
+							<span class="package_server floatright"><a href="' . $scripturl . '?action=admin;area=packages;get;sa=browse;server=' . $server['id'] . '">[ ' . $txt['package_browse'] . ' ]</a></span>
 						</li>';
 	echo '
 					</ul>
@@ -1189,7 +1189,7 @@ function template_package_list()
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<div class="padding smalltext align_left">
+		<div class="padding smalltext floatleft">
 			', $txt['package_installed_key'], '
 			<img src="', $settings['images_url'], '/icons/package_installed.gif" alt="" align="middle" style="margin-left: 1ex;" /> ', $txt['package_installed_current'], '
 			<img src="', $settings['images_url'], '/icons/package_old.gif" alt="" align="middle" style="margin-left: 2ex;" /> ', $txt['package_installed_old'], '
@@ -1265,9 +1265,9 @@ function template_downloaded()
 			<div class="content">
 				<p>', (empty($context['package_server']) ? $txt['package_uploaded_successfully'] : $txt['package_downloaded_successfully']), '</p>
 				<ul class="reset">
-					<li class="reset"><span class="align_left"><strong>', $context['package']['name'], '</strong></span>
-						<span class="package_server align_right">', $context['package']['list_files']['link'], '</span>
-						<span class="package_server align_right">', $context['package']['install']['link'], '</span>
+					<li class="reset"><span class="floatleft"><strong>', $context['package']['name'], '</strong></span>
+						<span class="package_server floatright">', $context['package']['list_files']['link'], '</span>
+						<span class="package_server floatright">', $context['package']['install']['link'], '</span>
 					</li>
 				</ul>
 				<br /><br />
@@ -1846,7 +1846,7 @@ function template_file_permissions()
 	<form action="', $scripturl, '?action=admin;area=packages;sa=perms;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 		<div class="title_bar">
 			<h3 class="titlebg">
-				<span class="align_left">', $txt['package_file_perms'], '</span><span class="fperm align_right">', $txt['package_file_perms_new_status'], '</span>
+				<span class="floatleft">', $txt['package_file_perms'], '</span><span class="fperm floatright">', $txt['package_file_perms_new_status'], '</span>
 			</h3>
 		</div>
 		<table width="100%" class="table_grid">

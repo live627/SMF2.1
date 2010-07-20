@@ -1087,8 +1087,8 @@ function template_send()
 	</div>
 	<div class="title_bar">
 		<h3 class="titlebg">
-			<span class="align_left">', $txt['from'], ': ', $context['quoted_message']['member']['name'], '</span>
-			<span class="align_right">', $txt['on'], ': ', $context['quoted_message']['time'], '</span>
+			<span class="floatleft">', $txt['from'], ': ', $context['quoted_message']['member']['name'], '</span>
+			<span class="floatright">', $txt['on'], ': ', $context['quoted_message']['time'], '</span>
 		</h3>
 	</div>
 	<div class="windowbg2">

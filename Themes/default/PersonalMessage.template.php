@@ -18,7 +18,7 @@ function template_pm_above()
 				<span class="floatleft capacity_bar">
 					<span class="', $context['limit_bar']['percent'] > 85 ? 'full' : ($context['limit_bar']['percent'] > 40 ? 'filled' : 'empty'), '" style="width: ', $context['limit_bar']['percent'] / 10, 'em;"></span>
 				</span>
-				<span class="align_right', $context['limit_bar']['percent'] > 90 ? ' alert' : '', '">', $context['limit_bar']['text'], '</span>
+				<span class="floatright', $context['limit_bar']['percent'] > 90 ? ' alert' : '', '">', $context['limit_bar']['text'], '</span>
 			</h3>
 		</div>';
 
@@ -1057,8 +1057,8 @@ function template_send()
 	</div>
 	<div class="title_bar">
 		<h3 class="titlebg">
-			<span class="align_left">', $txt['from'], ': ', $context['quoted_message']['member']['name'], '</span>
-			<span class="align_right">', $txt['on'], ': ', $context['quoted_message']['time'], '</span>
+			<span class="floatleft">', $txt['from'], ': ', $context['quoted_message']['member']['name'], '</span>
+			<span class="floatright">', $txt['on'], ': ', $context['quoted_message']['time'], '</span>
 		</h3>
 	</div>
 	<div class="windowbg2">
