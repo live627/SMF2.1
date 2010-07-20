@@ -31,6 +31,8 @@ July 2010
  * Fixed several validation/markup/layout issues (Admin.template.php, Packages.template.php, index.css, admin.css)
  * Got rid of remnants of align_left and align_right classes. Replaced with floatleft and floatright. (Quite a lot of files)
  * And these are the ones I missed. This should be merged with 10011 (Quite a lot of files)
+ * Had dropped a layer when making new main_block from psd. Fixed, with better compression (main_block_.png)
+ 
 
 
 June 2010
