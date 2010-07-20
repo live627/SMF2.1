@@ -1,11 +1,11 @@
 /* Common classes to ease styling.
 ------------------------------------------------------- */
 
-.floatright, .align_right
+.floatright
 {
 	float: left;
 }
-.floatleft, .align_left
+.floatleft
 {
 	float: right;
 }
@@ -548,7 +548,7 @@ dl.register_form dd
 {
 	text-align: right;
 }
-#maintenance_mode img.align_left
+#maintenance_mode img.floatleft
 {
 	margin-right: 0;
 	margin-left: 1em;

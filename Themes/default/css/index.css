@@ -177,11 +177,11 @@ em
 /* Common classes to easy styling.
 ------------------------------------------------------- */
 
-.floatright, .align_right
+.floatright
 {
 	float: right;
 }
-.floatleft, .align_left
+.floatleft
 {
 	float: left;
 }
@@ -2531,7 +2531,7 @@ dl.register_form dd
 	min-width: 520px;
 	text-align: left;
 }
-#maintenance_mode img.align_left
+#maintenance_mode img.floatleft
 {
 	margin-right: 1em;
 }

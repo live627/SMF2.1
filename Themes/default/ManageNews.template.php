@@ -46,7 +46,7 @@ function template_edit_news()
 				</tr>
 			</tbody>
 			</table>
-			<div class="align_left padding">
+			<div class="floatleftpadding">
 				<div id="moreNewsItems_link" style="display: none;"><a href="javascript:void(0);" onclick="addNewsItem(); return false;">', $txt['editnews_clickadd'], '</a></div>
 				<script type="text/javascript"><!-- // --><![CDATA[
 					document.getElementById("moreNewsItems_link").style.display = "";
@@ -60,7 +60,7 @@ function template_edit_news()
 					<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" style="width: 85%;" name="news[]"></textarea></div>
 				</noscript>
 			</div>
-			<div class="align_right padding">
+			<div class="floatrightpadding">
 				<input type="submit" name="save_items" value="', $txt['save'], '" class="button_submit" /> <input type="submit" name="delete_selection" value="', $txt['editnews_remove_selected'], '" onclick="return confirm(\'', $txt['editnews_remove_confirm'], '\');" class="button_submit" />
 			</div>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
