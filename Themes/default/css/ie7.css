@@ -8,12 +8,12 @@ h3.catbg input.input_check
 /* the dropmenu - RTL tweak */
 .dropmenu li ul
 {
-	margin: 0 -40px 0 0;
+	margin: 0 -50px 0 0;
 }
 /* the hover effects */
-.dropmenu li:hover, .dropmenu li.hover
+.dropmenu li.iehover
 {
-	position: static;
+	z-index: 120;
 }
 /* the tabled definition lists */
 dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.options dd, .login dd
@@ -21,10 +21,11 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 	float: none !important;
 	width: auto;
 }
-.table_grid thead th
+/* NOTE: this was marked as important but seems unnecessary.
+/*.table_grid thead th
 {
 	padding: 0 !important;
-}
+}*/
 
 /* Overrides for the messageindex template
 ------------------------------------------------------- */

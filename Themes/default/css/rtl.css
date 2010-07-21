@@ -110,11 +110,11 @@ table.table_list a.collapse
 }
 .table_grid th.first_th
 {
-	background: url(../images/theme/main_block.png) no-repeat 100% -160px;
+	background: #a8bace url(../images/theme/main_block.png) no-repeat 100% -240px;
 }
 .table_grid th.last_th
 {
-	background: url(../images/theme/main_block.png) no-repeat 0 -160px;
+	background: #a8bace url(../images/theme/main_block.png) no-repeat 0 -240px;
 }
 
 /* Styles for the standard dropdown menus.

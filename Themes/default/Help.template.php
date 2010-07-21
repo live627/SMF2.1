@@ -755,7 +755,7 @@ function template_manual_topic_view()
 	<p>', $txt['manual_topic_posts'], '</p>
 	<ul>
 		<li>
-			Author Section
+			',$txt['author_section'],'
 			<ul>
 				<li>', $txt['manual_topic_author_name'], '</li>
 				<li>', $txt['manual_topic_author_custom_title'], '</li>
@@ -767,7 +767,7 @@ function template_manual_topic_view()
 			</ul>
 		</li>
 		<li>
-			Post Section
+			',$txt['post_section'],'
 			<ul>
 				<li>', $txt['manual_topic_post_message_icon'], '</li>
 				<li>', $txt['manual_topic_post_subject'], '</li>
@@ -2301,74 +2301,75 @@ function template_manual_pm_messages()
 //]]>
 </script>
 			<form action="', $scripturl, '?action=help;area=sending_pms" method="post" accept-charset="', $context['character_set'], '">
-				<table border="0" width="100%" cellspacing="0" cellpadding="3">
+				<table border="0" width="100%" cellspacing="0" cellpadding="0">
 					<tr>
-						<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_pm_forum_name'], '</a></strong><br />
-						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="nav">', $txt['manual_pm_personal_msgs'], '</a></strong><br />
-						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="nav">', $txt['manual_pm_inbox'], '</a></strong></span></td>
+						<td colspan="2" style="padding: 0 0 6px 0;">
+							<span class="nav"><strong>&nbsp;<a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_pm_forum_name'], '</a>&nbsp;&#187;&nbsp;
+							<a href="', $scripturl, '?action=help;area=sending_pms#interface" class="nav">', $txt['manual_pm_personal_msgs'], '</a>&nbsp;&#187;&nbsp;
+							<a href="', $scripturl, '?action=help;area=sending_pms#interface" class="nav">', $txt['manual_pm_inbox'], '</a></strong></span>
+						</td>
 					</tr>
-				</table>
-				<table width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
-					<td width="125" valign="top">
-						<table border="0" cellpadding="4" cellspacing="1" class="bordercolor" width="100">
-							<tr class="catbg">
-								<td>', $txt['manual_pm_messages'], '</td>
-							</tr>
-							<tr class="windowbg">
-								<td class="smalltext" style="padding-bottom: 2ex;">
-								', $txt['manual_pm_new_msg'], '<br /><br />
-								<strong>', $txt['manual_pm_inbox'], '</strong><br />
-								', $txt['manual_pm_outbox'], '<br />
-							</td>
-						</tr>
-					</table>
-					<br />
-				</td>
-				<td valign="top">
-					<table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor" align="center">
-						<tr>
-							<td>
-								<table border="0" width="100%" cellspacing="1" class="bordercolor">
-									<tr class="titlebg">
-										<td>&nbsp;</td>
-										<td style="width: 32ex;"><a href="javascript:sortLastPM();">', $txt['manual_pm_date'], '&nbsp; <img id="sort-arrow" src="', $settings['images_url'], '/sort_up.gif" alt="" name="sort-arrow" /></a></td>
-										<td width="46%"><a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_subject2'], '</a></td>
-										<td><a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_from'], '</a></td>
-										<td align="center" width="24"><input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" /></td>
-									</tr>
-									<tr class="windowbg">
-										<td align="center" width="2%"><img src="' . $settings['images_url'] . '/icons/pm_read.gif" style="margin-right: 4px;" alt="" /></td>
-										<td>', $txt['manual_pm_date_and_time'], '</td>
-										<td><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="board">', $txt['manual_pm_subject'], '</a></td>
-										<td>', $txt['manual_pm_another_member'], '</td>
-										<td align="center"><input type="checkbox" class="input_check" /></td>
-									</tr>
-									<tr>
-										<td class="windowbg" style="padding: 2px;" align="right" colspan="6"></td>
-									</tr>
-									<tr class="catbg">
-										<td colspan="6" height="25">
-											<div class="floatleft"><strong>', $txt['manual_pm_pages'], ':</strong> [<strong>1</strong>]</div>
-											<div class="floatright">&nbsp;<input type="button" value="', $txt['manual_pm_delete_selected'], '" class="button_submit" /></div>
-										</td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-					</table><br />
-				</td>
-			</tr></table>
-			<br />
+					<tr>
+						<td width="125" valign="top">
+							<div style="width: 110px;">
+								<div class="cat_bar">
+									<h3 class="catbg">
+										', $txt['manual_pm_messages'], '
+									</h3>
+								</div>
+								<div class="windowbg2 smalltext" style="padding: 4px 6px 2ex 6px;">
+										', $txt['manual_pm_new_msg'], '<br />
+										<strong>', $txt['manual_pm_inbox'], '</strong><br />
+										', $txt['manual_pm_outbox'], '<br />
+								</div>
+							</div>
+						</td>
+						<td valign="top">
+							<table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor" align="center">
+								<tr>
+									<td>
+										<table border="0" width="100%" cellspacing="1" class="table_grid bordercolor">
+											<thead>
+												<tr class="catbg">
+													<th class="first_th"><img src="', $settings['images_url'], '/im_switch.gif" alt="" title="" width="16" height="16" /></th>
+													<th class="lefttext" style="width: 32ex;"><a href="javascript:sortLastPM();">', $txt['manual_pm_date'], '&nbsp; <img id="sort-arrow" src="', $settings['images_url'], '/sort_up.gif" alt="" name="sort-arrow" /></a></th>
+													<th class="lefttext" width="46%"><a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_subject2'], '</a></th>
+													<th class="lefttext"><a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_from'], '</a></th>
+													<th class="last_th" align="center" width="24"><input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" /></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr class="windowbg2">
+													<td align="center" width="2%"><img src="' . $settings['images_url'] . '/icons/pm_read.gif" style="margin-right: 4px;" alt="" /></td>
+													<td>', $txt['manual_pm_date_and_time'], '</td>
+													<td><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="board">', $txt['manual_pm_subject'], '</a></td>
+													<td>', $txt['manual_pm_another_member'], '</td>
+													<td align="center"><input type="checkbox" class="input_check" /></td>
+												</tr>
+												<tr>
+													<td colspan="5" style="padding-top: 5px; height: 25px;">
+														<div class="floatleft"><strong>', $txt['manual_pm_pages'], ':</strong> [<strong>1</strong>]</div>
+														<div class="floatright">&nbsp;<input type="button" value="', $txt['manual_pm_delete_selected'], '" class="button_submit" /></div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</table><br />
+						</td>
+					</tr>
+				</table><br />
 			</form>
 	</div>
 	<ul>
 		<li>', $txt['manual_pm_nav_tree'], '</li>
-		<li>', $txt['manual_pm_delete_button'], '</li>
 		<li>', $txt['manual_pm_outbox_button'], '</li>
 		<li>', $txt['manual_pm_new_msg2_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms#newtopic">', $txt['manual_pm_new_msg2_link_posting_newtopic'], '</a>', $txt['manual_pm_new_msg2_part2'], '</li>
 		<li>', $txt['manual_pm_reload'], '</li>
 		<li>', $txt['manual_pm_sort_by'], '</li>
 		<li>', $txt['manual_pm_main_subject'], '</li>
+		<li>', $txt['manual_pm_delete_button'], '</li>		
 		<li>', $txt['manual_pm_page_nos'], '</li>
 	</ul>
 	<h3 class="section" id="starting">', $txt['manual_pm_start_reply'], '</h3>

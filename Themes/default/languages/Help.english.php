@@ -7,6 +7,10 @@ global $helptxt;
 
 $txt['close_window'] = 'Close window';
 
+$txt['author_section'] = 'Author Section';
+
+$txt['post_section'] = 'Post Section';
+
 $helptxt['manage_boards'] = '
 	<strong>Edit Boards</strong><br />
 	In this menu you can create/reorder/remove boards, and the categories

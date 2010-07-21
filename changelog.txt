@@ -32,6 +32,7 @@ July 2010
  * Got rid of remnants of align_left and align_right classes. Replaced with floatleft and floatright. (Quite a lot of files)
  * And these are the ones I missed. This should be merged with 10011 (Quite a lot of files)
  * Had dropped a layer when making new main_block from psd. Fixed, with better compression (main_block_.png)
+ * Various minor template and CSS glitches plus new stats_pie.png (A dozen files of various sorts)
  
 
 
