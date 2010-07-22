@@ -33,6 +33,8 @@ July 2010
  * And these are the ones I missed. This should be merged with 10011 (Quite a lot of files)
  * Had dropped a layer when making new main_block from psd. Fixed, with better compression (main_block_.png)
  * Various minor template and CSS glitches plus new stats_pie.png (A dozen files of various sorts)
+ ! Use REPLACE for SQLite (Subs-Db-sqlite.php) [Bug 3853]
+ * Finished reverting the table headers part of rev. 9966 (Themes/default/images/theme: removed titlebg.png and catbg.png)
  
 
 
