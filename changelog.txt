@@ -35,6 +35,7 @@ July 2010
  * Various minor template and CSS glitches plus new stats_pie.png (A dozen files of various sorts)
  ! Use REPLACE for SQLite (Subs-Db-sqlite.php) [Bug 3853]
  * Finished reverting the table headers part of rev. 9966 (Themes/default/images/theme: removed titlebg.png and catbg.png)
+ ! Reverted partially 9976, causing issues with Postgresql, and MySQL should be further tested (DbExtra-mysql.php, DbExtra-postgresql.php)
  
 
 

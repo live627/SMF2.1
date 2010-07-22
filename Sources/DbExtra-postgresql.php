@@ -238,7 +238,7 @@ function smf_db_table_sql($tableName)
 			$row['data_type'] .= '(' . $row['character_maximum_length'] . ')';
 
 		// Make the CREATE for this column.
-		$schema_create .= ' `' . $row['column_name'] . '` ' . $row['data_type'] . ($row['is_nullable'] != 'YES' ? ' NOT NULL' : '');
+		$schema_create .= ' ' . $row['column_name'] . ' ' . $row['data_type'] . ($row['is_nullable'] != 'YES' ? ' NOT NULL' : '');
 
 		// Add a default...?
 		if (trim($row['column_default']) != '')
@@ -250,7 +250,7 @@ function smf_db_table_sql($tableName)
 			{
 				// Get to find the next variable first!
 				$count_req = $smcFunc['db_query']('', '
-					SELECT MAX(`{raw:column}`)
+					SELECT MAX({raw:column})
 					FROM {raw:table}',
 					array(
 						'column' => $row['column_name'],
@@ -286,10 +286,10 @@ function smf_db_table_sql($tableName)
 	{
 		if ($row['is_primary'])
 		{
-			if (preg_match('~\(`?([^\)`]+?)`?\)~i', $row['inddef'], $matches) == 0)
+			if (preg_match('~\(([^\)]+?)\)~i', $row['inddef'], $matches) == 0)
 				continue;
 
-			$index_create .= $crlf . 'ALTER TABLE ' . $tableName . ' ADD PRIMARY KEY (`' . $matches[1] . '`);';
+			$index_create .= $crlf . 'ALTER TABLE ' . $tableName . ' ADD PRIMARY KEY (' . $matches[1] . ');';
 		}
 		else
 			$index_create .= $crlf . $row['inddef'] . ';';
