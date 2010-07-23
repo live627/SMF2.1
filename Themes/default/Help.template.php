@@ -755,7 +755,7 @@ function template_manual_topic_view()
 	<p>', $txt['manual_topic_posts'], '</p>
 	<ul>
 		<li>
-			',$txt['author_section'],'
+			', $txt['author_section'], '
 			<ul>
 				<li>', $txt['manual_topic_author_name'], '</li>
 				<li>', $txt['manual_topic_author_custom_title'], '</li>
@@ -767,7 +767,7 @@ function template_manual_topic_view()
 			</ul>
 		</li>
 		<li>
-			',$txt['post_section'],'
+			', $txt['post_section'], '
 			<ul>
 				<li>', $txt['manual_topic_post_message_icon'], '</li>
 				<li>', $txt['manual_topic_post_subject'], '</li>

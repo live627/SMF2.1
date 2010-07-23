@@ -43,7 +43,7 @@ h3.catbg span.ie6_header, h4.catbg span.ie6_header, h3.titlebg span.ie6_header, 
 	z-index: 120;
 }
 
-/* the page section*/
+/* the page section */
 .pagesection
 {
 	overflow: auto;
@@ -64,8 +64,8 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 	float: none !important;
 	width: auto;
 }
-/*generic lists header */
-/* NOTE: this was marked as important but seems unnecessary. 
+/* generic lists header */
+/* NOTE: this was marked as important but seems unnecessary.
 /*.table_grid thead th
 {
 	padding: 0 !important;
