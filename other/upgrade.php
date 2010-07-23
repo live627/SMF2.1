@@ -986,7 +986,22 @@ function WelcomeLogin()
 	if (!file_exists($cachedir_temp))
 		return throw_error('The cache directory could not be found.<br /><br />Please make sure you have a directory called &quot;cache&quot; in your forum directory before continuing.');
 
-	$writable_files[] = $cachedir_temp;
+	if (!file_exists($boarddir . '/Themes/default/languages/index.' . $upcontext['language'] . '.php') && !isset($modSettings['smfVersion']) && !isset($_GET['lang']))
+		return throw_error('The upgrader was unable to find language files for the language specified in Settings.php.<br />SMF will not work without the primary language files installed.<br /><br />Please either install them, or <a href="' . $upgradeurl . '?step=0;lang=english">use english instead</a>.');
+	elseif (!isset($_GET['skiplang']))
+	{
+		$temp = substr(@implode('', @file($boarddir . '/Themes/default/languages/index.' . $upcontext['language'] . '.php')), 0, 4096);
+		preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*index(?:[\s]{2}|\*/)~i', $temp, $match);
+
+		if (empty($match[1]) || $match[1] != SMF_LANG_VERSION)
+			return throw_error('The upgrader found some old or outdated language files, for the forum default language, ' . $upcontext['language'] . '.<br /><br />Please make certain you uploaded the new versions of all the files included in the package, even the theme and language files for the default theme.<br />&nbsp;&nbsp;&nbsp;[<a href="' . $upgradeurl . '?skiplang">SKIP</a>] [<a href="' . $upgradeurl . '?lang=english">Try English</a>]');
+	}
+
+	// This needs to exist!
+	if (!file_exists($boarddir . '/Themes/default/languages/Install.' . $upcontext['language'] . '.php'))
+		return throw_error('The upgrader could not find the &quot;Install&quot; language file for the forum default language, ' . $upcontext['language'] . '.<br /><br />Please make certain you uploaded all the files included in the package, even the theme and language files for the default theme.<br />&nbsp;&nbsp;&nbsp;[<a href="' . $upgradeurl . '?lang=english">Try English</a>]');
+	else
+		require_once($boarddir . '/Themes/default/languages/Install.' . $upcontext['language'] . '.php');
 
 	if (!makeFilesWritable($writable_files))
 		return false;
@@ -1017,23 +1032,6 @@ function WelcomeLogin()
 	// Either we're logged in or we're going to present the login.
 	if (checkLogin())
 		return true;
-
-	if (!file_exists($boarddir . '/Themes/default/languages/index.' . $upcontext['language'] . '.php') && !isset($modSettings['smfVersion']) && !isset($_GET['lang']))
-		return throw_error('The upgrader was unable to find language files for the language specified in Settings.php.<br />SMF will not work without the primary language files installed.<br /><br />Please either install them, or <a href="' . $upgradeurl . '?step=0;lang=english">use english instead</a>.');
-	elseif (!isset($_GET['skiplang']))
-	{
-		$temp = substr(@implode('', @file($boarddir . '/Themes/default/languages/index.' . $upcontext['language'] . '.php')), 0, 4096);
-		preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*index(?:[\s]{2}|\*/)~i', $temp, $match);
-
-		if (empty($match[1]) || $match[1] != SMF_LANG_VERSION)
-			return throw_error('The upgrader found some old or outdated language files, for the forum default language, ' . $upcontext['language'] . '.<br /><br />Please make certain you uploaded the new versions of all the files included in the package, even the theme and language files for the default theme.<br />&nbsp;&nbsp;&nbsp;[<a href="' . $upgradeurl . '?skiplang">SKIP</a>] [<a href="' . $upgradeurl . '?lang=english">Try English</a>]');
-	}
-
-	// This needs to exist!
-	if (!file_exists($boarddir . '/Themes/default/languages/Install.' . $upcontext['language'] . '.php'))
-		return throw_error('The upgrader could not find the &quot;Install&quot; language file for the forum default language, ' . $upcontext['language'] . '.<br /><br />Please make certain you uploaded all the files included in the package, even the theme and language files for the default theme.<br />&nbsp;&nbsp;&nbsp;[<a href="' . $upgradeurl . '?lang=english">Try English</a>]');
-	else
-		require_once($boarddir . '/Themes/default/languages/Install.' . $upcontext['language'] . '.php');
 
 	return false;
 }
