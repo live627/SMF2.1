@@ -451,7 +451,7 @@ function template_main()
 		echo '
 					<dl id="postAttachment2">
 						<dt>
-							', $txt['attach'], ':
+							', $txt['attach'], ': (<a href="javascript:void(0);" onclick="cleanFileInput(\'postAttachment2\');">', $txt['clean_attach'], '</a>)
 						</dt>
 						<dd class="smalltext">
 							<input type="file" size="60" name="attachment[]" class="input_file" />';

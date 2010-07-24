@@ -1442,3 +1442,9 @@ function smc_saveEntities(sFormName, aElementNames, sMask)
 			document.forms[sFormName][aElementNames[i]].value = document.forms[sFormName][aElementNames[i]].value.replace(/&#/g, '&#38;#');
 	}
 }
+
+// A function used to clean the attachments on post page
+function cleanFileInput(idElement)
+{
+	document.getElementById(idElement).innerHTML = document.getElementById(idElement).innerHTML;
+}

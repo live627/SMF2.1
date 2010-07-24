@@ -38,6 +38,8 @@ July 2010
  ! Reverted partially 9976, causing issues with Postgresql, and MySQL should be further tested (DbExtra-mysql.php, DbExtra-postgresql.php)
  ! cache directory does not need to be writable during upgrade; fix potentially missing language strings during upgrade (upgrade.php) [Bug 3834]
  ! Database error on unread replies on Postgresql [Bug 4390]
+ * Allow removal of attachments on posting error (thanks TE!)[Bug 3780]
+ & Added a language file entry for the attachments cleaning link [Bug 3780]
 
 
 June 2010
