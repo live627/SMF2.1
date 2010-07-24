@@ -1111,6 +1111,7 @@ function UnreadTopics()
 					'order' => $_REQUEST['sort'] . ($ascending ? '' : ' DESC'),
 					'offset' => $_REQUEST['start'],
 					'limit' => $context['topics_per_page'],
+					'sort' => $_REQUEST['sort'],
 				))
 			);
 

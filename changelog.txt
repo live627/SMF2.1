@@ -37,6 +37,7 @@ July 2010
  * Finished reverting the table headers part of rev. 9966 (Themes/default/images/theme: removed titlebg.png and catbg.png)
  ! Reverted partially 9976, causing issues with Postgresql, and MySQL should be further tested (DbExtra-mysql.php, DbExtra-postgresql.php)
  ! cache directory does not need to be writable during upgrade; fix potentially missing language strings during upgrade (upgrade.php) [Bug 3834]
+ ! Database error on unread replies on Postgresql [Bug 4390]
 
 
 June 2010
