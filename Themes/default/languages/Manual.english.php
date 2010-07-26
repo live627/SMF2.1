@@ -158,6 +158,8 @@ $txt['manual_message_index_sticky_locked'] = 'There are three different kinds of
 $txt['manual_message_index_sorting'] = 'The default sort order for the topics on the message index is by the date and time of the last post. This can be changed by simply selecting any of the other column headings.';
 
 // Text for template: topic_view
+$txt['manual_topic_author_section'] = 'Author Section';
+$txt['manual_topic_post_section'] = 'Post Section';
 $txt['manual_topic_describe'] = 'Once a specific topic has been selected, a list of its posts is displayed. A topic with a large number of posts may split them up across pages. A member can choose the number of posts to be displayed per page from their profile. Some forums may also provide next and previous links to allow quick navigation between topics.';
 $txt['manual_topic_looks'] = 'A topic usually looks something like this:';
 $txt['manual_topic_subject'] = 'Topic Subject';
