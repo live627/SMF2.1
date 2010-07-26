@@ -45,6 +45,7 @@ $databases = array(
 		'utf8_version' => '4.1.0',
 		'utf8_version_check' => 'return mysql_get_server_info();',
 		'utf8_default' => false,
+		'utf8_required' => false,
 		'alter_support' => true,
 		'validate_prefix' => create_function('&$value', '
 			$value = preg_replace(\'~[^A-Za-z0-9_\$]~\', \'\', $value);
@@ -59,6 +60,7 @@ $databases = array(
 		'supported' => function_exists('pg_connect'),
 		'always_has_db' => true,
 		'utf8_default' => true,
+		'utf8_required' => true,
 		'utf8_support' => true,
 		'utf8_version' => '8.0',
 		'utf8_version_check' => '$request = pg_query(\'SELECT version()\'); list ($version) = pg_fetch_row($request); list($pgl, $version) = explode(" ", $version); return $version;',
@@ -83,7 +85,8 @@ $databases = array(
 		'version_check' => 'return 1;',
 		'supported' => function_exists('sqlite_open'),
 		'always_has_db' => true,
-		'utf8_default' => false,
+		'utf8_default' => true,
+		'utf8_required' => true,
 		'validate_prefix' => create_function('&$value', '
 			global $incontext, $txt;
 
@@ -925,6 +928,7 @@ function ForumSettings()
 	$incontext['test_dbsession'] = @ini_get('session.auto_start') != 1 && @version_compare(PHP_VERSION, '4.2.0') != -1;
 	$incontext['utf8_should_work'] = strpos(strtolower(PHP_OS), 'win') === false || @version_compare(PHP_VERSION, '4.2.3') != -1;
 	$incontext['utf8_default'] = $databases[$db_type]['utf8_default'];
+	$incontext['utf8_required'] = $databases[$db_type]['utf8_required'];
 
 	$incontext['continue'] = 1;
 
@@ -2452,7 +2456,7 @@ function template_forum_settings()
 			<tr>
 				<td valign="top" class="textbox">', $txt['install_settings_utf8'], ':</td>
 				<td>
-					<input type="checkbox" name="utf8" id="utf8_check"', $incontext['utf8_default'] ? ' checked="checked"' : '', ' class="input_check" /> <label for="utf8_check">', $txt['install_settings_utf8_title'], '</label><br />
+					<input type="checkbox" name="utf8" id="utf8_check"', $incontext['utf8_default'] ? ' checked="checked"' : '', ' class="input_check"', $incontext['utf8_required'] ? ' disabled' : '', ' /> <label for="utf8_check">', $txt['install_settings_utf8_title'], '</label><br />
 					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['install_settings_utf8_info'], '</div>
 				</td>
 			</tr>';

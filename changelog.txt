@@ -40,6 +40,7 @@ July 2010
  ! Database error on unread replies on Postgresql [Bug 4390]
  * Allow removal of attachments on posting error (thanks TE!)[Bug 3780]
  & Added a language file entry for the attachments cleaning link [Bug 3780]
+ ! Disable non-utf8 installation for Postgresql and SQLite [Bug 4282]
 
 
 June 2010
