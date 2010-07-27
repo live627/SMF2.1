@@ -42,6 +42,8 @@ July 2010
  & Added a language file entry for the attachments cleaning link. [Bug 3780]
  ! Disable non-utf8 installation for Postgresql and SQLite. (install.php) [Bug 4282]
  ! Invalid HTML markup for disabled UTF-8 option. (install.php)
+ ! Allowing authors to view their own unapproved attachments didn't function correctly when guests were involved. (Display.php)
+ ! Undefined index on downloading avatars. (Display.php) [Bug 4385]
 
 
 June 2010

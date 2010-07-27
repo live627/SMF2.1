@@ -961,7 +961,7 @@ function Display()
 			$temp = array();
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 			{
-				if (!$row['approved'] && $modSettings['postmod_active'] && !allowedTo('approve_posts') && $all_posters[$row['id_msg']] != $user_info['id'])
+				if (!$row['approved'] && $modSettings['postmod_active'] && !allowedTo('approve_posts') && (!isset($all_posters[$row['id_msg']]) || $all_posters[$row['id_msg']] != $user_info['id']))
 					continue;
 
 				$temp[$row['id_attach']] = $row;
@@ -1237,7 +1237,7 @@ function Download()
 	if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'avatar')
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT id_folder, filename, file_hash, fileext, id_attach, attachment_type, mime_type, approved
+			SELECT id_folder, filename, file_hash, fileext, id_attach, attachment_type, mime_type, approved, id_member
 			FROM {db_prefix}attachments
 			WHERE id_attach = {int:id_attach}
 				AND id_member > {int:blank_id_member}
@@ -1276,7 +1276,7 @@ function Download()
 	$smcFunc['db_free_result']($request);
 
 	// If it isn't yet approved, do they have permission to view it?
-	if (!$is_approved && $user_info['id'] != $id_member && ($attachment_type == 0 || $attachment_type == 3))
+	if (!$is_approved && ($id_member == 0 || $user_info['id'] != $id_member) && ($attachment_type == 0 || $attachment_type == 3))
 		isAllowedTo('approve_posts');
 
 	// Update the download counter (unless it's a thumbnail).
