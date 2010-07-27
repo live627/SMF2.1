@@ -44,7 +44,7 @@ function XMLhttpMain()
 		),
 	);
 	if (!isset($_REQUEST['sa'], $sub_actions[$_REQUEST['sa']]))
-		fatal_error('Action doesn\'t exist');
+		fatal_lang_error('no_access', false);
 
 	$sub_actions[$_REQUEST['sa']]['function']();
 }
