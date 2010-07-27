@@ -10,7 +10,7 @@ July 2010
  ! Static class methods could not be handled properly by integration hooks. (Many files)
  ! It was not possible to pass variables by reference for integration functions. (Many files) [Bug 4246]
  * Years did not automatically collapse in statistics center. (Stats.php, Stats template, stats.js) [Bug 4011]
- ! Custom selectbox fields did not provide an empty option (Profile.php) [Bug 4345]
+ ! Custom selectbox fields did not provide an empty option. (Profile.php) [Bug 4345]
  * Indenting was to be redone entirely in MessageIndex template.
  ! version_compare doesn't need 'PHP' in the comparison string. (Subs-OpenID.php)
  ! If user provides an incorrect OpenID URL, consider it a mistake, and fall back to the username/password check. (LogInOut.php, Subs-OpenID.php) [Bug 2978]
@@ -27,20 +27,21 @@ July 2010
  * JavaScript verification for registration form did not use CSS for background colors. (index.css, register.js) [Bug 3844]
  ! Crashed log_errors table caused infinite loop. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 4294]
  ! RSS and Recent Posts features sometimes showed less posts than expected. [Bug 3605]
- ! Fix for table headers breaking sometimes (main_block.png, index.css) [Bug 3716]
- * Fixed several validation/markup/layout issues (Admin.template.php, Packages.template.php, index.css, admin.css)
+ ! Fix for table headers breaking sometimes. (main_block.png, index.css) [Bug 3716]
+ * Fixed several validation/markup/layout issues. (Admin.template.php, Packages.template.php, index.css, admin.css)
  * Got rid of remnants of align_left and align_right classes. Replaced with floatleft and floatright. (Quite a lot of files)
  * And these are the ones I missed. This should be merged with 10011 (Quite a lot of files)
- * Had dropped a layer when making new main_block from psd. Fixed, with better compression (main_block_.png)
- * Various minor template and CSS glitches plus new stats_pie.png (A dozen files of various sorts)
- ! Use REPLACE for SQLite (Subs-Db-sqlite.php) [Bug 3853]
- * Finished reverting the table headers part of rev. 9966 (Themes/default/images/theme: removed titlebg.png and catbg.png)
- ! Reverted partially 9976, causing issues with Postgresql, and MySQL should be further tested (DbExtra-mysql.php, DbExtra-postgresql.php)
- ! cache directory does not need to be writable during upgrade; fix potentially missing language strings during upgrade (upgrade.php) [Bug 3834]
- ! Database error on unread replies on Postgresql [Bug 4390]
- * Allow removal of attachments on posting error (thanks TE!)[Bug 3780]
- & Added a language file entry for the attachments cleaning link [Bug 3780]
- ! Disable non-utf8 installation for Postgresql and SQLite [Bug 4282]
+ * Had dropped a layer when making new main_block from psd. Fixed, with better compression. (main_block_.png)
+ * Various minor template and CSS glitches plus new stats_pie.png. (A dozen files of various sorts)
+ ! Use REPLACE for SQLite. (Subs-Db-sqlite.php) [Bug 3853]
+ * Finished reverting the table headers part of rev. 9966. (Themes/default/images/theme: removed titlebg.png and catbg.png)
+ ! Reverted partially 9976, causing issues with PostgreSQL, and MySQL should be further tested. (DbExtra-mysql.php, DbExtra-postgresql.php)
+ ! cache directory does not need to be writable during upgrade; fix potentially missing language strings during upgrade. (upgrade.php) [Bug 3834]
+ ! Database error on unread replies on PostgreSQL. [Bug 4390]
+ * Allow removal of attachments on posting error. (thanks TE!)[Bug 3780]
+ & Added a language file entry for the attachments cleaning link. [Bug 3780]
+ ! Disable non-utf8 installation for Postgresql and SQLite. (install.php) [Bug 4282]
+ ! Invalid HTML markup for disabled UTF-8 option. (install.php)
 
 
 June 2010

@@ -2456,7 +2456,7 @@ function template_forum_settings()
 			<tr>
 				<td valign="top" class="textbox">', $txt['install_settings_utf8'], ':</td>
 				<td>
-					<input type="checkbox" name="utf8" id="utf8_check"', $incontext['utf8_default'] ? ' checked="checked"' : '', ' class="input_check"', $incontext['utf8_required'] ? ' disabled' : '', ' /> <label for="utf8_check">', $txt['install_settings_utf8_title'], '</label><br />
+					<input type="checkbox" name="utf8" id="utf8_check"', $incontext['utf8_default'] ? ' checked="checked"' : '', ' class="input_check"', $incontext['utf8_required'] ? ' disabled="disabled"' : '', ' /> <label for="utf8_check">', $txt['install_settings_utf8_title'], '</label><br />
 					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['install_settings_utf8_info'], '</div>
 				</td>
 			</tr>';
