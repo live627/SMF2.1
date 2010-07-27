@@ -4321,11 +4321,7 @@ function template_database_changes()
 		if ($is_debug)
 		{
 			echo '
-			<div id="debug_section" style="height: 200px; overflow: auto;">';
-			echo $upcontext['current_debug_item_name'];
-			for ($i = substr_count($upcontext['current_debug_item_name'], '.'); $i < 3; $i++)
-				echo '.';
-			echo '
+			<div id="debug_section" style="height: 200px; overflow: auto;">
 			<span id="debuginfo"></span>
 			</div>';
 		}
@@ -4349,6 +4345,7 @@ function template_database_changes()
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var lastItem = ', $upcontext['current_debug_item_num'], ';
 			var sLastString = "', strtr($upcontext['current_debug_item_name'], array('"' => '&quot;')), '";
+			var iLastSubStepProgress = -1;
 			var curFile = ', $upcontext['cur_file_num'], ';
 			var totalItems = 0;
 			var prevFile = 0;
@@ -4516,17 +4513,22 @@ function template_database_changes()
 		// If debug scroll the screen.
 		if ($is_debug)
 			echo '
-				if (bIsComplete)
+				if (iLastSubStepProgress == -1)
 				{
 					// Give it consistent dots.
 					dots = sDebugName.match(/\./g);
 					numDots = dots ? dots.length : 0;
 					for (var i = numDots; i < 3; i++)
 						sDebugName += ".";
-					setOuterHTML(document.getElementById(\'debuginfo\'), \'done<br />\' + sDebugName + \'<span id="debuginfo"><\' + \'/span>\');
+					setOuterHTML(document.getElementById(\'debuginfo\'), sDebugName + \'<span id="debuginfo"><\' + \'/span>\');
 				}
+				iLastSubStepProgress = iSubStepProgress;
+
+				if (bIsComplete)
+					setOuterHTML(document.getElementById(\'debuginfo\'), \'done<br /><span id="debuginfo"><\' + \'/span>\');
 				else
 					setOuterHTML(document.getElementById(\'debuginfo\'), \'...<span id="debuginfo"><\' + \'/span>\');
+
 				if (document.getElementById(\'debug_section\').scrollHeight)
 					document.getElementById(\'debug_section\').scrollTop = document.getElementById(\'debug_section\').scrollHeight';
 

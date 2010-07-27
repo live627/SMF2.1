@@ -45,6 +45,7 @@ July 2010
  ! Allowing authors to view their own unapproved attachments didn't function correctly when guests were involved. (Display.php)
  ! Undefined index on downloading avatars. (Display.php) [Bug 4385]
  ! Hardcoded text for unknown action error. (Xml.php) [Bug 4377]
+ ! Doing sub-steps were showing dots on previous entry during upgrade. (upgrade.php) [Bug 3510]
 
 
 June 2010
