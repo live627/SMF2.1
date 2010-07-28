@@ -254,7 +254,7 @@ function template_imode_boardindex()
 	{
 		if (!empty($category['boards']) || $category['is_collapsed'])
 			echo '
-			<tr bgcolor="#b6dbff"><td>', $category['can_collapse'] ? '<a href="' . $scripturl . '?action=collapse;c=' . $category['id'] . ';sa=' . ($category['is_collapsed'] ? 'expand' : 'collapse') . ';imode">' : '', $category['name'], $category['can_collapse'] ? '</a>' : '', '</td></tr>';
+			<tr bgcolor="#b6dbff"><td>', $category['can_collapse'] ? '<a href="' . $scripturl . '?action=collapse;c=' . $category['id'] . ';sa=' . ($category['is_collapsed'] ? 'expand;' : 'collapse;') . $context['session_var'] . '=' . $context['session_id'] . ';imode">' : '', $category['name'], $category['can_collapse'] ? '</a>' : '', '</td></tr>';
 
 		foreach ($category['boards'] as $board)
 		{
@@ -911,7 +911,7 @@ function template_wap2_boardindex()
 	{
 		if (!empty($category['boards']) || $category['is_collapsed'])
 			echo '
-		<p class="titlebg">', $category['can_collapse'] ? '<a href="' . $scripturl . '?action=collapse;c=' . $category['id'] . ';sa=' . ($category['is_collapsed'] ? 'expand' : 'collapse') . ';wap2">' : '', $category['name'], $category['can_collapse'] ? '</a>' : '', '</p>';
+		<p class="titlebg">', $category['can_collapse'] ? '<a href="' . $scripturl . '?action=collapse;c=' . $category['id'] . ';sa=' . ($category['is_collapsed'] ? 'expand;' : 'collapse;') . $context['session_var'] . '=' . $context['session_id'] . ';wap2">' : '', $category['name'], $category['can_collapse'] ? '</a>' : '', '</p>';
 
 		foreach ($category['boards'] as $board)
 		{

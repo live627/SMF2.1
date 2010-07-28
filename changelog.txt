@@ -47,6 +47,7 @@ July 2010
  ! Hardcoded text for unknown action error. (Xml.php) [Bug 4377]
  ! Doing sub-steps were showing dots on previous entry during upgrade. (upgrade.php) [Bug 3510]
  ! Changing username did not reset the password. (Profile-Modify.php) [Bug 4358]
+ * Board Index category toggle URLs were missing session ids for WAP2 and imode. (Wireless.template.php) [Bug 4394]
 
 
 June 2010
