@@ -453,7 +453,7 @@ function loadProfileFields($force_reload = false)
 			'permission' => 'profile_identity',
 			'prehtml' => allowedTo('admin_forum') && isset($_GET['changeusername']) ? '<div class="alert">' . $txt['username_warning'] . '</div>' : '',
 			'input_validate' => create_function('&$value', '
-				global $sourcedir, $context, $user_info;
+				global $sourcedir, $context, $user_info, $cur_profile;
 
 				if (allowedTo(\'admin_forum\'))
 				{
@@ -462,7 +462,7 @@ function loadProfileFields($force_reload = false)
 
 					// Maybe they are trying to change their password as well?
 					$resetPassword = true;
-					if (isset($_POST[\'passwrd2\']) && isset($_POST[\'passwrd1\']) && (($_POST[\'passwrd1\'] != $_POST[\'passwrd2\']) || (validatePassword($value, $value, array($user_info[\'name\'], $user_info[\'email\'])) == null)))
+					if (isset($_POST[\'passwrd1\']) && $_POST[\'passwrd1\'] != \'\' && isset($_POST[\'passwrd2\']) && $_POST[\'passwrd1\'] == $_POST[\'passwrd2\'] && validatePassword($_POST[\'passwrd1\'], $value, array($cur_profile[\'real_name\'], $user_info[\'username\'], $user_info[\'name\'], $user_info[\'email\'])) == null)
 						$resetPassword = false;
 
 					// Do the reset... this will send them an email too.
