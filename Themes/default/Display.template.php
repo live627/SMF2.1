@@ -320,11 +320,11 @@ function template_main()
 			if ($message['member']['has_messenger'] && $message['member']['can_view_profile'])
 				echo '
 								<li class="im_icons">
-									<ul>', !empty($message['member']['icq']['link']) ? '
-										<li>' . $message['member']['icq']['link'] . '</li>' : '', !empty($message['member']['msn']['link']) ? '
-										<li>' . $message['member']['msn']['link'] . '</li>' : '', !empty($message['member']['aim']['link']) ? '
-										<li>' . $message['member']['aim']['link'] . '</li>' : '', !empty($message['member']['yim']['link']) ? '
-										<li>' . $message['member']['yim']['link'] . '</li>' : '', '
+									<ul>
+										', !empty($message['member']['icq']['link']) ? '<li>' . $message['member']['icq']['link'] . '</li>' : '', '
+										', !empty($message['member']['msn']['link']) ? '<li>' . $message['member']['msn']['link'] . '</li>' : '', '
+										', !empty($message['member']['aim']['link']) ? '<li>' . $message['member']['aim']['link'] . '</li>' : '', '
+										', !empty($message['member']['yim']['link']) ? '<li>' . $message['member']['yim']['link'] . '</li>' : '', '
 									</ul>
 								</li>';
 
@@ -534,7 +534,7 @@ function template_main()
 		// Show "« Last Edit: Time by Person »" if this post was edited.
 		if ($settings['show_modify'] && !empty($message['modified']['name']))
 			echo '
-								&#171; <em>', $txt['last_edit'], ' ', $message['modified']['time'], $message['modified']['name'] !== $message['member']['name'] ? ' ' . $txt['by'] . ' ' . $message['modified']['name'] : '', '</em> &#187;';
+								&#171; <em>', $txt['last_edit'], ': ', $message['modified']['time'], ' ', $txt['by'], ' ', $message['modified']['name'], '</em> &#187;';
 
 		echo '
 							</div>
