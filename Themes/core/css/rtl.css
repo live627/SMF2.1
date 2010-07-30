@@ -469,19 +469,44 @@ ul.post_options li
 ---------------------------------------------------- */
 #post_event div.event_options
 {
+	float: left;
+}
+#post_event #event_main input
+{
+	margin: 0 0 1em 0;
 	float: right;
+}
+#post_event #event_main div.smalltext
+{
+	float: left;
 }
 #post_event ul.event_main li
 {
-	float: right;
+	float: left;
 }
 #post_event ul.event_options
 {
 	padding: 0 .7em .7em 0;
 }
+#post_event #event_main select, #post_event ul.event_options li select, #post_event ul.event_options li .input_check
+{
+	margin: 0 0 0 1em;
+}
 
 /* Styles for edit poll section.
 ---------------------------------------------------- */
+#edit_poll fieldset input
+{
+	margin-right: 7em;	
+}
+#edit_poll ul.poll_main li
+{
+	padding-right: 1em;
+}
+#edit_poll ul.poll_main input
+{
+	margin-right: 1em;
+}
 #edit_poll div.poll_options
 {
 	float: right;
@@ -489,6 +514,14 @@ ul.post_options li
 #edit_poll ul.poll_main, dl.poll_options
 {
 	padding: 0 .7em 0 0;
+}
+#edit_poll dl.poll_options dt
+{
+	padding: 0 1em 0 0;
+}
+#edit_poll dl.poll_options dd input
+{
+	margin-right: 0; 
 }
 
 /* Styles for the recent messages section.
@@ -744,16 +777,9 @@ tr.titlebg td
 	margin-right: 0;
 	margin-left: 1em;
 }
-#permissions dt
+#permissions div.permission_name
 {
-	float: right;
-	margin: 0 0 -500px;
-	padding: 1% 1% 500px;
-
-}
-#permissions dd
-{
-	float: right;
+	margin: 0 0 0 1%;
 }
 #ip_list li.header, #ip_list li.ip
 {

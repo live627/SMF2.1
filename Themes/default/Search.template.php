@@ -127,7 +127,7 @@ function template_main()
 		if (empty($context['search_params']['topic']))
 		{
 			echo '
-		<fieldset>
+		<fieldset class="flow_hidden">
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
 				<div class="title_bar">
@@ -136,7 +136,7 @@ function template_main()
 					</h4>
 				</div>
 				<div class="flow_auto" id="searchBoardsExpand"', $context['boards_check_all'] ? ' style="display: none;"' : '', '>
-					<ul class="floatleft">';
+					<ul class="ignoreboards floatleft">';
 
 	$i = 0;
 	$limit = ceil($context['num_boards'] / 2);
@@ -154,7 +154,7 @@ function template_main()
 							</ul>
 						</li>
 					</ul>
-					<ul class="floatright">
+					<ul class="ignoreboards floatright">
 						<li class="category">
 							<ul>';
 
@@ -173,22 +173,25 @@ function template_main()
 
 	echo '
 					</ul>
-				</div>';
+				</div>
+				<br class="clear" />';
 
 			echo '
-				<p>
-					<input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="input_check" />
-					<label for="check_all">', $txt['check_all'], '</label>
-				</p>
+				<div class="padding">
+					<input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="input_check floatleft" />
+					<label for="check_all" class="floatleft">', $txt['check_all'], '</label>
+					<input type="submit" name="submit" value="', $txt['search'], '" class="button_submit floatright" />
+				</div>
+				<br class="clear" />
 			</div>
 			<span class="lowerframe"><span></span></span>
 		</fieldset>';
 		}
 
-		echo '
-		<div class="righttext padding">
-			<input type="submit" name="submit" value="', $txt['search'], '" class="button_submit" />
-		</div>';
+//		echo '
+//		<div class="righttext padding">
+//			<input type="submit" name="submit" value="', $txt['search'], '" class="button_submit" />
+//		</div>';
 	}
 
 	echo '
@@ -360,7 +363,7 @@ function template_results()
 		</div>';
 
 		}
-
+		if (!empty($context['topics']))
 		echo '
 		<div class="pagesection">
 			<span>', $txt['pages'], ': ', $context['page_index'], '</span>

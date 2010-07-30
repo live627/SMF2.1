@@ -410,58 +410,63 @@ function template_showPosts()
 	{
 		echo '
 		<table border="0" width="100%" cellspacing="1" cellpadding="2" class="bordercolor" align="center">
-			<tr class="titlebg">
-				<td width="25%">
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=filename', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'filename' ? ';asc' : ''), '">
-						', $txt['show_attach_filename'], '
-						', ($context['sort_order'] == 'filename' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
-					</a>
-				</td>
-				<td width="12%" align="center">
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=downloads', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'downloads' ? ';asc' : ''), '">
-						', $txt['show_attach_downloads'], '
-						', ($context['sort_order'] == 'downloads' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
-					</a>
-				</td>
-				<td width="30%">
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=subject', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'subject' ? ';asc' : ''), '">
-						', $txt['message'], '
-						', ($context['sort_order'] == 'subject' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
-					</a>
-				</td>
-				<td>
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=posted', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'posted' ? ';asc' : ''), '">
-					', $txt['show_attach_posted'], '
-					', ($context['sort_order'] == 'posted' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
-					</a>
-				</td>
-			</tr>';
+			<thead>
+				<tr class="titlebg">
+					<th class="first_th" width="25%">
+						<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=filename', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'filename' ? ';asc' : ''), '">
+							', $txt['show_attach_filename'], '
+							', ($context['sort_order'] == 'filename' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
+						</a>
+					</th>
+					<th width="12%" align="center">
+						<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=downloads', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'downloads' ? ';asc' : ''), '">
+							', $txt['show_attach_downloads'], '
+							', ($context['sort_order'] == 'downloads' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
+						</a>
+					</th>
+					<th width="30%">
+						<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=subject', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'subject' ? ';asc' : ''), '">
+							', $txt['message'], '
+							', ($context['sort_order'] == 'subject' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
+						</a>
+					</th>
+					<th class="last_th">
+						<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=posted', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'posted' ? ';asc' : ''), '">
+						', $txt['show_attach_posted'], '
+						', ($context['sort_order'] == 'posted' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
+						</a>
+					</th>
+				</tr>
+			</thead>
+			<tbody>';
 
 		// Looks like we need to do all the attachments instead!
 		$alternate = false;
 		foreach ($context['attachments'] as $attachment)
 		{
 			echo '
-			<tr class="', $attachment['approved'] ? ($alternate ? 'windowbg' : 'windowbg2') : 'approvebg', '">
-				<td><a href="', $scripturl, '?action=dlattach;topic=', $attachment['topic'], '.0;attach=', $attachment['id'], '">', $attachment['filename'], '</a>', !$attachment['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : '', '</td>
-				<td align="center">', $attachment['downloads'], '</td>
-				<td><a href="', $scripturl, '?topic=', $attachment['topic'], '.msg', $attachment['msg'], '#msg', $attachment['msg'], '" rel="nofollow">', $attachment['subject'], '</a></td>
-				<td>', $attachment['posted'], '</td>
-			</tr>';
+				<tr class="', $attachment['approved'] ? ($alternate ? 'windowbg' : 'windowbg2') : 'approvebg', '">
+					<td><a href="', $scripturl, '?action=dlattach;topic=', $attachment['topic'], '.0;attach=', $attachment['id'], '">', $attachment['filename'], '</a>', !$attachment['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : '', '</td>
+					<td align="center">', $attachment['downloads'], '</td>
+					<td><a href="', $scripturl, '?topic=', $attachment['topic'], '.msg', $attachment['msg'], '#msg', $attachment['msg'], '" rel="nofollow">', $attachment['subject'], '</a></td>
+					<td>', $attachment['posted'], '</td>
+				</tr>';
 			$alternate = !$alternate;
 		}
-
-		echo '
-		</table>';
-	}
 
 	// No posts? Just end the table with a informative message.
 	if ((isset($context['attachments']) && empty($context['attachments'])) || (!isset($context['attachments']) && empty($context['posts'])))
 		echo '
-		<div class="tborder windowbg2 padding centertext">
-			', isset($context['attachments']) ? $txt['show_attachments_none'] : ($context['is_topics'] ? $txt['show_topics_none'] : $txt['show_posts_none']), '
-		</div>';
-
+				<tr>
+					<td class="tborder windowbg2 padding centertext" colspan="4">
+						', isset($context['attachments']) ? $txt['show_attachments_none'] : ($context['is_topics'] ? $txt['show_topics_none'] : $txt['show_posts_none']), '
+					</td>
+				</tr>';
+		
+		echo '
+			</tbody>
+		</table>';
+	}
 	// Show more page numbers.
 	echo '
 		<div class="pagesection" style="margin-bottom: 0;">
@@ -481,15 +486,15 @@ function template_editBuddies()
 			</h3>
 		</div>
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
-			<tr class="titlebg">
-				<th width="20%">', $txt['name'], '</th>
+			<tr class="catbg">
+				<th class="first_th" width="20%">', $txt['name'], '</th>
 				<th>', $txt['status'], '</th>
 				<th>', $txt['email'], '</th>
 				<th align="center">', $txt['icq'], '</th>
 				<th align="center">', $txt['aim'], '</th>
 				<th align="center">', $txt['yim'], '</th>
 				<th align="center">', $txt['msn'], '</th>
-				<th></th>
+				<th class="last_th"></th>
 			</tr>';
 
 	// If they don't have any buddies don't list them!
@@ -567,15 +572,15 @@ function template_editIgnoreList()
 			</h3>
 		</div>
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
-			<tr class="titlebg">
-				<th width="20%">', $txt['name'], '</th>
+			<tr class="catbg">
+				<th class="first_th" width="20%">', $txt['name'], '</th>
 				<th>', $txt['status'], '</th>
 				<th>', $txt['email'], '</th>
 				<th align="center">', $txt['icq'], '</th>
 				<th align="center">', $txt['aim'], '</th>
 				<th align="center">', $txt['yim'], '</th>
 				<th align="center">', $txt['msn'], '</th>
-				<th></th>
+				<th class="last_th"></th>
 			</tr>';
 
 	// If they don't have anyone on their ignore list, don't list it!
@@ -742,8 +747,8 @@ function template_trackIP()
 
 	// The second table lists all the members who have been logged as using this IP address.
 	echo '
-		<div class="cat_bar">
-			<h3 class="catbg">', $txt['members_from_ip'], ' ', $context['ip'], '</h3>
+		<div class="title_bar">
+			<h3 class="titlebg">', $txt['members_from_ip'], ' ', $context['ip'], '</h3>
 		</div>';
 	if (empty($context['ips']))
 		echo '
@@ -754,8 +759,8 @@ function template_trackIP()
 		<table class="table_grid" cellspacing="0" width="100%">
 			<thead>
 				<tr class="catbg">
-					<th class="smalltext">', $txt['ip_address'], '</th>
-					<th class="smalltext">', $txt['display_name'], '</th>
+					<th class="smalltext first_th">', $txt['ip_address'], '</th>
+					<th class="smalltext last_th">', $txt['display_name'], '</th>
 				</tr>
 			</thead>
 			<tbody>';
@@ -800,7 +805,8 @@ function template_showPermissions()
 	else
 	{
 		echo '
-		<div id="permissions">';
+		<p class="description">',$txt['showPermissions_help'],'</p>
+		<div id="permissions" class="flow_hidden">';
 
 		if (!empty($context['no_access_boards']))
 		{
@@ -822,34 +828,37 @@ function template_showPermissions()
 
 		// General Permissions section.
 		echo '
-			<div class="cat_bar">
-				<h3 class="catbg">', $txt['showPermissions_general'], '</h3>
-			</div>';
+				<div class="tborder floatleft">
+					<div class="cat_bar">
+						<h3 class="catbg">', $txt['showPermissions_general'], '</h3>
+					</div>';
 		if (!empty($context['member']['permissions']['general']))
 		{
 			echo '
-				<div class="title_bar">
-					<h3 class="titlebg">', $txt['showPermissions_permission'], '</h3>
-				</div>
-				<dl class="windowbg">';
+					<div class="windowbg padding">
+						<b>', $txt['showPermissions_permission'], '</b>
+					</div>
+					<ul>';
 			foreach ($context['member']['permissions']['general'] as $permission)
 			{
+				echo '
+						<li class="windowbg2 floatleft">
+							<div class="permission_name floatleft" title="', $permission['id'], '">
+								', $permission['is_denied'] ? '<del>' . $permission['name'] . '</del>' : $permission['name'], '
+							</div>';
+
+				if ($permission['is_denied'])
 					echo '
-					<dt class="windowbg" title="', $permission['id'], '">
-						', $permission['is_denied'] ? '<del>' . $permission['name'] . '</del>' : $permission['name'], '
-					</dt>
-					<dd class="windowbg2 smalltext">';
-					if ($permission['is_denied'])
-						echo '
-						<span class="alert">', $txt['showPermissions_denied'], ': </span>', implode(', ', $permission['groups']['denied']);
-					else
-						echo '
-						<span>', $txt['showPermissions_given'], ': </span>', implode(', ', $permission['groups']['allowed']);
+							<span class="alert">', $txt['showPermissions_denied'], ':&nbsp;', implode(', ', $permission['groups']['denied']),'</span>';
+				else
 					echo '
-					</dd>';
+							<span class="permission_status">', $txt['showPermissions_given'], ':&nbsp;', implode(', ', $permission['groups']['allowed']),'</span>';
+					echo '
+						</li>';
 			}
 			echo '
-				</dl>';
+					</ul>
+				</div><br class="clear" />';
 		}
 		else
 			echo '
@@ -857,61 +866,64 @@ function template_showPermissions()
 
 		// Board permission section.
 		echo '
-			<form action="' . $scripturl . '?action=profile;u=', $context['id_member'], ';area=permissions#board_permissions" method="post" accept-charset="', $context['character_set'], '">
-				<div class="cat_bar">
-					<h3 class="catbg">
-						<a id="board_permissions"></a>', $txt['showPermissions_select'], ':
-						<select name="board" onchange="if (this.options[this.selectedIndex].value) this.form.submit();">
-							<option value="0"', $context['board'] == 0 ? ' selected="selected"' : '', '>', $txt['showPermissions_global'], '</option>';
-			if (!empty($context['boards']))
-				echo '
-							<option value="" disabled="disabled">---------------------------</option>';
+			<div class="tborder floatleft">
+				<form action="' . $scripturl . '?action=profile;u=', $context['id_member'], ';area=permissions#board_permissions" method="post" accept-charset="', $context['character_set'], '">
+					<div class="cat_bar">
+						<h3 class="catbg"><span class="ie6_header floatleft">
+							<a id="board_permissions"></a>', $txt['showPermissions_select'], ':
+							<select name="board" onchange="if (this.options[this.selectedIndex].value) this.form.submit();">
+								<option value="0"', $context['board'] == 0 ? ' selected="selected"' : '', '>', $txt['showPermissions_global'], '&nbsp;</option>';
+				if (!empty($context['boards']))
+					echo '
+								<option value="" disabled="disabled">---------------------------</option>';
 
-			// Fill the box with any local permission boards.
-			foreach ($context['boards'] as $board)
-				echo '
-							<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['name'], ' (', $board['profile_name'], ')</option>';
+				// Fill the box with any local permission boards.
+				foreach ($context['boards'] as $board)
+					echo '
+								<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['name'], ' (', $board['profile_name'], ')</option>';
 
-			echo '
-						</select>
-					</h3>
-				</div>
-			</form>';
+				echo '
+							</select></span>
+						</h3>
+					</div>
+				</form>';
 		if (!empty($context['member']['permissions']['board']))
 		{
 			echo '
-				<div class="title_bar">
-					<h3 class="titlebg">', $txt['showPermissions_permission'], '</h3>
-				</div>
-			<dl class="windowbg">';
+					<div class="windowbg padding">
+						<b>', $txt['showPermissions_permission'], '</b>
+					</div>
+				<ul>';
 			foreach ($context['member']['permissions']['board'] as $permission)
 			{
 				echo '
-				<dt class="windowbg" title="', $permission['id'], '">
-					', $permission['is_denied'] ? '<del>' . $permission['name'] . '</del>' : $permission['name'], '
-				</dt>
-				<dd class="windowbg2 smalltext">';
+					<li class="windowbg2 floatleft">
+						<div class="permission_name floatleft" title="', $permission['id'], '">
+							', $permission['is_denied'] ? '<del>' . $permission['name'] . '</del>' : $permission['name'], '
+						</div>';
+
 				if ($permission['is_denied'])
 				{
 					echo '
-					<span class="alert">', $txt['showPermissions_denied'], ': </span>', implode(', ', $permission['groups']['denied']), '<br />';
+						<span class="alert">', $txt['showPermissions_denied'], ':&nbsp;', implode(', ', $permission['groups']['denied']), '</span>';
 				}
 				else
 				{
 					echo '
-					<span>', $txt['showPermissions_given'], ': </span>', implode(', ', $permission['groups']['allowed']), '<br />';
+						<span class="permission_status">', $txt['showPermissions_given'], ': &nbsp;', implode(', ', $permission['groups']['allowed']), '</span>';
 				}
 				echo '
-				</dd>';
+					</li>';
 			}
 			echo '
-			</dl>';
+				</ul>
+			</div>';
 		}
 		else
 			echo '
 			<p class="windowbg2 description">', $txt['showPermissions_none_board'], '</p>';
 	echo '
-		</div><br />';
+		</div>';
 	}
 }
 
@@ -1562,7 +1574,7 @@ function template_notification()
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<div class="content">
-					<form action="', $scripturl, '?action=profile;area=notification;save" method="post" accept-charset="', $context['character_set'], '" id="notify_options">';
+					<form action="', $scripturl, '?action=profile;area=notification;save" method="post" accept-charset="', $context['character_set'], '" id="notify_options" class="flow_hidden">';
 
 	// Allow notification on announcements to be disabled?
 	if (!empty($modSettings['allow_disableAnnounce']))
@@ -1596,14 +1608,14 @@ function template_notification()
 							<option value="2"', $context['member']['notify_types'] == 2 ? ' selected="selected"' : '', '>', $txt['notify_send_type_everything_own'], '</option>
 							<option value="3"', $context['member']['notify_types'] == 3 ? ' selected="selected"' : '', '>', $txt['notify_send_type_only_replies'], '</option>
 							<option value="4"', $context['member']['notify_types'] == 4 ? ' selected="selected"' : '', '>', $txt['notify_send_type_nothing'], '</option>
-						</select><br />
+						</select><br class="clear" />
 
 						<div>
-							<input id="notify_submit" type="submit" value="', $txt['notify_save'], '" class="button_submit" />
+							<input id="notify_submit" type="submit" value="', $txt['notify_save'], '" class="button_submit floatright" />
 							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 							<input type="hidden" name="u" value="', $context['id_member'], '" />
 							<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
-						</div>
+						</div><br class="clear" />
 					</form>
 				</div>
 				<span class="botslice"><span></span></span>
@@ -1664,40 +1676,44 @@ function template_groupMembership()
 	{
 		echo '
 			<table border="0" width="100%" cellspacing="0" cellpadding="4" class="table_grid">
-				<tr class="catbg">
-					<th class="first_th" colspan="2">', $txt['current_membergroups'], '</th>
-					<th class="last_th"></th>
-				</tr>';
+				<thead>
+					<tr class="catbg">
+						<th class="first_th"', $context['can_edit_primary'] ? ' colspan="2"' : '', '>', $txt['current_membergroups'], '</th>
+						<th class="last_th"></th>
+					</tr>
+				</thead>
+				<tbody>';
 
 		$alternate = true;
 		foreach ($context['groups']['member'] as $group)
 		{
 			echo '
-				<tr class="', $alternate ? 'windowbg' : 'windowbg2', '" id="primdiv_', $group['id'], '">';
+					<tr class="', $alternate ? 'windowbg' : 'windowbg2', '" id="primdiv_', $group['id'], '">';
 
-			if ($context['can_edit_primary'])
+				if ($context['can_edit_primary'])
+					echo '
+						<td width="4%">
+							<input type="radio" name="primary" id="primary_', $group['id'], '" value="', $group['id'], '" ', $group['is_primary'] ? 'checked="checked"' : '', ' onclick="highlightSelected(\'primdiv_' . $group['id'] . '\');" ', $group['can_be_primary'] ? '' : 'disabled="disabled"', ' class="input_radio" />
+						</td>';
+
 				echo '
-					<td width="4%">
-						<input type="radio" name="primary" id="primary_', $group['id'], '" value="', $group['id'], '" ', $group['is_primary'] ? 'checked="checked"' : '', ' onclick="highlightSelected(\'primdiv_' . $group['id'] . '\');" ', $group['can_be_primary'] ? '' : 'disabled="disabled"', ' class="input_radio" />
-					</td>';
+						<td>
+							<label for="primary_', $group['id'], '"><strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '</label>
+						</td>
+						<td width="15%" class="righttext">';
 
-			echo '
-					<td>
-						<label for="primary_', $group['id'], '"><strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '</label>
-					</td>
-					<td width="15%" class="righttext">';
-
-			// Can they leave their group?
-			if ($group['can_leave'])
+				// Can they leave their group?
+				if ($group['can_leave'])
+					echo '
+							<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;' . $context['session_var'] . '=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['leave_group'] . '</a>';
 				echo '
-						<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;' . $context['session_var'] . '=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['leave_group'] . '</a>';
-			echo '
-					</td>
-				</tr>';
+						</td>
+					</tr>';
 			$alternate = !$alternate;
 		}
 
 		echo '
+				</tbody>
 			</table>';
 
 		if ($context['can_edit_primary'])
@@ -1712,28 +1728,32 @@ function template_groupMembership()
 			echo '
 			<br />
 			<table border="0" width="100%" cellspacing="0" cellpadding="4" class="table_grid">
-				<tr class="catbg">
-					<th class="first_th">
-						', $txt['available_groups'], '
-					</th>
-					<th class="last_th"></th>
-				</tr>';
+				<thead>
+					<tr class="catbg">
+						<th class="first_th">
+							', $txt['available_groups'], '
+						</th>
+						<th class="last_th"></th>
+					</tr>
+				</thead>
+				<tbody>';
 
 			$alternate = true;
 			foreach ($context['groups']['available'] as $group)
 			{
 				echo '
-				<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
-					<td>
-						<strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '
-					</td>
-					<td width="15%" class="righttext">
-						', $group['type'] == 2 ? '<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;' . $context['session_var'] . '=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['join_group'] . '</a>' : ($group['pending'] ? $txt['approval_pending'] : '<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';area=groupmembership;request=' . $group['id'] . '">' . $txt['request_group'] . '</a>'), '
-					</td>
-				</tr>';
+					<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
+						<td>
+							<strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '
+						</td>
+						<td width="15%" class="lefttext">
+							', $group['type'] == 2 ? '<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;' . $context['session_var'] . '=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['join_group'] . '</a>' : ($group['pending'] ? $txt['approval_pending'] : '<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';area=groupmembership;request=' . $group['id'] . '">' . $txt['request_group'] . '</a>'), '
+						</td>
+					</tr>';
 				$alternate = !$alternate;
 			}
 			echo '
+				</tbody>
 			</table>';
 		}
 
@@ -1785,63 +1805,72 @@ function template_ignoreboards()
 	// ]]></script>
 
 	<form action="', $scripturl, '?action=profile;area=ignoreboards;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
-			<div class="title_bar">
-				<h3 class="titlebg">
-					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />', $txt['profile'], '</span>
-				</h3>
-			</div>
-			<p class="description">', $txt['ignoreboards_info'], '</p>
-			<div class="windowbg2">
-				<span class="topslice"><span></span></span>
-				<div class="content">
-					<ul class="ignoreboards floatleft">';
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />', $txt['profile'], '</span>
+			</h3>
+		</div>
+		<p class="description">', $txt['ignoreboards_info'], '</p>
+		<div class="windowbg2">
+			<span class="topslice"><span></span></span>
+			<div class="content flow_hidden">
+				<ul class="ignoreboards floatleft">';
 
 	$i = 0;
 	$limit = ceil($context['num_boards'] / 2);
 	foreach ($context['categories'] as $category)
 	{
+		if ($i == $limit)
+		{
+			echo '
+				</ul>
+				<ul class="ignoreboards floatright">';
+
+			$i++;
+		}
+
 		echo '
-						<li class="category">
-							<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $category['child_ids']), ']); return false;">', $category['name'], '</a>
-							<ul>';
+					<li class="category">
+						<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $category['child_ids']), ']); return false;">', $category['name'], '</a>
+						<ul>';
 
 		foreach ($category['boards'] as $board)
 		{
 			if ($i == $limit)
 				echo '
-							</ul>
-						</li>
-					</ul>
-					<ul class="ignoreboards floatright">
-						<li class="category">
-							<ul>';
+						</ul>
+					</li>
+				</ul>
+				<ul class="ignoreboards floatright">
+					<li class="category">
+						<ul>';
 
 			echo '
-								<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left', ': ', $board['child_level'], 'em;">
-									<label for="ignore_brd', $board['id'], '"><input type="checkbox" id="ignore_brd', $board['id'], '" name="ignore_brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="input_check" /> ', $board['name'], '</label>
-								</li>';
+							<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left', ': ', $board['child_level'], 'em;">
+								<label for="ignore_brd', $board['id'], '"><input type="checkbox" id="ignore_brd', $board['id'], '" name="ignore_brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="input_check" /> ', $board['name'], '</label>
+							</li>';
 
-			$i ++;
+			$i++;
 		}
 
 		echo '
-							</ul>
-						</li>';
+						</ul>
+					</li>';
 	}
 
 	echo '
-					</ul>
-					<div class="clear_right"><br /></div>';
+				</ul>
+				<br class="clear" />';
 
 	// Show the standard "Save Settings" profile button.
 	template_profile_save();
 
 	echo '
-				</div>
-				<span class="botslice"><span></span></span>
 			</div>
-		</form>
-		<br />';
+			<span class="botslice"><span></span></span>
+		</div>
+	</form>
+	<br />';
 }
 
 // Simple load some theme variables common to several warning templates.
@@ -2058,9 +2087,9 @@ function template_issueWarning()
 	// ]]></script>';
 
 	echo '
-	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=issuewarning" method="post" accept-charset="', $context['character_set'], '">
-		<div class="title_bar">
-			<h3 class="titlebg">
+	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=issuewarning" method="post" class="flow_hidden" accept-charset="', $context['character_set'], '">
+		<div class="cat_bar">
+			<h3 class="catbg">
 				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
 				', $context['user']['is_owner'] ? $txt['profile_warning_level'] : $txt['profile_issue_warning'], '
 				</span>
@@ -2069,7 +2098,7 @@ function template_issueWarning()
 
 	if (!$context['user']['is_owner'])
 		echo '
-		<p class="windowbg2 description">', $txt['profile_warning_desc'], '</p>';
+		<p class="description">', $txt['profile_warning_desc'], '</p>';
 
 	echo '
 		<div class="windowbg">
@@ -2163,7 +2192,7 @@ function template_issueWarning()
 		echo '
 						</select>
 						<span class="smalltext" id="new_template_link" style="display: none;">[<a href="', $scripturl, '?action=moderate;area=warnings;sa=templateedit;tid=0" target="_blank" class="new_win">', $txt['profile_warning_new_template'], '</a>]</span><br />
-						<textarea name="warn_body" id="warn_body" cols="40" rows="8" style="width: 80%; font-size: x-small;">', $context['warning_data']['notify_body'], '</textarea>
+						<textarea name="warn_body" id="warn_body" cols="40" rows="8">', $context['warning_data']['notify_body'], '</textarea>
 					</dd>';
 	}
 	echo '
@@ -2179,18 +2208,21 @@ function template_issueWarning()
 
 	// Previous warnings?
 	echo '<br />
-		<div class="title_bar">
-			<h3 class="titlebg">
+		<div class="cat_bar">
+			<h3 class="catbg">
 				', $txt['profile_warning_previous'], '
 			</h3>
 		</div>
 		<table border="0" width="100%" cellspacing="1" cellpadding="5" class="bordercolor" align="center">
-			<tr class="catbg">
-				<td width="20%">', $txt['profile_warning_previous_issued'], '</td>
-				<td width="30%">', $txt['profile_warning_previous_time'], '</td>
-				<td>', $txt['profile_warning_previous_reason'], '</td>
-				<td width="6%">', $txt['profile_warning_previous_level'], '</td>
-			</tr>';
+			<thead>
+				<tr class="titlebg lefttext">
+					<th class="first_th" width="20%">', $txt['profile_warning_previous_issued'], '</th>
+					<th width="30%">', $txt['profile_warning_previous_time'], '</th>
+					<th>', $txt['profile_warning_previous_reason'], '</th>
+					<th class="last_th" width="6%">', $txt['profile_warning_previous_level'], '</th>
+				</tr>
+			</thead>
+			<tbody>';
 
 	// Print the warnings.
 	$alternate = 0;
@@ -2198,40 +2230,37 @@ function template_issueWarning()
 	{
 		$alternate = !$alternate;
 		echo '
-			<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
-				<td class="smalltext">', $warning['issuer']['link'], '</td>
-				<td class="smalltext">', $warning['time'], '</td>
-				<td class="smalltext">
-					<div class="floatleft">
-						', $warning['reason'], '
-					</div>';
+				<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
+					<td class="smalltext">', $warning['issuer']['link'], '</td>
+					<td class="smalltext">', $warning['time'], '</td>
+					<td class="smalltext">
+						<div class="floatleft">
+							', $warning['reason'], '
+						</div>';
 
 		if (!empty($warning['id_notice']))
 			echo '
-					<div class="floatright">
-						<a href="', $scripturl, '?action=moderate;area=notice;nid=', $warning['id_notice'], '" onclick="window.open(this.href, \'\', \'scrollbars=yes,resizable=yes,width=400,height=250\');return false;" target="_blank" class="new_win" title="', $txt['profile_warning_previous_notice'], '"><img src="', $settings['images_url'], '/filter.gif" alt="" /></a>
-					</div>';
+						<div class="floatright">
+							<a href="', $scripturl, '?action=moderate;area=notice;nid=', $warning['id_notice'], '" onclick="window.open(this.href, \'\', \'scrollbars=yes,resizable=yes,width=400,height=250\');return false;" target="_blank" class="new_win" title="', $txt['profile_warning_previous_notice'], '"><img src="', $settings['images_url'], '/filter.gif" alt="" /></a>
+						</div>';
 		echo '
-				</td>
-				<td class="smalltext">', $warning['counter'], '</td>
-			</tr>';
+					</td>
+					<td class="smalltext">', $warning['counter'], '</td>
+				</tr>';
 	}
 
 	if (empty($context['previous_warnings']))
 		echo '
-			<tr class="windowbg2">
-				<td align="center" colspan="4">
-					', $txt['profile_warning_previous_none'], '
-				</td>
-			</tr>';
+				<tr class="windowbg2">
+					<td align="center" colspan="4">
+						', $txt['profile_warning_previous_none'], '
+					</td>
+				</tr>';
 
 	echo '
-			<tr class="catbg">
-				<td colspan="4">
-					', $txt['pages'], ': ', $context['page_index'], '
-				</td>
-			</tr>
-		</table>';
+			</tbody>
+		</table>
+		<div class="pagesection">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 	// Do our best to get pretty javascript enabled.
 	echo '

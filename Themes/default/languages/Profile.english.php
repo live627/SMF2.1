@@ -312,6 +312,7 @@ $txt['show_attach_downloads'] = 'Downloads';
 $txt['show_attach_posted'] = 'Posted';
 
 $txt['showPermissions'] = 'Show Permissions';
+$txt['showPermissions_help'] = 'This section allows you to view all permissions for this member (denied permissions are <del>struck out</del>).';
 $txt['showPermissions_given'] = 'Given by';
 $txt['showPermissions_denied'] = 'Denied by';
 $txt['showPermissions_permission'] = 'Permission (denied permissions are <del>struck out</del>)';

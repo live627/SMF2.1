@@ -390,8 +390,8 @@ tr.catbg th.smalltext
 /* the page navigation area */
 .pagesection
 {
-	font-size: 0.9em;
-	padding: 0.5em;
+	font-size: 0.85em;
+	padding: 0.5em 0.2em;
 	overflow: hidden;
 }
 .pagesection .pagelinks
@@ -1151,7 +1151,7 @@ h1#forum_name
 	padding: 0;
 	display: inline;
 }
-.main_menu li a
+.main_menu li a:link, .main_menu li a:visited
 {
 	float: left;
 	display: block;
@@ -1908,7 +1908,6 @@ form#postmodify .roundframe
 #post_header
 {
 	margin-bottom: 0.5em;
-	border-bottom: 1px solid #666;
 	padding: 0.5em;
 	overflow: hidden;
 }
@@ -2021,8 +2020,7 @@ ul.post_options li
 #post_event fieldset
 {
 	margin-bottom: 0.5em;
-	border: none;
-	border-bottom: 1px solid #666;
+	border: 1px solid #c4c4c4;
 	padding: 0.5em;
 	clear: both;
 }
@@ -2031,10 +2029,19 @@ ul.post_options li
 	font-weight: bold;
 	color: #000;
 }
+#post_event #event_main input
+{
+	margin: 0 0 1em 0;
+	float: left;
+}
+#post_event #event_main div.smalltext
+{
+	width: 33em;
+	float: right;
+}
 #post_event div.event_options
 {
-	width: 49%;
-	float: left;
+	float: right;
 }
 #post_event ul.event_main, ul.event_options
 {
@@ -2056,29 +2063,50 @@ ul.post_options li
 #post_event ul.event_options li
 {
 	list-style-type: none;
-	margin: 0.3em 0 0 0;
+	margin: 0;
+	float: left;
+}
+#post_event #event_main select, #post_event ul.event_options li select, #post_event ul.event_options li .input_check
+{
+	margin: 0 1em 0 0;
 }
 
 /* Styles for edit poll section.
 ---------------------------------------------------- */
 
+#edit_poll
+{
+	overflow: hidden;
+}
 #edit_poll fieldset
 {
-	margin-bottom: 0.5em;
-	border: none;
-	border-bottom: 1px solid #666;
+	margin: 0.5em 0;
+	border: 1px solid #c4c4c4;
 	padding: 0.5em;
 	clear: both;
+	overflow: hidden;
 }
 #edit_poll legend
 {
 	font-weight: bold;
 	color: #000;
 }
+#edit_poll fieldset input
+{
+	margin-left: 8.6em;
+}
+#edit_poll ul.poll_main li
+{
+	padding-left: 1em;
+}
+#edit_poll ul.poll_main input
+{
+	margin-left: 1em;
+}
 #edit_poll ul.poll_main, dl.poll_options
 {
 	overflow: hidden;
-	padding: 0 0 0 .7em;
+	padding: 0 0 .7em .7em;
 	list-style: none;
 }
 #edit_poll ul.poll_main li
@@ -2087,12 +2115,18 @@ ul.post_options li
 }
 #edit_poll dl.poll_options dt
 {
-	width: 35%;
+	width: 33%;
+	padding: 0 0 0 1em;
 }
 #edit_poll dl.poll_options dd
 {
-	width: 63%;
+	width: 65%;
 }
+#edit_poll dl.poll_options dd input
+{
+	margin-left: 0; 
+}
+
 
 /* Styles for the recent messages section.
 ---------------------------------------------------- */
@@ -2853,25 +2887,39 @@ div.core_posts div.content
 	text-align: right;
 	margin-right: 1em;
 }
-
-#permissions dt
+#permissions div.tborder
 {
-	width: 48%;
-	float: left;
-	line-height: 1.2em;
-	margin: 0;
-	padding: 1%;
-	clear: both;
-	border-top: 1px solid #fff;
+	margin-bottom: 2em;
 }
-
-#permissions dd
+#permissions ul
+{
+	padding: 0;
+	margin: 1px 0 0 0;
+	border-top: 1px solid #e5e5e8;
+	float: left;
+	width: 100%; 
+}
+#permissions div.permission_name
 {
 	width: 48%;
-	float: left;
-	margin: 0;
-	padding: 1%;
-	border-top: 1px solid #fff;
+	list-style: none;
+	border-right: 1px solid #e5e5e8;
+	background: #ecedf3;
+	margin: 0 1% 0 0;
+	padding: 0.7em 0.7em 0.8em 0.7em;
+	line-height: 1em;
+}
+#permissions li
+{
+	width: 100%;
+	padding: 0;
+	list-style: none;
+	margin: 0 0 1px 0;
+}
+#permissions li span.permission_status, #permissions li span.alert
+{
+	line-height: 2.9em;
+	font-size: 0.85em;
 }
 
 #tracking div.content dl
@@ -2901,19 +2949,25 @@ div.core_posts div.content
 
 .ignoreboards
 {
-	margin: 0;
+	margin: 0 2%;
 	padding: 0;
-	width: 49%;
-	overflow: auto;
+	width: 45%;
 }
 .ignoreboards a
 {
-	text-decoration: underline;
+	font-weight: bold;
+	text-decoration: none;
+	border-bottom: 1px solid #c4c4c4;
+	padding: 0.1em 0;
+}
+.ignoreboards a:hover
+{
+	text-decoration: none;
+	border-bottom: 1px solid #476c8e;
 }
 .ignoreboards ul
 {
-	overflow: auto;
-	margin: 0 0 0 1em;
+	margin: 0;
 	padding: 0;
 }
 .ignoreboards li
@@ -2921,6 +2975,19 @@ div.core_posts div.content
 	list-style: none;
 	float: left;
 	clear: both;
+}
+.ignoreboards li.category
+{
+	margin: 0.7em 0 0 0;
+	width: 100%;
+}
+.ignoreboards li ul
+{
+	margin: 0.2em 0 0 0;
+}
+.ignoreboards li.category ul li.board
+{
+	width: 93%;
 }
 
 #theme_settings
@@ -2954,6 +3021,11 @@ div.core_posts div.content
 {
 	width: 100%;
 	float: left;
+}
+/*Issue a warning*/
+#warn_body{
+	width: 80%;
+	font-size: 0.9em;
 }
 
 /* Styles for the statistics center.
@@ -3064,6 +3136,10 @@ dl.stats dd
 #personal_messages .reportlinks
 {
 	padding: 0.5em 1.3em;
+}
+#searchLabelsExpand li
+{
+	padding: 0.3em 0.5em;
 }
 
 /* Styles for the calendar section.
@@ -3267,35 +3343,6 @@ fieldset#advanced_search .roundframe
 #searchform p.clear
 {
 	clear: both;
-}
-
-/* Boards picker */
-#searchform fieldset div#searchBoardsExpand ul
-{
-	overflow: auto;
-	margin: 0 0 0 1em;
-	padding: 0;
-	width: 48%;
-}
-#searchform fieldset div#searchBoardsExpand ul ul
-{
-	width: auto;
-}
-#searchform fieldset div#searchBoardsExpand a
-{
-	text-decoration: underline;
-}
-#searchform fieldset div#searchBoardsExpand li
-{
-	list-style: none;
-	float: left;
-	clear: both;
-}
-#searchform fieldset p
-{
-	padding: 4px;
-	text-align: left;
-	margin-top: 5px;
 }
 
 /* Styles for the search results page.

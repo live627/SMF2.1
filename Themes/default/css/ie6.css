@@ -65,11 +65,12 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 	width: auto;
 }
 /* generic lists header */
-/* NOTE: this was marked as important but seems unnecessary.
-/*.table_grid thead th
+/* Side paddings must NOT be defined here.*/
+.table_grid thead th
 {
-	padding: 0 !important;
-}*/
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
 
 /* overflow: hidden doesn't help in IE6. */
 h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
@@ -157,6 +158,12 @@ h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
 {
 	word-wrap: break-word;
 }
+.ignoreboards
+{
+	margin: 0 1%;
+	padding: 0;
+	width: 45%;
+}
 
 /* Overrides for the personal messages template
 ------------------------------------------------------- */
@@ -174,3 +181,10 @@ h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
 	width: 99.5%;
 	margin: 0 auto;
 }
+
+#edit_poll ul.poll_main li
+{
+	padding-left: 0;
+	margin: 0 -2em;
+}
+#postmodify div.roundframe { margin-right: 0;}

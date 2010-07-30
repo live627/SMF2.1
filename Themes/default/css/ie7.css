@@ -21,11 +21,13 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 	float: none !important;
 	width: auto;
 }
-/* NOTE: this was marked as important but seems unnecessary.
-/*.table_grid thead th
+/* generic lists header */
+/* Side paddings must NOT be defined here.*/
+.table_grid thead th
 {
-	padding: 0 !important;
-}*/
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
 
 /* Overrides for the messageindex template
 ------------------------------------------------------- */
@@ -76,4 +78,11 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 #main_grid table.weeklist h4.titlebg
 {
 	margin: 2px 0 -4px 0;
+}
+
+/* Overrides for the personal messages template
+------------------------------------------------------- */
+#postmodify dl #pm_to, #postmodify dl #bcc_div2, #postmodify dl #pm_subject
+{
+	clear:both !important;
 }

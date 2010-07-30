@@ -592,13 +592,6 @@ function template_browse()
 			}
 		// ]]></script>';
 
-	// Gotta love IE4, and its hatefulness...
-	if ($context['browser']['is_ie4'])
-		echo '
-		<script type="text/javascript"><!-- // --><![CDATA[
-			addLoadEvent(smfSetLatestPackages);
-		// ]]></script>';
-	else
 		echo '
 		<script type="text/javascript"><!-- // --><![CDATA[
 			smfSetLatestPackages();
@@ -621,10 +614,10 @@ function template_browse()
 		<table class="table_grid" width="100%">
 		<thead>
 			<tr class="catbg">
-				<th width="32"></th>
+				<th class="first_th" width="32"></th>
 				<th class="smalltext lefttext" width="25%">', $txt['mod_name'], '</th>
 				<th class="smalltext lefttext" width="25%">', $txt['mod_version'], '</th>
-				<th class="smalltext" width="49%"></th>
+				<th class="smalltext last_th" width="49%"></th>
 			</tr>
 		</thead>
 		<tbody>';

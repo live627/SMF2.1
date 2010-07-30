@@ -48,6 +48,7 @@ July 2010
  ! Doing sub-steps were showing dots on previous entry during upgrade. (upgrade.php) [Bug 3510]
  ! Changing username did not reset the password. (Profile-Modify.php) [Bug 4358]
  * Board Index category toggle URLs were missing session ids for WAP2 and imode. (Wireless.template.php) [Bug 4394]
+ * Changes to various files for cross-browser support plus some tweaks for aesthetics (Quite a few files)
 
 
 June 2010
@@ -80,6 +81,7 @@ June 2010
  ! 'alternate' value for Unapproved Attachments list was not set. (PostModeration.php)
  * Unapproved Posts and Unapproved Attachments areas were missing bottom page index. (ModerationCenter template) [Bug 4334]
  ! Division by zero error in profile stats area with members having posts but a post count of zero. (Profile-View.php) [Bug 4336]
+ 
 
 
 May 2010

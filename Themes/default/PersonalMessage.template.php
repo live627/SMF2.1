@@ -747,17 +747,13 @@ function template_search()
 			echo '
 				</ul>
 				<p>
-					<input type="checkbox" name="all" id="check_all" value="" ', $context['check_all'] ? 'checked="checked"' : '', ' onclick="invertAll(this, this.form, \'searchlabel\');" class="input_check" /><em> <label for="check_all">', $txt['check_all'], '</label></em>
-				</p>
+					<span class="floatleft"><input type="checkbox" name="all" id="check_all" value="" ', $context['check_all'] ? 'checked="checked"' : '', ' onclick="invertAll(this, this.form, \'searchlabel\');" class="input_check" /><em> <label for="check_all">', $txt['check_all'], '</label></em></span>
+					<input type="submit" name="submit" value="', $txt['pm_search_go'], '" class="button_submit floatright" />
+				</p><br class="clear" />
 			</div>
 			<span class="lowerframe"><span></span></span>
 		</fieldset>';
 		}
-
-		echo '
-		<div class="righttext padding">
-			<input type="submit" name="submit" value="', $txt['pm_search_go'], '" class="button_submit" />
-		</div>';
 	}
 
 	echo '
@@ -934,10 +930,10 @@ function template_send()
 		</div>';
 
 	echo '
-	<form action="', $scripturl, '?action=pm;sa=send2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'message\']);">
-		<div>
+	<form action="', $scripturl, '?action=pm;sa=send2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" class="flow_hidden" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'message\']);">
+		<div style="position: relative; float: left; width: 100%;">
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe">';
+			<div class="roundframe" style="float: left; position: relative; right:0;">';
 
 	// If there were errors for sending the PM, show them.
 	if (!empty($context['post_error']['messages']))
@@ -967,7 +963,7 @@ function template_send()
 
 	// Autosuggest will be added by the JavaScript later on.
 	echo '
-					<dd>
+					<dd id="pm_to" class="clear_right">
 						<input type="text" name="to" id="to_control" value="', $context['to_value'], '" tabindex="', $context['tabindex']++, '" size="40" style="width: 130px;" class="input_text" />';
 
 	// A link to add BCC, only visible with JavaScript enabled.
@@ -983,7 +979,7 @@ function template_send()
 
 	// This BCC row will be hidden by default if JavaScript is enabled.
 	echo '
-					<dt id="bcc_div">
+					<dt  class="clear_left" id="bcc_div">
 						<span', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_bcc']) ? ' class="error"' : ''), '>', $txt['pm_bcc'], ':</span>
 					</dt>
 					<dd id="bcc_div2">
@@ -992,14 +988,14 @@ function template_send()
 					</dd>';
 
 	// The subject of the PM.
-	echo '
-					<dt>
+	echo ' 
+					<dt class="clear_left">
 						<span', (isset($context['post_error']['no_subject']) ? ' class="error"' : ''), '>', $txt['subject'], ':</span>
 					</dt>
-					<dd>
-						<input type="text" name="subject" value="', $context['subject'], '" tabindex="', $context['tabindex']++, '" size="40" maxlength="50" />
+					<dd id="pm_subject">
+						<input type="text" name="subject" value="', $context['subject'], '" tabindex="', $context['tabindex']++, '" size="60" maxlength="60" />
 					</dd>
-				</dl>';
+				</dl><hr class="clear" />';
 
 	// Showing BBC?
 	if ($context['show_bbc'])
@@ -1042,7 +1038,7 @@ function template_send()
 				<input type="hidden" name="pm_head" value="', !empty($context['quoted_message']['pm_head']) ? $context['quoted_message']['pm_head'] : 0, '" />
 				<input type="hidden" name="f" value="', isset($context['folder']) ? $context['folder'] : '', '" />
 				<input type="hidden" name="l" value="', isset($context['current_label_id']) ? $context['current_label_id'] : -1, '" />
-			</div>
+			</div><br class="clear" />
 			<span class="lowerframe"><span></span></span>
 		</div>
 	</form>';
@@ -1055,15 +1051,13 @@ function template_send()
 	<div class="cat_bar">
 		<h3 class="catbg">', $txt['subject'], ': ', $context['quoted_message']['subject'], '</h3>
 	</div>
-	<div class="title_bar">
-		<h3 class="titlebg">
-			<span class="floatleft">', $txt['from'], ': ', $context['quoted_message']['member']['name'], '</span>
-			<span class="floatright">', $txt['on'], ': ', $context['quoted_message']['time'], '</span>
-		</h3>
-	</div>
 	<div class="windowbg2">
 		<span class="topslice"><span></span></span>
 		<div class="content">
+			<div class="clear">
+				<span class="smalltext floatright">', $txt['on'], ': ', $context['quoted_message']['time'], '</span>
+				<b>', $txt['from'], ': ', $context['quoted_message']['member']['name'], '</b>
+			</div><hr />
 			', $context['quoted_message']['body'], '
 		</div>
 		<span class="botslice"><span></span></span>

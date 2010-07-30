@@ -95,7 +95,7 @@ function template_main()
 	// End of the javascript, start the form and display the link tree.
 	echo '
 		// ]]></script>
-		<form action="', $scripturl, '?action=', $context['destination'], ';', empty($context['current_board']) ? '' : 'board=' . $context['current_board'], '" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="', ($context['becomes_approved'] ? '' : 'alert(\'' . $txt['js_post_will_require_approval'] . '\');'), 'submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'', $context['post_box_name'], '\', \'guestname\', \'evtitle\', \'question\'], \'options\');" enctype="multipart/form-data">';
+		<form action="', $scripturl, '?action=', $context['destination'], ';', empty($context['current_board']) ? '' : 'board=' . $context['current_board'], '" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" class="flow_hidden" onsubmit="', ($context['becomes_approved'] ? '' : 'alert(\'' . $txt['js_post_will_require_approval'] . '\');'), 'submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'', $context['post_box_name'], '\', \'guestname\', \'evtitle\', \'question\'], \'options\');" enctype="multipart/form-data">';
 
 	// If the user wants to see how their message looks - the preview section is where it's at!
 	echo '
@@ -192,7 +192,7 @@ function template_main()
 						<dd>
 							<input type="text" name="subject"', $context['subject'] == '' ? '' : ' value="' . $context['subject'] . '"', ' tabindex="', $context['tabindex']++, '" size="80" maxlength="80" class="input_text" />
 						</dd>
-						<dt>
+						<dt class="clear_left">
 							', $txt['message_icon'], ':
 						</dt>
 						<dd>
@@ -207,7 +207,7 @@ function template_main()
 							</select>
 							<img src="', $context['icon_url'], '" name="icons" hspace="15" alt="" />
 						</dd>
-					</dl>';
+					</dl><hr class="clear" />';
 
 	// Are you posting a calendar event?
 	if ($context['make_event'])
@@ -217,34 +217,34 @@ function template_main()
 						<fieldset id="event_main">
 							<legend><span', isset($context['post_error']['no_event']) ? ' class="error"' : '', ' id="caption_evtitle">', $txt['calendar_event_title'], '</span></legend>
 							<input type="text" name="evtitle" maxlength="60" size="60" value="', $context['event']['title'], '" tabindex="', $context['tabindex']++, '" class="input_text" />
-							<div class="padding">
-								<input type="hidden" name="calendar" value="1" />', $txt['calendar_year'], '&nbsp;
+							<div class="smalltext">
+								<input type="hidden" name="calendar" value="1" />', $txt['calendar_year'], '
 								<select name="year" id="year" tabindex="', $context['tabindex']++, '" onchange="generateDays();">';
 
 		// Show a list of all the years we allow...
 		for ($year = $modSettings['cal_minyear']; $year <= $modSettings['cal_maxyear']; $year++)
 			echo '
-									<option value="', $year, '"', $year == $context['event']['year'] ? ' selected="selected"' : '', '>', $year, '</option>';
+									<option value="', $year, '"', $year == $context['event']['year'] ? ' selected="selected"' : '', '>', $year, '&nbsp;</option>';
 
 		echo '
-								</select>&nbsp;
-								', $txt['calendar_month'], '&nbsp;
+								</select>
+								', $txt['calendar_month'], '
 								<select name="month" id="month" onchange="generateDays();">';
 
 		// There are 12 months per year - ensure that they all get listed.
 		for ($month = 1; $month <= 12; $month++)
 			echo '
-									<option value="', $month, '"', $month == $context['event']['month'] ? ' selected="selected"' : '', '>', $txt['months'][$month], '</option>';
+									<option value="', $month, '"', $month == $context['event']['month'] ? ' selected="selected"' : '', '>', $txt['months'][$month], '&nbsp;</option>';
 
 		echo '
-								</select>&nbsp;
-								', $txt['calendar_day'], '&nbsp;
+								</select>
+								', $txt['calendar_day'], '
 								<select name="day" id="day">';
 
 		// This prints out all the days in the current month - this changes dynamically as we switch months.
 		for ($day = 1; $day <= $context['event']['last_day']; $day++)
 			echo '
-									<option value="', $day, '"', $day == $context['event']['day'] ? ' selected="selected"' : '', '>', $day, '</option>';
+									<option value="', $day, '"', $day == $context['event']['day'] ? ' selected="selected"' : '', '>', $day, '&nbsp;</option>';
 
 		echo '
 								</select>
@@ -256,7 +256,7 @@ function template_main()
 			echo '
 						<fieldset id="event_options">
 							<legend>', $txt['calendar_event_options'], '</legend>
-							<div class="event_options">
+							<div class="event_options smalltext">
 								<ul class="event_options">';
 
 			// If events can span more than one day then allow the user to select how long it should last.
@@ -269,7 +269,7 @@ function template_main()
 
 				for ($days = 1; $days <= $modSettings['cal_maxspan']; $days++)
 					echo '
-											<option value="', $days, '"', $days == $context['event']['span'] ? ' selected="selected"' : '', '>', $days, '</option>';
+											<option value="', $days, '"', $days == $context['event']['span'] ? ' selected="selected"' : '', '>', $days, '&nbsp;</option>';
 
 				echo '
 										</select>
@@ -289,7 +289,7 @@ function template_main()
 											<optgroup label="', $category['name'], '">';
 					foreach ($category['boards'] as $board)
 						echo '
-												<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
+												<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '&nbsp;</option>';
 					echo '
 											</optgroup>';
 				}
@@ -314,7 +314,7 @@ function template_main()
 		echo '
 					<div id="edit_poll">
 						<fieldset id="poll_main">
-							<legend><span ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '>', $txt['poll_question'], ':</span></legend>
+							<legend><span ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '>', $txt['poll_question'], '</span></legend>
 							<input type="text" name="question" value="', isset($context['question']) ? $context['question'] : '', '" tabindex="', $context['tabindex']++, '" size="80" class="input_text" />
 							<ul class="poll_main">';
 
@@ -334,7 +334,7 @@ function template_main()
 							<strong><a href="javascript:addPollOption(); void(0);">(', $txt['poll_add_option'], ')</a></strong>
 						</fieldset>
 						<fieldset id="poll_options">
-							<legend>', $txt['poll_options'], ':</legend>
+							<legend>', $txt['poll_options'], '</legend>
 							<dl class="settings poll_options">
 								<dt>
 									<label for="poll_max_votes">', $txt['poll_max_votes'], ':</label>

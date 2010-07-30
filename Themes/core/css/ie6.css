@@ -1,4 +1,16 @@
 /* special styles for IE6 */
+
+.main_menu li.active a
+{
+	background: none;
+	padding-right: 0;
+}
+.main_menu li.active
+{
+	background: url(../images/maintab_active_last.gif) no-repeat bottom right;
+	padding-right: 8px;
+}
+
 * html #poll_options ul.horizlist dl.options dd, * html #poll_options ul.horizlist dl.options dt
 {
 	margin: 0;
