@@ -53,8 +53,8 @@ July 2010
  * Minor tweaks to stats page and profile for consistency (Stats.template.php, Profile.template.php, index.css)
  * Fixed a bug in 10038 in send new message area (PersonalMessage.template.php)
  * Fixed small glitches with slice spans and updated topic posting samples to match Curve (Help.template.php)
- 
-
+ ! Minor bugfixes for quick moderation and moderation log [Bug 4384,4369]
+ * Left aligned text for message index headers that have left aligned column content (MessageIndex.template.php)
 
 June 2010
 --------------------------------------------------------------------------------

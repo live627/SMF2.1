@@ -856,9 +856,9 @@ function QuickModeration()
 			)
 		);
 
-		// Get the board IDs
+// Get the board IDs and Sticky status
 		$request = $smcFunc['db_query']('', '
-			SELECT id_topic, id_board
+			SELECT id_topic, id_board, is_sticky
 			FROM {db_prefix}topics
 			WHERE id_topic IN ({array_int:sticky_topic_ids})
 			LIMIT ' . count($stickyCache),
@@ -867,8 +867,12 @@ function QuickModeration()
 			)
 		);
 		$stickyCacheBoards = array();
+		$stickyCacheStatus = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
 			$stickyCacheBoards[$row['id_topic']] = $row['id_board'];
+			$stickyCacheStatus[$row['id_topic']] = empty($row['is_sticky']);
+		}
 		$smcFunc['db_free_result']($request);
 	}
 
@@ -1026,6 +1030,26 @@ function QuickModeration()
 		}
 	}
 
+// Let's do approval
+	if (!empty($approveCache))
+	{
+		// Get the author ID
+		$request = $smcFunc['db_query']('', '
+			SELECT t.id_topic, msg.id_member
+			FROM {db_prefix}topics AS t
+				LEFT JOIN {db_prefix}messages AS msg ON (t.id_first_msg = msg.id_msg)
+			WHERE t.id_topic IN ({array_int:approve_topic_ids})
+			LIMIT ' . count($approveCache),
+			array(
+				'approve_topic_ids' => $approveCache,
+			)
+		);
+		$approveCacheUsers = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$approveCacheUsers[$row['id_topic']] = $row['id_member'];
+		$smcFunc['db_free_result']($request);
+	}
+
 	// And (almost) lastly, lock the topics...
 	if (!empty($lockCache))
 	{
@@ -1097,7 +1121,8 @@ function QuickModeration()
 	if (!empty($approveCache))
 	{
 		// This function returns the outcome...
-		//!!! Add logging!
+		// Log!
+		logAction('approve_topic', array('topic' => $topic, 'member' => $approveCacheUsers[$topic]));
 		$approveCache = approveTopics($approveCache);
 	}
 
@@ -1126,14 +1151,14 @@ function QuickModeration()
 	}
 	foreach ($lockCache as $topic)
 	{
-		logAction('lock', array('topic' => $topic, 'board' => $lockCacheBoards[$topic]));
+		logAction($lockStatus[$topic] ? 'lock' : 'unlock', array('topic' => $topic, 'board' => $lockCacheBoards[$topic]));
 		sendNotifications($topic, $lockStatus[$topic] ? 'lock' : 'unlock');
 	}
 	foreach ($stickyCache as $topic)
 	{
-		logAction('sticky', array('topic' => $topic, 'board' => $stickyCacheBoards[$topic]));
+		logAction($stickyCacheStatus[$topic] ? 'unsticky' : 'sticky', array('topic' => $topic, 'board' => $stickyCacheBoards[$topic]));
 		sendNotifications($topic, 'sticky');
-	}
+	} 
 
 	updateStats('topic');
 	updateStats('message');

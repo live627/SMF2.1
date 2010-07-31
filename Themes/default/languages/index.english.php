@@ -529,8 +529,8 @@ $txt['poll_cannot_see'] = 'You cannot see the results of this poll at the moment
 
 $txt['quick_mod_approve'] = 'Approve selected';
 $txt['quick_mod_remove'] = 'Remove selected';
-$txt['quick_mod_lock'] = 'Lock selected';
-$txt['quick_mod_sticky'] = 'Sticky selected';
+$txt['quick_mod_lock'] = 'Lock/Unlock selected';
+$txt['quick_mod_sticky'] = 'Sticky/Unsticky selected';
 $txt['quick_mod_move'] = 'Move selected to';
 $txt['quick_mod_merge'] = 'Merge selected';
 $txt['quick_mod_markread'] = 'Mark selected read';
