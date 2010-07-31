@@ -931,9 +931,9 @@ function template_send()
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=send2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" class="flow_hidden" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'message\']);">
-		<div style="position: relative; float: left; width: 100%;">
+		<div>
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe" style="float: left; position: relative; right:0;">';
+			<div class="roundframe"><br class="clear" />';
 
 	// If there were errors for sending the PM, show them.
 	if (!empty($context['post_error']['messages']))
@@ -1038,7 +1038,8 @@ function template_send()
 				<input type="hidden" name="pm_head" value="', !empty($context['quoted_message']['pm_head']) ? $context['quoted_message']['pm_head'] : 0, '" />
 				<input type="hidden" name="f" value="', isset($context['folder']) ? $context['folder'] : '', '" />
 				<input type="hidden" name="l" value="', isset($context['current_label_id']) ? $context['current_label_id'] : -1, '" />
-			</div><br class="clear" />
+				<br class="clear" />
+				</div>
 			<span class="lowerframe"><span></span></span>
 		</div>
 	</form>';
@@ -1159,8 +1160,8 @@ function template_labels()
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=manlabels" method="post" accept-charset="', $context['character_set'], '">
-		<div class="title_bar">
-			<h3 class="titlebg">', $txt['pm_manage_labels'], '</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pm_manage_labels'], '</h3>
 		</div>
 		<div class="description">
 			', $txt['pm_labels_desc'], '
@@ -1326,9 +1327,9 @@ function template_rules()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<form action="', $scripturl, '?action=pm;sa=manrules" method="post" accept-charset="', $context['character_set'], '" name="manRules">
-		<div class="title_bar">
-			<h3 class="titlebg">', $txt['pm_manage_rules'], '</h3>
+	<form action="', $scripturl, '?action=pm;sa=manrules" method="post" accept-charset="', $context['character_set'], '" name="manRules" id="manrules">
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pm_manage_rules'], '</h3>
 		</div>
 		<div class="description">
 			', $txt['pm_manage_rules_desc'], '
@@ -1387,10 +1388,10 @@ function template_rules()
 	if (!empty($context['rules']))
 		echo '
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-			<input type="submit" name="delselected" value="', $txt['pm_delete_selected_rule'], '" onclick="return confirm(\'', $txt['pm_js_delete_rule_confirm'], '\');" class="button_submit" />';
+			<input type="submit" name="delselected" value="', $txt['pm_delete_selected_rule'], '" onclick="return confirm(\'', $txt['pm_js_delete_rule_confirm'], '\');" class="button_submit smalltext" />';
 
 	echo '
-			</div>
+		</div>
 	</form>';
 
 }
@@ -1570,20 +1571,20 @@ function template_add_rule()
 	// ]]></script>';
 
 	echo '
-	<form action="', $scripturl, '?action=pm;sa=manrules;save;rid=', $context['rid'], '" method="post" accept-charset="', $context['character_set'], '" name="addrule" id="addrule">
+	<form action="', $scripturl, '?action=pm;sa=manrules;save;rid=', $context['rid'], '" method="post" accept-charset="', $context['character_set'], '" name="addrule" id="addrule" class="flow_hidden">
 		<div class="cat_bar">
 			<h3 class="catbg">', $context['rid'] == 0 ? $txt['pm_add_rule'] : $txt['pm_edit_rule'], '</h3>
 		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
-				<dl class="settings">
-					<dt>
+				<dl class="addrules">
+					<dt class="floatleft">
 						<strong>', $txt['pm_rule_name'], ':</strong><br />
 						<span class="smalltext">', $txt['pm_rule_name_desc'], '</span>
 					</dt>
-					<dd>
-						<input type="text" name="rule_name" value="', empty($context['rule']['name']) ? $txt['pm_rule_name_default'] : $context['rule']['name'], '" class="input_text" style="width: 100%" />
+					<dd class="floatleft">
+						<input type="text" name="rule_name" value="', empty($context['rule']['name']) ? $txt['pm_rule_name_default'] : $context['rule']['name'], '" size="50" class="input_text" />
 					</dd>
 				</dl>
 				<fieldset>
@@ -1687,12 +1688,12 @@ function template_add_rule()
 				</fieldset>
 			</div>
 			<span class="botslice"><span></span></span>
-		</div>
+		</div><br class="clear" />
 		<div class="cat_bar">
 			<h3 class="catbg">', $txt['pm_rule_description'], '</h3>
 		</div>
 		<div class="information">
-			<div id="ruletext" class="smalltext">', $txt['pm_rule_js_disabled'], '</div>
+			<div id="ruletext">', $txt['pm_rule_js_disabled'], '</div>
 		</div>
 		<div class="righttext">
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />

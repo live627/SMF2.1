@@ -343,7 +343,7 @@ function template_showPosts()
 	// Are we displaying posts or attachments?
 	if (!isset($context['attachments']))
 	{
-		// For every post to be displayed, give it its own subtable, and show the important details of the post.
+		// For every post to be displayed, give it its own div, and show the important details of the post.
 		foreach ($context['posts'] as $post)
 		{
 			echo '
@@ -412,7 +412,7 @@ function template_showPosts()
 		<table border="0" width="100%" cellspacing="1" cellpadding="2" class="bordercolor" align="center">
 			<thead>
 				<tr class="titlebg">
-					<th class="first_th" width="25%">
+					<th class="first_th lefttext" width="25%">
 						<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=filename', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'filename' ? ';asc' : ''), '">
 							', $txt['show_attach_filename'], '
 							', ($context['sort_order'] == 'filename' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
@@ -424,13 +424,13 @@ function template_showPosts()
 							', ($context['sort_order'] == 'downloads' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 						</a>
 					</th>
-					<th width="30%">
+					<th class="lefttext" width="30%">
 						<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=subject', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'subject' ? ';asc' : ''), '">
 							', $txt['message'], '
 							', ($context['sort_order'] == 'subject' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 						</a>
 					</th>
-					<th class="last_th">
+					<th class="last_th lefttext">
 						<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=posted', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'posted' ? ';asc' : ''), '">
 						', $txt['show_attach_posted'], '
 						', ($context['sort_order'] == 'posted' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '

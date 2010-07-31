@@ -199,6 +199,7 @@ function ViewModlog()
 			'action' => array(
 				'header' => array(
 					'value' => $txt['modlog_action'],
+					'class' => 'lefttext first_th',
 				),
 				'data' => array(
 					'db' => 'action_text',
@@ -212,6 +213,7 @@ function ViewModlog()
 			'time' => array(
 				'header' => array(
 					'value' => $txt['modlog_date'],
+					'class' => 'lefttext',
 				),
 				'data' => array(
 					'db' => 'time',
@@ -225,6 +227,7 @@ function ViewModlog()
 			'moderator' => array(
 				'header' => array(
 					'value' => $txt['modlog_member'],
+					'class' => 'lefttext',
 				),
 				'data' => array(
 					'db' => 'moderator_link',
@@ -238,6 +241,7 @@ function ViewModlog()
 			'position' => array(
 				'header' => array(
 					'value' => $txt['modlog_position'],
+					'class' => 'lefttext',
 				),
 				'data' => array(
 					'db' => 'position',
@@ -251,6 +255,7 @@ function ViewModlog()
 			'ip' => array(
 				'header' => array(
 					'value' => $txt['modlog_ip'],
+					'class' => 'lefttext',
 				),
 				'data' => array(
 					'db' => 'ip',

@@ -49,6 +49,11 @@ July 2010
  ! Changing username did not reset the password. (Profile-Modify.php) [Bug 4358]
  * Board Index category toggle URLs were missing session ids for WAP2 and imode. (Wireless.template.php) [Bug 4394]
  * Changes to various files for cross-browser support plus some tweaks for aesthetics (Quite a few files)
+ ! Cleaned up some formatting in moderation log (Modlog.php)
+ * Minor tweaks to stats page and profile for consistency (Stats.template.php, Profile.template.php, index.css)
+ * Fixed a bug in 10038 in send new message area (PersonalMessage.template.php)
+ * Fixed small glitches with slice spans and updated topic posting samples to match Curve (Help.template.php)
+ 
 
 
 June 2010

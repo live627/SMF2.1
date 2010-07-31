@@ -1093,8 +1093,8 @@ function template_manual_profile_info_summary()
 				</h3>
 			</div>
 			<div id="basicinfo">
-				<div class="windowbg">
-					<span class="topslice"><span></span></span>
+				<div class="windowbg2">
+					<span class="topslice windowbg"><span></span></span>
 					<div class="content">
 						<div class="username"><h4>', $txt['manual_profile_summary_display_name'], ' <span class="position">', $txt['manual_topic_membergroup'], '</span></h4></div>
 						<img class="avatar" src="', $settings['default_images_url'], '/admin/smilies_and_messageicons.png" alt="" />
@@ -1376,7 +1376,7 @@ function template_manual_profile_actions_subscriptions()
 			<div class="cat_bar">
 				<h3 class="catbg">', $txt['manual_profile_subscribe_example'], '</h3>
 			</div>
-			<div class="windowbg">
+			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<div class="content">
 					<p><strong>', $txt['manual_profile_subscribe_example'], '</strong></p>
@@ -1487,35 +1487,41 @@ function template_manual_posting_topics()
 	<p>', $txt['manual_posting_starting_topic_desc_part1'], '<a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_posting_starting_topic_desc_link_index_message'], '</a>', $txt['manual_posting_starting_topic_desc_part2'], '<a href="', $scripturl, '?action=help;area=posting_topics#standard">', $txt['manual_posting_starting_topic_desc_link_index_message_standard'], '</a>', $txt['manual_posting_starting_topic_desc_part3'], '</p>
 	<div class="help_sample">
 			<form action="', $scripturl, '?action=help;area=posting_topics" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
-				<table width="100%" align="center" cellpadding="0" cellspacing="3">
-					<tr>
-						<td valign="bottom" colspan="2"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_posting_forum_name'], '</a></strong><br />
-						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_posting_cat_name'], '</a></strong><br />
-						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=message_index" class="nav">', $txt['manual_posting_board_name'], '</a></strong><br />
-						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " /> <img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" />&nbsp; <strong><em>', $txt['manual_posting_start_topic'], '</em></strong></span></td>
-					</tr>
-				</table>
-				<table border="0" width="100%" align="center" cellspacing="1" cellpadding="3" class="bordercolor">
-					<tr class="titlebg">
-						<td>', $txt['manual_posting_start_topic'], '</td>
-					</tr>
-					<tr>
-						<td class="windowbg">
-							<table border="0" cellpadding="3" width="100%">
-								<tr class="windowbg">
+				<div class="navigate_section">
+					<ul>
+						<li>
+							<a href="', $scripturl, '?action=help;area=board_index"><span>', $context['forum_name'], '</span></a>&nbsp;&#187;
+						</li>
+						<li>
+							<a href="', $scripturl, '?action=help;area=board_index"><span>', $txt['manual_board_index_category_name'], '</span></a>&nbsp;&#187;
+						</li>
+						<li>
+							<a href="', $scripturl, '?action=help;area=message_index"><span>', $txt['manual_board_index_board_name'], '</span></a>&nbsp;&#187;
+						</li>
+						<li>
+							<a href="', $scripturl, '?action=help;area=message_index"><span><strong><em>', $txt['manual_posting_start_topic'], '</em></strong></span></a>
+						</li>
+					</ul>
+				</div>
+				<div class="cat_bar">
+					<h3 class="catbg">', $txt['manual_posting_start_topic'], '</h3>
+				</div>
+				<span class="clear upperframe"><span></span></span>
+				<div class="roundframe"><div class="innerframe">
+							<table border="0" cellpadding="3" width="100%" align="center">
+								<tr>
 									<td colspan="2" align="center"><a href="', $scripturl, '?action=help;area=posting_topics#standard">', $txt['manual_posting_std_options'], '&nbsp;', $txt['manual_posting_omit_clarity'], '</a></td>
 								</tr>
 								<tr>
-									<td align="right"><strong>', $txt['manual_posting_subject'], ':</strong></td>
-									<td><input type="text" name="subject" size="80" maxlength="80" tabindex="', $context['tabindex']++, '" class="input_text" /></td>
+									<td align="right" width="22%"><strong>', $txt['manual_posting_subject'], ':</strong></td>
+									<td><input type="text" name="subject" size="75" maxlength="75" tabindex="', $context['tabindex']++, '" class="input_text" /></td>
 								</tr>
 								<tr>
 									<td valign="top" align="right"></td>
 									<td>
-									<textarea class="editor" name="message" rows="12" cols="60" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex="', $context['tabindex']++, '">
-</textarea></td>
+									<textarea class="editor" name="message" rows="12" cols="76" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex="', $context['tabindex']++, '"></textarea></td>
 								</tr>
-								<tr class="windowbg">
+								<tr>
 									<td colspan="2" align="center"><a href="', $scripturl, '?action=help;area=posting_topics#additional">', $txt['manual_posting_sec_additional_options'], '&nbsp;', $txt['manual_posting_omit_clarity'], '</a></td>
 								</tr>
 								<tr>
@@ -1524,9 +1530,8 @@ function template_manual_posting_topics()
 									<input type="button" accesskey="s" tabindex="', $context['tabindex']++, '" value="', $txt['manual_posting_posts'], '" class="button_submit" /> <input type="button" accesskey="p" tabindex="', $context['tabindex']++, '" value="', $txt['manual_posting_preview'], '" class="button_submit" /></td>
 								</tr>
 							</table>
-						</td>
-					</tr>
-				</table>
+				</div></div>
+				<span class="lowerframe"><span></span></span>
 			</form><br />
 	</div>
 	<ul>
@@ -1576,12 +1581,11 @@ function template_manual_posting_topics()
 //]]>
 </script>
 			<form action="', $scripturl, '?action=help;area=posting_topics" method="post" accept-charset="', $context['character_set'], '" name="postmodify" style="margin: 0;" id="postmodify">
-				<table border="0" width="100%" align="center" cellspacing="1" cellpadding="3" class="bordercolor">
-					<tr>
-						<td class="windowbg">
+				<span class="clear upperframe"><span></span></span>
+				<div class="roundframe"><div class="innerframe">
 							<table border="0" cellpadding="3" width="100%">
 								<tr>
-									<td align="right"><strong>', $txt['manual_posting_msg_icon'], ':</strong></td>
+									<td align="right" width="16%"><strong>', $txt['manual_posting_msg_icon'], ':</strong></td>
 									<td><select name="icon" id="icon" onchange="showimage();">
 										<option value="xx" selected="selected">
 											', $txt['manual_posting_standard_icon'], '
@@ -1698,13 +1702,12 @@ function template_manual_posting_topics()
 								<tr>
 									<td valign="top" align="right"></td>
 									<td>
-									<textarea class="editor" name="message" rows="12" cols="60" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex="', $context['tabindex']++, '">
-</textarea></td>
+										<textarea class="editor" name="message" rows="12" cols="60" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex="', $context['tabindex']++, '"></textarea>
+									</td>
 								</tr>
 							</table>
-						</td>
-					</tr>
-				</table>
+				</div></div>
+				<span class="lowerframe"><span></span></span>
 			</form><br />
 	</div>
 	<h3 class="section" id="messageicon">', $txt['manual_posting_sub_message_icon'], '</h3>
@@ -2489,7 +2492,7 @@ function template_manual_searching()
 						<h4 class="titlebg">', $txt['manual_searching_choose'], '</h4>
 					</div>
 					<div class="flow_auto" id="searchBoardsExpand">
-						<ul class="floatleft">
+						<ul class="ignoreboards floatleft">
 							<li class="category">
 								<span>', $txt['manual_searching_cat'], '</span>
 								<ul>
@@ -2499,7 +2502,7 @@ function template_manual_searching()
 								</ul>
 							</li>
 						</ul>
-						<ul class="floatright">
+						<ul class="ignoreboards floatright">
 							<li class="category">
 								<span>', $txt['manual_searching_cat'], '</span>
 								<ul>

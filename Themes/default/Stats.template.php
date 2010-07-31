@@ -333,82 +333,86 @@ function template_main()
 	{
 		echo '
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="tborder" id="stats">
-			<tr class="titlebg" valign="middle" align="center">
-				<td width="25%">', $txt['yearly_summary'], '</td>
-				<td width="15%">', $txt['stats_new_topics'], '</td>
-				<td width="15%">', $txt['stats_new_posts'], '</td>
-				<td width="15%">', $txt['stats_new_members'], '</td>
-				<td width="15%">', $txt['smf_stats_14'], '</td>';
+			<thead>
+				<tr class="titlebg" valign="middle" align="center">
+					<th class="first_th lefttext" width="25%">', $txt['yearly_summary'], '</th>
+					<th width="15%">', $txt['stats_new_topics'], '</th>
+					<th width="15%">', $txt['stats_new_posts'], '</th>
+					<th width="15%">', $txt['stats_new_members'], '</th>
+					<th class="last_th" width="15%">', $txt['smf_stats_14'], '</th>';
 
 		if (!empty($modSettings['hitStats']))
 			echo '
-				<td>', $txt['page_views'], '</td>';
+					<td>', $txt['page_views'], '</td>';
 
 		echo '
-			</tr>';
+				</tr>
+			</thead>
+			<tbody>';
 
 		foreach ($context['yearly'] as $id => $year)
 		{
 			echo '
-			<tr class="windowbg2" valign="middle" id="year_', $id, '">
-				<th class="lefttext" width="25%">
-					<img id="year_img_', $id, '" src="', $settings['images_url'], '/collapse.gif" alt="*" /> <a href="#year_', $id, '" id="year_link_', $id, '">', $year['year'], '</a>
-				</th>
-				<th align="center" width="15%">', $year['new_topics'], '</th>
-				<th align="center" width="15%">', $year['new_posts'], '</th>
-				<th align="center" width="15%">', $year['new_members'], '</th>
-				<th align="center" width="15%">', $year['most_members_online'], '</th>';
+				<tr class="windowbg2" valign="middle" id="year_', $id, '">
+					<th class="lefttext" width="25%">
+						<img id="year_img_', $id, '" src="', $settings['images_url'], '/collapse.gif" alt="*" /> <a href="#year_', $id, '" id="year_link_', $id, '">', $year['year'], '</a>
+					</th>
+					<th align="center" width="15%">', $year['new_topics'], '</th>
+					<th align="center" width="15%">', $year['new_posts'], '</th>
+					<th align="center" width="15%">', $year['new_members'], '</th>
+					<th align="center" width="15%">', $year['most_members_online'], '</th>';
 
 			if (!empty($modSettings['hitStats']))
 				echo '
-				<th align="center">', $year['hits'], '</th>';
+					<th align="center">', $year['hits'], '</th>';
 
 			echo '
-			</tr>';
+				</tr>';
 
 			foreach ($year['months'] as $month)
 			{
 				echo '
-			<tr class="windowbg2" valign="middle" id="tr_month_', $month['id'], '">
-				<th class="lefttext" width="25%" style="padding-', ($context['right_to_left'] ? 'right' : 'left'), ': 3ex;">
-					<img src="', $settings['images_url'], '/', $month['expanded'] ? 'collapse.gif' : 'expand.gif', '" alt="" id="img_', $month['id'], '" /> <a id="m', $month['id'], '" href="', $month['href'], '" onclick="return doingExpandCollapse;">', $month['month'], ' ', $month['year'], '</a>
-				</th>
-				<th align="center" width="15%">', $month['new_topics'], '</th>
-				<th align="center" width="15%">', $month['new_posts'], '</th>
-				<th align="center" width="15%">', $month['new_members'], '</th>
-				<th align="center" width="15%">', $month['most_members_online'], '</th>';
+				<tr class="windowbg2" valign="middle" id="tr_month_', $month['id'], '">
+					<th class="lefttext" width="25%" style="padding-', ($context['right_to_left'] ? 'right' : 'left'), ': 3ex;">
+						<img src="', $settings['images_url'], '/', $month['expanded'] ? 'collapse.gif' : 'expand.gif', '" alt="" id="img_', $month['id'], '" /> <a id="m', $month['id'], '" href="', $month['href'], '" onclick="return doingExpandCollapse;">', $month['month'], ' ', $month['year'], '</a>
+					</th>
+					<th align="center" width="15%">', $month['new_topics'], '</th>
+					<th align="center" width="15%">', $month['new_posts'], '</th>
+					<th align="center" width="15%">', $month['new_members'], '</th>
+					<th align="center" width="15%">', $month['most_members_online'], '</th>';
 
 				if (!empty($modSettings['hitStats']))
 					echo '
-				<th align="center">', $month['hits'], '</th>';
+					<th align="center">', $month['hits'], '</th>';
 
 				echo '
-			</tr>';
+				</tr>';
 
 				if ($month['expanded'])
 				{
 					foreach ($month['days'] as $day)
 					{
 						echo '
-			<tr class="windowbg2" valign="middle" align="left" id="tr_day_', $day['year'], '-', $day['month'], '-', $day['day'], '">
-				<td class="lefttext" style="padding-', ($context['right_to_left'] ? 'right' : 'left'), ': 6ex;">', $day['year'], '-', $day['month'], '-', $day['day'], '</td>
-				<td align="center">', $day['new_topics'], '</td>
-				<td align="center">', $day['new_posts'], '</td>
-				<td align="center">', $day['new_members'], '</td>
-				<td align="center">', $day['most_members_online'], '</td>';
+				<tr class="windowbg2" valign="middle" align="left" id="tr_day_', $day['year'], '-', $day['month'], '-', $day['day'], '">
+					<td class="lefttext" style="padding-', ($context['right_to_left'] ? 'right' : 'left'), ': 6ex;">', $day['year'], '-', $day['month'], '-', $day['day'], '</td>
+					<td align="center">', $day['new_topics'], '</td>
+					<td align="center">', $day['new_posts'], '</td>
+					<td align="center">', $day['new_members'], '</td>
+					<td align="center">', $day['most_members_online'], '</td>';
 
 						if (!empty($modSettings['hitStats']))
 							echo '
-				<td align="center">', $day['hits'], '</td>';
+					<td align="center">', $day['hits'], '</td>';
 
 						echo '
-			</tr>';
+				</tr>';
 					}
 				}
 			}
 		}
 
 		echo '
+			</tbody>
 		</table>
 		</div>
 	</div>

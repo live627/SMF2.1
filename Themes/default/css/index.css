@@ -3339,6 +3339,25 @@ dl.stats dd
 {
 	padding: 0.3em 0.5em;
 }
+#manrules div.righttext
+{
+	padding: 0.3em 0.1em;
+}
+dl.addrules dt.floatleft
+{
+	width: 15em;
+	color: #333;
+	padding: 0 1.25em 0.5em 1.25em;
+}
+#addrule fieldset
+{
+	clear: both;
+}
+#addrule fieldset legend
+{
+	font-weight: bold;
+	color: #333;
+}
 
 /* Styles for the calendar section.
 ------------------------------------------------- */
