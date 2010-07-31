@@ -55,6 +55,7 @@ July 2010
  * Fixed small glitches with slice spans and updated topic posting samples to match Curve (Help.template.php)
  ! Minor bugfixes for quick moderation and moderation log [Bug 4384,4369]
  * Left aligned text for message index headers that have left aligned column content (MessageIndex.template.php)
+ * Fixed a typo in stats table markup. Fixed indentation issue in MessageIndex.php (Stats.template.php, MessageIndex.php)
 
 June 2010
 --------------------------------------------------------------------------------

@@ -856,7 +856,7 @@ function QuickModeration()
 			)
 		);
 
-// Get the board IDs and Sticky status
+		// Get the board IDs and Sticky status
 		$request = $smcFunc['db_query']('', '
 			SELECT id_topic, id_board, is_sticky
 			FROM {db_prefix}topics
@@ -1030,7 +1030,7 @@ function QuickModeration()
 		}
 	}
 
-// Let's do approval
+	// Let's do approval
 	if (!empty($approveCache))
 	{
 		// Get the author ID

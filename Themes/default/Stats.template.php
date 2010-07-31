@@ -343,7 +343,8 @@ function template_main()
 
 		if (!empty($modSettings['hitStats']))
 			echo '
-					<td>', $txt['page_views'], '</td>';
+					<t
+					<th>', $txt['page_views'], '</th>';
 
 		echo '
 				</tr>
