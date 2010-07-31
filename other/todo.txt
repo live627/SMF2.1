@@ -1,0 +1,49 @@
+FEATURES OR CHANGES CONSIDERED FOR 1.1 OR LATER:
+-------------------------------------------------------------------------------
+Consider adding a way to disallow the default smiley set for Owdy.
+Make the restore_backup script able to only restore certain tables?
+Convert old URLs to new in converters option?
+Site RSS feeds.
+Add If-Modified-Since to rss feeds...?
+Installer -> Client does not support authentication protocol requested by server; consider upgrading MySQL client.
+Permission for just seeing the darn board for guests without entrance?
+$txt['regards_team']
+Member by member "mark topics older than xx read" and same for admins?
+Merged notice liked moved, when crossing boards with a merge?
+Set login cookie using HTTP_HOST too?  This might work out well.
+Delete with/without replies?
+More checkSession()'s.
+Maybe even hide typed emails in posted messages from guests?
+Use a separate file for db_last_error?
+Registration global lock by time?
+Make 'Unable to verify referring url. Please go back and try again.' talk about restricted to previous action, etc. security.
+Every package installation should require an administrator password.  (fresh)
+Issues with numbering in other languages - internationalization.
+Use realpath() on both paths and boarddir, and make sure everything is in there?
+sendpm() should make sure they can even read pms...?
+SMF API: permissions, attachments!
+Themes, smiley sets, avatars, and language files should be installable from other places, by link or upload?
+Package info should handle conflict/dependency issues.
+Search for "// !!! TODO" for other things... (only doing this for package manager stuff.)
+Move --> check for post_new?
+Group by group theme permissions <-- much later, just adding because everyone seems to think I'm ignoring it.
+context -> x amount of time ago.
+Search in all templates with options.
+WAP 1.1 posting, login, etc.?
+Investigate using form {margin: 0;} and table {border: 0;} in default theme.
+You are here/disabled/etc. in MoveTopic with javascript to block submit.
+Attachments optionally using FTP instead of the filesystem.
+Possibly separate the different types of packages less?
+Better support from running scripts, with options and cool stuff ^_^.
+Use $txt['script_output'] for running scripts?
+Add strings to the Packages language files for modifications to use. (like about what's being done to the database!)
+Don't change email address until it's *for sure* verified as a real address.
+Login should have a checkbox for "invisible"?
+meta keywords/description
+Report bug?
+When you vote on a poll, also allow a reply easily? <-- notice the ?!
+Actually make repair.php do something.
+Access child + no access parent = child is parent?  Maybe this is bad.
+Profile and Recent should have quickmod.
+Add ability to flag (sticky) personal messages.
+Change the attachmentType of the avatars in the attachment directory to '2'

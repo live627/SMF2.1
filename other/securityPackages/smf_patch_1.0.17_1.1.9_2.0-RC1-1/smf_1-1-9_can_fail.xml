@@ -1,0 +1,269 @@
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>smf:smf-1.1.9</id>
+	<version>1.0</version>
+
+	<file name="$themes_dir/babylon/Recent.template.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+// Version: 1.1; Recent
+]]></search>
+			<add><![CDATA[
+// Version: 1.1.9; Recent
+]]></add>
+		</operation>
+
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+								<a href="', $scripturl, '?action=recent;delete=', $post['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt[154], '?\');">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/delete.gif" alt="' . $txt[121] . '" border="0" />' : $txt[31]), '</a>';
+]]></search>
+			<add><![CDATA[
+								<a href="', $scripturl, '?action=deletemsg;msg=', $post['id'], ';topic=', $post['topic'], ';recent;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt[154], '?\');">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/delete.gif" alt="' . $txt[121] . '" border="0" />' : $txt[31]), '</a>';
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$themes_dir/classic/Recent.template.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+// Version: 1.1; Recent
+]]></search>
+			<add><![CDATA[
+// Version: 1.1.9; Recent
+]]></add>
+		</operation>
+
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+								<a href="', $scripturl, '?action=recent;delete=', $post['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt[154], '?\');">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/delete.gif" alt="' . $txt[121] . '" border="0" />' : $txt[31], '</a>';
+]]></search>
+			<add><![CDATA[
+								<a href="', $scripturl, '?action=deletemsg;msg=', $post['id'], ';topic=', $post['topic'], ';recent;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt[154], '?\');">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/delete.gif" alt="' . $txt[121] . '" border="0" />' : $txt[31], '</a>';
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$languagedir/index.english.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+// Version: 1.1.5; index
+]]></search>
+			<add><![CDATA[
+// Version: 1.1.9; index
+]]></add>
+		</operation>
+
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by ' . $forum_version . '</a> |
+<a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2006-2008, Simple Machines LLC</a>';
+]]></search>
+			<add><![CDATA[
+$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by ' . $forum_version . '</a> |
+<a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2006-2009, Simple Machines LLC</a>';
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$boarddir/attachments/.htaccess" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+</Files>]]></search>
+			<add><![CDATA[
+</Files>
+RemoveHandler .php .php3 .phtml .cgi .fcgi .pl .fpl .shtml
+]]></add>
+		</operation>
+	</file>
+
+
+	<file name="$boarddir/index.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Display.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Load.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Post.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Profile.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Security.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs-Graphics.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs-Members.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs-Post.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+]]></search>
+			<add><![CDATA[
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+]]></add>
+		</operation>
+	</file>
+
+</modification>

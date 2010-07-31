@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<title>SMF Package SDK</title>
+		<style type="text/css"><!--
+			body
+			{
+				font-family: Verdana, sans-serif;
+				background-color: #D4D4D4;
+				margin: 0;
+			}
+			body, td
+			{
+				font-size: 10pt;
+			}
+			div#header
+			{
+				background-color: white;
+				padding: 22px 4% 12px 4%;
+				font-family: Georgia, serif;
+				font-size: xx-large;
+				border-bottom: 1px solid black;
+				height: 40px;
+			}
+			div#content
+			{
+				padding: 20px 30px;
+			}
+
+			div.panel
+			{
+				border: 1px solid gray;
+				background-color: #F0F0F0;
+				margin: 1ex 0 3ex 0;
+				padding: 1.2ex;
+			}
+			div.panel h2
+			{
+				margin: 0;
+				margin-bottom: 2ex;
+				padding-bottom: 3px;
+				border-bottom: 1px dashed black;
+				font-size: 14pt;
+				font-weight: normal;
+			}
+
+			dl
+			{
+				margin-left: 3ex;
+			}
+			dt
+			{
+				font-style: italic;
+			}
+			dd
+			{
+				margin-bottom: 1ex;
+			}
+
+			div.code
+			{
+				margin: 1ex 3ex 2ex 3ex;
+				padding: 3px;
+				background-color: #FAFAFA;
+				font-family: monospace;
+				overflow: auto;
+			}
+			div.code span.comment
+			{
+				font-style: italic;
+				color: #000066;
+			}
+		--></style>
+	</head>
+	<body>
+		<div id="header">
+			<div title="Mallow">SMF Server Reference</div>
+		</div>
+		<div id="content">
+			<div class="panel">
+				<h2 id="contents">Ready to maintain a package server?</h2>
+
+				This documentation, intended for people who wish to create a package server, is only a quick run down of package lists.  More thorough and advanced information can always be found on Simple Machines' <a href="http://mods.simplemachines.org/docs/">mod site documentation pages</a>.  It should also be noted that sometimes, it's better to put your packages on the mod site.<br />
+				<br />
+				You can find the following information in this file:<br />
+
+				<ul type="none" style="list-style-type: none;">
+					<li>&raquo; <a href="#files">Files contained in this package.</a></li>
+					<li>&raquo; <a href="#list">How to create a package list.</a></li>
+					<li>&raquo; <a href="#packages">Where you should put your list and packages.</a></li>
+					<li>&raquo; <a href="#server">Accessing your server with the package manager.</a></li>
+				</ul>
+
+				For more information, you can always post on <a href="http://www.simplemachines.org/community/index.php">the forum</a> asking questions, exchanging ideas and comments, or just plain bragging about how much better your package server is than anyone else's.
+			</div>
+
+			<div class="panel">
+				<h2 id="files">What's available in this kit?</h2>
+
+				You should notice a few files that came with this readme.  They are examples to help give you a better understanding of how to create package lists.  They are as follows:
+
+				<dl>
+					<dt>packages.xml</dt>
+					<dd>A simple example of a package listing, to get started with.</dd>
+
+					<dt>packages_advanced.xml</dt>
+					<dd>A more advanced example of a package listing, using some more powerful features.</dd>
+
+					<dt>readme.html</dt>
+					<dd>This file, describing the use of the above files and what you can do with them.</dd>
+				</dl>
+
+				All of these files, with the exception of the one you are currently viewing, are best viewed and edited with the text editor of your choice.  If you can, try to read through them all and get a feel for what they are doing.
+			</div>
+
+			<div class="panel">
+				<h2 id="list">Creating a package list</h2>
+
+				To allow people to download packages from your server, you need a package list.  This is a listing of packages on your server, with information about them.<br />
+				<br />
+				For the most basic use, you'll need a list title, and some packages to offer ;).  Assuming you have that, take a look at <tt>packages.xml</tt>.  You'll see a section for the package list's title, like so:<br />
+
+				<div class="code">
+&nbsp; &nbsp; &nbsp; &lt;list-title&gt;My Package Server&lt;/list-title&gt;
+				</div>
+
+				In your package server list, you'll want to use a different title.  For example, you might use <q>Mike's Mods</q> - this is the title of this package listing.  Next, you have 'sections', which are usually groupings of types of packages, or versions.  One example would be to have a section for New Features, another for Themes, another for Odds and Ends.  For the purposes of this tutorial, let's just keep it to one section.<br />
+				<br />
+				Each section is enclosed in a <tt>&lt;section&gt;</tt> element.  Inside the section should be one title element.  After that, you can have one or more modification, language, theme, avatar-pack, or smiley-set (there are a few others.)  Let's assume you have a modification package.  For it, you might have the following data:<br />
+
+				<div class="code">
+<span class="comment">&lt;!-- Remember, these have to be the same as those in the package itself! --&gt;</span><br />
+&lt;id&gt;username:testing123&lt;/id&gt;<br />
+&lt;name&gt;Testing - 123!&lt;/name&gt;<br />
+&lt;version&gt;1.0&lt;/version&gt;<br />
+<br />
+<span class="comment">&lt;!-- Where is the file itself? (must be relative to the current URL for security reasons!) --&gt;</span><br />
+&lt;filename&gt;testing123_1-0.tar.gz&lt;/filename&gt;<br />
+<br />
+<span class="comment">&lt;!-- A description for this mod! (required)  The CDATA makes it so you can type html in here. --&gt;</span><br />
+&lt;description&gt;&lt;![CDATA[<br />
+&nbsp; &nbsp; &nbsp; This is a really &lt;b&gt;awesome&lt;/b&gt; modification ;).<br />
+]]&gt;&lt;/description&gt;
+				</div>
+
+				The id, name, and version here (for modifications) <strong>must</strong> be the same as the mod itself.  By the way, for upgrade purposes, you should keep the same id for different versions of the same mod.  As for the filename, it may include a path, but the actual filename part will be used to save the package - so try to use something unique/descriptive.  Remember, also, that the description is required.<br />
+				<br />
+				Once you have the package list file sorted out, you need to actually put it somewhere.  Read on!
+			</div>
+
+			<div class="panel">
+				<h2 id="packages">Putting the packages and list up</h2>
+
+				Now that you have your package list set up, you should upload it somewhere.  A good place is your website ;).  You can put them anywhere, for example mine should be at <a href="http://www.unknownbrackets.com/smf/">http://www.unknownbrackets.com/smf</a>.<br />
+				<br />
+				It's also a good idea to put an index.php in that directory, just in case people are using a safe mode server.  If they are, they will not be able to download packages directly, and will be sent to <tt>your url/index.php?package-list&amp;language=blah&amp;ref=their forum</tt><br />
+				<br />
+				It's important to note that the packages should be under the same directory as the package list, or in a directory inside that directory.  Don't put them in a different directory. (this means, don't put the list in /list and the packages in /packages.)
+			</div>
+
+			<div class="panel">
+				<h2 id="server">Accessing your server</h2>
+
+				Now that you have all your files ready, you want to be able to access it, don't you?  More importantly... you want other people to be able to access it!<br />
+				<br />
+				To access it, go to your package manager.  Inside the package manager, click <a href="javascript:void(0);">[ Download New Packages ]</a>, and look under the <q>Add server</q> section.  Under that, type your package server's name and URL - for example, <em>[Unknown]'s Packages</em> and <a href="http://www.unknownbrackets.com/smf/">http://www.unknownbrackets.com/smf</a>.  After you click Add server, you'll see your package server in the list.  Just click <a href="javascript:void(0);">[ Browse ]</a> next to it, and you're ready to download your own packages!<br />
+				<br />
+				Thanks for contributing,<br />
+				Simple Machines
+			</div>
+		</div>
+	</body>
+</html>

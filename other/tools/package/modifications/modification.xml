@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	This is an example modification file for SMF packages.
+
+	ATTENTION: If you are trying to install this manually, you should try
+	the package manager.  If it will not work for you, please take a look
+	at the following for information on this format:
+		http://www.simplemachines.org/redirect/manual_mod_install
+
+================================================================================
+
+	Modification files can be used to modify files so that they do what
+	your package needs them to do to work properly.
+
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<!-- This information needs to be the same as that in the package-info.xml. -->
+	<id>username:testing123</id>
+	<version>1.0</version>
+
+	<!-- Edit a specific file.. -->
+	<file name="$sourcedir/Filename.php">
+		<!-- A seach operation, with search rules and code to modify the file with. -->
+		<operation>
+			<!-- Search for this text before the code we add.  You can also search for after, and the end of the file. -->
+			<search position="before"><![CDATA[
+Search for some code to add stuff after.
+]]></search>
+			<!-- Add this text when we find it.  Note that it's on it's own line on purpose, and the CDATA keeps things clean. -->
+			<add><![CDATA[
+This is what to add.
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[
+Another search operation?
+]]></search>
+			<add><![CDATA[
+Yes, another.  This time, replacing!
+]]></add>
+		</operation>
+	</file>
+</modification>
