@@ -1047,7 +1047,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		SELECT
 			member_name, real_name, id_member, email_address, lngfile,
 			pm_email_notify, instant_messages,' . (allowedTo('moderate_forum') ? ' 0' : '
-			(pm_receive_from = {int:admins_only}' . (!empty($modSettings['enable_buddylist']) ? '' : ' OR
+			(pm_receive_from = {int:admins_only}' . (empty($modSettings['enable_buddylist']) ? '' : ' OR
 			(pm_receive_from = {int:buddies_only} AND FIND_IN_SET({string:from_id}, buddy_list) = 0) OR
 			(pm_receive_from = {int:not_on_ignore_list} AND FIND_IN_SET({string:from_id}, pm_ignore_list) != 0)') . ')') . ' AS ignored,
 			FIND_IN_SET({string:from_id}, buddy_list) != 0 AS is_buddy, is_activated,

@@ -7,6 +7,7 @@ August 2010
 --------------------------------------------------------------------------------
  * The new replies template for preview JavaScript was using outdated post layout. (Post.template.php) [Bug 4387]
  * "new" images for new replies inserted by JavaScript were not removed once the post is no longer unread. (Post.template.php) [Bug 4397]
+ ! PM ignore settings were ignored. (Subs-Post.php) [Bug 4401]
 
 
 July 2010
