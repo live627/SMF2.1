@@ -383,7 +383,7 @@ function Login2()
 			$user_settings['password_salt'] = substr(md5(mt_rand()), 0, 4);
 
 			// Update the password and set up the hash.
-			updateMemberData($user_settings['id_member'], array('passwd' => $user_settings['passwd'], 'password_salt' => $user_settings['password_salt']));
+			updateMemberData($user_settings['id_member'], array('passwd' => $user_settings['passwd'], 'password_salt' => $user_settings['password_salt'], 'passwd_flood' => ''));
 		}
 		// Okay, they for sure didn't enter the password!
 		else
@@ -407,7 +407,7 @@ function Login2()
 	}
 	elseif (!empty($user_settings['passwd_flood']))
 	{
-		// Let's be sure they wern't a little hacker.
+		// Let's be sure they weren't a little hacker.
 		validatePasswordFlood($user_settings['id_member'], $user_settings['passwd_flood'], true);
 
 		// If we got here then we can reset the flood counter.

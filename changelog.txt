@@ -9,6 +9,7 @@ August 2010
  * "new" images for new replies inserted by JavaScript were not removed once the post is no longer unread. (Post.template.php) [Bug 4397]
  ! PM ignore settings were ignored. (Subs-Post.php) [Bug 4401]
  ! File counts for attachment directories were counted wrongfully. (ManageAttachments.php) [Bug 4381]
+ ! Unnecessary logouts following password conversion. (LogInOut.php) [Bug 4365]
 
 
 July 2010
