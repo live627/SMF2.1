@@ -1844,7 +1844,6 @@ function notification($memID)
 	// Fine, start with the board list.
 	$listOptions = array(
 		'id' => 'board_notification_list',
-//		'title' => '&nbsp;<img src="' . $settings['images_url'] . '/icons/notify_sm.gif" alt="" align="top" />&nbsp;' . $txt['notifications_boards'],
 		'width' => '100%',
 		'no_items_label' => $txt['notifications_boards_none'] . '<br /><br />' . $txt['notifications_boards_howto'],
 		'no_items_align' => 'left',
@@ -1860,7 +1859,6 @@ function notification($memID)
 			'board_name' => array(
 				'header' => array(
 					'value' => $txt['notifications_boards'],
-					//$txt['board'],
 					'class' => 'lefttext first_th',
 				),
 				'data' => array(
@@ -1921,7 +1919,6 @@ function notification($memID)
 	// Now do the topic notifications.
 	$listOptions = array(
 		'id' => 'topic_notification_list',
-//		'title' => '&nbsp;<img src="' . $settings['images_url'] . '/icons/notify_sm.gif" alt="" align="top" />&nbsp;' . $txt['notifications_topics'],
 		'width' => '100%',
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $txt['notifications_topics_none'] . '<br /><br />' . $txt['notifications_topics_howto'],
@@ -1944,7 +1941,6 @@ function notification($memID)
 			'subject' => array(
 				'header' => array(
 					'value' => $txt['notifications_topics'],
-					//$txt['subject'],
 					'class' => 'lefttext first_th',
 				),
 				'data' => array(

@@ -591,7 +591,7 @@ function MessageIndex()
 		$context['can_remove'] = allowedTo('remove_any');
 		$context['can_merge'] = allowedTo('merge_any');
 		// Ignore approving own topics as it's unlikely to come up...
-		$context['can_approve'] = allowedTo('approve_posts');
+		$context['can_approve'] = $modSettings['postmod_active'] && allowedTo('approve_posts') && !empty($board_info['unapproved_topics']);
 		// Can we restore topics?
 		$context['can_restore'] = allowedTo('move_any') && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board;
 
@@ -1030,24 +1030,40 @@ function QuickModeration()
 		}
 	}
 
-	// Let's do approval
+	// Approve the topics...
 	if (!empty($approveCache))
 	{
-		// Get the author ID
+		// We need unapproved topic ids and their authors!
 		$request = $smcFunc['db_query']('', '
-			SELECT t.id_topic, msg.id_member
-			FROM {db_prefix}topics AS t
-				LEFT JOIN {db_prefix}messages AS msg ON (t.id_first_msg = msg.id_msg)
-			WHERE t.id_topic IN ({array_int:approve_topic_ids})
+			SELECT id_topic, id_member_started
+			FROM {db_prefix}topics
+			WHERE id_topic IN ({array_int:approve_topic_ids})
+				AND approved = {int:not_approved}
 			LIMIT ' . count($approveCache),
 			array(
 				'approve_topic_ids' => $approveCache,
+				'not_approved' => 0,
 			)
 		);
-		$approveCacheUsers = array();
+		$approveCache = array();
+		$approveCacheMembers = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$approveCacheUsers[$row['id_topic']] = $row['id_member'];
+		{
+			$approveCache[] = $row['id_topic'];
+			$approveCacheMembers[$row['id_topic']] = $row['id_member_started'];
+		}
 		$smcFunc['db_free_result']($request);
+
+		// Any topics to approve?
+		if (!empty($approveCache))
+		{
+			// Handle the approval part...
+			approveTopics($approveCache);
+
+			// Time for some logging!
+			foreach ($approveCache as $topic)
+				logAction('approve_topic', array('topic' => $topic, 'member' => $approveCacheMembers[$topic]));
+		}
 	}
 
 	// And (almost) lastly, lock the topics...
@@ -1115,15 +1131,6 @@ function QuickModeration()
 				)
 			);
 		}
-	}
-
-	// Topics/posts to approve, eh?
-	if (!empty($approveCache))
-	{
-		// This function returns the outcome...
-		// Log!
-		logAction('approve_topic', array('topic' => $topic, 'member' => $approveCacheUsers[$topic]));
-		$approveCache = approveTopics($approveCache);
 	}
 
 	if (!empty($markCache))

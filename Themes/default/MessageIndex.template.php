@@ -154,7 +154,7 @@ function template_main()
 	<div class="tborder topic_table" id="messageindex">
 		<table class="table_grid" cellspacing="0">
 			<thead>
-				<tr class="catbg">';
+				<tr>';
 
 		// Are there actually any topics to show?
 		if (!empty($context['topics']))
@@ -184,9 +184,9 @@ function template_main()
 		// No topics.... just say, "sorry bub".
 		else
 			echo '
-					<th scope="col" class="first_th" width="8%">&nbsp;</th>
-					<th scope="col" colspan="3"><strong>', $txt['msg_alert_none'], '</strong></th>
-					<th scope="col" class="last_th" width="8%">&nbsp;</th>';
+					<th scope="col" class="smalltext first_th" width="8%">&nbsp;</th>
+					<th class="smalltext" colspan="3"><strong>', $txt['msg_alert_none'], '</strong></th>
+					<th scope="col" class="smalltext last_th" width="8%">&nbsp;</th>';
 
 		echo '
 				</tr>
@@ -277,7 +277,7 @@ function template_main()
 			if (!empty($context['can_quick_mod']))
 			{
 				echo '
-					<td class="moderation ', $color_class, '" align="center">';
+					<td class="moderation ', $color_class, '">';
 				if ($options['display_quick_mod'] == 1)
 					echo '
 						<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check" />';
@@ -312,14 +312,14 @@ function template_main()
 				<tr class="titlebg">
 					<td colspan="6" align="right">
 						<select class="qaction" name="qaction"', $context['can_move'] ? ' onchange="this.form.moveItTo.disabled = (this.options[this.selectedIndex].value != \'move\');"' : '', '>
-							<option value="">--------</option>', $context['can_approve'] ? '
-							<option value="approve">' . $txt['quick_mod_approve'] . '</option>' : '', $context['can_remove'] ? '
+							<option value="">--------</option>', $context['can_remove'] ? '
 							<option value="remove">' . $txt['quick_mod_remove'] . '</option>' : '', $context['can_lock'] ? '
 							<option value="lock">' . $txt['quick_mod_lock'] . '</option>' : '', $context['can_sticky'] ? '
 							<option value="sticky">' . $txt['quick_mod_sticky'] . '</option>' : '', $context['can_move'] ? '
 							<option value="move">' . $txt['quick_mod_move'] . ': </option>' : '', $context['can_merge'] ? '
 							<option value="merge">' . $txt['quick_mod_merge'] . '</option>' : '', $context['can_restore'] ? '
-							<option value="restore">' . $txt['quick_mod_restore'] . '</option>' : '', $context['user']['is_logged'] ? '
+							<option value="restore">' . $txt['quick_mod_restore'] . '</option>' : '', $context['can_approve'] ? '
+							<option value="approve">' . $txt['quick_mod_approve'] . '</option>' : '', $context['user']['is_logged'] ? '
 							<option value="markread">' . $txt['quick_mod_markread'] . '</option>' : '', '
 						</select>';
 
