@@ -10,6 +10,7 @@ August 2010
  ! PM ignore settings were ignored. (Subs-Post.php) [Bug 4401]
  ! File counts for attachment directories were counted wrongfully. (ManageAttachments.php) [Bug 4381]
  ! Unnecessary logouts following password conversion. (LogInOut.php) [Bug 4365]
+ ! Missing sub template caused premature termination of the script instead of displaying error. (Errors.php, Subs.php) [Bug 4402]
 
 
 July 2010

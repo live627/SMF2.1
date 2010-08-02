@@ -2737,15 +2737,17 @@ function redirectexit($setLocation = '', $refresh = false)
 }
 
 // Ends execution.  Takes care of template loading and remembering the previous URL.
-function obExit($header = null, $do_footer = null, $from_index = false)
+function obExit($header = null, $do_footer = null, $from_index = false, $from_fatal_error = false)
 {
 	global $context, $settings, $modSettings, $txt, $smcFunc;
-	static $header_done = false, $footer_done = false, $level = 0;
+	static $header_done = false, $footer_done = false, $level = 0, $has_fatal_error = false;
 
 	// Attempt to prevent a recursive loop.
 	++$level;
-	if ($level > 1)
+	if ($level > 1 && !$from_fatal_error && !$has_fatal_error)
 		exit;
+	if ($from_fatal_error)
+		$has_fatal_error = true;
 
 	// Clear out the stat cache.
 	trackStats();

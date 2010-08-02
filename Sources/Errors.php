@@ -327,7 +327,7 @@ function setup_fatal_error_context($error_message)
 	}
 
 	// We want whatever for the header, and a footer. (footer includes sub template!)
-	obExit(null, true);
+	obExit(null, true, false, true);
 
 	/* DO NOT IGNORE:
 		If you are creating a bridge to SMF or modifying this function, you MUST
