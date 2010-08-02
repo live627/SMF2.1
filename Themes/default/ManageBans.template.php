@@ -172,46 +172,46 @@ function template_ban_edit()
 			<br />
 			<form action="', $scripturl, '?action=admin;area=ban;sa=edit" method="post" accept-charset="', $context['character_set'], '" style="padding: 0px;margin: 0px;" onsubmit="return confirm(\'', $txt['ban_remove_selected_triggers_confirm'], '\');">
 				<table class="table_grid" width="100%">
-				<thead>
-					<tr class="catbg">
-						<td width="65%" align="left">', $txt['ban_banned_entity'], '</td>
-						<td width="15%" align="center">', $txt['ban_hits'], '</td>
-						<td width="15%" align="center">', $txt['ban_actions'], '</td>
-						<td width="5%" align="center"><input type="checkbox" onclick="invertAll(this, this.form, \'ban_items\');" class="input_check" /></td>
-					</tr>
-				</thead>
-				<tbody>';
+					<thead>
+						<tr class="catbg">
+							<th width="65%" align="left">', $txt['ban_banned_entity'], '</td>
+							<th width="15%" align="center">', $txt['ban_hits'], '</td>
+							<th width="15%" align="center">', $txt['ban_actions'], '</td>
+							<th width="5%" align="center"><input type="checkbox" onclick="invertAll(this, this.form, \'ban_items\');" class="input_check" /></td>
+						</tr>
+					</thead>
+					<tbody>';
 		if (empty($context['ban_items']))
 			echo '
-					<tr class="windowbg2">
-						<td colspan="4">(', $txt['ban_no_triggers'], ')</td>
-					</tr>';
+						<tr class="windowbg2">
+							<td colspan="4">(', $txt['ban_no_triggers'], ')</td>
+						</tr>';
 		else
 		{
 			foreach ($context['ban_items'] as $ban_item)
 			{
 				echo '
-					<tr class="windowbg2" align="left">
-						<td>';
+						<tr class="windowbg2" align="left">
+							<td>';
 				if ($ban_item['type'] == 'ip')
-					echo '<strong>', $txt['ip'], ':</strong>&nbsp;', $ban_item['ip'];
+					echo '		<strong>', $txt['ip'], ':</strong>&nbsp;', $ban_item['ip'];
 				elseif ($ban_item['type'] == 'hostname')
-					echo '<strong>', $txt['hostname'], ':</strong>&nbsp;', $ban_item['hostname'];
+					echo '		<strong>', $txt['hostname'], ':</strong>&nbsp;', $ban_item['hostname'];
 				elseif ($ban_item['type'] == 'email')
-					echo '<strong>', $txt['email'], ':</strong>&nbsp;', $ban_item['email'];
+					echo '		<strong>', $txt['email'], ':</strong>&nbsp;', $ban_item['email'];
 				elseif ($ban_item['type'] == 'user')
-					echo '<strong>', $txt['username'], ':</strong>&nbsp;', $ban_item['user']['link'];
+					echo '		<strong>', $txt['username'], ':</strong>&nbsp;', $ban_item['user']['link'];
 				echo '
-						</td>
-						<td class="windowbg" align="center">', $ban_item['hits'], '</td>
-						<td class="windowbg" align="center"><a href="', $scripturl, '?action=admin;area=ban;sa=edittrigger;bg=', $context['ban']['id'], ';bi=', $ban_item['id'], '">', $txt['ban_edit_trigger'], '</a></td>
-						<td align="center" class="windowbg2"><input type="checkbox" name="ban_items[]" value="', $ban_item['id'], '" class="input_check" /></td>
-					</tr>';
+							</td>
+							<td class="windowbg" align="center">', $ban_item['hits'], '</td>
+							<td class="windowbg" align="center"><a href="', $scripturl, '?action=admin;area=ban;sa=edittrigger;bg=', $context['ban']['id'], ';bi=', $ban_item['id'], '">', $txt['ban_edit_trigger'], '</a></td>
+							<td align="center" class="windowbg2"><input type="checkbox" name="ban_items[]" value="', $ban_item['id'], '" class="input_check" /></td>
+						</tr>';
 			}
 		}
 
 		echo '
-				</tbody>
+					</tbody>
 				</table>
 				<div class="additional_rows">
 					<div class="floatleft">

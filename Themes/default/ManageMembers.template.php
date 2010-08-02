@@ -155,65 +155,73 @@ function template_search_members()
 			</div>
 			<div class="flow_hidden">
 				<table width="49%" class="table_grid floatleft">
-					<tr class="catbg">
-						<th class="smalltext" scope="col">', $txt['membergroups'], '</th>
-						<th class="smalltext" scope="col">', $txt['primary'], '</th>
-						<th class="smalltext" scope="col">', $txt['additional'], '</th>
-					</tr>';
+					<thead>
+						<tr class="catbg">
+							<th scope="col">', $txt['membergroups'], '</th>
+							<th scope="col">', $txt['primary'], '</th>
+							<th scope="col">', $txt['additional'], '</th>
+						</tr>
+					</thead>
+					<tbody>';
 
 			foreach ($context['membergroups'] as $membergroup)
 				echo '
-					<tr class="windowbg2">
-						<td>', $membergroup['name'], '</td>
-						<td align="center">
-							<input type="checkbox" name="membergroups[1][]" value="', $membergroup['id'], '" checked="checked" class="input_check" />
-						</td>
-						<td align="center">
-							', $membergroup['can_be_additional'] ? '<input type="checkbox" name="membergroups[2][]" value="' . $membergroup['id'] . '" checked="checked" class="input_check" />' : '', '
-						</td>
-					</tr>';
+						<tr class="windowbg2">
+							<td>', $membergroup['name'], '</td>
+							<td align="center">
+								<input type="checkbox" name="membergroups[1][]" value="', $membergroup['id'], '" checked="checked" class="input_check" />
+							</td>
+							<td align="center">
+								', $membergroup['can_be_additional'] ? '<input type="checkbox" name="membergroups[2][]" value="' . $membergroup['id'] . '" checked="checked" class="input_check" />' : '', '
+							</td>
+						</tr>';
 
 			echo '
-					<tr class="windowbg2">
-						<td>
-							<em>', $txt['check_all'], '</em>
-						</td>
-						<td align="center">
-							<input type="checkbox" onclick="invertAll(this, this.form, \'membergroups[1]\');" checked="checked" class="input_check" />
-						</td>
-						<td align="center">
-							<input type="checkbox" onclick="invertAll(this, this.form, \'membergroups[2]\');" checked="checked" class="input_check" />
-						</td>
-					</tr>
+						<tr class="windowbg2">
+							<td>
+								<em>', $txt['check_all'], '</em>
+							</td>
+							<td align="center">
+								<input type="checkbox" onclick="invertAll(this, this.form, \'membergroups[1]\');" checked="checked" class="input_check" />
+							</td>
+							<td align="center">
+								<input type="checkbox" onclick="invertAll(this, this.form, \'membergroups[2]\');" checked="checked" class="input_check" />
+							</td>
+						</tr>
+					</tbody>
 				</table>
 
 				<table width="49%" class="table_grid floatright">
-					<tr class="catbg">
-						<th class="smalltext" scope="col" colspan="2">
-							', $txt['membergroups_postgroups'], '
-						</th>
-					</tr>';
+					<thead>
+						<tr class="catbg">
+							<th scope="col" colspan="2">
+								', $txt['membergroups_postgroups'], '
+							</th>
+						</tr>
+					</thead>
+					</tbody>';
 
 			foreach ($context['postgroups'] as $postgroup)
 				echo '
-					<tr class="windowbg2">
-						<td>
-							', $postgroup['name'], '
-						</td>
-						<td width="40" align="center">
-							<input type="checkbox" name="postgroups[]" value="', $postgroup['id'], '" checked="checked" class="input_check" />
-						</td>
-					</tr>';
+						<tr class="windowbg2">
+							<td>
+								', $postgroup['name'], '
+							</td>
+							<td width="40" align="center">
+								<input type="checkbox" name="postgroups[]" value="', $postgroup['id'], '" checked="checked" class="input_check" />
+							</td>
+						</tr>';
 
 			echo '
-					<tr class="windowbg2">
-						<td>
-							<em>', $txt['check_all'], '</em>
-						</td>
-						<td align="center">
-							<input type="checkbox" onclick="invertAll(this, this.form, \'postgroups[]\');" checked="checked" class="input_check" />
-						</td>
-					</tr>
+						<tr class="windowbg2">
+							<td>
+								<em>', $txt['check_all'], '</em>
+							</td>
+							<td align="center">
+								<input type="checkbox" onclick="invertAll(this, this.form, \'postgroups[]\');" checked="checked" class="input_check" />
+							</td>
+						</tr>
+					</tbody>
 				</table>
 			</div><br />
 			<div class="righttext">

@@ -447,10 +447,10 @@ function template_unapproved_attachments()
 			<table class="table_grid" width="100%">
 			<thead>
 				<tr class="catbg">
-					<th class="smalltext">', $txt['mc_unapproved_attach_name'], '</th>
-					<th class="smalltext">', $txt['mc_unapproved_attach_size'], '</th>
-					<th class="smalltext">', $txt['mc_unapproved_attach_poster'], '</th>
-					<th class="smalltext">', $txt['date'], '</th>
+					<th>', $txt['mc_unapproved_attach_name'], '</th>
+					<th>', $txt['mc_unapproved_attach_size'], '</th>
+					<th>', $txt['mc_unapproved_attach_poster'], '</th>
+					<th>', $txt['date'], '</th>
 					<th nowrap="nowrap" align="center"><input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" checked="checked" /></th>
 				</tr>
 			</thead>
@@ -597,38 +597,39 @@ function template_viewmodreport()
 				<h3 class="catbg">', $txt['mc_modreport_modactions'], '</h3>
 			</div>
 			<table width="100%" class="table_grid">
-			<thead>
-				<tr class="catbg">
-					<th class="smalltext">', $txt['modlog_action'], '</th>
-					<th class="smalltext">', $txt['modlog_date'], '</th>
-					<th class="smalltext">', $txt['modlog_member'], '</th>
-					<th class="smalltext">', $txt['modlog_position'], '</th>
-					<th class="smalltext">', $txt['modlog_ip'], '</th>
-				</tr>
-			</thead>
-			<tbody>';
+				<thead>
+					<tr class="catbg">
+						<th>', $txt['modlog_action'], '</th>
+						<th>', $txt['modlog_date'], '</th>
+						<th>', $txt['modlog_member'], '</th>
+						<th>', $txt['modlog_position'], '</th>
+						<th>', $txt['modlog_ip'], '</th>
+					</tr>
+				</thead>
+				<tbody>';
 
 		foreach ($context['entries'] as $entry)
 		{
 			echo '
-				<tr class="', $alt ? 'windowbg2' : 'windowbg', '">
-					<td>', $entry['action'], '</td>
-					<td>', $entry['time'], '</td>
-					<td>', $entry['moderator']['link'], '</td>
-					<td>', $entry['position'], '</td>
-					<td>', $entry['ip'], '</td>
-				</tr><tr>
-					<td colspan="5" class="', $alt ? 'windowbg2' : 'windowbg', '">';
+					<tr class="', $alt ? 'windowbg2' : 'windowbg', '">
+						<td>', $entry['action'], '</td>
+						<td>', $entry['time'], '</td>
+						<td>', $entry['moderator']['link'], '</td>
+						<td>', $entry['position'], '</td>
+						<td>', $entry['ip'], '</td>
+					</tr>
+					<tr>
+						<td colspan="5" class="', $alt ? 'windowbg2' : 'windowbg', '">';
 
 			foreach ($entry['extra'] as $key => $value)
 				echo '
-						<em>', $key, '</em>: ', $value;
+							<em>', $key, '</em>: ', $value;
 			echo '
-					</td>
-				</tr>';
+						</td>
+					</tr>';
 		}
 		echo '
-			</tbody>
+				</tbody>
 			</table>';
 	}
 

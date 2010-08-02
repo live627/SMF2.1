@@ -415,49 +415,49 @@ function template_view_versions()
 		</div>
 		<div class="information">', $txt['version_check_desc'], '</div>
 			<table width="100%" class="table_grid">
-			<thead>
-				<tr class="catbg">
-					<th scope="col" class="smalltext" width="50%">
-						<strong>', $txt['admin_smffile'], '</strong>
-					</th>
-					<th scope="col" class="smalltext" width="25%">
-						<strong>', $txt['dvc_your'], '</strong>
-					</th>
-					<th scope="col" class="smalltext" width="25%">
-						<strong>', $txt['dvc_current'], '</strong>
-					</th>
-				</tr>
-			</thead>
-			<tbody>';
+				<thead>
+					<tr class="catbg" align="left">
+						<th class="first_th" scope="col" width="50%">
+							<strong>', $txt['admin_smffile'], '</strong>
+						</th>
+						<th scope="col" width="25%">
+							<strong>', $txt['dvc_your'], '</strong>
+						</th>
+						<th class="last_th" scope="col"" width="25%">
+							<strong>', $txt['dvc_current'], '</strong>
+						</th>
+					</tr>
+				</thead>
+				<tbody>';
 
 	// The current version of the core SMF package.
 	echo '
-				<tr>
-					<td class="windowbg">
-						', $txt['admin_smfpackage'], '
-					</td>
-					<td class="windowbg">
-						<em id="yourSMF">', $context['forum_version'], '</em>
-					</td>
-					<td class="windowbg">
-						<em id="currentSMF">??</em>
-					</td>
-				</tr>';
+					<tr>
+						<td class="windowbg">
+							', $txt['admin_smfpackage'], '
+						</td>
+						<td class="windowbg">
+							<em id="yourSMF">', $context['forum_version'], '</em>
+						</td>
+						<td class="windowbg">
+							<em id="currentSMF">??</em>
+						</td>
+					</tr>';
 
 	// Now list all the source file versions, starting with the overall version (if all match!).
 	echo '
-				<tr>
-					<td class="windowbg">
-						<a href="#" id="Sources-link">', $txt['dvc_sources'], '</a>
-					</td>
-					<td class="windowbg">
-						<em id="yourSources">??</em>
-					</td>
-					<td class="windowbg">
-						<em id="currentSources">??</em>
-					</td>
-				</tr>
-			</tbody>
+					<tr>
+						<td class="windowbg">
+							<a href="#" id="Sources-link">', $txt['dvc_sources'], '</a>
+						</td>
+						<td class="windowbg">
+							<em id="yourSources">??</em>
+						</td>
+						<td class="windowbg">
+							<em id="currentSources">??</em>
+						</td>
+					</tr>
+				</tbody>
 			</table>
 
 			<table id="Sources" width="100%" class="table_grid">
@@ -484,81 +484,81 @@ function template_view_versions()
 			</table>
 
 			<table width="100%" class="table_grid">
-			<tbody>
-				<tr>
-					<td class="windowbg" width="50%">
-						<a href="#" id="Default-link">', $txt['dvc_default'], '</a>
-					</td>
-					<td class="windowbg" width="25%">
-						<em id="yourDefault">??</em>
-					</td>
-					<td class="windowbg" width="25%">
-						<em id="currentDefault">??</em>
-					</td>
-				</tr>
-			</tbody>
+				<tbody>
+					<tr>
+						<td class="windowbg" width="50%">
+							<a href="#" id="Default-link">', $txt['dvc_default'], '</a>
+						</td>
+						<td class="windowbg" width="25%">
+							<em id="yourDefault">??</em>
+						</td>
+						<td class="windowbg" width="25%">
+							<em id="currentDefault">??</em>
+						</td>
+					</tr>
+				</tbody>
 			</table>
 
 			<table id="Default" width="100%" class="table_grid">
-			<tbody>';
+				<tbody>';
 
 	foreach ($context['default_template_versions'] as $filename => $version)
 		echo '
-				<tr>
-					<td class="windowbg2" width="50%" style="padding-left: 3ex;">
-						', $filename, '
-					</td>
-					<td class="windowbg2" width="25%">
-						<em id="yourDefault', $filename, '">', $version, '</em>
-					</td>
-					<td class="windowbg2" width="25%">
-						<em id="currentDefault', $filename, '">??</em>
-					</td>
-				</tr>';
+					<tr>
+						<td class="windowbg2" width="50%" style="padding-left: 3ex;">
+							', $filename, '
+						</td>
+						<td class="windowbg2" width="25%">
+							<em id="yourDefault', $filename, '">', $version, '</em>
+						</td>
+						<td class="windowbg2" width="25%">
+							<em id="currentDefault', $filename, '">??</em>
+						</td>
+					</tr>';
 
 	// Now the language files...
 	echo '
-			</tbody>
+				</tbody>
 			</table>
 
 			<table width="100%" class="table_grid">
-			<tbody>
-				<tr>
-					<td class="windowbg" width="50%">
-						<a href="#" id="Languages-link">', $txt['dvc_languages'], '</a>
-					</td>
-					<td class="windowbg" width="25%">
-						<em id="yourLanguages">??</em>
-					</td>
-					<td class="windowbg" width="25%">
-						<em id="currentLanguages">??</em>
-					</td>
-				</tr>
-			</tbody>
+				<tbody>
+					<tr>
+						<td class="windowbg" width="50%">
+							<a href="#" id="Languages-link">', $txt['dvc_languages'], '</a>
+						</td>
+						<td class="windowbg" width="25%">
+							<em id="yourLanguages">??</em>
+						</td>
+						<td class="windowbg" width="25%">
+							<em id="currentLanguages">??</em>
+						</td>
+					</tr>
+				</tbody>
 			</table>
 
 			<table id="Languages" width="100%" class="table_grid">
-			<tbody>';
+				<tbody>';
 
 	foreach ($context['default_language_versions'] as $language => $files)
 	{
 		foreach ($files as $filename => $version)
 			echo '
-				<tr>
-					<td class="windowbg2" width="50%" style="padding-left: 3ex;">
-						', $filename, '.<em>', $language, '</em>.php
-					</td>
-					<td class="windowbg2" width="25%">
-						<em id="your', $filename, '.', $language, '">', $version, '</em>
-					</td>
-					<td class="windowbg2" width="25%">
-						<em id="current', $filename, '.', $language, '">??</em>
-					</td>
-				</tr>';
+					<tr>
+						<td class="windowbg2" width="50%" style="padding-left: 3ex;">
+							', $filename, '.<em>', $language, '</em>.php
+						</td>
+						<td class="windowbg2" width="25%">
+							<em id="your', $filename, '.', $language, '">', $version, '</em>
+						</td>
+						<td class="windowbg2" width="25%">
+							<em id="current', $filename, '.', $language, '">??</em>
+						</td>
+					</tr>';
 	}
 
 	echo '
-			</tbody>
+				</tbody>
 			</table>';
 
 	// Finally, display the version information for the currently selected theme - if it is not the default one.
@@ -566,40 +566,40 @@ function template_view_versions()
 	{
 		echo '
 			<table width="100%" class="table_grid">
-			<tbody>
-				<tr>
-					<td class="windowbg" width="50%">
-						<a href="#" id="Templates-link">', $txt['dvc_templates'], '</a>
-					</td>
-					<td class="windowbg" width="25%">
-						<em id="yourTemplates">??</em>
-					</td>
-					<td class="windowbg" width="25%">
-						<em id="currentTemplates">??</em>
-					</td>
-				</tr>
-			</tbody>
+				<tbody>
+					<tr>
+						<td class="windowbg" width="50%">
+							<a href="#" id="Templates-link">', $txt['dvc_templates'], '</a>
+						</td>
+						<td class="windowbg" width="25%">
+							<em id="yourTemplates">??</em>
+						</td>
+						<td class="windowbg" width="25%">
+							<em id="currentTemplates">??</em>
+						</td>
+					</tr>
+				</tbody>
 			</table>
 
 			<table id="Templates" width="100%" class="table_grid">
-			<tbody>';
+				<tbody>';
 
 		foreach ($context['template_versions'] as $filename => $version)
 			echo '
-				<tr>
-					<td class="windowbg2" width="50%" style="padding-left: 3ex;">
-						', $filename, '
-					</td>
-					<td class="windowbg2" width="25%">
-						<em id="yourTemplates', $filename, '">', $version, '</em>
-					</td>
-					<td class="windowbg2" width="25%">
-						<em id="currentTemplates', $filename, '">??</em>
-					</td>
-				</tr>';
+					<tr>
+						<td class="windowbg2" width="50%" style="padding-left: 3ex;">
+							', $filename, '
+						</td>
+						<td class="windowbg2" width="25%">
+							<em id="yourTemplates', $filename, '">', $version, '</em>
+						</td>
+						<td class="windowbg2" width="25%">
+							<em id="currentTemplates', $filename, '">??</em>
+						</td>
+					</tr>';
 
 		echo '
-			</tbody>
+				</tbody>
 			</table>';
 	}
 
@@ -1521,25 +1521,25 @@ function template_add_language()
 
 				<table class="table_grid" cellspacing="0" width="100%">
 					<thead>
-					<tr class="catbg">
-						<th scope="col" class="smalltext">', $txt['name'], '</th>
-						<th scope="col" class="smalltext">', $txt['add_language_smf_desc'], '</th>
-						<th scope="col" class="smalltext">', $txt['add_language_smf_version'], '</th>
-						<th scope="col" class="smalltext">', $txt['add_language_smf_utf8'], '</th>
-						<th scope="col" class="smalltext">', $txt['add_language_smf_install'], '</th>
-					</tr>
+						<tr class="catbg">
+							<th class="first_th" scope="col">', $txt['name'], '</th>
+							<th scope="col">', $txt['add_language_smf_desc'], '</th>
+							<th scope="col">', $txt['add_language_smf_version'], '</th>
+							<th scope="col">', $txt['add_language_smf_utf8'], '</th>
+							<th class="first_th" scope="col">', $txt['add_language_smf_install'], '</th>
+						</tr>
 					</thead>
 					<tbody>';
 
 		foreach ($context['smf_languages'] as $language)
 			echo '
-					<tr class="windowbg2">
-						<td align="left">', $language['name'], '</td>
-						<td align="left">', $language['description'], '</td>
-						<td align="left">', $language['version'], '</td>
-						<td align="center">', $language['utf8'] ? $txt['yes'] : $txt['no'], '</td>
-						<td align="left"><a href="', $language['link'], '">', $txt['add_language_smf_install'], '</a></td>
-					</tr>';
+						<tr class="windowbg2">
+							<td align="left">', $language['name'], '</td>
+							<td align="left">', $language['description'], '</td>
+							<td align="left">', $language['version'], '</td>
+							<td align="center">', $language['utf8'] ? $txt['yes'] : $txt['no'], '</td>
+							<td align="left"><a href="', $language['link'], '">', $txt['add_language_smf_install'], '</a></td>
+						</tr>';
 
 		echo '
 					</tbody>
@@ -1620,23 +1620,23 @@ function template_download_language()
 				</h3>
 			</div>
 			<table class="table_grid" cellspacing="0" width="100%">
-			<thead>
-				<tr class="catbg">
-					<th scope="col" class="smalltext">
-						', $txt['languages_download_filename'], '
-					</th>
-					<th scope="col" class="smalltext" width="100">
-						', $txt['languages_download_writable'], '
-					</th>
-					<th scope="col" class="smalltext" width="100">
-						', $txt['languages_download_exists'], '
-					</th>
-					<th scope="col" class="smalltext" width="50">
-						', $txt['languages_download_copy'], '
-					</th>
-				</tr>
-			</thead>
-			<tbody>';
+				<thead>
+					<tr class="catbg">
+						<th class="first_th" scope="col">
+							', $txt['languages_download_filename'], '
+						</th>
+						<th scope="col" width="100">
+							', $txt['languages_download_writable'], '
+						</th>
+						<th scope="col" width="100">
+							', $txt['languages_download_exists'], '
+						</th>
+						<th class="last_th" scope="col" width="50">
+							', $txt['languages_download_copy'], '
+						</th>
+					</tr>
+				</thead>
+				<tbody>';
 
 	foreach ($context['files']['images'] as $theme => $group)
 	{

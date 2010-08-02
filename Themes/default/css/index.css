@@ -148,9 +148,14 @@ h1, h2, h3, h4, h5, h6
 /* Fieldsets are used to group elements. */
 fieldset
 {
-	border: 1px solid #cacdd3;
+	border: 1px solid #c4c4c4;
 	padding: 1em;
-	margin: 0 0 0.3em 0;
+	margin: 0 0 0.5em 0;
+}
+fieldset legend
+{
+	font-weight: bold;
+	color: #444;
 }
 /* No image should have a border when linked. */
 a img
@@ -2200,15 +2205,8 @@ ul.post_options li
 }
 #post_event fieldset
 {
-	margin-bottom: 0.5em;
-	border: 1px solid #c4c4c4;
 	padding: 0.5em;
 	clear: both;
-}
-#post_event legend
-{
-	font-weight: bold;
-	color: #444;
 }
 #post_event #event_main input
 {
@@ -2261,16 +2259,9 @@ ul.post_options li
 }
 #edit_poll fieldset
 {
-	margin-bottom: 0.5em;
-	border: 1px solid #c4c4c4;
 	padding: 0.5em;
 	clear: both;
 	overflow: hidden;
-}
-#edit_poll legend
-{
-	font-weight: bold;
-	color: #444;
 }
 #edit_poll fieldset input
 {
@@ -2348,8 +2339,6 @@ ul.post_options li
 }
 div.move_topic fieldset
 {
-	margin: 0.5em 0;
-	border: 1px solid #cacdd3;
 	padding: 0.5em;
 }
 
@@ -2358,7 +2347,6 @@ div.move_topic fieldset
 
 fieldset.send_topic
 {
-	margin-bottom: 0.5em;
 	border: none;
 	padding: 0.5em;
 }
@@ -2428,11 +2416,7 @@ dl.merge_topic dd
 }
 fieldset.merge_options
 {
-	margin-bottom: 0.5em;
-}
-fieldset.merge_options legend
-{
-	font-weight: bold;
+	clear: both;
 }
 .custom_subject
 {
@@ -3314,11 +3298,6 @@ dl.addrules dt.floatleft
 {
 	clear: both;
 }
-#addrule fieldset legend
-{
-	font-weight: bold;
-	color: #333;
-}
 
 /* Styles for the calendar section.
 ------------------------------------------------- */
@@ -3470,7 +3449,6 @@ span.hidelink
 {
 	text-align: left;
 	padding: 0;
-	margin: 0.5em 0;
 	border: none;
 }
 #advanced_search dl#search_options

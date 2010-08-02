@@ -510,10 +510,10 @@ function template_manual_message_view()
 			<table class="table_grid" cellspacing="0">
 				<thead>
 					<tr class="catbg">
-						<th scope="col" class="smalltext first_th" width="8%" colspan="2">&nbsp;</th>
-						<th scope="col" class="smalltext"><a href="#">', $txt['subject'], '</a> / <a href="#">', $txt['started_by'], '</a></th>
-						<th scope="col" class="smalltext" width="14%" align="center"><a href="#">', $txt['replies'], '</a> / <a href="#">', $txt['views'], '</a></th>
-						<th scope="col" class="smalltext last_th" width="22%"><a href="#">', $txt['last_post'], ' <img src="', $settings['images_url'], '/sort_down.gif" alt="" /></a></th>
+						<th scope="col" class="first_th" width="8%" colspan="2">&nbsp;</th>
+						<th scope="col"><a href="#">', $txt['subject'], '</a> / <a href="#">', $txt['started_by'], '</a></th>
+						<th scope="col" width="14%" align="center"><a href="#">', $txt['replies'], '</a> / <a href="#">', $txt['views'], '</a></th>
+						<th scope="col" class="last_th" width="22%"><a href="#">', $txt['last_post'], ' <img src="', $settings['images_url'], '/sort_down.gif" alt="" /></a></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -1341,26 +1341,30 @@ function template_manual_modify_profile_groups()
 		<p>', $txt['manual_profile_groups_describe'], '</p>
 		<div class="help_sample">
 			<table border="0" width="100%" cellspacing="0" cellpadding="4" class="table_grid">
-				<tr class="catbg">
-					<th class="first_th">', $txt['manual_profile_groups_available'], '</th>
-					<th class="last_th"></th>
-				</tr>
-				<tr class="windowbg2">
-					<td>
-						<strong>', $txt['manual_profile_groups_free'], '</strong><br /><span class="smalltext">', $txt['manual_profile_groups_free_desc'], '</span>
-					</td>
-					<td class="righttext">
-						<a href="#">', $txt['manual_profile_groups_join'], '</a>
-					</td>
-				</tr>
-				<tr class="windowbg">
-					<td>
-						<strong>', $txt['manual_profile_groups_requestable'], '</strong><br /><span class="smalltext">', $txt['manual_profile_groups_requestable_desc'], '</span>
-					</td>
-					<td class="righttext">
-						<a href="#">', $txt['manual_profile_groups_request'], '</a>
-					</td>
-				</tr>
+				<thead>
+					<tr class="catbg">
+						<th class="first_th">', $txt['manual_profile_groups_available'], '</th>
+						<th class="last_th"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="windowbg2">
+						<td>
+							<strong>', $txt['manual_profile_groups_free'], '</strong><br /><span class="smalltext">', $txt['manual_profile_groups_free_desc'], '</span>
+						</td>
+						<td class="righttext">
+							<a href="#">', $txt['manual_profile_groups_join'], '</a>
+						</td>
+					</tr>
+					<tr class="windowbg">
+						<td>
+							<strong>', $txt['manual_profile_groups_requestable'], '</strong><br /><span class="smalltext">', $txt['manual_profile_groups_requestable_desc'], '</span>
+						</td>
+						<td class="righttext">
+							<a href="#">', $txt['manual_profile_groups_request'], '</a>
+						</td>
+					</tr>
+				</tbody>
 			</table>
 		</div>';
 }

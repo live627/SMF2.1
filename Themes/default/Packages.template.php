@@ -511,10 +511,10 @@ function template_view_installed()
 		<table class="table_grid" width="100%">
 		<thead>
 			<tr class="catbg">
-				<th scope="col" class="smalltext" width="32"></th>
-				<th scope="col" class="smalltext" width="25%">', $txt['mod_name'], '</th>
-				<th scope="col" class="smalltext" width="25%">', $txt['mod_version'], '</th>
-				<th scope="col" class="smalltext" width="49%"></th>
+				<th scope="col" width="32"></th>
+				<th scope="col" width="25%">', $txt['mod_name'], '</th>
+				<th scope="col" width="25%">', $txt['mod_version'], '</th>
+				<th scope="col" width="49%"></th>
 			</tr>
 		</thead>
 		<tbody>';
@@ -615,9 +615,9 @@ function template_browse()
 		<thead>
 			<tr class="catbg">
 				<th class="first_th" width="32"></th>
-				<th class="smalltext lefttext" width="25%">', $txt['mod_name'], '</th>
-				<th class="smalltext lefttext" width="25%">', $txt['mod_version'], '</th>
-				<th class="smalltext last_th" width="49%"></th>
+				<th class="lefttext" width="25%">', $txt['mod_name'], '</th>
+				<th class="lefttext" width="25%">', $txt['mod_version'], '</th>
+				<th class="last_th" width="49%"></th>
 			</tr>
 		</thead>
 		<tbody>';
@@ -673,10 +673,10 @@ function template_browse()
 		<table class="table_grid" width="100%">
 		<thead>
 			<tr class="catbg">
-				<th class="smalltext" width="32"></th>
-				<th class="smalltext" width="25%">', $txt['mod_name'], '</th>
-				<th class="smalltext" width="25%">', $txt['mod_version'], '</th>
-				<th class="smalltext" width="49%"></th>
+				<th width="32"></th>
+				<th width="25%">', $txt['mod_name'], '</th>
+				<th width="25%">', $txt['mod_version'], '</th>
+				<th width="49%"></th>
 			</tr>
 		</thead>
 		<tbody>';
@@ -729,10 +729,10 @@ function template_browse()
 		<table class="table_grid" width="100%">
 		<thead>
 			<tr class="catbg">
-				<th class="smalltext" width="32"></th>
-				<th class="smalltext" width="25%">', $txt['mod_name'], '</th>
-				<th class="smalltext" width="25%">', $txt['mod_version'], '</th>
-				<th class="smalltext" width="49%"></th>
+				<th width="32"></th>
+				<th width="25%">', $txt['mod_name'], '</th>
+				<th width="25%">', $txt['mod_version'], '</th>
+				<th width="49%"></th>
 			</tr>
 		</thead>
 		<tbody>';
@@ -785,10 +785,10 @@ function template_browse()
 		<table class="table_grid" width="100%">
 		<thead>
 			<tr class="catbg">
-				<th class="smalltext" width="32"></th>
-				<th class="smalltext" width="25%">', $txt['mod_name'], '</th>
-				<th class="smalltext" width="25%">', $txt['mod_version'], '</th>
-				<th class="smalltext" width="49%"></th>
+				<th width="32"></th>
+				<th width="25%">', $txt['mod_name'], '</th>
+				<th width="25%">', $txt['mod_version'], '</th>
+				<th width="49%"></th>
 			</tr>
 		</thead>
 		<tbody>';
@@ -1843,44 +1843,43 @@ function template_file_permissions()
 			</h3>
 		</div>
 		<table width="100%" class="table_grid">
-		<thead>
-			<tr class="catbg">
-				<th class="first_th lefttext" width="30%">&nbsp;', $txt['package_file_perms_name'], '&nbsp;</th>
-				<th width="30%" class="lefttext">', $txt['package_file_perms_status'], '</th>
-				<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_read'], '</span></th>
-				<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_write'], '</span></th>
-				<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_execute'], '</span></th>
-				<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_custom'], '</span></th>
-				<th class="last_th" align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_no_change'], '</span></th>
-			</tr>
-		</thead>
-		';
+			<thead>
+				<tr class="catbg">
+					<th class="first_th lefttext" width="30%">&nbsp;', $txt['package_file_perms_name'], '&nbsp;</th>
+					<th width="30%" class="lefttext">', $txt['package_file_perms_status'], '</th>
+					<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_read'], '</span></th>
+					<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_write'], '</span></th>
+					<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_execute'], '</span></th>
+					<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_custom'], '</span></th>
+					<th class="last_th" align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_no_change'], '</span></th>
+				</tr>
+			</thead>';
 
 	foreach ($context['file_tree'] as $name => $dir)
 	{
 		echo '
-		<tbody>
-			<tr class="windowbg2">
-				<td width="30%"><strong>';
+			<tbody>
+				<tr class="windowbg2">
+					<td width="30%"><strong>';
 
-			if (!empty($dir['type']) && ($dir['type'] == 'dir' || $dir['type'] == 'dir_recursive'))
+				if (!empty($dir['type']) && ($dir['type'] == 'dir' || $dir['type'] == 'dir_recursive'))
+					echo '
+						<img src="', $settings['default_images_url'], '/board.gif" alt="*" />';
+
 				echo '
-					<img src="', $settings['default_images_url'], '/board.gif" alt="*" />';
-
-			echo '
-					', $name, '
-				</strong></td>
-				<td width="30%">
-					<span style="color: ', ($dir['perms']['chmod'] ? 'green' : 'red'), '">', ($dir['perms']['chmod'] ? $txt['package_file_perms_writable'] : $txt['package_file_perms_not_writable']), '</span>
-					', ($dir['perms']['perms'] ? '&nbsp;(' . $txt['package_file_perms_chmod'] . ': ' . substr(sprintf('%o', $dir['perms']['perms']), -4) . ')' : ''), '
-				</td>
-				<td align="center" class="perm_read" width="8%"><input type="radio" name="permStatus[', $name, ']" value="read" class="input_radio" /></td>
-				<td align="center" class="perm_write" width="8%"><input type="radio" name="permStatus[', $name, ']" value="writable" class="input_radio" /></td>
-				<td align="center" class="perm_execute" width="8%"><input type="radio" name="permStatus[', $name, ']" value="execute" class="input_radio" /></td>
-				<td align="center" class="perm_custom" width="8%"><input type="radio" name="permStatus[', $name, ']" value="custom" class="input_radio" /></td>
-				<td align="center" class="perm_nochange" width="8%"><input type="radio" name="permStatus[', $name, ']" value="no_change" checked="checked" class="input_radio" /></td>
-			</tr>
-		</tbody>';
+						', $name, '
+					</strong></td>
+					<td width="30%">
+						<span style="color: ', ($dir['perms']['chmod'] ? 'green' : 'red'), '">', ($dir['perms']['chmod'] ? $txt['package_file_perms_writable'] : $txt['package_file_perms_not_writable']), '</span>
+						', ($dir['perms']['perms'] ? '&nbsp;(' . $txt['package_file_perms_chmod'] . ': ' . substr(sprintf('%o', $dir['perms']['perms']), -4) . ')' : ''), '
+					</td>
+					<td align="center" class="perm_read" width="8%"><input type="radio" name="permStatus[', $name, ']" value="read" class="input_radio" /></td>
+					<td align="center" class="perm_write" width="8%"><input type="radio" name="permStatus[', $name, ']" value="writable" class="input_radio" /></td>
+					<td align="center" class="perm_execute" width="8%"><input type="radio" name="permStatus[', $name, ']" value="execute" class="input_radio" /></td>
+					<td align="center" class="perm_custom" width="8%"><input type="radio" name="permStatus[', $name, ']" value="custom" class="input_radio" /></td>
+					<td align="center" class="perm_nochange" width="8%"><input type="radio" name="permStatus[', $name, ']" value="no_change" checked="checked" class="input_radio" /></td>
+				</tr>
+			</tbody>';
 
 		if (!empty($dir['contents']))
 			template_permission_show_contents($name, $dir['contents'], 1);

@@ -375,39 +375,39 @@ function template_merge_extra_options()
 				<h3 class="titlebg">', $txt['merge_topic_list'], '</h3>
 			</div>
 			<table width="100%" class="bordercolor table_grid">
-			<thead>
-				<tr class="catbg">
-					<th scope="col" class="smalltext" width="10px">', $txt['merge_check'], '</th>
-					<th scope="col" class="smalltext">', $txt['subject'], '</th>
-					<th scope="col" class="smalltext">', $txt['started_by'], '</th>
-					<th scope="col" class="smalltext">', $txt['last_post'], '</th>
-					<th scope="col" class="smalltext" width="20px">' . $txt['merge_include_notifications'] . '</th>
-				</tr>
-			</thead>
-			<tbody>';
-	foreach ($context['topics'] as $topic)
+				<thead>
+					<tr class="catbg">
+						<th scope="col" class="first_th" align="center" width="10px">', $txt['merge_check'], '</th>
+						<th scope="col" class="lefttext">', $txt['subject'], '</th>
+						<th scope="col" class="lefttext">', $txt['started_by'], '</th>
+						<th scope="col" class="lefttext">', $txt['last_post'], '</th>
+						<th scope="col" class="last_th" width="20px">' . $txt['merge_include_notifications'] . '</th>
+					</tr>
+				</thead>
+				<tbody>';
+		foreach ($context['topics'] as $topic)
+			echo '
+					<tr class="windowbg2">
+						<td align="center">
+							<input type="checkbox" class="input_check" name="topics[]" value="' . $topic['id'] . '" checked="checked" />
+						</td>
+						<td>
+							<a href="' . $scripturl . '?topic=' . $topic['id'] . '.0" target="_blank" class="new_win">' . $topic['subject'] . '</a>
+						</td>
+						<td>
+							', $topic['started']['link'], '<br />
+							<span class="smalltext">', $topic['started']['time'], '</span>
+						</td>
+						<td>
+							' . $topic['updated']['link'] . '<br />
+							<span class="smalltext">', $topic['updated']['time'], '</span>
+						</td>
+						<td align="center">
+							<input type="checkbox" class="input_check" name="notifications[]" value="' . $topic['id'] . '" checked="checked" />
+						</td>
+					</tr>';
 		echo '
-				<tr>
-					<td class="windowbg2" align="center">
-						<input type="checkbox" class="input_check" name="topics[]" value="' . $topic['id'] . '" checked="checked" />
-					</td>
-					<td class="windowbg2" align="center">
-						<a href="' . $scripturl . '?topic=' . $topic['id'] . '.0" target="_blank" class="new_win">' . $topic['subject'] . '</a>
-					</td>
-					<td class="windowbg2" align="center">
-						', $topic['started']['link'], '<br />
-						<span class="smalltext">', $topic['started']['time'], '</span>
-					</td>
-					<td class="windowbg2" align="center">
-						' . $topic['updated']['link'] . '<br />
-						<span class="smalltext">', $topic['updated']['time'], '</span>
-					</td>
-					<td class="windowbg2" align="center">
-						<input type="checkbox" class="input_check" name="notifications[]" value="' . $topic['id'] . '" checked="checked" />
-					</td>
-				</tr>';
-	echo '
-			</tbody>
+				</tbody>
 			</table>
 			<br />
 			<div class="windowbg">
@@ -463,9 +463,9 @@ function template_merge_extra_options()
 					</fieldset>';
 	}
 	echo '
-					<input type="submit" value="' . $txt['merge'] . '" class="button_submit" />
+					<input type="submit" value="' . $txt['merge'] . '" class="button_submit floatright" />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="hidden" name="sa" value="execute" />
+					<input type="hidden" name="sa" value="execute" /><br class="clear" />
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

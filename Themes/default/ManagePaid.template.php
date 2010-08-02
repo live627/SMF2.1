@@ -524,42 +524,42 @@ function template_user_subscription()
 			', $txt['paid_current_desc'], '
 		</div>
 		<table width="100%" class="table_grid">
-		<thead>
-			<tr class="catbg">
-				<th class="first_th" width="30%">', $txt['paid_name'], '</th>
-				<th align="center">', $txt['paid_status'], '</th>
-				<th align="center">', $txt['start_date'], '</th>
-				<th class="last_th" align="center">', $txt['end_date'], '</th>
-			</tr>
-		</thead>
-		<tbody>';
+			<thead>
+				<tr class="catbg">
+					<th class="first_th" width="30%">', $txt['paid_name'], '</th>
+					<th align="center">', $txt['paid_status'], '</th>
+					<th align="center">', $txt['start_date'], '</th>
+					<th class="last_th" align="center">', $txt['end_date'], '</th>
+				</tr>
+			</thead>
+			<tbody>';
 
 	if (empty($context['current']))
 		echo '
-			<tr class="windowbg">
-				<td align="center" colspan="4">
-					', $txt['paid_none_yet'], '
-				</td>
-			</tr>';
+				<tr class="windowbg">
+					<td align="center" colspan="4">
+						', $txt['paid_none_yet'], '
+					</td>
+				</tr>';
 
 	foreach ($context['current'] as $sub)
 	{
 		if (!$sub['hide'])
 			echo '
-			<tr class="windowbg">
-				<td>
-					', (allowedTo('admin_forum') ? '<a href="' . $scripturl . '?action=admin;area=paidsubscribe;sa=modifyuser;lid=' . $sub['id'] . '">' . $sub['name'] . '</a>' : $sub['name']), '
-				</td><td>
-					<span style="color: ', ($sub['status'] == 2 ? 'green' : ($sub['status'] == 1 ? 'red' : 'orange')), '"><strong>', $sub['status_text'], '</strong></span>
-				</td><td>
-					', $sub['start'], '
-				</td><td>
-					', $sub['end'], '
-				</td>
-			</tr>';
+				<tr class="windowbg">
+					<td>
+						', (allowedTo('admin_forum') ? '<a href="' . $scripturl . '?action=admin;area=paidsubscribe;sa=modifyuser;lid=' . $sub['id'] . '">' . $sub['name'] . '</a>' : $sub['name']), '
+					</td><td>
+						<span style="color: ', ($sub['status'] == 2 ? 'green' : ($sub['status'] == 1 ? 'red' : 'orange')), '"><strong>', $sub['status_text'], '</strong></span>
+					</td><td>
+						', $sub['start'], '
+					</td><td>
+						', $sub['end'], '
+					</td>
+				</tr>';
 	}
 	echo '
-		</tbody>
+			</tbody>
 		</table>
 	</div>
 	<br class="clear" />';

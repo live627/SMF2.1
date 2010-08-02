@@ -10,41 +10,41 @@ function template_edit_news()
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=news;sa=editnews" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify">
 			<table class="table_grid" width="100%">
-			<thead>
-				<tr class="catbg">
-					<th class="smalltext first_th" width="50%">', $txt['admin_edit_news'], '</th>
-					<th class="smalltext" align="left" width="45%">', $txt['preview'], '</th>
-					<th class="smalltext last_th" align="center" width="5%"><input type="checkbox" class="input_check" onclick="invertAll(this, this.form);" /></th>
-				</tr>
-			</thead>
-			<tbody>';
+				<thead>
+					<tr class="catbg">
+						<th class="first_th" width="50%">', $txt['admin_edit_news'], '</th>
+						<th align="left" width="45%">', $txt['preview'], '</th>
+						<th class="last_th" align="center" width="5%"><input type="checkbox" class="input_check" onclick="invertAll(this, this.form);" /></th>
+					</tr>
+				</thead>
+				<tbody>';
 
 	// Loop through all the current news items so you can edit/remove them.
 	foreach ($context['admin_current_news'] as $admin_news)
 		echo '
-				<tr class="windowbg2">
-					<td align="center">
+					<tr class="windowbg2">
+						<td align="center">
 
-						<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" name="news[]" style="width: 85%;">', $admin_news['unparsed'], '</textarea></div>
-					</td><td align="left" valign="top">
-						<div style="overflow: auto; width: 100%; height: 10ex;">', $admin_news['parsed'], '</div>
-					</td><td align="center">
-						<input type="checkbox" name="remove[]" value="', $admin_news['id'], '" class="input_check" />
-					</td>
-				</tr>';
+							<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" name="news[]" style="width: 85%;">', $admin_news['unparsed'], '</textarea></div>
+						</td><td align="left" valign="top">
+							<div style="overflow: auto; width: 100%; height: 10ex;">', $admin_news['parsed'], '</div>
+						</td><td align="center">
+							<input type="checkbox" name="remove[]" value="', $admin_news['id'], '" class="input_check" />
+						</td>
+					</tr>';
 
 	// This provides an empty text box to add a news item to the site.
 	echo '
-				<tr id="moreNews" class="windowbg2" style="display: none;">
-					<td align="center">
-						<div id="moreNewsItems"></div>
-					</td>
-					<td align="center">
-					</td>
-					<td align="center">
-					</td>
-				</tr>
-			</tbody>
+					<tr id="moreNews" class="windowbg2" style="display: none;">
+						<td align="center">
+							<div id="moreNewsItems"></div>
+						</td>
+						<td align="center">
+						</td>
+						<td align="center">
+						</td>
+					</tr>
+				</tbody>
 			</table>
 			<div class="floatleftpadding">
 				<div id="moreNewsItems_link" style="display: none;"><a href="javascript:void(0);" onclick="addNewsItem(); return false;">', $txt['editnews_clickadd'], '</a></div>

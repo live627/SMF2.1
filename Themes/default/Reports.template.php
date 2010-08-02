@@ -81,12 +81,12 @@ function template_main()
 
 		if (!empty($table['title']))
 			echo '
-		<thead>
-			<tr class="catbg">
-				<th scope="col" class="smalltext" colspan="', $table['column_count'], '">', $table['title'], '</th>
-			</tr>
-		</thead>
-		<tbody>';
+			<thead>
+				<tr class="catbg">
+					<th scope="col" colspan="', $table['column_count'], '">', $table['title'], '</th>
+				</tr>
+			</thead>
+			<tbody>';
 
 		// Now do each row!
 		$row_number = 0;
@@ -95,10 +95,10 @@ function template_main()
 		{
 			if ($row_number == 0 && !empty($table['shading']['top']))
 				echo '
-			<tr class="windowbg table_caption">';
+				<tr class="windowbg table_caption">';
 			else
 				echo '
-			<tr class="', !empty($row[0]['separator']) ? 'catbg' : ($alternate ? 'windowbg' : 'windowbg2'), '" valign="top">';
+				<tr class="', !empty($row[0]['separator']) ? 'catbg' : ($alternate ? 'windowbg' : 'windowbg2'), '" valign="top">';
 
 			// Now do each column.
 			$column_number = 0;
@@ -109,35 +109,35 @@ function template_main()
 				if (!empty($data['separator']) && $column_number == 0)
 				{
 					echo '
-				<td colspan="', $table['column_count'], '" class="smalltext">
-					', $data['v'], ':
-				</td>';
+					<td colspan="', $table['column_count'], '" class="smalltext">
+						', $data['v'], ':
+					</td>';
 					break;
 				}
 
 				// Shaded?
 				if ($column_number == 0 && !empty($table['shading']['left']))
 					echo '
-				<td align="', $table['align']['shaded'], '" class="table_caption"', $table['width']['shaded'] != 'auto' ? ' width="' . $table['width']['shaded'] . '"' : '', '>
-					', $data['v'] == $table['default_value'] ? '' : ($data['v'] . (empty($data['v']) ? '' : ':')), '
-				</td>';
+					<td align="', $table['align']['shaded'], '" class="table_caption"', $table['width']['shaded'] != 'auto' ? ' width="' . $table['width']['shaded'] . '"' : '', '>
+						', $data['v'] == $table['default_value'] ? '' : ($data['v'] . (empty($data['v']) ? '' : ':')), '
+					</td>';
 				else
 					echo '
-				<td class="smalltext" align="', $table['align']['normal'], '"', $table['width']['normal'] != 'auto' ? ' width="' . $table['width']['normal'] . '"' : '', !empty($data['style']) ? ' style="' . $data['style'] . '"' : '', '>
-					', $data['v'], '
-				</td>';
+					<td class="smalltext" align="', $table['align']['normal'], '"', $table['width']['normal'] != 'auto' ? ' width="' . $table['width']['normal'] . '"' : '', !empty($data['style']) ? ' style="' . $data['style'] . '"' : '', '>
+						', $data['v'], '
+					</td>';
 
 				$column_number++;
 			}
 
 			echo '
-			</tr>';
+				</tr>';
 
 			$row_number++;
 			$alternate = !$alternate;
 		}
 		echo '
-		</tbody>
+			</tbody>
 		</table>';
 	}
 	echo '
