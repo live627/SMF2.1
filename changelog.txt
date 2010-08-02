@@ -3,6 +3,12 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0                                                                      ???
 ================================================================================
+August 2010
+--------------------------------------------------------------------------------
+ * The new replies template for preview JavaScript was using outdated post layout. (Post.template.php) [Bug 4387]
+ * "new" images for new replies inserted by JavaScript were not removed once the post is no longer unread. (Post.template.php) [Bug 4397]
+
+
 July 2010
 --------------------------------------------------------------------------------
  ! Incorrect password was passed to integrate_reset_pass hook when password was changed. (Profile.php) [Bug 3986]
