@@ -409,28 +409,28 @@ function template_showPosts()
 	else
 	{
 		echo '
-		<table border="0" width="100%" cellspacing="1" cellpadding="2" class="bordercolor" align="center">
+		<table border="0" width="100%" cellspacing="1" cellpadding="2" class="table_grid" align="center">
 			<thead>
 				<tr class="titlebg">
-					<th class="first_th lefttext" width="25%">
+					<th class="first_th lefttext" scope="col" width="25%">
 						<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=filename', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'filename' ? ';asc' : ''), '">
 							', $txt['show_attach_filename'], '
 							', ($context['sort_order'] == 'filename' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 						</a>
 					</th>
-					<th width="12%" align="center">
+					<th scope="col" width="12%">
 						<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=downloads', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'downloads' ? ';asc' : ''), '">
 							', $txt['show_attach_downloads'], '
 							', ($context['sort_order'] == 'downloads' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 						</a>
 					</th>
-					<th class="lefttext" width="30%">
+					<th class="lefttext" scope="col" width="30%">
 						<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=subject', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'subject' ? ';asc' : ''), '">
 							', $txt['message'], '
 							', ($context['sort_order'] == 'subject' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 						</a>
 					</th>
-					<th class="last_th lefttext">
+					<th class="last_th lefttext" scope="col">
 						<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=posted', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'posted' ? ';asc' : ''), '">
 						', $txt['show_attach_posted'], '
 						', ($context['sort_order'] == 'posted' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
@@ -485,16 +485,16 @@ function template_editBuddies()
 				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />', $txt['editBuddies'], '</span>
 			</h3>
 		</div>
-		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
+		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="table_grid" align="center">
 			<tr class="catbg">
-				<th class="first_th" width="20%">', $txt['name'], '</th>
-				<th>', $txt['status'], '</th>
-				<th>', $txt['email'], '</th>
-				<th align="center">', $txt['icq'], '</th>
-				<th align="center">', $txt['aim'], '</th>
-				<th align="center">', $txt['yim'], '</th>
-				<th align="center">', $txt['msn'], '</th>
-				<th class="last_th"></th>
+				<th class="first_th lefttext" scope="col" width="20%">', $txt['name'], '</th>
+				<th scope="col">', $txt['status'], '</th>
+				<th scope="col">', $txt['email'], '</th>
+				<th scope="col">', $txt['icq'], '</th>
+				<th scope="col">', $txt['aim'], '</th>
+				<th scope="col">', $txt['yim'], '</th>
+				<th scope="col">', $txt['msn'], '</th>
+				<th class="last_th" scope="col"></th>
 			</tr>';
 
 	// If they don't have any buddies don't list them!
@@ -571,16 +571,16 @@ function template_editIgnoreList()
 				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />', $txt['editIgnoreList'], '</span>
 			</h3>
 		</div>
-		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
+		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="table_grid" align="center">
 			<tr class="catbg">
-				<th class="first_th" width="20%">', $txt['name'], '</th>
-				<th>', $txt['status'], '</th>
-				<th>', $txt['email'], '</th>
-				<th align="center">', $txt['icq'], '</th>
-				<th align="center">', $txt['aim'], '</th>
-				<th align="center">', $txt['yim'], '</th>
-				<th align="center">', $txt['msn'], '</th>
-				<th class="last_th"></th>
+				<th class="first_th" scope="col" width="20%">', $txt['name'], '</th>
+				<th scope="col">', $txt['status'], '</th>
+				<th scope="col">', $txt['email'], '</th>
+				<th scope="col">', $txt['icq'], '</th>
+				<th scope="col">', $txt['aim'], '</th>
+				<th scope="col">', $txt['yim'], '</th>
+				<th scope="col">', $txt['msn'], '</th>
+				<th class="last_th" scope="col"></th>
 			</tr>';
 
 	// If they don't have anyone on their ignore list, don't list it!
@@ -759,8 +759,8 @@ function template_trackIP()
 		<table class="table_grid" cellspacing="0" width="100%">
 			<thead>
 				<tr class="catbg">
-					<th class="smalltext first_th">', $txt['ip_address'], '</th>
-					<th class="smalltext last_th">', $txt['display_name'], '</th>
+					<th class="first_th" scope="col">', $txt['ip_address'], '</th>
+					<th class="last_th" scope="col">', $txt['display_name'], '</th>
 				</tr>
 			</thead>
 			<tbody>';
@@ -828,37 +828,46 @@ function template_showPermissions()
 
 		// General Permissions section.
 		echo '
-				<div class="tborder floatleft">
+				<div class="tborder">
 					<div class="cat_bar">
 						<h3 class="catbg">', $txt['showPermissions_general'], '</h3>
 					</div>';
 		if (!empty($context['member']['permissions']['general']))
 		{
 			echo '
-					<div class="windowbg padding">
-						<b>', $txt['showPermissions_permission'], '</b>
-					</div>
-					<ul>';
+					<table class="table_grid" width="100%" cellspacing="0">
+						<thead>
+							<tr class="titlebg">
+								<th class="lefttext first_th" scope="col" width="50%">', $txt['showPermissions_permission'], '</th>
+								<th class="lefttext last_th" scope="col" width="50%">', $txt['showPermissions_status'], '</th>
+							</tr>
+						</thead>
+						<tbody>';
+
 			foreach ($context['member']['permissions']['general'] as $permission)
 			{
 				echo '
-						<li class="windowbg2 floatleft">
-							<div class="permission_name floatleft" title="', $permission['id'], '">
-								', $permission['is_denied'] ? '<del>' . $permission['name'] . '</del>' : $permission['name'], '
-							</div>';
+							<tr>
+								<td class="windowbg" title="', $permission['id'], '">
+									', $permission['is_denied'] ? '<del>' . $permission['name'] . '</del>' : $permission['name'], '
+								</td>
+								<td class="windowbg2 smalltext">';
 
 				if ($permission['is_denied'])
 					echo '
-							<span class="alert">', $txt['showPermissions_denied'], ':&nbsp;', implode(', ', $permission['groups']['denied']),'</span>';
+									<span class="alert">', $txt['showPermissions_denied'], ':&nbsp;', implode(', ', $permission['groups']['denied']),'</span>';
 				else
 					echo '
-							<span class="permission_status">', $txt['showPermissions_given'], ':&nbsp;', implode(', ', $permission['groups']['allowed']),'</span>';
+									', $txt['showPermissions_given'], ':&nbsp;', implode(', ', $permission['groups']['allowed']);
+
 					echo '
-						</li>';
+								</td>
+							</tr>';
 			}
 			echo '
-					</ul>
-				</div><br class="clear" />';
+						</tbody>
+					</table>
+				</div><br />';
 		}
 		else
 			echo '
@@ -866,7 +875,7 @@ function template_showPermissions()
 
 		// Board permission section.
 		echo '
-			<div class="tborder floatleft">
+			<div class="tborder">
 				<form action="' . $scripturl . '?action=profile;u=', $context['id_member'], ';area=permissions#board_permissions" method="post" accept-charset="', $context['character_set'], '">
 					<div class="cat_bar">
 						<h3 class="catbg"><span class="ie6_header floatleft">
@@ -890,39 +899,46 @@ function template_showPermissions()
 		if (!empty($context['member']['permissions']['board']))
 		{
 			echo '
-					<div class="windowbg padding">
-						<b>', $txt['showPermissions_permission'], '</b>
-					</div>
-				<ul>';
+				<table class="table_grid" width="100%" cellspacing="0">
+					<thead>
+						<tr class="titlebg">
+							<th class="lefttext first_th" scope="col" width="50%">', $txt['showPermissions_permission'], '</th>
+							<th class="lefttext last_th" scope="col" width="50%">', $txt['showPermissions_status'], '</th>
+						</tr>
+					</thead>
+					<tbody>';
 			foreach ($context['member']['permissions']['board'] as $permission)
 			{
 				echo '
-					<li class="windowbg2 floatleft">
-						<div class="permission_name floatleft" title="', $permission['id'], '">
-							', $permission['is_denied'] ? '<del>' . $permission['name'] . '</del>' : $permission['name'], '
-						</div>';
+						<tr>
+							<td class="windowbg" title="', $permission['id'], '">
+								', $permission['is_denied'] ? '<del>' . $permission['name'] . '</del>' : $permission['name'], '
+							</td>
+							<td class="windowbg2 smalltext">';
 
 				if ($permission['is_denied'])
 				{
 					echo '
-						<span class="alert">', $txt['showPermissions_denied'], ':&nbsp;', implode(', ', $permission['groups']['denied']), '</span>';
+								<span class="alert">', $txt['showPermissions_denied'], ':&nbsp;', implode(', ', $permission['groups']['denied']), '</span>';
 				}
 				else
 				{
 					echo '
-						<span class="permission_status">', $txt['showPermissions_given'], ': &nbsp;', implode(', ', $permission['groups']['allowed']), '</span>';
+								', $txt['showPermissions_given'], ': &nbsp;', implode(', ', $permission['groups']['allowed']);
 				}
 				echo '
-					</li>';
+							</td>
+						</tr>';
 			}
 			echo '
-				</ul>
-			</div>';
+					</tbody>
+				</table>';
 		}
 		else
 			echo '
 			<p class="windowbg2 description">', $txt['showPermissions_none_board'], '</p>';
 	echo '
+			</div>
 		</div>';
 	}
 }
@@ -1678,8 +1694,8 @@ function template_groupMembership()
 			<table border="0" width="100%" cellspacing="0" cellpadding="4" class="table_grid">
 				<thead>
 					<tr class="catbg">
-						<th class="first_th"', $context['can_edit_primary'] ? ' colspan="2"' : '', '>', $txt['current_membergroups'], '</th>
-						<th class="last_th"></th>
+						<th class="first_th" scope="col" ', $context['can_edit_primary'] ? ' colspan="2"' : '', '>', $txt['current_membergroups'], '</th>
+						<th class="last_th" scope="col"></th>
 					</tr>
 				</thead>
 				<tbody>';
@@ -1730,10 +1746,10 @@ function template_groupMembership()
 			<table border="0" width="100%" cellspacing="0" cellpadding="4" class="table_grid">
 				<thead>
 					<tr class="catbg">
-						<th class="first_th">
+						<th class="first_th" scope="col">
 							', $txt['available_groups'], '
 						</th>
-						<th class="last_th"></th>
+						<th class="last_th" scope="col"></th>
 					</tr>
 				</thead>
 				<tbody>';
@@ -2213,13 +2229,13 @@ function template_issueWarning()
 				', $txt['profile_warning_previous'], '
 			</h3>
 		</div>
-		<table border="0" width="100%" cellspacing="1" cellpadding="5" class="bordercolor" align="center">
+		<table border="0" width="100%" cellspacing="0" cellpadding="5" class="table_grid">
 			<thead>
 				<tr class="titlebg lefttext">
-					<th class="first_th" width="20%">', $txt['profile_warning_previous_issued'], '</th>
-					<th width="30%">', $txt['profile_warning_previous_time'], '</th>
-					<th>', $txt['profile_warning_previous_reason'], '</th>
-					<th class="last_th" width="6%">', $txt['profile_warning_previous_level'], '</th>
+					<th class="first_th" scope="col" width="20%">', $txt['profile_warning_previous_issued'], '</th>
+					<th scope="col" width="30%">', $txt['profile_warning_previous_time'], '</th>
+					<th scope="col">', $txt['profile_warning_previous_reason'], '</th>
+					<th class="last_th" scope="col" width="6%">', $txt['profile_warning_previous_level'], '</th>
 				</tr>
 			</thead>
 			<tbody>';

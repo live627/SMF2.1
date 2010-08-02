@@ -56,6 +56,9 @@ July 2010
  ! Minor bugfixes for quick moderation and moderation log [Bug 4384,4369]
  * Left aligned text for message index headers that have left aligned column content (MessageIndex.template.php)
  * Fixed a typo in stats table markup. Fixed indentation issue in MessageIndex.php (Stats.template.php, MessageIndex.php)
+ * Removed some redundant css, added some desirable definitions for table_grid, moved all table_gird to same location (index.css)
+ * Recoded Profile>Show permissions with standard table_grid, added language string (Profile.template.php, Profile.english.php)
+ * Added catbg/titlebg classes to tr's for table headers, removed unnecessary smalltext classes (Stats.template.php, Memberlist,emplate.php)
 
 June 2010
 --------------------------------------------------------------------------------
