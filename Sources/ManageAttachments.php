@@ -1761,9 +1761,11 @@ function list_getAttachDirs()
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_folder, COUNT(id_attach) AS num_attach
-		FROM {db_prefix}attachments
+		FROM {db_prefix}attachments' . (empty($modSettings['custom_avatar_enabled']) ? '' : '
+		WHERE attachment_type != {int:type_avatar}') . '
 		GROUP BY id_folder',
 		array(
+			'type_avatar' => 1,
 		)
 	);
 
@@ -1821,7 +1823,7 @@ function attachDirStatus($dir, $expected_files)
 	while ($file = $dir_handle->read())
 	{
 		// Now do we have a real file here?
-		if ($file == '.' || $file == '..')
+		if (in_array($file, array('.', '..', '.htaccess', 'index.php')))
 			continue;
 
 		$dir_size += filesize($dir . '/' . $file);
