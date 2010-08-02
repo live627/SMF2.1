@@ -71,7 +71,8 @@ July 2010
  * Added catbg/titlebg classes to tr's for table headers, removed unnecessary smalltext classes (Stats.template.php, Memberlist.template.php)
  * Removed all remaining th class="smalltext", added missing <thead></thead> tags, fixed table indentations (fourteen templates)
  * Cleaned up css for fieldsets and legends to remove unnecessary code (index.css)
-
+ * Fixed a php error and some indentation issues (Stats.template.php, Recent.template.php)
+ 
 June 2010
 --------------------------------------------------------------------------------
  ! Reverted an invalid change in the upgrader from December 2007, as ip2range() may be used by the SMF1 upgrade script. (upgrade.php) [Bug 1127,4312]

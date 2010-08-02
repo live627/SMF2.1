@@ -107,13 +107,13 @@ function template_unread()
 
 	if (!empty($context['topics']))
 	{
-	echo '
+		echo '
 			<div class="pagesection">';
 
-	if (!empty($mark_read) && !empty($settings['use_tabs']))
-		template_button_strip($mark_read, 'right');
+		if (!empty($mark_read) && !empty($settings['use_tabs']))
+			template_button_strip($mark_read, 'right');
 
-	echo '
+		echo '
 				<span>', $txt['pages'], ': ', $context['page_index'], '</span>
 			</div>';
 
@@ -129,37 +129,38 @@ function template_unread()
 							<th scope="col" width="14%" align="center">
 								<a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=replies', $context['sort_by'] == 'replies' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['replies'], $context['sort_by'] == 'replies' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a>
 							</th>';
-			// Show a "select all" box for quick moderation?
-			if ($showCheckboxes)
-					echo '
+
+		// Show a "select all" box for quick moderation?
+		if ($showCheckboxes)
+			echo '
 							<th scope="col" width="22%">
 								<a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a>
 							</th>
 							<th class="last_th">
 								<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />
 							</th>';
-							else
-					echo '
+		else
+			echo '
 							<th scope="col" class="smalltext last_th" width="22%">
 								<a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a>
 							</th>';
-			echo '
+		echo '
 						</tr>
 					</thead>
 					<tbody>';
 
-	foreach ($context['topics'] as $topic)
-	{
-		// Calculate the color class of the topic.
-		$color_class = '';
-		if (strpos($topic['class'], 'sticky') !== false)
-			$color_class = 'stickybg';
-		if (strpos($topic['class'], 'locked') !== false)
-			$color_class .= 'lockedbg';
+		foreach ($context['topics'] as $topic)
+		{
+			// Calculate the color class of the topic.
+			$color_class = '';
+			if (strpos($topic['class'], 'sticky') !== false)
+				$color_class = 'stickybg';
+			if (strpos($topic['class'], 'locked') !== false)
+				$color_class .= 'lockedbg';
 
-		$color_class2 = !empty($color_class) ? $color_class . '2' : '';
+			$color_class2 = !empty($color_class) ? $color_class . '2' : '';
 
-		echo '
+			echo '
 						<tr>
 							<td class="', $color_class, ' icon1 windowbg">
 								<img src="', $settings['images_url'], '/topic/', $topic['class'], '.gif" alt="" />
@@ -188,51 +189,49 @@ function template_unread()
 								', $topic['last_post']['time'], '<br />
 								', $txt['by'], ' ', $topic['last_post']['member']['link'], '
 							</td>';
-				if ($showCheckboxes)
-					echo '
+
+			if ($showCheckboxes)
+				echo '
 							<td class="windowbg2" valign="middle" align="center">
 								<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check" />
 							</td>';
 			echo '
 						</tr>';
-
 		}
 
-	if (!empty($context['topics']) && !$context['showing_all_topics'])
-		$mark_read['readall'] = array('text' => 'unread_topics_all', 'image' => 'markreadall.gif', 'lang' => true, 'url' => $scripturl . '?action=unread;all' . $context['querystring_board_limits'], 'active' => true);
+		if (!empty($context['topics']) && !$context['showing_all_topics'])
+			$mark_read['readall'] = array('text' => 'unread_topics_all', 'image' => 'markreadall.gif', 'lang' => true, 'url' => $scripturl . '?action=unread;all' . $context['querystring_board_limits'], 'active' => true);
 
-	if (empty($settings['use_tabs']) && !empty($mark_read))
-		echo '
+		if (empty($settings['use_tabs']) && !empty($mark_read))
+			echo '
 						<tr class="catbg">
 							<td colspan="', $showCheckboxes ? '6' : '5', '" align="right">
 								', template_button_strip($mark_read, 'top'), '
 							</td>
 						</tr>';
 
-	if (empty($context['topics']))
-		echo '
+		if (empty($context['topics']))
+			echo '
 					<tr style="display: none;"><td></td></tr>';
 
-	echo '
+		echo '
 					</tbody>
 				</table>
 			</div>
 			<div class="pagesection" id="readbuttons">';
 
-	if (!empty($settings['use_tabs']) && !empty($mark_read))
-		template_button_strip($mark_read, 'right');
+		if (!empty($settings['use_tabs']) && !empty($mark_read))
+			template_button_strip($mark_read, 'right');
 
-	echo '
+		echo '
 				<span>', $txt['pages'], ': ', $context['page_index'], '</span>
 			</div>';
-
 	}
-
 	else
 		echo '
 			<div class="cat_bar">
 				<h3 class="catbg centertext">
-				', $context['showing_all_topics'] ? $txt['msg_alert_none'] : $txt['unread_topics_visit_none'], '
+					', $context['showing_all_topics'] ? $txt['msg_alert_none'] : $txt['unread_topics_visit_none'], '
 				</h3>
 			</div>';
 
@@ -295,10 +294,10 @@ function template_replies()
 		echo '
 			<div class="pagesection">';
 
-	if (!empty($mark_read) && !empty($settings['use_tabs']))
-		template_button_strip($mark_read, 'right');
+		if (!empty($mark_read) && !empty($settings['use_tabs']))
+			template_button_strip($mark_read, 'right');
 
-	echo '
+		echo '
 				<span>', $txt['pages'], ': ', $context['page_index'], '</span>
 			</div>';
 
@@ -314,17 +313,18 @@ function template_replies()
 							<th scope="col" width="14%" align="center">
 								<a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=replies', $context['sort_by'] === 'replies' && $context['sort_direction'] === 'up' ? ';desc' : '', '">', $txt['replies'], $context['sort_by'] === 'replies' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a>
 							</th>';
-			// Show a "select all" box for quick moderation?
-			if ($showCheckboxes)
-					echo '
+
+		// Show a "select all" box for quick moderation?
+		if ($showCheckboxes)
+				echo '
 							<th scope="col" width="22%">
 								<a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=last_post', $context['sort_by'] === 'last_post' && $context['sort_direction'] === 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] === 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a>
 							</th>
 							<th class="last_th">
 								<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />
 							</th>';
-							else
-					echo '
+		else
+			echo '
 							<th scope="col" class="last_th" width="22%">
 								<a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=last_post', $context['sort_by'] === 'last_post' && $context['sort_direction'] === 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] === 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a>
 							</th>';
@@ -335,16 +335,16 @@ function template_replies()
 
 		foreach ($context['topics'] as $topic)
 		{
-		// Calculate the color class of the topic.
-		$color_class = '';
-		if (strpos($topic['class'], 'sticky') !== false)
-			$color_class = 'stickybg';
-		if (strpos($topic['class'], 'locked') !== false)
-			$color_class .= 'lockedbg';
+			// Calculate the color class of the topic.
+			$color_class = '';
+			if (strpos($topic['class'], 'sticky') !== false)
+				$color_class = 'stickybg';
+			if (strpos($topic['class'], 'locked') !== false)
+				$color_class .= 'lockedbg';
 
-		$color_class2 = !empty($color_class) ? $color_class . '2' : '';
+			$color_class2 = !empty($color_class) ? $color_class . '2' : '';
 
-		echo '
+			echo '
 						<tr>
 							<td class="', $color_class, ' icon1 windowbg">
 								<img src="', $settings['images_url'], '/topic/', $topic['class'], '.gif" alt="" />
@@ -373,14 +373,14 @@ function template_replies()
 								', $topic['last_post']['time'], '<br />
 								', $txt['by'], ' ', $topic['last_post']['member']['link'], '
 							</td>';
-				if ($showCheckboxes)
-					echo '
+
+			if ($showCheckboxes)
+				echo '
 							<td class="windowbg2" valign="middle" align="center">
 								<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check" />
 							</td>';
 			echo '
 						</tr>';
-
 		}
 
 		if (empty($settings['use_tabs']) && !empty($mark_read))
@@ -391,21 +391,19 @@ function template_replies()
 							</td>
 						</tr>';
 
-	echo '
+		echo '
 					</tbody>
 				</table>
 			</div>
 			<div class="pagesection">';
 
-	if (!empty($settings['use_tabs']) && !empty($mark_read))
-		template_button_strip($mark_read, 'right');
+		if (!empty($settings['use_tabs']) && !empty($mark_read))
+			template_button_strip($mark_read, 'right');
 
-	echo '
+		echo '
 				<span>', $txt['pages'], ': ', $context['page_index'], '</span>
 			</div>';
-
 	}
-
 	else
 		echo '
 			<div class="cat_bar">
@@ -434,7 +432,6 @@ function template_replies()
 			</p>
 		</div>
 	</div>';
-
 }
 
 ?>

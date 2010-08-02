@@ -338,13 +338,16 @@ function template_main()
 					<th class="first_th lefttext" width="25%">', $txt['yearly_summary'], '</th>
 					<th width="15%">', $txt['stats_new_topics'], '</th>
 					<th width="15%">', $txt['stats_new_posts'], '</th>
-					<th width="15%">', $txt['stats_new_members'], '</th>
+					<th width="15%">', $txt['stats_new_members'], '</th>';
+
+		if (empty($modSettings['hitStats']))
+			echo '
 					<th class="last_th" width="15%">', $txt['smf_stats_14'], '</th>';
 
-		if (!empty($modSettings['hitStats']))
+		else
 			echo '
-					<t
-					<th>', $txt['page_views'], '</th>';
+					<th width="15%">', $txt['smf_stats_14'], '</th>
+					<th class="last_th">', $txt['page_views'], '</th>';
 
 		echo '
 				</tr>
