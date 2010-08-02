@@ -154,7 +154,7 @@ function template_main()
 	<div class="tborder topic_table" id="messageindex">
 		<table class="table_grid" cellspacing="0">
 			<thead>
-				<tr>';
+				<tr class="catbg">';
 
 		// Are there actually any topics to show?
 		if (!empty($context['topics']))
@@ -184,9 +184,9 @@ function template_main()
 		// No topics.... just say, "sorry bub".
 		else
 			echo '
-					<th scope="col" class="smalltext first_th" width="8%">&nbsp;</th>
-					<th class="smalltext" colspan="3"><strong>', $txt['msg_alert_none'], '</strong></th>
-					<th scope="col" class="smalltext last_th" width="8%">&nbsp;</th>';
+					<th scope="col" class="first_th" width="8%">&nbsp;</th>
+					<th colspan="3"><strong>', $txt['msg_alert_none'], '</strong></th>
+					<th scope="col" class="last_th" width="8%">&nbsp;</th>';
 
 		echo '
 				</tr>
@@ -277,7 +277,7 @@ function template_main()
 			if (!empty($context['can_quick_mod']))
 			{
 				echo '
-					<td class="moderation ', $color_class, '">';
+					<td class="moderation ', $color_class, '" align="center">';
 				if ($options['display_quick_mod'] == 1)
 					echo '
 						<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check" />';
