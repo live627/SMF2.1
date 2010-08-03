@@ -3988,7 +3988,7 @@ function setupMenuContext()
 					'modlog' => array(
 						'title' => $txt['modlog_view'],
 						'href' => $scripturl . '?action=moderate;area=modlog',
-						'show' => !empty($modSettings['modlog_enabled']) && $user_info['mod_cache']['bq'] != '0=1',
+						'show' => !empty($modSettings['modlog_enabled']) && !empty($user_info['mod_cache']) && $user_info['mod_cache']['bq'] != '0=1',
 					),
 					'poststopics' => array(
 						'title' => $txt['mc_unapproved_poststopics'],
@@ -4003,7 +4003,7 @@ function setupMenuContext()
 					'reports' => array(
 						'title' => $txt['mc_reported_posts'],
 						'href' => $scripturl . '?action=moderate;area=reports',
-						'show' => $user_info['mod_cache']['bq'] != '0=1',
+						'show' => !empty($user_info['mod_cache']) && $user_info['mod_cache']['bq'] != '0=1',
 						'is_last' => true,
 					),
 				),
