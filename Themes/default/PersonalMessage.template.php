@@ -718,7 +718,12 @@ function template_search()
 					</dd>
 					<dt class="between">', $txt['pm_search_post_age'], ':</dt>
 					<dd>', $txt['pm_search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" class="input_text" />&nbsp;', $txt['pm_search_between_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" class="input_text" /> ', $txt['pm_search_between_days'], '</dd>
-				</dl>
+				</dl>';
+		if (!$context['currently_using_labels'])
+			echo '
+				<input type="submit" name="submit" value="', $txt['pm_search_go'], '" class="button_submit floatright" />';
+			echo '
+				<br class="clear" />
 			</div>
 			<span class="lowerframe"><span></span></span>
 		</fieldset>';
@@ -778,9 +783,9 @@ function template_search_results()
 	<table width="100%" class="table_grid">
 	<thead>
 		<tr class="catbg">
-			<th class="first_th" width="30%">', $txt['date'], '</th>
-			<th width="50%">', $txt['subject'], '</th>
-			<th class="last_th" width="20%">', $txt['from'], '</th>
+			<th class="lefttext first_th" width="30%">', $txt['date'], '</th>
+			<th class="lefttext" width="50%">', $txt['subject'], '</th>
+			<th class="lefttext last_th" width="20%">', $txt['from'], '</th>
 		</tr>
 	</thead>
 	<tbody>';

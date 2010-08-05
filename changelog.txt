@@ -12,6 +12,9 @@ August 2010
  ! Unnecessary logouts following password conversion. (LogInOut.php) [Bug 4365]
  ! Missing sub template caused premature termination of the script instead of displaying error. (Errors.php, Subs.php) [Bug 4402]
  ! Approvals by quick moderation were not logged properly. (MessageIndex.php)
+ *Got the last of th smalltext in (MessageIndex.template.php)
+ *Applied "fix" to (Stats.template.php) [Bug 4403]
+ *Fixed submit button bug in (PersonalMessage.template.php)
 
 
 July 2010
