@@ -19,6 +19,8 @@ August 2010
  * E-mail icon was displayed for guests who did not have e-mail address information. (Display template, PersonalMessage template) [Bug 4362]
  & Incorrect last login date for recent watched members who never logged in. (ModerationCenter.php, ModerationCenter template, ModerationCenter language) [Bug 4406]
  * Incosistency in handling color of erroneous field captions between PHP and JavaScript. (Post template, Xml template) [Bug 4343]
+ ! Passing an incorrect pm id on conversation mode could cause errors in the log. (PersonalMessage.php)
+ ! Pm search results listed incorrect URLs for pms when using conversation mode. (PersonalMessage.php) [Bug 4351]
 
 
 July 2010

@@ -765,6 +765,10 @@ function MessageFolder()
 	}
 	$smcFunc['db_free_result']($request);
 
+	// Make sure that we have been given a correct head pm id!
+	if ($context['display_mode'] == 2 && !empty($pmID) && $pmID != $lastData['id'])
+		fatal_lang_error('no_access', false);
+
 	if (!empty($pms))
 	{
 		// Select the correct current message.
@@ -1405,7 +1409,7 @@ function MessageSearch2()
 	// Get all the matching messages... using standard search only (No caching and the like!)
 	// !!! This doesn't support sent item searching yet.
 	$request = $smcFunc['db_query']('', '
-		SELECT pm.id_pm, pm.id_member_from
+		SELECT pm.id_pm, pm.id_pm_head, pm.id_member_from
 		FROM {db_prefix}pm_recipients AS pmr
 			INNER JOIN {db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
 		WHERE ' . ($context['folder'] == 'inbox' ? '
@@ -1424,12 +1428,39 @@ function MessageSearch2()
 	);
 	$foundMessages = array();
 	$posters = array();
+	$head_pms = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$foundMessages[] = $row['id_pm'];
 		$posters[] = $row['id_member_from'];
+		$head_pms[$row['id_pm']] = $row['id_pm_head'];
 	}
 	$smcFunc['db_free_result']($request);
+
+	// Find the real head pms!
+	if ($context['display_mode'] == 2 && !empty($head_pms))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT MAX(pm.id_pm) AS id_pm, pm.id_pm_head
+			FROM {db_prefix}personal_messages AS pm
+				INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)
+			WHERE pm.id_pm_head IN ({array_int:head_pms})
+				AND pmr.id_member = {int:current_member}
+				AND pmr.deleted = {int:not_deleted}
+			GROUP BY pm.id_pm_head
+			LIMIT {int:limit}',
+			array(
+				'head_pms' => array_unique($head_pms),
+				'current_member' => $user_info['id'],
+				'not_deleted' => 0,
+				'limit' => count($head_pms),
+			)
+		);
+		$real_pm_ids = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$real_pm_ids[$row['id_pm_head']] = $row['id_pm'];
+		$smcFunc['db_free_result']($request);
+	}
 
 	// Load the users...
 	$posters = array_unique($posters);
@@ -1516,7 +1547,7 @@ function MessageSearch2()
 			// Parse out any BBC...
 			$row['body'] = parse_bbc($row['body'], true, 'pm' . $row['id_pm']);
 
-			$href = $scripturl . '?action=pm;f=' . $context['folder'] . (isset($context['first_label'][$row['id_pm']]) ? ';l=' . $context['first_label'][$row['id_pm']] : '') . ';pmid=' . $row['id_pm'] . '#msg' . $row['id_pm'];
+			$href = $scripturl . '?action=pm;f=' . $context['folder'] . (isset($context['first_label'][$row['id_pm']]) ? ';l=' . $context['first_label'][$row['id_pm']] : '') . ';pmid=' . ($context['display_mode'] == 2 && isset($real_pm_ids[$head_pms[$row['id_pm']]]) ? $real_pm_ids[$head_pms[$row['id_pm']]] : $row['id_pm']) . '#msg' . $row['id_pm'];
 			$context['personal_messages'][] = array(
 				'id' => $row['id_pm'],
 				'member' => &$memberContext[$row['id_member_from']],
