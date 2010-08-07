@@ -289,7 +289,7 @@ function ModBlockWatchedUsers()
 			'name' => $user['real_name'],
 			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $user['id_member'] . '">' . $user['real_name'] . '</a>',
 			'href' => $scripturl . '?action=profile;u=' . $user['id_member'],
-			'last_login' => timeformat($user['last_login']),
+			'last_login' => !empty($user['last_login']) ? timeformat($user['last_login']) : '',
 		);
 	}
 

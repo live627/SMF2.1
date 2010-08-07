@@ -176,7 +176,7 @@ function template_watched_users()
 		foreach ($context['watched_users'] as $user)
 			echo '
 					<li>
-						<span class="smalltext">', $user['link'], ' ', $txt['mc_seen'], ' ', $user['last_login'], '</span>
+						<span class="smalltext">', sprintf(!empty($user['last_login']) ? $txt['mc_seen'] : $txt['mc_seen_never'], $user['link'], $user['last_login']), '</span>
 					</li>';
 
 		// Don't have any watched users right now?

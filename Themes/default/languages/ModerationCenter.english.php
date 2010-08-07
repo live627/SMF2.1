@@ -29,7 +29,8 @@ $txt['mc_recent_reports_none'] = 'There are no outstanding reports';
 $txt['mc_watched_users_none'] = 'There are not currently any watches in place.';
 $txt['mc_group_requests_none'] = 'There are no open requests for group membership.';
 
-$txt['mc_seen'] = 'last seen';
+$txt['mc_seen'] = '%1$s last seen %2$s';
+$txt['mc_seen_never'] = '%1$s never seen';
 $txt['mc_groupr_by'] = 'by';
 
 $txt['mc_reported_posts_desc'] = 'Here you can review all the post reports raised by members of the community.';

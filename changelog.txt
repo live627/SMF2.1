@@ -17,6 +17,7 @@ August 2010
  * Fixed submit button bug in. (PersonalMessage.template.php)
  ! It was possible to use custom e-mail functionality even when e-mail address was not found. (SendTopic.php)
  * E-mail icon was displayed for guests who did not have e-mail address information. (Display template, PersonalMessage template) [Bug 4362]
+ & Incorrect last login date for recent watched members who never logged in. (ModerationCenter.php, ModerationCenter template, ModerationCenter language) [Bug 4406]
 
 
 July 2010
