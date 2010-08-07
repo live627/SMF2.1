@@ -12,9 +12,11 @@ August 2010
  ! Unnecessary logouts following password conversion. (LogInOut.php) [Bug 4365]
  ! Missing sub template caused premature termination of the script instead of displaying error. (Errors.php, Subs.php) [Bug 4402]
  ! Approvals by quick moderation were not logged properly. (MessageIndex.php)
- *Got the last of th smalltext in (MessageIndex.template.php)
- *Applied "fix" to (Stats.template.php) [Bug 4403]
- *Fixed submit button bug in (PersonalMessage.template.php)
+ * Got the last of th smalltext in (MessageIndex.template.php)
+ * Applied "fix" to (Stats.template.php) [Bug 4403]
+ * Fixed submit button bug in. (PersonalMessage.template.php)
+ ! It was possible to use custom e-mail functionality even when e-mail address was not found. (SendTopic.php)
+ * E-mail icon was displayed for guests who did not have e-mail address information. (Display template, PersonalMessage template) [Bug 4362]
 
 
 July 2010

@@ -220,6 +220,10 @@ function CustomEmail()
 	$row = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 
+	// Are you sure you got the address?
+	if (empty($row['email']))
+		fatal_lang_error('cant_find_user_email');
+
 	// Can they actually do this?
 	$context['show_email_address'] = showEmailAddress(!empty($row['hide_email']), $row['id_member']);
 	if ($context['show_email_address'] === 'no')
