@@ -14,13 +14,16 @@ August 2010
  ! Approvals by quick moderation were not logged properly. (MessageIndex.php)
  * Got the last of th smalltext in (MessageIndex.template.php)
  * Applied "fix" to (Stats.template.php) [Bug 4403]
- * Fixed submit button bug in. (PersonalMessage.template.php)
+ * Fixed submit button bug in (PersonalMessage.template.php)
  ! It was possible to use custom e-mail functionality even when e-mail address was not found. (SendTopic.php)
  * E-mail icon was displayed for guests who did not have e-mail address information. (Display template, PersonalMessage template) [Bug 4362]
  & Incorrect last login date for recent watched members who never logged in. (ModerationCenter.php, ModerationCenter template, ModerationCenter language) [Bug 4406]
  * Incosistency in handling color of erroneous field captions between PHP and JavaScript. (Post template, Xml template) [Bug 4343]
  ! Passing an incorrect pm id on conversation mode could cause errors in the log. (PersonalMessage.php)
  ! Pm search results listed incorrect URLs for pms when using conversation mode. (PersonalMessage.php) [Bug 4351]
+ * Previewing generated unlimited topic replies when there were new replies to topic while posting. (Post template) [Bug 4389]
+ * The warning for new replies while posting did not take deleted posts into account. (SSI.php, Display.php, Post.php, Display template, Post template, Xml template) [Bug 4400]
+ * The warning for new replies while posting did not consider replies displayed by previewing as read. (SSI.php, Display.php, Post.php, Display template, Post template, Xml template) [Bug 4354]
 
 
 July 2010

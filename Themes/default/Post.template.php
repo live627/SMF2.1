@@ -529,10 +529,10 @@ function template_main()
 			</div>
 			<br class="clear" />';
 
-	// Assuming this isn't a new topic pass across the number of replies when the topic was created.
-	if (isset($context['num_replies']))
+	// Assuming this isn't a new topic pass across the last message id.
+	if (isset($context['topic_last_message']))
 		echo '
-			<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />';
+			<input type="hidden" name="last_msg" value="', $context['topic_last_message'], '" />';
 
 	echo '
 			<input type="hidden" name="additional_options" id="additional_options" value="', $context['show_additional_options'] ? '1' : '0', '" />
@@ -573,7 +573,7 @@ function template_main()
 					var x = new Array();
 					var textFields = [\'subject\', ', JavaScriptEscape($context['post_box_name']), ', \'icon\', \'guestname\', \'email\', \'evtitle\', \'question\', \'topic\'];
 					var numericFields = [
-						\'board\', \'topic\', \'num_replies\',
+						\'board\', \'topic\', \'last_msg\',
 						\'eventid\', \'calendar\', \'year\', \'month\', \'day\',
 						\'poll_max_votes\', \'poll_expire\', \'poll_change_vote\', \'poll_hide\'
 					];
@@ -658,9 +658,9 @@ function template_main()
 						document.forms.postmodify.', $context['post_box_name'], '.style.border = null;
 				}
 
-				// Set the new number of replies.
-				if (\'num_replies\' in document.forms.postmodify.elements)
-					document.forms.postmodify.num_replies.value = XMLDoc.getElementsByTagName(\'smf\')[0].getElementsByTagName(\'num_replies\')[0].firstChild.nodeValue;
+				// Set the new last message id.
+				if (\'last_msg\' in document.forms.postmodify)
+					document.forms.postmodify.last_msg.value = XMLDoc.getElementsByTagName(\'smf\')[0].getElementsByTagName(\'last_msg\')[0].firstChild.nodeValue;
 
 				// Remove the new image from old-new replies!
 				for (i = 0; i < new_replies.length; i++)
@@ -674,7 +674,7 @@ function template_main()
 					var newPostsHTML = \'<span id="new_replies"><\' + \'/span>\';
 					for (var i = 0; i < numNewPosts; i++)
 					{
-						new_posts[new_posts.length] = newPosts[i].getAttribute("id");
+						new_replies[new_replies.length] = newPosts[i].getAttribute("id");
 						newPostsHTML += \'<div class="windowbg\' + (i % 2 == 0 ? \'2\' : \'\') + \' core_posts"><span class="topslice"><span></span></span><div class="content" id="msg\' + newPosts[i].getAttribute("id") + \'"><div class="floatleft"><h5>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</h5><span class="smalltext">&#171;&nbsp;<strong>', $txt['on'], ':</strong> \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \'&nbsp;&#187;</span> <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" id="image_new_\' + newPosts[i].getAttribute("id") + \'" /></div>\';';
 
 	if ($context['can_quote'])

@@ -144,7 +144,7 @@ function Post()
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT
-				t.locked, IFNULL(ln.id_topic, 0) AS notify, t.is_sticky, t.id_poll, t.num_replies, mf.id_member,
+				t.locked, IFNULL(ln.id_topic, 0) AS notify, t.is_sticky, t.id_poll, t.id_last_msg, mf.id_member,
 				t.id_first_msg, mf.subject,
 				CASE WHEN ml.poster_time > ml.modified_time THEN ml.poster_time ELSE ml.modified_time END AS last_post_time
 			FROM {db_prefix}topics AS t
@@ -158,7 +158,7 @@ function Post()
 				'current_topic' => $topic,
 			)
 		);
-		list ($locked, $context['notify'], $sticky, $pollID, $context['num_replies'], $ID_MEMBER_POSTER, $id_first_msg, $first_subject, $lastPostTime) = $smcFunc['db_fetch_row']($request);
+		list ($locked, $context['notify'], $sticky, $pollID, $context['topic_last_message'], $ID_MEMBER_POSTER, $id_first_msg, $first_subject, $lastPostTime) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 
 		// If this topic already has a poll, they sure can't add another.
@@ -373,24 +373,37 @@ function Post()
 	// See if any new replies have come along.
 	if (empty($_REQUEST['msg']) && !empty($topic))
 	{
-		if (empty($options['no_new_reply_warning']) && isset($_REQUEST['num_replies']))
+		if (empty($options['no_new_reply_warning']) && isset($_REQUEST['last_msg']) && $context['topic_last_message'] > $_REQUEST['last_msg'])
 		{
-			$newReplies = $context['num_replies'] > $_REQUEST['num_replies'] ? $context['num_replies'] - $_REQUEST['num_replies'] : 0;
+			$request = $smcFunc['db_query']('', '
+				SELECT COUNT(*)
+				FROM {db_prefix}messages
+				WHERE id_topic = {int:current_topic}
+					AND id_msg > {int:last_msg}' . (!$modSettings['postmod_active'] || allowedTo('approve_posts') ? '' : '
+					AND approved = {int:approved}') . '
+				LIMIT 1',
+				array(
+					'current_topic' => $topic,
+					'last_msg' => (int) $_REQUEST['last_msg'],
+				)
+			);
+			list ($context['new_replies']) = $smcFunc['db_fetch_row']($request);
+			$smcFunc['db_free_result']($request);
 
-			if (!empty($newReplies))
+			if (!empty($context['new_replies']))
 			{
-				if ($newReplies == 1)
-					$txt['error_new_reply'] = isset($_GET['num_replies']) ? $txt['error_new_reply_reading'] : $txt['error_new_reply'];
+				if ($context['new_replies'] == 1)
+					$txt['error_new_reply'] = isset($_GET['last_msg']) ? $txt['error_new_reply_reading'] : $txt['error_new_reply'];
 				else
-					$txt['error_new_replies'] = sprintf(isset($_GET['num_replies']) ? $txt['error_new_replies_reading'] : $txt['error_new_replies'], $newReplies);
+					$txt['error_new_replies'] = sprintf(isset($_GET['last_msg']) ? $txt['error_new_replies_reading'] : $txt['error_new_replies'], $context['new_replies']);
 
 				// If they've come from the display page then we treat the error differently....
-				if (isset($_GET['num_replies']))
-					$newRepliesError = $newReplies;
+				if (isset($_GET['last_msg']))
+					$newRepliesError = $context['new_replies'];
 				else
-					$context['post_error'][$newReplies == 1 ? 'new_reply' : 'new_replies'] = true;
+					$context['post_error'][$context['new_replies'] == 1 ? 'new_reply' : 'new_replies'] = true;
 
-				$modSettings['topicSummaryPosts'] = $newReplies > $modSettings['topicSummaryPosts'] ? max($modSettings['topicSummaryPosts'], 5) : $modSettings['topicSummaryPosts'];
+				$modSettings['topicSummaryPosts'] = $context['new_replies'] > $modSettings['topicSummaryPosts'] ? max($modSettings['topicSummaryPosts'], 5) : $modSettings['topicSummaryPosts'];
 			}
 		}
 		// Check whether this is a really old post being bumped...
@@ -1264,7 +1277,7 @@ function Post2()
 	if (!empty($topic))
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT locked, is_sticky, id_poll, approved, num_replies, id_first_msg, id_member_started, id_board
+			SELECT locked, is_sticky, id_poll, approved, id_first_msg, id_last_msg, id_member_started, id_board
 			FROM {db_prefix}topics
 			WHERE id_topic = {int:current_topic}
 			LIMIT 1',
@@ -1339,8 +1352,7 @@ function Post2()
 			unset($_POST['sticky']);
 
 		// If the number of replies has changed, if the setting is enabled, go back to Post() - which handles the error.
-		$newReplies = isset($_POST['num_replies']) && $topic_info['num_replies'] > $_POST['num_replies'] ? $topic_info['num_replies'] - $_POST['num_replies'] : 0;
-		if (empty($options['no_new_reply_warning']) && !empty($newReplies))
+		if (empty($options['no_new_reply_warning']) && isset($_POST['last_msg']) && $topic_info['id_last_msg'] > $_POST['last_msg'])
 		{
 			$_REQUEST['preview'] = true;
 			return Post();
@@ -2478,12 +2490,9 @@ function getTopic()
 {
 	global $topic, $modSettings, $context, $smcFunc, $counter;
 
-	// Calculate the amount of new replies.
-	$newReplies = empty($_REQUEST['num_replies']) || $context['num_replies'] <= $_REQUEST['num_replies'] ? 0 : $context['num_replies'] - $_REQUEST['num_replies'];
-
 	if (isset($_REQUEST['xml']))
 		$limit = '
-		LIMIT ' . (empty($newReplies) ? '0' : $newReplies);
+		LIMIT ' . (empty($context['new_replies']) ? '0' : $context['new_replies']);
 	else
 		$limit = empty($modSettings['topicSummaryPosts']) ? '' : '
 		LIMIT ' . (int) $modSettings['topicSummaryPosts'];
@@ -2519,11 +2528,11 @@ function getTopic()
 			'time' => timeformat($row['poster_time']),
 			'timestamp' => forum_time(true, $row['poster_time']),
 			'id' => $row['id_msg'],
-			'is_new' => !empty($newReplies),
+			'is_new' => !empty($context['new_replies']),
 		);
 
-		if (!empty($newReplies))
-			$newReplies--;
+		if (!empty($context['new_replies']))
+			$context['new_replies']--;
 	}
 	$smcFunc['db_free_result']($request);
 }

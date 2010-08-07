@@ -101,7 +101,7 @@ function template_post()
 		<caption name="question" class="', isset($context['post_error']['no_question']) ? 'error' : '', '" />', isset($context['post_error']['no_message']) || isset($context['post_error']['long_message']) ? '
 		<post_error />' : '', '
 	</errors>
-	<num_replies>', isset($context['num_replies']) ? $context['num_replies'] : '0', '</num_replies>';
+	<last_msg>', isset($context['topic_last_message']) ? $context['topic_last_message'] : '0', '</last_msg>';
 
 	if (!empty($context['previous_posts']))
 	{
