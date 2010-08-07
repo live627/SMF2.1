@@ -646,7 +646,7 @@ function template_main()
 				var captions = errors.getElementsByTagName(\'caption\');
 				for (var i = 0, numCaptions = errors.getElementsByTagName(\'caption\').length; i < numCaptions; i++)
 					if (document.getElementById(\'caption_\' + captions[i].getAttribute(\'name\')))
-						document.getElementById(\'caption_\' + captions[i].getAttribute(\'name\')).style.color = captions[i].getAttribute(\'color\');
+						document.getElementById(\'caption_\' + captions[i].getAttribute(\'name\')).className = captions[i].getAttribute(\'class\');
 
 				if (errors.getElementsByTagName(\'post_error\').length == 1)
 					document.forms.postmodify.', $context['post_box_name'], '.style.border = \'1px solid red\';

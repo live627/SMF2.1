@@ -94,11 +94,11 @@ function template_post()
 			echo '
 		<error><![CDATA[', cleanXml($message), ']]></error>';
 	echo '
-		<caption name="guestname" color="', isset($context['post_error']['long_name']) || isset($context['post_error']['no_name']) || isset($context['post_error']['bad_name']) ? 'red' : '', '" />
-		<caption name="email" color="', isset($context['post_error']['no_email']) || isset($context['post_error']['bad_email']) ? 'red' : '', '" />
-		<caption name="evtitle" color="', isset($context['post_error']['no_event']) ? 'red' : '', '" />
-		<caption name="subject" color="', isset($context['post_error']['no_subject']) ? 'red' : '', '" />
-		<caption name="question" color="', isset($context['post_error']['no_question']) ? 'red' : '', '" />', isset($context['post_error']['no_message']) || isset($context['post_error']['long_message']) ? '
+		<caption name="guestname" class="', isset($context['post_error']['long_name']) || isset($context['post_error']['no_name']) || isset($context['post_error']['bad_name']) ? 'error' : '', '" />
+		<caption name="email" class="', isset($context['post_error']['no_email']) || isset($context['post_error']['bad_email']) ? 'error' : '', '" />
+		<caption name="evtitle" class="', isset($context['post_error']['no_event']) ? 'error' : '', '" />
+		<caption name="subject" class="', isset($context['post_error']['no_subject']) ? 'error' : '', '" />
+		<caption name="question" class="', isset($context['post_error']['no_question']) ? 'error' : '', '" />', isset($context['post_error']['no_message']) || isset($context['post_error']['long_message']) ? '
 		<post_error />' : '', '
 	</errors>
 	<num_replies>', isset($context['num_replies']) ? $context['num_replies'] : '0', '</num_replies>';
