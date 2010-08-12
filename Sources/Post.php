@@ -385,6 +385,7 @@ function Post()
 				array(
 					'current_topic' => $topic,
 					'last_msg' => (int) $_REQUEST['last_msg'],
+					'approved' => 1,
 				)
 			);
 			list ($context['new_replies']) = $smcFunc['db_fetch_row']($request);
