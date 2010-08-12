@@ -372,6 +372,13 @@ function html_to_bbc($text)
 					}
 				}
 
+				// Preserve the a tag stripping the styling.
+				if ($matches[2] === 'a')
+				{
+					$replacement .= $precedingStyle . $afterStyle;
+					$curCloseTags = '</a>' . $curCloseTags;
+				}
+
 				// If there's something that still needs closing, push it to the stack.
 				if (!empty($curCloseTags))
 					array_push($stack, array(
