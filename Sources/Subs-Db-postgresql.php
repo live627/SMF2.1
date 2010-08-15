@@ -601,53 +601,43 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 	$table = str_replace('{db_prefix}', $db_prefix, $table);
 
 	$priv_trans = false;
-	if (count($data) > 1 && !$db_in_transact && !$disable_trans)
+	if (((count($data) > 1) || ($method == 'replace')) && !$db_in_transact && !$disable_trans)
 	{
 		$smcFunc['db_transaction']('begin', $connection);
 		$priv_trans = true;
 	}
 
-	// PostgreSQL doesn't support replace or insert ignore so we need to work around it.
+	// PostgreSQL doesn't support replace: we implement a MySQL-compatible behavior instead
 	if ($method == 'replace')
 	{
-		// Setup an UPDATE template.
-		$updateData = '';
+		$count = 0;
 		$where = '';
 		foreach ($columns as $columnName => $type)
 		{
 			// Are we restricting the length?
 			if (strpos($type, 'string-') !== false)
-				$actualType = sprintf($columnName . ' = SUBSTRING({string:%1$s}, 1, ' . substr($type, 7) . '), ', $columnName);
+				$actualType = sprintf($columnName . ' = SUBSTRING({string:%1$s}, 1, ' . substr($type, 7) . '), ', $count);
 			else
-				$actualType = sprintf($columnName . ' = {%1$s:%2$s}, ', $type, $columnName);
+				$actualType = sprintf($columnName . ' = {%1$s:%2$s}, ', $type, $count);
 
-			// Has it got a key?
+			// A key? That's what we were looking for.
 			if (in_array($columnName, $keys))
-				$where .= (empty($where) ? '' : ' AND ') . substr($actualType,0, -2);
-			else
-				$updateData .= $actualType;
+				$where .= (empty($where) ? '' : ' AND ') . substr($actualType, 0, -2);
+			$count++;
 		}
-		$updateData = substr($updateData, 0, -2);
 
-		// Try and update the entries.
-		if (!empty($updateData))
+		// Make it so.
+		if (!empty($where) && (!empty($data)))
+		{
 			foreach ($data as $k => $entry)
 			{
 				$smcFunc['db_query']('', '
-					UPDATE ' . $table . '
-					SET ' . $updateData . '
-					' . (empty($where) ? '' : ' WHERE ' . $where),
-					array_merge(array_combine(array_keys($columns), $entry), array('db_error_skip' => $table === $db_prefix . 'log_errors')),
-					$connection
+					DELETE FROM ' . $table .
+					' WHERE ' . $where,
+					$entry, $connection
 				);
-
-				// Make a note that the replace actually overwrote.
-				if (smf_db_affected_rows() != 0)
-				{
-					unset($data[$k]);
-					$db_replace_result = 2;
-				}
 			}
+		}
 	}
 
 	if (!empty($data))

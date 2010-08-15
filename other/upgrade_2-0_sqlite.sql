@@ -585,7 +585,7 @@ if (empty($modSettings['dont_repeat_buddylists']))
 		REPLACE INTO {$db_prefix}settings
 			(variable, value)
 		VALUES
-			('enable_buddylists', '1')");
+			('enable_buddylist', '1')");
 
 	// Ignore posts made by ignored users by default, too.
 	upgrade_query("
@@ -602,6 +602,28 @@ if (empty($modSettings['dont_repeat_buddylists']))
 			('dont_repeat_buddylists', '1')");
 }
 
+// And yet, and yet... We might have a small hiccup here...
+if (!empty($modSettings['dont_repeat_buddylists']) && !isset($modSettings['enable_buddylist']))
+{
+	// Correct RC3 adopters setting here...
+	if (isset($modSettings['enable_buddylists']))
+	{
+		upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('enable_buddylist', "$modSettings['enable_buddylists']")");
+	}
+	else
+	{
+		// This should never happen :)
+		upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('enable_buddylist', '1')");
+	}
+}
 ---}
 ---#
 

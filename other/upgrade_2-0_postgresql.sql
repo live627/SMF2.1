@@ -784,7 +784,7 @@ if (empty($modSettings['dont_repeat_buddylists']))
 	$smcFunc['db_insert']('replace',
 		'{db_prefix}settings',
 		array('variable' => 'string-255', 'value' => 'string-255'),
-		array('enable_buddylists', '1'),
+		array('enable_buddylist', '1'),
 		array('variable', 'value')
 	);
 
@@ -805,6 +805,31 @@ if (empty($modSettings['dont_repeat_buddylists']))
 	);
 }
 
+// And yet, and yet... We might have a small hiccup here...
+if (!empty($modSettings['dont_repeat_buddylists']) && !isset($modSettings['enable_buddylist']))
+{
+	// Correct RC3 adopters setting here...
+	if (isset($modSettings['enable_buddylists']))
+	{
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}settings',
+			array('variable' => 'string-255', 'value' => 'string-255'),
+			array('enable_buddylist', $modSettings['enable_buddylists']),
+			array('variable', 'value')
+		);
+	}
+	else
+	{
+		// This should never happen :)
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}settings',
+			array('variable' => 'string-255', 'value' => 'string-255'),
+			array('enable_buddylist', '1'),
+			array('variable', 'value')
+		);
+	}
+}
+
 ---}
 ---#
 
@@ -819,40 +844,43 @@ if (empty($modSettings['dont_repeat_buddylists']))
 if (!isset($modSettings['attachment_image_reencode']))
 {
 	// Enable image re-encoding by default.
-	upgrade_query("
-		REPLACE INTO {$db_prefix}settings
-			(variable, value)
-		VALUES
-			('attachment_image_reencode', '1')");
+	$smcFunc['db_insert']('replace',		
+		'{db_prefix}settings',
+		array('variable' => 'string-255', 'value' => 'string-255'),		
+		array('attachment_image_reencode', '1'),
+		array('variable', 'value')	
+	);
 }
 if (!isset($modSettings['attachment_image_paranoid']))
 {
 	// Disable draconic checks by default.
-	upgrade_query("
-		REPLACE INTO {$db_prefix}settings
-			(variable, value)
-		VALUES
-			('attachment_image_paranoid', '0')");
+	$smcFunc['db_insert']('replace',	
+		'{db_prefix}settings',
+		array('variable' => 'string-255', 'value' => 'string-255'),	
+		array('attachment_image_paranoid', '0'),
+		array('variable', 'value')
+	);
 }
 if (!isset($modSettings['avatar_reencode']))
 {
 	// Enable image re-encoding by default.
-	upgrade_query("
-		REPLACE INTO {$db_prefix}settings
-			(variable, value)
-		VALUES
-			('avatar_reencode', '1')");
+	$smcFunc['db_insert']('replace',	
+		'{db_prefix}settings',
+		array('variable' => 'string-255', 'value' => 'string-255'),	
+		array('avatar_reencode', '1'),
+		array('variable', 'value')
+	);
 }
 if (!isset($modSettings['avatar_paranoid']))
 {
 	// Disable draconic checks by default.
-	upgrade_query("
-		REPLACE INTO {$db_prefix}settings
-			(variable, value)
-		VALUES
-			('avatar_paranoid', '0')");
+	$smcFunc['db_insert']('replace',
+		'{db_prefix}settings',
+		array('variable' => 'string-255', 'value' => 'string-255'),
+		array('avatar_paranoid', '0'),
+		array('variable', 'value')
+	);
 }
-
 ---}
 ---#
 
@@ -861,13 +889,13 @@ if (!isset($modSettings['avatar_paranoid']))
 if (!isset($modSettings['attachment_thumb_png']))
 {
 	// Make image attachment thumbnail as PNG by default.
-	upgrade_query("
-		REPLACE INTO {$db_prefix}settings
-			(variable, value)
-		VALUES
-			('attachment_thumb_png', '1')");
+	$smcFunc['db_insert']('replace',
+		'{db_prefix}settings',
+		array('variable' => 'string-255', 'value' => 'string-255'),
+		array('attachment_thumb_png', '1'),
+		array('variable', 'value')
+	);
 }
-
 ---}
 ---#
 
