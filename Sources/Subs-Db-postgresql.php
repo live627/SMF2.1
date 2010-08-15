@@ -303,7 +303,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 			'~SELECT\\s+DISTINCT\\s+t.id_topic~' => 'SELECT t.id_topic, {raw:sort}',
 		),
 		'profile_board_stats' => array(
-			'~COUNT\(\*\) \/ b.num_posts' => 'CAST(COUNT(*) AS DECIMAL) / CAST(b.num_posts AS DECIMAL)',
+			'~COUNT\(\*\) \/ MAX\(b.num_posts\)~' => 'CAST(COUNT(*) AS DECIMAL) / CAST(b.num_posts AS DECIMAL)',
 		),
 	);
 
