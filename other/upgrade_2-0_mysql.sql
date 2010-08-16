@@ -2656,7 +2656,7 @@ if (!empty($modSettings['dont_repeat_buddylists']) && !isset($modSettings['enabl
 		REPLACE INTO {$db_prefix}settings
 			(variable, value)
 		VALUES
-			('enable_buddylist', "$modSettings['enable_buddylists']")");
+			('enable_buddylist', '", $modSettings['enable_buddylists'], "')");
 	}
 	else
 	{
