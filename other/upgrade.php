@@ -3617,7 +3617,7 @@ function makeFilesWritable(&$files)
 // This is what is displayed if there's any chmod to be done. If not it returns nothing...
 function template_chmod()
 {
-	global $upcontext, $upgradeurl;
+	global $upcontext, $upgradeurl, $settings;
 
 	// Don't call me twice!
 	if (!empty($upcontext['chmod_called']))
