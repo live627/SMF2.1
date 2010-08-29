@@ -35,6 +35,7 @@ August 2010
  ! Undefined error when upgrade may need to chmod files (upgrade.php)
  * Replaced incorrect use of substr with $smcFunc['substr'] (Calendar template) [Bug 3738]
  * A few more fixes for using internationalized substr/strlen (ManageCalendar, ManageMail) [Bug 3738]
+ ! Fixed migration of a buddy lists setting (upgrade scripts for MySQL and SQlite)
 
 July 2010
 --------------------------------------------------------------------------------
