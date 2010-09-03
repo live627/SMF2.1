@@ -15,6 +15,7 @@ September 2010
  ! A variable was overwritten for font-size style tag, but needed later for <a> tag preservation (Subs-Editor.php)
  ! MySQL needs the autoincrement column defined as primary key (DbPackages-mysql.php) [Bug 4422]
  ! Drop the sequence if any, along with the table in Postgresql (DbPackages-postgresql.php) [Bug 4421]
+ ! Improve 'who's online' behavior for a user who toggles WYSIWYG view (index.php) [Bug 4415]
  
 August 2010
 --------------------------------------------------------------------------------
