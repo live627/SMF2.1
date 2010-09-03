@@ -13,6 +13,7 @@ September 2010
  ! Removed smflib (it is in tools repository now) (other/smflib)
  ! Removed tools (they are in tools repository now) (other/tools content)
  ! A variable was overwritten for font-size style tag, but needed later for <a> tag preservation (Subs-Editor.php)
+ ! MySQL needs the autoincrement column defined as primary key (DbPackages-mysql.php) [Bug 4422]
  
 August 2010
 --------------------------------------------------------------------------------
