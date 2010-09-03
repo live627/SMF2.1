@@ -6,7 +6,7 @@ SMF 2.0                                                                      ???
 September 2010
 --------------------------------------------------------------------------------
  ! Source files should be UTF-8 encoded. (convert.php, Subs.php)
- 
+ ! Incorrect $smcFunc function use (Subs-Calendar.php)
  
 August 2010
 --------------------------------------------------------------------------------
