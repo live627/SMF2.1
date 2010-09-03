@@ -9,6 +9,7 @@ September 2010
  ! Incorrect $smcFunc function use (Subs-Calendar.php)
  ! Removed classic and babylon files from the core (they are in their own repository now) (/Themes/classic and Themes/babylon files) [Bug 4376]
  ! Removed babylon directory (Themes/babylon) [Bug 4376]
+ ! Removed classic directory (Themes/classic) [Bug 4376]
  
 August 2010
 --------------------------------------------------------------------------------
