@@ -1,6 +1,0 @@
-ARG_WITH("smflib", "Include SMF library support", "yes");
-
-if (PHP_SMFLIB != "no") {
-	AC_DEFINE('HAVE_SMFLIB', 1, 'Whether you have SMF library');
-	EXTENSION("smflib", "smflib.c QueryString.c Errors.c Security.c Load.c");
-}

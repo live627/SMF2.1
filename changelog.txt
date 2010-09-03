@@ -10,6 +10,7 @@ September 2010
  ! Removed classic and babylon files from the core (they are in their own repository now) (/Themes/classic and Themes/babylon files) [Bug 4376]
  ! Removed babylon directory (Themes/babylon) [Bug 4376]
  ! Removed classic directory (Themes/classic) [Bug 4376]
+ ! Removed smflib (it is in tools repository now) (other/smflib)
  
 August 2010
 --------------------------------------------------------------------------------
