@@ -218,13 +218,30 @@ function smf_db_drop_table($table_name, $parameters = array(), $error = 'fatal')
 	// Does it exist?
 	if (in_array($full_table_name, $smcFunc['db_list_tables']()))
 	{
-		$query = 'DROP TABLE ' . $table_name;
+		// We can then drop the table.
+		$smcFunc['db_transaction']('begin');
+
+		// the table
+		$table_query = 'DROP TABLE ' . $table_name;
+
+		// and the assosciated sequence, if any
+		$sequence_query = 'DROP SEQUENCE IF EXISTS ' . $table_name . '_seq';
+
+		// drop them
 		$smcFunc['db_query']('',
-			$query,
+			$table_query,
 			array(
 				'security_override' => true,
 			)
 		);
+		$smcFunc['db_query']('',
+			$sequence_query,
+			array(
+				'security_override' => true,
+			)
+		);
+
+		$smcFunc['db_transaction']('commit');
 
 		return true;
 	}
