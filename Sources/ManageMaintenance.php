@@ -1620,6 +1620,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 	if ($can_write && $fh)
 	{
 		fwrite($fh, '?' . '>');
+		flock($fh, LOCK_UN);
 		fclose($fh);
 
 		// If we couldn't find the file don't cache it!

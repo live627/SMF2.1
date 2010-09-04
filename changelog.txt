@@ -16,6 +16,7 @@ September 2010
  ! MySQL needs the autoincrement column defined as primary key (DbPackages-mysql.php) [Bug 4422]
  ! Drop the sequence if any, along with the table in Postgresql (DbPackages-postgresql.php) [Bug 4421]
  ! Improve 'who's online' behavior for a user who toggles WYSIWYG view (index.php) [Bug 4415]
+ ! Re-added a couple of flock() that rev 10000, 10002 had removed. fclose() does not unlock the file on all PHP versions. (Load.php, ManageMaintenance.php) [Bug 4330]
  
 August 2010
 --------------------------------------------------------------------------------

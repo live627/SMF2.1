@@ -2589,6 +2589,7 @@ function cache_put_data($key, $value, $ttl = 120)
 				set_file_buffer($fh, 0);
 				flock($fh, LOCK_EX);
 				$cache_bytes = fwrite($fh, $cache_data);
+				flock($fh, LOCK_UN);
 				fclose($fh);
 
 				// Check that the cache write was successful; all the data should be written
