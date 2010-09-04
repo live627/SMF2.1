@@ -1944,6 +1944,8 @@ list($totalActions) = mysql_fetch_row($request);
 mysql_free_result($request);
 
 $_GET['m'] = !empty($_GET['m']) ? (int) $_GET['m'] : '0';
+$step_progress['total'] = $totalActions;
+$step_progress['current'] = $_GET['m'];
 
 while ($_GET['m'] < $totalActions)
 {
@@ -2015,6 +2017,7 @@ while ($_GET['m'] < $totalActions)
 		upgrade_query("UPDATE {$db_prefix}log_actions SET id_board=$board_id, id_topic=$topic_id, id_msg=$msg_id, extra='$row[extra]' WHERE id_action=$row[id_action]");
 	}
 	$_GET['m'] += 500;
+	$step_progress['current'] = $_GET['m'];
 }
 unset($_GET['m']);
 ---}
