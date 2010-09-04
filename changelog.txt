@@ -17,6 +17,7 @@ September 2010
  ! Drop the sequence if any, along with the table in Postgresql (DbPackages-postgresql.php) [Bug 4421]
  ! Improve 'who's online' behavior for a user who toggles WYSIWYG view (index.php) [Bug 4415]
  ! Re-added a couple of flock() that rev 10000, 10002 had removed. fclose() does not unlock the file on all PHP versions. (Load.php, ManageMaintenance.php) [Bug 4330]
+ ! Avatars loaded from remote locations may have failed resizing in some cases (script.js) [Bug 3842]
  
 August 2010
 --------------------------------------------------------------------------------
