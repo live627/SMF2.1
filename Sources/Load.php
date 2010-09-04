@@ -696,7 +696,7 @@ function loadBoard()
 						'id' => $row['id_moderator'],
 						'name' => $row['real_name'],
 						'href' => $scripturl . '?action=profile;u=' . $row['id_moderator'],
-						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_moderator'] . '" title="' . $txt['board_moderator'] . '">' . $row['real_name'] . '</a>'
+						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_moderator'] . '">' . $row['real_name'] . '</a>'
 					);
 			}
 			while ($row = $smcFunc['db_fetch_assoc']($request));
@@ -1929,7 +1929,7 @@ function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload =
 // Get all parent boards (requires first parent as parameter)
 function getBoardParents($id_parent)
 {
-	global $scripturl, $txt, $smcFunc;
+	global $scripturl, $smcFunc;
 
 	$boards = array();
 
@@ -1971,7 +1971,7 @@ function getBoardParents($id_parent)
 						'id' => $row['id_moderator'],
 						'name' => $row['real_name'],
 						'href' => $scripturl . '?action=profile;u=' . $row['id_moderator'],
-						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_moderator'] . '" title="' . $txt['board_moderator'] . '">' . $row['real_name'] . '</a>'
+						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_moderator'] . '">' . $row['real_name'] . '</a>'
 					);
 				}
 		}

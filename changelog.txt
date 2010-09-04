@@ -18,6 +18,7 @@ September 2010
  ! Improve 'who's online' behavior for a user who toggles WYSIWYG view (index.php) [Bug 4415]
  ! Re-added a couple of flock() that rev 10000, 10002 had removed. fclose() does not unlock the file on all PHP versions. (Load.php, ManageMaintenance.php) [Bug 4330]
  ! Avatars loaded from remote locations may have failed resizing in some cases (script.js) [Bug 3842]
+ ! Small improvement to be more mod-friendly, a useless variable usage could have caused issues with mods (Load.php) [Bug4445]
  
 August 2010
 --------------------------------------------------------------------------------
