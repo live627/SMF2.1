@@ -1451,6 +1451,16 @@ function smc_saveEntities(sFormName, aElementNames, sMask)
 // A function used to clean the attachments on post page
 function cleanFileInput(idElement)
 {
-	alert(document.getElementById(idElement).outerHTML);
-	document.getElementById(idElement).outerHTML = document.getElementById(idElement).outerHTML;
+	// Simpler solutions work in Opera, but not in Firefox and IE (except sometimes!)
+	// and apparently never on Safari...
+	if (is_opera)
+	{
+		document.getElementById(idElement).outerHTML = document.getElementById(idElement).outerHTML;
+	}
+	else
+	{
+		// What else can we do?
+		document.getElementById(idElement).type = 'input';
+		document.getElementById(idElement).type = 'file';
+	}
 }

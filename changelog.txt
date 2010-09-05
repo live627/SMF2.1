@@ -22,6 +22,9 @@ September 2010
  ! Added the optional (in 1.1 spec) assoc_type to OpenID parameters (Subs-OpenID.php) [Bug 4420]
  ! Fixed calculating steps/substeps for log_actions changes (upgrade script) [Bug 4427]
  ! Fixed avatars resized with javascript (script.js)
+ * Tweaked the attachments cleaning to allow single file removals (script.js, Post template) [Bug 3559]
+ & Tweaked the language string accordingly (Post english)
+ ! Chose a hopefully more portable fix for cleaning file input (script.js) [Bug 3780]
  
  
 August 2010
