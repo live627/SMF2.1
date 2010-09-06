@@ -1453,13 +1453,13 @@ function cleanFileInput(idElement)
 {
 	// Simpler solutions work in Opera, but not in Firefox and IE (except sometimes!)
 	// and apparently never on Safari...
-	if (is_opera)
+	if (is_opera || is_ie)
 	{
 		document.getElementById(idElement).outerHTML = document.getElementById(idElement).outerHTML;
 	}
 	else
 	{
-		// What else can we do?
+		// What else can we do? This doesn't work in IE.
 		document.getElementById(idElement).type = 'input';
 		document.getElementById(idElement).type = 'file';
 	}
