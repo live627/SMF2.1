@@ -28,6 +28,7 @@ September 2010
  ! Cleanup - changing back all CRLF to LF (lots of files) [Bug 4439]
  ! Add attachments cleaning for IE as well, though it allows manually deleting the file input box (script.js)
  ! fetch_web_data did not properly parse a port on urls (Subs-Package.php)[Bug 4454]
+ ! constructPageIndex didn't respect flexible start for compact pagination (Subs.php)
  
  
 August 2010
