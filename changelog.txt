@@ -31,6 +31,7 @@ September 2010
  ! constructPageIndex didn't respect flexible start for compact pagination (Subs.php)
  ! Topic moderation logs were not listed on mod report details. (ModerationCenter.php) [Bug 4419]
  ! Unoptimized query for topic participation query in unread topics. (Recent.php) [Bug 4457]
+ ! 'moderate_board' permission does not really make sense for guests (ManagePermissions.php) [Bug 4460]
 
  
 August 2010
