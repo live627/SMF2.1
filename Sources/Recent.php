@@ -1307,10 +1307,13 @@ function UnreadTopics()
 			SELECT id_topic
 			FROM {db_prefix}messages
 			WHERE id_topic IN ({array_int:topic_list})
-				AND id_member = {int:current_member}',
+				AND id_member = {int:current_member}
+			GROUP BY id_topic
+			LIMIT {int:limit}',
 			array(
 				'current_member' => $user_info['id'],
 				'topic_list' => $topic_ids,
+				'limit' => count($topic_ids),
 			)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($result))
