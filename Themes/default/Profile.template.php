@@ -462,7 +462,7 @@ function template_showPosts()
 						', isset($context['attachments']) ? $txt['show_attachments_none'] : ($context['is_topics'] ? $txt['show_topics_none'] : $txt['show_posts_none']), '
 					</td>
 				</tr>';
-		
+
 		echo '
 			</tbody>
 		</table>';

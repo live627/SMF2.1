@@ -2001,35 +2001,31 @@ function Post2()
 	}
 
 	// Marking read should be done even for editing messages....
-	if (!$user_info['is_guest'])
+	// Mark all the parents read.  (since you just posted and they will be unread.)
+	if (!$user_info['is_guest'] && !empty($board_info['parent_boards']))
 	{
-		// Mark all the parents read.  (since you just posted and they will be unread.)
-		if (!empty($board_info['parent_boards']))
-		{
-			$smcFunc['db_query']('', '
-				UPDATE {db_prefix}log_boards
-				SET id_msg = {int:id_msg}
-				WHERE id_member = {int:current_member}
-					AND id_board IN ({array_int:board_list})',
-				array(
-					'current_member' => $user_info['id'],
-					'board_list' => array_keys($board_info['parent_boards']),
-					'id_msg' => $modSettings['maxMsgID'],
-				)
-			);
-		}
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}log_boards
+			SET id_msg = {int:id_msg}
+			WHERE id_member = {int:current_member}
+				AND id_board IN ({array_int:board_list})',
+			array(
+				'current_member' => $user_info['id'],
+				'board_list' => array_keys($board_info['parent_boards']),
+				'id_msg' => $modSettings['maxMsgID'],
+			)
+		);
 	}
 
 	// Turn notification on or off.  (note this just blows smoke if it's already on or off.)
 	if (!empty($_POST['notify']) && allowedTo('mark_any_notify'))
 	{
-		if (allowedTo('mark_any_notify'))
-			$smcFunc['db_insert']('ignore',
-				'{db_prefix}log_notify',
-				array('id_member' => 'int', 'id_topic' => 'int', 'id_board' => 'int'),
-				array($user_info['id'], $topic, 0),
-				array('id_member', 'id_topic', 'id_board')
-			);
+		$smcFunc['db_insert']('ignore',
+			'{db_prefix}log_notify',
+			array('id_member' => 'int', 'id_topic' => 'int', 'id_board' => 'int'),
+			array($user_info['id'], $topic, 0),
+			array('id_member', 'id_topic', 'id_board')
+		);
 	}
 	elseif (!$newTopic)
 		$smcFunc['db_query']('', '
