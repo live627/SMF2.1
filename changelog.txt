@@ -32,6 +32,7 @@ September 2010
  ! Topic moderation logs were not listed on mod report details. (ModerationCenter.php) [Bug 4419]
  ! Unoptimized query for topic participation query in unread topics. (Recent.php) [Bug 4457]
  ! 'moderate_board' permission does not really make sense for guests (ManagePermissions.php) [Bug 4460]
+ * Avatars and other packages removals missed session vars (Package template) [bug 4463]
 
  
 August 2010
