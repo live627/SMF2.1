@@ -32,12 +32,12 @@ September 2010
  ! Topic moderation logs were not listed on mod report details. (ModerationCenter.php) [Bug 4419]
  ! Unoptimized query for topic participation query in unread topics. (Recent.php) [Bug 4457]
  ! 'moderate_board' permission does not really make sense for guests (ManagePermissions.php) [Bug 4460]
- * Avatars and other packages removals missed session vars (Package template) [bug 4463]
+ * Avatars and other packages removals missed session vars (Package template) [Bug 4463]
  ! Small cleanup and tweaks [Bug 4461]
  ! Fix attachments boxes cleanup for Safari [Bug 4470]
- 
+ * Variant selection was disregarded when previewing a theme. (Themes template) [Bug 4433]
 
- 
+
 August 2010
 --------------------------------------------------------------------------------
  * The new replies template for preview JavaScript was using outdated post layout. (Post.template.php) [Bug 4387]
