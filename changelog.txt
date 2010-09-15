@@ -34,6 +34,7 @@ September 2010
  ! 'moderate_board' permission does not really make sense for guests (ManagePermissions.php) [Bug 4460]
  * Avatars and other packages removals missed session vars (Package template) [bug 4463]
  ! Small cleanup and tweaks [Bug 4461]
+ ! Fix attachments boxes cleanup for Safari [Bug 4470]
  
 
  
