@@ -36,6 +36,7 @@ September 2010
  ! Small cleanup and tweaks [Bug 4461]
  ! Fix attachments boxes cleanup for Safari [Bug 4470]
  * Variant selection was disregarded when previewing a theme. (Themes template) [Bug 4433]
+ * Redirect back to the post instead of board, after reporting a post. (Display.php, MessageIndex.php, SendTopic.php, Display template, MessageIndex template)
 
 
 August 2010
