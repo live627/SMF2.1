@@ -22,10 +22,6 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-/*
-
-*/
-
 function getBoardList($boardListOptions = array())
 {
 	global $smcFunc, $user_info;

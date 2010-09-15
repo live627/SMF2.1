@@ -1162,7 +1162,7 @@ function QuickModeration()
 	{
 		logAction($stickyCacheStatus[$topic] ? 'unsticky' : 'sticky', array('topic' => $topic, 'board' => $stickyCacheBoards[$topic]));
 		sendNotifications($topic, 'sticky');
-	} 
+	}
 
 	updateStats('topic');
 	updateStats('message');
