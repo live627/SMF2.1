@@ -632,7 +632,7 @@ function template_set_settings()
 		foreach ($context['theme_variants'] as $key => $variant)
 		{
 			echo '
-			', $key, ': \'', $variant['thumbnail'], '\'', (count($context['theme_variants']) == $count ? '' : ',');
+			\'', $key, '\': \'', $variant['thumbnail'], '\'', (count($context['theme_variants']) == $count ? '' : ',');
 			$count++;
 		}
 
@@ -720,7 +720,7 @@ function template_pick()
 			foreach ($theme['variants'] as $key => $variant)
 			{
 				echo '
-				', $key, ': \'', $variant['thumbnail'], '\'', (count($theme['variants']) == $count ? '' : ',');
+				\'', $key, '\': \'', $variant['thumbnail'], '\'', (count($theme['variants']) == $count ? '' : ',');
 				$count++;
 			}
 
