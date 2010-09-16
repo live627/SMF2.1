@@ -18,7 +18,7 @@ function template_main()
 					<div class="pagelinks floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>';
 		echo '
 					<div class="selectbox floatright">', $txt['who_show1'], '
-						<select name="showtop" onchange="document.forms.whoFilter.submit();">';
+						<select name="show_top" onchange="document.forms.whoFilter.show.value = this.value; document.forms.whoFilter.submit();">';
 
 		foreach ($context['show_methods'] as $value => $label)
 			echo '
@@ -26,7 +26,7 @@ function template_main()
 		echo '
 						</select>
 						<noscript>
-							<input type="submit" value="', $txt['go'], '" class="button_submit" />
+							<input type="submit" name="submit_top" value="', $txt['go'], '" class="button_submit" />
 						</noscript>
 					</div>
 				</div>

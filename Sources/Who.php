@@ -134,6 +134,9 @@ function Who()
 	if (!allowedTo('moderate_forum'))
 		$conditions[] = '(IFNULL(mem.show_online, 1) = 1)';
 
+	// Fallback to top filter?
+	if (isset($_REQUEST['submit_top']) && isset($_REQUEST['show_top']))
+		$_REQUEST['show'] = $_REQUEST['show_top'];
 	// Does the user wish to apply a filter?
 	if (isset($_REQUEST['show']) && isset($show_methods[$_REQUEST['show']]))
 	{

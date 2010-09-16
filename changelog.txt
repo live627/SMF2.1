@@ -41,6 +41,7 @@ September 2010
  * Incorrect label assignment in Reattribute User Posts section. (ManageMaintenance template) [Bug 4467]
  ! Restoring moderate_board permission for guests. (ManagePermissions.php)
  * Ignored members' posts were not hidden in topic summary. (Post.php, Post template, Xml template) [Bug 4466]
+ * Who's Online filters did not function correctly. (Who.php, Who template) [Bug 4462]
 
 
 August 2010
