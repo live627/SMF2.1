@@ -39,8 +39,8 @@ September 2010
  * Redirect back to the post instead of board, after reporting a post. (Display.php, MessageIndex.php, SendTopic.php, Display template, MessageIndex template) [Bug 4452]
  ! Adjusted the URL for the arin whois service to reflect its new location. (Profile-View.php) [Bug 4464]
  * Incorrect label assignment in Reattribute User Posts section. (ManageMaintenance template) [Bug 4467]
- ! Restoring moderate_board for guests (ManagePermissions)
-
+ ! Restoring moderate_board permission for guests. (ManagePermissions.php)
+ * Ignored members' posts were not hidden in topic summary. (Post.php, Post template, Xml template) [Bug 4466]
 
 
 August 2010
