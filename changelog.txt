@@ -80,6 +80,7 @@ August 2010
  ! Fixed migration of a buddy lists setting (upgrade scripts for MySQL and SQlite)
  ! Fixed a couple of issues with the RSS feeds optimization (News.php) [Bug 4428]
  ! More fixes to use internationalized substr/strlen (more files) [Bug 3738]
+ * Fixed a few minor bugs (index.css, PersonalMessage.template, Display.template, Sendtopic.template, MessageIndex.template) [Bug 4411,4434,4446,4471]
 
 July 2010
 --------------------------------------------------------------------------------

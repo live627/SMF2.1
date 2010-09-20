@@ -608,7 +608,7 @@ a.moderation_link, a.moderation_link:visited
 }
 
 /* a descriptive style */
-.description, .plainbox
+.description, .description_board, .plainbox
 {
 	padding: 0.5em 1em;
 	font-size: 0.9em;
@@ -616,6 +616,10 @@ a.moderation_link, a.moderation_link:visited
 	border: 1px solid #bbb;
 	background: #f5f5f0;
 	margin: 0.2em 1px 1em 1px;
+}
+.description_board
+{
+	margin-top: 0;
 }
 
 /* an informative style */
@@ -1485,7 +1489,7 @@ div#upper_section div.news form
 }
 select.qaction, input.qaction
 {
-	font-size: 0.7em;
+	font-size: 0.85em;
 	padding: 0;
 }
 #mlist table tbody td.windowbg2
@@ -1687,6 +1691,10 @@ img.new_posts
 	clear: both;
 }
 /* the page navigation area */
+.childboards
+{
+	margin-bottom: 0.2em;
+}
 #childboards h3
 {
 	padding-bottom: 0;
@@ -1858,6 +1866,11 @@ p#whoisviewing
 	padding: 0.5em;
 }
 /* poster and postarea + moderation area underneath */
+.post_wrapper
+{
+	float:left;
+	width:100%;
+}
 .poster
 {
 	float: left;
@@ -1903,6 +1916,10 @@ p#whoisviewing
 .poster li.stars, .poster li.avatar, .poster li.blurb, li.postcount, li.im_icons ul
 {
 	margin-top: 0.5em;
+}
+.poster li.avatar
+{
+	overflow: hidden;
 }
 .poster li.warning
 {
