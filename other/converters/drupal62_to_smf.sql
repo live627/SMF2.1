@@ -12,6 +12,9 @@ TRUNCATE {$to_prefix}members;
 TRUNCATE {$to_prefix}attachments;
 
 ---* {$to_prefix}members
+---{
+$ignore = true;
+---}
 SELECT
 	uid AS id_member, SUBSTRING(name, 1, 255) AS member_name,
 	SUBSTRING(name, 1, 255) AS real_name, mail AS email_address,

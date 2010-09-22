@@ -447,6 +447,7 @@ function loadSettings()
 
 	// Keep in mind our important variables, we don't want them swept away by the code we're running
 	$smf_db_prefix = $db_prefix;
+	$smf_db_prefix = $db_prefix;
 
 	foreach ($convert_data['variable'] as $eval_me)
 		eval($eval_me);
@@ -463,8 +464,9 @@ function loadSettings()
 	if (preg_match('~^`[^`]+`.\d~', $from_prefix) != 0)
 		$from_prefix = strtr($from_prefix, array('`' => ''));
 
-	// recall our variables in case the software we're converting from defines one itself
+	// recall our variables in case the software we're converting from defines one itself...
 	$db_prefix = $smf_db_prefix;
+	$db_type = $smf_db_type;
 
 	if ($_REQUEST['start'] == 0 && empty($_GET['substep']) && empty($_GET['cstep']) && ($_GET['step'] == 1 || $_GET['step'] == 2) && isset($convert_data['table_test']))
 	{
@@ -2353,21 +2355,6 @@ function removeAllAttachments()
 			@unlink($physical_filename);
 	}
 	$smcFunc['db_free_result']($result);
-}
-
-if (!function_exists('getLegacyAttachmentFilename'))
-{
-	function getLegacyAttachmentFilename($filename, $attachment_id)
-	{
-		// Remove special accented characters - ie. sí (because they won't write to the filesystem well.)
-		$clean_name = strtr($filename, 'ŠŽšžŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ', 'SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy');
-		$clean_name = strtr($clean_name, array('Þ' => 'TH', 'þ' => 'th', 'Ð' => 'DH', 'ð' => 'dh', 'ß' => 'ss', 'Œ' => 'OE', 'œ' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u'));
-
-		// Get rid of dots, spaces, and other weird characters.
-		$clean_name = preg_replace(array('/\s/', '/[^\w_\.\-]/'), array('_', ''), $clean_name);
-
-		return $attachment_id . '_' . strtr($clean_name, '.', '_') . md5($clean_name);
-	}
 }
 
 // Add slashes recursively...

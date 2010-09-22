@@ -1,13 +1,21 @@
 /* ATTENTION: You don't need to run or use this file!  The convert.php script does everything for you! */
 
 /******************************************************************************/
----~ name: "PunBB 1.2.5"
+---~ name: "PunBB 1.x"
 /******************************************************************************/
 ---~ version: "SMF 2.0"
 ---~ settings: "/config.php"
 ---~ from_prefix: "`$db_name`.$db_prefix"
 ---~ table_test: "{$from_prefix}users"
 
+/******************************************************************************/
+--- Making sure database structure is appropriate...
+/******************************************************************************/
+
+---{
+convert_query("ALTER TABLE {$to_prefix}members CHANGE password_salt password_salt varchar(12) NOT NULL DEFAULT  ''");
+
+---}
 /******************************************************************************/
 --- Converting members...
 /******************************************************************************/
@@ -34,7 +42,7 @@ SELECT
 	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
 	'' AS personal_text, '' AS time_format, '' AS avatar, '' AS usertitle,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
-	'' AS additional_groups, '' AS smiley_set, '' AS password_salt,
+	'' AS additional_groups, '' AS smiley_set, salt AS password_salt,
 	SUBSTRING(registration_ip, 1, 255) AS member_ip2
 FROM {$from_prefix}users
 WHERE id != 1;

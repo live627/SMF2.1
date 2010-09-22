@@ -223,6 +223,7 @@ if (strlen($physical_filename) > 255)
 
 if (copy($yAttachmentDir . '/' . $row['filename'], $attachmentUploadDir . '/' . $physical_filename))
 {
+	$no_add = false;
 	$rows[] = array(
 		'id_attach' => $id_attach,
 		'size' => $row['size'],

@@ -80,7 +80,7 @@ SELECT
 	SUBSTRING(u.user_password, 1, 64) AS passwd, u.user_lastvisit AS last_login,
 	u.user_regdate AS date_registered,
 	SUBSTRING(u.user_from, 1, 255) AS location,
-	u.user_posts AS posts, IF(u.user_level = 2, 1, mg.id_group) AS id_group,
+	u.user_posts AS posts, IF(u.user_level = 2, 1, IFNULL(mg.id_group, '0')) AS id_group,
 	u.user_new_privmsg AS instant_messages,
 	SUBSTRING(u.user_email, 1, 255) AS email_address,
 	u.user_unread_privmsg AS unread_messages,
@@ -226,7 +226,7 @@ SELECT
 	t.topic_id AS id_topic, t.topic_type = 1 AS is_sticky,
 	t.topic_first_post_id AS id_first_msg, t.topic_last_post_id AS id_last_msg,
 	t.topic_poster AS id_member_started, p.poster_id AS id_member_updated,
-	t.forum_id AS id_board, v.vote_id AS id_poll, t.topic_status = 1 AS locked,
+	t.forum_id AS id_board, IFNULL(v.vote_id, '0') AS id_poll, t.topic_status = 1 AS locked,
 	t.topic_replies AS num_replies, t.topic_views AS num_views
 FROM {$from_prefix}bbtopics AS t
 	LEFT JOIN {$from_prefix}bbposts AS p ON (p.post_id = t.topic_last_post_id)
@@ -354,12 +354,15 @@ FROM {$from_prefix}bbtopics_watch;
 --- Converting board access...
 /******************************************************************************/
 
+DELETE FROM {$to_prefix}board_permissions
+WHERE id_profile > 4;
+
 REPLACE INTO {$to_prefix}settings
 	(variable, value)
 VALUES ('permission_enable_by_board', '1');
 
 UPDATE {$to_prefix}boards
-SET permission_mode = 1;
+SET id_profile = id_board + 4;
 
 ---# Do all board permissions...
 ---{
@@ -436,7 +439,7 @@ while ($row = convert_fetch_assoc($request))
 	}
 
 	if (!empty($inserts))
-		convert_insert('board_permissions', array('id_group' => 'int', 'id_board' => 'int', 'permission' => 'string'), $inserts);
+		convert_insert('board_permissions', array('id_group', 'id_profile', 'permission'), $inserts, 'replace');
 }
 convert_free_result($request);
 ---}

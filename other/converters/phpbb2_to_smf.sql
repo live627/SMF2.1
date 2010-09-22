@@ -323,6 +323,7 @@ TRUNCATE {$to_prefix}messages;
 ---* {$to_prefix}messages 200
 ---{
 $ignore = true;
+$ignore_slashes = true;
 $row['body'] = preg_replace('~\[size=([789]|[012]\d)\]~is', '[size=$1px]', $row['body']);
 $row['body'] = preg_replace('~\[quote="(.+?)"\]~is', '[quote author="$1"]', $row['body']);
 ---}
