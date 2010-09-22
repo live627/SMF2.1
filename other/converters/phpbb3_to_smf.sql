@@ -549,9 +549,11 @@ $row['body'] = stripslashes($row['body']);
 SELECT
 	p.post_id AS id_msg, p.topic_id AS id_topic, p.forum_id AS id_board,
 	p.post_time AS poster_time, p.poster_id AS id_member, p.post_subject AS subject,
-	m.username AS poster_name, m.user_email AS poster_email, p.poster_ip AS poster_ip,
+	IFNULL(m.username, 'Guest') AS poster_name, 
+	IFNULL(m.user_email, 'Unknown') AS poster_email, 
+	IFNULL(p.poster_ip, '0.0.0.0') AS poster_ip,
 	p.enable_smilies AS smileys_enabled, p.post_edit_time AS modified_time,
-	CASE p.post_edit_user WHEN 0 THEN '' ELSE m2.username END AS modified_name,
+	CASE p.post_edit_user WHEN 0 THEN 'Guest' ELSE m2.username END AS modified_name,
 	p.post_text AS body
 FROM {$from_prefix}posts AS p
 	LEFT JOIN {$from_prefix}users AS m ON (m.user_id = p.poster_id)
@@ -569,7 +571,7 @@ TRUNCATE {$to_prefix}log_polls;
 ---* {$to_prefix}polls
 SELECT
 	t.topic_id AS id_poll, t.poll_title AS question, t.poll_max_options AS max_votes, IF((t.poll_start + t.poll_length) < 0, 0, (t.poll_start + t.poll_length)) AS expire_time,
-	t.poll_vote_change AS change_vote, t.topic_poster AS id_member, m.username AS poster_name
+	t.poll_vote_change AS change_vote, t.topic_poster AS id_member, IFNULL(m.username, 0) AS poster_name
 FROM {$from_prefix}topics AS t
 	LEFT JOIN {$from_prefix}users AS m ON (m.user_id = t.topic_poster)
 WHERE t.poll_title != '';
