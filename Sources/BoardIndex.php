@@ -36,7 +36,7 @@ if (!defined('SMF'))
 		- is accessed by ?action=boardindex.
 
 	void CollapseCategory()
-		// !!!
+		- collapse or expand a category
 */
 
 // Show the board index!

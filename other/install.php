@@ -738,13 +738,6 @@ function DatabaseSettings()
 	else
 		$incontext['db']['prefix'] = 'smf_';
 
-	// This is just because it makes it easier for people on Lycos/Tripod UK :P.
-	if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'members.lycos.co.uk' && defined('LOGIN'))
-	{
-		$incontext['db']['user'] = LOGIN;
-		$incontext['db']['name'] = LOGIN . '_uk_db';
-	}
-
 	// Should we use a non standard port?
 	if (!empty($db_port))
 		$incontext['db']['server'] .= ':' . $db_port;

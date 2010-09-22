@@ -26,8 +26,17 @@ if (!defined('SMF'))
 
 /*	This file contains database functions specific to search related activity.
 
-	// !!!
+	void db_search_init()
+		- adds the functions in this file to the $smcFunc array
 
+	boolean smf_db_search_support($search_type)
+		- whether this database type support the search type $search_type
+
+	void smf_db_create_word_search($size)
+ 		- create the custom word index table
+
+ 	resource smf_db_search_query($identifier, $db_string, $db_values = array(), $connection = null)
+		- returns the correct query for this search type.
 */
 
 // Add the file functions to the $smcFunc array.

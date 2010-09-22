@@ -27,7 +27,8 @@ if (!defined('SMF'))
 
 /*	This file has all the main functions in it that relate to the database.
 
-	// !!!
+	smf_db_initiate() maps the implementations in this file (smf_db_function_name)
+	to the $smcFunc['db_function_name'] variable.
 
 */
 
@@ -601,7 +602,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 	$table = str_replace('{db_prefix}', $db_prefix, $table);
 
 	$priv_trans = false;
-	if (((count($data) > 1) || ($method == 'replace')) && !$db_in_transact && !$disable_trans)
+	if ((count($data) > 1 || $method == 'replace') && !$db_in_transact && !$disable_trans)
 	{
 		$smcFunc['db_transaction']('begin', $connection);
 		$priv_trans = true;
@@ -627,7 +628,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 		}
 
 		// Make it so.
-		if (!empty($where) && (!empty($data)))
+		if (!empty($where) && !empty($data))
 		{
 			foreach ($data as $k => $entry)
 			{
