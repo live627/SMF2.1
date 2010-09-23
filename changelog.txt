@@ -51,6 +51,7 @@ September 2010
  ! Incorrect parameter given for checkImageContents() on avatar uploads. (Profile-Modify.php)
  ! Members with moderate_forum permission can no longer access Manage Posts admin area. (Admin.php)
  * All new replies added via JavaScript were marked as ignored. (Post template)
+ * Fixed secret question page, and overflow error in admin menus (index.css) [Bug 4405]
 
 
 August 2010
