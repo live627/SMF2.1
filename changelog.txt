@@ -45,8 +45,12 @@ September 2010
  * Variant selection was broken with reserved variant names. (Themes template) [Bug 4435]
  ! Cleanups and documentation fixes (many files)
  * Fixed a few minor bugs (index.css, PersonalMessage.template, Display.template, Sendtopic.template, MessageIndex.template) [Bug 4411,4434,4446,4471]
- * Yet another attempted fix for that damned IE8 cursor bug (GenericControls.template.php) [Bug 3354]  
- * Minor typos and glitches (ProfileModify.php, ModerationCenter.template, Packages.template) [Bug 4436,4476]  
+ * Yet another attempted fix for that damned IE8 cursor bug (GenericControls.template.php) [Bug 3354]
+ * Minor typos and glitches (ProfileModify.php, ModerationCenter.template, Packages.template) [Bug 4436,4476]
+ ! The check on package server URL for http:// prefix failed. (PackageGet.php)
+ ! Incorrect parameter given for checkImageContents() on avatar uploads. (Profile-Modify.php)
+ ! Members with moderate_forum permission can no longer access Manage Posts admin area. (Admin.php)
+ * All new replies added via JavaScript were marked as ignored. (Post template)
 
 
 August 2010
