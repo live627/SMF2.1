@@ -44,6 +44,9 @@ September 2010
  * Who's Online filters did not function correctly. (Who.php, Who template) [Bug 4462]
  * Variant selection was broken with reserved variant names. (Themes template) [Bug 4435]
  ! Cleanups and documentation fixes (many files)
+ * Fixed a few minor bugs (index.css, PersonalMessage.template, Display.template, Sendtopic.template, MessageIndex.template) [Bug 4411,4434,4446,4471]
+ * Yet another attempted fix for that damned IE8 cursor bug (GenericControls.template.php) [Bug 3354]  
+ * Minor typos and glitches (ProfileModify.php, ModerationCenter.template, Packages.template) [Bug 4436,4476]  
 
 
 August 2010
@@ -81,9 +84,8 @@ August 2010
  ! Fixed migration of a buddy lists setting (upgrade scripts for MySQL and SQlite)
  ! Fixed a couple of issues with the RSS feeds optimization (News.php) [Bug 4428]
  ! More fixes to use internationalized substr/strlen (more files) [Bug 3738]
- * Fixed a few minor bugs (index.css, PersonalMessage.template, Display.template, Sendtopic.template, MessageIndex.template) [Bug 4411,4434,4446,4471]
- * Yet another attempted fix for that damned IE8 cursor bug (GenericControls.template.php) [Bug 3354] 
 
+ 
 July 2010
 --------------------------------------------------------------------------------
  ! Incorrect password was passed to integrate_reset_pass hook when password was changed. (Profile.php) [Bug 3986]
