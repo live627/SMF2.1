@@ -54,6 +54,7 @@ September 2010
  * Fixed secret question page, and overflow error in admin menus (index.css) [Bug 4405]
  ! index.php in avatars directories was caught in a loop (avatars/*/index.php)
  + Adding a file to avoid browsing in Themes/core/languages (index.php)
+ ! Tables should be created with SMF's charset and collation (DbPackages-mysql.php)
 
 
 August 2010
