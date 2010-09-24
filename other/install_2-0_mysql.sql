@@ -1,5 +1,5 @@
 #### ATTENTION: You do not need to run or use this file!  The install.php script does everything for you!
-#### Install script for MySQL 3.23.28+
+#### Install script for MySQL 4.0.0+
 
 #
 # Table structure for table `admin_info_files`
@@ -14,7 +14,7 @@ CREATE TABLE {$db_prefix}admin_info_files (
   filetype varchar(255) NOT NULL default '',
   PRIMARY KEY (id_file),
   KEY filename (filename(30))
-) ENGINE=MYISAM;
+) ENGINE=MyISAM;
 
 #
 # Dumping data for table `admin_info_files`
@@ -40,7 +40,7 @@ CREATE TABLE {$db_prefix}approval_queue (
   id_msg int(10) unsigned NOT NULL default '0',
   id_attach int(10) unsigned NOT NULL default '0',
   id_event smallint(5) unsigned NOT NULL default '0'
-) ENGINE=MYISAM;
+) ENGINE=MyISAM;
 
 #
 # Table structure for table `attachments`
@@ -866,7 +866,7 @@ CREATE TABLE {$db_prefix}log_group_requests (
   reason text NOT NULL,
   PRIMARY KEY (id_request),
   UNIQUE id_member (id_member, id_group)
-) ENGINE=MYISAM;
+) ENGINE=MyISAM;
 
 #
 # Table structure for table `log_karma`

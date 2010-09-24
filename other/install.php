@@ -852,7 +852,7 @@ function DatabaseSettings()
 		if ($db_name != '' && !$needsDB)
 		{
 			$smcFunc['db_query']('', "
-				CREATE DATABASE IF NOT EXISTS `$db_name`" . (isset($_POST['utf8']) ? ' DEFAULT CHARACTER SET utf8' : ''),
+				CREATE DATABASE IF NOT EXISTS `$db_name`",
 				array(
 					'security_override' => true,
 					'db_error_skip' => true,
