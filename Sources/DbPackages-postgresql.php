@@ -734,11 +734,17 @@ function smf_db_list_indexes($table_name, $detail = false, $parameters = array()
 		foreach ($columns as $k => $v)
 			$columns[$k] = trim($v);
 
+		// Fix up the name to be consistent cross databases
+		if (substr($row['name'], -5) == '_pkey' && $row['is_primary'] == 1)
+			$row['name'] = 'PRIMARY';
+		else
+			$row['name'] = str_replace($table_name . '_', '', $row['name']);
+
 		if (!$detail)
 			$indexes[] = $row['name'];
 		else
 		{
-			$indexes[] = array(
+			$indexes[$row['name']] = array(
 				'name' => $row['name'],
 				'type' => $row['is_primary'] ? 'primary' : ($row['is_unique'] ? 'unique' : 'index'),
 				'columns' => $columns,
