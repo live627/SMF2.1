@@ -531,7 +531,7 @@ function smf_db_list_indexes($table_name, $detail = false, $parameters = array()
 				// Add the column...
 				$indexes[$row['name']]['columns'][] = $row2['name'];
 			}
-			$smcFunc['db_free_result']($result);
+			$smcFunc['db_free_result']($result2);
 		}
 	}
 	$smcFunc['db_free_result']($result);

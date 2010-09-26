@@ -59,6 +59,7 @@ September 2010
  ! Fixing potential usage of international characters in attachments filenames (Subs.php)
  ! smf_table_structure() should be consistent for Postgres as well as MySQL (thanks feline!) (DbPackages-postgresql.php) [Bug 4425]
  ! Fixed missing global $smcFunc in prepareIndexes function (SearchAPI-Custom.php)
+ ! $smcFunc['db_list_indexes'] was broken for SQLite. (DbPackages-sqlite.php)
 
 August 2010
 --------------------------------------------------------------------------------
