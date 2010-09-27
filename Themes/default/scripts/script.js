@@ -497,59 +497,6 @@ function setOuterHTML(oElement, sToValue)
 	}
 }
 
-function getOuterHTML(oNode)
-{
-	if ('outerHTML' in oNode)
-		return oNode.outerHTML;
-
-	var sReturnValue = '';
-
-	switch (oNode.nodeType)
-	{
-		// An element.
-		case 1:
-			sReturnValue += '<' + oNode.nodeName;
-
-			for (var i = 0; i < oNode.attributes.length; i++)
-			{
-				if (oNode.attributes[i].nodeValue != null)
-					sReturnValue += ' ' + oNode.attributes[i].nodeName + '="' + oNode.attributes[i].nodeValue + '"';
-			}
-
-			if (oNode.childNodes.length == 0 && in_array(oNode.nodeName.toLowerCase(), ['hr', 'input', 'img', 'link', 'meta', 'br']))
-				sReturnValue += ' />';
-			else
-				sReturnValue += '>' + getInnerHTML(oNode) + '</' + oNode.nodeName + '>';
-		break;
-
-		// 2 is an attribute.
-
-		// Just some text..
-		case 3:
-			sReturnValue += oNode.nodeValue;
-		break;
-
-		// A CDATA section.
-		case 4:
-			sReturnValue += '<![CDATA' + '[' + oNode.nodeValue + ']' + ']>';
-		break;
-
-		// Entity reference..
-		case 5:
-			sReturnValue += '&' + oNode.nodeName + ';';
-		break;
-
-		// 6 is an actual entity, 7 is a PI.
-
-		// Comment.
-		case 8:
-			sReturnValue += '<!--' + oNode.nodeValue + '-->';
-		break;
-	}
-
-	return sReturnValue;
-}
-
 // Checks for variable in theArray.
 function in_array(variable, theArray)
 {
