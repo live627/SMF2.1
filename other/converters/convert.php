@@ -447,7 +447,7 @@ function loadSettings()
 
 	// Keep in mind our important variables, we don't want them swept away by the code we're running
 	$smf_db_prefix = $db_prefix;
-	$smf_db_prefix = $db_prefix;
+	$smf_db_type = $db_type;
 
 	foreach ($convert_data['variable'] as $eval_me)
 		eval($eval_me);
