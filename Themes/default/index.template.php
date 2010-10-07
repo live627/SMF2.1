@@ -294,22 +294,23 @@ function template_body_above()
 			});
 		// ]]></script>';
 
-	// Show the menu here, according to the menu sub template.
-	template_menu();
+        // Show the menu here, according to the menu sub template.
+        template_menu();
 
-	echo '
-		<br class="clear" />';
+    echo '
+            <br class="clear" />
+        </div></div>';
 
-	// Show the navigation tree.
-	theme_linktree();
+    // The main content should go here.
+    echo '       
+       
+    <div id="content_section"><div class="frame">
+        <div id="main_content_section">';
+       
+        // Custom banners and shoutboxes should be placed here, before the linktree.		
+        // Show the navigation tree.
+        theme_linktree();
 
-	echo '
-	</div></div>';
-
-	// The main content should go here.
-	echo '
-	<div id="content_section"><div class="frame">
-		<div id="main_content_section">';
 }
 
 function template_body_below()

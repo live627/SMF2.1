@@ -61,7 +61,7 @@ September 2010
  ! Fixed missing global $smcFunc in prepareIndexes function (SearchAPI-Custom.php)
  ! $smcFunc['db_list_indexes'] was broken for SQLite. (DbPackages-sqlite.php)
  - remove getOuterHTML(), outdated javascript function (script.js) [Bug 4284]
- 
+ * Missing icon in profile/ignore boards. Markup/css to allow large content above the linktree (Profile.template.php, index.template.php, index.css)
  
 
 August 2010

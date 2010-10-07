@@ -1823,7 +1823,7 @@ function template_ignoreboards()
 	<form action="', $scripturl, '?action=profile;area=ignoreboards;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 		<div class="cat_bar">
 			<h3 class="catbg">
-				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />', $txt['profile'], '</span>
+				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />', $txt['profile'], '</span>
 			</h3>
 		</div>
 		<p class="description">', $txt['ignoreboards_info'], '</p>
