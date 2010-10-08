@@ -349,7 +349,6 @@ span.percent
 /* author and topic information */
 #forumposts h3 span#author
 {
-	float: right;
 	margin: 0 0 0 7.7em;
 }
 #forumposts h3 img
@@ -489,6 +488,11 @@ ul.quickbuttons li.inline_mod_check
 {
 	margin: 0 0.2em 0 0;
 	padding: 0 1em 0 0;
+}
+/* The jump to box */
+#display_jump_to
+{
+	text-align: left;
 }
 
 /* Styles for edit post section

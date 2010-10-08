@@ -115,6 +115,7 @@ h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
 {
 	clear: both;
 }
+.post{word-wrap: break-word;}
 .buttonlist ul li
 {
 	width: 1%;

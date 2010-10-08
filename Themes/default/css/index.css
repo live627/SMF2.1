@@ -1858,7 +1858,6 @@ div#pollmoderation
 /* author and topic information */
 #forumposts h3 span#author
 {
-	float: left;
 	margin: 0 7.7em 0 0;
 }
 #forumposts h3 img
@@ -2107,6 +2106,7 @@ ul.quickbuttons li.inline_mod_check
 	clear: both;
 	padding: 5px;
 	margin-top: 2px;
+	text-align: right;
 }
 
 /* Separator of posts. More useful in the print stylesheet. */
