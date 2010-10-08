@@ -12,6 +12,17 @@ a:hover
 	text-decoration: underline;
 }
 
+/* Links that open in a new window. */
+a.new_win:link, a.new_win:visited
+{
+	color: #346;
+	text-decoration: none;
+}
+a.new_win:hover
+{
+	text-decoration: underline;
+}
+
 /* Tables should show empty cells. */
 table
 {
@@ -390,7 +401,7 @@ code.bbc_code
 /* Highlighted text - such as search results. */
 .highlight
 {
-	background-color: #ff0;
+	background-color: #ffa21f;
 	font-weight: bold;
 	color: #000 !important;
 }
@@ -3587,3 +3598,5 @@ ul.basic_helplist
 		border: none;
 	}
 }
+
+.new_win{width: 400px; height: 400px;}

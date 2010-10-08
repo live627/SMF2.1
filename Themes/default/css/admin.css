@@ -1,13 +1,10 @@
 /* Styles for the admin quick search.
 ------------------------------------------------------- */
 
-#quick_search form
+#quick_search form, h3.catbg #quick_search form
 {
 	padding: 7px;
 	line-height: 0.9em;
-}
-#quick_search input, #quick_search select
-{
 	font-size: 0.8em !important;
 }
 
@@ -18,7 +15,8 @@ ol.search_results
 }
 ol.search_results li
 {
-	padding-top: 5px;
+	padding-top: 1em;
+	border-bottom: 1px solid #ccc;
 }
 
 /* Styles for the core features screen.
@@ -149,7 +147,7 @@ h3.titlebg form
 }
 .windowbg.nopadding
 {
-	margin: 0;
+	margin: 0.3em 0 0 0;
 	padding: 0;
 }
 .windowbg ol

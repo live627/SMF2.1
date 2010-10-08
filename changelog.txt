@@ -62,6 +62,7 @@ September 2010
  ! $smcFunc['db_list_indexes'] was broken for SQLite. (DbPackages-sqlite.php)
  - remove getOuterHTML(), outdated javascript function (script.js) [Bug 4284]
  * Missing icon in profile/ignore boards. Markup/css to allow large content above the linktree (Profile.template.php, index.template.php, index.css)
+ * Minor cleaning up in admin. Better highlighting of search results. Defined new_win class. Better description for post options (Admin.template.php, admin.css, index.css, Post.english.php)
  
 
 August 2010

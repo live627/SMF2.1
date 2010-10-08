@@ -54,7 +54,7 @@ function template_admin()
 						<span class="ie6_header floatleft"><a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" /></a> ', $txt['live'], '</span>
 					</h3>
 				</div>
-				<div class="windowbg">
+				<div class="windowbg nopadding">
 					<span class="topslice"><span></span></span>
 					<div class="content">
 						<div id="smfAnnouncements">', $txt['lfyi'], '</div>
@@ -71,7 +71,7 @@ function template_admin()
 						<a href="', $scripturl, '?action=admin;area=credits">', $txt['support_title'], '</a>
 					</h3>
 				</div>
-				<div class="windowbg">
+				<div class="windowbg nopadding">
 					<span class="topslice"><span></span></span>
 					<div class="content">
 						<div id="version_details">
@@ -1315,22 +1315,21 @@ function template_admin_search_results()
 	global $context, $txt, $settings, $options, $scripturl;
 
 	echo '
-		<div class="title_bar">
-			<h3 class="titlebg">
-				<div id="quick_search" class="floatright">
-					<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" style="font-weight: normal; display: inline;">
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<object id="quick_search">
+					<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" class="floatright">
 						<input type="text" name="search_term" value="', $context['search_term'], '" class="input_text" />
 						<input type="hidden" name="search_type" value="', $context['search_type'], '" />
 						<input type="submit" name="search_go" value="', $txt['admin_search_results_again'], '" class="button_submit" />
 					</form>
-				</div>
-				', $txt['admin_search_results'], '
+				</object>
+				<span class="ie6_header floatleft"><img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />&nbsp;', sprintf($txt['admin_search_results_desc'], $context['search_term']), '</span>
 			</h3>
 		</div>
 	<div class="windowbg nopadding">
 		<span class="topslice"><span></span></span>
-		<div class="content">
-			', sprintf($txt['admin_search_results_desc'], $context['search_term']);
+		<div class="content">';
 
 	if (empty($context['search_results']))
 	{
@@ -1353,7 +1352,7 @@ function template_admin_search_results()
 						<br /><span class="smalltext"><a href="', $result['category']['href'], '" target="_blank" class="new_win">', $result['category']['name'], '</a> &nbsp;/&nbsp;
 						<a href="', $result['board']['href'], '" target="_blank" class="new_win">', $result['board']['name'], '</a> /</span>
 					</p>
-					<p class="quote">
+					<p class="double_height">
 						', $result['messages'][0]['body'], '
 					</p>
 				</li>';
@@ -1363,11 +1362,11 @@ function template_admin_search_results()
 			{
 				echo '
 				<li class="windowbg">
-					<a href="', $result['url'], '">', $result['name'], '</a> [', isset($txt['admin_search_section_' . $result['type']]) ? $txt['admin_search_section_' . $result['type']] : $result['type'] , ']';
+					<a href="', $result['url'], '"><strong>', $result['name'], '</strong></a> [', isset($txt['admin_search_section_' . $result['type']]) ? $txt['admin_search_section_' . $result['type']] : $result['type'] , ']';
 
 				if ($result['help'])
 					echo '
-					<br /><span class="smalltext">', $result['help'], '</span>';
+					<p class="double_height">', $result['help'], '</p>';
 
 				echo '
 				</li>';
