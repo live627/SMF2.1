@@ -896,6 +896,10 @@ dl.stats dd
 	right: -6px;
 	padding: 0 0 0 6px;
 }
+tr.windowbg2 th.stats_month, tr.windowbg2 td.stats_day
+{
+	text-align: right;
+}
 
 /* Styles for the calendar section.
 ------------------------------------------------- */

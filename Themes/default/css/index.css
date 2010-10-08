@@ -3140,7 +3140,7 @@ div#profile_success
 }
 .ignoreboards li.category ul li.board
 {
-	width: 93%;
+	width: 93%;	
 }
 
 #theme_settings
@@ -3255,6 +3255,17 @@ dl.stats dd
 	padding: 0 4px 0 0;
 	background: url(../images/bar_stats.png) no-repeat 100%;
 	height: 16px;
+}
+tr.windowbg2 th.stats_month
+{
+	width: 25%;
+	padding: 0 2em;
+	text-align: left;
+}
+tr.windowbg2 td.stats_day
+{
+	padding: 0 3.5em;
+	text-align: left;
 }
 
 /* Styles for the personal messages section.

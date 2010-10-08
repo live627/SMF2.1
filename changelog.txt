@@ -64,6 +64,7 @@ September 2010
  * Missing icon in profile/ignore boards. Markup/css to allow large content above the linktree (Profile.template.php, index.template.php, index.css)
  * Minor cleaning up in admin. Better highlighting of search results. Defined new_win class. Better description for post options (Admin.template.php, admin.css, index.css, Post.english.php)
  * Fixed post-breaking bug in IE6 and IE7. Removed $context['right_to_left'] from two templates. (ie6.css, ie7.css, index.css, rtl.css, Display.template.php, Memberlist.template.php)
+ * Fixed board selection in profile and help. Cleaned up stats markup. (Profile.template.php, Help.template.php, Stats.template.php, index.css, rtl.css)
  
 
 August 2010

@@ -2498,9 +2498,9 @@ function template_manual_searching()
 					<div class="flow_auto" id="searchBoardsExpand">
 						<ul class="ignoreboards floatleft">
 							<li class="category">
-								<span>', $txt['manual_searching_cat'], '</span>
+								<a href="">', $txt['manual_searching_cat'], '</a>
 								<ul>
-									<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left', ': 1em;">
+									<li class="board">
 										<label for="brd2"><input type="checkbox" id="brd2" name="brd[2]" value="2" class="input_check" /> ', $txt['manual_searching_another_board'], '</label>
 									</li>
 								</ul>
@@ -2508,23 +2508,23 @@ function template_manual_searching()
 						</ul>
 						<ul class="ignoreboards floatright">
 							<li class="category">
-								<span>', $txt['manual_searching_cat'], '</span>
+								<a href="">', $txt['manual_searching_cat'], '</a>
 								<ul>
-									<li class="board" style="margin-', $context['right_to_left'] ? 'right' : 'left', ': 1em;">
+									<li class="board">
 										<label for="brd1"><input type="checkbox" id="brd1" name="brd[1]" value="1" class="input_check" /> ', $txt['manual_searching_board_name'], '</label>
 									</li>
 								</ul>
 							</li>
 						</ul>
 					</div><br />
-					<div>
+					<div class="padding">
+						<input type="submit" name="submit" value="', $txt['manual_searching_search'], '" class="button_submit floatright" />
 						<input type="checkbox" name="all" id="check_all" value="" checked="checked" onclick="invertAll(this, this.form, \'brd\');" class="input_check" />
 						<label for="check_all">', $txt['manual_searching_check_all'], '</label>
 					</div>
 				</div>
 				<span class="lowerframe"><span></span></span>
 			</fieldset>
-			<div><input type="submit" name="submit" value="', $txt['manual_searching_search'], '" class="button_submit" /></div>
 		</form>
 	</div>
 	<ul>
