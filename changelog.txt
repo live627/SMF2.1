@@ -11,6 +11,7 @@ October 2010
  * Fixed post-breaking bug in IE6 and IE7. Removed $context['right_to_left'] from two templates. (ie6.css, ie7.css, index.css, rtl.css, Display.template.php, Memberlist.template.php)
  * Fixed board selection in profile and help. Cleaned up stats markup. (Profile.template.php, Help.template.php, Stats.template.php, index.css, rtl.css)
  * Editors without BBC buttons caused JavaScript errors. (editor.js) [Bug 4475]
+ * New replies added by JavaScript did not get correct backgrounds. (Xml template) [Bug 4474]
 
 
 September 2010

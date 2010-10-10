@@ -4,7 +4,7 @@
 // The main template for the post page.
 function template_main()
 {
-	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+	global $context, $settings, $options, $txt, $scripturl, $modSettings, $counter;
 
 	// Start the javascript... and boy is there a lot.
 	echo '
@@ -552,6 +552,7 @@ function template_main()
 			var txt_preview_title = "', $txt['preview_title'], '";
 			var txt_preview_fetch = "', $txt['preview_fetch'], '";
 			var new_replies = new Array();
+			var reply_counter = ', empty($counter) ? 0 : $counter, ';
 			function previewPost()
 			{';
 	if ($context['browser']['is_firefox'])
@@ -683,7 +684,7 @@ function template_main()
 						if (newPosts[i].getElementsByTagName("is_ignored")[0].firstChild.nodeValue != 0)
 							ignored_replies[ignored_replies.length] = ignoring = newPosts[i].getAttribute("id");
 
-						newPostsHTML += \'<div class="windowbg\' + (i % 2 == 0 ? \'2\' : \'\') + \' core_posts"><span class="topslice"><span></span></span><div class="content" id="msg\' + newPosts[i].getAttribute("id") + \'"><div class="floatleft"><h5>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</h5><span class="smalltext">&#171;&nbsp;<strong>', $txt['on'], ':</strong> \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \'&nbsp;&#187;</span> <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" id="image_new_\' + newPosts[i].getAttribute("id") + \'" /></div>\';';
+						newPostsHTML += \'<div class="windowbg\' + (++reply_counter % 2 == 0 ? \'2\' : \'\') + \' core_posts"><span class="topslice"><span></span></span><div class="content" id="msg\' + newPosts[i].getAttribute("id") + \'"><div class="floatleft"><h5>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</h5><span class="smalltext">&#171;&nbsp;<strong>', $txt['on'], ':</strong> \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \'&nbsp;&#187;</span> <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" id="image_new_\' + newPosts[i].getAttribute("id") + \'" /></div>\';';
 
 	if ($context['can_quote'])
 		echo '
