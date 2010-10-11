@@ -13,6 +13,7 @@ October 2010
  * Editors without BBC buttons caused JavaScript errors. (editor.js) [Bug 4475]
  * New replies added by JavaScript did not get correct backgrounds. (Post template) [Bug 4474]
  ! Nested move BBC tags caused trouble for some browsers. (Subs.php)
+ ! Added default forum_width of 90% to install and upgrade files(install_2-0_mysql.sql, install_2-0_postgresql.sql, install_2-0_mysqlite.sql, upgrade_2-0_mysqlite.sql)
 
 
 September 2010

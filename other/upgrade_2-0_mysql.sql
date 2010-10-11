@@ -669,6 +669,13 @@ VALUES
 	(1, 'show_stats_index', '0');
 ---#
 
+---# Ensuring forum width setting present...
+INSERT IGNORE INTO {$db_prefix}themes
+	(id_theme, variable, value)
+VALUES
+	(1, 'forum_width', '90%');
+---#
+
 ---# Replacing old calendar settings...
 ---{
 // Only try it if one of the "new" settings doesn't yet exist.
