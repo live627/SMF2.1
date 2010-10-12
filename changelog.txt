@@ -19,7 +19,8 @@ October 2010
  * Added alt text fallback for quick edit icon. Changed quickbuttons font declaration to shorthand notation. (Display.template.php, index.css, core/Display.template.php, core/index.css)
  * Removed alt text fallback for quickbuttons icons in Core. Better without as text string displays anyway. (core/Display.template.php)
  * Syntax correction for previous rev. (core/Display.template.php)
- ! CSS colour fallback for buttonlists, minor css tweaks. (index.css, rtl.css, ie6.css, ie7.css, menu_gfx.png)  
+ ! CSS colour fallback for buttonlists, minor css tweaks. (index.css, rtl.css, ie6.css, ie7.css, menu_gfx.png)
+ ! CSS colour fallback for catbg and titlebg. Extra bar for catbg inside roundframe. Removed excess main_block height. (index.css, main_block.png)  
  
 
 September 2010
