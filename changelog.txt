@@ -18,6 +18,7 @@ October 2010
  ! Sorted cell borders for message index child boards table. (index.css, rtl.css) [Bug 4490]
  * Added alt text fallback for quick edit icon. Changed quickbuttons font declaration to shorthand notation. (Display.template.php, index.css, core/Display.template.php, core/index.css)
  * Removed alt text fallback for quickbuttons icons in Core. Better without as text string displays anyway. (core/Display.template.php)
+ * Syntax correction for previous rev. (core/Display.template.php)  
  
 
 September 2010
