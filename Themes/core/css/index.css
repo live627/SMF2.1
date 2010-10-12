@@ -970,8 +970,6 @@ ul.quickbuttons
 	clear: right;
 	float: right;
 	text-align: right;
-	font-family: arial, sans-serif;
-	font-size: 0.85em;
 }
 ul.quickbuttons li
 {
@@ -984,8 +982,7 @@ ul.quickbuttons li a
 	padding: 0 0 0.7em 20px;
 	display: block;
 	height: 20px;
-	font-weight: bold;
-	line-height: 18px;
+	font: bold 0.85em/18px arial, sans-serif;
 	float: left;
 }
 ul.quickbuttons li.quote_button
@@ -1815,6 +1812,8 @@ ul.postingbuttons li
 {
 	float: right;
 	margin: 0 0.5em 0.5em 0;
+	font: bold 0.85em arial, sans-serif;
+	color: #476c8e;		
 }
 .attachments
 {

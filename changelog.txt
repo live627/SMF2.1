@@ -16,6 +16,7 @@ October 2010
  ! Added default forum_width of 90% to install and upgrade files(install_2-0_mysql.sql, install_2-0_postgresql.sql, install_2-0_mysqlite.sql, upgrade_2-0_mysqlite.sql)
  ! Removed side padding from body (relying solely on forum_width setting now). Added max-width and min-width restrictions to prevent breaking. (index.css)
  ! Sorted cell borders for message index child boards table. (index.css, rtl.css) [Bug 4490]
+ * Added alt text fallback for quick edit icon. Changed quickbuttons font declaration to shorthand notation. (Display.template.php, index.css, core/Display.template.php, core/index.css)
  
 
 September 2010

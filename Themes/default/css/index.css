@@ -1970,6 +1970,8 @@ p#whoisviewing
 	float: right;
 	margin: 8px 20px 10px 0;
 	text-align: right;
+	font: bold 0.85em arial, sans-serif;
+	color: #334466;	
 }
 
 /* The quick buttons */
@@ -1986,9 +1988,7 @@ ul.quickbuttons
 	clear: right;
 	float: right;
 	text-align: right;
-	font-family: arial, sans-serif;
-	font-weight: bold;
-	font-size: 0.85em;
+	font: bold 0.85em arial, sans-serif;
 }
 ul.quickbuttons li
 {
