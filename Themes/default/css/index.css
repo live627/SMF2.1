@@ -35,7 +35,7 @@ body
 	background: #E9EEF2 url(../images/theme/backdrop.png) repeat-x;
 	font: 78%/130% "Verdana", "Arial", "Helvetica", sans-serif;
 	margin: 0 auto;
-	padding: 15px 5%;
+	padding: 15px 0;
 }
 
 /* Help popups require a different styling of the body element. */
@@ -54,6 +54,8 @@ body, td, th, tr
 div#wrapper
 {
 	margin: 0 auto;
+	min-width: 780px;
+	max-width: 2300px;	
 }
 
 /* lets give all forms zero padding/margins */
@@ -1695,7 +1697,15 @@ img.new_posts
 }
 /* Styles for the message (topic) index.
 ---------------------------------------------------- */
-
+div.table_frame .table_list
+{
+	border-collapse: collapse;
+	margin: 2px 0;
+}
+.table_frame .table_list td.icon, .table_frame .table_list td.info, .table_frame .table_list td.stats
+{
+	border-right: 2px solid white;
+}
 #messageindex
 {
 	clear: both;

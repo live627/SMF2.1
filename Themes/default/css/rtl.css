@@ -284,6 +284,11 @@ img#upshrink_ic, img#newsupshrink
 
 /* Styles for the message (topic) index.
 ---------------------------------------------------- */
+.table_frame .table_list td.icon, .table_frame .table_list td.info, .table_frame .table_list td.stats
+{
+	border-right: none;
+	border-left: 2px solid white;
+}
 .lastpost img
 {
 	float: left;

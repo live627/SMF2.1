@@ -3944,7 +3944,6 @@ function setupMenuContext()
 				'sub_buttons' => array(
 				),
 				'is_last' => $context['right_to_left'],
-				// 'target' => '_blank',
 			),
 			'help' => array(
 				'title' => $txt['help'],
