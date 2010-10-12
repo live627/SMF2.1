@@ -23,7 +23,7 @@ function template_show_list($list_id = null)
 		echo '
 			<div class="title_bar clear_right">
 				<h3 class="titlebg">
-					<span class="ie6_header floatleft">', $cur_list['title'], '</span>
+					', $cur_list['title'], '
 				</h3>
 			</div>';
 	// This is for the old style menu with the arrows "> Test | Test 1"

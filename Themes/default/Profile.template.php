@@ -324,10 +324,8 @@ function template_showPosts()
 
 	echo '
 		<div class="cat_bar">
-			<h3 class="catbg">
-				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
+			<h3 class="catbg">				
 					', (!isset($context['attachments']) && empty($context['is_topics']) ? $txt['showMessages'] : (!empty($context['is_topics']) ? $txt['showTopics'] : $txt['showAttachments'])), ' - ', $context['member']['name'], '
-				</span>
 			</h3>
 		</div>
 		<div class="pagesection">
@@ -482,7 +480,7 @@ function template_editBuddies()
 	echo '
 		<div class="title_bar">
 			<h3 class="titlebg">
-				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />', $txt['editBuddies'], '</span>
+				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/online.gif" alt="" class="icon" />', $txt['editBuddies'], '</span>
 			</h3>
 		</div>
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="table_grid" align="center">
@@ -1583,7 +1581,7 @@ function template_notification()
 	echo '
 			<div class="cat_bar">
 				<h3 class="catbg">
-				<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />', $txt['profile'], '</span>
+					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />', $txt['profile'], '</span>
 				</h3>
 			</div>
 			<p class="windowbg description">', $txt['notification_info'], '</p>
@@ -2374,33 +2372,7 @@ function template_deleteAccount()
 function template_profile_save()
 {
 	global $context, $settings, $options, $txt;
-// Commenting this out for now... I don't believe it's really used at all since the ignore boards
-// template is the only one that calls this that I can think of... will most likely delete if it causes no issues
-/*	// Are there any custom profile fields - if so print them!
-	if (!empty($context['custom_fields']))
-	{
-		echo '
-						<dd></dd>
-					</dl>
-					<hr width="100%" size="1" class="hrcolor" />
-					<dl>';
 
-		foreach ($context['custom_fields'] as $field)
-		{
-			echo '
-						<dt>
-							<strong>', $field['name'], ': </strong><br />
-							<span class="smalltext">', $field['desc'], '</span>
-						</dt>
-						<dd>
-							', $field['input_html'], '
-						</dd>';
-		}
-
-		echo '
-					</dl>';
-	}
-*/
 	echo '
 
 					<hr width="100%" size="1" class="hrcolor" />';
