@@ -87,3 +87,10 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 {
 	clear:both !important;
 }
+
+/* Overrides for the recent posts template
+------------------------------------------------------- */
+.list_posts
+{
+	word-wrap: break-word;
+}

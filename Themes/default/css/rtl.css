@@ -129,13 +129,14 @@ tr.titlebg th.last_th
 ------------------------------------------------------- */
 #main_menu
 {
-	padding: 0 0 0 0.5em;
+	padding: 0 0.5em;
 	float: right;
 	text-align: right;
 }
 .dropmenu li
 {
 	float: right;
+	margin: 0 0 0 8px;
 }
 .dropmenu li ul ul
 {
@@ -143,7 +144,8 @@ tr.titlebg th.last_th
 }
 .dropmenu li ul
 {
-	background: url(../images/theme/menu_gfx.png) 100% -100px no-repeat;
+	background: url(../images/theme/menu_gfx.png) 100% -130px no-repeat;
+	right: 5px;
 }
 
 /* The dropdown menu toggle image */

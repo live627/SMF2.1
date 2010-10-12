@@ -10,6 +10,7 @@ a:link, a:visited
 a:hover
 {
 	text-decoration: underline;
+	cursor: pointer;
 }
 
 /* Links that open in a new window. */
@@ -403,9 +404,9 @@ code.bbc_code
 /* Highlighted text - such as search results. */
 .highlight
 {
-	background-color: #ffa21f;
 	font-weight: bold;
-	color: #000 !important;
+	color: #ff7200 !important;
+	font-size: 1.1em;
 }
 
 /* A more discreet highlight color, for selected membergroups etc. */
@@ -632,7 +633,7 @@ a.moderation_link, a.moderation_link:visited
 }
 .description_board
 {
-	margin-top: 0;
+	margin: 1em 1px 0 1px;
 }
 
 /* an informative style */
@@ -739,7 +740,7 @@ h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg, h4.catbg
 {
 	overflow: hidden;
 	height: 31px;
-	line-height: 32px;
+	line-height: 31px;
 	font-size: 1.2em;
 	font-weight: bold;
 }
@@ -797,10 +798,11 @@ h4.titlebg img.icon
 }
 div.cat_bar
 {
-	background: url(../images/theme/main_block.png) no-repeat 0 -160px;
+	background: #8fa1b5 url(../images/theme/main_block.png) no-repeat 0 -160px;
 	padding-left: 9px;
-	height: 32px;
+	height: 31px;
 	overflow: hidden;
+	margin-bottom: 1px;
 }
 div.title_bar
 {
@@ -1079,7 +1081,7 @@ span.lowerframe span
 ------------------------------------------------------- */
 #main_menu
 {
-	padding: 0 0 0 0.5em;
+	padding: 0 0.5em;
 	float: left;
 	margin: 0;
 	width: 98%;
@@ -1137,7 +1139,7 @@ span.lowerframe span
 	width: 19.2em;
 	font-weight: normal;
 	border-bottom: 1px solid #999;
-	background: url(../images/theme/menu_gfx.png) 0 -100px no-repeat;
+	background: url(../images/theme/menu_gfx.png) 0 -130px no-repeat;
 	padding: 7px 0 0 0;
 }
 .dropmenu li li
@@ -1224,7 +1226,7 @@ span.lowerframe span
 {
 	z-index: 100;
 	padding: 5px;
-	margin: 0 0.2em 0 0;
+	margin: 0 0.2em 5px 0;
 }
 .buttonlist ul li
 {
@@ -1238,8 +1240,8 @@ span.lowerframe span
 	display: block;
 	font-size: 0.8em;
 	color: #000;
-	background: url(../images/theme/menu_gfx.png) no-repeat 0 -60px;
-	padding: 0;
+	background: #e8e8e8 url(../images/theme/menu_gfx.png) no-repeat 0 -60px;
+	padding: 0 0 0 8px;
 	margin-left: 12px;
 	text-transform: uppercase;
 	cursor: pointer;
@@ -1254,26 +1256,24 @@ span.lowerframe span
 {
 	background: url(../images/theme/menu_gfx.png) no-repeat 100% -60px;
 	display: block;
-	height: 24px;
-	line-height: 20px;
+	height: 19px;
+	line-height: 19px;
 	padding: 0 8px 0 0;
-	position: relative;
-	right: -8px;
 }
 .buttonlist ul li a:hover span
 {
-	background: url(../images/theme/menu_gfx.png) no-repeat 100% 0;
+	background: #fff url(../images/theme/menu_gfx.png) no-repeat 100% 0;
 }
 /* the active one */
 .buttonlist ul li a.active
 {
-	background: url(../images/theme/menu_gfx.png) no-repeat 0 -30px;
+	background: #5a6c85 url(../images/theme/menu_gfx.png) no-repeat 0 -90px;
 	color: #fff;
 	font-weight: bold;
 }
 .buttonlist ul li a.active span
 {
-	background: url(../images/theme/menu_gfx.png) no-repeat 100% -30px;
+	background: url(../images/theme/menu_gfx.png) no-repeat 100% -90px;
 }
 .buttonlist ul li a.active
 {
@@ -1609,6 +1609,10 @@ p.moderators
 }
 
 /* the newsfader */
+#newsfader
+{
+	margin: 0 2px;
+}
 #smfFadeScroller
 {
 	text-align: center;
@@ -1865,6 +1869,10 @@ div#pollmoderation
 {
 	clear: both;
 }
+#forumposts .cat_bar
+{
+	margin: 0 0 2px 0;
+}
 /* author and topic information */
 #forumposts h3 span#author
 {
@@ -2101,6 +2109,10 @@ ul.quickbuttons li.inline_mod_check
 
 /* The quick-reply area. Horizontal alignments go a bit wonky in IE6 and IE7 but is it really worth worrying about? */
 
+#quickreplybox
+{
+	padding-bottom: 1px;
+}
 #quickReplyOptions .roundframe
 {
 	padding: 0 10%;
@@ -2115,7 +2127,7 @@ ul.quickbuttons li.inline_mod_check
 {
 	clear: both;
 	padding: 5px;
-	margin-top: 2px;
+	margin-top: 6px;
 	text-align: right;
 }
 
@@ -3060,6 +3072,7 @@ div#profile_success
 	border-top: 2px solid #b3b3bf;
 	padding-top: 12px;
 	margin-top: 6px;
+	overflow: auto;
 }
 
 .core_posts
