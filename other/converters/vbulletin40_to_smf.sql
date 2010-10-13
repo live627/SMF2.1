@@ -524,10 +524,10 @@ $rows[] = array(
 $id_attach++;
 ---}
 SELECT
-	at.contentid AS id_msg, at.counter AS downloads, at.filename, at.userid, at.attachmentid, fd.filedata
-FROM {$from_prefix}attachment AS at
-    LEFT JOIN {$from_prefix}filedata AS fd ON (fd.filedataid = at.filedataid)
-WHERE at.contenttypeid = 1;
+	IFNULL(c.postid, 0) AS id_msg, a.counter AS downloads, a.filename, f.filedata, a.userid,
+	a.attachmentid
+FROM {$from_prefix}attachment AS a, {$from_prefix}cms_article AS c, {$from_prefix}filedata AS f
+WHERE a.contentid = c.contentid AND a.filedataid = f.filedataid;
 ---*
 
 /******************************************************************************/
