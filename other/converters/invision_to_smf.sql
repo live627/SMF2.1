@@ -56,7 +56,8 @@ SELECT
 	joined AS date_registered, posts,
 	IF(mgroup = {$INFO['admin_group']}, 1, IF(mgroup > 5, mgroup + 3, 0)) AS id_group,
 	last_visit AS last_login, SUBSTRING(name, 1, 255) AS real_name,
-	msg_total AS instant_messages, SUBSTRING(password, 1, 64) AS passwd,
+	IFNULL(msg_total, 0) AS instant_messages,
+	SUBSTRING(password, 1, 64) AS passwd,
 	SUBSTRING(email, 1, 255) AS email_address,
 	SUBSTRING(website, 1, 255) AS website_title,
 	SUBSTRING(website, 1, 255) AS website_url,
@@ -66,7 +67,7 @@ SELECT
 	SUBSTRING(aim_name, 1, 16) AS aim, SUBSTRING(yahoo, 1, 32) AS yim,
 	SUBSTRING(msnname, 1, 255) AS msn, hide_email AS hide_email,
 	SUBSTRING(IF(avatar = 'noavatar' OR INSTR(avatar, 'upload') > 0, '', avatar), 1, 255) AS avatar,
-	email_pm AS pm_email_notify, '' AS lngfile, '' AS buddy_list,
+	IFNULL(email_pm, 0) AS pm_email_notify, '' AS lngfile, '' AS buddy_list,
 	'' AS pm_ignore_list, '' AS message_labels, '' AS personal_text,
 	'' AS time_format, '' AS usertitle, '' AS member_ip, '' AS secret_question,
 	'' AS secret_answer, '' AS validation_code, '' AS additional_groups,
@@ -117,7 +118,7 @@ TRUNCATE {$to_prefix}log_mark_read;
 SELECT
 	t.tid AS id_topic, t.pinned AS is_sticky, t.forum_id AS id_board,
 	t.starter_id AS id_member_started, t.last_poster_id AS id_member_updated,
-	pl.pid AS id_poll, t.posts AS num_replies, t.views AS num_views,
+	IFNULL(pl.pid, 0) AS id_poll, t.posts AS num_replies, t.views AS num_views,
 	MIN(p.pid) AS id_first_msg, MAX(p.pid) AS id_last_msg,
 	t.state = 'closed' AS locked
 FROM {$from_prefix}topics AS t
@@ -174,7 +175,7 @@ SELECT
 	p.author_id AS id_member, SUBSTRING(t.title, 1, 255) AS subject,
 	SUBSTRING(p.author_name, 1, 255) AS poster_name,
 	SUBSTRING(p.ip_address, 1, 255) AS poster_ip,
-	p.use_emo AS smileys_enabled, p.edit_time AS modified_time,
+	p.use_emo AS smileys_enabled, IFNULL(p.edit_time, 0) AS modified_time,
 	SUBSTRING(p.edit_name, 1, 255) AS modified_name, t.forum_id AS id_board,
 	SUBSTRING(REPLACE(p.post, '<br>', '<br />'), 1, 65534) AS body,
 	SUBSTRING(mem.email, 1, 255) AS poster_email, 'xx' AS icon
@@ -703,11 +704,11 @@ if (!empty($rows))
 ---{
 convert_insert('settings', array('variable', 'value'),
 	array(
-		array('hotTopicPosts', $INFO['hot_topic'])
-		array('defaultMaxMessages', $INFO['display_max_posts'])
-		array('defaultMaxTopics', $INFO['display_max_topics'])
-		array('spamWaitTime', $INFO['flood_control'])
-		array('onlineEnable', $INFO['allow_online_list'])
+		array('hotTopicPosts', $INFO['hot_topic']),
+		array('defaultMaxMessages', $INFO['display_max_posts']),
+		array('defaultMaxTopics', $INFO['display_max_topics']),
+		array('spamWaitTime', $INFO['flood_control']),
+		array('onlineEnable', $INFO['allow_online_list']),
 	), 'replace');
 
 updateSettingsFile(array(

@@ -1,7 +1,7 @@
 /* ATTENTION: You don't need to run or use this file!  The convert.php script does everything for you! */
 
 /******************************************************************************/
----~ name: "Invision Power Board 2.3"
+---~ name: "Invision Power Board 3.0"
 /******************************************************************************/
 ---~ version: "SMF 2.0"
 ---~ settings: "/conf_global.php"
@@ -94,31 +94,28 @@ $row['signature'] = preg_replace(
 $row['signature'] = substr(strtr(strtr($row['signature'], '<>', '[]'), array('[br /]' => '<br />')), 0, 65534);
 ---}
 SELECT
-	m.id AS id_member, SUBSTRING(m.name, 1, 80) AS member_name,
+	m.member_id AS id_member, SUBSTRING(m.name, 1, 80) AS member_name,
 	m.joined AS date_registered,
-	IF(m.mgroup = {$INFO['admin_group']}, 1, IF(m.mgroup = 3, 0, IF(m.mgroup > 5, m.mgroup + 3, 0))) AS id_group,
+	IF(m.member_group_id = {$INFO['admin_group']}, 1, IF(m.member_group_id = 3, 0, IF(m.member_group_id > 5, m.member_group_id + 3, 0))) AS id_group,
 	posts, m.last_visit AS last_login, SUBSTRING(m.members_display_name, 1, 80) AS real_name,
-	SUBSTRING(me.yahoo, 1, 32) AS yim, m.msg_total AS instant_messages,
-	SUBSTRING(mc.converge_pass_hash, 1, 64) AS passwd,
-	SUBSTRING(mc.converge_pass_salt, 1, 5) AS password_salt,
+	m.msg_count_total AS instant_messages,
+	SUBSTRING(m.members_pass_hash, 1, 64) AS passwd,
+	SUBSTRING(m.members_pass_salt, 1, 5) AS password_salt,
 	SUBSTRING(m.email, 1, 255) AS email_address,
-	IF (m.bday_year = 0 AND m.bday_month != 0 AND m.bday_day != 0, CONCAT('0004-', m.bday_month, '-', m.bday_day), CONCAT_WS('-', IF(m.bday_year <= 4, 1, m.bday_year), IF(m.bday_month = 0, 1, m.bday_month), IF(m.bday_day = 0, 1, m.bday_day))) AS birthdate,
-	SUBSTRING(me.website, 1, 255) AS website_title,
-	SUBSTRING(me.website, 1, 255) AS website_url, me.signature,
-	SUBSTRING(me.location, 1, 255) AS location,
-	SUBSTRING(me.icq_number, 1, 255) AS icq,
-	SUBSTRING(me.msnname, 1, 255) AS msn, SUBSTRING(me.aim_name, 1, 16) AS aim,
-	m.hide_email AS hide_email, 
-	IFNULL(m.email_pm, 0) AS pm_email_notify,
-	SUBSTRING(IF(me.avatar_location = 'noavatar', '', me.avatar_location), 1, 255) AS avatar,
+	IF (ISNULL(m.bday_year) AND ISNULL(m.bday_month) AND ISNULL(m.bday_day), '0001-01-01', IF (m.bday_year = 0 AND m.bday_month != 0 AND m.bday_day != 0, CONCAT('1000-', m.bday_month, '-', m.bday_day),
+		 CONCAT_WS('-', IF(m.bday_year <= 1000 OR ISNULL( m.bday_year ), 1000, m.bday_year),
+		 	 IF(m.bday_month = 0 OR ISNULL( m.bday_month ), 1, m.bday_month), 
+		 	 IF(m.bday_day = 0 OR ISNULL( m.bday_day ), 1, m.bday_day)))) AS birthdate,
+	pp.signature,
+	m.hide_email AS hide_email, m.email_pm AS pm_email_notify,
+	SUBSTRING(IF(pp.avatar_location = 'noavatar', '', pp.avatar_location), 1, 255) AS avatar,
 	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
 	'' AS personal_text, '' AS time_format, '' AS usertitle, '' AS member_ip,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
 	'' AS additional_groups, '' AS smiley_set, '' AS member_ip2
 FROM {$from_prefix}members AS m
-	LEFT JOIN {$from_prefix}member_extra AS me ON (m.id = me.id)
-	LEFT JOIN {$from_prefix}members_converge AS mc ON (m.id = mc.converge_id)
-WHERE m.id != 0;
+	LEFT JOIN {$from_prefix}profile_portal AS pp ON (m.member_id = pp.pp_member_id)
+WHERE m.member_id != 0;
 ---{
 // Get the buddies.
 $id_member = $row['id_member'];
@@ -197,11 +194,11 @@ TRUNCATE {$to_prefix}log_topics;
 TRUNCATE {$to_prefix}log_boards;
 TRUNCATE {$to_prefix}log_mark_read;
 
----* {$to_prefix}topics 250
+---* {$to_prefix}topics 20
 SELECT
 	t.tid AS id_topic, t.pinned AS is_sticky, t.forum_id AS id_board,
 	t.starter_id AS id_member_started, t.last_poster_id AS id_member_updated,
-	pl.pid AS id_poll, t.posts AS num_replies, t.views AS num_views,
+	IF(ISNULL(pl.pid), 0, pl.pid) AS id_poll, t.posts AS num_replies, t.views AS num_views,
 	MIN(p.pid) AS id_first_msg, MAX(p.pid) AS id_last_msg,
 	t.state = 'closed' AS locked
 FROM {$from_prefix}topics AS t
@@ -290,7 +287,7 @@ $row['body'] = addslashes(preg_replace(
 		'[email=$1]$2[/email]',
 		'[url=$1]$2[/url]',
 		'[url=$1]$2[/url]',
-	), ltrim(stripslashes($row['signature']))));
+	), ltrim(stripslashes($row['body']))));
 $row['body'] = substr(strtr(strtr($row['body'], '<>', '[]'), array('[br /]' => '<br />')), 0, 65534);
 ---}
 SELECT
@@ -298,12 +295,12 @@ SELECT
 	p.author_id AS id_member, SUBSTRING(t.title, 1, 255) AS subject,
 	SUBSTRING(p.author_name, 1, 255) AS poster_name,
 	SUBSTRING(p.ip_address, 1, 255) AS poster_ip, p.use_emo AS smileys_enabled,
-	p.edit_time AS modified_time, SUBSTRING(p.edit_name, 1, 255) AS modified_name,
+	if(isnull(p.edit_time), 0, p.edit_time) AS modified_time, SUBSTRING(p.edit_name, 1, 255) AS modified_name,
 	t.forum_id AS id_board, REPLACE(p.post, '<br>', '<br />') AS body,
 	SUBSTRING(IFNULL(m.email, 'guest@example.com'), 1, 255) AS poster_email, 'xx' AS icon
 FROM {$from_prefix}posts AS p
 	LEFT JOIN {$from_prefix}topics AS t ON (t.tid = p.topic_id)
-	LEFT JOIN {$from_prefix}members AS m ON (m.id = p.author_id);
+	LEFT JOIN {$from_prefix}members AS m ON (m.member_id = p.author_id);
 ---*
 
 /******************************************************************************/
@@ -320,7 +317,7 @@ SELECT
 	p.starter_id AS id_member,
 	SUBSTRING(IFNULL(m.name, 'Guest'), 1, 255) AS poster_name
 FROM {$from_prefix}polls AS p
-	LEFT JOIN {$from_prefix}members AS m ON (m.id = p.starter_id);
+	LEFT JOIN {$from_prefix}members AS m ON (m.member_id = p.starter_id);
 ---*
 
 /******************************************************************************/
@@ -470,19 +467,19 @@ $row['body'] = addslashes(preg_replace(
 		'[email=$1]$2[/email]',
 		'[url=$1]$2[/url]',
 		'[url=$1]$2[/url]',
-	), ltrim(stripslashes($row['signature']))));
+	), ltrim(stripslashes($row['body']))));
 $row['body'] = strtr(strtr($row['body'], '<>', '[]'), array('[br /]' => '<br />'));
 ---}
 SELECT
-	mt.msg_id AS id_pm, mt.msg_author_id AS id_member_from,
-	IF(m.mt_to_id = m.mt_from_id, 0, 1) AS deleted_by_sender,
-	mt.msg_date AS msgtime, SUBSTRING(uf.name, 1, 255) AS from_name,
-	SUBSTRING(m.mt_title, 1, 255) AS subject,
-	SUBSTRING(mt.msg_post, 1, 65534) AS body
-FROM {$from_prefix}message_text AS mt
-	INNER JOIN {$from_prefix}message_topics AS m ON (m.mt_msg_id = mt.msg_id)
-	LEFT JOIN {$from_prefix}members AS uf ON (uf.id = m.mt_from_id)
-GROUP BY mt.msg_id;
+	mp.msg_id AS id_pm, mp.msg_author_id AS id_member_from,
+	IF(mt.mt_to_member_id = mt.mt_starter_id, 0, 1) AS deleted_by_sender,
+	mp.msg_date AS msgtime, SUBSTRING(mem.name, 1, 255) AS from_name,
+	SUBSTRING(mt.mt_title, 1, 255) AS subject,
+	SUBSTRING(mp.msg_post, 1, 65534) AS body
+FROM {$from_prefix}message_posts AS mp
+	INNER JOIN {$from_prefix}message_topics AS mt ON (mt.mt_id = mp.msg_topic_id)
+	LEFT JOIN {$from_prefix}members AS mem ON (mem.member_id = mt.mt_starter_id)
+GROUP BY mp.msg_id;
 ---*
 
 /******************************************************************************/
@@ -493,11 +490,12 @@ TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
 SELECT
-	mt_msg_id AS id_pm, mt_to_id AS id_member, MIN(mt_hide_cc) AS bcc,
-	IF(MAX(mt_user_read) > 0, 1, 0) AS is_read, '-1' AS labels
-FROM {$from_prefix}message_topics
-WHERE mt_vid_folder != 'sent' OR mt_from_id != mt_to_id
-GROUP BY mt_msg_id, mt_to_id;
+	mp.msg_id AS id_pm, mt.mt_to_member_id AS id_member, 0 AS bcc,
+	IF(um.map_has_unread = 0,1,0) AS is_read, '-1' AS labels
+FROM {$from_prefix}message_topics AS mt
+	INNER JOIN {$from_prefix}message_posts AS mp ON (mt.mt_id = mp.msg_topic_id)
+	INNER JOIN {$from_prefix}message_topic_user_map AS um ON (um.map_user_id = mt.mt_to_member_id)
+WHERE (um.map_folder_id != 'sent' OR mt_starter_id != mt_to_member_id) AND (um.map_topic_id = mt.mt_id);
 ---*
 
 /******************************************************************************/
@@ -535,11 +533,24 @@ TRUNCATE {$to_prefix}moderators;
 ---* {$to_prefix}moderators
 ---{
 $ignore = true;
+$no_add = true;
 
 if (empty($row['id_member']))
+{
 	unset($row);
+	return;
+}
+$boards = explode(',', $row['boards']);
+foreach ($boards as $board)
+{
+	if (!empty($board))
+		$rows[] = array(
+			'id_member' => $row['id_member'],
+			'id_board' => $board,
+		);
+}
 ---}
-SELECT member_id AS id_member, forum_id AS id_board
+SELECT member_id AS id_member, forum_id AS boards
 FROM {$from_prefix}moderators
 WHERE member_id != -1;
 ---*
@@ -547,10 +558,9 @@ WHERE member_id != -1;
 /******************************************************************************/
 --- Converting calendar events...
 /******************************************************************************/
-
+---* {$to_prefix}calendar
 TRUNCATE {$to_prefix}calendar
 
----* {$to_prefix}calendar
 ---{
 $row['start_date'] = date('Y-m-d', $row['start_date']);
 $row['end_date'] = date('Y-m-d', $row['end_date']);
@@ -559,7 +569,7 @@ SELECT
 	event_id AS id_event,
 	event_unixstamp AS start_date, event_unixstamp AS end_date,
 	'0' AS id_board, '0' AS id_topic, SUBSTRING(event_title, 1, 60) AS title, event_member_id AS id_member
-FROM {$from_prefix}cal_events;
+FROM {$from_prefix}cal_events
 WHERE event_recurring = 1;
 ---*
 
@@ -700,6 +710,7 @@ $perm_equiv = array(
 	),
 );
 
+
 if (!isset($_REQUEST['start']))
 	$_REQUEST['start'] = 0;
 
@@ -780,32 +791,32 @@ while (true)
 	$perms = array();
 	while ($row = convert_fetch_assoc($result))
 	{
-		$row += unserialize(stripslashes($row['permission_array']));
-		$row = addslashes_recursive($row);
+		$perm_row = unserialize(stripslashes($row['permission_array']));
+		$perm_row = addslashes_recursive($perm_row);
 
 		// Oh yea... this is the "mask -> group" conversion stuffs...
-		magicMask($row['start_perms']);
-		magicMask($row['reply_perms']);
-		magicMask($row['read_perms']);
-		magicMask($row['upload_perms']);
+		magicMask($perm_row['start_perms']);
+		magicMask($perm_row['reply_perms']);
+		magicMask($perm_row['read_perms']);
+		magicMask($perm_row['upload_perms']);
 
 		// This is used for updating the groups allowed on this board.
 		$affectedGroups = array();
 
 		// This is not at all fun... or the MOST efficient code but it should work.
 		// first the patented "if everything is open do didley squat" routine.
-		if ($row['start_perms'] == $row['reply_perms'] && $row['start_perms'] == $row['read_perms'] && $row['start_perms'] == $row['upload_perms'])
+		if ($perm_row['start_perms'] == $perm_row['reply_perms'] && $perm_row['start_perms'] == $perm_row['read_perms'] && $perm_row['start_perms'] == $perm_row['upload_perms'])
 		{
-			if ($row['read_perms'] != '*')
+			if ($perm_row['read_perms'] != '*')
 			{
-				$affectedGroups = explode(',', $row['read_perms']);
+				$affectedGroups = explode(',', $perm_row['read_perms']);
 				smfGroup($affectedGroups);
 
 				// Update the board with allowed groups - appears twice in case board is hidden... makes sense to me :)
 				convert_query("
 					UPDATE {$to_prefix}boards
 					SET member_groups = '" . implode(', ', $affectedGroups) . "'
-					WHERE id_board = $row[id_board]");
+					WHERE id_board = {$row['id_board']}");
 			}
 		}
 		else
@@ -814,15 +825,15 @@ while (true)
 			/* The complicated stuff :)
 			First we work out which groups can access the board (ie ones who can READ it) - and set the board
 			permission for this. Then for every group we work out what permissions they have and add them to the array */
-			if ($row['read_perms'] != '*')
+			if ($perm_row['read_perms'] != '*')
 			{
-				$affectedGroups = explode(',', $row['read_perms']);
+				$affectedGroups = explode(',', $perm_row['read_perms']);
 				smfGroup($affectedGroups);
 				// Update the board with allowed groups - appears twice in case board is hidden... makes sense to me :)
 				convert_query("
 					UPDATE {$to_prefix}boards
 					SET member_groups = '" . implode(', ', $affectedGroups) . "'
-					WHERE id_board = $row[id_board]");
+					WHERE id_board = {$row['id_board']}");
 			}
 			else
 			{
@@ -833,29 +844,29 @@ while (true)
 			// Everyone who is in affectedGroups can read so...
 			foreach ($affectedGroups as $group)
 				$tempGroup[$group] = $perm_equiv['read_perms'];
-			if ($row['start_perms'] == '*')
+			if ($perm_row['start_perms'] == '*')
 				$affectedGroups2 = $affectedGroups;
 			else
 			{
-				$affectedGroups2 = explode(',', $row['start_perms']);
+				$affectedGroups2 = explode(',', $perm_row['start_perms']);
 				smfGroup($affectedGroups2);
 			}
 			foreach ($affectedGroups2 as $group)
 				$tempGroup[$group] = isset($tempGroup[$group]) ? array_merge($perm_equiv['start_perms'], $tempGroup[$group]) : $perm_equiv['start_perms'];
-			if ($row['reply_perms'] == '*')
+			if ($perm_row['reply_perms'] == '*')
 				$affectedGroups2 = $affectedGroups;
 			else
 			{
-				$affectedGroups2 = explode(',', $row['reply_perms']);
+				$affectedGroups2 = explode(',', $perm_row['reply_perms']);
 				smfGroup($affectedGroups2);
 			}
 			foreach ($affectedGroups2 as $group)
 				$tempGroup[$group] = isset($tempGroup[$group]) ? array_merge($perm_equiv['reply_perms'], $tempGroup[$group]) : $perm_equiv['reply_perms'];
-			if ($row['upload_perms'] == '*')
+			if ($perm_row['upload_perms'] == '*')
 				$affectedGroups2 = $affectedGroups;
 			else
 			{
-				$affectedGroups2 = explode(',', $row['upload_perms']);
+				$affectedGroups2 = explode(',', $perm_row['upload_perms']);
 				smfGroup($affectedGroups2);
 			}
 			foreach ($affectedGroups2 as $group)
@@ -954,7 +965,7 @@ $result = convert_query("
 	SELECT
 		conf_key AS config_name,
 		IF(conf_value = '', conf_default, conf_value) AS config_value
-	FROM {$from_prefix}conf_settings");
+	FROM {$from_prefix}core_sys_conf_settings");
 while ($row = convert_fetch_assoc($result))
 {
 	switch ($row['config_name'])
@@ -1014,9 +1025,16 @@ if (!empty($inv_stats['most_count']) && !empty($inv_stats['most_date']))
 	$update_settings['mostDate'] = $inv_stats['most_date'];
 }
 
-convert_insert('settings', array('variable', 'value'), $update_settings, 'replace');
+$destination_rows = array();
+foreach ($update_settings as $key => $value)
+{
+	$destination_rows[] = array(
+		$key => $value
+	);
+}
+convert_insert('settings', array('variable', 'value'), $destination_rows, 'replace');
 
-updateSettingsFile(array(
+updateSettings(array(
 	'mbname' => '\'' . addcslashes($inv_forum_name, '\'\\') . '\'',
 	'mmessage' => '\'' . addcslashes($inv_maintenance_message, '\'\\') . '\''
 ));
@@ -1035,7 +1053,7 @@ if (!isset($oldAttachmentDir))
 {
 	$result = convert_query("
 		SELECT conf_value
-		FROM {$from_prefix}conf_settings
+		FROM {$from_prefix}core_sys_conf_settings
 		WHERE conf_key = 'upload_dir'
 		LIMIT 1");
 	list ($oldAttachmentDir) = convert_fetch_row($result);
@@ -1107,7 +1125,7 @@ if (!isset($oldAttachmentDir))
 {
 	$result = convert_query("
 		SELECT conf_value
-		FROM {$from_prefix}conf_settings
+		FROM {$from_prefix}core_sys_conf_settings
 		WHERE conf_key = 'upload_dir'
 		LIMIT 1");
 	list ($oldAvatarDir) = convert_fetch_row($result);
