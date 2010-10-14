@@ -215,7 +215,7 @@ $row['body'] = preg_replace(
 		'~\[INDENT\]~is',
 		'~\[/INDENT\]~is',
 		'~\[LIST=1\]~is',
-               '~\[(ATTACH|attach)\](.+?)\[\/(ATTACH|attach)\]~i',
+		'~\[(ATTACH|attach)\](.+?)\[\/(ATTACH|attach)\]~i',
 	),
 	array(
 		'[$1=&quot;$2&quot;]',
@@ -223,7 +223,7 @@ $row['body'] = preg_replace(
 		'	',
 		'',
 		'[list type=decimal]',
-                '',
+		'',
 	), strtr($row['body'], array('"' => '&quot;')));
 
 // Code tags are mean
