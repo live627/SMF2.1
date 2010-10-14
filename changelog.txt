@@ -21,7 +21,8 @@ October 2010
  * Syntax correction for previous rev. (core/Display.template.php)
  ! CSS colour fallback for buttonlists, minor css tweaks. (index.css, rtl.css, ie6.css, ie7.css, menu_gfx.png)
  ! CSS colour fallback for catbg and titlebg. Extra bar for catbg inside roundframe. Removed excess main_block height. (index.css, main_block.png)
- * Fixed code for icons in some areas. Removed unnecessary ie6_header span from GenericList. Removed old commented out code. (GenericList.template.php, GenericMenu.template.php, Profile.template.php, Profile-Modify.php, Profile-View.php) [Bug 4489]  
+ * Fixed code for icons in some areas. Removed unnecessary ie6_header span from GenericList. Removed old commented out code. (GenericList.template.php, GenericMenu.template.php, Profile.template.php, Profile-Modify.php, Profile-View.php) [Bug 4489]
+ ! Height fix for RTE with Opera. (editor.js) [Bug 4500]
  
 
 September 2010
