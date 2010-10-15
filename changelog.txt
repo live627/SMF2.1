@@ -23,6 +23,7 @@ October 2010
  ! CSS colour fallback for catbg and titlebg. Extra bar for catbg inside roundframe. Removed excess main_block height. (index.css, main_block.png)
  * Fixed code for icons in some areas. Removed unnecessary ie6_header span from GenericList. Removed old commented out code. (GenericList.template.php, GenericMenu.template.php, Profile.template.php, Profile-Modify.php, Profile-View.php) [Bug 4489]
  ! Height fix for RTE with Opera. (editor.js) [Bug 4500]
+ + Add the option to enable/disable test mode for payment gateways to the user interface. Thanks Nibogo! (ManagePaid.php) [Bug 4503]
  
 
 September 2010
