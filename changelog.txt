@@ -29,6 +29,7 @@ October 2010
  ! Supported database versions. (install, upgrade and convert scripts)
  ! Updated a couple of latest* files to their last version.
  * Moved CSS and JavaScript to top. (index template) [Bug 4468]
+ ! Fixed an undefined variable in some cases (Subs.php)
 
 
 September 2010
