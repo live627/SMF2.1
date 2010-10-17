@@ -27,12 +27,12 @@ define('SMF_VERSION', '2.0 RC3');
 define('SMF_LANG_VERSION', '2.0 RC3');
 
 $GLOBALS['required_php_version'] = '4.1.0';
-$GLOBALS['required_mysql_version'] = '4.0.0';
+$GLOBALS['required_mysql_version'] = '4.0.18';
 
 $databases = array(
 	'mysql' => array(
 		'name' => 'MySQL',
-		'version' => '4.0.0',
+		'version' => '4.0.18',
 		'version_check' => 'return min(mysql_get_server_info(), mysql_get_client_info());',
 		'utf8_support' => true,
 		'utf8_version' => '4.1.0',
@@ -2333,11 +2333,6 @@ function parse_sql($filename)
 	$current_data = '';
 	$substep = 0;
 	$last_step = '';
-
-	// MySQL users below v4 can't use engine.
-	if ($db_type == 'mysql' && version_compare('4', preg_replace('~\-.+?$~', '', eval($databases[$db_type]['version_check']))) > 0)
-		foreach ($lines as $key => $line)
-			$lines[$key] = strtr($line, array(') ENGINE=' => ') TYPE='));
 
 	// Make sure all newly created tables will have the proper characters set.
 	if (isset($db_character_set) && $db_character_set === 'utf8')

@@ -34,7 +34,7 @@ $GLOBALS['required_php_version'] = '4.1.0';
 $databases = array(
 	'mysql' => array(
 		'name' => 'MySQL',
-		'version' => '4.0.0',
+		'version' => '4.0.18',
 		'version_check' => 'return min(mysql_get_server_info(), mysql_get_client_info());',
 		'supported' => function_exists('mysql_connect'),
 		'default_user' => 'mysql.default_user',
@@ -1043,9 +1043,6 @@ function DatabasePopulation()
 	}
 	$replaces['{$default_reserved_names}'] = strtr($replaces['{$default_reserved_names}'], array('\\\\n' => '\\n'));
 
-	// MySQL users below v4 can't use engine.
-	if ($db_type == 'mysql' && version_compare('4', preg_replace('~\-.+?$~', '', eval($databases[$db_type]['version_check']))) > 0)
-		$replaces[') ENGINE='] = ') TYPE=';
 	// If the UTF-8 setting was enabled, add it to the table definitions.
 	//!!! Very MySQL specific still
 	if ($db_type == 'mysql' && isset($_POST['utf8']) && !empty($databases[$db_type]['utf8_support']))

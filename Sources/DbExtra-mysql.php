@@ -79,11 +79,6 @@ function db_extra_init()
 function smf_db_backup_table($table, $backup_table)
 {
 	global $smcFunc, $db_prefix;
-	static $no_engine_support = null;
-
-	// We check for engine support this way to save time repeatedly performing this check.
-	if (is_null($no_engine_support))
-		$no_engine_support = version_compare('4', $smcFunc['db_get_version']()) > 0;
 
 	$table = str_replace('{db_prefix}', $db_prefix, $table);
 
@@ -176,7 +171,7 @@ function smf_db_backup_table($table, $backup_table)
 
 	$request = $smcFunc['db_query']('', '
 		CREATE TABLE {raw:backup_table} {raw:create}
-		{raw:engine_type}={raw:engine}' . (empty($charset) ? '' : ' CHARACTER SET {raw:charset}' . (empty($collate) ? '' : ' COLLATE {raw:collate}')) . '
+		ENGINE={raw:engine}' . (empty($charset) ? '' : ' CHARACTER SET {raw:charset}' . (empty($collate) ? '' : ' COLLATE {raw:collate}')) . '
 		SELECT *
 		FROM {raw:table}',
 		array(
@@ -186,8 +181,6 @@ function smf_db_backup_table($table, $backup_table)
 			'engine' => $engine,
 			'charset' => empty($charset) ? '' : $charset,
 			'collate' => empty($collate) ? '' : $collate,
-			// MySQL users below v4 can't use engine.
-			'engine_type' => $no_engine_support ? 'TYPE' : 'ENGINE',
 		)
 	);
 
@@ -351,11 +344,6 @@ function smf_db_insert_sql($tableName)
 function smf_db_table_sql($tableName)
 {
 	global $smcFunc, $db_prefix;
-	static $no_engine_support = null;
-
-	// We check for engine support this way to save time repeatedly performing this check.
-	if (is_null($no_engine_support))
-		$no_engine_support = version_compare('4', $smcFunc['db_get_version']()) > 0;
 
 	$tableName = str_replace('{db_prefix}', $db_prefix, $tableName);
 
@@ -379,7 +367,7 @@ function smf_db_table_sql($tableName)
 	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
 		// Make the CREATE for this column.
-		$schema_create .= ' ' . $row['Field'] . ' ' . $row['Type'] . ($row['Null'] != 'YES' ? ' NOT NULL' : '');
+		$schema_create .= ' `' . $row['Field'] . '` ' . $row['Type'] . ($row['Null'] != 'YES' ? ' NOT NULL' : '');
 
 		// Add a default...?
 		if (!empty($row['Default']) || $row['Null'] !== 'YES')
@@ -418,7 +406,7 @@ function smf_db_table_sql($tableName)
 	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
 		// IS this a primary key, unique index, or regular index?
-		$row['Key_name'] = $row['Key_name'] == 'PRIMARY' ? 'PRIMARY KEY' : (empty($row['Non_unique']) ? 'UNIQUE ' : ($row['Comment'] == 'FULLTEXT' || (isset($row['Index_type']) && $row['Index_type'] == 'FULLTEXT') ? 'FULLTEXT ' : 'KEY ')) . $row['Key_name'];
+		$row['Key_name'] = $row['Key_name'] == 'PRIMARY' ? 'PRIMARY KEY' : (empty($row['Non_unique']) ? 'UNIQUE ' : ($row['Comment'] == 'FULLTEXT' || (isset($row['Index_type']) && $row['Index_type'] == 'FULLTEXT') ? 'FULLTEXT ' : 'KEY ')) . '`' . $row['Key_name'] . '`';
 
 		// Is this the first column in the index?
 		if (empty($indexes[$row['Key_name']]))
@@ -426,9 +414,9 @@ function smf_db_table_sql($tableName)
 
 		// A sub part, like only indexing 15 characters of a varchar.
 		if (!empty($row['Sub_part']))
-			$indexes[$row['Key_name']][$row['Seq_in_index']] = $row['Column_name'] . '(' . $row['Sub_part'] . ')';
+			$indexes[$row['Key_name']][$row['Seq_in_index']] = '`' . $row['Column_name'] . '`(' . $row['Sub_part'] . ')';
 		else
-			$indexes[$row['Key_name']][$row['Seq_in_index']] = $row['Column_name'];
+			$indexes[$row['Key_name']][$row['Seq_in_index']] = '`' . $row['Column_name'] . '`';
 	}
 	$smcFunc['db_free_result']($result);
 
@@ -453,7 +441,7 @@ function smf_db_table_sql($tableName)
 	$smcFunc['db_free_result']($result);
 
 	// Probably MyISAM.... and it might have a comment.
-	$schema_create .= $crlf . ') ' . ($no_engine_support ? 'TYPE' : 'ENGINE') . '=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
+	$schema_create .= $crlf . ') ENGINE=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
 
 	return $schema_create;
 }

@@ -100,11 +100,6 @@ function db_packages_init()
 function smf_db_create_table($table_name, $columns, $indexes = array(), $parameters = array(), $if_exists = 'update', $error = 'fatal')
 {
 	global $reservedTables, $smcFunc, $db_package_log, $db_prefix, $db_character_set;
-	static $no_engine_support = null;
-
-	// We check for engine support this way to save time repeatedly performing this check.
-	if (is_null($no_engine_support))
-		$no_engine_support = version_compare('4', $smcFunc['db_get_version']()) > 0;
 
 	// Strip out the table name, we might not need it in some cases
 	$real_prefix = preg_match('~^(`?)(.+?)\\1\\.(.*?)$~', $db_prefix, $match) === 1 ? $match[3] : $db_prefix;
@@ -179,7 +174,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 	if (substr($table_query, -1) == ',')
 		$table_query = substr($table_query, 0, -1);
 
-	$table_query .= ') ' . ($no_engine_support ? 'TYPE' : 'ENGINE') . '=MyISAM';
+	$table_query .= ') ENGINE=MyISAM';
 	if (!empty($db_character_set) && $db_character_set == 'utf8')
 		$table_query .= ' DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci';
 

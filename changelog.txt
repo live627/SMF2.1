@@ -36,6 +36,9 @@ October 2010
  ! Moved YabbSE theme converter code to external Tools. [Bug 4495]
  ! FixLanguage.php removed, I say! :) [Bug 4495]
  ! UTF8 fixes. Thank you, Nao! (Subs.php, Subs-Post.php) [Bug 4498]
+ ! One more slight change, in supported versions. (install, upgrade, convert scripts)
+ ! Now MySQL versions support ENGINE, so simplify some things. (several files)
+ ! Escaping potential identifiers used as column names (DbExtra-mysql.php, DbExtra-postgresql.php) [Bug 4261]
 
 
 September 2010
