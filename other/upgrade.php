@@ -27,12 +27,12 @@ define('SMF_VERSION', '2.0 RC3');
 define('SMF_LANG_VERSION', '2.0 RC3');
 
 $GLOBALS['required_php_version'] = '4.1.0';
-$GLOBALS['required_mysql_version'] = '3.23.28';
+$GLOBALS['required_mysql_version'] = '4.0.0';
 
 $databases = array(
 	'mysql' => array(
 		'name' => 'MySQL',
-		'version' => '3.23.28',
+		'version' => '4.0.0',
 		'version_check' => 'return min(mysql_get_server_info(), mysql_get_client_info());',
 		'utf8_support' => true,
 		'utf8_version' => '4.1.0',
@@ -41,7 +41,7 @@ $databases = array(
 	),
 	'postgresql' => array(
 		'name' => 'PostgreSQL',
-		'version' => '7.4.10',
+		'version' => '8.0',
 		'version_check' => '$version = pg_version(); return $version[\'client\'];',
 		'always_has_db' => true,
 	),

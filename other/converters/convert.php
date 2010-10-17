@@ -25,8 +25,8 @@ define('SMF', 'convert');
 error_reporting(E_ALL);
 
 $GLOBALS['required_php_version'] = '4.1.0';
-$GLOBALS['required_mysql_version'] = '3.23.28';
-$GLOBALS['required_postgresql_version'] = '7.4.10';
+$GLOBALS['required_mysql_version'] = '4.0.0';
+$GLOBALS['required_postgresql_version'] = '8.0';
 
 // Buy some time
 @set_time_limit(600);
