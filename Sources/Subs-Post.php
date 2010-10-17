@@ -305,8 +305,8 @@ function preparsecode(&$message, $previewing = false)
 				// Now, find any [list]s or [/li]s followed by [li].
 				'~\[(list(?: [^\]]*?)?|/li)\]([\s' . $non_breaking_space . ']*)\[li\]~s' . ($context['utf8'] ? 'u' : '') => '[$1]$2[_li_]',
 				// Allow for sub lists.
-				'~\[/li\]([\s' . $non_breaking_space . ']*)\[list\]~' => '[_/li_]$1[list]',
-				'~\[/list\]([\s' . $non_breaking_space . ']*)\[li\]~' => '[/list]$1[_li_]',
+				'~\[/li\]([\s' . $non_breaking_space . ']*)\[list\]~' . ($context['utf8'] ? 'u' : '') => '[_/li_]$1[list]',
+				'~\[/list\]([\s' . $non_breaking_space . ']*)\[li\]~' . ($context['utf8'] ? 'u' : '') => '[/list]$1[_li_]',
 				// Any remaining [li]s weren't inside a [list].
 				'~\[li\]~' => '[list][li]',
 				// Any remaining [/li]s weren't before a [/list].
