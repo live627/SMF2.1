@@ -287,14 +287,14 @@ WHERE isgroup = 0;
 $result = convert_query("
 	SELECT m.fid, u.uid
 	FROM {$from_prefix}moderators AS m
-        LEFT JOIN {$from_prefix}users AS u ON (u.usergroup = m.id OR FIND_IN_SET(m.id, u.additionalgroups))
-        WHERE m.isgroup = 1");
+	LEFT JOIN {$from_prefix}users AS u ON (u.usergroup = m.id OR FIND_IN_SET(m.id, u.additionalgroups))
+	WHERE m.isgroup = 1");
 
 while ($row = convert_fetch_assoc($result))
 {
-        convert_query("
+	convert_query("
 	INSERT INTO {$to_prefix}moderators
-        (id_board, id_member)
+		(id_board, id_member)
 	VALUES ('{$row['fid']}', '{$row['uid']}')");
 }
 convert_free_result($result);

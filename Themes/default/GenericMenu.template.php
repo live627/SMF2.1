@@ -25,21 +25,20 @@ function template_generic_menu_sidebar_above()
 				<div class="cat_bar">
 					<h4 class="catbg">';
 
-			if ($firstSection && !empty($menu_context['can_toggle_drop_down']))
-			{
-				echo '
+		if ($firstSection && !empty($menu_context['can_toggle_drop_down']))
+		{
+			echo '
 						<span class="ie6_header floatleft">
 							<a href="', $menu_context['toggle_url'], '">', $section['title'],'<img style="margin: 0 5px; vertical-align: middle;" src="', $context['menu_image_path'], '/change_menu', $context['right_to_left'] ? '' : '2', '.png" alt="!" /></a>
 						</span>';
-			}
-
-			else
-			{
-				echo '
-						', $section['title'];
-			}
-
+		}
+		else
+		{
 			echo '
+						', $section['title'];
+		}
+
+		echo '
 					</h4>
 				</div>
 				<ul class="smalltext left_admmenu">';
@@ -254,27 +253,27 @@ function template_generic_menu_tabs(&$menu_context)
 
 	// Find the selected tab
 	foreach ($tab_context['tabs'] as $sa => $tab)
-		if (!empty($tab['is_selected']) || (isset($menu_context['current_subsection']) && $menu_context['current_subsection'] == $sa))
-		{
-			$selected_tab = $tab;
-			$tab_context['tabs'][$sa]['is_selected'] = true;
-		}
+	if (!empty($tab['is_selected']) || (isset($menu_context['current_subsection']) && $menu_context['current_subsection'] == $sa))
+	{
+		$selected_tab = $tab;
+		$tab_context['tabs'][$sa]['is_selected'] = true;
+	}
 
-    // Show an icon and/or a help item?
-    if (!empty($selected_tab['icon']) || !empty($tab_context['icon']) || !empty($selected_tab['help']) || !empty($tab_context['help']))
-    {
-        echo '
-            <span class="ie6_header floatleft">';
+	// Show an icon and/or a help item?
+	if (!empty($selected_tab['icon']) || !empty($tab_context['icon']) || !empty($selected_tab['help']) || !empty($tab_context['help']))
+	{
+		echo '
+			<span class="ie6_header floatleft">';
 
-        if (!empty($selected_tab['icon']) || !empty($tab_context['icon']))
-            echo '<img src="', $settings['images_url'], '/icons/', !empty($selected_tab['icon']) ? $selected_tab['icon'] : $tab_context['icon'], '" alt="" class="icon" />';
+		if (!empty($selected_tab['icon']) || !empty($tab_context['icon']))
+			echo '<img src="', $settings['images_url'], '/icons/', !empty($selected_tab['icon']) ? $selected_tab['icon'] : $tab_context['icon'], '" alt="" class="icon" />';
 
-        if (!empty($selected_tab['help']) || !empty($tab_context['help']))
-            echo '<a href="', $scripturl, '?action=helpadmin;help=', !empty($selected_tab['help']) ? $selected_tab['help'] : $tab_context['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" class="icon" /></a>';
+		if (!empty($selected_tab['help']) || !empty($tab_context['help']))
+			echo '<a href="', $scripturl, '?action=helpadmin;help=', !empty($selected_tab['help']) ? $selected_tab['help'] : $tab_context['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" class="icon" /></a>';
 
-        echo $tab_context['title'], '
-            </span>';
-    }
+		echo $tab_context['title'], '
+			</span>';
+	}
 	else
 	{
 		echo '
