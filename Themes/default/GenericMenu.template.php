@@ -253,10 +253,12 @@ function template_generic_menu_tabs(&$menu_context)
 
 	// Find the selected tab
 	foreach ($tab_context['tabs'] as $sa => $tab)
-	if (!empty($tab['is_selected']) || (isset($menu_context['current_subsection']) && $menu_context['current_subsection'] == $sa))
 	{
-		$selected_tab = $tab;
-		$tab_context['tabs'][$sa]['is_selected'] = true;
+		if (!empty($tab['is_selected']) || (isset($menu_context['current_subsection']) && $menu_context['current_subsection'] == $sa))
+		{
+			$selected_tab = $tab;
+			$tab_context['tabs'][$sa]['is_selected'] = true;
+		}
 	}
 
 	// Show an icon and/or a help item?

@@ -13,7 +13,7 @@ function template_ut_index()
 
 	<script type="text/javascript" src="', $context['ut_js_url'], '/unittest.js"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
-		 var oUnitTest = new UnitTest({
+		var oUnitTest = new UnitTest({
 			aTests: [';
 	foreach ($context['tests'] as $test)
 	{

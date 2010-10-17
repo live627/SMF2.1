@@ -132,8 +132,8 @@ function show_form()
 	echo '
 				<h2>Fix Image Attachments Dimensions</h2>
 				<h3>This script will fix the width and height of attachments that don\'thave one set.
-				 This script is mainly for those that have converted but have missing thumbnails.
-				 Once you get the width and height for the attachments, thumbnails will be created when you enter the topic.
+				This script is mainly for those that have converted but have missing thumbnails.
+				Once you get the width and height for the attachments, thumbnails will be created when you enter the topic.
 				</h3>';
 
 	// Start?

@@ -844,19 +844,19 @@ if (!empty($modSettings['dont_repeat_buddylists']) && !isset($modSettings['enabl
 if (!isset($modSettings['attachment_image_reencode']))
 {
 	// Enable image re-encoding by default.
-	$smcFunc['db_insert']('replace',		
+	$smcFunc['db_insert']('replace',
 		'{db_prefix}settings',
-		array('variable' => 'string-255', 'value' => 'string-255'),		
+		array('variable' => 'string-255', 'value' => 'string-255'),
 		array('attachment_image_reencode', '1'),
-		array('variable', 'value')	
+		array('variable', 'value')
 	);
 }
 if (!isset($modSettings['attachment_image_paranoid']))
 {
 	// Disable draconic checks by default.
-	$smcFunc['db_insert']('replace',	
+	$smcFunc['db_insert']('replace',
 		'{db_prefix}settings',
-		array('variable' => 'string-255', 'value' => 'string-255'),	
+		array('variable' => 'string-255', 'value' => 'string-255'),
 		array('attachment_image_paranoid', '0'),
 		array('variable', 'value')
 	);
@@ -864,9 +864,9 @@ if (!isset($modSettings['attachment_image_paranoid']))
 if (!isset($modSettings['avatar_reencode']))
 {
 	// Enable image re-encoding by default.
-	$smcFunc['db_insert']('replace',	
+	$smcFunc['db_insert']('replace',
 		'{db_prefix}settings',
-		array('variable' => 'string-255', 'value' => 'string-255'),	
+		array('variable' => 'string-255', 'value' => 'string-255'),
 		array('avatar_reencode', '1'),
 		array('variable', 'value')
 	);

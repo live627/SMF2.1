@@ -549,8 +549,8 @@ $row['body'] = stripslashes($row['body']);
 SELECT
 	p.post_id AS id_msg, p.topic_id AS id_topic, p.forum_id AS id_board,
 	p.post_time AS poster_time, p.poster_id AS id_member, p.post_subject AS subject,
-	IFNULL(m.username, 'Guest') AS poster_name, 
-	IFNULL(m.user_email, 'Unknown') AS poster_email, 
+	IFNULL(m.username, 'Guest') AS poster_name,
+	IFNULL(m.user_email, 'Unknown') AS poster_email,
 	IFNULL(p.poster_ip, '0.0.0.0') AS poster_ip,
 	p.enable_smilies AS smileys_enabled, p.post_edit_time AS modified_time,
 	CASE p.post_edit_user WHEN 0 THEN 'Guest' ELSE m2.username END AS modified_name,

@@ -108,7 +108,7 @@ SELECT
 	SUBSTRING(me.location, 1, 255) AS location,
 	SUBSTRING(me.icq_number, 1, 255) AS icq,
 	SUBSTRING(me.msnname, 1, 255) AS msn, SUBSTRING(me.aim_name, 1, 16) AS aim,
-	m.hide_email AS hide_email, 
+	m.hide_email AS hide_email,
 	IFNULL(m.email_pm, 0) AS pm_email_notify,
 	SUBSTRING(IF(me.avatar_location = 'noavatar', '', me.avatar_location), 1, 255) AS avatar,
 	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,

@@ -410,7 +410,7 @@
 				),
 				'ManagePosts_2' => array(
 					'name' => 'Manage posts and topics (2)',
-					'description' => " 	 Bulletin Board Code   	",
+					'description' => "Bulletin Board Code",
 					'url' => $scripturl . '?action=admin;area=postsettings;sa=bbc',
 				),
 				'ManagePosts_3' => array(
