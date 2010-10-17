@@ -34,6 +34,7 @@ October 2010
  & Who's Online language strings were missing for some actions. (Who.php, Who language file) [Bug 4465]
  ! Removed obsolete scripts and functions: FixTemplate.php and related functions in Themes.php. [Bug 4495]
  ! Moved YabbSE theme converter code to external Tools. [Bug 4495]
+ ! FixLanguage.php removed, I say! :) [Bug 4495]
 
 
 September 2010
