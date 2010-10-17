@@ -297,6 +297,7 @@ function determineActions($urls, $preferred_prefix = false)
 		'manageattachments' => array('manage_attachments'),
 		'manageboards' => array('manage_boards'),
 		'mlist' => array('view_mlist'),
+		'moderate' => array('access_mod_center', 'moderate_forum', 'manage_membergroups'),
 		'optimizetables' => array('admin_forum'),
 		'repairboards' => array('admin_forum'),
 		'search' => array('search_posts'),

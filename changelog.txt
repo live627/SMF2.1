@@ -30,6 +30,8 @@ October 2010
  ! Updated a couple of latest* files to their last version.
  * Moved CSS and JavaScript to top. (index template) [Bug 4468]
  ! Fixed an undefined variable in some cases (Subs.php)
+ ! Some actions were unnecessarily logged. (index.php) [Bug 4465]
+ & Who's Online language strings were missing for some actions. (Who.php, Who language file) [Bug 4465]
 
 
 September 2010
