@@ -28,7 +28,8 @@ October 2010
  ! Oops, yet some more formatting cleanup! Nao in action :). And other pedantic stuff. (several files) [Bug 4505]
  ! Supported database versions. (install, upgrade and convert scripts)
  ! Updated a couple of latest* files to their last version.
- 
+ * Moved CSS and JavaScript to top. (index template) [Bug 4468]
+
 
 September 2010
 --------------------------------------------------------------------------------
