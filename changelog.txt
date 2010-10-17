@@ -26,6 +26,8 @@ October 2010
  + Add the option to enable/disable test mode for payment gateways to the user interface. Thanks Nibogo! (ManagePaid.php) [Bug 4503]
  ! Small cleanups. (several files) [Bug 4505]
  ! Oops, yet some more formatting cleanup! Nao in action :). And other pedantic stuff. (several files) [Bug 4505]
+ ! Supported database versions. (install, upgrade and convert scripts)
+ ! Updated a couple of latest* files to their last version.
  
 
 September 2010

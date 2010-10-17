@@ -30,24 +30,28 @@ else
 	echo "var actionurl = '?action=admin;area=packages;sa=download;get;package=';";
 
 // Pull the smf versions out of the table.
-$result = $smcFunc['db_query']('', "
-	SELECT id_ver, ver_name
-	FROM {raw:customize_prefix}smfVersions
-	WHERE public = 1",
-	array(
-		'customize_prefix' => $customize_prefix,
-	)
-);
-
-$mod_site['smf_versions'] = array();
-while ($row = $smcFunc['db_fetch_assoc']($result))
+if (($mod_site['smf_versions'] = cache_get_data('site_smf_versions', 86400)) == null)
 {
-	$mod_site['smf_versions'][$row['id_ver']] = $row['vername'];
+	$result = $smcFunc['db_query']('', "
+		SELECT id_ver, ver_name
+		FROM {raw:customize_prefix}smfVersions
+		WHERE public = 1",
+		array(
+			'customize_prefix' => $customize_prefix,
+		)
+	);
+
+	$mod_site['smf_versions'] = array();
+	while ($row = $smcFunc['db_fetch_assoc']($result))
+		$mod_site['smf_versions'][$row['id_ver']] = $row['vername'];
+	$smcFunc['db_free_result']($result);
+
+	if (!empty($modSettings['cache_enable']))
+		cache_put_data('site_smf_versions', $mod_site['smf_versions'], 86400);
 }
-$smcFunc['db_free_result']($result);
 
+// This is javascript and nothing else.
 header('Content-Type: text/javascript');
-
 ?>
 if (typeof(window.smfForum_sessionvar) == "undefined")
 	window.smfForum_sessionvar = 'sesc';
@@ -85,6 +89,12 @@ else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1
 	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.0.14. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.15_1.1.7.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.0.15.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.15")
 	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.0.15. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.16_1.1.8.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.0.16.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.16")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.0.16. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.17_1.1.9_2.0-RC1-1.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.0.17.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.17")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.0.17. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.18_1.1.10-2.0-RC1.2;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.0.18.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.18")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.0.18. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.19_1.1.11.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.0.19.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1 Beta 2" && !in_array("smf:smf_1-1-beta2-fix1", window.smfInstalledPackages))
 	window.smfLatestPackages = 'A few bugs have been fixed since SMF 1.1 Beta 2, and a problem with parsing nested BBC tags addressed.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-1-beta2-fix1.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily fix the problem.<br /><br />Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> or in the helpdesk if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1 RC2" && !in_array("smf:smf-1.0.7", window.smfInstalledPackages))
@@ -107,10 +117,20 @@ else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1
 	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.1.6. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.15_1.1.7.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.7.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1.7")
 	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.1.7. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.16_1.1.8.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.8.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1.8")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.1.8. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.17_1.1.9_2.0-RC1-1.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.9.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1.9")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.1.9. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.18_1.1.10-2.0-RC1.2.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.10.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1.10")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.1.10. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.19_1.1.11.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.11.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 2.0 beta 1")
 	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 2.0 beta 1 as well as a few small bugs. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.12_1.1.4_2.0.b1.1.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 2.0 beta 1.1.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 2.0 Beta 3 Public")
 	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 2.0 beta 3 as well as a few small bugs. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.13_1.1.5_2.0-b3.1.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 2.0 beta 3.1.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 2.0 RC1")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 2.0 RC1. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.17_1.1.9_2.0-RC1-1.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 2.0-RC1-1.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 2.0 RC1-1")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 2.0 RC1-1. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.18_1.1.10-2.0-RC1.2.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 2.0-RC1.2 .<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) == "undefined")
 	window.smfLatestPackages = 'For the package manager to function properly, please upgrade to the latest version of SMF.';
 else
@@ -118,72 +138,90 @@ else
 var smf_modificationInfo = {
 <?php
 
-$request = $smcFunc['db_query']('', '
-	(
-		SELECT
-			ms.id_mod, ms.mod_name, ms.modified_time, ms.downloads, ms.submit_time, 1 AS type,
-			ms.smf_versions, ms.id_attach_package, a.filename, ms.description, ms.latest_version
-		FROM {raw:mod_prefix}mods AS ms
-			LEFT JOIN {db_prefix}attachments AS a ON (a.id_attach = ms.id_attach_package)
-		WHERE ms.approved = 1
-			AND ms.id_attach_package != 0
-			AND ms.id_type != 11
-		ORDER BY ms.id_mod DESC
-		LIMIT 3
-	)
-	UNION ALL
-	(
-		SELECT
-			ms.id_mod, ms.mod_name, ms.modified_time, ms.downloads, ms.submit_time, 2 AS type,
-			ms.smf_versions, ms.id_attach_package, a.filename, ms.description, ms.latest_version
-		FROM {raw:mod_prefix}mods AS ms
-			LEFT JOIN {db_prefix}attachments AS a ON (a.id_attach = ms.id_attach_package)
-		WHERE ms.approved = 1
-			AND ms.id_attach_package != 0
-			AND ms.id_type != 11
-		ORDER BY RAND()
-		LIMIT 1
-	)',
-	array(
-		'mod_prefix' => $mod_site_db_name . '.' . $mod_site_db_prefix,
-	)
-);
-$mods = array();
-while ($row = $smcFunc['db_fetch_assoc']($request))
+// Save some queries, do some caching.
+if (($data = cache_get_data('site_latest_packages', 3600)) == null)
 {
-	censorText($row['mod_name']);
-	censorText($row['description']);
-
-	$mods[$row['id_mod']] = array(
-		'id' => $row['id_mod'],
-		'attach_id' => $row['id_attach_package'],
-		'attach_filename' => $row['filename'],
-		'short_name' => strlen($row['mod_name']) <= 20 ? $row['mod_name'] : substr($row['mod_name'], 0, 20) . '...',
-		'name' => $row['mod_name'],
-		'version' => $row['latest_version'],
-		'submit_time' => timeformat($row['submit_time']),
-		'modify_time' => timeformat($row['modified_time']),
-		'description' => parse_bbc($row['description']),
-		'downloads' => $row['downloads'],
-		'smf_versions' => explode(',', $row['smf_versions']),
-		'is_latest' => $row['type'] == 1,
-		'is_last' => $row['type'] == 2,
+	$context['cust_packs'] = array(
+		'latest_ids' => array(),
+		'moment_id' => 0
 	);
-}
-$smcFunc['db_free_result']($request);
 
-foreach ($mod_site['smf_versions'] as $i => $ver)
-{
-	if (isset($mod_site['smf_versions'][trim($ver)]))
-		$context['mod']['smf_versions'][$i] = $mod_site['smf_versions'][trim($ver)];
-	else
-		unset($context['mod']['smf_versions'][$i]);
-}
+	$request = $smcFunc['db_query']('', '
+		(
+			SELECT
+				ms.id_mod, ms.mod_name, ms.modified_time, ms.downloads, ms.submit_time, 1 AS type,
+				ms.smf_versions, ms.id_attach_package, a.filename, ms.description, ms.latest_version
+			FROM {raw:mod_prefix}mods AS ms
+				LEFT JOIN {db_prefix}attachments AS a ON (a.id_attach = ms.id_attach_package)
+			WHERE ms.approved = 1
+				AND ms.id_attach_package != 0
+				AND ms.id_type != 11
+			ORDER BY ms.id_mod DESC
+			LIMIT 3
+		)
+		UNION ALL
+		(
+			SELECT
+				ms.id_mod, ms.mod_name, ms.modified_time, ms.downloads, ms.submit_time, 2 AS type,
+				ms.smf_versions, ms.id_attach_package, a.filename, ms.description, ms.latest_version
+			FROM {raw:mod_prefix}mods AS ms
+				LEFT JOIN {db_prefix}attachments AS a ON (a.id_attach = ms.id_attach_package)
+			WHERE ms.approved = 1
+				AND ms.id_attach_package != 0
+				AND ms.id_type != 11
+			ORDER BY RAND()
+			LIMIT 1
+		)',
+		array(
+			'mod_prefix' => $mod_site_db_name . '.' . $mod_site_db_prefix,
+		)
+	);
+	$mods = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		censorText($row['mod_name']);
+		censorText($row['description']);
 
-$latest_ids = array();
-$moment_id = 0;
+		$mods[$row['id_mod']] = array(
+			'id' => $row['id_mod'],
+			'attach_id' => $row['id_attach_package'],
+			'attach_filename' => $row['filename'],
+			'short_name' => strlen($row['mod_name']) <= 20 ? $row['mod_name'] : substr($row['mod_name'], 0, 20) . '...',
+			'name' => $row['mod_name'],
+			'version' => $row['latest_version'],
+			'submit_time' => timeformat($row['submit_time']),
+			'modify_time' => timeformat($row['modified_time']),
+			'description' => parse_bbc($row['description']),
+			'downloads' => $row['downloads'],
+			'smf_versions' => explode(',', $row['smf_versions']),
+			'is_latest' => $row['type'] == 1,
+			'is_last' => $row['type'] == 2,
+		);
+
+		// is_latest check.
+		if ($row['type'] == 1)
+			$context['cust_packs']['latest_ids'][] = $row['id_mod'];
+		else
+			$context['cust_packs']['moment_id'] = $row['id_mod'];
+	}
+	$smcFunc['db_free_result']($request);
+
+	foreach ($mod_site['smf_versions'] as $i => $ver)
+	{
+		if (isset($mod_site['smf_versions'][trim($ver)]))
+			$context['mod']['smf_versions'][$i] = $mod_site['smf_versions'][trim($ver)];
+		else
+			unset($context['mod']['smf_versions'][$i]);
+	}
+
+	if (!empty($modSettings['cache_enable']))
+		cache_put_data('site_latest_packages', array($mods, $mod_site['smf_versions'], $context['cust_packs']), 86400);
+}
+// Otherwise we split the data up.
+else
+	list($mods, $mod_site['smf_versions'], $context['cust_packs']) = $data;
+
 foreach ($mods as $mod)
-{
 	echo '
 	', $mod['id'], ': {
 		name: \'', addcslashes($mod['name'], "'"), ' ', addcslashes($mod['version'], "'"), '\',
@@ -192,32 +230,25 @@ foreach ($mods as $mod)
 		file: \'', addcslashes($mod['attach_filename'], "'"), '\'
 	}', empty($mod['is_last']) ? ',' : '';
 
-	if ($mod['is_latest'])
-		$latest_ids[] = $mod['id'];
-	else
-		$moment_id = $mod['id'];
-}
-
 ?>
 };
-var smf_latestModifications = [<?php echo implode(', ', $latest_ids); ?>];
+var smf_latestModifications = [<?php echo implode(', ', $context['cust_packs']['latest_ids']); ?>];
 
 function smf_packagesMoreInfo(id)
 {
-	window.smfLatestPackages_temp = getOuterHTML(document.getElementById("smfLatestPackagesWindow"));
+	window.smfLatestPackages_temp = document.getElementById("smfLatestPackagesWindow").innerHTML;
 
-	setOuterHTML(document.getElementById("smfLatestPackagesWindow"),
-	'<div id="smfLatestPackagesWindow">\
+	setInnerHTML(document.getElementById("smfLatestPackagesWindow"),
+	'\
 		<h3 style="margin: 0; padding: 4px;">' + smf_modificationInfo[id].name + '</h3>\
-			<h4 style="padding: 4px; margin: 0;"><a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/' + id + '/' + smf_modificationInfo[id].file + ';' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">Install Now!</a></h4>\
-			<div style="margin: 4px;">' + smf_modificationInfo[id].desc.replace(/<a href/g, '<a href') + '</div>\
-			<div class="titlebg" style="padding: 4px; margin: 0;"><a href="javascript:smf_packagesBack();void(0);">(go back)</a></div>\
-	</div>');
+		<h4 style="padding: 4px; margin: 0;"><a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/' + id + '/' + smf_modificationInfo[id].file + ';' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">Install Now!</a></h4>\
+		<div style="margin: 4px;">' + smf_modificationInfo[id].desc.replace(/<a href/g, '<a href') + '</div>\
+		<div class="titlebg" style="padding: 4px; margin: 0;"><a href="javascript:smf_packagesBack();void(0);">(go back)</a></div>');
 }
 
 function smf_packagesBack()
 {
-	setOuterHTML(document.getElementById("smfLatestPackagesWindow"), window.smfLatestPackages_temp);
+	setInnerHTML(document.getElementById("smfLatestPackagesWindow"), window.smfLatestPackages_temp);
 	window.scrollTo(0, findTop(document.getElementById("smfLatestPackagesWindow")) - 10);
 }
 
@@ -247,7 +278,7 @@ else
 	window.smfLatestPackages += '\
 		<h3 style="margin: 0; padding: 4px;">Package of the Moment:</h3>\
 		<div style="padding: 0 4px;">\
-			<a href="javascript:smf_packagesMoreInfo(<?php echo $moment_id; ?>);void(0);"><?php echo addcslashes($mods[$moment_id]['name'], "'"), ' ', addcslashes($mod['version'], "'"); ?></a>\
+			<a href="javascript:smf_packagesMoreInfo(<?php echo $context['cust_packs']['moment_id']; ?>);void(0);"><?php echo addcslashes($mods[$context['cust_packs']['moment_id']]['name'], "'"), ' ', addcslashes($mods[$context['cust_packs']['moment_id']]['version'], "'"); ?></a>\
 		</div>';
 
 window.smfLatestPackages += '\

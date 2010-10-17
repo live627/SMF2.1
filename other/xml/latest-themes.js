@@ -23,122 +23,129 @@ include_once('/home/sites/simplemachines.org/security/settings_customize.php');
 
 unset($_SESSION['language']);
 
-// Get a featured theme
-$themes = array();
-$request = $smcFunc['db_query']('', '
-	SELECT th.id_theme, th.theme_name, th.modified_time, th.downloads, th.id_package, th.id_preview,
-		th.submit_time, th.id_type, a.filename, th.description, th.author_name
-	FROM {raw:theme_prefix}featured AS fe
-		LEFT JOIN {raw:theme_prefix}themes AS th ON (th.id_theme=fe.id_theme)
+// Save some queries, do some caching.
+if (($data = cache_get_data('site_latest_themes', 3600)) == null)
+{
+	// Get a featured theme
+	$themes = array();
+	$request = $smcFunc['db_query']('', '
+		SELECT th.id_theme, th.theme_name, th.modified_time, th.downloads, th.id_package, th.id_preview,
+			th.submit_time, th.id_type, a.filename, th.description, th.author_name
+		FROM {raw:theme_prefix}featured AS fe
+			LEFT JOIN {raw:theme_prefix}themes AS th ON (th.id_theme=fe.id_theme)
+			LEFT JOIN {raw:theme_prefix}files AS f ON (f.id_file=th.id_package)
+			LEFT JOIN {db_prefix}attachments AS a ON (a.id_attach=f.id_attach)
+		WHERE th.status=1
+		ORDER BY RAND()
+		LIMIT 1',
+		array(
+			'theme_prefix' => $theme_site_db_name . '.' . $theme_site_db_prefix,
+		)
+	);
+	if ( $smcFunc['db_num_rows']($request) )
+	{
+		$row = $smcFunc['db_fetch_assoc']($request);
+		censorText($row['theme_name']);
+		censorText($row['description']);
+		$themes[$row['id_theme']] = array(
+			'id' => $row['id_theme'],
+			'package' => array(
+				'id' => $row['id_package'],
+				'name' => $row['filename'],
+			),
+			'short_name' => strlen($row['theme_name']) <= 20 ? $row['theme_name'] : substr($row['theme_name'], 0, 20) . '...',
+				'name' => $row['theme_name'],
+			'submit_time' => timeformat($row['submit_time']),
+			'modify_time' => timeformat($row['modified_time']),
+			'description' => parse_bbc($row['description']),
+			'downloads' => $row['downloads'],
+			'author_name' => $row['author_name'],
+		);
+		$featured = $row['id_theme'];
+	}
+	else
+		$featured = 0;
+
+	// Load the theme data
+	$request = $smcFunc['db_query']('', '
+		SELECT th.id_theme, th.theme_name, th.modified_time, th.downloads, th.id_package, th.id_preview,
+			th.submit_time, th.id_type, a.filename, th.description, th.author_name
+		FROM {raw:theme_prefix}themes AS th
 		LEFT JOIN {raw:theme_prefix}files AS f ON (f.id_file=th.id_package)
 		LEFT JOIN {db_prefix}attachments AS a ON (a.id_attach=f.id_attach)
-	WHERE th.status=1
-	ORDER BY RAND()
-	LIMIT 1',
-	array(
-		'theme_prefix' => $theme_site_db_name . '.' . $theme_site_db_prefix,
-	)
-);
-if ( $smcFunc['db_num_rows']($request) )
-{
-	$row = $smcFunc['db_fetch_assoc']($request);
-	censorText($row['theme_name']);
-	censorText($row['description']);
-	$themes[$row['id_theme']] = array(
-		'id' => $row['id_theme'],
-		'package' => array(
-			'id' => $row['id_package'],
-			'name' => $row['filename'],
-		),
-		'short_name' => strlen($row['theme_name']) <= 20 ? $row['theme_name'] : substr($row['theme_name'], 0, 20) . '...',
-		'name' => $row['theme_name'],
-		'submit_time' => timeformat($row['submit_time']),
-		'modify_time' => timeformat($row['modified_time']),
-		'description' => parse_bbc($row['description']),
-		'downloads' => $row['downloads'],
-		'author_name' => $row['author_name'],
+		WHERE th.status=1
+			AND th.id_theme != {int:featured}
+		ORDER BY submit_time DESC
+		LIMIT 3',
+		array(
+			'theme_prefix' => $theme_site_db_name . '.' . $theme_site_db_prefix,
+			'featured' => $featured,
+		)
 	);
-	$featured = $row['id_theme'];
+	$latest_ids = array();
+	while ( $row = $smcFunc['db_fetch_assoc']($request) )
+	{
+		censorText($row['theme_name']);
+		censorText($row['description']);
+		$themes[$row['id_theme']] = array(
+			'id' => $row['id_theme'],
+			'package' => array(
+				'id' => $row['id_package'],
+				'name' => $row['filename'],
+			),
+			'short_name' => strlen($row['theme_name']) <= 20 ? $row['theme_name'] : substr($row['theme_name'], 0, 20) . '...',
+			'name' => $row['theme_name'],
+			'submit_time' => timeformat($row['submit_time']),
+			'modify_time' => timeformat($row['modified_time']),
+			'description' => parse_bbc($row['description']),
+			'downloads' => $row['downloads'],
+			'author_name' => $row['author_name'],
+		);
+		$latest_ids[] = $row['id_theme'];
+	}
+
+	// Grab a random theme
+	$request = $smcFunc['db_query']('', "
+		SELECT th.id_theme, th.theme_name, th.modified_time, th.downloads, th.id_package, th.id_preview,
+			th.submit_time, th.id_type, a.filename, th.description, th.author_name
+		FROM {raw:theme_prefix}themes AS th
+			LEFT JOIN {raw:theme_prefix}files AS f ON (f.id_file=th.id_package)
+			LEFT JOIN {db_prefix}attachments AS a ON (a.id_attach=f.id_attach)
+		WHERE th.status=1 AND th.id_theme NOT IN ({array_int:ids})
+		ORDER BY RAND()
+		LIMIT 1",
+		array(
+			'theme_prefix' => $theme_site_db_name . '.' . $theme_site_db_prefix,
+			'ids' => array_merge(array($featured), $latest_ids),
+		)
+	);
+	while ( $row = $smcFunc['db_fetch_assoc']($request) )
+	{
+		censorText($row['theme_name']);
+		censorText($row['description']);
+		$themes[$row['id_theme']] = array(
+			'id' => $row['id_theme'],
+			'package' => array(
+				'id' => $row['id_package'],
+				'name' => $row['filename'],
+			),
+			'short_name' => strlen($row['theme_name']) <= 20 ? $row['theme_name'] : substr($row['theme_name'], 0, 20) . '...',
+			'name' => $row['theme_name'],
+			'submit_time' => timeformat($row['submit_time']),
+			'modify_time' => timeformat($row['modified_time']),
+			'description' => parse_bbc($row['description']),
+			'downloads' => $row['downloads'],
+			'author_name' => $row['author_name'],
+		);
+		$random_id = $row['id_theme'];
+	}
+	$smcFunc['db_free_result']($request);
+
+	if (!empty($modSettings['cache_enable']))
+		cache_put_data('site_latest_themes', array($themes, $featured, $latest_ids, $random_id), 86400);
 }
 else
-	$featured = 0;
-
-// Load the theme data
-$request = $smcFunc['db_query']('', '
-	SELECT th.id_theme, th.theme_name, th.modified_time, th.downloads, th.id_package, th.id_preview,
-		th.submit_time, th.id_type, a.filename, th.description, th.author_name
-	FROM {raw:theme_prefix}themes AS th
-	LEFT JOIN {raw:theme_prefix}files AS f ON (f.id_file=th.id_package)
-	LEFT JOIN {db_prefix}attachments AS a ON (a.id_attach=f.id_attach)
-	WHERE th.status=1
-		AND th.id_theme != {int:featured}
-	ORDER BY submit_time DESC
-	LIMIT 3',
-	array(
-		'theme_prefix' => $theme_site_db_name . '.' . $theme_site_db_prefix,
-		'featured' => $featured,
-	)
-);
-$latest_ids = array();
-while ( $row = $smcFunc['db_fetch_assoc']($request) )
-{
-	censorText($row['theme_name']);
-	censorText($row['description']);
-	$themes[$row['id_theme']] = array(
-		'id' => $row['id_theme'],
-		'package' => array(
-			'id' => $row['id_package'],
-			'name' => $row['filename'],
-		),
-		'short_name' => strlen($row['theme_name']) <= 20 ? $row['theme_name'] : substr($row['theme_name'], 0, 20) . '...',
-		'name' => $row['theme_name'],
-		'submit_time' => timeformat($row['submit_time']),
-		'modify_time' => timeformat($row['modified_time']),
-		'description' => parse_bbc($row['description']),
-		'downloads' => $row['downloads'],
-		'author_name' => $row['author_name'],
-	);
-	$latest_ids[] = $row['id_theme'];
-}
-
-// Grab a random theme
-$request = $smcFunc['db_query']('', "
-	SELECT th.id_theme, th.theme_name, th.modified_time, th.downloads, th.id_package, th.id_preview,
-		th.submit_time, th.id_type, a.filename, th.description, th.author_name
-	FROM {raw:theme_prefix}themes AS th
-		LEFT JOIN {raw:theme_prefix}files AS f ON (f.id_file=th.id_package)
-		LEFT JOIN {db_prefix}attachments AS a ON (a.id_attach=f.id_attach)
-	WHERE th.status=1 AND th.id_theme NOT IN ({array_int:ids})
-	ORDER BY RAND()
-	LIMIT 1",
-	array(
-		'theme_prefix' => $theme_site_db_name . '.' . $theme_site_db_prefix,
-		'ids' => array_merge(array($featured), $latest_ids),
-	)
-);
-while ( $row = $smcFunc['db_fetch_assoc']($request) )
-{
-	censorText($row['theme_name']);
-	censorText($row['description']);
-	$themes[$row['id_theme']] = array(
-		'id' => $row['id_theme'],
-		'package' => array(
-			'id' => $row['id_package'],
-			'name' => $row['filename'],
-		),
-		'short_name' => strlen($row['theme_name']) <= 20 ? $row['theme_name'] : substr($row['theme_name'], 0, 20) . '...',
-		'name' => $row['theme_name'],
-		'submit_time' => timeformat($row['submit_time']),
-		'modify_time' => timeformat($row['modified_time']),
-		'description' => parse_bbc($row['description']),
-		'downloads' => $row['downloads'],
-		'author_name' => $row['author_name'],
-	);
-	$random_id = $row['id_theme'];
-}
-
-$smcFunc['db_free_result']($request);
-
+	list($themes, $featured, $latest_ids, $random_id) = $data;
 
 header('Content-Type: text/javascript');
 echo '
@@ -164,22 +171,25 @@ var smf_latestThemes = [', implode(', ', $latest_ids), '];';
 
 function smf_themesMoreInfo(id)
 {
-	window.smfLatestThemes_temp = getOuterHTML(document.getElementById("smfLatestThemesWindow"));
-	setOuterHTML(document.getElementById("smfLatestThemesWindow"),
-	'<div id="smfLatestThemesWindow" style="overflow: auto;">\
+	window.smfLatestThemes_temp = document.getElementById("smfLatestThemesWindow").innerHTML;
+
+	// !!! Why not just always auto?
+	document.getElementById("smfLatestThemesWindow").style.overflow = "auto";
+	setInnerHTML(document.getElementById("smfLatestThemesWindow"),
+	'\
 		<h3 style="margin: 0; padding: 4px;">' + smf_themeInfo[id].name + '</h3>\
 		<h4 style="margin: 0;padding: 4px;"><a href="http://custom.simplemachines.org/themes/index.php?lemma=' + id + '">View Theme Now!</a></h4>\
 		<div style="overflow: auto;">\
 			<img src="http://custom.simplemachines.org/themes/index.php?action=download;lemma='+id+';image=thumb" alt="" style="float: right; margin: 10px;" />\
 			<div style="padding:8px;">' + smf_themeInfo[id].desc.replace(/<a href/g, '<a href') + '</div>\
 		</div>\
-		<div style="padding: 4px;" class="smalltext"><a href="javascript:smf_themesBack();void(0);">(go back)</a></div>\
-	</div>');
+		<div style="padding: 4px;" class="smalltext"><a href="javascript:smf_themesBack();void(0);">(go back)</a></div>');
 }
 
 function smf_themesBack()
 {
-	setOuterHTML(document.getElementById("smfLatestThemesWindow"), window.smfLatestThemes_temp);
+	document.getElementById("smfLatestThemesWindow").style.overflow = "";
+	setInnerHTML(document.getElementById("smfLatestThemesWindow"), window.smfLatestThemes_temp);
 	window.scrollTo(0, findTop(document.getElementById("smfLatestThemesWindow")) - 10);
 }
 
