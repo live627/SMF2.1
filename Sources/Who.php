@@ -584,7 +584,7 @@ function Credits($in_admin = false)
 						'Huw',
 						'Jan-Olof &quot;Owdy&quot; Eriksson',
 						'Jeremy &quot;jerm&quot; Strike',
-						'Kat',
+						'K@',
 						'Kays',
 						'Kevin &quot;greyknight17&quot; Hou',
 						'KGIII',
