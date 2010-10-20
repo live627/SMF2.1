@@ -1127,7 +1127,7 @@ function legalise_bbc($text)
 	$new_text_offset = 0;
 
 	// These keep track of where we are!
-	if (count($parts = preg_split(sprintf('~(\\[)(/?)(%1$s)((?:[\\s=][^\\]\\[]*)?\\])~', implode('|', array_keys($valid_tags))), $text, -1, PREG_SPLIT_DELIM_CAPTURE)) > 1)
+	if (count($parts = preg_split(sprintf('~(\\[)(/?)(%1$s)((?:[\\s=].*?)?\\])~', implode('|', array_keys($valid_tags))), $text, -1, PREG_SPLIT_DELIM_CAPTURE)) > 1)
 	{
 		// Start with just text.
 		$isTag = false;

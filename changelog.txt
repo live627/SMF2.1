@@ -54,6 +54,7 @@ October 2010
  & Adding a new group to credits to reflect the recent changes in the structure. (Who.english.php)
  ! One more little credits update. (Who.php)
  * Incorrect background image for Core theme last active buttonlist buttons on IE6. (index template, index.css) [Bug 4472]
+ ! Brackets in username caused trailing quote to be lost on WYSIWYG toggle. (Subs-Editor.php) [Bug 4316]
 
 
 September 2010
