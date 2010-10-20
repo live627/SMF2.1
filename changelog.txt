@@ -40,6 +40,7 @@ October 2010
  ! Now MySQL versions support ENGINE, so simplify some things. (several files)
  ! Escaping potential identifiers used as column names (DbExtra-mysql.php, DbExtra-postgresql.php) [Bug 4261]
  * Clean attachment function didn't work properly on Chrome. (script.js) [Bug 4508]
+ ! Incorrect usage of $smcFunc['db_insert_id'] function. (Subs-Calendar.php) [Bug 4509]
 
 
 September 2010

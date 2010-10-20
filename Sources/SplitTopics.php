@@ -530,9 +530,6 @@ function SplitSelectionExecute()
 	if (!isset($_POST['subname']) || $_POST['subname'] == '')
 		$_POST['subname'] = $txt['new_topic'];
 
-	// The old topic's ID is the current one.
-	$split1_ID_TOPIC = $topic;
-
 	// You must've selected some messages!  Can't split out none!
 	if (empty($_SESSION['split_selection'][$topic]))
 		fatal_lang_error('no_posts_selected', false);
