@@ -52,6 +52,7 @@ October 2010
  ! Ensure forum_width setting for Postgres and SQLite (upgrade scripts) [Bug 4496]
  ! A few more updates to credits. (Who.php)
  & Adding a new group to credits to reflect the recent changes in the structure. (Who.english.php)
+ ! One more little credits update. (Who.php)
 
 
 September 2010

@@ -681,7 +681,7 @@ function Credits($in_admin = false)
 			array(
 				'title' => $txt['credits_groups_consultants'],
 				'members' => array(
-					'Nao',
+					'Ren&eacute;-Gilles &quot;Nao &#23578;&quot; Deberdt',
 				),
 			),
 			array(
