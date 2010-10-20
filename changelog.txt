@@ -46,6 +46,7 @@ October 2010
  ! Removed no longer used validate_unicode__recursive function. (QueryString.php) [Bug 4498]
  * Install script stylesheet required its own width setting. (install.css)
  * Some lists were not alternated in Subscriptions Profile area. (ManagePaid template) [Bug 4502]
+ ! getBoardParents() function results were not cached. (Load.php, Subs-Boards.php) [Bug 4487]
 
 
 September 2010
