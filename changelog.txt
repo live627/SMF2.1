@@ -45,6 +45,7 @@ October 2010
  & Add a new language entry for the change above. (ManagePaid language file) [Bug 4503]
  ! Removed no longer used validate_unicode__recursive function. (QueryString.php) [Bug 4498]
  * Install script stylesheet required its own width setting. (install.css)
+ * Some lists were not alternated in Subscriptions Profile area. (ManagePaid template) [Bug 4502]
 
 
 September 2010
