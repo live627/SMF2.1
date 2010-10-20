@@ -55,6 +55,7 @@ October 2010
  ! One more little credits update. (Who.php)
  * Incorrect background image for Core theme last active buttonlist buttons on IE6. (index template, index.css) [Bug 4472]
  ! Brackets in username caused trailing quote to be lost on WYSIWYG toggle. (Subs-Editor.php) [Bug 4316]
+ ! Ugly fix for Firefox resetting form content. (script.js) [Bug 3446]
 
 
 September 2010
