@@ -39,6 +39,7 @@ October 2010
  ! One more slight change, in supported versions. (install, upgrade, convert scripts)
  ! Now MySQL versions support ENGINE, so simplify some things. (several files)
  ! Escaping potential identifiers used as column names (DbExtra-mysql.php, DbExtra-postgresql.php) [Bug 4261]
+ * Clean attachment function didn't work properly on Chrome. (script.js) [Bug 4508]
 
 
 September 2010
