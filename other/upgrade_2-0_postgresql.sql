@@ -199,7 +199,7 @@ CREATE TABLE {$db_prefix}log_spider_stats (
 --- Adding new forum settings.
 /******************************************************************************/
 
----# Enable cache if upgrading from 1.1 and lower.
+---# Enable cache if upgrading from 2.0 beta 1 and lower.
 ---{
 if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '2.0 Beta 1')
 {
@@ -209,7 +209,7 @@ if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '2.0 Beta
 		WHERE variable = 'cache_enable'");
 	list ($cache_enable) = $smcFunc['db_fetch_row']($request);
 
-	// No cache before 1.1.
+	// No cache before
 	if ($smcFunc['db_num_rows']($request) == 0)
 		upgrade_query("
 			INSERT INTO {$db_prefix}settings
@@ -221,6 +221,18 @@ if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '2.0 Beta
 			SET value = '1'
 			WHERE variable = 'cache_enable'");
 }
+---}
+---#
+
+---# Ensuring forum width setting present...
+---{
+// Don't do this twice!
+$smcFunc['db_insert']('ignore',
+	'{db_prefix}themes',
+	array('id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-255'),
+	array(1, 'forum_width', '90%'),
+	array('id_theme', 'variable', 'value')
+);
 ---}
 ---#
 

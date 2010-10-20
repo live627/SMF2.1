@@ -49,6 +49,7 @@ October 2010
  ! getBoardParents() function results were not cached. (Load.php, Subs-Boards.php) [Bug 4487]
  * Adding in some new integration hooks. (index.php, Admin.php, Profile.php, Subs-Editor.php, Subs.php, Display template, MessageIndex template)
  ! Updated credits with recent changes. (Who.php)
+ ! Ensure forum_width setting for Postgres and SQLite (upgrade scripts) [Bug 4496]
 
 
 September 2010
