@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC3; ManageBoards
+// Version: 2.0 RC4; ManageBoards
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
 

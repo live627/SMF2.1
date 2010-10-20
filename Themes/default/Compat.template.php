@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC3; Compat
+// Version: 2.0 RC4; Compat
 
 // Generate a strip of buttons, out of buttons.
 function template_button_strip($button_strip, $direction = 'top', $strip_options = array())

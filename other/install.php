@@ -22,7 +22,7 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-$GLOBALS['current_smf_version'] = '2.0 RC3';
+$GLOBALS['current_smf_version'] = '2.0 RC4';
 $GLOBALS['db_script_version'] = '2-0';
 
 $GLOBALS['required_php_version'] = '4.1.0';

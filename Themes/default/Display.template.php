@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC3; Display
+// Version: 2.0 RC4; Display
 
 function template_main()
 {
@@ -543,7 +543,7 @@ function template_main()
 						<div class="moderatorbar">
 							<div class="smalltext modified" id="modified_', $message['id'], '">';
 
-		// Show "« Last Edit: Time by Person »" if this post was edited.
+		// Show "ï¿½ Last Edit: Time by Person ï¿½" if this post was edited.
 		if ($settings['show_modify'] && !empty($message['modified']['name']))
 			echo '
 								&#171; <em>', $txt['last_edit'], ': ', $message['modified']['time'], ' ', $txt['by'], ' ', $message['modified']['name'], '</em> &#187;';
