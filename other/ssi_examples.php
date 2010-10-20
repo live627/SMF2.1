@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC3                                         *
+* Software Version:           SMF 2.0 RC4                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -422,7 +422,7 @@ function template_ssi_above()
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>SMF 2.0 RC3 SSI.php Examples</title>
+		<title>SMF 2.0 RC4 SSI.php Examples</title>
 		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css?rc3" />
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<style type="text/css">
@@ -526,7 +526,7 @@ function template_ssi_above()
 	<body>
 		<div id="header"><div class="frame">
 			<div id="top_section">
-				<h1 class="forumtitle">SMF 2.0 RC3 SSI.php Examples</h1>
+				<h1 class="forumtitle">SMF 2.0 RC4 SSI.php Examples</h1>
 				<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />
 			</div>
 			<div id="upper_section" class="middletext" style="overflow: hidden;">
