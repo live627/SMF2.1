@@ -540,7 +540,7 @@ function Credits($in_admin = false)
 				array(
 					'title' => $txt['credits_groups_ps'],
 					'members' => array(
-						'Cathy &quot;Amacythe&quot; Bailey',
+						'Amacythe',
 						'Derek Schwab',
 						'Jeremy &quot;SleePy&quot; Darwood',
 						'Justin &quot;metallica48423&quot; O\'Leary',
@@ -580,7 +580,6 @@ function Credits($in_admin = false)
 						'Fiery',
 						'(F.L.A.M.E.R)',
 						'gbsothere',
-						'greyknight17',
 						'Harro',
 						'Huw',
 						'Jan-Olof &quot;Owdy&quot; Eriksson',
@@ -680,15 +679,21 @@ function Credits($in_admin = false)
 		'posttext' => $txt['credits_anyone'],
 		'groups' => array(
 			array(
-				'title' => $txt['credits_groups_translators'],
+				'title' => $txt['credits_groups_consultants'],
 				'members' => array(
-					$txt['credits_translators_message'],
+					'Nao',
 				),
 			),
 			array(
 				'title' => $txt['credits_groups_beta'],
 				'members' => array(
 					$txt['credits_beta_message'],
+				),
+			),
+			array(
+				'title' => $txt['credits_groups_translators'],
+				'members' => array(
+					$txt['credits_translators_message'],
 				),
 			),
 			array(
