@@ -888,7 +888,7 @@ div#menu_toggle a
 	background: url(../images/maintab_active_first.gif) no-repeat bottom left;
 	padding: 0 0 0 8px;
 }
-.buttonlist ul li.last.active
+.buttonlist ul li.lastactive
 {
 	float: left;
 	background: url(../images/maintab_last.gif) no-repeat bottom right;
@@ -944,7 +944,7 @@ div#menu_toggle a
 	background: url(../images/mirrortab_active_first.gif) no-repeat top left;
 	padding: 0 0 0 8px;
 }
-.buttonlist_bottom ul li.last.active
+.buttonlist_bottom ul li.lastactive
 {
 	float: left;
 	background: url(../images/mirrortab_last.gif) no-repeat top right;

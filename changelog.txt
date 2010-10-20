@@ -53,6 +53,7 @@ October 2010
  ! A few more updates to credits. (Who.php)
  & Adding a new group to credits to reflect the recent changes in the structure. (Who.english.php)
  ! One more little credits update. (Who.php)
+ * Incorrect background image for Core theme last active buttonlist buttons on IE6. (index template, index.css) [Bug 4472]
 
 
 September 2010
