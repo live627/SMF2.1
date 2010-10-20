@@ -41,6 +41,8 @@ October 2010
  ! Escaping potential identifiers used as column names (DbExtra-mysql.php, DbExtra-postgresql.php) [Bug 4261]
  * Clean attachment function didn't work properly on Chrome. (script.js) [Bug 4508]
  ! Incorrect usage of $smcFunc['db_insert_id'] function. (Subs-Calendar.php) [Bug 4509]
+ ! Offer one last warning for admins enabling test mode for paid subscriptions. (ManagePaid.php) [Bug 4503]
+ & Add a new language entry for the change above. (ManagePaid language file) [Bug 4503]
 
 
 September 2010
