@@ -1553,8 +1553,15 @@ smc_BBCButtonBox.prototype.init = function ()
 
 				case 'select':
 					var sOptions = '';
+
+					// Fighting javascript's idea of order in a for loop... :P
+					if ('' in oCurButton.oOptions)
+						sOptions = '<option value="">' + oCurButton.oOptions[''].php_htmlspecialchars() + '</option>';
 					for (var sSelectValue in oCurButton.oOptions)
-						sOptions += '<option value="' + sSelectValue.php_htmlspecialchars() + '">' + oCurButton.oOptions[sSelectValue].php_htmlspecialchars() + '</option>';
+						// we've been through this before
+						if (sSelectValue != '')
+							sOptions += '<option value="' + sSelectValue.php_htmlspecialchars() + '">' + oCurButton.oOptions[sSelectValue].php_htmlspecialchars() + '</option>';
+
 					sRowContent += this.opt.sSelectTemplate.easyReplace({
 						selectName: oCurButton.sName,
 						selectId: this.opt.sUniqueId.php_htmlspecialchars() + '_select_' + iButtonRowIndex.toString() + '_' + iButtonIndex.toString(),
