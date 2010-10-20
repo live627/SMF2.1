@@ -1597,6 +1597,9 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			),
 		);
 
+		// Let mods add new BBC without hassle.
+		call_integration_hook('integrate_bbc_codes', array(&$codes));
+
 		// This is mainly for the bbc manager, so it's easy to add tags above.  Custom BBC should be added above this line.
 		if ($message === false)
 		{
@@ -4153,6 +4156,9 @@ function setupMenuContext()
 		if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
 			cache_put_data('menu_buttons-' . implode('_', $user_info['groups']) . '-' . $user_info['language'], $menu_buttons, $cacheTime);
 	}
+
+	// Allow editing menu buttons easily.
+	call_integration_hook('integrate_menu_buttons', array(&$menu_buttons));
 
 	$context['menu_buttons'] = $menu_buttons;
 

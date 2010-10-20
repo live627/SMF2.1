@@ -47,6 +47,7 @@ October 2010
  * Install script stylesheet required its own width setting. (install.css)
  * Some lists were not alternated in Subscriptions Profile area. (ManagePaid template) [Bug 4502]
  ! getBoardParents() function results were not cached. (Load.php, Subs-Boards.php) [Bug 4487]
+ * Adding in some new integration hooks. (index.php, Admin.php, Profile.php, Subs-Editor.php, Subs.php, Display template, MessageIndex template)
 
 
 September 2010

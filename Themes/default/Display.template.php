@@ -158,6 +158,9 @@ function template_main()
 		'print' => array('text' => 'print', 'image' => 'print.gif', 'lang' => true, 'custom' => 'rel="new_win nofollow"', 'url' => $scripturl . '?action=printpage;topic=' . $context['current_topic'] . '.0'),
 	);
 
+	// Allow adding new buttons easily.
+	call_integration_hook('integrate_display_buttons', array(&$normal_buttons));
+
 	// Show the page index... "Pages: [1]".
 	echo '
 			<div class="pagesection">
@@ -646,6 +649,9 @@ function template_main()
 	// Restore topic. eh?  No monkey business.
 	if ($context['can_restore_topic'])
 		$mod_buttons[] = array('text' => 'restore_topic', 'image' => '', 'lang' => true, 'url' => $scripturl . '?action=restoretopic;topics=' . $context['current_topic'] . ';' . $context['session_var'] . '=' . $context['session_id']);
+
+	// Allow adding new mod buttons easily.
+	call_integration_hook('integrate_mod_buttons', array(&$mod_buttons));
 
 	echo '
 			<div id="moderationbuttons">', template_button_strip($mod_buttons, 'bottom', array('id' => 'moderationbuttons_strip')), '</div>';

@@ -131,6 +131,9 @@ function template_main()
 	if (!$context['user']['is_logged'] || !$settings['show_mark_read'])
 		unset($normal_buttons['markread']);
 
+	// Allow adding new buttons easily.
+	call_integration_hook('integrate_messageindex_buttons', array(&$normal_buttons));
+
 	if (!$context['no_topic_listing'])
 	{
 		echo '
