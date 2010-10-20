@@ -67,14 +67,6 @@ if (!defined('SMF'))
 		- does not effect keys, only values.
 		- may call itself recursively if needed.
 
-	array validate_unicode__recursive(array var)
-		- makes sure a string only contains character which are allowed in
-		  XML/XHTML (not 0-8, 11, 12, and 14-31.)
-		- tries to handle UTF-8 properly, and shouldn't negatively affect
-		  character sets like ISO-8859-1.
-		- does not effect keys, only changes values.
-		- may call itself recursively if necessary.
-
 	string cleanXml(string var)
 		- removes invalid XML characters to assure the input string being
 		  parsed properly.
@@ -436,42 +428,6 @@ function htmltrim__recursive($var, $level = 0)
 	// Go through all the elements and remove the whitespace.
 	foreach ($var as $k => $v)
 		$var[$k] = $level > 25 ? null : htmltrim__recursive($v, $level + 1);
-
-	return $var;
-}
-
-// !!!
-function validate_unicode__recursive($var)
-{
-	if (is_array($var))
-		return array_map('validate_unicode__recursive', $var);
-
-	$cleanup = array_merge(range(0, 8), range(11, 12), range(14, 31));
-
-	// Assuming unicode for now - won't really hurt if we're wrong.
-	for ($i = 0; $i < strlen($var); $i++)
-	{
-		$c = ord($var{$i});
-		if (in_array($c, $cleanup))
-		{
-			$var = substr($var, 0, $i) . substr($var, $i + 1);
-			$i--;
-			continue;
-		}
-
-		if ($c < 192)
-			continue;
-		elseif ($c < 224)
-			$i++;
-		elseif ($c < 240)
-			$i += 2;
-		elseif ($c < 248)
-			$i += 3;
-		elseif ($c < 252)
-			$i += 4;
-		elseif ($c < 254)
-			$i += 5;
-	}
 
 	return $var;
 }

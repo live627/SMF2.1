@@ -43,6 +43,7 @@ October 2010
  ! Incorrect usage of $smcFunc['db_insert_id'] function. (Subs-Calendar.php) [Bug 4509]
  ! Offer one last warning for admins enabling test mode for paid subscriptions. (ManagePaid.php) [Bug 4503]
  & Add a new language entry for the change above. (ManagePaid language file) [Bug 4503]
+ ! Removed no longer used validate_unicode__recursive function. (QueryString.php) [Bug 4498]
 
 
 September 2010
