@@ -1,6 +1,8 @@
 <edit file>
 $sourcedir/DumpDatabase.php
 </edit file>
+
+
 <search for>
 * =============================================================================== *
 * Software Version:           SMF 1.0.10                                          *
@@ -11,9 +13,7 @@ $sourcedir/DumpDatabase.php
 * Software Version:           SMF 1.0.20                                          *
 </replace>
 
-<edit file>
-$sourcedir/DumpDatabase.php
-</edit file>
+
 <search for>
 
 	// Probably MyISAM.... and it might have a comment.
@@ -47,6 +47,7 @@ $sourcedir/News.php
 * Software Version:           SMF 1.0.20                                          *
 </replace>
 
+
 <search for>
 	// Find the most recent members.
 </search for>
@@ -69,6 +70,7 @@ $sourcedir/News.php
 	// Load the member's contextual information!
 	if (!loadMemberContext($_GET['u']) || !allowedTo('profile_view_any'))
 </replace>
+
 
 
 <edit file>
@@ -94,4 +96,3 @@ $forum_version = 'SMF 1.0.19';
 
 $forum_version = 'SMF 1.0.20';
 </replace>
-
