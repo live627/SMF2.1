@@ -57,6 +57,7 @@ October 2010
  ! Brackets in username caused trailing quote to be lost on WYSIWYG toggle. (Subs-Editor.php) [Bug 4316]
  ! Ugly fix for Firefox resetting form content. (script.js) [Bug 4346]
  ! Browsers' javascript has sometimes odd ideas about expected order. :P (editor.js) [Bug 4453]
+ ! Reverting 10207 for Subs.php. Should be included only if it can be properly tested.
 
 
 September 2010

@@ -3655,6 +3655,10 @@ function getAttachmentFilename($filename, $attachment_id, $dir = null, $new = fa
 		$smcFunc['db_free_result']($request);
 	}
 
+	// In case of files from the old system, do a legacy call.
+	if (empty($file_hash))
+		return getLegacyAttachmentFilename($filename, $attachment_id, $dir, $new);
+
 	// Are we using multiple directories?
 	if (!empty($modSettings['currentAttachmentUploadDir']))
 	{
@@ -3664,24 +3668,6 @@ function getAttachmentFilename($filename, $attachment_id, $dir = null, $new = fa
 	}
 	else
 		$path = $modSettings['attachmentUploadDir'];
-
-	// In case of files from the old system, do a legacy call.
-	if (empty($file_hash))
-	{
-		$current_filename = getLegacyAttachmentFilename($filename, $attachment_id, $dir, $new);
-		$hash = sha1(md5($filename . time()) . mt_rand());
-
-		if (rename($current_filename, $path . '/' . $attachment_id . '_' . $file_hash))
-			$smcFunc['db_query']('', '
-				UPDATE {db_prefix}attachments
-				SET file_hash = {string:file_hash}
-				WHERE id_attachment = {int:attachment_id}',
-				array(
-					'file_hash' => $hash,
-					'attachment_id' => $attachment_id,
-				)
-			);
-	}
 
 	return $path . '/' . $attachment_id . '_' . $file_hash;
 }
