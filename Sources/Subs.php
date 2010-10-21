@@ -1496,7 +1496,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'test' => '([1-9][\d]?p[xt]|(?:x-)?small(?:er)?|(?:x-)?large[r]?|(0\.[1-9]|[1-9](\.[\d][\d]?)?)?em)\]',
 				'before' => '<span style="font-size: $1;" class="bbc_size">',
 				'after' => '</span>',
-				'disallow_children' => array('size'),
 			),
 			array(
 				'tag' => 'size',

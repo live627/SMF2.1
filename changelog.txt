@@ -59,6 +59,7 @@ October 2010
  ! Browsers' javascript has sometimes odd ideas about expected order. :P (editor.js) [Bug 4453]
  ! Reverting 10207 for Subs.php. Should be included only if it can be properly tested.
  ! Fixed webkit unexpected behavior when setting font styles (thank you Nibogo!) (editor.js) [Bug 4511]
+ ! Allow nested [size] tags - we do allow them anyway, just not in all combinations (Subs.php)
 
 
 September 2010
