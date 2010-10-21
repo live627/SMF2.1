@@ -25,6 +25,7 @@ $sourcedir/DumpDatabase.php
 
 <search for>
 	// Probably MyISAM.... and it might have a comment.
+	$schema_create .= $crlf . ') TYPE=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
 </search for>
 
 <replace>
@@ -34,17 +35,6 @@ $sourcedir/DumpDatabase.php
 	else 
 		$schema_type = 'ENGINE=';
 	
-	// Probably MyISAM.... and it might have a comment.
-</replace>
-
-
-
-<search for>
-	// Probably MyISAM.... and it might have a comment.
-	$schema_create .= $crlf . ') TYPE=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
-</search for>
-
-<replace>
 	// Probably MyISAM.... and it might have a comment.
 	$schema_create .= $crlf . ') ' . $schema_type . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
 </replace>
@@ -129,7 +119,6 @@ function ManageSmileys()
 </search for>
 
 <replace>
-					PRIMARY KEY (ID_WORD, ID_MSG)
 			sortSmileyTable();
 </replace>
 
@@ -141,7 +130,6 @@ function ManageSmileys()
 </search for>
 
 <replace>
-					PRIMARY KEY (ID_WORD, ID_MSG)
 		sortSmileyTable();
 </replace>
 
@@ -316,24 +304,10 @@ $sourcedir/Profile.php
 </replace>
 
 
+
 <edit file>
 $sourcedir/Subs-Package.php
-</edit file><search for>
-
-		if (trim($lower) <= $version && trim($upper) >= $version)
-		foreach ($upper as $key => $high)
-</search for>
-
-<replace>
-		$lower = explode('.', $lower);
-		$upper = explode('.', $upper);
-		$version = explode('.', $version);
-
-		if (trim($lower) <= $version && trim($upper) >= $version)
-		foreach ($upper as $key => $high)
-</replace>
-
-
+</edit file>
 
 <search for>
 
@@ -341,6 +315,9 @@ $sourcedir/Subs-Package.php
 </search for>
 
 <replace>
+		$lower = explode('.', $lower);
+		$upper = explode('.', $upper);
+		$version = explode('.', $version);
 
 		foreach ($upper as $key => $high)
 		{
@@ -359,6 +336,9 @@ $sourcedir/Subs-Package.php
 		}
 </replace>
 
+<edit file>
+$sourcedir/Subs-Package.php
+</edit file>
 
 <search for>
 
@@ -373,7 +353,8 @@ $sourcedir/Subs-Package.php
 
 <edit file>
 $sourcedir/Subs.php
-</edit file><search for>
+</edit file>
+<search for>
 	// Never show smileys for wireless clients.  More bytes, can't see it anyway :P.
 </search for>
 
