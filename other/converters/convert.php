@@ -2512,7 +2512,7 @@ function convert_query($string, $return_error = false)
 		// FIrst log it.
 		// In the future this may return the actual file it came from.
 		if (isset($_GET['debug']) || isset($_POST['debug']))
-			convert_error_hanlder($db_error, $string, 'Converter File', $db_errno, true);
+			convert_error_handler($db_error, $string, 'Converter File', $db_errno, array(), true);
 
 		// Error numbers:
 		//    1016: Can't open file '....MYI'
@@ -2548,7 +2548,7 @@ function convert_query($string, $return_error = false)
 				$smcFunc['db_query']('', "SET @@SQL_BIG_SELECTS = 1", 'security_override');
 
 			// Lets set MAX_JOIN_SIZE to something we should
-			if (empty($sql_max_join) || ($sql_max_join == '18446744073709551615' && sql_max_join == '18446744073709551615'))
+			if (empty($sql_max_join) || ($sql_max_join == '18446744073709551615' && sql_max_join == '18446744073709551615')), 
 				$smcFunc['db_query']('', "SET @@SQL_MAX_JOIN_SIZE = 18446744073709551615", 'security_override');
 
 			// Try again.
@@ -3088,7 +3088,7 @@ function print_line($line, $return = true)
 }
 
 // Handles our errors.
-function convert_error_handler($error_level, $error_string, $file, $line, $is_database_error = false)
+function convert_error_handler($error_level, $error_string, $file, $line, $errorContext = array(), $is_database_error = false)
 {
 	global $command_line;
 
