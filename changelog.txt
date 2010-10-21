@@ -58,6 +58,7 @@ October 2010
  ! Ugly fix for Firefox resetting form content. (script.js) [Bug 4346]
  ! Browsers' javascript has sometimes odd ideas about expected order. :P (editor.js) [Bug 4453]
  ! Reverting 10207 for Subs.php. Should be included only if it can be properly tested.
+ ! Fixed webkit unexpected behavior when setting font styles (thank you Nibogo!) (editor.js) [Bug 4511]
 
 
 September 2010

@@ -745,7 +745,11 @@ smc_Editor.prototype.handleSelectChange = function (oSelectProperties)
 			oSelectProperties.oSelect.selectedIndex = 0;
 		}
 		else
+		{
+			if (is_webkit)
+				this.smf_execCommand('styleWithCSS', false, true);
 			this.smf_execCommand('fontname', false, sValue);
+		}
 	}
 
 	// Font size?
