@@ -11,6 +11,9 @@ $sourcedir/DumpDatabase.php
 * Software Version:           SMF 1.0.20                                          *
 </replace>
 
+<edit file>
+$sourcedir/DumpDatabase.php
+</edit file>
 <search for>
 
 	// Probably MyISAM.... and it might have a comment.
@@ -26,20 +29,9 @@ $sourcedir/DumpDatabase.php
 		$schema_type = 'ENGINE=';
 
 	// Probably MyISAM.... and it might have a comment.
-	$schema_create .= $crlf . ') TYPE=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
-</replace>
-
-
-
-<search for>
-	// Probably MyISAM.... and it might have a comment.
-	$schema_create .= $crlf . ') TYPE=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
-</search for>
-
-<replace>
-	// Probably MyISAM.... and it might have a comment.
 	$schema_create .= $crlf . ') ' . $schema_type . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
 </replace>
+
 
 
 <edit file>
