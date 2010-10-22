@@ -60,6 +60,8 @@ October 2010
  ! Reverting 10207 for Subs.php. Should be included only if it can be properly tested.
  ! Fixed webkit unexpected behavior when setting font styles (thank you Nibogo!) (editor.js) [Bug 4511]
  ! Allow nested [size] tags - we do allow them anyway, just not in all combinations (Subs.php)
+ ! censor area should only be available to admins - reported by more, including KinG-InFeT.
+ ! Package servers URLs and names properly cleaned for all circumstances - reported by KinG-InFeT.
 
 
 September 2010
