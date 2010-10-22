@@ -132,8 +132,7 @@ function ManageSmileys()
 ]]></add>
 		</operation>
 		<operation>
-			<search position="after"><![CDATA[?>
-]]></search>
+			<search position="end" />
 			<add><![CDATA[// This function sorts the smiley table by code length, it is needed as MySQL withdrew support for functions in order by.
 function sortSmileyTable()
 {
