@@ -52,9 +52,9 @@ $sourcedir/ManageSearch.php
 			// MySQL users below 4.0 can not use Engine
 			if (version_compare('4', preg_replace('~\-.+?$~', '', min(mysql_get_server_info(), mysql_get_client_info()))) > 0)
 				$schema_type = 'TYPE=';
-			else 
+			else
 				$schema_type = 'ENGINE=';
-		
+
 			db_query("
 				CREATE TABLE {$db_prefix}log_search_words (
 					ID_WORD " . $index_properties[$context['index_settings']['bytes_per_word']]['column_definition'] . " unsigned NOT NULL default '0',
@@ -240,70 +240,6 @@ $sourcedir/PackageGet.php
 </replace>
 
 
-<edit file>
-$sourcedir/Profile.php
-</edit file>
-<search for>
-				'url' => 'http://www.afrinic.net/cgi-bin/whois?searchtext=' . $context['ip'],
-				'range' => array(),
-</search for>
-
-<replace>
-				'url' => 'http://www.afrinic.net/cgi-bin/whois?searchtext=' . $context['ip'],
-				'range' => array(41, 154, 196),
-</replace>
-
-
-<search for>
-				'url' => 'http://wq.apnic.net/apnic-bin/whois.pl?searchtext=' . $context['ip'],
-				'range' => array(58, 59, 60, 61, 124, 125, 126, 202, 203, 210, 211, 218, 219, 220, 221, 222),
-</search for>
-
-<replace>
-				'url' => 'http://wq.apnic.net/apnic-bin/whois.pl?searchtext=' . $context['ip'],
-				'range' => array(58, 59, 60, 61, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124,
-					125, 126, 133, 150, 153, 163, 171, 202, 203, 210, 211, 218, 219, 220, 221, 222),
-</replace>
-
-
-<search for>
-				'url' => 'http://ws.arin.net/whois/?queryinput=' . $context['ip'],
-				'range' => array(63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 199, 204, 205, 206, 207, 208, 209, 216),
-</search for>
-
-<replace>
-				'url' => 'http://wq.apnic.net/apnic-bin/whois.pl?searchtext=' . $context['ip'],
-				'url' => 'http://whois.arin.net/rest/ip/' . $context['ip'],
-				'range' => array(7, 24, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 96, 97, 98, 99,
-					128, 129, 130, 131, 132, 134, 135, 136, 137, 138, 139, 140, 142, 143, 144, 146, 147, 148, 149,
-					152, 155, 156, 157, 158, 159, 160, 161, 162, 164, 165, 166, 167, 168, 169, 170, 172, 173, 174,
-					192, 198, 199, 204, 205, 206, 207, 208, 209, 216),
-</replace>
-
-
-<search for>
-				'url' => 'http://lacnic.net/cgi-bin/lacnic/whois?query=' . $context['ip'],
-				'range' => array(200, 201),
-</search for>
-
-<replace>
-				'url' => 'http://lacnic.net/cgi-bin/lacnic/whois?query=' . $context['ip'],
-				'range' => array(186, 187, 189, 190, 191, 200, 201),
-</replace>
-
-
-<search for>
-				'url' => 'http://www.db.ripe.net/whois?searchtext=' . $context['ip'],
-				'range' => array(62, 80, 81, 82, 83, 84, 85, 86, 87, 88, 193, 194, 195, 212, 213, 217),
-</search for>
-
-<replace>
-				'url' => 'http://www.db.ripe.net/whois?searchtext=' . $context['ip'],
-				'range' => array(62, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,
-					141, 145, 151, 188, 193, 194, 195, 212, 213, 217),
-</replace>
-
-
 
 <edit file>
 $sourcedir/Subs-Package.php
@@ -348,22 +284,6 @@ $sourcedir/Subs-Package.php
 <replace>
 
 	preg_match('~^(http|ftp)(s)?://([^/:]+)(:(\d+))?(.+)$~', $url, $match);
-</replace>
-
-
-<edit file>
-$sourcedir/Subs.php
-</edit file>
-<search for>
-	// Never show smileys for wireless clients.  More bytes, can't see it anyway :P.
-</search for>
-
-<replace>
-	// Don't waste cycles
-	if ($message === '')
-		return '';	
-
-	// Never show smileys for wireless clients.  More bytes, can't see it anyway :P.
 </replace>
 
 
