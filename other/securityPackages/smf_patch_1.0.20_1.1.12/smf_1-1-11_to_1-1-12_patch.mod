@@ -534,3 +534,25 @@ $themedir/Display.template.php
 		'remove_poll' => array('test' => 'can_remove_poll', 'text' => 'poll_remove', 'image' => 'admin_remove_poll.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');"', 'url' => $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id']),
 </replace>
 
+<edit file>
+$boarddir/index.php
+</edit file>
+
+
+<search for>
+* Software Version:           SMF 1.1.11                                          *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.12                                          *
+</replace>
+
+
+<search for>
+$forum_version = 'SMF 1.1.11';
+</search for>
+
+<replace>
+$forum_version = 'SMF 1.1.12';
+</replace>
+
