@@ -171,31 +171,48 @@ function ManageSmileys()
 
 
 <search for>
+			// Sort all smiley codes for more accurate parsing (longest code first).
 			db_query("
 				ALTER TABLE {$db_prefix}smileys
 				ORDER BY LENGTH(code) DESC", __FILE__, __LINE__);
 </search for>
 
 <replace>
+			// Sort all smiley codes for more accurate parsing (longest code first).
 			sortSmileyTable();
 </replace>
 
 
 <search for>
+		// Make sure the smiley codes are still in the right order.
 		db_query("
 			ALTER TABLE {$db_prefix}smileys
 			ORDER BY LENGTH(code) DESC", __FILE__, __LINE__);
 </search for>
 
 <replace>
+		// Make sure the smiley codes are still in the right order.
 		sortSmileyTable();
 </replace>
 
+
 <search for>
+		while ($row = mysql_fetch_assoc($request))
+			$context['boards'][$row['ID_BOARD']] = $row['name'];
+		mysql_free_result($request);
+	}
+}
+
 ?>
 </search for>
 
 <replace>
+		while ($row = mysql_fetch_assoc($request))
+			$context['boards'][$row['ID_BOARD']] = $row['name'];
+		mysql_free_result($request);
+	}
+}
+
 // This function sorts the smiley table by code length, it is needed as MySQL withdrew support for functions in order by.
 function sortSmileyTable()
 {
