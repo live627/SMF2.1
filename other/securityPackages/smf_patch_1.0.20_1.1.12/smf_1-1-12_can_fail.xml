@@ -1,41 +1,41 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>smf:smf-1.1.12</id>
 	<version>1.0</version>
-	<file name="$boarddir/index.php">
-		<operation>
+	<file name="$boarddir/index.php" error="skip">
+		<operation error="ignore">
 			<search position="replace"><![CDATA[* Software Version:           SMF 1.1.11                                          *
 ]]></search>
 			<add><![CDATA[* Software Version:           SMF 1.1.12                                          *
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[$forum_version = 'SMF 1.1.11';
 ]]></search>
 			<add><![CDATA[$forum_version = 'SMF 1.1.12';
 ]]></add>
 		</operation>
 	</file>
-	<file name="$sourcedir/DumpDatabase.php">
-		<operation>
+	<file name="$sourcedir/DumpDatabase.php" error="skip">
+		<operation error="ignore">
 			<search position="replace"><![CDATA[* Software Version:           SMF 1.1                                             *
 ]]></search>
 			<add><![CDATA[* Software Version:           SMF 1.1.12                                             *
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[	@ini_set('memory_limit', '128M');
 ]]></search>
 			<add><![CDATA[	if (@ini_get('memory_limit') < 256)
 		@ini_set('memory_limit', '256M');
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[		header('Content-Type: application/octetstream');
 ]]></search>
 			<add><![CDATA[		header('Content-Type: ' . ($context['browser']['is_ie'] || $context['browser']['is_opera'] ? 'application/octetstream' : 'application/octet-stream'));
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="after"><![CDATA[	// Probably MyISAM.... and it might have a comment.
 ]]></search>
 			<add><![CDATA[	// MySQL users below 4.0 can not use Engine
@@ -46,21 +46,21 @@
 	
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[	$schema_create .= $crlf . ') TYPE=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
 ]]></search>
 			<add><![CDATA[	$schema_create .= $crlf . ') ' . $schema_type . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
 ]]></add>
 		</operation>
 	</file>
-	<file name="$sourcedir/ManageSearch.php">
-		<operation>
+	<file name="$sourcedir/ManageSearch.php" error="skip">
+		<operation error="ignore">
 			<search position="replace"><![CDATA[* Software Version:           SMF 1.1.2                                           *
 ]]></search>
 			<add><![CDATA[* Software Version:           SMF 1.1.12                                           *
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="after"><![CDATA[			db_query("
 				CREATE TABLE {$db_prefix}log_search_words (
 					ID_WORD " . $index_properties[$context['index_settings']['bytes_per_word']]['column_definition'] . " unsigned NOT NULL default '0',
@@ -75,7 +75,7 @@
 
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[				) TYPE=MyISAM", __FILE__, __LINE__);
 			
 ]]></search>
@@ -84,14 +84,14 @@
 ]]></add>
 		</operation>
 	</file>
-	<file name="$sourcedir/ManageSmileys.php">
-		<operation>
+	<file name="$sourcedir/ManageSmileys.php" error="skip">
+		<operation error="ignore">
 			<search position="replace"><![CDATA[* Software Version:           SMF 1.1.11                                          *
 ]]></search>
 			<add><![CDATA[* Software Version:           SMF 1.1.12                                          *
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="after"><![CDATA[*/
 
 function ManageSmileys()
@@ -104,7 +104,7 @@ function ManageSmileys()
 		// !!!
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="after"><![CDATA[		updateSettings(array(
 			'smiley_sets_default' => empty($context['smiley_sets'][$_POST['default_smiley_set']]) ? 'default' : $context['smiley_sets'][$_POST['default_smiley_set']],
 			'smiley_sets_enable' => isset($_POST['smiley_sets_enable']) ? '1' : '0',
@@ -115,7 +115,7 @@ function ManageSmileys()
 
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[			db_query("
 				ALTER TABLE {$db_prefix}smileys
 				ORDER BY LENGTH(code) DESC", __FILE__, __LINE__);
@@ -123,7 +123,7 @@ function ManageSmileys()
 			<add><![CDATA[			sortSmileyTable();
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[		db_query("
 			ALTER TABLE {$db_prefix}smileys
 			ORDER BY LENGTH(code) DESC", __FILE__, __LINE__);
@@ -131,7 +131,7 @@ function ManageSmileys()
 			<add><![CDATA[		sortSmileyTable();
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="end" />
 			<add><![CDATA[
 // This function sorts the smiley table by code length, it is needed as MySQL withdrew support for functions in order by.
@@ -162,14 +162,14 @@ function sortSmileyTable()
 ]]></add>
 		</operation>
 	</file>
-	<file name="$sourcedir/News.php">
-		<operation>
+	<file name="$sourcedir/News.php" error="skip">
+		<operation error="ignore">
 			<search position="replace"><![CDATA[* Software Version:           SMF 1.1                                             *
 ]]></search>
 			<add><![CDATA[* Software Version:           SMF 1.1.12                                             *
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="after"><![CDATA[	// Find the most recent members.
 	$request = db_query("
 		SELECT ID_MEMBER, memberName, realName, dateRegistered, lastLogin
@@ -179,21 +179,21 @@ function sortSmileyTable()
 
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[	if (!loadMemberContext($_GET['u']))
 ]]></search>
 			<add><![CDATA[	if (!loadMemberContext($_GET['u']) || !allowedTo('profile_view_any'))
 ]]></add>
 		</operation>
 	</file>
-	<file name="$sourcedir/PackageGet.php">
-		<operation>
+	<file name="$sourcedir/PackageGet.php" error="skip">
+		<operation error="ignore">
 			<search position="replace"><![CDATA[* Software Version:           SMF 1.1.11                                          *
 ]]></search>
 			<add><![CDATA[* Software Version:           SMF 1.1.12                                          *
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[			'name' => htmlspecialchars($row['name']),
 			'url' => htmlspecialchars($row['url']),
 ]]></search>
@@ -201,7 +201,7 @@ function sortSmileyTable()
 			'url' => $row['url'],
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[		$_POST['serverurl'] = substr($_POST['serverurl'], 0, -1);
 
 ]]></search>
@@ -215,21 +215,21 @@ function sortSmileyTable()
 
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[		VALUES (SUBSTRING('$_POST[servername]', 1, 255), SUBSTRING('$_POST[serverurl]', 1, 255))", __FILE__, __LINE__);
 ]]></search>
 			<add><![CDATA[		VALUES (SUBSTRING('$servername', 1, 255), SUBSTRING('$serverurl', 1, 255))", __FILE__, __LINE__);
 ]]></add>
 		</operation>
 	</file>
-	<file name="$sourcedir/Subs-Package.php">
-		<operation>
+	<file name="$sourcedir/Subs-Package.php" error="skip">
+		<operation error="ignore">
 			<search position="replace"><![CDATA[* Software Version:           SMF 1.1.5                                           *
 ]]></search>
 			<add><![CDATA[* Software Version:           SMF 1.1.12                                           *
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[
 		if (trim($lower) <= $version && trim($upper) >= $version)
 			return true;
@@ -256,49 +256,49 @@ function sortSmileyTable()
 		return true;
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[	preg_match('~^(http|ftp)(s)?://([^/:]+)(:(\d))?(.+)$~', $url, $match);
 ]]></search>
 			<add><![CDATA[	preg_match('~^(http|ftp)(s)?://([^/:]+)(:(\d+))?(.+)$~', $url, $match);
 ]]></add>
 		</operation>
 	</file>
-	<file name="$themes_dir/babylon/Display.template.php">
-		<operation>
+	<file name="$themes_dir/babylon/Display.template.php" error="skip">
+		<operation error="ignore">
 			<search position="replace"><![CDATA[// Version: 1.1; Display
 ]]></search>
 			<add><![CDATA[// Version: 1.1.12; Display
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[		$moderationButtons[] = '<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/admin_remove_poll.gif" alt="' . $txt['poll_remove'] . '" border="0" />' : $txt['poll_remove']) . '</a>';
 ]]></search>
 			<add><![CDATA[		$moderationButtons[] = '<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/admin_remove_poll.gif" alt="' . $txt['poll_remove'] . '" border="0" />' : $txt['poll_remove']) . '</a>';
 ]]></add>
 		</operation>
 	</file>
-	<file name="$themes_dir/classic/Display.template.php">
-		<operation>
+	<file name="$themes_dir/classic/Display.template.php" error="skip">
+		<operation error="ignore">
 			<search position="replace"><![CDATA[// Version: 1.1; Display
 ]]></search>
 			<add><![CDATA[// Version: 1.1.12; Display
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[		$moderationButtons[] = '<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/admin_remove_poll.gif" alt="' . $txt['poll_remove'] . '" border="0" />' : $txt['poll_remove']) . '</a>';
 ]]></search>
 			<add><![CDATA[		$moderationButtons[] = '<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/admin_remove_poll.gif" alt="' . $txt['poll_remove'] . '" border="0" />' : $txt['poll_remove']) . '</a>';
 ]]></add>
 		</operation>
 	</file>
-	<file name="$themedir/Admin.template.php">
-		<operation>
+	<file name="$themedir/Admin.template.php" error="skip">
+		<operation error="ignore">
 			<search position="replace"><![CDATA[// Version: 1.1.1; Admin
 ]]></search>
 			<add><![CDATA[// Version: 1.1.12; Admin
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="after"><![CDATA[			function smfDetermineVersions()
 			{
 				var highYour = {"Sources": "??", "Default" : "??", "Languages": "??", "Templates": "??"};
@@ -333,57 +333,57 @@ function sortSmileyTable()
 
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[						if ((highYour[versionType] < yourVersion || highYour[versionType] == "??") && !lowVersion[versionType])
 ]]></search>
 			<add><![CDATA[						if ((compareVersions(highYour[versionType], yourVersion) || highYour[versionType] == "??") && !lowVersion[versionType])
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[						if (highCurrent[versionType] < smfVersions[filename] || highCurrent[versionType] == "??")
 ]]></search>
 			<add><![CDATA[						if (compareVersions(highCurrent[versionType], smfVersions[filename]) || highCurrent[versionType] == "??")
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[						if (yourVersion < smfVersions[filename])
 ]]></search>
 			<add><![CDATA[						if (compareVersions(yourVersion, smfVersions[filename]))
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[					else if (yourVersion < smfVersions[filename])
 ]]></search>
 			<add><![CDATA[					else if (compareVersions(yourVersion, smfVersions[filename]))
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[						if ((highYour["Languages"] < yourVersion || highYour["Languages"] == "??") && !lowVersion["Languages"])
 ]]></search>
 			<add><![CDATA[						if ((compareVersions(highYour["Languages"], yourVersion) || highYour["Languages"] == "??") && !lowVersion["Languages"])
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[						if (highCurrent["Languages"] < smfLanguageVersions[filename] || highCurrent["Languages"] == "??")
 ]]></search>
 			<add><![CDATA[						if (compareVersions(highCurrent["Languages"], smfLanguageVersions[filename]) || highCurrent["Languages"] == "??")
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[						if (yourVersion < smfLanguageVersions[filename])
 ]]></search>
 			<add><![CDATA[						if (compareVersions(yourVersion, smfLanguageVersions[filename]))
 ]]></add>
 		</operation>
 	</file>
-	<file name="$themedir/Display.template.php">
-		<operation>
+	<file name="$themedir/Display.template.php" error="skip">
+		<operation error="ignore">
 			<search position="replace"><![CDATA[// Version: 1.1; Display
 ]]></search>
 			<add><![CDATA[// Version: 1.1.12; Display
 ]]></add>
 		</operation>
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[		'remove_poll' => array('test' => 'can_remove_poll', 'text' => 'poll_remove', 'image' => 'admin_remove_poll.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');"', 'url' => $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start']),
 ]]></search>
 			<add><![CDATA[		'remove_poll' => array('test' => 'can_remove_poll', 'text' => 'poll_remove', 'image' => 'admin_remove_poll.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');"', 'url' => $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id']),
