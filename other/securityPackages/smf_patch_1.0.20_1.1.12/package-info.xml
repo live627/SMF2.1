@@ -21,7 +21,7 @@
 		<readme type="inline">
 			This patch file will update your forum to SMF 1.1.12.
 		</readme>
-<!--		<modification type="file" format="boardmod">smf_1-1-11_to_1-1-12_patch.mod</modification>-->
+		<modification type="file" format="boardmod">smf_1-1-11_to_1-1-12_patch.mod</modification>
 		<modification type="file" format="xml">smf_1-1-12_can_fail.xml</modification>
 	--></install>
 	<install for="1.0.19">
@@ -34,7 +34,7 @@
 		<readme type="inline">
 			This will downgrade your forum back to SMF 1.1.11.
 		</readme>
-<!--		<modification type="file" format="boardmod" reverse="true">smf_1-1-11_to_1-1-12_patch.mod</modification>-->
+		<modification type="file" format="boardmod" reverse="true">smf_1-1-11_to_1-1-12_patch.mod</modification>
 		<modification type="file" format="xml" reverse="true">smf_1-1-12_can_fail.xml</modification>
 	</uninstall>
 	<uninstall for="1.0.20">

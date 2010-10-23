@@ -36,14 +36,19 @@
 ]]></add>
 		</operation>
 		<operation error="ignore">
-			<search position="after"><![CDATA[	// Probably MyISAM.... and it might have a comment.
+			<search position="replace"><![CDATA[	@mysql_free_result($result);
+
+	// Probably MyISAM.... and it might have a comment.
 ]]></search>
-			<add><![CDATA[	// MySQL users below 4.0 can not use Engine
+			<add><![CDATA[	@mysql_free_result($result);
+
+	// MySQL users below 4.0 can not use Engine
 	if (version_compare('4', preg_replace('~\-.+?$~', '', min(mysql_get_server_info(), mysql_get_client_info()))) > 0)
 		$schema_type = 'TYPE=';
 	else 
 		$schema_type = 'ENGINE=';
 	
+	// Probably MyISAM.... and it might have a comment.
 ]]></add>
 		</operation>
 		<operation error="ignore">
@@ -61,18 +66,21 @@
 ]]></add>
 		</operation>
 		<operation error="ignore">
-			<search position="after"><![CDATA[			db_query("
+			<search position="replace"><![CDATA[				DROP TABLE IF EXISTS {$db_prefix}log_search_words", __FILE__, __LINE__);
+
+			db_query("
 				CREATE TABLE {$db_prefix}log_search_words (
-					ID_WORD " . $index_properties[$context['index_settings']['bytes_per_word']]['column_definition'] . " unsigned NOT NULL default '0',
-					ID_MSG int(10) unsigned NOT NULL default '0',
-					PRIMARY KEY (ID_WORD, ID_MSG)
 ]]></search>
-			<add><![CDATA[			// MySQL users below 4.0 can not use Engine
+			<add><![CDATA[				DROP TABLE IF EXISTS {$db_prefix}log_search_words", __FILE__, __LINE__);
+
+			// MySQL users below 4.0 can not use Engine
 			if (version_compare('4', preg_replace('~\-.+?$~', '', min(mysql_get_server_info(), mysql_get_client_info()))) > 0)
 				$schema_type = 'TYPE=';
 			else
 				$schema_type = 'ENGINE=';
 
+			db_query("
+				CREATE TABLE {$db_prefix}log_search_words (
 ]]></add>
 		</operation>
 		<operation error="ignore">
@@ -92,27 +100,37 @@
 ]]></add>
 		</operation>
 		<operation error="ignore">
-			<search position="after"><![CDATA[*/
-
-function ManageSmileys()
+			<search position="replace"><![CDATA[	void ImportSmileys($smileyPath)
+		// !!!
+*/
 ]]></search>
-			<add><![CDATA[
+			<add><![CDATA[	void ImportSmileys($smileyPath)
+		// !!!
+
 	void EditMessageIcons()
 		// !!!
 
 	void sortSmileyTable()
 		// !!!
+*/
 ]]></add>
 		</operation>
 		<operation error="ignore">
-			<search position="after"><![CDATA[		updateSettings(array(
+			<search position="replace"><![CDATA[		$context['smiley_sets'] = explode(',', $modSettings['smiley_sets_known']);
+
+		updateSettings(array(
 			'smiley_sets_default' => empty($context['smiley_sets'][$_POST['default_smiley_set']]) ? 'default' : $context['smiley_sets'][$_POST['default_smiley_set']],
 			'smiley_sets_enable' => isset($_POST['smiley_sets_enable']) ? '1' : '0',
 ]]></search>
-			<add><![CDATA[		// Make sure that the smileys are in the right order after enabling them.
+			<add><![CDATA[		$context['smiley_sets'] = explode(',', $modSettings['smiley_sets_known']);
+
+		// Make sure that the smileys are in the right order after enabling them.
 		if (isset($_POST['smiley_enable']))
 			sortSmileyTable();
 
+		updateSettings(array(
+			'smiley_sets_default' => empty($context['smiley_sets'][$_POST['default_smiley_set']]) ? 'default' : $context['smiley_sets'][$_POST['default_smiley_set']],
+			'smiley_sets_enable' => isset($_POST['smiley_sets_enable']) ? '1' : '0',
 ]]></add>
 		</operation>
 		<operation error="ignore">
@@ -186,13 +204,16 @@ function sortSmileyTable()
 ]]></add>
 		</operation>
 		<operation error="ignore">
-			<search position="after"><![CDATA[	// Find the most recent members.
-	$request = db_query("
-		SELECT ID_MEMBER, memberName, realName, dateRegistered, lastLogin
+			<search position="replace"><![CDATA[	global $db_prefix, $scripturl;
+
+	// Find the most recent members.
 ]]></search>
-			<add><![CDATA[	if (!allowedTo('view_mlist'))
+			<add><![CDATA[	global $db_prefix, $scripturl;
+
+	if (!allowedTo('view_mlist'))
 		return array();
 
+	// Find the most recent members.
 ]]></add>
 		</operation>
 		<operation error="ignore">
@@ -315,11 +336,17 @@ function sortSmileyTable()
 ]]></add>
 		</operation>
 		<operation error="ignore">
-			<search position="after"><![CDATA[			function smfDetermineVersions()
-			{
-				var highYour = {"Sources": "??", "Default" : "??", "Languages": "??", "Templates": "??"};
+			<search position="replace"><![CDATA[				sendingElement.blur();
+				return false;
+			}
+
+			function smfDetermineVersions()
 ]]></search>
-			<add><![CDATA[			function compareVersions(current, target)
+			<add><![CDATA[				sendingElement.blur();
+				return false;
+			}
+
+			function compareVersions(current, target)
 			{
 				// Are they equal, maybe?
 				if (current == target)
@@ -347,6 +374,7 @@ function sortSmileyTable()
 				return false;
 			}
 
+			function smfDetermineVersions()
 ]]></add>
 		</operation>
 		<operation error="ignore">
