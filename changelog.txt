@@ -62,6 +62,7 @@ October 2010
  ! Allow nested [size] tags - we do allow them anyway, just not in all combinations (Subs.php)
  ! censor area should only be available to admins - reported by more, including KinG-InFeT.
  ! Package servers URLs and names properly cleaned for all circumstances - reported by KinG-InFeT.
+ & Adapt a language string to the changes in SMF meta keywords. (Help.english.php) [Bug 4515]
 
 
 September 2010
