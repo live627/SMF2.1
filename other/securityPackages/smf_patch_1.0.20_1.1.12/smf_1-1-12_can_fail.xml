@@ -133,7 +133,8 @@ function ManageSmileys()
 		</operation>
 		<operation>
 			<search position="end" />
-			<add><![CDATA[// This function sorts the smiley table by code length, it is needed as MySQL withdrew support for functions in order by.
+			<add><![CDATA[
+// This function sorts the smiley table by code length, it is needed as MySQL withdrew support for functions in order by.
 function sortSmileyTable()
 {
 	global $db_prefix;
@@ -158,7 +159,6 @@ function sortSmileyTable()
 		ALTER TABLE {$db_prefix}smileys
 		DROP temp_order", __FILE__, __LINE__);
 }
-
 ]]></add>
 		</operation>
 	</file>
@@ -202,9 +202,11 @@ function sortSmileyTable()
 ]]></add>
 		</operation>
 		<operation>
-			<search position="replace"><![CDATA[
+			<search position="replace"><![CDATA[		$_POST['serverurl'] = substr($_POST['serverurl'], 0, -1);
+
 ]]></search>
-			<add><![CDATA[	$servername = htmlspecialchars($_POST['servername']);
+			<add><![CDATA[		$_POST['serverurl'] = substr($_POST['serverurl'], 0, -1);
+	$servername = htmlspecialchars($_POST['servername']);
 	$serverurl = htmlspecialchars($_POST['serverurl']);
 
 	// Make sure the URL has the correct prefix.
