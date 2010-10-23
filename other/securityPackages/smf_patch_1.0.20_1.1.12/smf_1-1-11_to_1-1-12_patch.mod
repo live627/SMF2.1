@@ -1,6 +1,36 @@
 <edit file>
+$boarddir/index.php
+</edit file>
+<search for>
+* Software Version:           SMF 1.1.11                                          *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.12                                          *
+</replace>
+
+
+<search for>
+$forum_version = 'SMF 1.1.11';
+</search for>
+
+<replace>
+$forum_version = 'SMF 1.1.12';
+</replace>
+
+
+<edit file>
 $sourcedir/DumpDatabase.php
 </edit file>
+<search for>
+* Software Version:           SMF 1.1                                             *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.12                                             *
+</replace>
+
+
 <search for>
 	@set_time_limit(600);
 	@ini_set('memory_limit', '128M');
@@ -25,7 +55,6 @@ $sourcedir/DumpDatabase.php
 
 <search for>
 	// Probably MyISAM.... and it might have a comment.
-	$schema_create .= $crlf . ') TYPE=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
 </search for>
 
 <replace>
@@ -36,13 +65,33 @@ $sourcedir/DumpDatabase.php
 		$schema_type = 'ENGINE=';
 	
 	// Probably MyISAM.... and it might have a comment.
+</replace>
+
+
+
+<search for>
+	// Probably MyISAM.... and it might have a comment.
+	$schema_create .= $crlf . ') TYPE=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
+</search for>
+
+<replace>
+	// Probably MyISAM.... and it might have a comment.
 	$schema_create .= $crlf . ') ' . $schema_type . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
 </replace>
 
 
 <edit file>
 $sourcedir/ManageSearch.php
-</edit file><search for>
+</edit file>
+<search for>
+* Software Version:           SMF 1.1.2                                           *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.12                                           *
+</replace>
+
+<search for>
 			db_query("
 				CREATE TABLE {$db_prefix}log_search_words (
 					ID_WORD " . $index_properties[$context['index_settings']['bytes_per_word']]['column_definition'] . " unsigned NOT NULL default '0',
@@ -63,19 +112,28 @@ $sourcedir/ManageSearch.php
 
 
 <search for>
-					PRIMARY KEY (ID_WORD, ID_MSG)
 				) TYPE=MyISAM", __FILE__, __LINE__);
+			
 </search for>
 
 <replace>
-					PRIMARY KEY (ID_WORD, ID_MSG)
 				) " . $schema_type . "MyISAM", __FILE__, __LINE__);
+
 </replace>
 
 
 <edit file>
 $sourcedir/ManageSmileys.php
-</edit file><search for>
+</edit file>
+<search for>
+* Software Version:           SMF 1.1.11                                          *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.12                                          *
+</replace>
+
+<search for>
 */
 
 function ManageSmileys()
@@ -171,7 +229,16 @@ function sortSmileyTable()
 
 <edit file>
 $sourcedir/News.php
-</edit file><search for>
+</edit file>
+<search for>
+* Software Version:           SMF 1.1                                             *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.12                                             *
+</replace>
+
+<search for>
 	// Find the most recent members.
 </search for>
 
@@ -199,34 +266,40 @@ $sourcedir/News.php
 $sourcedir/PackageGet.php
 </edit file>
 <search for>
+* Software Version:           SMF 1.1.11                                          *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.12                                          *
+</replace>
+
+
+<search for>
 			'name' => htmlspecialchars($row['name']),
 			'url' => htmlspecialchars($row['url']),
 </search for>
 
 <replace>
-	// Load the member's contextual information!
 			'name' => $row['name'],
 			'url' => $row['url'],
 </replace>
 
-<search for>
 
-	db_query("
-		INSERT INTO {$db_prefix}package_servers
+<search for>
+		$_POST['serverurl'] = substr($_POST['serverurl'], 0, -1);
+
 </search for>
 
 <replace>
+		$_POST['serverurl'] = substr($_POST['serverurl'], 0, -1);
 	$servername = htmlspecialchars($_POST['servername']);
 	$serverurl = htmlspecialchars($_POST['serverurl']);
-	
+
 	// Make sure the URL has the correct prefix.
 	if (strpos($serverurl, 'http://') !== 0 && strpos($serverurl, 'https://') !== 0)
 		$serverurl = 'http://' . $serverurl;
 
-	db_query("
-		INSERT INTO {$db_prefix}package_servers
 </replace>
-
 
 
 <search for>
@@ -240,14 +313,22 @@ $sourcedir/PackageGet.php
 </replace>
 
 
-
 <edit file>
 $sourcedir/Subs-Package.php
 </edit file>
 
 <search for>
+* Software Version:           SMF 1.1.5                                           *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.12                                           *
+</replace>
+
+<search for>
 
 		if (trim($lower) <= $version && trim($upper) >= $version)
+			return true;
 </search for>
 
 <replace>
@@ -270,11 +351,9 @@ $sourcedir/Subs-Package.php
 					return false;
 			}
 		}
+		return true;
 </replace>
 
-<edit file>
-$sourcedir/Subs-Package.php
-</edit file>
 
 <search for>
 
@@ -287,10 +366,20 @@ $sourcedir/Subs-Package.php
 </replace>
 
 
-
 <edit file>
 $themes_dir/babylon/Display.template.php
 </edit file>
+<search for>
+<?php
+// Version: 1.1; Display
+</search for>
+
+<replace>
+<?php
+// Version: 1.1.12; Display
+</replace>
+
+
 <search for>
 	if ($context['can_remove_poll'])
 		$moderationButtons[] = '<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/admin_remove_poll.gif" alt="' . $txt['poll_remove'] . '" border="0" />' : $txt['poll_remove']) . '</a>';
@@ -306,6 +395,17 @@ $themes_dir/babylon/Display.template.php
 $themes_dir/classic/Display.template.php
 </edit file>
 <search for>
+<?php
+// Version: 1.1; Display
+</search for>
+
+<replace>
+<?php
+// Version: 1.1.12; Display
+</replace>
+
+
+<search for>
 	if ($context['can_remove_poll'])
 		$moderationButtons[] = '<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/admin_remove_poll.gif" alt="' . $txt['poll_remove'] . '" border="0" />' : $txt['poll_remove']) . '</a>';
 </search for>
@@ -318,7 +418,18 @@ $themes_dir/classic/Display.template.php
 
 <edit file>
 $themedir/Admin.template.php
-</edit file><search for>
+</edit file>
+<search for>
+<?php
+// Version: 1.1.1; Admin
+</search for>
+
+<replace>
+<?php
+// Version: 1.1.12; Admin
+</replace>
+
+<search for>
 			function smfDetermineVersions()
 			{
 				var highYour = {"Sources": "??", "Default" : "??", "Languages": "??", "Templates": "??"};
@@ -445,6 +556,17 @@ $themedir/Admin.template.php
 $themedir/Display.template.php
 </edit file>
 <search for>
+<?php
+// Version: 1.1; Display
+</search for>
+
+<replace>
+<?php
+// Version: 1.1.12; Display
+</replace>
+
+
+<search for>
 		'merge' => array('test' => 'can_merge', 'text' => 'smf252', 'image' => 'merge.gif', 'lang' => true, 'url' => $scripturl . '?action=mergetopics;board=' . $context['current_board'] . '.0;from=' . $context['current_topic']),
 		'remove_poll' => array('test' => 'can_remove_poll', 'text' => 'poll_remove', 'image' => 'admin_remove_poll.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');"', 'url' => $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start']),
 </search for>
@@ -452,27 +574,5 @@ $themedir/Display.template.php
 <replace>
 		'merge' => array('test' => 'can_merge', 'text' => 'smf252', 'image' => 'merge.gif', 'lang' => true, 'url' => $scripturl . '?action=mergetopics;board=' . $context['current_board'] . '.0;from=' . $context['current_topic']),
 		'remove_poll' => array('test' => 'can_remove_poll', 'text' => 'poll_remove', 'image' => 'admin_remove_poll.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');"', 'url' => $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id']),
-</replace>
-
-<edit file>
-$boarddir/index.php
-</edit file>
-
-
-<search for>
-* Software Version:           SMF 1.1.11                                          *
-</search for>
-
-<replace>
-* Software Version:           SMF 1.1.12                                          *
-</replace>
-
-
-<search for>
-$forum_version = 'SMF 1.1.11';
-</search for>
-
-<replace>
-$forum_version = 'SMF 1.1.12';
 </replace>
 

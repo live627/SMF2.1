@@ -1,6 +1,6 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>smf:smf-1.1.12</id>
-	<version>1</version>
+	<version>1.0</version>
 	<file name="$boarddir/index.php">
 		<operation>
 			<search position="replace"><![CDATA[* Software Version:           SMF 1.1.11                                          *
@@ -202,45 +202,15 @@ function sortSmileyTable()
 ]]></add>
 		</operation>
 		<operation>
-			<search position="replace"><![CDATA[		
-]]></search>
-			<add><![CDATA[
-]]></add>
-		</operation>
-		<operation>
-			<search position="replace"><![CDATA[		
-]]></search>
-			<add><![CDATA[
-]]></add>
-		</operation>
-		<operation>
-			<search position="replace"><![CDATA[			
-]]></search>
-			<add><![CDATA[
-]]></add>
-		</operation>
-		<operation>
-			<search position="replace"><![CDATA[					$package['description'] = parse_bbc(preg_replace('~\[[/]?html\]~i', '', htmlspecialchars($package['description'])));				
-]]></search>
-			<add><![CDATA[					$package['description'] = parse_bbc(preg_replace('~\[[/]?html\]~i', '', htmlspecialchars($package['description'])));
-]]></add>
-		</operation>
-		<operation>
-			<search position="replace"><![CDATA[		
-]]></search>
-			<add><![CDATA[
-]]></add>
-		</operation>
-		<operation>
 			<search position="replace"><![CDATA[
 ]]></search>
 			<add><![CDATA[	$servername = htmlspecialchars($_POST['servername']);
 	$serverurl = htmlspecialchars($_POST['serverurl']);
-	
+
 	// Make sure the URL has the correct prefix.
 	if (strpos($serverurl, 'http://') !== 0 && strpos($serverurl, 'https://') !== 0)
 		$serverurl = 'http://' . $serverurl;
-	
+
 ]]></add>
 		</operation>
 		<operation>
@@ -258,18 +228,15 @@ function sortSmileyTable()
 ]]></add>
 		</operation>
 		<operation>
-			<search position="after"><![CDATA[
+			<search position="replace"><![CDATA[
+		if (trim($lower) <= $version && trim($upper) >= $version)
+			return true;
 ]]></search>
 			<add><![CDATA[		$lower = explode('.', $lower);
 		$upper = explode('.', $upper);
 		$version = explode('.', $version);
-]]></add>
-		</operation>
-		<operation>
-			<search position="replace"><![CDATA[		if (trim($lower) <= $version && trim($upper) >= $version)
-			return true;
-]]></search>
-			<add><![CDATA[		foreach ($upper as $key => $high)
+
+		foreach ($upper as $key => $high)
 		{
 			// Let's check that this is at or below the upper... obviously.
 			if (isset($version[$key]) && trim($version[$key]) > trim($high))
@@ -294,7 +261,7 @@ function sortSmileyTable()
 ]]></add>
 		</operation>
 	</file>
-	<file name="Themes/babylon/Display.template.php">
+	<file name="$themes_dir/babylon/Display.template.php">
 		<operation>
 			<search position="replace"><![CDATA[// Version: 1.1; Display
 ]]></search>
@@ -308,7 +275,7 @@ function sortSmileyTable()
 ]]></add>
 		</operation>
 	</file>
-	<file name="Themes/classic/Display.template.php">
+	<file name="$themes_dir/classic/Display.template.php">
 		<operation>
 			<search position="replace"><![CDATA[// Version: 1.1; Display
 ]]></search>
