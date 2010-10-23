@@ -569,7 +569,7 @@ function Credits($in_admin = false)
 					'title' => $txt['credits_groups_support'],
 					'members' => array(
 						'JimM',
-						'Arantor',
+						'Adish &quot;(F.L.A.M.E.R)&quot; Patel',
 						'Ben Scott',
 						'Bigguy',
 						'bluedevil',
@@ -578,7 +578,6 @@ function Credits($in_admin = false)
 						'Duncan85',
 						'Eliana Tamerin',
 						'Fiery',
-						'(F.L.A.M.E.R)',
 						'gbsothere',
 						'Harro',
 						'Huw',
@@ -606,6 +605,7 @@ function Credits($in_admin = false)
 					'members' => array(
 						'Matt &quot;SlammedDime&quot; Zuba',
 						'&#12487;&#12451;&#12531;1031',
+						'Arantor',
 						'Brad &quot;IchBin&trade;&quot; Grow',
 						'Brannon &quot;B&quot; Hall',
 						'Bryan &quot;Runic&quot; Deakin',
