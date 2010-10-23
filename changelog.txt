@@ -63,6 +63,7 @@ October 2010
  ! censor area should only be available to admins - reported by more, including KinG-InFeT.
  ! Package servers URLs and names properly cleaned for all circumstances - reported by KinG-InFeT.
  & Adapt a language string to the changes in SMF meta keywords. (Help.english.php) [Bug 4515]
+ & Notify about PostgreSQL of older and newer versions not supported in the same database. (install language file) [Bug 4214]
 
 
 September 2010
