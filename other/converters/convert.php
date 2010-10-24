@@ -2548,7 +2548,7 @@ function convert_query($string, $return_error = false)
 				$smcFunc['db_query']('', "SET @@SQL_BIG_SELECTS = 1", 'security_override');
 
 			// Lets set MAX_JOIN_SIZE to something we should
-			if (empty($sql_max_join) || ($sql_max_join == '18446744073709551615' && sql_max_join == '18446744073709551615')), 
+			if (empty($sql_max_join) || ($sql_max_join == '18446744073709551615' && sql_max_join == '18446744073709551615'))
 				$smcFunc['db_query']('', "SET @@SQL_MAX_JOIN_SIZE = 18446744073709551615", 'security_override');
 
 			// Try again.
