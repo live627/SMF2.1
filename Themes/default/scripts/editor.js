@@ -304,7 +304,7 @@ smc_Editor.prototype.init = function()
 				this.oFrameDocument.body.style.border = 'none';
 				this.oFrameHandle.style.border = '1px solid #808080';
 				if (is_opera)
-				this.oFrameDocument.body.style.height = '99%';
+					this.oFrameDocument.body.style.height = '99%';
 			}
 		}
 
