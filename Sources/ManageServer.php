@@ -622,7 +622,6 @@ function DownloadLanguage()
 			package_flush_cache();
 			$context['install_complete'] = sprintf($txt['languages_download_complete_desc'], $scripturl . '?action=admin;area=languages');
 
-			clean_cache('lang');
 			return;
 		}
 	}
@@ -1551,10 +1550,7 @@ function ModifyLanguage()
 
 	// If we saved, redirect.
 	if ($madeSave)
-	{
-		clean_cache('lang');
 		redirectexit('action=admin;area=languages;sa=editlang;lid=' . $context['lang_id']);
-	}
 }
 
 // This function could be two functions - either way it cleans language entries to/from display.

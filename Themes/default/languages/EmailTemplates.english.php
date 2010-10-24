@@ -1,8 +1,6 @@
 <?php
 // Version: 2.0 RC4; EmailTemplates
 
-// Important! Before editing these language files please read the text at the top of index.english.php.
-
 // Since all of these strings are being used in emails, numeric entities should be used.
 
 // Do not translate anything that is between {}, they are used as replacement variables and MUST remain exactly how they are.

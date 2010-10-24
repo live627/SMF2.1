@@ -1,8 +1,6 @@
 <?php
 // Version: 2.0 RC4; PersonalMessage
 
-// Important! Before editing these language files please read the text at the top of index.english.php.
-
 global $context;
 
 $txt['pm_inbox'] = 'Personal Messages Index';

@@ -1,8 +1,6 @@
 <?php
 // Version: 2.0 RC4; Wireless
 
-// Important! Before editing these language files please read the text at the top of index.english.php.
-
 $txt['wireless_error_home'] = 'Board index';
 
 $txt['wireless_options'] = 'Additional options';

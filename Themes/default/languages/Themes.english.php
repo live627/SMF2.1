@@ -1,8 +1,6 @@
 <?php
 // Version: 2.0 RC4; Themes
 
-// Important! Before editing these language files please read the text at the top of index.english.php.
-
 $txt['themeadmin_explain'] = 'Themes are the different looks and feels of your forum.  These settings affect the selection of themes, and which themes guests and other members use.';
 
 $txt['theme_allow'] = 'Allow members to select their own themes.';

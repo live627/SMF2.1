@@ -1,8 +1,6 @@
 <?php
 // Version: 2.0 RC4; Who
 
-// Important! Before editing these language files please read the text at the top of index.english.php.
-
 global $scripturl, $context;
 
 $txt['who_hidden'] = '<em>Nothing, or nothing you can see...</em>';

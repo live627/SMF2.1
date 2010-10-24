@@ -1,8 +1,6 @@
 <?php
 // Version: 2.0 RC4; ManageBoards
 
-// Important! Before editing these language files please read the text at the top of index.english.php.
-
 $txt['boards_and_cats'] = 'Manage Boards and Categories';
 $txt['order'] = 'Order';
 $txt['full_name'] = 'Full name';

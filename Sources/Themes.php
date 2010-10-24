@@ -965,9 +965,6 @@ function RemoveTheme()
 	else
 		updateSettings(array('knownThemes' => $known));
 
-	// Remove any cached language files to keep space minimum!
-	clean_cache('lang');
-
 	redirectexit('action=admin;area=theme;sa=list;' . $context['session_var'] . '=' . $context['session_id']);
 }
 

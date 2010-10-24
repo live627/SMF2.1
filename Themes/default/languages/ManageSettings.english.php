@@ -1,8 +1,6 @@
 <?php
 // Version: 2.0 RC4; ManageSettings
 
-// Important! Before editing these language files please read the text at the top of index.english.php.
-
 global $scripturl;
 
 $txt['modSettings_desc'] = 'This page allows you to change the settings of features and basic options in your forum.  Please see the <a href="' . $scripturl . '?action=admin;area=theme;sa=settings;th=%1$s;%3$s=%2$s">theme settings</a> for more options.  Click the help icons for more information about a setting.';

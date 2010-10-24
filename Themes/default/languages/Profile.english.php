@@ -1,8 +1,6 @@
 <?php
 // Version: 2.0 RC4; Profile
 
-// Important! Before editing these language files please read the text at the top of index.english.php.
-
 global $scripturl, $context;
 
 $txt['no_profile_edit'] = 'You are not allowed to change this person\'s profile.';

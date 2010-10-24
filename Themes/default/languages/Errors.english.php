@@ -1,8 +1,6 @@
 <?php
 // Version: 2.0 RC4; Errors
 
-// Important! Before editing these language files please read the text at the top of index.english.php.
-
 global $scripturl, $modSettings;
 
 $txt['no_access'] = 'You are not allowed to access this section';

@@ -1640,14 +1640,6 @@ function loadTheme($id_theme = 0, $initialize = true)
 		else
 			$templates = array('index');
 
-		// Fall back to the English version of the Modifications files, if necessary.
-		if (empty($modSettings['disable_language_fallback']))
-		{
-			$cur_language = isset($user_info['language']) ? $user_info['language'] : $language;
-			if ($cur_language !== 'english')
-				loadLanguage('Modifications', 'english', false);
-		}
-
 		// Load each template...
 		foreach ($templates as $template)
 			loadTemplate($template);
@@ -1676,15 +1668,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 
 	// Any theme-related strings that need to be loaded?
 	if (!empty($settings['require_theme_strings']))
-	{
-		if (empty($modSettings['disable_language_fallback']))
-		{
-			$cur_language = isset($user_info['language']) ? $user_info['language'] : $language;
-			if ($cur_language !== 'english')
-				loadLanguage('ThemeStrings', 'english', false);
-		}
 		loadLanguage('ThemeStrings', '', false);
-	}
 
 	// We allow theme variants, because we're cool.
 	$context['theme_variant'] = '';
@@ -1889,35 +1873,87 @@ function loadSubTemplate($sub_template_name, $fatal = false)
 // Load a language file.  Tries the current and default themes as well as the user and global languages.
 function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload = false)
 {
-	global $user_info, $language, $settings, $context;
-	global $cachedir, $db_show_debug, $sourcedir;
+	global $user_info, $language, $settings, $context, $modSettings;
+	global $cachedir, $db_show_debug, $sourcedir, $txt;
 	static $already_loaded = array();
 
 	// Default to the user's language.
 	if ($lang == '')
 		$lang = isset($user_info['language']) ? $user_info['language'] : $language;
 
+	// Do we want the English version of language file as fallback?
+	if (empty($modSettings['disable_language_fallback']) && $lang != 'english')
+		loadLanguage($template_name, 'english', false);
+
 	if (!$force_reload && isset($already_loaded[$template_name]) && $already_loaded[$template_name] == $lang)
 		return $lang;
+
+	// Make sure we have $settings - if not we're in trouble and need to find it!
+	if (empty($settings['default_theme_dir']))
+	{
+		require_once($sourcedir . '/ScheduledTasks.php');
+		loadEssentialThemeData();
+	}
 
 	// What theme are we in?
 	$theme_name = basename($settings['theme_url']);
 	if (empty($theme_name))
 		$theme_name = 'unknown';
 
+	// For each file open it up and write it out!
+	foreach (explode('+', $template_name) as $template)
+	{
+		// Obviously, the current theme is most important to check.
+		$attempts = array(
+			array($settings['theme_dir'], $template, $lang, $settings['theme_url']),
+			array($settings['theme_dir'], $template, $language, $settings['theme_url']),
+		);
+
+		// Do we have a base theme to worry about?
+		if (isset($settings['base_theme_dir']))
+		{
+			$attempts[] = array($settings['base_theme_dir'], $template, $lang, $settings['base_theme_url']);
+			$attempts[] = array($settings['base_theme_dir'], $template, $language, $settings['base_theme_url']);
+		}
+
+		// Fall back on the default theme if necessary.
+		$attempts[] = array($settings['default_theme_dir'], $template, $lang, $settings['default_theme_url']);
+		$attempts[] = array($settings['default_theme_dir'], $template, $language, $settings['default_theme_url']);
+
+		// Fall back on the English language if none of the preferred languages can be found.
+		if (!in_array('english', array($lang, $language)))
+		{
+			$attempts[] = array($settings['theme_dir'], $template, 'english', $settings['theme_url']);
+			$attempts[] = array($settings['default_theme_dir'], $template, 'english', $settings['default_theme_url']);
+		}
+
+		// Try to find the language file.
+		$found = false;
+		foreach ($attempts as $k => $file)
+		{
+			if (file_exists($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php'))
+			{
+				// Include it!
+				template_include($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php');
+
+				// Note that we found it.
+				$found = true;
+
+				break;
+			}
+		}
+
+		// That couldn't be found!  Log the error, but *try* to continue normally.
+		if (!$found && $fatal)
+		{
+			log_error(sprintf($txt['theme_language_error'], $template_name . '.' . $lang, 'template'));
+			break;
+		}
+	}
+
 	// Keep track of what we're up to soldier.
 	if ($db_show_debug === true)
 		$context['debug']['language_files'][] = $template_name . '.' . $lang . ' (' . $theme_name . ')';
-
-	// Is this cached? If not recache!
-	if (!file_exists($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php'))
-	{
-		require_once($sourcedir . '/ManageMaintenance.php');
-		$do_include = cacheLanguage($template_name, $lang, $fatal, $theme_name);
-	}
-	// Otherwise just get it, get it, get it.
-	else
-		template_include($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php');
 
 	// Remember what we have loaded, and in which language.
 	$already_loaded[$template_name] = $lang;

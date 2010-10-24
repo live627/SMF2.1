@@ -1,8 +1,6 @@
 <?php
 // Version: 2.0 RC4; ManagePermissions
 
-// Important! Before editing these language files please read the text at the top of index.english.php.
-
 $txt['permissions_title'] = 'Manage Permissions';
 $txt['permissions_modify'] = 'Modify';
 $txt['permissions_view'] = 'View';

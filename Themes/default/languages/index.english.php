@@ -1,16 +1,6 @@
 <?php
 // Version: 2.0 RC4; index
 
-/* Important note about language files in SMF 2.0 upwards:
-	1) All language entries in SMF 2.0 are cached. All edits should therefore be made through the admin menu. If you do
-	   edit a language file manually you will not see the changes in SMF until the cache refreshes. To manually refresh
-	   the cache go to Admin => Maintenance => Clean Cache.
-
-	2) Please also note that strings should use single quotes, not double quotes for enclosing the string
-	   except for line breaks.
-
-*/
-
 global $forum_copyright, $forum_version, $webmaster_email, $scripturl, $context, $boardurl;
 
 // Locale (strftime, pspell_new) and spelling. (pspell_new, can be left as '' normally.)

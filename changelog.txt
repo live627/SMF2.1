@@ -64,6 +64,9 @@ October 2010
  ! Package servers URLs and names properly cleaned for all circumstances - reported by KinG-InFeT.
  & Adapt a language string to the changes in SMF meta keywords. (Help.english.php) [Bug 4515]
  & Notify about PostgreSQL of older and newer versions not supported in the same database. (install language file) [Bug 4214]
+ ! Language files are no longer cached. (Load.php, ManageMaintenance.php, ManageServer.php, Subs.php, Themes.php)
+ & Remove the note about caching from all language files. (many files)
+ ! Load English version of language files as a fallback for missing language strings. (Load.php) [Bug 2743]
 
 
 September 2010

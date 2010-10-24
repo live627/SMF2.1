@@ -1,8 +1,6 @@
 <?php
 // Version: 2.0 RC4; Manual
 
-// Important! Before editing these language files please read the text at the top of index.english.php.
-
 /* Everything in this file is for the Simple Machines help manual
    If you are looking at translating this into another language please
    visit the Simple Machines website for tools to assist! */

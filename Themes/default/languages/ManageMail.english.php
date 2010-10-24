@@ -1,8 +1,6 @@
 <?php
 // Version: 2.0 RC4; ManageMail
 
-// Important! Before editing these language files please read the text at the top of index.english.php.
-
 $txt['mailqueue_desc'] = 'From this page you can configure your mail settings, as well as viewing and administrating the current mail queue if it is enabled.';
 
 $txt['mail_type'] = 'Mail type';
