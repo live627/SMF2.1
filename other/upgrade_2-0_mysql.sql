@@ -3097,6 +3097,16 @@ ADD COLUMN email_address varchar(255) NOT NULL default '' AFTER membername;
 ---#
 
 /******************************************************************************/
+--- Changing the group type for Administrator group.
+/******************************************************************************/
+
+---# Changing the group type for Administrator group.
+UPDATE {$db_prefix}membergroups
+SET group_type = 1
+WHERE id_group = 1;
+---#
+
+/******************************************************************************/
 --- Final clean up...
 /******************************************************************************/
 

@@ -69,6 +69,7 @@ October 2010
  ! Load English version of language files as a fallback for missing language strings. (Load.php) [Bug 2743]
  * Added a new group type, protected, for too powerful groups to be managed only by true admins. (Groups.php, ManageMembergroups.php, Profile-Modify.php, Subs-Membergroups.php, ManageMembergroups template, Profile template) [Bug 3528]
  & Added the new group type language string for the change above. (ManageMembers language file) [Bug 3528]
+ ! Make sure Administrator group type is set to protected on install and upgrade. (install_2-0_*.sql, upgrade_2-0_*.sql)
 
 
 September 2010

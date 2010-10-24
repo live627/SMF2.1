@@ -943,3 +943,13 @@ $smcFunc['db_alter_table']('{db_prefix}log_reported_comments', array(
 ));
 ---}
 ---#
+
+/******************************************************************************/
+--- Changing the group type for Administrator group.
+/******************************************************************************/
+
+---# Changing the group type for Administrator group.
+UPDATE {$db_prefix}membergroups
+SET group_type = 1
+WHERE id_group = 1;
+---#
