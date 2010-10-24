@@ -67,6 +67,8 @@ October 2010
  ! Language files are no longer cached. (Load.php, ManageMaintenance.php, ManageServer.php, Subs.php, Themes.php)
  & Remove the note about caching from all language files. (many files)
  ! Load English version of language files as a fallback for missing language strings. (Load.php) [Bug 2743]
+ * Added a new group type, protected, for too powerful groups to be managed only by true admins. (Groups.php, ManageMembergroups.php, Profile-Modify.php, Subs-Membergroups.php, ManageMembergroups template, Profile template) [Bug 3528]
+ & Added the new group type language string for the change above. (ManageMembers language file) [Bug 3528]
 
 
 September 2010

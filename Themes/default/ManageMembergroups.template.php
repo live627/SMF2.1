@@ -32,6 +32,7 @@ function template_new_group()
 							<input type="text" name="group_name" id="group_name_input" size="30" class="input_text" />
 						</dd>';
 	if ($context['undefined_group'])
+	{
 		echo '
 						<dt>
 							<label for="group_type"><strong>', $txt['membergroups_edit_group_type'], '</strong>:</label>
@@ -39,12 +40,18 @@ function template_new_group()
 						<dd>
 							<fieldset id="group_type">
 								<legend>', $txt['membergroups_edit_select_group_type'], '</legend>
-								<label for="group_type_private"><input type="radio" name="group_type" id="group_type_private" value="0" checked="checked" class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_private'], '</label><br />
-								<label for="group_type_request"><input type="radio" name="group_type" id="group_type_request" value="1" class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_request'], '</label><br />
-								<label for="group_type_free"><input type="radio" name="group_type" id="group_type_free" value="2" class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_free'], '</label><br />
+								<label for="group_type_private"><input type="radio" name="group_type" id="group_type_private" value="0" checked="checked" class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_private'], '</label><br />';
+
+		if ($context['allow_protected'])
+			echo '
+								<label for="group_type_protected"><input type="radio" name="group_type" id="group_type_protected" value="1" class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_protected'], '</label><br />';
+
+		echo '
+								<label for="group_type_request"><input type="radio" name="group_type" id="group_type_request" value="2" class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_request'], '</label><br />
+								<label for="group_type_free"><input type="radio" name="group_type" id="group_type_free" value="3" class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_free'], '</label><br />
 								<label for="group_type_post"><input type="radio" name="group_type" id="group_type_post" value="-1" class="input_radio" onclick="swapPostGroup(1);" />', $txt['membergroups_group_type_post'], '</label><br />
-							</fieldset>
 						</dd>';
+	}
 
 	if ($context['post_group'] || $context['undefined_group'])
 		echo '
@@ -175,6 +182,7 @@ function template_edit_group()
 
 	// Group type...
 	if ($context['group']['allow_post_group'])
+	{
 		echo '
 						<dt>
 							<label for="group_type"><strong>', $txt['membergroups_edit_group_type'], ':</strong></label>
@@ -182,12 +190,19 @@ function template_edit_group()
 						<dd>
 							<fieldset id="group_type">
 								<legend>', $txt['membergroups_edit_select_group_type'], '</legend>
-								<label for="group_type_private"><input type="radio" name="group_type" id="group_type_private" value="0" ', !$context['group']['is_post_group'] && $context['group']['type'] == 0 ? 'checked="checked"' : '', ' class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_private'], '</label><br />
-								<label for="group_type_request"><input type="radio" name="group_type" id="group_type_request" value="1" ', $context['group']['type'] == 1 ? 'checked="checked"' : '', ' class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_request'], '</label><br />
-								<label for="group_type_free"><input type="radio" name="group_type" id="group_type_free" value="2" ', $context['group']['type'] == 2 ? 'checked="checked"' : '', ' class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_free'], '</label><br />
+								<label for="group_type_private"><input type="radio" name="group_type" id="group_type_private" value="0" ', !$context['group']['is_post_group'] && $context['group']['type'] == 0 ? 'checked="checked"' : '', ' class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_private'], '</label><br />';
+
+		if ($context['group']['allow_protected'])
+			echo '
+								<label for="group_type_protected"><input type="radio" name="group_type" id="group_type_protected" value="1" ', $context['group']['type'] == 1 ? 'checked="checked"' : '', ' class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_protected'], '</label><br />';
+
+		echo '
+								<label for="group_type_request"><input type="radio" name="group_type" id="group_type_request" value="2" ', $context['group']['type'] == 2 ? 'checked="checked"' : '', ' class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_request'], '</label><br />
+								<label for="group_type_free"><input type="radio" name="group_type" id="group_type_free" value="3" ', $context['group']['type'] == 3 ? 'checked="checked"' : '', ' class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_free'], '</label><br />
 								<label for="group_type_post"><input type="radio" name="group_type" id="group_type_post" value="-1" ', $context['group']['is_post_group'] ? 'checked="checked"' : '', ' class="input_radio" onclick="swapPostGroup(1);" />', $txt['membergroups_group_type_post'], '</label><br />
 							</fieldset>
 						</dd>';
+	}
 
 	if ($context['group']['id'] != 3 && $context['group']['id'] != 4)
 		echo '
