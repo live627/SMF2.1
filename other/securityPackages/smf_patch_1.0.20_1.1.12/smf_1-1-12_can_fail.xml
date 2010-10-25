@@ -434,4 +434,10 @@ function sortSmileyTable()
 ]]></add>
 		</operation>
 	</file>
+	<file name="$languagedir/Manual.english.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[Although many forums also have a quick login box to allow you to login direct from any screen, its position on the page may vary considerably from forum to forum. In the SMF default theme, for example, it\'s in the collapsable section at the top, whereas it\'s more likely to be at the bottom in themes based on the older YaBB SE forum.]]></search>
+			<add><![CDATA[Although many forums also have a quick login box to allow you to login direct from any screen, its position on the page may vary considerably from forum to forum. In the SMF default theme, for example, it\'s in the collapsible section at the top, whereas it\'s more likely to be at the bottom in themes based on the older YaBB SE forum.]]></add>
+		</operation>
+	</file>
 </modification>
