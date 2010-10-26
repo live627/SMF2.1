@@ -1967,58 +1967,51 @@ function getBoardParents($id_parent)
 {
 	global $scripturl, $smcFunc;
 
-	// First check if we have this cached already.
-	if (($boards = cache_get_data('board_parents-' . $id_parent, 480)) === null)
-	{
-		$boards = array();
-		$original_parent = $id_parent;
+	$boards = array();
 
-		// Loop while the parent is non-zero.
-		while ($id_parent != 0)
+	// Loop while the parent is non-zero.
+	while ($id_parent != 0)
+	{
+		$result = $smcFunc['db_query']('', '
+			SELECT
+				b.id_parent, b.name, {int:board_parent} AS id_board, IFNULL(mem.id_member, 0) AS id_moderator,
+				mem.real_name, b.child_level
+			FROM {db_prefix}boards AS b
+				LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
+			WHERE b.id_board = {int:board_parent}',
+			array(
+				'board_parent' => $id_parent,
+			)
+		);
+		// In the EXTREMELY unlikely event this happens, give an error message.
+		if ($smcFunc['db_num_rows']($result) == 0)
+			fatal_lang_error('parent_not_found', 'critical');
+		while ($row = $smcFunc['db_fetch_assoc']($result))
 		{
-			$result = $smcFunc['db_query']('', '
-				SELECT
-					b.id_parent, b.name, {int:board_parent} AS id_board, IFNULL(mem.id_member, 0) AS id_moderator,
-					mem.real_name, b.child_level
-				FROM {db_prefix}boards AS b
-					LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
-					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
-				WHERE b.id_board = {int:board_parent}',
-				array(
-					'board_parent' => $id_parent,
-				)
-			);
-			// In the EXTREMELY unlikely event this happens, give an error message.
-			if ($smcFunc['db_num_rows']($result) == 0)
-				fatal_lang_error('parent_not_found', 'critical');
-			while ($row = $smcFunc['db_fetch_assoc']($result))
+			if (!isset($boards[$row['id_board']]))
 			{
-				if (!isset($boards[$row['id_board']]))
+				$id_parent = $row['id_parent'];
+				$boards[$row['id_board']] = array(
+					'url' => $scripturl . '?board=' . $row['id_board'] . '.0',
+					'name' => $row['name'],
+					'level' => $row['child_level'],
+					'moderators' => array()
+				);
+			}
+			// If a moderator exists for this board, add that moderator for all children too.
+			if (!empty($row['id_moderator']))
+				foreach ($boards as $id => $dummy)
 				{
-					$id_parent = $row['id_parent'];
-					$boards[$row['id_board']] = array(
-						'url' => $scripturl . '?board=' . $row['id_board'] . '.0',
-						'name' => $row['name'],
-						'level' => $row['child_level'],
-						'moderators' => array()
+					$boards[$id]['moderators'][$row['id_moderator']] = array(
+						'id' => $row['id_moderator'],
+						'name' => $row['real_name'],
+						'href' => $scripturl . '?action=profile;u=' . $row['id_moderator'],
+						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_moderator'] . '">' . $row['real_name'] . '</a>'
 					);
 				}
-				// If a moderator exists for this board, add that moderator for all children too.
-				if (!empty($row['id_moderator']))
-					foreach ($boards as $id => $dummy)
-					{
-						$boards[$id]['moderators'][$row['id_moderator']] = array(
-							'id' => $row['id_moderator'],
-							'name' => $row['real_name'],
-							'href' => $scripturl . '?action=profile;u=' . $row['id_moderator'],
-							'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_moderator'] . '">' . $row['real_name'] . '</a>'
-						);
-					}
-			}
-			$smcFunc['db_free_result']($result);
 		}
-
-		cache_put_data('board_parents-' . $original_parent, $boards, 480);
+		$smcFunc['db_free_result']($result);
 	}
 
 	return $boards;

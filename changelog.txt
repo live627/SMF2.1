@@ -74,6 +74,7 @@ October 2010
  ! Making sure eol-style is set on all our converters as well. (/other/converters ASCII files)
  ! Fix for windows check (ManageServer.php)
  ! A safer handling of the database last error and generally writing Settings.php () [Bug 4222]
+ ! Last minute: boards incorrectly retrieved (Subs-Boards.php, Load.php)
 
 September 2010
 --------------------------------------------------------------------------------
