@@ -75,6 +75,7 @@ October 2010
  ! Fix for windows check (ManageServer.php)
  ! A safer handling of the database last error and generally writing Settings.php () [Bug 4222]
  ! Last minute: boards incorrectly retrieved (Subs-Boards.php, Load.php)
+ ! Last minute: an incorrect warning (Profile-Actions.php)
 
 September 2010
 --------------------------------------------------------------------------------
