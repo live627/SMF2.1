@@ -79,6 +79,8 @@ October 2010
  ! Last minute: adding SMF favicon. (favicon.ico)
  * Validation errors due to a typo in themes list (Themes template) [Bug 4505]
  ! On some versions of Opera the cursor wasn't displayed in WYSIWYG editor (thanks TE) [Bug 4521]
+ ! Clean the entire cache on the disk, if any, during scheduled maintenance (ScheduledTasks.php)
+ ! Small addition to clean_cache() documentation (Subs.php)
 
 September 2010
 --------------------------------------------------------------------------------

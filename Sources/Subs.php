@@ -213,7 +213,9 @@ if (!defined('SMF'))
 		// !!!
 
 	void clean_cache(type = '')
-		// !!!
+		- clean the cache directory ($cachedir, if any and in use)
+		- it may only remove the files of a certain type
+		(if the $type parameter is given)
 
 	array call_integration_hook(string hook, array parameters = array())
 		- calls all functions of the given hook.
