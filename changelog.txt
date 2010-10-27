@@ -76,6 +76,7 @@ October 2010
  ! A safer handling of the database last error and generally writing Settings.php () [Bug 4222]
  ! Last minute: boards incorrectly retrieved (Subs-Boards.php, Load.php)
  ! Last minute: an incorrect warning (Profile-Actions.php)
+ ! Last minute: adding SMF favicon. (favicon.ico)
 
 September 2010
 --------------------------------------------------------------------------------
