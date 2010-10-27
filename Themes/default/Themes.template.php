@@ -243,7 +243,7 @@ function template_list_themes()
 						<dd>', $theme['theme_url'], '</dd>
 						<dt>', $txt['themeadmin_list_images_url'], ':</dt>
 						<dd>', $theme['images_url'], '</dd>
-					</ul>
+					</dl>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';

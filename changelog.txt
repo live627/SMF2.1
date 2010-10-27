@@ -77,6 +77,7 @@ October 2010
  ! Last minute: boards incorrectly retrieved (Subs-Boards.php, Load.php)
  ! Last minute: an incorrect warning (Profile-Actions.php)
  ! Last minute: adding SMF favicon. (favicon.ico)
+ * Validation errors due to a typo in themes list (Themes template) [Bug 4505]
 
 September 2010
 --------------------------------------------------------------------------------
