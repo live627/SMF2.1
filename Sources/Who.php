@@ -655,7 +655,7 @@ function Credits($in_admin = false)
 					'members' => array(
 						'GravuTrad',
 						'Relyana',
-						'akyhne',
+						'Akyhne',
 					),
 				),
 			),
