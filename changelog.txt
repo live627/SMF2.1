@@ -82,6 +82,7 @@ October 2010
  ! Clean the entire cache on the disk, if any, during scheduled maintenance (ScheduledTasks.php)
  ! Small addition to clean_cache() documentation (Subs.php)
  ! Manage Posts area should only check for admin_forum permission. (ManagePosts.php) [Bug 4520]
+ * Undefined index in Subs.php for Core theme (Display template)
 
 
 September 2010

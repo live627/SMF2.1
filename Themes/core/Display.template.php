@@ -179,12 +179,12 @@ function template_main()
 	<form action="', $scripturl, '?action=quickmod2;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;" onsubmit="return oQuickModify.bInEditMode ? oQuickModify.modifySave(\'' . $context['session_id'] . '\', \'' . $context['session_var'] . '\') : false">';
 
 	// These are some cache image buttons we may want.
-	$reply_button = create_button('quote.gif', '', 'quote', 'align="middle"');
-	$modify_button = create_button('modify.gif', '', 'modify', 'align="middle"');
-	$remove_button = create_button('delete.gif', '', 'remove', 'align="middle"');
-	$split_button = create_button('split.gif', '', 'split', 'align="middle"');
-	$approve_button = create_button('approve.gif', '', 'approve', 'align="middle"');
-	$restore_message_button = create_button('restore_topic.gif', '', 'restore_message', 'align="middle"');
+	$reply_button = create_button('quote.gif', 'reply', 'quote', 'align="middle"');
+	$modify_button = create_button('modify.gif', 'modify', 'modify', 'align="middle"');
+	$remove_button = create_button('delete.gif', 'remove', 'remove', 'align="middle"');
+	$split_button = create_button('split.gif', 'split', 'split', 'align="middle"');
+	$approve_button = create_button('approve.gif', 'approve', 'approve', 'align="middle"');
+	$restore_message_button = create_button('restore_topic.gif', 'restore_message', 'restore_message', 'align="middle"');
 
 	$ignoredMsgs = array();
 	$removableMessageIDs = array();
