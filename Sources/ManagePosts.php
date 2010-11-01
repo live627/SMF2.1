@@ -105,7 +105,7 @@ function ManagePostSettings()
 	);
 
 	// Call the right function for this sub-acton.
-	$subActions[$_REQUEST['sa']][0]();
+	$subActions[$_REQUEST['sa']]();
 }
 
 // Set the censored words.
