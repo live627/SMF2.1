@@ -391,7 +391,7 @@ $txt['manual_profile_pm_display'] = 'The first two options address how private m
 $txt['manual_proifle_pm_control'] = 'Members may control who is allowed to send them private messages. It can be limited to members not on their ignore list, buddies and administrators, or only administrators.';
 $txt['manual_profile_pm_notify'] = 'Notification may be enabled in order to receive emails when private messages are received on the forum. Additionally, a popup message may also be enabled to notify a member of new messages.';
 $txt['manual_profile_pm_last'] = 'The last two available options are the following.';
-$txt['manual_profile_pm_save'] = '<strong>Save a copy of each personal message in my outbox by default.</strong> - When sending a message, a copy of it is saved in a member\'s outbox automatically. This option should be enabled when viewing messages as a conversation.';
+$txt['manual_profile_pm_save'] = '<strong>Save a copy of each personal message in my sent items by default.</strong> - When sending a message, a copy of it is saved in a member\'s sent items automatically. This option should be enabled when viewing messages as a conversation.';
 $txt['manual_profile_pm_label'] = '<strong>Remove the inbox label when applying another label</strong> - When a new label is applied to a message, the inbox lable is removed.';
 
 // Text for template: modify_profile_buddies

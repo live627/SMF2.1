@@ -4,7 +4,8 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 October 2010
 --------------------------------------------------------------------------------
-! Mail functions broken (ManageMail.php)
+& Language strings for "sent items" in PM updated. (Profile, Manual language files)
+
 
 --------------------------------------------------------------------------------
 SMF 2.0                                                              SMF 2.0 RC4
@@ -89,6 +90,7 @@ October 2010
  ! Small addition to clean_cache() documentation (Subs.php)
  ! Manage Posts area should only check for admin_forum permission. (ManagePosts.php) [Bug 4520]
  * Undefined index in Subs.php for Core theme (Display template)
+ ! Mail functions broken (ManageMail.php)
 
 
 September 2010
