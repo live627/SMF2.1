@@ -2,13 +2,15 @@ Changes go downward, months go upward.  Please scroll to the bottom for a legend
 Changelog started January 1, 2004; Currently at $Revision$.
 
 
-October 2010
+November 2010
 --------------------------------------------------------------------------------
 & Language strings for "sent items" in PM updated. (Profile, Manual language files)
+! Reapplied the fix of 10194, even though the cache is only cleared if using SMF's disk cache. (Load.php, Subs-Boards.php)
+* Typo (Post.template.php)
 
 
 --------------------------------------------------------------------------------
-SMF 2.0                                                              SMF 2.0 RC4
+SMF 2.0 RC4                                                      1 November 2010
 ================================================================================
 
 October 2010
