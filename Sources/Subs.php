@@ -4239,7 +4239,7 @@ function call_integration_hook($hook, $parameters = array())
 // Add a function for integration hook.
 function add_integration_function($hook, $function, $permanent = true)
 {
-	global $modSettings;
+	global $modSettings, $smcFunc;
 
 	$functions = empty($modSettings[$hook]) ? array() : explode(',', $modSettings[$hook]);
 
@@ -4247,30 +4247,65 @@ function add_integration_function($hook, $function, $permanent = true)
 	if (in_array($function, $functions))
 		return;
 
-	$functions[] = $function;
-
 	// Add it!
 	if ($permanent)
-		updateSettings(array($hook => implode(',', $functions)));
-	else
-		$modSettings[$hook] = implode(',', $functions);
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT variable, value
+			FROM {db_prefix}settings
+			WHERE variable = {string:varname}',
+			array(
+			'varname' => $hook,
+			)
+		);
+		list($hook_name, $available) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+		if(!empty($available))
+			$permfunctions = array_merge(explode(',', $available), array($function));
+		else
+			$permfunctions = array($function);
+		updateSettings(array($hook => implode(',', $permfunctions)));
+	}
+
+	$functions[] = $function;
+	$modSettings[$hook] = implode(',', $functions);
 }
 
 // Remove an integration hook function.
 function remove_integration_function($hook, $function)
 {
-	global $modSettings;
+	global $modSettings, $smcFunc;
 
 	$functions = empty($modSettings[$hook]) ? array() : explode(',', $modSettings[$hook]);
 
-	// You can only remove it's available.
+	// You can only remove it if it's available.
 	if (!in_array($function, $functions))
 		return;
 
-	$functions = array_diff($functions, array($function));
+	$request = $smcFunc['db_query']('', '
+		SELECT variable, value
+		FROM {db_prefix}settings
+		WHERE variable = {string:varname}',
+		array(
+		'varname' => $hook,
+		)
+	);
+	list($hook_name, $available) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Now officially, it's no longer a part of our family...
-	updateSettings(array($hook => implode(',', $functions)));
+	if (!empty($available))
+	{
+		$available_hooks = explode(',', $available);
+		if (in_array($function, $available_hooks))
+		{
+			$permfunctions = array_diff($available_hooks, array($function));
+			updateSettings(array($hook => implode(',', $permfunctions)));
+		}
+	}
+	$functions = array_diff($functions, array($function));
+	$modSettings[$hook] = implode(',', $functions);
+
 }
 
 ?>

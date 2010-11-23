@@ -8,6 +8,7 @@ November 2010
 ! Reapplied the fix of 10194, even though the cache is only cleared if using SMF's disk cache. (Load.php, Subs-Boards.php)
 * Typo (Post.template.php)
 ! array_diff_key() compatibility added - ported from bug fixes (index.php, SSI.php, Subs-Compat.php)
+! integration hooks fix for temporary/permanent hooks - ported from bug fixes (Subs.php)
 
 
 --------------------------------------------------------------------------------
