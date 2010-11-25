@@ -4303,6 +4303,7 @@ function remove_integration_function($hook, $function)
 			updateSettings(array($hook => implode(',', $permfunctions)));
 		}
 	}
+
 	$functions = array_diff($functions, array($function));
 	$modSettings[$hook] = implode(',', $functions);
 
