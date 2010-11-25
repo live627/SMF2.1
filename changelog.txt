@@ -12,6 +12,7 @@ November 2010
 & Added a language string for cannot_moderate_board (Errors file)
 ! Invalidate cache (as long as Load.php can be modified, at least) (Subs.php)
 ! Tweak the size regex to accept the standard valid values (Subs.php)
+! Fixed signature padding for IE6 and IE7 (ie6.css, ie7.css) [Bug 4535]
 
 --------------------------------------------------------------------------------
 SMF 2.0 RC4                                                      1 November 2010
