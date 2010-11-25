@@ -187,12 +187,13 @@ if (!function_exists('clean_cache'))
 	// Empty out the cache folder.
 	function clean_cache($type = '')
 	{
-		global $cachedir;
+		global $cachedir, $sourcedir;
 
 		// No directory = no game.
 		if (!is_dir($cachedir))
 			return;
 
+		// Remove the files in SMF's own disk cache, if any
 		$dh = opendir($cachedir);
 		while ($file = readdir($dh))
 		{
@@ -200,6 +201,11 @@ if (!function_exists('clean_cache'))
 				@unlink($cachedir . '/' . $file);
 		}
 		closedir($dh);
+
+		// Invalidate cache, to be sure!
+		// ... as long as Load.php can be modified, anyway.
+		@touch($sourcedir . '/' . 'Load.php');
+		clearstatcache();
 	}
 }
 

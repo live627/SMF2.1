@@ -3858,12 +3858,13 @@ function create_button($name, $alt, $label = '', $custom = '', $force_use = fals
 // Empty out the cache folder.
 function clean_cache($type = '')
 {
-	global $cachedir;
+	global $cachedir, $sourcedir;
 
 	// No directory = no game.
 	if (!is_dir($cachedir))
 		return;
 
+	// Remove the files in SMF's own disk cache, if any
 	$dh = opendir($cachedir);
 	while ($file = readdir($dh))
 	{
@@ -3871,6 +3872,11 @@ function clean_cache($type = '')
 			@unlink($cachedir . '/' . $file);
 	}
 	closedir($dh);
+
+	// Invalidate cache, to be sure!
+	// ... as long as Load.php can be modified, anyway.
+	@touch($sourcedir . '/' . 'Load.php');
+	clearstatcache();
 }
 
 // Load classes that are both (E_STRICT) PHP 4 and PHP 5 compatible.

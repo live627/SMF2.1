@@ -10,6 +10,7 @@ November 2010
 ! array_diff_key() compatibility added - ported from bug fixes (index.php, SSI.php, Subs-Compat.php)
 ! integration hooks fix for temporary/permanent hooks - ported from bug fixes (Subs.php)
 & Added a language string for cannot_moderate_board (Errors file)
+! Invalidate cache (as long as Load.php can be modified, at least) (Subs.php)
 
 
 --------------------------------------------------------------------------------
