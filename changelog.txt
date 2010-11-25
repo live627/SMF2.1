@@ -9,6 +9,7 @@ November 2010
 * Typo (Post.template.php)
 ! array_diff_key() compatibility added - ported from bug fixes (index.php, SSI.php, Subs-Compat.php)
 ! integration hooks fix for temporary/permanent hooks - ported from bug fixes (Subs.php)
+& Added a language string for cannot_moderate_board (Errors file)
 
 
 --------------------------------------------------------------------------------
