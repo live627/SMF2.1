@@ -541,11 +541,11 @@ dl.themes_list dd
 ------------------------------------------------- */
 .agreement, .reserved_names
 {
-	padding: 0 5px;
+	padding: 0;
 }
-#agreement
+#agreement, #reserved
 {
-	width: 100%;
+	width: 99%;
 }
 
 /* Styles for the moderation center.
