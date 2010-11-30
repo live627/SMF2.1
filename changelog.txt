@@ -15,7 +15,7 @@ November 2010
 ! Fixed signature padding for IE6 and IE7 (ie6.css, ie7.css) [Bug 4535]
 ! Allow fallback to non-utf8 languages for UTF8 forums, in case the corresponding UTF8 files are not installed (still prefer UTF8) (Profile-Modify.php) [Bug 4534]
 * Minor spacing tweaks for request membergroup and edit registration agreement pages. (Profile.template.php, Register.template.php, admin.css) [Bugs 4530, 4531]
-
+! Typo in OpenID handling. (Subs-OpenID.php)
 
 --------------------------------------------------------------------------------
 SMF 2.0 RC4                                                      1 November 2010
