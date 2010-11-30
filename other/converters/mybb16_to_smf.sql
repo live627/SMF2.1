@@ -1,7 +1,7 @@
 /* ATTENTION: You don't need to run or use this file!  The convert.php script does everything for you! */
 
 /******************************************************************************/
----~ name: "MyBulletinBoard 1.4"
+---~ name: "MyBulletinBoard 1.6"
 /******************************************************************************/
 ---~ version: "SMF 2.0"
 ---~ settings: "/inc/config.php"
@@ -66,7 +66,7 @@ WHERE id_profile > 4;
 SELECT
 	fid AS id_board, SUBSTRING(name, 1, 255) AS name,
 	SUBSTRING(description, 1, 65534) AS description, disporder AS board_order,
-	posts AS num_posts, threads AS num_topics, pid AS id_parent,
+	posts AS num_posts, threads AS num_topics, pid AS id_cat,
 	usepostcounts != 'yes' AS count_posts, '-1,0' AS member_groups
 FROM {$from_prefix}forums
 WHERE type = 'f';
