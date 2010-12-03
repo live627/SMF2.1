@@ -2,6 +2,11 @@ Changes go downward, months go upward.  Please scroll to the bottom for a legend
 Changelog started January 1, 2004; Currently at $Revision$.
 
 
+December 2010
+--------------------------------------------------------------------------------
+! HTTPS cookie detection was incorrectly detected for some configurations (ManageServer.php)
+
+
 November 2010
 --------------------------------------------------------------------------------
 & Language strings for "sent items" in PM updated. (Profile, Manual language files)
