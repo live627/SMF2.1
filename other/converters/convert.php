@@ -2074,7 +2074,7 @@ function doStep2()
 				'name' => 'id_member',
 				'columns' => array('id_member', 'id_msg')),
 				array('no_prefix' => true));
-		if (!isset($indexes['ipIndex']))
+		if (!isset($indexes['ip_index']))
 			$smcFunc['db_add_index']($to_prefix . 'messages', array(
 				'type' => 'INDEX', // no key
 				'name' => 'ip_index',
@@ -2086,7 +2086,7 @@ function doStep2()
 				'name' => 'participation',
 				'columns' => array('id_member', 'id_topic')),
 				array('no_prefix' => true));
-		if (!isset($indexes['showPosts']))
+		if (!isset($indexes['show_posts']))
 			$smcFunc['db_add_index']($to_prefix . 'messages', array(
 				'type' => 'INDEX', // no key
 				'name' => 'show_posts',
