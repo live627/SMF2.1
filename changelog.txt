@@ -5,7 +5,7 @@ Changelog started January 1, 2004; Currently at $Revision$.
 December 2010
 --------------------------------------------------------------------------------
 ! HTTPS cookie detection was incorrectly detected for some configurations (ManageServer.php)
-
+! Check for spam with emails before sending the email. (ported from Tools, thank you Brett!) (SendTopic.php)
 
 November 2010
 --------------------------------------------------------------------------------
