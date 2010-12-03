@@ -35,7 +35,7 @@ SELECT
 	timeonline AS total_time_logged_in,
 	CASE
 		WHEN birthday = '' THEN '0001-01-01'
-		ELSE CONCAT_WS('-', RIGHT(birthday, 4), SUBSTRING(birthday, LOCATE('-', birthday) + 1, LOCATE('-', birthday, LOCATE('-', birthday) + 1) - LOCATE('-', birthday) - 1), LEFT(birthday, LOCATE('-', birthday) - 1))
+		ELSE RIGHT(birthday,10)
 	END AS birthdate
 FROM {$from_prefix}users;
 ---*
@@ -284,6 +284,7 @@ WHERE isgroup = 0;
 
 ---# Converting groups moderators
 ---{
+
 $result = convert_query("
 	SELECT m.fid, u.uid
 	FROM {$from_prefix}moderators AS m
@@ -293,7 +294,7 @@ $result = convert_query("
 while ($row = convert_fetch_assoc($result))
 {
 	convert_query("
-	INSERT INTO {$to_prefix}moderators
+	INSERT IGNORE INTO {$to_prefix}moderators
 		(id_board, id_member)
 	VALUES ('{$row['fid']}', '{$row['uid']}')");
 }
