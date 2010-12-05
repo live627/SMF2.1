@@ -543,7 +543,7 @@ function template_editBuddies()
 			<span class="lowerframe"><span></span></span>
 		</div>
 	</form>
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?fin20"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var oAddBuddySuggest = new smc_AutoSuggest({
 			sSelf: \'oAddBuddySuggest\',
@@ -629,7 +629,7 @@ function template_editIgnoreList()
 			<span class="lowerframe"><span></span></span>
 		</div>
 	</form>
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?fin20"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var oAddIgnoreSuggest = new smc_AutoSuggest({
 			sSelf: \'oAddIgnoreSuggest\',

@@ -423,7 +423,7 @@ function template_ssi_above()
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>SMF 2.0 RC4 SSI.php Examples</title>
-		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css?rc3" />
+		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css?fin20" />
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<style type="text/css">
 			#upper_section .user

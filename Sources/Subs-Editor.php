@@ -1457,7 +1457,7 @@ function create_control_richedit($editorOptions)
 				prompt_text_img: \'' . addcslashes($txt['prompt_text_img'], "'") . '\'
 			}
 		// ]]></script>
-		<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/editor.js?rc3"></script>';
+		<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/editor.js?fin20"></script>';
 
 		$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
 		if ($context['show_spellchecking'])

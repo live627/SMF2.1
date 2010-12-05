@@ -1519,8 +1519,8 @@ function template_view_operations()
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index.css" />
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/admin.css" />
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc3"></script>
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc3"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?fin20"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?fin20"></script>
 	</head>
 	<body>
 		<div class="padding windowbg">
