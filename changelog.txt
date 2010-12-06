@@ -10,6 +10,7 @@ December 2010
 & Tweak to language string (Admin file) [bug 4558]
 ! Minor tweaks (ModerationCenter.template.php, index.css) [Bug 4523] [Bug 4548]
 * Added ie6_rtl.css file to core theme (core/index.template.php, core/ie6_rtl.css)
+! New css for bbc_link class, with new_win secondary removed (index.css, Subs.php)
 
 November 2010
 --------------------------------------------------------------------------------

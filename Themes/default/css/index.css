@@ -351,7 +351,12 @@ code.bbc_code
 /* Styling for BBC tags */
 .bbc_link:link, .bbc_link:visited
 {
-	color: #778899;
+	border-bottom: 1px solid #A8B6CF;
+}
+.bbc_link:hover
+{
+	text-decoration: none;
+	border-bottom: 1px solid #346;
 }
 .bbc_size
 {
