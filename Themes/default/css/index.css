@@ -1985,7 +1985,7 @@ p#whoisviewing
 {
 	clear: right;
 	float: right;
-	margin: 8px 20px 10px 0;
+	margin: 6px 20px 10px 0;
 	text-align: right;
 	font: bold 0.85em arial, sans-serif;
 	color: #334466;	
@@ -2073,7 +2073,7 @@ ul.quickbuttons li.inline_mod_check
 }
 .inner
 {
-	padding: 1em 1em 0 0;
+	padding: 1em 1em 2px 0;
 	margin: 0 1em 0 0;
 	border-top: 1px solid #99a;
 }

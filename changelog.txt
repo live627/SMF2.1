@@ -8,6 +8,8 @@ December 2010
 ! Check for spam with emails before sending the email. (ported from Tools, thank you Brett!) (SendTopic.php)
 & Tweaks to language strings (thank you, Akyhne!) (a few language files)
 & Tweak to language string (Admin file) [bug 4558]
+! Minor tweaks (ModerationCenter.template.php, index.css) [Bug 4523] [Bug 4548]
+* Added ie6_rtl.css file to core theme (core/index.template.php, core/ie6_rtl.css)
 
 November 2010
 --------------------------------------------------------------------------------
