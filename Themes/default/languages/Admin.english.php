@@ -439,7 +439,7 @@ $txt['news_mailing_desc'] = 'From this menu you can send messages to all members
 $txt['groups_edit_news'] = 'Groups allowed to edit news items';
 $txt['groups_send_mail'] = 'Groups allowed to send out forum newsletters';
 $txt['xmlnews_enable'] = 'Enable XML/RSS news';
-$txt['xmlnews_maxlen'] = 'Maximum post length:<div class="smalltext">(0 to disable, bad idea.)</div>';
+$txt['xmlnews_maxlen'] = 'Maximum message length:<div class="smalltext">(0 to disable, bad idea.)</div>';
 $txt['editnews_clickadd'] = 'Click here to add another item.';
 $txt['editnews_remove_selected'] = 'Remove selected';
 $txt['editnews_remove_confirm'] = 'Are you sure you want to delete the selected news items?';

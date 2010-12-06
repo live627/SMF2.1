@@ -7,6 +7,7 @@ December 2010
 ! HTTPS cookie detection was incorrectly detected for some configurations (ManageServer.php)
 ! Check for spam with emails before sending the email. (ported from Tools, thank you Brett!) (SendTopic.php)
 & Tweaks to language strings (thank you, Akyhne!) (a few language files)
+& Tweak to language string (Admin file) [bug 4558]
 
 November 2010
 --------------------------------------------------------------------------------
