@@ -11,6 +11,7 @@ December 2010
 ! Minor tweaks (ModerationCenter.template.php, index.css) [Bug 4523] [Bug 4548]
 * Added ie6_rtl.css file to core theme (core/index.template.php, core/ie6_rtl.css)
 ! New css for bbc_link class, with new_win secondary removed (index.css, Subs.php)
+! Tweak to a language string (ManagePermission file) [Bug 4564]
 
 November 2010
 --------------------------------------------------------------------------------
