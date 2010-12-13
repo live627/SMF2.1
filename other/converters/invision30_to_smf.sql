@@ -242,6 +242,9 @@ TRUNCATE {$to_prefix}attachments;
 
 ---* {$to_prefix}messages 200
 ---{
+// It's possible to get ourselves empty board information
+if(empty($row['id_board']))
+	$row['id_board'] = 0;
 $row['body'] = addslashes(preg_replace(
 	array(
 		'~<!--QuoteBegin.*?-->.+?<!--QuoteEBegin-->~is',
