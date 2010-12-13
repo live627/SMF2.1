@@ -1252,14 +1252,14 @@ ul.linktree li span
 	padding: 0 4px 0 2px;
 }
 /* Note: It is against the license to remove, alter or otherwise hide the copyright output from SMF so please do not alter the two sections below. */
-#footerarea ul li.copywrite
+#footerarea ul li.copyright
 {
 	display: block;
 	line-height: 0;
 	font-size: small;
 	padding: 1em;
 }
-#footerarea ul li.copywrite, #footerarea ul li.last
+#footerarea ul li.copyright, #footerarea ul li.last
 {
 	border-right: none;
 }
