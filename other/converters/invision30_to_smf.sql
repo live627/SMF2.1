@@ -940,7 +940,7 @@ if (!empty($inv_stats['most_count']) && !empty($inv_stats['most_date']))
 	$update_settings['mostDate'] = $inv_stats['most_date'];
 }
 
-// While we coulddo this in one big batch, lets do it one by one.
+// While we could do this in one big batch, lets do it one by one.
 foreach ($update_settings as $key => $value)
 	convert_query("
 		REPLACE INTO {$to_prefix}settings
