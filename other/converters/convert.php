@@ -338,11 +338,12 @@ function loadSettings()
 
 	// Everything should be alright now... no cross server includes, we hope...
 	require($_POST['path_to'] . '/Settings.php');
-	require($sourcedir . '/QueryString.php');
-	require($sourcedir . '/Subs.php');
-	require($sourcedir . '/Errors.php');
-	require($sourcedir . '/Load.php');
-	require($sourcedir . '/Security.php');
+	require_once($sourcedir . '/QueryString.php');
+	require_once($sourcedir . '/Subs.php');
+	require_once($sourcedir . '/Errors.php');
+	require_once($sourcedir . '/Load.php');
+	require_once($sourcedir . '/Security.php');
+	require_once($sourcedir . '/Subs-Admin.php');
 	// PHP4 users compatibility
 	if (@version_compare(PHP_VERSION, '5') == -1)
 		require_once($sourcedir . '/Subs-Compat.php');
