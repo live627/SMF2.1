@@ -34,7 +34,7 @@ SELECT
 	SUBSTRING(ignorelist, 1, 255) AS pm_ignore_list,
 	timeonline AS total_time_logged_in,
 	CASE
-		WHEN birthday = '' THEN '0001-01-01'
+		WHEN birthday = '' OR LENGTH(birthday) < 8 THEN '0001-01-01'
 		ELSE RIGHT(birthday,10)
 	END AS birthdate
 FROM {$from_prefix}users;
@@ -118,7 +118,7 @@ SELECT
 	SUBSTRING(IF(p.subject = '', t.subject, p.subject), 1, 255) AS subject,
 	SUBSTRING(IF(p.uid > 0, u.email, ''), 1, 255) AS poster_email,
 	p.smilieoff = 'no' AS smileys_enabled,
-	SUBSTRING(IF(p.edituid > 0, edit_u.username, ''), 1, 255) AS modified_name,
+	SUBSTRING(IF(p.edituid > 0, edit_u.username, 0), 1, 255) AS modified_name,
 	p.edittime AS modified_time,
 	SUBSTRING(REPLACE(p.message, '<br>', '<br />'), 1, 65534) AS body,
 	'xx' AS icon
@@ -190,6 +190,10 @@ FROM {$from_prefix}pollvotes;
 TRUNCATE {$to_prefix}personal_messages;
 
 ---* {$to_prefix}personal_messages
+---{
+if(empty($row['from_name']))
+	$row['from_name'] = 'Guest';
+---}
 SELECT
 	pm.pmid AS id_pm, pm.fromid AS id_member_from, pm.dateline AS msgtime,
 	SUBSTRING(uf.username, 1, 255) AS from_name,
