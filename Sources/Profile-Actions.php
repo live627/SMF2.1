@@ -423,6 +423,9 @@ function deleteAccount($memID)
 function deleteAccount2($profile_vars, $post_errors, $memID)
 {
 	global $user_info, $sourcedir, $context, $cur_profile, $modSettings, $smcFunc;
+	
+	// Try get more time...
+	@set_time_limit(600);
 
 	// !!! Add a way to delete pms as well?
 
@@ -509,7 +512,12 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 			);
 			// This could take a while... but ya know it's gonna be worth it in the end.
 			while ($row = $smcFunc['db_fetch_assoc']($request))
+			{
+				if (function_exists('apache_reset_timeout'))
+					@apache_reset_timeout();
+
 				removeMessage($row['id_msg']);
+			}
 			$smcFunc['db_free_result']($request);
 		}
 
