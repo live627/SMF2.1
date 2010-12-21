@@ -12,7 +12,8 @@ December 2010
 * Added ie6_rtl.css file to core theme (core/index.template.php, core/ie6_rtl.css)
 ! New css for bbc_link class, with new_win secondary removed (index.css, Subs.php)
 ! Tweak to a language string (ManagePermission file) [Bug 4564]
-! Fixed link to pruning logs under Search Engines Settings [Bug 4569]
+! Fixed link to pruning logs under Search Engines Settings (ManageSearchEngines.php) [Bug 4569]
+! Fixed formatting of birthday email on mail settings page (ManageMail.php) [Bug 4573]
 
 November 2010
 --------------------------------------------------------------------------------

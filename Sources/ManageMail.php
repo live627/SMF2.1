@@ -344,7 +344,7 @@ function ModifyMailSettings($return_config = false)
 		$context['settings_insert_above'] .= '
 			' . $index . ': {
 				subject: ' . JavaScriptEscape($email['subject']) . ',
-				body: ' . JavaScriptEscape($email['body']) . '
+				body: ' . JavaScriptEscape(nl2br($email['body'])) . '
 			}' . (!$is_last ? ',' : '');
 	}
 	$context['settings_insert_above'] .= '
