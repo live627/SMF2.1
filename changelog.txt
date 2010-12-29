@@ -15,6 +15,7 @@ December 2010
 ! Fixed link to pruning logs under Search Engines Settings (ManageSearchEngines.php) [Bug 4569]
 ! Fixed formatting of birthday email on mail settings page (ManageMail.php) [Bug 4573]
 ! Added timeout protection for removing posts and topics when deleting a user (RemoveTopic.php, Profile-Actions.php) [Bug 4575]
+! Made title column for calender events and holidays larger to handle long events and holidays (install*.sql upgrade*.sql) [Bug 4583]
 
 November 2010
 --------------------------------------------------------------------------------

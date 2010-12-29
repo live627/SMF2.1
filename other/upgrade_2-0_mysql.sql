@@ -2354,12 +2354,12 @@ CHANGE ignore_boards ignore_boards text NOT NULL;
 
 ---# Changing event title column to a larger field type...
 ALTER TABLE {$db_prefix}calendar
-CHANGE title title varchar(60) NOT NULL default '';
+CHANGE title title varchar(255) NOT NULL default '';
 ---#
 
 ---# Changing holidays title column to a larger field type...
 ALTER TABLE {$db_prefix}calendar_holidays
-CHANGE title title varchar(60) NOT NULL default '';
+CHANGE title title varchar(255) NOT NULL default '';
 ---#
 
 /******************************************************************************/

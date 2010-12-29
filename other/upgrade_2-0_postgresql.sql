@@ -629,12 +629,12 @@ ALTER COLUMN error_type TYPE varchar(15);
 
 ---# Changing event title column to a larger field type...
 ALTER TABLE {$db_prefix}calendar
-ALTER COLUMN title TYPE varchar(60);
+ALTER COLUMN title TYPE varchar(255);
 ---#
 
 ---# Changing holiday title column to a larger field type...
 ALTER TABLE {$db_prefix}calendar_holidays
-ALTER COLUMN title TYPE varchar(60);
+ALTER COLUMN title TYPE varchar(255);
 ---#
 
 /******************************************************************************/

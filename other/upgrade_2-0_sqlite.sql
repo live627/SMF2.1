@@ -447,7 +447,7 @@ $smcFunc['db_alter_table']('{db_prefix}calendar', array(
 			'name' => 'title',
 			'null' => false,
 			'type' => 'varchar',
-			'size' => 60,
+			'size' => 255,
 			'default' => ''
 		)
 	)
@@ -463,7 +463,7 @@ $smcFunc['db_alter_table']('{db_prefix}calendar_holidays', array(
 			'name' => 'title',
 			'null' => false,
 			'type' => 'varchar',
-			'size' => 60,
+			'size' => 255,
 			'default' => ''
 		)
 	)
