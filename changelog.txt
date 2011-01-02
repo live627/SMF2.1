@@ -1,6 +1,10 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
+January 2011
+--------------------------------------------------------------------------------
+! Fixed converted passwords not recognized with encryption using md5(md5($_POST['passwrd'])) (LogInOut.php) [Bug 4584]
+
 
 December 2010
 --------------------------------------------------------------------------------
@@ -16,7 +20,6 @@ December 2010
 ! Fixed formatting of birthday email on mail settings page (ManageMail.php) [Bug 4573]
 ! Added timeout protection for removing posts and topics when deleting a user (RemoveTopic.php, Profile-Actions.php) [Bug 4575]
 ! Made title column for calender events and holidays larger to handle long events and holidays (install*.sql upgrade*.sql) [Bug 4583]
-! Fixed converted passwords not recognized with encryption using md5(md5($_POST['passwrd'])) (LogInOut.php) [Bug 4584]
 
 November 2010
 --------------------------------------------------------------------------------
