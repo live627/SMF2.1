@@ -1257,6 +1257,9 @@ function loadMemberContext($user, $display_custom_fields = false)
 			// BBC?
 			if ($custom['bbc'])
 				$value = parse_bbc($value);
+			// ... or checkbox?
+			elseif (isset($custom['type']) && $custom['type'] == 'check')
+				$value = $value ? $txt['yes'] : $txt['no'];
 
 			// Enclosing the user input within some other text?
 			if (!empty($custom['enclose']))
