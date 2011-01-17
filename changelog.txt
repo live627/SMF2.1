@@ -10,6 +10,7 @@ January 2011
  ! It was possible define wildcard-only censor words. (ManagePosts.php) [Bug 4574]
  ! The value of checkbox custom fields were displayed incorrectly on topic display. (Load.php, ManageSettings.php) [Bug 4601]
  ! Paid subscriptions scheduled taks should be disabled when paid subscriptions feature is disabled. (ManageSettings.php, install_2-0_*.sql) [Bug 4599]
+ & Unclear help strings for post unapproved replies and attachments permissions. (ManagePermissions language file) [Bug 4561]
 
 
 December 2010
