@@ -7,6 +7,7 @@ January 2011
  & Incorrect link to Scheduled Tasks area in 'birthday_email' help string. (Help language file) [Bug 4598]
  ! Text color was lost when additional styling was applied using WYSIWYG editor. (Subs-Editor.php) [Bug 4600]
  * Replaced or removed the remaining deprecated <b> tags. (Reminder.php, PersonalMessage template) [Bug 4594]
+ ! It was possible define wildcard-only censor words. (ManagePosts.php) [Bug 4574]
 
 
 December 2010
