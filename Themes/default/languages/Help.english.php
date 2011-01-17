@@ -311,10 +311,8 @@ $helptxt['karmaMode'] = 'Karma is a feature that shows the popularity of a membe
 		number of posts needed to have a &quot;karma&quot;, the time between smites or applauds, and if administrators
 		have to wait this time as well.<br /><br />Whether or not groups of members can smite others is controlled by
 		a permission.  If you have trouble getting this feature to work for everyone, double check your permissions.';
-// !!! This should be reused or removed.
 $helptxt['cal_enabled'] = 'The calendar can be used for showing birthdays, or for showing important moments happening in your community.<br /><br />
 		<strong>Show days as link to \'Post Event\'</strong>:<br />This will allow members to post events for that day, when they click on that date<br />
-		<strong>Show week numbers</strong>:<br />Show which week it is.<br />
 		<strong>Max days in advance on board index</strong>:<br />If this is set to 7, the next week\'s worth of events will be shown.<br />
 		<strong>Show holidays on board index</strong>:<br />Show today\'s holidays in a calendar bar on the board index.<br />
 		<strong>Show birthdays on board index</strong>:<br />Show today\'s birthdays in a calendar bar on the board index.<br />
