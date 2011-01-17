@@ -19,6 +19,7 @@ January 2011
  ! News items didn't get their html special chars encoded. (ManageNews.php)
  & Updated the area description matching the change above. (Admin language file)
  ! SSI.php did not handle guest access correctly for forums having guest access disabled. (SSI.php, ssi_examples.php)
+ ! ssi_examples.php was missing padding on the sides. (ssi_examples.php) [Bug 4602]
 
 
 December 2010
