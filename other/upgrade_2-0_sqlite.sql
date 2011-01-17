@@ -953,3 +953,20 @@ UPDATE {$db_prefix}membergroups
 SET group_type = 1
 WHERE id_group = 1;
 ---#
+
+/******************************************************************************/
+--- Adjusting calendar maximum year.
+/******************************************************************************/
+
+---# Adjusting calendar maximum year.
+---{
+if (!isset($modSettings['cal_maxyear']) || $modSettings['cal_maxyear'] == '2010')
+{
+	upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('cal_maxyear', '2020')");
+}
+---}
+---#

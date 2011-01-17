@@ -714,6 +714,19 @@ if (!isset($modSettings['cal_showholidays']) || !isset($modSettings['cal_showbda
 		'cal_holidaycolor', 'cal_bdaycolor', 'cal_eventcolor');
 ---#
 
+---# Adjusting calendar maximum year...
+---{
+if (!isset($modSettings['cal_maxyear']) || $modSettings['cal_maxyear'] == '2010')
+{
+	upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('cal_maxyear', '2020')");
+}
+---}
+---#
+
 ---# Adding advanced signature settings...
 ---{
 if (empty($modSettings['signature_settings']))

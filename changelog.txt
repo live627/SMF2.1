@@ -14,6 +14,7 @@ January 2011
  & Outdated information in calendar help string. (Help language file) [Bug 4556]
  ! Post action caused errors on wap protocol, trying to load a nonexistent template. (Post.php) [Bug 4570]
  ! The check for empty body on personal message body failed in some cases. (PersonalMessage.php) [Bug 4597]
+ ! Calendar maximum year was not adjusted on forums upgraded from older versions. (install_2-0_*.sql, upgrade_2-0_*.sql) [Bug 4592]
 
 
 December 2010
