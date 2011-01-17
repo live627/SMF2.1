@@ -4245,33 +4245,36 @@ function call_integration_hook($hook, $parameters = array())
 // Add a function for integration hook.
 function add_integration_function($hook, $function, $permanent = true)
 {
-	global $modSettings, $smcFunc;
+	global $smcFunc, $modSettings;
 
+	// Is it going to be permanent?
+	if ($permanent)
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT value
+			FROM {db_prefix}settings
+			WHERE variable = {string:variable}',
+			array(
+				'variable' => $hook,
+			)
+		);
+		list($current_functions) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+
+		if (!empty($current_functions))
+			$permanent_functions = array_merge(explode(',', $current_functions), array($function));
+		else
+			$permanent_functions = array($function);
+
+		updateSettings(array($hook => implode(',', $permanent_functions)));
+	}
+
+	// Make current function list usable.
 	$functions = empty($modSettings[$hook]) ? array() : explode(',', $modSettings[$hook]);
 
 	// Do nothing, if it's already there.
 	if (in_array($function, $functions))
 		return;
-
-	// Add it!
-	if ($permanent)
-	{
-		$request = $smcFunc['db_query']('', '
-			SELECT variable, value
-			FROM {db_prefix}settings
-			WHERE variable = {string:varname}',
-			array(
-			'varname' => $hook,
-			)
-		);
-		list($hook_name, $available) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
-		if(!empty($available))
-			$permfunctions = array_merge(explode(',', $available), array($function));
-		else
-			$permfunctions = array($function);
-		updateSettings(array($hook => implode(',', $permfunctions)));
-	}
 
 	$functions[] = $function;
 	$modSettings[$hook] = implode(',', $functions);
@@ -4282,37 +4285,35 @@ function remove_integration_function($hook, $function)
 {
 	global $modSettings, $smcFunc;
 
+	// Get the permanent functions.
+	$request = $smcFunc['db_query']('', '
+		SELECT value
+		FROM {db_prefix}settings
+		WHERE variable = {string:variable}',
+		array(
+			'variable' => $hook,
+		)
+	);
+	list($current_functions) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
+	if (!empty($current_functions))
+	{
+		$current_functions = explode(',', $current_functions);
+
+		if (in_array($function, $current_functions))
+			updateSettings(array($hook => implode(',', array_diff($current_functions, array($function)))));
+	}
+
+	// Turn the function list into something usable.
 	$functions = empty($modSettings[$hook]) ? array() : explode(',', $modSettings[$hook]);
 
 	// You can only remove it if it's available.
 	if (!in_array($function, $functions))
 		return;
 
-	$request = $smcFunc['db_query']('', '
-		SELECT variable, value
-		FROM {db_prefix}settings
-		WHERE variable = {string:varname}',
-		array(
-		'varname' => $hook,
-		)
-	);
-	list($hook_name, $available) = $smcFunc['db_fetch_row']($request);
-	$smcFunc['db_free_result']($request);
-
-	// Now officially, it's no longer a part of our family...
-	if (!empty($available))
-	{
-		$available_hooks = explode(',', $available);
-		if (in_array($function, $available_hooks))
-		{
-			$permfunctions = array_diff($available_hooks, array($function));
-			updateSettings(array($hook => implode(',', $permfunctions)));
-		}
-	}
-
 	$functions = array_diff($functions, array($function));
 	$modSettings[$hook] = implode(',', $functions);
-
 }
 
 ?>
