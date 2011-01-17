@@ -156,7 +156,10 @@ function EditNews()
 			if (trim($news) == '')
 				unset($_POST['news'][$i]);
 			else
+			{
+				$_POST['news'][$i] = $smcFunc['htmlspecialchars']($_POST['news'][$i], ENT_QUOTES);
 				preparsecode($_POST['news'][$i]);
+			}
 		}
 
 		// Send the new news to the database.
@@ -170,7 +173,7 @@ function EditNews()
 	foreach (explode("\n", $modSettings['news']) as $id => $line)
 		$context['admin_current_news'][$id] = array(
 			'id' => $id,
-			'unparsed' => $smcFunc['htmlspecialchars'](un_preparsecode($line)),
+			'unparsed' => un_preparsecode($line),
 			'parsed' => preg_replace('~<([/]?)form[^>]*?[>]*>~i', '<em class="smalltext">&lt;$1form&gt;</em>', parse_bbc($line)),
 		);
 

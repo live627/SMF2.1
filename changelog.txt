@@ -16,6 +16,8 @@ January 2011
  ! The check for empty body on personal message body failed in some cases. (PersonalMessage.php) [Bug 4597]
  ! Calendar maximum year was not adjusted on forums upgraded from older versions. (install_2-0_*.sql, upgrade_2-0_*.sql) [Bug 4592]
  ! Member approvals did not take account deletion requests into account when registration method is not set to member approval. (ManageMembers.php, Subs.php) [Bug 4529]
+ ! News items didn't get their html special chars encoded. (ManageNews.php)
+ & Updated the area description matching the change above. (Admin language file)
 
 
 December 2010
