@@ -1062,7 +1062,7 @@ function template_send()
 		<div class="content">
 			<div class="clear">
 				<span class="smalltext floatright">', $txt['on'], ': ', $context['quoted_message']['time'], '</span>
-				<b>', $txt['from'], ': ', $context['quoted_message']['member']['name'], '</b>
+				<strong>', $txt['from'], ': ', $context['quoted_message']['member']['name'], '</strong>
 			</div><hr />
 			', $context['quoted_message']['body'], '
 		</div>

@@ -4,8 +4,9 @@ Changelog started January 1, 2004; Currently at $Revision$.
 January 2011
 --------------------------------------------------------------------------------
  ! Fixed converted passwords not recognized with encryption using md5(md5($_POST['passwrd'])) (LogInOut.php) [Bug 4584]
- & Incorrect link to Scheduled Tasks area in 'birthday_email' help string. (Help.english.php) [Bug 4598]
+ & Incorrect link to Scheduled Tasks area in 'birthday_email' help string. (Help language file) [Bug 4598]
  ! Text color was lost when additional styling was applied using WYSIWYG editor. (Subs-Editor.php) [Bug 4600]
+ * Replaced or removed the remaining deprecated <b> tags. (Reminder.php, PersonalMessage template) [Bug 3594]
 
 
 December 2010
