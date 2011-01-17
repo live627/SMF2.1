@@ -4283,7 +4283,7 @@ function add_integration_function($hook, $function, $permanent = true)
 // Remove an integration hook function.
 function remove_integration_function($hook, $function)
 {
-	global $modSettings, $smcFunc;
+	global $smcFunc, $modSettings;
 
 	// Get the permanent functions.
 	$request = $smcFunc['db_query']('', '
