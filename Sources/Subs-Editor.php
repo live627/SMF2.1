@@ -372,11 +372,11 @@ function html_to_bbc($text)
 					}
 				}
 
-				// Preserve the a tag stripping the styling.
-				if ($matches[2] === 'a')
+				// Preserve some tags stripping the styling.
+				if (in_array($matches[2], array('a', 'font')))
 				{
 					$replacement .= $precedingStyle . $afterStyle;
-					$curCloseTags = '</a>' . $curCloseTags;
+					$curCloseTags = '</' . $matches[2] . '>' . $curCloseTags;
 				}
 
 				// If there's something that still needs closing, push it to the stack.
