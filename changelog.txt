@@ -13,6 +13,7 @@ January 2011
  & Unclear help strings for post unapproved replies and attachments permissions. (ManagePermissions language file) [Bug 4561]
  & Outdated information in calendar help string. (Help language file) [Bug 4556]
  ! Post action caused errors on wap protocol, trying to load a nonexistent template. (Post.php) [Bug 4570]
+ ! The check for empty body on personal message body failed in some cases. (PersonalMessage.php) [Bug 4597]
 
 
 December 2010
