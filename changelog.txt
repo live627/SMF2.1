@@ -3,39 +3,42 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 January 2011
 --------------------------------------------------------------------------------
-! Fixed converted passwords not recognized with encryption using md5(md5($_POST['passwrd'])) (LogInOut.php) [Bug 4584]
+ ! Fixed converted passwords not recognized with encryption using md5(md5($_POST['passwrd'])) (LogInOut.php) [Bug 4584]
+ & Incorrect link to Scheduled Tasks area in 'birthday_email' help string. (Help.english.php) [Bug 4598]
 
 
 December 2010
 --------------------------------------------------------------------------------
-! HTTPS cookie detection was incorrectly detected for some configurations (ManageServer.php)
-! Check for spam with emails before sending the email. (ported from Tools, thank you Brett!) (SendTopic.php)
-& Tweaks to language strings (thank you, Akyhne!) (a few language files)
-& Tweak to language string (Admin file) [bug 4558]
-! Minor tweaks (ModerationCenter.template.php, index.css) [Bug 4523] [Bug 4548]
-* Added ie6_rtl.css file to core theme (core/index.template.php, core/ie6_rtl.css)
-! New css for bbc_link class, with new_win secondary removed (index.css, Subs.php)
-! Tweak to a language string (ManagePermission file) [Bug 4564]
-! Fixed link to pruning logs under Search Engines Settings (ManageSearchEngines.php) [Bug 4569]
-! Fixed formatting of birthday email on mail settings page (ManageMail.php) [Bug 4573]
-! Added timeout protection for removing posts and topics when deleting a user (RemoveTopic.php, Profile-Actions.php) [Bug 4575]
-! Made title column for calender events and holidays larger to handle long events and holidays (install*.sql upgrade*.sql) [Bug 4583]
+ ! HTTPS cookie detection was incorrectly detected for some configurations (ManageServer.php)
+ ! Check for spam with emails before sending the email. (ported from Tools, thank you Brett!) (SendTopic.php)
+ & Tweaks to language strings (thank you, Akyhne!) (a few language files)
+ & Tweak to language string (Admin file) [bug 4558]
+ ! Minor tweaks (ModerationCenter.template.php, index.css) [Bug 4523] [Bug 4548]
+ * Added ie6_rtl.css file to core theme (core/index.template.php, core/ie6_rtl.css)
+ ! New css for bbc_link class, with new_win secondary removed (index.css, Subs.php)
+ ! Tweak to a language string (ManagePermission file) [Bug 4564]
+ ! Fixed link to pruning logs under Search Engines Settings (ManageSearchEngines.php) [Bug 4569]
+ ! Fixed formatting of birthday email on mail settings page (ManageMail.php) [Bug 4573]
+ ! Added timeout protection for removing posts and topics when deleting a user (RemoveTopic.php, Profile-Actions.php) [Bug 4575]
+ ! Made title column for calender events and holidays larger to handle long events and holidays (install*.sql upgrade*.sql) [Bug 4583]
+
 
 November 2010
 --------------------------------------------------------------------------------
-& Language strings for "sent items" in PM updated. (Profile, Manual language files)
-! Reapplied the fix of 10194, even though the cache is only cleared if using SMF's disk cache. (Load.php, Subs-Boards.php)
-* Typo (Post.template.php)
-! array_diff_key() compatibility added - ported from bug fixes (index.php, SSI.php, Subs-Compat.php)
-! integration hooks fix for temporary/permanent hooks - ported from bug fixes (Subs.php)
-& Added a language string for cannot_moderate_board (Errors file)
-! Invalidate cache (as long as Load.php can be modified, at least) (Subs.php)
-! Tweak the size regex to accept the standard valid values (Subs.php)
-! Fixed signature padding for IE6 and IE7 (ie6.css, ie7.css) [Bug 4535]
-! Allow fallback to non-utf8 languages for UTF8 forums, in case the corresponding UTF8 files are not installed (still prefer UTF8) (Profile-Modify.php) [Bug 4534]
-* Minor spacing tweaks for request membergroup and edit registration agreement pages. (Profile.template.php, Register.template.php, admin.css) [Bugs 4530, 4531]
-! Typo in OpenID handling. (Subs-OpenID.php)
-! Trivial change, to check for spam a tad bit sooner. (LogInOut.php)
+ & Language strings for "sent items" in PM updated. (Profile, Manual language files)
+ ! Reapplied the fix of 10194, even though the cache is only cleared if using SMF's disk cache. (Load.php, Subs-Boards.php)
+ * Typo (Post.template.php)
+ ! array_diff_key() compatibility added - ported from bug fixes (index.php, SSI.php, Subs-Compat.php)
+ ! integration hooks fix for temporary/permanent hooks - ported from bug fixes (Subs.php)
+ & Added a language string for cannot_moderate_board (Errors file)
+ ! Invalidate cache (as long as Load.php can be modified, at least) (Subs.php)
+ ! Tweak the size regex to accept the standard valid values (Subs.php)
+ ! Fixed signature padding for IE6 and IE7 (ie6.css, ie7.css) [Bug 4535]
+ ! Allow fallback to non-utf8 languages for UTF8 forums, in case the corresponding UTF8 files are not installed (still prefer UTF8) (Profile-Modify.php) [Bug 4534]
+ * Minor spacing tweaks for request membergroup and edit registration agreement pages. (Profile.template.php, Register.template.php, admin.css) [Bugs 4530, 4531]
+ ! Typo in OpenID handling. (Subs-OpenID.php)
+ ! Trivial change, to check for spam a tad bit sooner. (LogInOut.php)
+
 
 --------------------------------------------------------------------------------
 SMF 2.0 RC4                                                      1 November 2010
