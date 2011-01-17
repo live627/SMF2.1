@@ -288,6 +288,27 @@ function ModifyCoreFeatures($return_config = false)
 			'settings' => array(
 				'paid_enabled' => 1,
 			),
+			'setting_callback' => create_function('$value', '
+				global $smcFunc, $sourcedir;
+
+				// Set the correct disabled value for scheduled task.
+				$smcFunc[\'db_query\'](\'\', \'
+					UPDATE {db_prefix}scheduled_tasks
+					SET disabled = {int:disabled}
+					WHERE task = {string:task}\',
+					array(
+						\'disabled\' => $value ? 0 : 1,
+						\'task\' => \'paid_subscriptions\',
+					)
+				);
+
+				// Should we calculate next trigger?
+				if ($value)
+				{
+					require_once($sourcedir . \'/ScheduledTasks.php\');
+					CalculateNextTrigger(\'paid_subscriptions\');
+				}
+			'),
 		),
 		// rg = report generator.
 		'rg' => array(
