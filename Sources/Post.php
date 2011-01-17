@@ -1211,7 +1211,7 @@ function Post()
 	checkSubmitOnce('register');
 
 	// Finally, load the template.
-	if (WIRELESS)
+	if (WIRELESS && WIRELESS_PROTOCOL != 'wap')
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_post';
 	elseif (!isset($_REQUEST['xml']))
 		loadTemplate('Post');
