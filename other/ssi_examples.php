@@ -24,6 +24,12 @@
 /* Special thanks to Spaceman-Spiff for his contributions to this page.           *
 **********************************************************************************/
 
+/* Define $ssi_guest_access variable just before SSI.php to handle guest access to your script.
+	false: (default) fallback to forum setting
+	true:	allow guest access to the script regardless
+*/
+$ssi_guest_access = false;
+
 // Include the SSI file.
 require(dirname(__FILE__) . '/SSI.php');
 

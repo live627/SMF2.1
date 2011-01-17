@@ -18,6 +18,7 @@ January 2011
  ! Member approvals did not take account deletion requests into account when registration method is not set to member approval. (ManageMembers.php, Subs.php) [Bug 4529]
  ! News items didn't get their html special chars encoded. (ManageNews.php)
  & Updated the area description matching the change above. (Admin language file)
+ ! SSI.php did not handle guest access correctly for forums having guest access disabled. (SSI.php, ssi_examples.php)
 
 
 December 2010

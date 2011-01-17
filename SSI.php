@@ -159,6 +159,14 @@ loadTheme(isset($ssi_theme) ? (int) $ssi_theme : 0);
 if (isset($_REQUEST['ssi_ban']) || (isset($ssi_ban) && $ssi_ban === true))
 	is_not_banned();
 
+// Do we allow guests in here?
+if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $user_info['is_guest'] && basename($_SERVER['PHP_SELF']) != 'SSI.php')
+{
+	require_once($sourcedir . '/Subs-Auth.php');
+	KickGuest();
+	obExit(null, true);
+}
+
 // Load the stuff like the menu bar, etc.
 if (isset($ssi_layers))
 {
@@ -177,7 +185,7 @@ if (!isset($_SESSION['USER_AGENT']) && (!isset($_GET['ssi_function']) || $_GET['
 	$_SESSION['USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
 
 // Call a function passed by GET.
-if (isset($_GET['ssi_function']) && function_exists('ssi_' . $_GET['ssi_function']))
+if (isset($_GET['ssi_function']) && function_exists('ssi_' . $_GET['ssi_function']) && (!empty($modSettings['allow_guestAccess']) || !$user_info['is_guest']))
 {
 	call_user_func('ssi_' . $_GET['ssi_function']);
 	exit;
