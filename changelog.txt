@@ -20,6 +20,8 @@ January 2011
  & Updated the area description matching the change above. (Admin language file)
  ! SSI.php did not handle guest access correctly for forums having guest access disabled. (SSI.php, ssi_examples.php)
  ! ssi_examples.php was missing padding on the sides. (ssi_examples.php) [Bug 4602]
+ * Replaced the help section with a page linking to Online Manual. (Help.php, Help.template.php, index.css)
+ & Updated the help language strings accordingly. (Manual language file)
 
 
 December 2010

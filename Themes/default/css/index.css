@@ -3586,55 +3586,14 @@ span.hidelink
 {
 	padding: 0 1em;
 }
-
-/* Samples should be easily distinguishable. */
-#helpmain .help_sample
-{
-	border: 1px solid #99a;
-	background: #fff;
-	padding: 1em;
-	overflow: auto;
-	margin-bottom: 1em;
-}
-#helpmain .help_sample .navigate_section
-{
-	margin: 0;
-}
-#helpmain .help_sample .navigate_section ul
-{
-	padding-top: 0;
-	border: none;
-}
-
-/* We need some air between the lines */
 #helpmain p
 {
 	margin: 0 0 1.5em 0;
 	line-height: 1.5em;
 }
-#helpmain ol
+#helpmain ul
 {
-	font-weight: bold;
-	list-style-type: disc;
-	margin-bottom: 1em;
-	margin-top: 1em;
 	line-height: 1.5em;
-}
-#helpmain ol.la
-{
-	font-weight: normal;
-	list-style-type: circle;
-	margin: 0.5em 0 1em 0;
-	padding-left: 1.5em;
-}
-ul.basic_helplist
-{
-	padding: 0.8em 1.5em;
-	line-height: 1.5em;
-}
-#helpmain #messageindex
-{
-	clear: right;
 }
 
 /* Styles for print media.
