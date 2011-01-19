@@ -2793,7 +2793,7 @@ function obExit($header = null, $do_footer = null, $from_index = false, $from_fa
 
 				// Is it valid?
 				if (is_callable($call))
-					ob_start(trim($call));
+					ob_start($call);
 			}
 
 		// Display the screen in the logical order.
