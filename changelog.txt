@@ -23,6 +23,7 @@ January 2011
  * Replaced the help section with a page linking to Online Manual. (Help.php, Help.template.php, index.css)
  & Updated the help language strings accordingly. (Manual language file)
  ! Integrated output buffers can use static functions in classes too (Subs.php) [Bug 4603]
+ * Incorrect fallback for pm receive options when buddy/ignore lists are disabled. (Profile template) [Bug 4596]
 
 
 December 2010
