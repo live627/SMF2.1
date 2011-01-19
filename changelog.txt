@@ -22,6 +22,7 @@ January 2011
  ! ssi_examples.php was missing padding on the sides. (ssi_examples.php) [Bug 4602]
  * Replaced the help section with a page linking to Online Manual. (Help.php, Help.template.php, index.css)
  & Updated the help language strings accordingly. (Manual language file)
+ ! Integrated output buffers can use static functions in classes too (Subs.php) [Bug 4603]
 
 
 December 2010
