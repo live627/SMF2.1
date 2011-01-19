@@ -24,6 +24,7 @@ January 2011
  & Updated the help language strings accordingly. (Manual language file)
  ! Integrated output buffers can use static functions in classes too (Subs.php) [Bug 4603]
  * Incorrect fallback for pm receive options when buddy/ignore lists are disabled. (Profile template) [Bug 4596]
+ ! Upgrade did not update group types. (upgrade_2-0_*.sql) [Bug 4577]
 
 
 December 2010

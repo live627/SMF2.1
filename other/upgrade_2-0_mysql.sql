@@ -3110,8 +3110,31 @@ ADD COLUMN email_address varchar(255) NOT NULL default '' AFTER membername;
 ---#
 
 /******************************************************************************/
---- Changing the group type for Administrator group.
+--- Adjusting group types.
 /******************************************************************************/
+
+---# Fixing the group types.
+---{
+// Get the admin group type.
+$request = upgrade_query("
+	SELECT group_type
+	FROM {$db_prefix}membergroups
+	WHERE id_group = 1
+	LIMIT 1");
+list ($admin_group_type) = mysql_fetch_row($request);
+mysql_free_result($request);
+
+// Not protected means we haven't updated yet!
+if ($admin_group_type != 1)
+{
+	// Increase by one.
+	upgrade_query("
+		UPDATE {$db_prefix}membergroups
+		SET group_type = group_type + 1
+		WHERE group_type > 0");
+}
+---}
+---#
 
 ---# Changing the group type for Administrator group.
 UPDATE {$db_prefix}membergroups
