@@ -23,11 +23,6 @@ a.new_win:hover
 {
 	text-decoration: underline;
 }
-.new_win
-{
-	width: 400px;
-	height: 400px;
-}
 
 /* Tables should show empty cells. */
 table
