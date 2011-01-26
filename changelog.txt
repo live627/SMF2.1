@@ -1,6 +1,9 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
+SMF 2.0 ???                                                                  ???
+================================================================================
+
 January 2011
 --------------------------------------------------------------------------------
  ! Fixed converted passwords not recognized with encryption using md5(md5($_POST['passwrd'])) (LogInOut.php) [Bug 4584]
@@ -28,6 +31,7 @@ January 2011
  ! Protected but visible group details could not be viewed by non-admins. (Groups.php) [Bug 4525]
  ! Search returned incorrect results for database users without create_temporary privilege. (Search.php)
  ! Search may result in database errors for database users without create_temporary privilege. (Search.php)
+ & Copyright years update (index.english.php and a few more files)
 
 
 December 2010
