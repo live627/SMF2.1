@@ -26,6 +26,8 @@ January 2011
  * Incorrect fallback for pm receive options when buddy/ignore lists are disabled. (Profile template) [Bug 4596]
  ! Upgrade did not update group types. (upgrade_2-0_*.sql) [Bug 4577]
  ! Protected but visible group details could not be viewed by non-admins. (Groups.php) [Bug 4525]
+ ! Search returned incorrect results for database users without create_temporary privilege. (Search.php)
+ ! Search may result in database errors for database users without create_temporary privilege. (Search.php)
 
 
 December 2010
