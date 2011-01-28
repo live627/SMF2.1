@@ -32,6 +32,7 @@ January 2011
  ! Search returned incorrect results for database users without create_temporary privilege. (Search.php)
  ! Search may result in database errors for database users without create_temporary privilege. (Search.php)
  & Copyright years update (index.english.php and a few more files)
+ ! SSI.php should not give information through functions called by $_GET either, if guest access is disabled (SSI.php)
 
 
 December 2010

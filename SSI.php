@@ -160,7 +160,7 @@ if (isset($_REQUEST['ssi_ban']) || (isset($ssi_ban) && $ssi_ban === true))
 	is_not_banned();
 
 // Do we allow guests in here?
-if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $user_info['is_guest'] && basename($_SERVER['PHP_SELF']) != 'SSI.php')
+if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $user_info['is_guest'] && basename($_SERVER['PHP_SELF']) != 'SSI.php' || (isset($_GET['ssi_function'])))
 {
 	require_once($sourcedir . '/Subs-Auth.php');
 	KickGuest();
