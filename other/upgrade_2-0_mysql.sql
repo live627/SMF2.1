@@ -714,19 +714,6 @@ if (!isset($modSettings['cal_showholidays']) || !isset($modSettings['cal_showbda
 		'cal_holidaycolor', 'cal_bdaycolor', 'cal_eventcolor');
 ---#
 
----# Adjusting calendar maximum year...
----{
-if (!isset($modSettings['cal_maxyear']) || $modSettings['cal_maxyear'] == '2010')
-{
-	upgrade_query("
-		REPLACE INTO {$db_prefix}settings
-			(variable, value)
-		VALUES
-			('cal_maxyear', '2020')");
-}
----}
----#
-
 ---# Adding advanced signature settings...
 ---{
 if (empty($modSettings['signature_settings']))
@@ -2367,12 +2354,12 @@ CHANGE ignore_boards ignore_boards text NOT NULL;
 
 ---# Changing event title column to a larger field type...
 ALTER TABLE {$db_prefix}calendar
-CHANGE title title varchar(255) NOT NULL default '';
+CHANGE title title varchar(60) NOT NULL default '';
 ---#
 
 ---# Changing holidays title column to a larger field type...
 ALTER TABLE {$db_prefix}calendar_holidays
-CHANGE title title varchar(255) NOT NULL default '';
+CHANGE title title varchar(60) NOT NULL default '';
 ---#
 
 /******************************************************************************/
@@ -3110,31 +3097,8 @@ ADD COLUMN email_address varchar(255) NOT NULL default '' AFTER membername;
 ---#
 
 /******************************************************************************/
---- Adjusting group types.
+--- Changing the group type for Administrator group.
 /******************************************************************************/
-
----# Fixing the group types.
----{
-// Get the admin group type.
-$request = upgrade_query("
-	SELECT group_type
-	FROM {$db_prefix}membergroups
-	WHERE id_group = 1
-	LIMIT 1");
-list ($admin_group_type) = mysql_fetch_row($request);
-mysql_free_result($request);
-
-// Not protected means we haven't updated yet!
-if ($admin_group_type != 1)
-{
-	// Increase by one.
-	upgrade_query("
-		UPDATE {$db_prefix}membergroups
-		SET group_type = group_type + 1
-		WHERE group_type > 0");
-}
----}
----#
 
 ---# Changing the group type for Administrator group.
 UPDATE {$db_prefix}membergroups

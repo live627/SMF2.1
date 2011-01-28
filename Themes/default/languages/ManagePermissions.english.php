@@ -99,7 +99,7 @@ $txt['permissionhelp_calendar_view'] = 'The calendar shows for each month the bi
 $txt['permissionname_calendar_post'] = 'Create events in the calendar';
 $txt['permissionhelp_calendar_post'] = 'An Event is a topic linked to a certain date or date range. Creating events can be done from the calendar. An event can only be created if the user that creates the event is allowed to post new topics.';
 $txt['permissionname_calendar_edit'] = 'Edit events in the calendar';
-$txt['permissionhelp_calendar_edit'] = 'An Event is a topic linked to a certain date or date range. The event can be edited by clicking the red asterisk (*) next to the event in the calendar view. In order to be able to edit an event, a user must have sufficient permissions to edit the first message of the topic that is linked to the event.';
+$txt['permissionhelp_calendar_edit'] = 'An Event is a topic linked to a certain date or date range. Event can be edited by clicking the red asterisk (*) next to the event in the calendar view. In order to be able to edit an event, a user must have sufficient permissions to edit the first message of the topic that is linked to the event.';
 $txt['permissionname_calendar_edit_own'] = 'Own events';
 $txt['permissionname_calendar_edit_any'] = 'Any events';
 
@@ -237,13 +237,13 @@ $txt['permissiongroup_approval'] = 'Post Moderation';
 $txt['permissionname_approve_posts'] = 'Approve items awaiting moderation';
 $txt['permissionhelp_approve_posts'] = 'This permission allows a user to approve all unapproved items on a board.';
 $txt['permissionname_post_unapproved_replies'] = 'Post replies to topics, but hide until approved';
-$txt['permissionhelp_post_unapproved_replies'] = 'This permission allows a user to post replies to a topic. The replies will not be shown until approved by a moderator.';
+$txt['permissionhelp_post_unapproved_replies'] = 'This permission allows a user to post replies to a topic which will not be shown until approved by a moderator.';
 $txt['permissionname_post_unapproved_replies_own'] = 'Own topic';
 $txt['permissionname_post_unapproved_replies_any'] = 'Any topic';
 $txt['permissionname_post_unapproved_topics'] = 'Post new topics, but hide until approved';
 $txt['permissionhelp_post_unapproved_topics'] = 'This permission allows a user to post a new topic which will require approval before being shown.';
 $txt['permissionname_post_unapproved_attachments'] = 'Post attachments, but hide until approved';
-$txt['permissionhelp_post_unapproved_attachments'] = 'This permission allows a user to attach files to their posts. The attached files will then require approval before being shown to other users.';
+$txt['permissionhelp_post_unapproved_attachments'] = 'This permission allows a user to attach files to their posts which will then require approval before being shown to other users.';
 
 $txt['permissiongroup_notification'] = 'Notifications';
 $txt['permissionname_mark_any_notify'] = 'Request notification on replies';

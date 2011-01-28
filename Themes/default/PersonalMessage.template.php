@@ -1062,7 +1062,7 @@ function template_send()
 		<div class="content">
 			<div class="clear">
 				<span class="smalltext floatright">', $txt['on'], ': ', $context['quoted_message']['time'], '</span>
-				<strong>', $txt['from'], ': ', $context['quoted_message']['member']['name'], '</strong>
+				<b>', $txt['from'], ': ', $context['quoted_message']['member']['name'], '</b>
 			</div><hr />
 			', $context['quoted_message']['body'], '
 		</div>
@@ -1070,8 +1070,8 @@ function template_send()
 	</div>';
 
 	echo '
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/PersonalMessage.js?fin20"></script>
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?fin20"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/PersonalMessage.js?rc3"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var oPersonalMessageSend = new smf_PersonalMessageSend({
 				sSelf: \'oPersonalMessageSend\',

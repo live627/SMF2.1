@@ -411,7 +411,7 @@ $row['filename'] = preg_replace('~images\/smilies\/~is', '', $row['filename']);
 
 if (!isset($smf_smileys_directory))
 {
-	// Find the path for SMF smileys.
+	// Find the path for SMF avatars.
 	$request = convert_query("
 		SELECT value
 		FROM {$to_prefix}settings
@@ -438,7 +438,7 @@ if (isset($smiley_enable))
 		WHERE variable='smiley_enable'");
 
 else
-	convert_insert('settings', array('variable', 'value'),
+	convert_insert('settings', array('variable' => 'string', 'value' => 'string'),
 		array('smiley_enable', '1'), 'ignore'
 	);
 
@@ -446,7 +446,7 @@ if (is_file($_POST['path_from'] . '/wcf/images/smilies/'. $row['filename']))
 {
 	copy($_POST['path_from'] . '/wcf/images/smilies/'. $row['filename'] , $smf_smileys_directory . '/default/'.$row['filename']);
 
-	convert_insert('smileys', array('code', 'filename', 'description', 'hidden'),
+	convert_insert('smileys', array('code' => 'string', 'filename' => 'string', 'description' => 'string', 'hidden' => 'int'),
 		array($row['code'], $row['newfilename'], $row['description'], 1), 'ignore'
 	);
 }

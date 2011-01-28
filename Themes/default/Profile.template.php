@@ -543,7 +543,7 @@ function template_editBuddies()
 			<span class="lowerframe"><span></span></span>
 		</div>
 	</form>
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?fin20"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var oAddBuddySuggest = new smc_AutoSuggest({
 			sSelf: \'oAddBuddySuggest\',
@@ -629,7 +629,7 @@ function template_editIgnoreList()
 			<span class="lowerframe"><span></span></span>
 		</div>
 	</form>
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?fin20"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var oAddIgnoreSuggest = new smc_AutoSuggest({
 			sSelf: \'oAddIgnoreSuggest\',
@@ -1394,7 +1394,7 @@ function template_profile_pm_settings()
 								</dt>
 								<dd>
 										<select name="pm_receive_from" id="pm_receive_from">
-												<option value="0"', empty($context['receive_from']) || (empty($modSettings['enable_buddylist']) && $context['receive_from'] < 3) ? ' selected="selected"' : '', '>', $txt['pm_receive_from_everyone'], '</option>';
+												<option value="0"', empty($context['receive_from']) ? ' selected="selected"' : '', '>', $txt['pm_receive_from_everyone'], '</option>';
 
 	if (!empty($modSettings['enable_buddylist']))
 		echo '
@@ -1402,7 +1402,7 @@ function template_profile_pm_settings()
 												<option value="2"', !empty($context['receive_from']) && $context['receive_from'] == 2 ? ' selected="selected"' : '', '>', $txt['pm_receive_from_buddies'], '</option>';
 
 	echo '
-												<option value="3"', !empty($context['receive_from']) && $context['receive_from'] > 2 ? ' selected="selected"' : '', '>', $txt['pm_receive_from_admins'], '</option>
+												<option value="3"', ((!empty($context['receive_from']) && $context['receive_from'] > 2) || (empty($modSettings['enable_buddylist']) && !empty($context['receive_from']))) ? ' selected="selected"' : '', '>', $txt['pm_receive_from_admins'], '</option>
 										</select>
 								</dd>
 								<dt>
@@ -1677,8 +1677,8 @@ function template_groupMembership()
 				<span class="upperframe"><span></span></span>
 				<div class="roundframe"><div class="innerframe">
 					', $txt['request_group_membership_desc'], ':
-					<textarea name="reason" rows="4" style="width: 99%;"></textarea>
-					<div class="righttext" style="margin: 0.5em 0.5% 0 0.5%;">
+					<textarea name="reason" rows="4" style="width: 95%"></textarea>
+					<div class="righttext">
 						<input type="hidden" name="gid" value="', $context['group_request']['id'], '" />
 						<input type="submit" name="req" value="', $txt['submit_request'], '" class="button_submit" />
 					</div>

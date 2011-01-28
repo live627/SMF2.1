@@ -187,13 +187,12 @@ if (!function_exists('clean_cache'))
 	// Empty out the cache folder.
 	function clean_cache($type = '')
 	{
-		global $cachedir, $sourcedir;
+		global $cachedir;
 
 		// No directory = no game.
 		if (!is_dir($cachedir))
 			return;
 
-		// Remove the files in SMF's own disk cache, if any
 		$dh = opendir($cachedir);
 		while ($file = readdir($dh))
 		{
@@ -201,11 +200,6 @@ if (!function_exists('clean_cache'))
 				@unlink($cachedir . '/' . $file);
 		}
 		closedir($dh);
-
-		// Invalidate cache, to be sure!
-		// ... as long as Load.php can be modified, anyway.
-		@touch($sourcedir . '/' . 'Load.php');
-		clearstatcache();
 	}
 }
 
@@ -3439,8 +3433,8 @@ function template_upgrade_above()
 		<meta http-equiv="Content-Type" content="text/html; charset=', isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1', '" />
 		<meta name="robots" content="noindex" />
 		<title>', $txt['upgrade_upgrade_utility'], '</title>
-		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css?fin20" />
-		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/install.css?fin20" />
+		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css?rc3" />
+		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/install.css?rc3" />
 				<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var smf_scripturl = \'', $upgradeurl, '\';
@@ -3571,7 +3565,7 @@ function template_upgrade_below()
 		</div>
 	</div></div>
 	<div id="footer_section"><div class="frame" style="height: 40px;">
-		<div class="smalltext"><a href="http://www.simplemachines.org/" title="Free Forum Software" target="_blank" class="new_win">SMF &copy; 2006&ndash;2011, Simple Machines LLC</a></div>
+		<div class="smalltext"><a href="http://www.simplemachines.org/" title="Free Forum Software" target="_blank" class="new_win">SMF &copy; 2006&ndash;2010, Simple Machines LLC</a></div>
 	</div></div>
 	</body>
 </html>';

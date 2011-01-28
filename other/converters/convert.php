@@ -338,12 +338,11 @@ function loadSettings()
 
 	// Everything should be alright now... no cross server includes, we hope...
 	require($_POST['path_to'] . '/Settings.php');
-	require_once($sourcedir . '/QueryString.php');
-	require_once($sourcedir . '/Subs.php');
-	require_once($sourcedir . '/Errors.php');
-	require_once($sourcedir . '/Load.php');
-	require_once($sourcedir . '/Security.php');
-	require_once($sourcedir . '/Subs-Admin.php');
+	require($sourcedir . '/QueryString.php');
+	require($sourcedir . '/Subs.php');
+	require($sourcedir . '/Errors.php');
+	require($sourcedir . '/Load.php');
+	require($sourcedir . '/Security.php');
 	// PHP4 users compatibility
 	if (@version_compare(PHP_VERSION, '5') == -1)
 		require_once($sourcedir . '/Subs-Compat.php');
@@ -2075,7 +2074,7 @@ function doStep2()
 				'name' => 'id_member',
 				'columns' => array('id_member', 'id_msg')),
 				array('no_prefix' => true));
-		if (!isset($indexes['ip_index']))
+		if (!isset($indexes['ipIndex']))
 			$smcFunc['db_add_index']($to_prefix . 'messages', array(
 				'type' => 'INDEX', // no key
 				'name' => 'ip_index',
@@ -2087,7 +2086,7 @@ function doStep2()
 				'name' => 'participation',
 				'columns' => array('id_member', 'id_topic')),
 				array('no_prefix' => true));
-		if (!isset($indexes['show_posts']))
+		if (!isset($indexes['showPosts']))
 			$smcFunc['db_add_index']($to_prefix . 'messages', array(
 				'type' => 'INDEX', // no key
 				'name' => 'show_posts',

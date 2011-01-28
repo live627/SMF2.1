@@ -188,6 +188,10 @@ function template_main()
 		</fieldset>';
 		}
 
+//		echo '
+//		<div class="righttext padding">
+//			<input type="submit" name="submit" value="', $txt['search'], '" class="button_submit" />
+//		</div>';
 	}
 
 	echo '

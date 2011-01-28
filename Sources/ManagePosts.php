@@ -104,7 +104,7 @@ function ManagePostSettings()
 		),
 	);
 
-	// Call the right function for this sub-action.
+	// Call the right function for this sub-acton.
 	$subActions[$_REQUEST['sa']]();
 }
 
@@ -134,10 +134,8 @@ function SetCensor()
 			if (is_array($_POST['censor_vulgar']))
 			{
 				foreach ($_POST['censor_vulgar'] as $i => $value)
-				{
-					if (trim(strtr($value, '*', ' ')) == '')
+					if ($value == '')
 						unset($_POST['censor_vulgar'][$i], $_POST['censor_proper'][$i]);
-				}
 
 				$censored_vulgar = $_POST['censor_vulgar'];
 				$censored_proper = $_POST['censor_proper'];

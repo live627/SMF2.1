@@ -629,12 +629,12 @@ ALTER COLUMN error_type TYPE varchar(15);
 
 ---# Changing event title column to a larger field type...
 ALTER TABLE {$db_prefix}calendar
-ALTER COLUMN title TYPE varchar(255);
+ALTER COLUMN title TYPE varchar(60);
 ---#
 
 ---# Changing holiday title column to a larger field type...
 ALTER TABLE {$db_prefix}calendar_holidays
-ALTER COLUMN title TYPE varchar(255);
+ALTER COLUMN title TYPE varchar(60);
 ---#
 
 /******************************************************************************/
@@ -1320,52 +1320,11 @@ else
 ---#
 
 /******************************************************************************/
---- Adjusting group types.
+--- Changing the group type for Administrator group.
 /******************************************************************************/
-
----# Fixing the group types.
----{
-// Get the admin group type.
-$request = upgrade_query("
-	SELECT group_type
-	FROM {$db_prefix}membergroups
-	WHERE id_group = 1
-	LIMIT 1");
-list ($admin_group_type) = mysql_fetch_row($request);
-mysql_free_result($request);
-
-// Not protected means we haven't updated yet!
-if ($admin_group_type != 1)
-{
-	// Increase by one.
-	upgrade_query("
-		UPDATE {$db_prefix}membergroups
-		SET group_type = group_type + 1
-		WHERE group_type > 0");
-}
----}
----#
 
 ---# Changing the group type for Administrator group.
 UPDATE {$db_prefix}membergroups
 SET group_type = 1
 WHERE id_group = 1;
----#
-
-/******************************************************************************/
---- Adjusting calendar maximum year.
-/******************************************************************************/
-
----# Adjusting calendar maximum year.
----{
-if (!isset($modSettings['cal_maxyear']) || $modSettings['cal_maxyear'] == '2010')
-{
-	$smcFunc['db_insert']('replace',
-		'{db_prefix}settings',
-		array('variable' => 'string-255', 'value' => 'string-255'),
-		array('cal_maxyear', '2020'),
-		array('variable', 'value')
-	);
-}
----}
 ---#

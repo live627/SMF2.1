@@ -351,12 +351,7 @@ code.bbc_code
 /* Styling for BBC tags */
 .bbc_link:link, .bbc_link:visited
 {
-	border-bottom: 1px solid #A8B6CF;
-}
-.bbc_link:hover
-{
-	text-decoration: none;
-	border-bottom: 1px solid #346;
+	color: #778899;
 }
 .bbc_size
 {
@@ -1990,7 +1985,7 @@ p#whoisviewing
 {
 	clear: right;
 	float: right;
-	margin: 6px 20px 10px 0;
+	margin: 8px 20px 10px 0;
 	text-align: right;
 	font: bold 0.85em arial, sans-serif;
 	color: #334466;	
@@ -2078,7 +2073,7 @@ ul.quickbuttons li.inline_mod_check
 }
 .inner
 {
-	padding: 1em 1em 2px 0;
+	padding: 1em 1em 0 0;
 	margin: 0 1em 0 0;
 	border-top: 1px solid #99a;
 }
@@ -3581,14 +3576,55 @@ span.hidelink
 {
 	padding: 0 1em;
 }
+
+/* Samples should be easily distinguishable. */
+#helpmain .help_sample
+{
+	border: 1px solid #99a;
+	background: #fff;
+	padding: 1em;
+	overflow: auto;
+	margin-bottom: 1em;
+}
+#helpmain .help_sample .navigate_section
+{
+	margin: 0;
+}
+#helpmain .help_sample .navigate_section ul
+{
+	padding-top: 0;
+	border: none;
+}
+
+/* We need some air between the lines */
 #helpmain p
 {
 	margin: 0 0 1.5em 0;
 	line-height: 1.5em;
 }
-#helpmain ul
+#helpmain ol
 {
+	font-weight: bold;
+	list-style-type: disc;
+	margin-bottom: 1em;
+	margin-top: 1em;
 	line-height: 1.5em;
+}
+#helpmain ol.la
+{
+	font-weight: normal;
+	list-style-type: circle;
+	margin: 0.5em 0 1em 0;
+	padding-left: 1.5em;
+}
+ul.basic_helplist
+{
+	padding: 0.8em 1.5em;
+	line-height: 1.5em;
+}
+#helpmain #messageindex
+{
+	clear: right;
 }
 
 /* Styles for print media.
@@ -3605,3 +3641,5 @@ span.hidelink
 		border: none;
 	}
 }
+
+.new_win{width: 400px; height: 400px;}

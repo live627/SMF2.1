@@ -125,7 +125,7 @@ function template_event_post()
 				<div class="roundframe">
 					<fieldset id="event_main">
 						<legend><span', isset($context['post_error']['no_event']) ? ' class="error"' : '', '>', $txt['calendar_event_title'], '</span></legend>
-						<input type="text" name="evtitle" maxlength="255" size="70" value="', $context['event']['title'], '" class="input_text" />
+						<input type="text" name="evtitle" maxlength="70" size="70" value="', $context['event']['title'], '" class="input_text" />
 						<div class="smalltext">
 							<input type="hidden" name="calendar" value="1" />', $txt['calendar_year'], '
 							<select name="year" id="year" onchange="generateDays();">';

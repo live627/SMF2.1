@@ -582,9 +582,6 @@ WHERE t.poll_title != '';
 /******************************************************************************/
 
 ---* {$to_prefix}poll_choices
----{
-$ignore = true;
----}
 SELECT
 	topic_id AS id_poll, poll_option_id AS id_choice,
 	SUBSTRING(poll_option_text, 1, 255) AS label, poll_option_total AS votes

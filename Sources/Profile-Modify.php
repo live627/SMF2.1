@@ -2288,12 +2288,15 @@ function profileLoadLanguages()
 	$context['profile_languages'] = array();
 
 	// Get our languages!
-	getLanguages(true, true);
+	getLanguages(true, false);
 
 	// Setup our languages.
 	foreach ($context['languages'] as $lang)
 	{
-		$context['profile_languages'][$lang['filename']] = strtr($lang['name'], array('-utf8' => ''));
+		if ($context['character_set'] == 'UTF-8' && substr($lang['filename'], -5) === '-utf8')
+			$context['profile_languages'][$lang['filename']] = strtr($lang['name'], array('-utf8' => ''));
+		elseif ($context['character_set'] != 'UTF-8' && substr($lang['filename'], -5) !== '-utf8')
+			$context['profile_languages'][$lang['filename']] = $lang['name'];
 	}
 	ksort($context['profile_languages']);
 

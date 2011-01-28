@@ -199,7 +199,7 @@ function template_email_members()
 
 	// Make the javascript stuff visible.
 	echo '
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?fin20"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		document.getElementById("advanced_select_div").style.display = "";
 		var oMemberSuggest = new smc_AutoSuggest({

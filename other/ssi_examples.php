@@ -24,12 +24,6 @@
 /* Special thanks to Spaceman-Spiff for his contributions to this page.           *
 **********************************************************************************/
 
-/* Define $ssi_guest_access variable just before including SSI.php to handle guest access to your script.
-	false: (default) fallback to forum setting
-	true:	allow guest access to the script regardless
-*/
-$ssi_guest_access = false;
-
 // Include the SSI file.
 require(dirname(__FILE__) . '/SSI.php');
 
@@ -429,13 +423,9 @@ function template_ssi_above()
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>SMF 2.0 RC4 SSI.php Examples</title>
-		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css?fin20" />
+		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css?rc3" />
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<style type="text/css">
-			#wrapper
-			{
-				width: 90%;
-			}
 			#upper_section .user
 			{
 				height: 4em;
@@ -463,6 +453,11 @@ function template_ssi_above()
 				top: -70px;
 				padding: 1em 2em 1em 1em;
 				line-height: 1.6em;
+			}
+			#footer_section
+			{
+				position: relative;
+				top: -20px;
 			}
 			#footer_section
 			{
@@ -529,21 +524,20 @@ function template_ssi_above()
 		// ]]></script>
 	</head>
 	<body>
-		<div id="wrapper">
-			<div id="header"><div class="frame">
-				<div id="top_section">
-					<h1 class="forumtitle">SMF 2.0 RC4 SSI.php Examples</h1>
-					<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />
+		<div id="header"><div class="frame">
+			<div id="top_section">
+				<h1 class="forumtitle">SMF 2.0 RC4 SSI.php Examples</h1>
+				<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />
+			</div>
+			<div id="upper_section" class="middletext" style="overflow: hidden;">
+				<div class="user"></div>
+				<div class="news normaltext">
 				</div>
-				<div id="upper_section" class="middletext" style="overflow: hidden;">
-					<div class="user"></div>
-					<div class="news normaltext">
-					</div>
-				</div>
-			</div></div>
-			<div id="content_section"><div class="frame">
-				<div id="main_content_section">
-					<div id="liftup" class="flow_auto">';
+			</div>
+		</div></div>
+		<div id="content_section"><div class="frame">
+			<div id="main_content_section">
+				<div id="liftup" class="flow_auto">';
 }
 
 function template_ssi_below()
@@ -551,16 +545,15 @@ function template_ssi_below()
 	global $time_start;
 
 	echo '
-						<script type="text/javascript"><!-- // --><![CDATA[
-							showSSIBlock("ssi_recentTopics");
-						// ]]></script>
-					</div>
+					<script type="text/javascript"><!-- // --><![CDATA[
+						showSSIBlock("ssi_recentTopics");
+					// ]]></script>
 				</div>
-			</div></div>
-			<div id="footer_section"><div class="frame">
-				<div class="smalltext"><a href="http://www.simplemachines.org">Simple Machines Forum</a></div>
-			</div></div>
-		</div>
+			</div>
+		</div></div>
+		<div id="footer_section"><div class="frame">
+			<div class="smalltext"><a href="http://www.simplemachines.org">Simple Machines Forum</a></div>
+		</div></div>
 	</body>
 </html>';
 }

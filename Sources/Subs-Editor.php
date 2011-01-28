@@ -372,11 +372,11 @@ function html_to_bbc($text)
 					}
 				}
 
-				// Preserve some tags stripping the styling.
-				if (in_array($matches[2], array('a', 'font')))
+				// Preserve the a tag stripping the styling.
+				if ($matches[2] === 'a')
 				{
 					$replacement .= $precedingStyle . $afterStyle;
-					$curCloseTags = '</' . $matches[2] . '>' . $curCloseTags;
+					$curCloseTags = '</a>' . $curCloseTags;
 				}
 
 				// If there's something that still needs closing, push it to the stack.
@@ -1457,7 +1457,7 @@ function create_control_richedit($editorOptions)
 				prompt_text_img: \'' . addcslashes($txt['prompt_text_img'], "'") . '\'
 			}
 		// ]]></script>
-		<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/editor.js?fin20"></script>';
+		<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/editor.js?rc3"></script>';
 
 		$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
 		if ($context['show_spellchecking'])

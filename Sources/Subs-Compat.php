@@ -223,26 +223,6 @@ if (!function_exists('array_combine'))
 	}
 }
 
-if (!function_exists('array_diff_key'))
-{
-	function array_diff_key()
-	{
-		$arrays = func_get_args();
-		$result = array_shift($arrays);
-		foreach ($arrays as $array)
-		{
-			foreach ($result as $key => $v)
-			{
-				if (array_key_exists($key, $array))
-				{
-					unset($result[$key]);
-				}
-			}
-		}
-		return $result;
-	}
-}
-
 if (!function_exists('mysql_real_escape_string'))
 {
 	function mysql_real_escape_string($string, $connection = null)

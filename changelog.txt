@@ -1,74 +1,7 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0 ???                                                                  ???
-================================================================================
-
-January 2011
---------------------------------------------------------------------------------
- ! Fixed converted passwords not recognized with encryption using md5(md5($_POST['passwrd'])) (LogInOut.php) [Bug 4584]
- & Incorrect link to Scheduled Tasks area in 'birthday_email' help string. (Help language file) [Bug 4598]
- ! Text color was lost when additional styling was applied using WYSIWYG editor. (Subs-Editor.php) [Bug 4600]
- * Replaced or removed the remaining deprecated <b> tags. (Reminder.php, PersonalMessage template) [Bug 4594]
- ! It was possible define wildcard-only censor words. (ManagePosts.php) [Bug 4574]
- ! The value of checkbox custom fields were displayed incorrectly on topic display. (Load.php, ManageSettings.php) [Bug 4601]
- ! Paid subscriptions scheduled taks should be disabled when paid subscriptions feature is disabled. (ManageSettings.php, install_2-0_*.sql) [Bug 4599]
- & Unclear help strings for post unapproved replies and attachments permissions. (ManagePermissions language file) [Bug 4561]
- & Outdated information in calendar help string. (Help language file) [Bug 4556]
- ! Post action caused errors on wap protocol, trying to load a nonexistent template. (Post.php) [Bug 4570]
- ! The check for empty body on personal message body failed in some cases. (PersonalMessage.php) [Bug 4597]
- ! Calendar maximum year was not adjusted on forums upgraded from older versions. (install_2-0_*.sql, upgrade_2-0_*.sql) [Bug 4592]
- ! Member approvals did not take account deletion requests into account when registration method is not set to member approval. (ManageMembers.php, Subs.php) [Bug 4529]
- ! News items didn't get their html special chars encoded. (ManageNews.php)
- & Updated the area description matching the change above. (Admin language file)
- ! SSI.php did not handle guest access correctly for forums having guest access disabled. (SSI.php, ssi_examples.php)
- ! ssi_examples.php was missing padding on the sides. (ssi_examples.php) [Bug 4602]
- * Replaced the help section with a page linking to Online Manual. (Help.php, Help.template.php, index.css)
- & Updated the help language strings accordingly. (Manual language file)
- ! Integrated output buffers can use static functions in classes too (Subs.php) [Bug 4603]
- * Incorrect fallback for pm receive options when buddy/ignore lists are disabled. (Profile template) [Bug 4596]
- ! Upgrade did not update group types. (upgrade_2-0_*.sql) [Bug 4577]
- ! Protected but visible group details could not be viewed by non-admins. (Groups.php) [Bug 4525]
- ! Search returned incorrect results for database users without create_temporary privilege. (Search.php)
- ! Search may result in database errors for database users without create_temporary privilege. (Search.php)
- & Copyright years update (index.english.php and a few more files)
-
-
-December 2010
---------------------------------------------------------------------------------
- ! HTTPS cookie detection was incorrectly detected for some configurations (ManageServer.php)
- ! Check for spam with emails before sending the email. (ported from Tools, thank you Brett!) (SendTopic.php)
- & Tweaks to language strings (thank you, Akyhne!) (a few language files)
- & Tweak to language string (Admin file) [bug 4558]
- ! Minor tweaks (ModerationCenter.template.php, index.css) [Bug 4523] [Bug 4548]
- * Added ie6_rtl.css file to core theme (core/index.template.php, core/ie6_rtl.css)
- ! New css for bbc_link class, with new_win secondary removed (index.css, Subs.php)
- ! Tweak to a language string (ManagePermission file) [Bug 4564]
- ! Fixed link to pruning logs under Search Engines Settings (ManageSearchEngines.php) [Bug 4569]
- ! Fixed formatting of birthday email on mail settings page (ManageMail.php) [Bug 4573]
- ! Added timeout protection for removing posts and topics when deleting a user (RemoveTopic.php, Profile-Actions.php) [Bug 4575]
- ! Made title column for calender events and holidays larger to handle long events and holidays (install*.sql upgrade*.sql) [Bug 4583]
-
-
-November 2010
---------------------------------------------------------------------------------
- & Language strings for "sent items" in PM updated. (Profile, Manual language files)
- ! Reapplied the fix of 10194, even though the cache is only cleared if using SMF's disk cache. (Load.php, Subs-Boards.php)
- * Typo (Post.template.php)
- ! array_diff_key() compatibility added - ported from bug fixes (index.php, SSI.php, Subs-Compat.php)
- ! integration hooks fix for temporary/permanent hooks - ported from bug fixes (Subs.php)
- & Added a language string for cannot_moderate_board (Errors file)
- ! Invalidate cache (as long as Load.php can be modified, at least) (Subs.php)
- ! Tweak the size regex to accept the standard valid values (Subs.php)
- ! Fixed signature padding for IE6 and IE7 (ie6.css, ie7.css) [Bug 4535]
- ! Allow fallback to non-utf8 languages for UTF8 forums, in case the corresponding UTF8 files are not installed (still prefer UTF8) (Profile-Modify.php) [Bug 4534]
- * Minor spacing tweaks for request membergroup and edit registration agreement pages. (Profile.template.php, Register.template.php, admin.css) [Bugs 4530, 4531]
- ! Typo in OpenID handling. (Subs-OpenID.php)
- ! Trivial change, to check for spam a tad bit sooner. (LogInOut.php)
-
-
---------------------------------------------------------------------------------
-SMF 2.0 RC4                                                      1 November 2010
+SMF 2.0                                                                      ???
 ================================================================================
 
 October 2010
@@ -150,7 +83,6 @@ October 2010
  ! Small addition to clean_cache() documentation (Subs.php)
  ! Manage Posts area should only check for admin_forum permission. (ManagePosts.php) [Bug 4520]
  * Undefined index in Subs.php for Core theme (Display template)
- ! Mail functions broken (ManageMail.php)
 
 
 September 2010

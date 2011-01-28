@@ -282,7 +282,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			$smcFunc['db_free_result']($result);
 
 			// Are we using registration approval?
-			if ((!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 2) || !empty($modSettings['approveAccountDeletion']))
+			if (!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 2)
 			{
 				// Update the amount of members awaiting approval - ignoring COPPA accounts, as you can't approve them until you get permission.
 				$result = $smcFunc['db_query']('', '
@@ -1495,7 +1495,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'size',
 				'type' => 'unparsed_equals',
-				'test' => '([1-9][\d]?p[xt]|small(?:er)?|large[r]?|x[x]?-(?:small|large)|medium|(0\.[1-9]|[1-9](\.[\d][\d]?)?)?em)\]',
+				'test' => '([1-9][\d]?p[xt]|(?:x-)?small(?:er)?|(?:x-)?large[r]?|(0\.[1-9]|[1-9](\.[\d][\d]?)?)?em)\]',
 				'before' => '<span style="font-size: $1;" class="bbc_size">',
 				'after' => '</span>',
 			),
@@ -1572,7 +1572,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'url',
 				'type' => 'unparsed_content',
-				'content' => '<a href="$1" class="bbc_link" target="_blank">$1</a>',
+				'content' => '<a href="$1" class="bbc_link new_win" target="_blank">$1</a>',
 				'validate' => create_function('&$tag, &$data, $disabled', '
 					$data = strtr($data, array(\'<br />\' => \'\'));
 					if (strpos($data, \'http://\') !== 0 && strpos($data, \'https://\') !== 0)
@@ -1582,7 +1582,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'url',
 				'type' => 'unparsed_equals',
-				'before' => '<a href="$1" class="bbc_link" target="_blank">',
+				'before' => '<a href="$1" class="bbc_link new_win" target="_blank">',
 				'after' => '</a>',
 				'validate' => create_function('&$tag, &$data, $disabled', '
 					if (strpos($data, \'http://\') !== 0 && strpos($data, \'https://\') !== 0)
@@ -2786,14 +2786,10 @@ function obExit($header = null, $do_footer = null, $from_index = false, $from_fa
 			$buffers = array_merge(explode(',', $modSettings['integrate_buffer']), $buffers);
 
 		if (!empty($buffers))
-			foreach ($buffers as $function)
+			foreach ($buffers as $buffer_function)
 			{
-				$function = trim($function);
-				$call = strpos($function, '::') !== false ? explode('::', $function) : $function;
-
-				// Is it valid?
-				if (is_callable($call))
-					ob_start($call);
+				if (function_exists(trim($buffer_function)))
+					ob_start(trim($buffer_function));
 			}
 
 		// Display the screen in the logical order.
@@ -3862,13 +3858,12 @@ function create_button($name, $alt, $label = '', $custom = '', $force_use = fals
 // Empty out the cache folder.
 function clean_cache($type = '')
 {
-	global $cachedir, $sourcedir;
+	global $cachedir;
 
 	// No directory = no game.
 	if (!is_dir($cachedir))
 		return;
 
-	// Remove the files in SMF's own disk cache, if any
 	$dh = opendir($cachedir);
 	while ($file = readdir($dh))
 	{
@@ -3876,11 +3871,6 @@ function clean_cache($type = '')
 			@unlink($cachedir . '/' . $file);
 	}
 	closedir($dh);
-
-	// Invalidate cache, to be sure!
-	// ... as long as Load.php can be modified, anyway.
-	@touch($sourcedir . '/' . 'Load.php');
-	clearstatcache();
 }
 
 // Load classes that are both (E_STRICT) PHP 4 and PHP 5 compatible.
@@ -4249,31 +4239,8 @@ function call_integration_hook($hook, $parameters = array())
 // Add a function for integration hook.
 function add_integration_function($hook, $function, $permanent = true)
 {
-	global $smcFunc, $modSettings;
+	global $modSettings;
 
-	// Is it going to be permanent?
-	if ($permanent)
-	{
-		$request = $smcFunc['db_query']('', '
-			SELECT value
-			FROM {db_prefix}settings
-			WHERE variable = {string:variable}',
-			array(
-				'variable' => $hook,
-			)
-		);
-		list($current_functions) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
-
-		if (!empty($current_functions))
-			$permanent_functions = array_merge(explode(',', $current_functions), array($function));
-		else
-			$permanent_functions = array($function);
-
-		updateSettings(array($hook => implode(',', $permanent_functions)));
-	}
-
-	// Make current function list usable.
 	$functions = empty($modSettings[$hook]) ? array() : explode(',', $modSettings[$hook]);
 
 	// Do nothing, if it's already there.
@@ -4281,43 +4248,29 @@ function add_integration_function($hook, $function, $permanent = true)
 		return;
 
 	$functions[] = $function;
-	$modSettings[$hook] = implode(',', $functions);
+
+	// Add it!
+	if ($permanent)
+		updateSettings(array($hook => implode(',', $functions)));
+	else
+		$modSettings[$hook] = implode(',', $functions);
 }
 
 // Remove an integration hook function.
 function remove_integration_function($hook, $function)
 {
-	global $smcFunc, $modSettings;
+	global $modSettings;
 
-	// Get the permanent functions.
-	$request = $smcFunc['db_query']('', '
-		SELECT value
-		FROM {db_prefix}settings
-		WHERE variable = {string:variable}',
-		array(
-			'variable' => $hook,
-		)
-	);
-	list($current_functions) = $smcFunc['db_fetch_row']($request);
-	$smcFunc['db_free_result']($request);
-
-	if (!empty($current_functions))
-	{
-		$current_functions = explode(',', $current_functions);
-
-		if (in_array($function, $current_functions))
-			updateSettings(array($hook => implode(',', array_diff($current_functions, array($function)))));
-	}
-
-	// Turn the function list into something usable.
 	$functions = empty($modSettings[$hook]) ? array() : explode(',', $modSettings[$hook]);
 
-	// You can only remove it if it's available.
+	// You can only remove it's available.
 	if (!in_array($function, $functions))
 		return;
 
 	$functions = array_diff($functions, array($function));
-	$modSettings[$hook] = implode(',', $functions);
+
+	// Now officially, it's no longer a part of our family...
+	updateSettings(array($hook => implode(',', $functions)));
 }
 
 ?>

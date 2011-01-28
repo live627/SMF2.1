@@ -529,7 +529,7 @@ CREATE TABLE {$db_prefix}calendar (
   end_date date NOT NULL default '0001-01-01',
   id_board smallint NOT NULL default '0',
   id_topic int NOT NULL default '0',
-  title varchar(255) NOT NULL default '',
+  title varchar(60) NOT NULL default '',
   id_member int NOT NULL default '0'
 );
 
@@ -548,7 +548,7 @@ CREATE INDEX {$db_prefix}calendar_topic ON {$db_prefix}calendar (id_topic, id_me
 CREATE TABLE {$db_prefix}calendar_holidays (
   id_holiday integer primary key,
   event_date date NOT NULL default '0001-01-01',
-  title varchar(255) NOT NULL default ''
+  title varchar(60) NOT NULL default ''
 );
 
 #
@@ -1724,7 +1724,7 @@ INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_r
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (7, 0, {$sched_task_offset}, 1, 'd', 0, 'fetchSMfiles');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (8, 0, 0, 1, 'd', 1, 'birthdayemails');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (9, 0, 0, 1, 'w', 0, 'weekly_maintenance');
-INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (10, 0, 120, 1, 'd', 1, 'paid_subscriptions');
+INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (10, 0, 120, 1, 'd', 0, 'paid_subscriptions');
 COMMIT;
 
 # --------------------------------------------------------
@@ -1788,7 +1788,7 @@ INSERT INTO {$db_prefix}settings (variable, value) VALUES ('max_image_width', '0
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('max_image_height', '0');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('onlineEnable', '0');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('cal_enabled', '0');
-INSERT INTO {$db_prefix}settings (variable, value) VALUES ('cal_maxyear', '2020');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('cal_maxyear', '2016');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('cal_minyear', '2008');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('cal_daysaslink', '0');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('cal_defaultboard', '');

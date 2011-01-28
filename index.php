@@ -64,8 +64,8 @@ require_once($sourcedir . '/Errors.php');
 require_once($sourcedir . '/Load.php');
 require_once($sourcedir . '/Security.php');
 
-// Using an pre-PHP 5.1 version?
-if (@version_compare(PHP_VERSION, '5.1') == -1)
+// Using an pre-PHP5 version?
+if (@version_compare(PHP_VERSION, '5') == -1)
 	require_once($sourcedir . '/Subs-Compat.php');
 
 // If $maintenance is set specifically to 2, then we're upgrading or something.

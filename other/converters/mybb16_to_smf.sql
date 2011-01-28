@@ -1,7 +1,7 @@
 /* ATTENTION: You don't need to run or use this file!  The convert.php script does everything for you! */
 
 /******************************************************************************/
----~ name: "MyBulletinBoard 1.6"
+---~ name: "MyBulletinBoard 1.4"
 /******************************************************************************/
 ---~ version: "SMF 2.0"
 ---~ settings: "/inc/config.php"
@@ -34,8 +34,8 @@ SELECT
 	SUBSTRING(ignorelist, 1, 255) AS pm_ignore_list,
 	timeonline AS total_time_logged_in,
 	CASE
-		WHEN birthday = '' OR LENGTH(birthday) < 8 THEN '0001-01-01'
-		ELSE RIGHT(birthday,10)
+		WHEN birthday = '' THEN '0001-01-01'
+		ELSE CONCAT_WS('-', RIGHT(birthday, 4), SUBSTRING(birthday, LOCATE('-', birthday) + 1, LOCATE('-', birthday, LOCATE('-', birthday) + 1) - LOCATE('-', birthday) - 1), LEFT(birthday, LOCATE('-', birthday) - 1))
 	END AS birthdate
 FROM {$from_prefix}users;
 ---*
@@ -66,7 +66,7 @@ WHERE id_profile > 4;
 SELECT
 	fid AS id_board, SUBSTRING(name, 1, 255) AS name,
 	SUBSTRING(description, 1, 65534) AS description, disporder AS board_order,
-	posts AS num_posts, threads AS num_topics, pid AS id_cat,
+	posts AS num_posts, threads AS num_topics, pid AS id_parent,
 	usepostcounts != 'yes' AS count_posts, '-1,0' AS member_groups
 FROM {$from_prefix}forums
 WHERE type = 'f';
@@ -118,7 +118,7 @@ SELECT
 	SUBSTRING(IF(p.subject = '', t.subject, p.subject), 1, 255) AS subject,
 	SUBSTRING(IF(p.uid > 0, u.email, ''), 1, 255) AS poster_email,
 	p.smilieoff = 'no' AS smileys_enabled,
-	SUBSTRING(IF(p.edituid > 0, edit_u.username, 0), 1, 255) AS modified_name,
+	SUBSTRING(IF(p.edituid > 0, edit_u.username, ''), 1, 255) AS modified_name,
 	p.edittime AS modified_time,
 	SUBSTRING(REPLACE(p.message, '<br>', '<br />'), 1, 65534) AS body,
 	'xx' AS icon
@@ -190,10 +190,6 @@ FROM {$from_prefix}pollvotes;
 TRUNCATE {$to_prefix}personal_messages;
 
 ---* {$to_prefix}personal_messages
----{
-if(empty($row['from_name']))
-	$row['from_name'] = 'Guest';
----}
 SELECT
 	pm.pmid AS id_pm, pm.fromid AS id_member_from, pm.dateline AS msgtime,
 	SUBSTRING(uf.username, 1, 255) AS from_name,
@@ -288,7 +284,6 @@ WHERE isgroup = 0;
 
 ---# Converting groups moderators
 ---{
-
 $result = convert_query("
 	SELECT m.fid, u.uid
 	FROM {$from_prefix}moderators AS m
@@ -298,7 +293,7 @@ $result = convert_query("
 while ($row = convert_fetch_assoc($result))
 {
 	convert_query("
-	INSERT IGNORE INTO {$to_prefix}moderators
+	INSERT INTO {$to_prefix}moderators
 		(id_board, id_member)
 	VALUES ('{$row['fid']}', '{$row['uid']}')");
 }

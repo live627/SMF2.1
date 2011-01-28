@@ -185,7 +185,7 @@ function fatal_lang_error($error, $log = 'general', $sprintf = array())
 		loadTheme();
 	}
 
-	// If we have no theme stuff we can't have the language file...
+	// If we have no theme stuff we can't have the lanuage file...
 	if (empty($context['theme_loaded']))
 		die($error);
 

@@ -135,9 +135,6 @@ FROM {$from_prefix}{$dbtables['polls']} AS p
 /******************************************************************************/
 
 ---* {$to_prefix}poll_choices
----{
-$ignore = true;
----}
 SELECT
 	poo_poid AS id_poll, pooid AS id_choice, SUBSTRING(poo_option, 1, 255) AS label, poo_votes AS votes
 FROM {$from_prefix}{$dbtables['poll_options']};

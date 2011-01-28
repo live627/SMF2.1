@@ -513,7 +513,7 @@ CREATE TABLE {$db_prefix}calendar (
   end_date date NOT NULL default '0001-01-01',
   id_board smallint(5) unsigned NOT NULL default '0',
   id_topic mediumint(8) unsigned NOT NULL default '0',
-  title varchar(255) NOT NULL default '',
+  title varchar(60) NOT NULL default '',
   id_member mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY (id_event),
   KEY start_date (start_date),
@@ -528,7 +528,7 @@ CREATE TABLE {$db_prefix}calendar (
 CREATE TABLE {$db_prefix}calendar_holidays (
   id_holiday smallint(5) unsigned NOT NULL auto_increment,
   event_date date NOT NULL default '0001-01-01',
-  title varchar(255) NOT NULL default '',
+  title varchar(60) NOT NULL default '',
   PRIMARY KEY (id_holiday),
   KEY event_date (event_date)
 ) ENGINE=MyISAM;
@@ -1586,7 +1586,7 @@ VALUES
 	(7, 0, {$sched_task_offset}, 1, 'd', 0, 'fetchSMfiles'),
 	(8, 0, 0, 1, 'd', 1, 'birthdayemails'),
 	(9, 0, 0, 1, 'w', 0, 'weekly_maintenance'),
-	(10, 0, 120, 1, 'd', 1, 'paid_subscriptions');
+	(10, 0, 120, 1, 'd', 0, 'paid_subscriptions');
 
 # --------------------------------------------------------
 
@@ -1650,7 +1650,7 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('max_image_height', '0'),
 	('onlineEnable', '0'),
 	('cal_enabled', '0'),
-	('cal_maxyear', '2020'),
+	('cal_maxyear', '2016'),
 	('cal_minyear', '2008'),
 	('cal_daysaslink', '0'),
 	('cal_defaultboard', ''),
