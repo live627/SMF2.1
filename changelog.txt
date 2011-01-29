@@ -34,6 +34,7 @@ January 2011
  & Copyright years update (index.english.php and a few more files)
  ! SSI.php should not give information through functions called by $_GET either, if guest access is disabled (SSI.php)
  & Fixed a couple of languages strings. [Bug 4566]
+ * Fixed validation error and header bar markup. [Bug 4549]
 
 
 December 2010

@@ -421,8 +421,8 @@ function template_unapproved_attachments()
 	echo '
 	<div id="modcenter">
 		<form action="', $scripturl, '?action=moderate;area=attachmod;sa=attachments;start=', $context['start'], '" method="post" accept-charset="', $context['character_set'], '">
-			<div class="title_bar">
-				<h3 class="titlebg">', $txt['mc_unapproved_attachments'], '</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['mc_unapproved_attachments'], '</h3>
 			</div>';
 
 	// The ever popular approve button, with the massively unpopular delete.
@@ -478,9 +478,12 @@ function template_unapproved_attachments()
 				</tr>';
 	}
 
-	echo '
+	if (!empty($context['unapproved_items']))
+		echo '
 			</tbody>
-			</table>
+			</table>';
+			
+		echo '
 			<div class="pagesection">
 				<div class="floatright">
 					<select name="do" onchange="if (this.value != 0 &amp;&amp; confirm(\'', $txt['mc_unapproved_sure'], '\')) submit();">
