@@ -36,7 +36,7 @@ January 2011
  & Fixed a couple of languages strings. [Bug 4566]
  * Fixed validation error and header bar markup. [Bug 4549]
  * Fixed newsletter IE7 issue and some other IE issues. (ie6.css, ie7.css, index.css, rtl.css, ManageNews.template.php, Login.template.php) [Bug 4567]
-
+ ! Fixed admin submenus glitch on very narrows screens. (index.css) [Bug 4571]
 
 December 2010
 --------------------------------------------------------------------------------
