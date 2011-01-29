@@ -17,7 +17,7 @@ function template_login()
 				</h3>
 			</div>
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe">';
+			<div class="roundframe"><br class="clear" />';
 
 	// Did they make a mistake last time?
 	if (!empty($context['login_errors']))

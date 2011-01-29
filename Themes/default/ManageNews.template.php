@@ -89,7 +89,7 @@ function template_email_members()
 
 	echo '
 	<div id="admincenter">
-		<form action="', $scripturl, '?action=admin;area=news;sa=mailingcompose" method="post" accept-charset="', $context['character_set'], '">
+		<form action="', $scripturl, '?action=admin;area=news;sa=mailingcompose" method="post" class="flow_hidden" accept-charset="', $context['character_set'], '">
 			<div class="cat_bar">
 				<h3 class="catbg">', $txt['admin_newsletters'], '</h3>
 			</div>
@@ -116,7 +116,7 @@ function template_email_members()
 
 	echo '
 						</dd>
-					</dl>
+					</dl><br class="clear" />
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
@@ -185,7 +185,7 @@ function template_email_members()
 						<dd>
 							<input type="checkbox" name="email_force" id="email_force" value="1" class="input_check" />
 						</dd>
-					</dl>
+					</dl><br class="clear" />
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

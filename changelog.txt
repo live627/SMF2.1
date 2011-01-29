@@ -35,6 +35,7 @@ January 2011
  ! SSI.php should not give information through functions called by $_GET either, if guest access is disabled (SSI.php)
  & Fixed a couple of languages strings. [Bug 4566]
  * Fixed validation error and header bar markup. [Bug 4549]
+ * Fixed newsletter IE7 issue and some other IE issues. (ie6.css, ie7.css, index.css, rtl.css, ManageNews.template.php, Login.template.php) [Bug 4567]
 
 
 December 2010
