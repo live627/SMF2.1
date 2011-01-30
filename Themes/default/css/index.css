@@ -1319,11 +1319,13 @@ ul#navigation li
 #adm_submenus
 {
 	padding-left: 2em;
-	clear: both;
+	overflow: hidden;
+	height: 3em;
 }
-#adm_submenus, #adm_submenus ul
+#adm_submenus ul
 {
 	height: 3em;
+	clear: both;
 }
 
 /* Styles for the general looks for the Curve theme.

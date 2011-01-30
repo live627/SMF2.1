@@ -36,9 +36,9 @@ January 2011
  & Fixed a couple of languages strings. [Bug 4566]
  * Fixed validation error and header bar markup. [Bug 4549]
  * Fixed newsletter IE7 issue and some other IE issues. (ie6.css, ie7.css, index.css, rtl.css, ManageNews.template.php, Login.template.php) [Bug 4567]
- ! Fixed admin submenus glitch on very narrow screens. (index.css) [Bug 4571]
  ! Fixed admin titlebg padding. (admin.css) [Bug 4576]
  * Missing class on some help icons. (Admin.template.php, Themes.template.php) [Bug 4580]
+ ! Fixed admin submenus glitch on very narrow screens and break on edit themes page. (index.css, admin.css) [Bug 4571] [Bug 4581]
 
 December 2010
 --------------------------------------------------------------------------------
