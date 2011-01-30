@@ -1935,9 +1935,9 @@ function template_viewWarning()
 			</h3>
 		</div>
 		<div class="windowbg">
-			<span class="topslice"><span></span</span>
+			<span class="topslice"><span></span></span>
 			<div class="content">
-				<dl>
+				<dl class="settings">
 					<dt>
 						<strong>', $txt['profile_warning_name'], ':</strong>
 					</dt>

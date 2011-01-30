@@ -40,6 +40,7 @@ January 2011
  * Missing class on some help icons. (Admin.template.php, Themes.template.php) [Bug 4580]
  ! Fixed admin submenus glitch on very narrow screens and break on edit themes page. (index.css, admin.css) [Bug 4571] [Bug 4581]
  * Incorrect id's fixed. (SplitTopics.template.php) [Bug 4582]
+ * Minor markup fixes. (Profile.template.php) [Bug 4607]
 
 ---------------------------------
  ! HTTPS cookie detection was incorrectly detected for some configurations (ManageServer.php)
