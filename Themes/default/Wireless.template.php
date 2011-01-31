@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC4; Wireless
+// Version: 2.0 RC5; Wireless
 
 // This is the header for WAP 1.1 output. You can view it with ?wap in the URL.
 function template_wap_above()
