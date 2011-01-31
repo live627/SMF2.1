@@ -42,6 +42,7 @@ January 2011
  * Incorrect id's fixed. (SplitTopics.template.php) [Bug 4582]
  * Minor markup fixes. (Profile.template.php) [Bug 4607]
  ! Fixed display of spider log title/information. (ManageSearchEngines.php) [Bug 4608]
+ ! Broken function call in ManageMail (ManageMail.php)
 
 ---------------------------------
  ! HTTPS cookie detection was incorrectly detected for some configurations (ManageServer.php)
