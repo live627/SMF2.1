@@ -44,7 +44,10 @@ January 2011
  ! Fixed display of spider log title/information. (ManageSearchEngines.php) [Bug 4608]
  ! Broken function call in ManageMail (ManageMail.php) 
  * All browsers (inc.IE6) fix for adm_submenus on narrow screens. Also untracked IE6/IE7 bug for span.firstlevel. (index.css, GenericMenu.template.php) [Bug 4571]
+ ! css caches preliminary updates (many files)
 
+
+December 2010
 ---------------------------------
  ! HTTPS cookie detection was incorrectly detected for some configurations (ManageServer.php)
  ! Check for spam with emails before sending the email. (ported from Tools, thank you Brett!) (SendTopic.php)
