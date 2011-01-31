@@ -1137,6 +1137,7 @@ span.lowerframe span
 	padding-left: 5px;
 	height: 22px;
 	line-height: 19px;
+	white-space: pre;
 }
 .dropmenu li
 {
@@ -1320,12 +1321,6 @@ ul#navigation li
 {
 	padding-left: 2em;
 	overflow: hidden;
-	height: 3em;
-}
-#adm_submenus ul
-{
-	height: 3em;
-	clear: both;
 }
 
 /* Styles for the general looks for the Curve theme.
@@ -2680,6 +2675,7 @@ tr.titlebg td
 #main_admsection
 {
 	margin-left: 172px;
+	overflow: hidden;
 }
 
 tr.windowbg td, tr.windowbg2 td, tr.approvebg td, tr.highlight2 td

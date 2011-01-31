@@ -42,7 +42,8 @@ January 2011
  * Incorrect id's fixed. (SplitTopics.template.php) [Bug 4582]
  * Minor markup fixes. (Profile.template.php) [Bug 4607]
  ! Fixed display of spider log title/information. (ManageSearchEngines.php) [Bug 4608]
- ! Broken function call in ManageMail (ManageMail.php)
+ ! Broken function call in ManageMail (ManageMail.php) 
+ * All browsers (inc.IE6) fix for adm_submenus on narrow screens. Also untracked IE6/IE7 bug for span.firstlevel. (index.css, GenericMenu.template.php) [Bug 4571]
 
 ---------------------------------
  ! HTTPS cookie detection was incorrectly detected for some configurations (ManageServer.php)

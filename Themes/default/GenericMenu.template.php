@@ -322,7 +322,7 @@ function template_generic_menu_tabs(&$menu_context)
 		// the end of tabs
 		echo '
 		</ul>
-	</div>';
+	</div><br class="clear" />';
 	}
 	// ...if not use the old style
 	else
