@@ -45,6 +45,7 @@ January 2011
  ! Broken function call in ManageMail (ManageMail.php) 
  * All browsers (inc.IE6) fix for adm_submenus on narrow screens. Also untracked IE6/IE7 bug for span.firstlevel. (index.css, GenericMenu.template.php) [Bug 4571]
  ! css caches preliminary updates (many files)
+ * Added array flip for buttonlists to fix untracked ltr/rtl issues in IE6/7. (rtl.css, index.template.php)
 
 
 December 2010
