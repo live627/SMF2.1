@@ -1,7 +1,7 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0 ???                                                                  ???
+SMF 2.0 RC5                                                      6 November 2011
 ================================================================================
 
 January 2011
@@ -19,7 +19,7 @@ January 2011
  ! The check for empty body on personal message body failed in some cases. (PersonalMessage.php) [Bug 4597]
  ! Calendar maximum year was not adjusted on forums upgraded from older versions. (install_2-0_*.sql, upgrade_2-0_*.sql) [Bug 4592]
  ! Member approvals did not take account deletion requests into account when registration method is not set to member approval. (ManageMembers.php, Subs.php) [Bug 4529]
- ! News items didn't get their html special chars encoded. (ManageNews.php)
+ ! News items didn't get their html special chars encoded. (ManageNews.php, thank you Ghost!)
  & Updated the area description matching the change above. (Admin language file)
  ! SSI.php did not handle guest access correctly for forums having guest access disabled. (SSI.php, ssi_examples.php)
  ! ssi_examples.php was missing padding on the sides. (ssi_examples.php) [Bug 4602]
@@ -29,7 +29,7 @@ January 2011
  * Incorrect fallback for pm receive options when buddy/ignore lists are disabled. (Profile template) [Bug 4596]
  ! Upgrade did not update group types. (upgrade_2-0_*.sql) [Bug 4577]
  ! Protected but visible group details could not be viewed by non-admins. (Groups.php) [Bug 4525]
- ! Search returned incorrect results for database users without create_temporary privilege. (Search.php)
+ ! Search returned incorrect results for database users without create_temporary privilege. (Search.php, thank you ioszilla!)
  ! Search may result in database errors for database users without create_temporary privilege. (Search.php)
  & Copyright years update (index.english.php and a few more files)
  ! SSI.php should not give information through functions called by $_GET either, if guest access is disabled (SSI.php)
