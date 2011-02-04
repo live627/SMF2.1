@@ -21,12 +21,12 @@
 		<readme type="inline">
 			This patch file will provide security fixes to your SMF 2.0 RC4 forum.
 		</readme>
-		<modification type="file" format="boardmod">smf_2-0-RC4_security_patch.xml</modification>
+		<modification type="file" format="xml">smf_2-0-RC4_security_patch.xml</modification>
 	</install>
 	<uninstall for="2.0 RC4">
 		<readme type="inline">
 			This will uninstall the security fixes of your SMF 2.0 RC4 forum.
 		</readme>
-		<modification type="file" format="boardmod" reverse="true">smf_2-0-RC4_security_patch.xml</modification>
+		<modification type="file" format="xml" reverse="true">smf_2-0-RC4_security_patch.xml</modification>
 	</uninstall>
 </package-info>
