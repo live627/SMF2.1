@@ -1,12 +1,12 @@
 
 <edit file>
-$sourcedir/index.php
+$boarddir/index.php
 </edit file>
 
 
 <search for>
 * =============================================================================== *
-* Software Version:           SMF 1.1.9                                          *
+* Software Version:           SMF 1.1.12                                          *
 </search for>
 
 <replace>
@@ -25,18 +25,16 @@ $forum_version = 'SMF 1.1.13';
 
 
 <edit file>
-$themedir/index.english.php
+$languagedir/index.english.php
 </edit file>
 
 
 <search for>
-* =============================================================================== *
-* Software Version:           SMF 1.1.9                                           *
+// Version: 1.1.9; index
 </search for>
 
 <replace>
-* =============================================================================== *
-* Software Version:           SMF 1.1.13                                          *
+// Version: 1.1.13; index
 </replace>
 
 
@@ -58,17 +56,13 @@ $sourcedir/Search.php
 
 <search for>
 * =============================================================================== *
-* Software Version:           SMF 1.1.5                                          *
+* Software Version:           SMF 1.1.5                                           *
 </search for>
 
 <replace>
 * =============================================================================== *
 * Software Version:           SMF 1.1.13                                          *
 </replace>
-
-<edit file>
-$sourcedir/Search.php
-</edit file>
 
 
 <search for>
@@ -138,7 +132,7 @@ $sourcedir/ManageNews.php
 
 
 <edit file>
-$sourcedir/ssi_examples..php
+$boarddir/ssi_examples.php
 </edit file>
 
 <search for>
@@ -194,12 +188,4 @@ if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $use
 
 // Load the stuff like the menu bar, etc.
 if (isset($ssi_layers))
-</replace>
-
-<search for>
-
-</search for>
-
-<replace>
-
 </replace>

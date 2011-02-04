@@ -2,4 +2,10 @@
 	<id>smf:smf-1.1.13</id>
 	<version>1.0</version>
 	
+	<file name="$languagedir/Admin.english.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[]]></search>
+			<add><![CDATA[]]></add>
+		</operation>
+	</file>
 </modification>
