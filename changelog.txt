@@ -7,7 +7,8 @@ SMF 2.0 RC5                                                      8 February 2011
 February 2011
 --------------------------------------------------------------------------------
  * Finalizing the help section. (Help.php, Help template) [Bug 2924]
- & Updated the help language strings accordingly. (Manual language file) [Bug 2924]
+ & Updated the help language strings accordingly. (Manual language file)
+ * Help section was not displayed correctly in Core theme. (Help template, index.css) [Bug 4611]
 
 
 January 2011
