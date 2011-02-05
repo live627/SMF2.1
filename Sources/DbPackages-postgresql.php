@@ -509,17 +509,17 @@ function smf_db_add_index($table_name, $index_info, $parameters = array(), $if_e
 	$db_package_log[] = array('remove_index', $table_name, $index_info['name']);
 
 	// Let's get all our indexes.
-	$indexes = $smcFunc['db_list_indexes']($table_name, false);
+	$indexes = $smcFunc['db_list_indexes']($table_name, true);
 	// Do we already have it?
 	foreach ($indexes as $index)
 	{
-		if ($index['name'] == $index_info['name'] || ($index['is_primary'] && isset($index_info['type']) && $index_info['type'] == 'primary'))
+		if ($index['name'] == $index_info['name'] || ($index['type'] == 'primary' && isset($index_info['type']) && $index_info['type'] == 'primary'))
 		{
 			// If we want to overwrite simply remove the current one then continue.
-			if ($if_exists == 'update')
-				$smcFunc['db_remove_index']($table_name, $index_info['name']);
-			else
+			if ($if_exists != 'update' || $index['type'] == 'primary')
 				return false;
+			else
+				$smcFunc['db_remove_index']($table_name, $index_info['name']);
 		}
 	}
 

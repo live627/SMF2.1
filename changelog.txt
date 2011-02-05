@@ -11,6 +11,7 @@ February 2011
  * Help section was not displayed correctly in Core theme. (Help template, index.css) [Bug 4611]
  ! Checking for search API files could cause an open_basedir error. (ManageSearch.php) [Bug 4605]
  ! Visual verification could cause undefined index errors in some cases. (Subs-Editor.php) [Bug 4546]
+ ! add_index function failed on duplicate indexes. (DbPackages-*.php) [Bug 4536]
 
 
 January 2011
