@@ -2037,6 +2037,7 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 		$_SESSION[$verificationOptions['id'] . '_vv']['errors'] = 0;
 		$_SESSION[$verificationOptions['id'] . '_vv']['did_pass'] = false;
 		$_SESSION[$verificationOptions['id'] . '_vv']['q'] = array();
+		$_SESSION[$verificationOptions['id'] . '_vv']['code'] = '';
 
 		// Generating a new image.
 		if ($thisVerification['show_visual'])
@@ -2044,7 +2045,6 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 			// Are we overriding the range?
 			$character_range = !empty($verificationOptions['override_range']) ? $verificationOptions['override_range'] : $context['standard_captcha_range'];
 
-			$_SESSION[$verificationOptions['id'] . '_vv']['code'] = '';
 			for ($i = 0; $i < 6; $i++)
 				$_SESSION[$verificationOptions['id'] . '_vv']['code'] .= $character_range[array_rand($character_range)];
 		}

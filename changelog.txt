@@ -9,7 +9,8 @@ February 2011
  * Finalizing the help section. (Help.php, Help template) [Bug 2924]
  & Updated the help language strings accordingly. (Manual language file)
  * Help section was not displayed correctly in Core theme. (Help template, index.css) [Bug 4611]
- ! Checking for search API files could cause an open_basedir error. (ManageSearch.php) [Bug 4251]
+ ! Checking for search API files could cause an open_basedir error. (ManageSearch.php) [Bug 4605]
+ ! Visual verification could cause undefined index errors in some cases. (Subs-Editor.php) [Bug 4546]
 
 
 January 2011
