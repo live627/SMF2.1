@@ -166,7 +166,7 @@ function template_manual()
 
 	echo '
 						</ul>
-						<p><a href="', $scripturl, '?action=credits">', $txt['manual_credits'], '</a><br /><a href="', $context['wiki_url'], '" target="_blank" class="new_win">', $txt['manual_documentation'], '</a></p>
+						<p>', sprintf($txt['manual_docs_and_credits'], $context['wiki_url'], $scripturl . '?action=credits'), '</p>
 					</div>
 					<span class="botslice"><span></span></span>
 				</div>

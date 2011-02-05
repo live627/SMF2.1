@@ -1,8 +1,14 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0 RC5                                                      6 November 2011
+SMF 2.0 RC5                                                      8 February 2011
 ================================================================================
+
+February 2011
+--------------------------------------------------------------------------------
+ * Finalizing the help section. (Help.php, Help template) [Bug 2924]
+ & Updated the help language strings accordingly. (Manual language file) [Bug 2924]
+
 
 January 2011
 --------------------------------------------------------------------------------
