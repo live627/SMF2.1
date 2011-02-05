@@ -12,7 +12,8 @@ February 2011
  ! Checking for search API files could cause an open_basedir error. (ManageSearch.php) [Bug 4605]
  ! Visual verification could cause undefined index errors in some cases. (Subs-Editor.php) [Bug 4546]
  ! add_index function failed on duplicate indexes. (DbPackages-*.php) [Bug 4536]
- ! Allow search methods to modify search settings. (ManageSearch.php) [Bug 4606]
+ ! Allow search APIs to modify search settings. (ManageSearch.php) [Bug 4606]
+ ! Undefined index when a non-moderator edited polls. (Poll.php) [Bug 4544]
 
 
 January 2011
