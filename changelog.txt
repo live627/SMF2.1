@@ -17,6 +17,7 @@ February 2011
  ! Non-existent permission profiles could cause undefined index errors. (ManagePermissions.php) [Bug 4612]
  ! Incorrect dots during upgrade with multiple script files. (upgrade.php) [Bug 4617]
  ! It was possible to add the same integration function twice. (Subs.php) [Bug 4616]
+ ! Who's Online integration hook was too restrictive. (Who.php) [Bug 4615]
 
 
 January 2011

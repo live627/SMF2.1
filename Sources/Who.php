@@ -350,21 +350,7 @@ function determineActions($urls, $preferred_prefix = false)
 			}
 			// It's the board index!!  It must be!
 			else
-			{
 				$data[$k] = $txt['who_index'];
-				// ...or maybe it's just integrated into another system...
-				if (count($integrate_actions = call_integration_hook('integrate_whos_online', array($actions))) > 0)
-				{
-					foreach ($integrate_actions as $integrate_action)
-					{
-						if (!empty($integrate_action))
-						{
-							$data[$k] = $integrate_action;
-							break;
-						}
-					}
-				}
-			}
 		}
 		// Probably an error or some goon?
 		elseif ($actions['action'] == '')
@@ -442,6 +428,19 @@ function determineActions($urls, $preferred_prefix = false)
 			// Unlisted or unknown action.
 			else
 				$data[$k] = $txt['who_unknown'];
+		}
+
+		// Maybe the action is integrated into another system?
+		if (count($integrate_actions = call_integration_hook('integrate_whos_online', array($actions))) > 0)
+		{
+			foreach ($integrate_actions as $integrate_action)
+			{
+				if (!empty($integrate_action))
+				{
+					$data[$k] = $integrate_action;
+					break;
+				}
+			}
 		}
 	}
 
@@ -558,7 +557,7 @@ function Credits($in_admin = false)
 						'Karl &quot;RegularExpression&quot; Benson',
 						$user_info['is_admin'] ? 'Matt &quot;Grudge&quot; Wolf': 'Grudge',
 						'Michael &quot;Thantos&quot; Miller',
-						'Sinan &quot;&#12471;&#12490;&#12531;&quot; &Ccedil;evik',
+						'Sinan &quot;[SiNaN]&quot; &Ccedil;evik',
 						'Theodore &quot;Orstio&quot; Hildebrandt',
 						'Thorsten &quot;TE&quot; Eurich',
 						'winrules',
