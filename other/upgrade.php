@@ -4172,8 +4172,7 @@ function template_database_changes()
 
 		if ($is_debug)
 			echo '
-					setOuterHTML(document.getElementById(\'debuginfo\'), \'done<span id="debuginfo"><\' + \'/span>\');
-					document.getElementById(\'debug_section\').style.display = "none"';
+					document.getElementById(\'debug_section\').style.display = "none";';
 
 		echo '
 
@@ -4198,7 +4197,7 @@ function template_database_changes()
 
 		if ($is_debug)
 			echo '
-					setOuterHTML(document.getElementById(\'debuginfo\'), \'done<br />Moving to next script file...<span id="debuginfo"><\' + \'/span>\');';
+					setOuterHTML(document.getElementById(\'debuginfo\'), \'Moving to next script file...done<br /><span id="debuginfo"><\' + \'/span>\');';
 
 		echo '
 					getNextItem();
