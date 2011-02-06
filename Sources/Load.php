@@ -137,7 +137,7 @@ if (!defined('SMF'))
 // Load the $modSettings array.
 function reloadSettings()
 {
-	global $modSettings, $boarddir, $smcFunc, $txt, $db_character_set, $context;
+	global $modSettings, $boarddir, $smcFunc, $txt, $db_character_set, $context, $sourcedir;
 
 	// Most database systems have not set UTF-8 as their default input charset.
 	if (!empty($db_character_set))
@@ -297,7 +297,7 @@ function reloadSettings()
 		$pre_includes = explode(',', $modSettings['integrate_pre_include']);
 		foreach ($pre_includes as $include)
 		{
-			$include = strtr(trim($include), array('$boarddir' => $boarddir));
+			$include = strtr(trim($include), array('$boarddir' => $boarddir, '$sourcedir' => $sourcedir));
 			if (file_exists($include))
 				require_once($include);
 		}
@@ -1335,7 +1335,7 @@ function detectBrowser()
 // Load a theme, by ID.
 function loadTheme($id_theme = 0, $initialize = true)
 {
-	global $user_info, $user_settings, $board_info, $sc;
+	global $user_info, $user_settings, $board_info, $sc, $boarddir;
 	global $txt, $boardurl, $scripturl, $mbname, $modSettings, $language;
 	global $context, $settings, $options, $sourcedir, $ssi_theme, $smcFunc;
 
@@ -1757,6 +1757,18 @@ function loadTheme($id_theme = 0, $initialize = true)
 		}
 		window.setTimeout("smfAutoTask();", 1);
 	</script>';
+		}
+	}
+
+	// Any files to include at this point?
+	if (!empty($modSettings['integrate_theme_include']))
+	{
+		$theme_includes = explode(',', $modSettings['integrate_theme_include']);
+		foreach ($theme_includes as $include)
+		{
+			$include = strtr(trim($include), array('$boarddir' => $boarddir, '$sourcedir' => $sourcedir, '$themedir' => $settings['theme_dir']));
+			if (file_exists($include))
+				require_once($include);
 		}
 	}
 

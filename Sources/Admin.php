@@ -61,7 +61,7 @@ if (!defined('SMF'))
 // The main admin handling function.
 function AdminMain()
 {
-	global $txt, $context, $scripturl, $sc, $modSettings, $user_info, $settings, $sourcedir, $options, $smcFunc;
+	global $txt, $context, $scripturl, $sc, $modSettings, $user_info, $settings, $sourcedir, $options, $smcFunc, $boarddir;
 
 	// Load the language and templates....
 	loadLanguage('Admin');
@@ -466,6 +466,18 @@ function AdminMain()
 			),
 		),
 	);
+
+	// Any files to include for administration?
+	if (!empty($modSettings['integrate_admin_include']))
+	{
+		$admin_includes = explode(',', $modSettings['integrate_admin_include']);
+		foreach ($admin_includes as $include)
+		{
+			$include = strtr(trim($include), array('$boarddir' => $boarddir, '$sourcedir' => $sourcedir, '$themedir' => $settings['theme_dir']));
+			if (file_exists($include))
+				require_once($include);
+		}
+	}
 
 	// Let them modify admin areas easily.
 	call_integration_hook('integrate_admin_areas', array(&$admin_areas));
