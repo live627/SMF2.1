@@ -14,6 +14,7 @@ February 2011
  ! add_index function failed on duplicate indexes. (DbPackages-*.php) [Bug 4536]
  ! Allow search APIs to modify search settings. (ManageSearch.php) [Bug 4606]
  ! Undefined index when a non-moderator edited polls. (Poll.php) [Bug 4544]
+ ! Non-existent permission profiles could cause undefined index errors. (ManagePermissions.php) [Bug 4612]
 
 
 January 2011
