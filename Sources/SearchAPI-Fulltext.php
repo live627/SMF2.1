@@ -62,7 +62,7 @@ class fulltext_search
 		}
 
 		// Some MySQL versions are superior to others :P.
-		$this->canDoBooleanSearch = version_compare($smcFunc['db_server_info']($db_connection), '4.0.1', '>=') == 1;
+		$this->canDoBooleanSearch = version_compare($smcFunc['db_server_info']($db_connection), '4.0.1', '>=');
 
 		$this->bannedWords = empty($modSettings['search_banned_words']) ? array() : explode(',', $modSettings['search_banned_words']);
 		$this->min_word_length = $this->_getMinWordLength();
