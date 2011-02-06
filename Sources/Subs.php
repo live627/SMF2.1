@@ -4266,7 +4266,13 @@ function add_integration_function($hook, $function, $permanent = true)
 		$smcFunc['db_free_result']($request);
 
 		if (!empty($current_functions))
-			$permanent_functions = array_merge(explode(',', $current_functions), array($function));
+		{
+			$current_functions = explode(',', $current_functions);
+			if (in_array($function, $current_functions))
+				return;
+
+			$permanent_functions = array_merge($current_functions, array($function));
+		}
 		else
 			$permanent_functions = array($function);
 
