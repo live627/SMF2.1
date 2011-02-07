@@ -129,8 +129,16 @@ require(dirname(__FILE__) . '/SSI.php');]]></add>
 		</operation>
 	</file>
 
-	<file name="$languagedir/index.english.php">
+	<file name="$themedir/Packages.template.php">
 		<operation>
+			<search position="replace"><![CDATA[			window.smfVersion = "', $context['forum_version'], '";]]></search>
+			<add><![CDATA[			window.smfVersion = "', $context['forum_version'], '";
+			window.smfRC4patch = true;]]></add>
+		</operation>
+	</file>
+
+	<file name="$languagedir/index.english.php" error="skip">
+		<operation error="ignore">
 			<search position="replace"><![CDATA[ <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank" class="new_win">SMF &copy; 2006&ndash;2010, Simple Machines LLC</a>';]]></search>
 			<add><![CDATA[ <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank" class="new_win">SMF &copy; 2006&ndash;2011, Simple Machines LLC</a>';]]></add>
 		</operation>
