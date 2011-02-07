@@ -2,7 +2,6 @@
 $boarddir/index.php
 </edit file>
 
-
 <search for>
 * =============================================================================== *
 * Software Version:           SMF 1.1.12                                          *
@@ -12,7 +11,6 @@ $boarddir/index.php
 * =============================================================================== *
 * Software Version:           SMF 1.1.13                                          *
 </replace>
-
 
 <search for>
 $forum_version = 'SMF 1.1.12';
@@ -27,7 +25,6 @@ $forum_version = 'SMF 1.1.13';
 $languagedir/index.english.php
 </edit file>
 
-
 <search for>
 // Version: 1.1.9; index
 </search for>
@@ -35,7 +32,6 @@ $languagedir/index.english.php
 <replace>
 // Version: 1.1.13; index
 </replace>
-
 
 <search for>
 $forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by ' . $forum_version . '</a> | 
@@ -52,7 +48,6 @@ $forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machi
 $sourcedir/Search.php
 </edit file>
 
-
 <search for>
 * =============================================================================== *
 * Software Version:           SMF 1.1.5                                           *
@@ -62,7 +57,6 @@ $sourcedir/Search.php
 * =============================================================================== *
 * Software Version:           SMF 1.1.13                                          *
 </replace>
-
 
 <search for>
 					FROM ({$db_prefix}topics AS t, {$db_prefix}" . ($createTemporary ? 'tmp_' : '') . "log_search_topics AS lst)
@@ -167,7 +161,7 @@ if (isset($ssi_layers))
 loadPermissions();
 
 // Do we allow guests in here?
-if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $user_info['is_guest'] && (basename($_SERVER['PHP_SELF']) != 'SSI.php'))
+if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $user_info['is_guest'] && basename($_SERVER['PHP_SELF']) != 'SSI.php')
 {
 	require_once($sourcedir . '/Subs-Auth.php');
 	KickGuest();
@@ -186,4 +180,66 @@ if (isset($_GET['ssi_function']) && function_exists('ssi_' . $_GET['ssi_function
 <replace>
 // Call a function passed by GET.
 if (isset($_GET['ssi_function']) && function_exists('ssi_' . $_GET['ssi_function']) && (!empty($modSettings['allow_guestAccess']) || !$user_info['is_guest']))
+</replace>
+
+
+<edit file>
+$sourcedir/QueryString.php
+</edit file>
+
+<search for>
+* =============================================================================== *
+* Software Version:           SMF 1.1.9                                           *
+</search for>
+
+<replace>
+* =============================================================================== *
+* Software Version:           SMF 1.1.13                                          *
+</replace>
+
+<search for>
+		// Now make absolutely sure it's a number.
+		$board = (int) $_REQUEST['board'];
+</search for>
+
+<replace>
+		// Now make absolutely sure it's a number.
+		$board = (int) $_REQUEST['board'];
+		$_REQUEST['start'] = isset($_REQUEST['start']) ? (int) $_REQUEST['start'] : 0;
+</replace>
+
+<search for>
+	// There should be a $_REQUEST['start'], some at least.  If you need to default to other than 0, use $_GET['start'].
+	if (empty($_REQUEST['start']) || $_REQUEST['start'] < 0)
+</search for>
+
+<replace>
+	// There should be a $_REQUEST['start'], some at least.  If you need to default to other than 0, use $_GET['start'].
+	if (empty($_REQUEST['start']) || $_REQUEST['start'] < 0 || (int) $_REQUEST['start'] > 2147473647)
+</replace>
+
+
+<edit file>
+$sourcedir/Subs.php
+</edit file>
+
+<search for>
+* =============================================================================== *
+* Software Version:           SMF 1.1.11                                          *
+</search for>
+
+<replace>
+* =============================================================================== *
+* Software Version:           SMF 1.1.13                                          *
+</replace>
+
+<search for>
+	// Save whether $start was less than 0 or not.
+	$start_invalid = $start < 0;
+</search for>
+
+<replace>
+	// Save whether $start was less than 0 or not.
+	$start = (int) $start;
+	$start_invalid = $start < 0;
 </replace>
