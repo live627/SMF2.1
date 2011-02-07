@@ -2122,13 +2122,13 @@ function changeSettings($config_vars)
 			if (isset($settingsArray[$i]) && strncasecmp($settingsArray[$i], '$' . $var, 1 + strlen($var)) == 0)
 			{
 				// This fixes a bug where cachedir may of been lost, causing upgrade to fail.
-				if ($var == 'upgradeData' && substr($settingsArray[$i - 1], 0, 2) == 'if')
-				{
-					if (strpos($settingsArray[$i - 1], 'cachedir') !== false)
-						$settingsArray[$i++] = '	$cachedir = $boarddir . \'/cache\';' . "\n";
-					elseif (strpos($settingsArray[$i - 1], 'sourcedir') !== false)
-						$settingsArray[$i++] = '	$sourcedir = $boarddir . \'/Sources\';' . "\n";
-				}
+				// if ($var == 'upgradeData' && substr($settingsArray[$i - 1], 0, 2) == 'if')
+				// {
+				//	if (strpos($settingsArray[$i - 1], 'cachedir') !== false)
+				//		$settingsArray[$i++] = '	$cachedir = $boarddir . \'/cache\';' . "\n";
+				//	elseif (strpos($settingsArray[$i - 1], 'sourcedir') !== false)
+				//		$settingsArray[$i++] = '	$sourcedir = $boarddir . \'/Sources\';' . "\n";
+				//}
 
 				if ($val == '#remove#')
 					unset($settingsArray[$i]);

@@ -21,7 +21,8 @@ February 2011
  * Auto suggest could not handle display names with html special characters. (suggest.js) [Bug 4604]
  ! Minor improvements to integration hooks. (Admin.php, Load.php, ManagePermissions.php, ManageSettings.php)
  ! Tabs within code tags were not parsed correctly for some browsers. (Subs.php) [Bug 4578]
-
+ ! Validate odd URLs (QueryString, Subs.php)
+ 
 
 January 2011
 --------------------------------------------------------------------------------
