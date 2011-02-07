@@ -1,4 +1,3 @@
-
 <edit file>
 $boarddir/index.php
 </edit file>
@@ -83,26 +82,23 @@ $sourcedir/ManageNews.php
 </edit file>
 
 <search for>
+* =============================================================================== *
 * Software Version:           SMF 1.1.5                                           *
 </search for>
 
 <replace>
+* =============================================================================== *
 * Software Version:           SMF 1.1.13                                          *
 </replace>
 
 <search for>
-		foreach ($_POST['news'] as $i => $news)
-		{
 			if (trim($news) == '')
 				unset($_POST['news'][$i]);
 			else
 				preparsecode($_POST['news'][$i]);
-		}
 </search for>
 
 <replace>
-		foreach ($_POST['news'] as $i => $news)
-		{
 			if (trim($news) == '')
 				unset($_POST['news'][$i]);
 			else
@@ -110,24 +106,14 @@ $sourcedir/ManageNews.php
 				$_POST['news'][$i] = $func['htmlspecialchars']($_POST['news'][$i], ENT_QUOTES);
 				preparsecode($_POST['news'][$i]);
 			}
-		}
 </replace>
 
 <search for>
-	foreach (explode("\n", $modSettings['news']) as $id => $line)
-		$context['admin_current_news'][$id] = array(
-			'id' => $id,
 			'unparsed' => $func['htmlspecialchars'](un_preparsecode($line)),
-			'parsed' => preg_replace('~<([/]?)form[^>]*?[>]*>~i', '<em class="smalltext">&lt;$1form&gt;</em>', parse_bbc($line)),
 </search for>
 
 <replace>
-	foreach (explode("\n", $modSettings['news']) as $id => $line)
-		$context['admin_current_news'][$id] = array(
-			'id' => $id,
 			'unparsed' => un_preparsecode($line),
-			'parsed' => preg_replace('~<([/]?)form[^>]*?[>]*>~i', '<em class="smalltext">&lt;$1form&gt;</em>', parse_bbc($line)),
-		);
 </replace>
 
 
@@ -146,7 +132,7 @@ require(dirname(__FILE__) . '/SSI.php');
 
 /* Define $ssi_guest_access variable just before including SSI.php to handle guest access to your script.
 	false: (default) fallback to forum setting
-	true:	allow guest access to the script regardless
+	true: allow guest access to the script regardless
 */
 $ssi_guest_access = false;
 
@@ -159,10 +145,12 @@ $boarddir/SSI.php
 </edit file>
 
 <search for>
+* =============================================================================== *
 * Software Version:           SMF 1.1.7                                           *
 </search for>
 
 <replace>
+* =============================================================================== *
 * Software Version:           SMF 1.1.13                                          *
 </replace>
 
@@ -179,7 +167,7 @@ if (isset($ssi_layers))
 loadPermissions();
 
 // Do we allow guests in here?
-if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $user_info['is_guest'] && (basename($_SERVER['PHP_SELF']) != 'SSI.php' || (isset($_GET['ssi_function']))))
+if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $user_info['is_guest'] && (basename($_SERVER['PHP_SELF']) != 'SSI.php'))
 {
 	require_once($sourcedir . '/Subs-Auth.php');
 	KickGuest();
@@ -188,4 +176,14 @@ if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $use
 
 // Load the stuff like the menu bar, etc.
 if (isset($ssi_layers))
+</replace>
+
+<search for>
+// Call a function passed by GET.
+if (isset($_GET['ssi_function']) && function_exists('ssi_' . $_GET['ssi_function']))
+</search for>
+
+<replace>
+// Call a function passed by GET.
+if (isset($_GET['ssi_function']) && function_exists('ssi_' . $_GET['ssi_function']) && (!empty($modSettings['allow_guestAccess']) || !$user_info['is_guest']))
 </replace>
