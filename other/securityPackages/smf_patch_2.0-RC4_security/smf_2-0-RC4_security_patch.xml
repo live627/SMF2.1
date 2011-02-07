@@ -3,58 +3,7 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>smf:smf-2.0-RC4</id>
 	<version>1.0</version>
-	<file name="$boarddir/ssi_examples.php">
-		<operation>
-			<search position="replace"><![CDATA[// Include the SSI file.
-require(dirname(__FILE__) . '/SSI.php');]]></search>
-			<add><![CDATA[/* Define $ssi_guest_access variable just before including SSI.php to handle guest access to your script.
-	false: (default) fallback to forum setting
-	true: allow guest access to the script regardless
-*/
-$ssi_guest_access = false;
 
-// Include the SSI file.
-require(dirname(__FILE__) . '/SSI.php');]]></add>
-		</operation>
-	</file>
-	<file name="$sourcedir/Search.php">
-		<operation>
-			<search position="replace"><![CDATA[if ($createTemporary)
-							$main_query['parameters']['id_search'] = $_SESSION['search_cache']['id_search'];]]></search>
-			<add><![CDATA[if (!$createTemporary)
-							$main_query['parameters']['id_search'] = $_SESSION['search_cache']['id_search'];]]></add>
-		</operation>
-		<operation>
-			<search position="replace"><![CDATA[FROM {db_prefix}topics AS t
-							INNER JOIN {db_prefix}' . ($createTemporary ? 'tmp_' : '') . 'log_search_topics AS lst ON (lst.id_topic = t.id_topic)
-						' . (empty($modSettings['search_max_results']) ? '' : '
-						LIMIT ' . ($modSettings['search_max_results'] - $_SESSION['search_cache']['num_results'])),]]></search>
-			<add><![CDATA[FROM {db_prefix}topics AS t
-							INNER JOIN {db_prefix}' . ($createTemporary ? 'tmp_' : '') . 'log_search_topics AS lst ON (lst.id_topic = t.id_topic)'
-						. ($createTemporary ? '' : 'WHERE lst.id_search = {int:id_search}')
-						. (empty($modSettings['search_max_results']) ? '' : '
-						LIMIT ' . ($modSettings['search_max_results'] - $_SESSION['search_cache']['num_results'])),]]></add>
-		</operation>
-	</file>
-	<file name="$sourcedir/ManageNews.php">
-		<operation>
-			<search position="after"><![CDATA[			if (trim($news) == '')
-				unset($_POST['news'][$i]);
-			else
-				preparsecode($_POST['news'][$i]);]]></search>
-			<add><![CDATA[			if (trim($news) == '')
-				unset($_POST['news'][$i]);
-			else
-			{
-				$_POST['news'][$i] = $smcFunc['htmlspecialchars']($_POST['news'][$i], ENT_QUOTES);
-				preparsecode($_POST['news'][$i]);
-			}]]></add>
-		</operation>
-		<operation>
-			<search position="replace"><![CDATA['unparsed' => $smcFunc['htmlspecialchars'](un_preparsecode($line)),]]></search>
-			<add><![CDATA['unparsed' => un_preparsecode($line),]]></add>
-		</operation>
-	</file>
 	<file name="$boarddir/SSI.php">
 		<operation>
 			<search position="replace"><![CDATA[if (isset($_REQUEST['ssi_ban']) || (isset($ssi_ban) && $ssi_ban === true))
@@ -81,16 +30,117 @@ if (isset($ssi_layers))]]></add>
 			<add><![CDATA[if (isset($_GET['ssi_function']) && function_exists('ssi_' . $_GET['ssi_function']) && (!empty($modSettings['allow_guestAccess']) || !$user_info['is_guest']))]]></add>
 		</operation>
 	</file>
+
+	<file name="$boarddir/ssi_examples.php">
+		<operation>
+			<search position="replace"><![CDATA[// Include the SSI file.
+require(dirname(__FILE__) . '/SSI.php');]]></search>
+			<add><![CDATA[/* Define $ssi_guest_access variable just before including SSI.php to handle guest access to your script.
+	false: (default) fallback to forum setting
+	true: allow guest access to the script regardless
+*/
+$ssi_guest_access = false;
+
+// Include the SSI file.
+require(dirname(__FILE__) . '/SSI.php');]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Load.php">
+		<operation>
+			<search position="replace"><![CDATA[		// If we no longer have the member maybe they're being all hackey, stop brute force!
+		if (!$id_member || !empty($user_settings['passwd_flood']))]]></search>
+			<add><![CDATA[		// If we no longer have the member maybe they're being all hackey, stop brute force!
+		if (!$id_member)]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/ManageNews.php">
+		<operation>
+			<search position="replace"><![CDATA[			if (trim($news) == '')
+				unset($_POST['news'][$i]);
+			else
+				preparsecode($_POST['news'][$i]);]]></search>
+			<add><![CDATA[			if (trim($news) == '')
+				unset($_POST['news'][$i]);
+			else
+			{
+				$_POST['news'][$i] = $smcFunc['htmlspecialchars']($_POST['news'][$i], ENT_QUOTES);
+				preparsecode($_POST['news'][$i]);
+			}]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA['unparsed' => $smcFunc['htmlspecialchars'](un_preparsecode($line)),]]></search>
+			<add><![CDATA['unparsed' => un_preparsecode($line),]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/QueryString.php">
+		<operation>
+			<search position="replace"><![CDATA[		// Now make absolutely sure it's a number.
+		$board = (int) $_REQUEST['board'];]]></search>
+			<add><![CDATA[		// Now make absolutely sure it's a number.
+		$board = (int) $_REQUEST['board'];
+		$_REQUEST['start'] = isset ($_REQUEST['start']) ? (int) $_REQUEST['start'] : 0;]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[	// There should be a $_REQUEST['start'], some at least.  If you need to default to other than 0, use $_GET['start'].
+	if (empty($_REQUEST['start']) || $_REQUEST['start'] < 0)]]></search>
+			<add><![CDATA[	// There should be a $_REQUEST['start'], some at least.  If you need to default to other than 0, use $_GET['start'].
+	if (empty($_REQUEST['start']) || $_REQUEST['start'] < 0 || (int) $_REQUEST['start'] > 2147473647)]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Search.php">
+		<operation>
+			<search position="replace"><![CDATA[if ($createTemporary)
+							$main_query['parameters']['id_search'] = $_SESSION['search_cache']['id_search'];]]></search>
+			<add><![CDATA[if (!$createTemporary)
+							$main_query['parameters']['id_search'] = $_SESSION['search_cache']['id_search'];]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[FROM {db_prefix}topics AS t
+							INNER JOIN {db_prefix}' . ($createTemporary ? 'tmp_' : '') . 'log_search_topics AS lst ON (lst.id_topic = t.id_topic)
+						' . (empty($modSettings['search_max_results']) ? '' : '
+						LIMIT ' . ($modSettings['search_max_results'] - $_SESSION['search_cache']['num_results'])),]]></search>
+			<add><![CDATA[FROM {db_prefix}topics AS t
+							INNER JOIN {db_prefix}' . ($createTemporary ? 'tmp_' : '') . 'log_search_topics AS lst ON (lst.id_topic = t.id_topic)'
+						. ($createTemporary ? '' : 'WHERE lst.id_search = {int:id_search}')
+						. (empty($modSettings['search_max_results']) ? '' : '
+						LIMIT ' . ($modSettings['search_max_results'] - $_SESSION['search_cache']['num_results'])),]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs.php">
+		<operation>
+			<search position="replace"><![CDATA[	// Save whether $start was less than 0 or not.
+	$start_invalid = $start < 0;]]></search>
+			<add><![CDATA[	// Save whether $start was less than 0 or not.
+	$start = (int) $start;
+	$start_invalid = $start < 0;]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Who.php">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[		'mods' => array(]]></search>
+			<add><![CDATA[		'mods' => array(
+			'SMF 2.0 RC4 Security Patch',]]></add>
+		</operation>
+	</file>
+
 	<file name="$languagedir/index.english.php">
 		<operation>
 			<search position="replace"><![CDATA[ <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank" class="new_win">SMF &copy; 2006&ndash;2010, Simple Machines LLC</a>';]]></search>
 			<add><![CDATA[ <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank" class="new_win">SMF &copy; 2006&ndash;2011, Simple Machines LLC</a>';]]></add>
 		</operation>
 	</file>
+
 	<file name="$languagedir/Admin.english.php" error="skip">
 		<operation>
 			<search position="replace"><![CDATA[$txt['admin_news_desc'] = 'Please place one news item per box. Some BBC tags, such as <span title="Are you bold?">[b]</span>, <span title="I tall icks!!">[i]</span> and <span title="Brackets are great, no?">[u]</span> are allowed in your news, as well as smileys and HTML. Clear a news item\'s text box to remove it.';]]></search>
 			<add><![CDATA[$txt['admin_news_desc'] = 'Please place one news item per box. BBC tags, such as <span title="Are you bold?">[b]</span>, <span title="I tall icks!!">[i]</span> and <span title="Brackets are great, no?">[u]</span> are allowed in your news, as well as smileys. Clear a news item\'s text box to remove it.';]]></add>
 		</operation>
 	</file>
+
 </modification>
