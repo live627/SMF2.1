@@ -1,26 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>smf:smf-2.0-RC4</id>
 	<version>1.0</version>
 	<file name="$boarddir/ssi_examples.php">
 		<operation>
-			<search position="replace"><![CDATA[/* Special thanks to Spaceman-Spiff for his contributions to this page.           *
-**********************************************************************************/
-
-// Include the SSI file.
-require(dirname(__FILE__) . '/SSI.php');
-]]></search>
-			<add><![CDATA[/* Special thanks to Spaceman-Spiff for his contributions to this page.           *
-**********************************************************************************/
-
-/* Define $ssi_guest_access variable just before including SSI.php to handle guest access to your script.
+			<search position="replace"><![CDATA[// Include the SSI file.
+require(dirname(__FILE__) . '/SSI.php');]]></search>
+			<add><![CDATA[/* Define $ssi_guest_access variable just before including SSI.php to handle guest access to your script.
 	false: (default) fallback to forum setting
-	true:	allow guest access to the script regardless
+	true: allow guest access to the script regardless
 */
 $ssi_guest_access = false;
 
 // Include the SSI file.
-require(dirname(__FILE__) . '/SSI.php');
-]]></add>
+require(dirname(__FILE__) . '/SSI.php');]]></add>
 		</operation>
 	</file>
 	<file name="$sourcedir/Search.php">
@@ -44,35 +38,21 @@ require(dirname(__FILE__) . '/SSI.php');
 	</file>
 	<file name="$sourcedir/ManageNews.php">
 		<operation>
-			<search position="after"><![CDATA[foreach ($_POST['news'] as $i => $news)
-		{
-			if (trim($news) == '')
+			<search position="after"><![CDATA[			if (trim($news) == '')
 				unset($_POST['news'][$i]);
 			else
-				preparsecode($_POST['news'][$i]);
-		}]]></search>
-			<add><![CDATA[foreach ($_POST['news'] as $i => $news)
-		{
-			if (trim($news) == '')
+				preparsecode($_POST['news'][$i]);]]></search>
+			<add><![CDATA[			if (trim($news) == '')
 				unset($_POST['news'][$i]);
 			else
 			{
 				$_POST['news'][$i] = $smcFunc['htmlspecialchars']($_POST['news'][$i], ENT_QUOTES);
 				preparsecode($_POST['news'][$i]);
-			}
-		}]]></add>
+			}]]></add>
 		</operation>
 		<operation>
-			<search position="replace"><![CDATA[$context['admin_current_news'][$id] = array(
-			'id' => $id,
-			'unparsed' => $smcFunc['htmlspecialchars'](un_preparsecode($line)),
-			'parsed' => preg_replace('~<([/]?)form[^>]*?[>]*>~i', '<em class="smalltext">&lt;$1form&gt;</em>', parse_bbc($line)),
-		);]]></search>
-			<add><![CDATA[$context['admin_current_news'][$id] = array(
-			'id' => $id,
-			'unparsed' => un_preparsecode($line),
-			'parsed' => preg_replace('~<([/]?)form[^>]*?[>]*>~i', '<em class="smalltext">&lt;$1form&gt;</em>', parse_bbc($line)),
-		);]]></add>
+			<search position="replace"><![CDATA['unparsed' => $smcFunc['htmlspecialchars'](un_preparsecode($line)),]]></search>
+			<add><![CDATA['unparsed' => un_preparsecode($line),]]></add>
 		</operation>
 	</file>
 	<file name="$boarddir/SSI.php">
@@ -86,7 +66,7 @@ if (isset($ssi_layers))]]></search>
 	is_not_banned();
 
 // Do we allow guests in here?
-if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $user_info['is_guest'] && (basename($_SERVER['PHP_SELF']) != 'SSI.php' || (isset($_GET['ssi_function']))))
+if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $user_info['is_guest'] && basename($_SERVER['PHP_SELF']) != 'SSI.php')
 {
 	require_once($sourcedir . '/Subs-Auth.php');
 	KickGuest();
@@ -97,10 +77,8 @@ if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $use
 if (isset($ssi_layers))]]></add>
 		</operation>
 		<operation>
-			<search position="replace"><![CDATA[if (isset($_GET['ssi_function']) && function_exists('ssi_' . $_GET['ssi_function']))
-]]></search>
-			<add><![CDATA[if (isset($_GET['ssi_function']) && function_exists('ssi_' . $_GET['ssi_function']) && (!empty($modSettings['allow_guestAccess']) || !$user_info['is_guest']))
-]]></add>
+			<search position="replace"><![CDATA[if (isset($_GET['ssi_function']) && function_exists('ssi_' . $_GET['ssi_function']))]]></search>
+			<add><![CDATA[if (isset($_GET['ssi_function']) && function_exists('ssi_' . $_GET['ssi_function']) && (!empty($modSettings['allow_guestAccess']) || !$user_info['is_guest']))]]></add>
 		</operation>
 	</file>
 	<file name="$languagedir/index.english.php">

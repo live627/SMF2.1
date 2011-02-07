@@ -26,7 +26,7 @@
 
 /* Define $ssi_guest_access variable just before including SSI.php to handle guest access to your script.
 	false: (default) fallback to forum setting
-	true:	allow guest access to the script regardless
+	true: allow guest access to the script regardless
 */
 $ssi_guest_access = false;
 
