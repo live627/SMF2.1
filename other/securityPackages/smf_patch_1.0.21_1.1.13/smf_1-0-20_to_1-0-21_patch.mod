@@ -3,13 +3,11 @@ $languagedir/index.english.php
 </edit file>
 
 <search for>
-* =============================================================================== *
-* Software Version:           SMF 1.0.9                                           *
+// Version: 1.0.17; index
 </search for>
 
 <replace>
-* =============================================================================== *
-* Software Version:           SMF 1.0.21                                          *
+// Version: 1.0.21; index
 </replace>
 
 <search for>
@@ -47,7 +45,7 @@ $forum_version = 'SMF 1.0.21';
 
 
 <edit file>
-$sourcedir/ssi_examples.php
+$boarddir/ssi_examples.php
 </edit file>
 
 <search for>
