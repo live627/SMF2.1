@@ -81,7 +81,7 @@ require(dirname(__FILE__) . '/SSI.php');]]></add>
 		$board = (int) $_REQUEST['board'];]]></search>
 			<add><![CDATA[		// Now make absolutely sure it's a number.
 		$board = (int) $_REQUEST['board'];
-		$_REQUEST['start'] = isset ($_REQUEST['start']) ? (int) $_REQUEST['start'] : 0;]]></add>
+		$_REQUEST['start'] = isset($_REQUEST['start']) ? (int) $_REQUEST['start'] : 0;]]></add>
 		</operation>
 		<operation>
 			<search position="replace"><![CDATA[	// There should be a $_REQUEST['start'], some at least.  If you need to default to other than 0, use $_GET['start'].
@@ -137,7 +137,7 @@ require(dirname(__FILE__) . '/SSI.php');]]></add>
 	</file>
 
 	<file name="$languagedir/Admin.english.php" error="skip">
-		<operation>
+		<operation error="ignore">
 			<search position="replace"><![CDATA[$txt['admin_news_desc'] = 'Please place one news item per box. Some BBC tags, such as <span title="Are you bold?">[b]</span>, <span title="I tall icks!!">[i]</span> and <span title="Brackets are great, no?">[u]</span> are allowed in your news, as well as smileys and HTML. Clear a news item\'s text box to remove it.';]]></search>
 			<add><![CDATA[$txt['admin_news_desc'] = 'Please place one news item per box. BBC tags, such as <span title="Are you bold?">[b]</span>, <span title="I tall icks!!">[i]</span> and <span title="Brackets are great, no?">[u]</span> are allowed in your news, as well as smileys. Clear a news item\'s text box to remove it.';]]></add>
 		</operation>

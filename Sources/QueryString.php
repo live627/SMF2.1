@@ -219,7 +219,7 @@ function cleanRequest()
 			list ($_REQUEST['board'], $_REQUEST['start']) = explode('.', $_REQUEST['board']);
 		// Now make absolutely sure it's a number.
 		$board = (int) $_REQUEST['board'];
-		$_REQUEST['start'] = isset ($_REQUEST['start']) ? (int) $_REQUEST['start'] : 0;
+		$_REQUEST['start'] = isset($_REQUEST['start']) ? (int) $_REQUEST['start'] : 0;
 
 		// This is for "Who's Online" because it might come via POST - and it should be an int here.
 		$_GET['board'] = $board;
