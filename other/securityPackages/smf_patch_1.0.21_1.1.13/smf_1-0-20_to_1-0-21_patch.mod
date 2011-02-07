@@ -48,7 +48,7 @@ $forum_version = 'SMF 1.0.21';
 
 
 <edit file>
-$sourcedir/ssi_examples..php
+$sourcedir/ssi_examples.php
 </edit file>
 
 <search for>
@@ -62,7 +62,7 @@ require(dirname(__FILE__) . '/SSI.php');
 
 /* Define $ssi_guest_access variable just before including SSI.php to handle guest access to your script.
 	false: (default) fallback to forum setting
-	true:	allow guest access to the script regardless
+	true: allow guest access to the script regardless
 */
 $ssi_guest_access = false;
 
@@ -95,7 +95,7 @@ if (isset($ssi_layers))
 loadPermissions();
 
 // Do we allow guests in here?
-if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $user_info['is_guest'] && (basename($_SERVER['PHP_SELF']) != 'SSI.php' || (isset($_GET['ssi_function']))))
+if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $user_info['is_guest'] && (basename($_SERVER['PHP_SELF']) != 'SSI.php'))
 {
 	require_once($sourcedir . '/Subs-Auth.php');
 	KickGuest();
@@ -104,4 +104,14 @@ if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $use
 
 // Load the stuff like the menu bar, etc.
 if (isset($ssi_layers))
+</replace>
+
+<search for>
+// Call a function passed by GET.
+if (isset($_GET['ssi_function']) && function_exists('ssi_' . $_GET['ssi_function']))
+</search for>
+
+<replace>
+// Call a function passed by GET.
+if (isset($_GET['ssi_function']) && function_exists('ssi_' . $_GET['ssi_function']) && (!empty($modSettings['allow_guestAccess']) || !$user_info['is_guest']))
 </replace>
