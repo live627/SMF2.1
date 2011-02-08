@@ -24,7 +24,8 @@ February 2011
  ! Validate odd URLs (QueryString, Subs.php)
  ! Users were logged out when other failed attempts to login were made (Load.php)
  ! Remove completely incorrect protection against $cachedir removal. (upgrade.php)
- 
+ ! sprintf call for support resources language string was overriden. (Admin.php)
+
 
 January 2011
 --------------------------------------------------------------------------------

@@ -543,22 +543,6 @@ function AdminHome()
 	require_once($sourcedir . '/Who.php');
 	Credits(true);
 
-	// Fill in the blanks in the support resources paragraphs.
-	$txt['support_resources_p1'] = sprintf($txt['support_resources_p1'],
-		'http://docs.simplemachines.org/',
-		'http://docs.simplemachines.org/redirect/features',
-		'http://docs.simplemachines.org/redirect/settings',
-		'http://docs.simplemachines.org/redirect/themes',
-		'http://docs.simplemachines.org/redirect/packages'
-		);
-	$txt['support_resources_p2'] = sprintf($txt['support_resources_p2'],
-		'http://www.simplemachines.org/community/',
-		'http://www.simplemachines.org/redirect/english_support',
-		'http://www.simplemachines.org/redirect/international_support_boards',
-		'http://www.simplemachines.org/redirect/smf_support',
-		'http://www.simplemachines.org/redirect/customize_support'
-		);
-
 	// Copyright?
 	if (!empty($modSettings['copy_settings']) || !empty($modSettings['copyright_key']))
 	{
@@ -688,6 +672,22 @@ function AdminHome()
 		$context['quick_admin_tasks'][count($context['quick_admin_tasks']) - 1]['is_last'] = true;
 		$context['quick_admin_tasks'][count($context['quick_admin_tasks']) - 2]['is_last'] = true;
 	}
+
+	// Lastly, fill in the blanks in the support resources paragraphs.
+	$txt['support_resources_p1'] = sprintf($txt['support_resources_p1'],
+		'http://docs.simplemachines.org/',
+		'http://docs.simplemachines.org/redirect/features',
+		'http://docs.simplemachines.org/redirect/settings',
+		'http://docs.simplemachines.org/redirect/themes',
+		'http://docs.simplemachines.org/redirect/packages'
+	);
+	$txt['support_resources_p2'] = sprintf($txt['support_resources_p2'],
+		'http://www.simplemachines.org/community/',
+		'http://www.simplemachines.org/redirect/english_support',
+		'http://www.simplemachines.org/redirect/international_support_boards',
+		'http://www.simplemachines.org/redirect/smf_support',
+		'http://www.simplemachines.org/redirect/customize_support'
+	);
 }
 
 // Allow users to remove their copyright.
