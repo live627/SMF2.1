@@ -22,29 +22,6 @@ $forum_version = 'SMF 1.1.13';
 
 
 <edit file>
-$languagedir/index.english.php
-</edit file>
-
-<search for>
-// Version: 1.1.9; index
-</search for>
-
-<replace>
-// Version: 1.1.13; index
-</replace>
-
-<search for>
-$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by ' . $forum_version . '</a> | 
-<a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2006-2009, Simple Machines LLC</a>';
-</search for>
-
-<replace>
-$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by ' . $forum_version . '</a> |
-<a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2006-2011, Simple Machines LLC</a>';
-</replace>
-
-
-<edit file>
 $sourcedir/Search.php
 </edit file>
 
@@ -149,17 +126,11 @@ $boarddir/SSI.php
 </replace>
 
 <search for>
-// Load the current user's permissions....
-loadPermissions();
-
 // Load the stuff like the menu bar, etc.
 if (isset($ssi_layers))
 </search for>
 
 <replace>
-// Load the current user's permissions....
-loadPermissions();
-
 // Do we allow guests in here?
 if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $user_info['is_guest'] && basename($_SERVER['PHP_SELF']) != 'SSI.php')
 {

@@ -29,6 +29,7 @@
 			This patch file will update your forum to SMF 1.0.21.
 		</readme>
 		<modification type="file" format="boardmod">smf_1-0-20_to_1-0-21_patch.mod</modification>
+		<modification type="file" format="xml">smf_1-0-21_can_fail.xml</modification>
 	</install>
 	<uninstall for="1.1.13">
 		<readme type="inline">
@@ -42,5 +43,6 @@
 			This will downgrade your forum back to SMF 1.0.20.
 		</readme>
 		<modification type="file" format="boardmod" reverse="true">smf_1-0-20_to_1-0-21_patch.mod</modification>
+		<modification type="file" format="xml" reverse="true">smf_1-0-21_can_fail.xml</modification>
 	</uninstall>
 </package-info>
