@@ -6,15 +6,9 @@
 
 	<file name="$boarddir/SSI.php">
 		<operation>
-			<search position="replace"><![CDATA[if (isset($_REQUEST['ssi_ban']) || (isset($ssi_ban) && $ssi_ban === true))
-	is_not_banned();
-
-// Load the stuff like the menu bar, etc.
+			<search position="replace"><![CDATA[// Load the stuff like the menu bar, etc.
 if (isset($ssi_layers))]]></search>
-			<add><![CDATA[if (isset($_REQUEST['ssi_ban']) || (isset($ssi_ban) && $ssi_ban === true))
-	is_not_banned();
-
-// Do we allow guests in here?
+			<add><![CDATA[// Do we allow guests in here?
 if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $user_info['is_guest'] && basename($_SERVER['PHP_SELF']) != 'SSI.php')
 {
 	require_once($sourcedir . '/Subs-Auth.php');
