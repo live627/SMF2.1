@@ -2112,27 +2112,26 @@ function changeSettings($config_vars)
 	for ($i = 0, $n = count($settingsArray); $i < $n; $i++)
 	{
 		// Don't trim or bother with it if it's not a variable.
-		if (substr($settingsArray[$i], 0, 1) != '$')
-			continue;
-
-		$settingsArray[$i] = trim($settingsArray[$i]) . "\n";
-
-		foreach ($config_vars as $var => $val)
+		if (substr($settingsArray[$i], 0, 1) == '$')
 		{
-			if (isset($settingsArray[$i]) && strncasecmp($settingsArray[$i], '$' . $var, 1 + strlen($var)) == 0)
-			{
-				if ($val == '#remove#')
-					unset($settingsArray[$i]);
-				else
-				{
-					$comment = strstr(substr($settingsArray[$i], strpos($settingsArray[$i], ';')), '#');
-					$settingsArray[$i] = '$' . $var . ' = ' . $val . ';' . ($comment != '' ? "\t\t" . $comment : "\n");
-				}
+			$settingsArray[$i] = trim($settingsArray[$i]) . "\n";
 
-				unset($config_vars[$var]);
+			foreach ($config_vars as $var => $val)
+			{
+				if (isset($settingsArray[$i]) && strncasecmp($settingsArray[$i], '$' . $var, 1 + strlen($var)) == 0)
+				{
+					if ($val == '#remove#')
+						unset($settingsArray[$i]);
+					else
+					{
+						$comment = strstr(substr($settingsArray[$i], strpos($settingsArray[$i], ';')), '#');
+						$settingsArray[$i] = '$' . $var . ' = ' . $val . ';' . ($comment != '' ? "\t\t" . $comment : "\n");
+					}
+
+					unset($config_vars[$var]);
+				}
 			}
 		}
-
 		if (isset($settingsArray[$i]))
 		{
 			if (trim(substr($settingsArray[$i], 0, 2)) == '?' . '>')
@@ -2142,7 +2141,7 @@ function changeSettings($config_vars)
 
 	// Assume end-of-file if the end wasn't found.
 	if (empty($end) || $end < 10)
-		$end = count($settingsArray) - 1;
+		$end = count($settingsArray);
 
 	if (!empty($config_vars))
 	{
