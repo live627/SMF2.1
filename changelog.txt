@@ -25,6 +25,7 @@ February 2011
  ! Users were logged out when other failed attempts to login were made (Load.php)
  ! Remove completely incorrect protection against $cachedir removal. (upgrade.php)
  ! sprintf call for support resources language string was overriden. (Admin.php)
+ ! MySQL 5.5 compatibility. (upgrade from older versions to 2.0)
 
 
 January 2011
