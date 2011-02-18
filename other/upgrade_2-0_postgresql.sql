@@ -84,6 +84,9 @@ ADD placement smallint NOT NULL default '0';
 ---# Fixing default value for the "show_profile" column
 ALTER TABLE {$db_prefix}custom_fields
 ALTER COLUMN show_profile SET DEFAULT 'forumprofile';
+
+UPDATE {$db_prefix}custom_fields
+SET show_profile='forumprofile' WHERE show_profile='forumProfile';
 ---#
 
 /******************************************************************************/
