@@ -9,6 +9,7 @@ February 2011
 & Better text for attachment clearing box. (Post language file)
 ! Some custom profile fields weren't being displayed in PostgreSQL (Profile-Modify.php, upgrade_2-0_postgresql.sql) [Bug 4626]
 ! zip files decompression fix (thank you Brett!) (Subs-Package)
+! Postgres upgrade script fix (upgrade_2-0_postgresql.sql)
 
 
 SMF 2.0 RC5                                                      8 February 2011

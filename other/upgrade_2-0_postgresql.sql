@@ -1334,8 +1334,8 @@ $request = upgrade_query("
 	FROM {$db_prefix}membergroups
 	WHERE id_group = 1
 	LIMIT 1");
-list ($admin_group_type) = mysql_fetch_row($request);
-mysql_free_result($request);
+list ($admin_group_type) = pg_fetch_row($request);
+pg_free_result($request);
 
 // Not protected means we haven't updated yet!
 if ($admin_group_type != 1)
