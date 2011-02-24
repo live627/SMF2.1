@@ -1269,6 +1269,12 @@ CREATE OR REPLACE FUNCTION DATE_FORMAT (timestamp, text) RETURNS text AS
     ''%d'', to_char($1, ''DD'')) AS result'
 LANGUAGE 'sql';
 
+---# Updating TO_DAYS()
+CREATE OR REPLACE FUNCTION TO_DAYS (timestamp) RETURNS integer AS
+  'SELECT DATE_PART(''DAY'', $1 - ''0001-01-01bc'')::integer AS result'
+LANGUAGE 'sql';
+---#
+
 /******************************************************************************/
 --- Adding extra columns to reported post comments
 /******************************************************************************/
