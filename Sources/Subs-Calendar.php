@@ -943,7 +943,7 @@ function removeEvent($event_id)
 		DELETE FROM {db_prefix}calendar
 		WHERE id_event = {int:id_event}',
 		array(
-			'id_event' => $_REQUEST['eventid'],
+			'id_event' => $event_id,
 		)
 	);
 
@@ -1045,7 +1045,7 @@ function removeHolidays($holiday_ids)
 		DELETE FROM {db_prefix}calendar_holidays
 		WHERE id_holiday IN ({array_int:id_holiday})',
 		array(
-			'id_holiday' => $_REQUEST['holiday'],
+			'id_holiday' => $holiday_ids,
 		)
 	);
 

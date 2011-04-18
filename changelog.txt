@@ -4,6 +4,10 @@ Changelog started January 1, 2004; Currently at $Revision$.
 SMF 2.0 ??                                                                    ??
 ================================================================================
 
+April 2011
+! Made functions removeEvent and and removeHolidays use the parameter value instead of the $_REQUEST variable
+
+
 February 2011
 --------------------------------------------------------------------------------
  ! In some cases, you couldn't edit calendar events after upgrading to Postgres 8.4 from an older version (upgrade_2-0_postgresql.sql) [Bug 4642] 
