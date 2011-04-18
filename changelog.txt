@@ -5,8 +5,7 @@ SMF 2.0 ??                                                                    ??
 ================================================================================
 
 April 2011
-! Made functions removeEvent and and removeHolidays use the parameter value instead of the $_REQUEST variable
-
+! Made functions removeEvent, getEventProperties and removeHolidays use the parameter value instead of the $_REQUEST variable (Subs-Calender.php)
 
 February 2011
 --------------------------------------------------------------------------------

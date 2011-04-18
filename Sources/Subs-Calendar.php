@@ -981,7 +981,7 @@ function getEventProperties($event_id)
 		'boards' => array(),
 		'board' => $row['id_board'],
 		'new' => 0,
-		'eventid' => $_REQUEST['eventid'],
+		'eventid' => $event_id,
 		'year' => $row['year'],
 		'month' => $row['month'],
 		'day' => $row['day'],
