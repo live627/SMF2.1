@@ -39,7 +39,11 @@ if (!defined('SMF'))
 // See the queries....
 function ViewQuery()
 {
-	global $scripturl, $user_info, $settings, $context, $db_connection, $modSettings, $boarddir, $smcFunc, $txt;
+	global $scripturl, $user_info, $settings, $context, $db_connection, $modSettings, $boarddir, $smcFunc, $txt, $db_show_debug;
+
+	// We should have debug mode enabled, as well as something to display!
+	if (!isset($db_show_debug) || $db_show_debug !== true || !isset($_SESSION['debug']))
+		fatal_lang_error('no_access', false);
 
 	// Don't allow except for administrators.
 	isAllowedTo('admin_forum');
