@@ -93,14 +93,14 @@ function template_ban_edit()
 
 		echo '
 							<dt>
-								<input type="checkbox" name="ban_suggestion[]" id="email_check" value="email" class="input_check" />
+								<input type="checkbox" name="ban_suggestion[]" id="email_check" value="email" class="input_check" checked="checked" />
 								<label for="email_check">', $txt['ban_on_email'], '</label>
 							</dt>
 							<dd>
 								<input type="text" name="email" value="', $context['ban_suggestions']['email'], '" size="50" onfocus="document.getElementById(\'email_check\').checked = true;" class="input_text" />
 							</dd>
 							<dt>
-								<input type="checkbox" name="ban_suggestion[]" id="user_check" value="user" class="input_check" />
+								<input type="checkbox" name="ban_suggestion[]" id="user_check" value="user" class="input_check" checked="checked" />
 								<label for="user_check">', $txt['ban_on_username'], '</label>:
 							</dt>
 							<dd>';

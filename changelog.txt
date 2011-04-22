@@ -9,6 +9,7 @@ April 2011
  ! Made functions removeEvent, getEventProperties and removeHolidays use the parameter value instead of a request variable. (Subs-Calender.php)
  ! viewquery action generated errors when necessary data was not loaded in some cases. (ViewQuery.php) [Bug 4628]
  ! Attachment links in attachment management area wasn't mod_security compliant. (ManageAttachments.php) [Bug 4629]
+ ! Ban creation form did not have any default triggers set. (ManageBans template) [Bug 4659]
 
 
 February 2011
