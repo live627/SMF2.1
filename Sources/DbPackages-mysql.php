@@ -47,8 +47,6 @@ if (!defined('SMF'))
 			+ 'columns' => Array containing columns that form part of key - in the order the index is to be created.
 		- parameters: (None yet)
 		- if_exists values:
-			+ 'update' will add missing columns - but NOT remove old ones.
-			+ 'update_remove' will add missing columns AND remove old ones.
 			+ 'ignore' will do nothing if the table exists. (And will return true)
 			+ 'overwrite' will drop any existing table of the same name.
 			+ 'error' will return false if the table already exists.
@@ -97,7 +95,7 @@ function db_packages_init()
 }
 
 // Create a table.
-function smf_db_create_table($table_name, $columns, $indexes = array(), $parameters = array(), $if_exists = 'update', $error = 'fatal')
+function smf_db_create_table($table_name, $columns, $indexes = array(), $parameters = array(), $if_exists = 'ignore', $error = 'fatal')
 {
 	global $reservedTables, $smcFunc, $db_package_log, $db_prefix, $db_character_set;
 
