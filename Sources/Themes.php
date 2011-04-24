@@ -56,7 +56,7 @@ if (!defined('SMF'))
 		- loads the Admin language file.
 		- calls ThemeAdmin() if no theme is specified. (the theme center.)
 		- requires an administrator.
-		- accessed with ?action=admin;area=theme;sa=settings&id=xx.
+		- accessed with ?action=admin;area=theme;sa=settings&th=xx.
 
 	void RemoveTheme()
 		- removes an installed theme.
