@@ -14,6 +14,7 @@ April 2011
  * The URL for setting theme options via JavaScript wasn't mod_security compliant. (script.js) [Bug 4701]
  ! Chrome was displaying a warning when scheduled tasks were triggered via JavaScript. (ScheduledTasks.php) [Bug 4673]
  ! 'db_create_table' package database function 'if_exists' parameter default was misleading. (DbPackages-*.php) [Bug 4672]
+ ! The re-attribute posts feature was broken on PostgreSQL. (Subs-Members.php) [Bug 4676]
 
 
 February 2011

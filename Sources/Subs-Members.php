@@ -1131,13 +1131,6 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 		$smcFunc['db_free_result']($request);
 	}
 
-	$query_parts = array();
-	if (!empty($email))
-		$query_parts[] = 'm.poster_email = {string:email_address}';
-	if (!empty($membername))
-		$query_parts[] = 'm.poster_name = {string:member_name}';
-	$query = implode(' AND ', $query_parts);
-
 	// If they want the post count restored then we need to do some research.
 	if ($post_count)
 	{
@@ -1147,8 +1140,9 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND b.count_posts = {int:count_posts})
 			WHERE m.id_member = {int:guest_id}
 				AND m.approved = {int:is_approved}
-				AND m.icon != {string:recycled_icon}
-				AND ' . $query,
+				AND m.icon != {string:recycled_icon}' . (empty($email) ? '' : '
+				AND m.poster_email = {string:email_address}') . (empty($membername) ? '' : '
+				AND m.poster_name = {string:member_name}'),
 			array(
 				'count_posts' => 0,
 				'guest_id' => 0,
@@ -1164,10 +1158,17 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 		updateMemberData($memID, array('posts' => 'posts + ' . $messageCount));
 	}
 
+	$query_parts = array();
+	if (!empty($email))
+		$query_parts[] = 'poster_email = {string:email_address}';
+	if (!empty($membername))
+		$query_parts[] = 'poster_name = {string:member_name}';
+	$query = implode(' AND ', $query_parts);
+
 	// Finally, update the posts themselves!
 	$smcFunc['db_query']('', '
-		UPDATE {db_prefix}messages AS m
-		SET m.id_member = {int:memID}
+		UPDATE {db_prefix}messages
+		SET id_member = {int:memID}
 		WHERE ' . $query,
 		array(
 			'memID' => $memID,
