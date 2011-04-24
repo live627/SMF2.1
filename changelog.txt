@@ -16,6 +16,7 @@ April 2011
  ! 'db_create_table' package database function 'if_exists' parameter default was misleading. (DbPackages-*.php) [Bug 4672]
  ! The re-attribute posts feature was broken on PostgreSQL. (Subs-Members.php) [Bug 4676]
  ! Missing preparsecode() call for package readme files with BBC. (Packages.php) [Bug 4678]
+ ! Unauthorized users were able to see warning status in some cases. (Display.php, PersonalMessage.php) [Bug 4696]
 
 
 February 2011
