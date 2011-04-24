@@ -362,7 +362,11 @@ function PackageInstallTest()
 				$context['package_readme'] = htmlspecialchars(trim(file_get_contents($action['filename']), "\n\r"));
 
 			if (!empty($action['parse_bbc']))
+			{
+				require_once($sourcedir . '/Subs-Post.php');
+				preparsecode($context['package_readme']);
 				$context['package_readme'] = parse_bbc($context['package_readme']);
+			}
 			else
 				$context['package_readme'] = nl2br($context['package_readme']);
 

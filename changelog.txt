@@ -15,6 +15,7 @@ April 2011
  ! Chrome was displaying a warning when scheduled tasks were triggered via JavaScript. (ScheduledTasks.php) [Bug 4673]
  ! 'db_create_table' package database function 'if_exists' parameter default was misleading. (DbPackages-*.php) [Bug 4672]
  ! The re-attribute posts feature was broken on PostgreSQL. (Subs-Members.php) [Bug 4676]
+ ! Missing preparsecode() call for package readme files with BBC. (Packages.php) [Bug 4678]
 
 
 February 2011
