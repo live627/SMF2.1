@@ -4121,6 +4121,9 @@ function setupMenuContext()
 			),
 		);
 
+		// Allow editing menu buttons easily.
+		call_integration_hook('integrate_menu_buttons', array(&$menu_buttons));
+
 		// Now we put the buttons in the context so the theme can use them.
 		$menu_buttons = array();
 		foreach ($buttons as $act => $button)
@@ -4160,9 +4163,6 @@ function setupMenuContext()
 		if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
 			cache_put_data('menu_buttons-' . implode('_', $user_info['groups']) . '-' . $user_info['language'], $menu_buttons, $cacheTime);
 	}
-
-	// Allow editing menu buttons easily.
-	call_integration_hook('integrate_menu_buttons', array(&$menu_buttons));
 
 	$context['menu_buttons'] = $menu_buttons;
 
