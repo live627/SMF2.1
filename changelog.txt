@@ -17,6 +17,7 @@ April 2011
  ! The re-attribute posts feature was broken on PostgreSQL. (Subs-Members.php) [Bug 4676]
  ! Missing preparsecode() call for package readme files with BBC. (Packages.php) [Bug 4678]
  ! Unauthorized users were able to see warning status in some cases. (Display.php, PersonalMessage.php) [Bug 4696]
+ ! Setting base_theme_dir caused undefined index errors in manage languages area. (ManageServer.php) [Bug 4634]
 
 
 February 2011
