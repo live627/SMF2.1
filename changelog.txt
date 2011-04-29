@@ -23,6 +23,7 @@ April 2011
  ! integrate_modify_modifications hook should be triggered earlier in the code. (ManageSettings.php) [Bug 4638]
  ! integrate_menu_buttons hook was triggered too late in the code. (Subs.php) [Bug 4637,4670]
  * Undefined index errors when there were not any recent posts. (BoardIndex template) [Bug 4650]
+ ! CAPTCHA settings were linked to the incorrect area in admin search results. (Admin.php) [Bug 4707]
 
 
 February 2011
