@@ -18,6 +18,7 @@ April 2011
  ! Missing preparsecode() call for package readme files with BBC. (Packages.php) [Bug 4678]
  ! Unauthorized users were able to see warning status in some cases. (Display.php, PersonalMessage.php) [Bug 4696]
  ! Setting base_theme_dir caused undefined index errors in manage languages area. (ManageServer.php) [Bug 4634]
+ ! Personal message preview did not display post errors. (PersonalMessages.php) [Bug 4653]
 
 
 February 2011
