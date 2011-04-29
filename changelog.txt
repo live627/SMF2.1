@@ -22,6 +22,7 @@ April 2011
  ! Custom language strings were not loaded when editing theme settings. (Themes.php) [Bug 4658]
  ! integrate_modify_modifications hook should be triggered earlier in the code. (ManageSettings.php) [Bug 4638]
  ! integrate_menu_buttons hook was triggered too late in the code. (Subs.php) [Bug 4637,4670]
+ * Undefined index errors when there were not any recent posts. (BoardIndex template) [Bug 4650]
 
 
 February 2011

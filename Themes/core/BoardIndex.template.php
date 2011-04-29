@@ -245,7 +245,7 @@ function template_info_center()
 		<div id="upshrinkHeaderIC"', empty($options['collapse_header_ic']) ? '' : ' style="display: none;"', '>';
 
 	// This is the "Recent Posts" bar.
-	if (!empty($settings['number_recent_posts']))
+	if (!empty($settings['number_recent_posts']) && (!empty($context['latest_posts']) || !empty($context['latest_post'])))
 	{
 		echo '
 			<div class="infocenter_section">
