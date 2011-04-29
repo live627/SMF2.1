@@ -4122,7 +4122,7 @@ function setupMenuContext()
 		);
 
 		// Allow editing menu buttons easily.
-		call_integration_hook('integrate_menu_buttons', array(&$menu_buttons));
+		call_integration_hook('integrate_menu_buttons', array(&$buttons));
 
 		// Now we put the buttons in the context so the theme can use them.
 		$menu_buttons = array();
