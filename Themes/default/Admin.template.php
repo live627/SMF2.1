@@ -9,8 +9,8 @@ function template_admin()
 	// Welcome message for the admin.
 	echo '
 	<div id="admincenter">
-		<div class="title_bar">
-			<h3 class="titlebg">';
+		<div class="cat_bar">
+			<h3 class="catbg">';
 
 	if ($context['user']['is_admin'])
 		echo '
@@ -1421,8 +1421,8 @@ function template_core_features()
 
 	echo '
 		<form action="', $scripturl, '?action=admin;area=corefeatures;" method="post" accept-charset="', $context['character_set'], '">
-			<div class="title_bar">
-				<h3 class="titlebg">
+			<div class="cat_bar">
+				<h3 class="catbg">
 					', $txt['core_settings_title'], '
 				</h3>
 			</div>';
