@@ -28,6 +28,7 @@ April 2011
  ! Fix to stop linktree anchors scrunching in IE6 and IE7. (index.css) [Bug 4651]
  * Hide category links for non-collapsible categories. (BoardIndex.template.php, index.css, rtl.css) [Bug 4652]
  ! Partial fix for problems caused by category collapse/expand in some browsers. Related to Bug 4639. (index.css)
+ ! Corrected menu text for consistency. (index.english.php) [Bug 4648]
 
 
 February 2011
