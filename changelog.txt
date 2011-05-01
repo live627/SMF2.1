@@ -25,6 +25,7 @@ April 2011
  * Undefined index errors when there were not any recent posts. (BoardIndex template) [Bug 4650]
  ! CAPTCHA settings were linked to the incorrect area in admin search results. (Admin.php) [Bug 4707]
  * Change of header bar classes for admin main page, core features page, and reports. (Admin.template.php, Reports.template.php) [Bug 4647]
+ ! Fix to stop linktree anchors scrunching in IE6 and IE7. (index.css) [Bug 4651]
 
 
 February 2011
