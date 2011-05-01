@@ -781,6 +781,11 @@ h3.catbg img.icon, h4.titlebg img.icon
 	vertical-align: middle;
 	margin: -2px 5px 0 0;
 }
+h3.catbg .nocollapse
+{
+	float:left;
+	margin-left:-99em;
+}
 h4.catbg a.toggle img
 {
 	vertical-align: middle;

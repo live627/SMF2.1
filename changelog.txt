@@ -26,6 +26,7 @@ April 2011
  ! CAPTCHA settings were linked to the incorrect area in admin search results. (Admin.php) [Bug 4707]
  * Change of header bar classes for admin main page, core features page, and reports. (Admin.template.php, Reports.template.php) [Bug 4647]
  ! Fix to stop linktree anchors scrunching in IE6 and IE7. (index.css) [Bug 4651]
+ * Hide category links for non-collapsible categories. (BoardIndex.template.php, index.css, rtl.css) [Bug 4652]
 
 
 February 2011

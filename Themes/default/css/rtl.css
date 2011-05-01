@@ -89,6 +89,11 @@ h3.catbg img.icon, h4.titlebg img.icon
 	vertical-align: middle;
 	margin: -2px 0 0 5px;
 }
+h3.catbg .nocollapse
+{
+	float:right;
+	margin-right:-99em;
+}
 h4.titlebg, h3.titlebg
 {
 	padding-right: 9px;
