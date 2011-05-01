@@ -27,6 +27,7 @@ April 2011
  * Change of header bar classes for admin main page, core features page, and reports. (Admin.template.php, Reports.template.php) [Bug 4647]
  ! Fix to stop linktree anchors scrunching in IE6 and IE7. (index.css) [Bug 4651]
  * Hide category links for non-collapsible categories. (BoardIndex.template.php, index.css, rtl.css) [Bug 4652]
+ ! Partial fix for problems caused by category collapse/expand in some browsers. Related to Bug 4639. (index.css)
 
 
 February 2011

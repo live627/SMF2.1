@@ -828,6 +828,7 @@ div.title_bar
 div.roundframe div.cat_bar
 {
 	background: #99abbf url(../images/theme/main_block.png) no-repeat 0 -240px;
+	margin-bottom: 0;
 }
 div.roundframe div.cat_bar h3.catbg
 {
@@ -862,6 +863,8 @@ table.table_list a.unreadlink, table.table_list a.collapse
 table.table_list a.collapse
 {
 	margin: 10px 5px 0 1em;
+	height: 31px;
+	line-height: 31px;
 }
 
 /* The half-round header bars for some tables. */
