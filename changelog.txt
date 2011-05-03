@@ -29,6 +29,7 @@ April 2011
  * Hide category links for non-collapsible categories. (BoardIndex.template.php, index.css, rtl.css) [Bug 4652]
  ! Partial fix for problems caused by category collapse/expand in some browsers. Related to Bug 4639. (index.css)
  ! Corrected menu text for consistency. (index.english.php) [Bug 4648]
+ * Fix for untracked validation errors with collapsed categories. (BoardIndex.template.php)
 
 
 February 2011
