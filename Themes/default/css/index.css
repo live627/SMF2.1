@@ -1422,6 +1422,7 @@ img#smflogo
 #guest_form .info
 {
 	padding: 4px 0 ;
+	line-height: 1.3em;
 }
 div#upper_section div.user
 {

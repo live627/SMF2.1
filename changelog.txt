@@ -14,7 +14,8 @@ May 2011
  * Fix for untracked validation errors with collapsed categories. (BoardIndex template)
  ! Making a board child of itself crashed the forum. (Subs-Boards.php) [Bug 4710]
  & Added the language string necessary for the above change. (Errors language file)
- ! Theme option changes was not loaded after profile changes in some cases. (Profile-Modify.php) [Bug 4675]
+ ! Theme option changes were not loaded after profile changes in some cases. (Profile-Modify.php) [Bug 4675]
+ * Bringing back the good, old welcome guest note along with activation link. (index template, index.css) [Bug 4703]
 
 
 April 2011
