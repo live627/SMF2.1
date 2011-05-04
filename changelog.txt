@@ -4,6 +4,18 @@ Changelog started January 1, 2004; Currently at $Revision$.
 SMF 2.0 ??                                                                    ??
 ================================================================================
 
+May 2011
+--------------------------------------------------------------------------------
+ * Change of header bar classes for admin main page, core features page, and reports. (Admin template, Reports template) [Bug 4647]
+ * Fix to stop linktree anchors scrunching in IE6 and IE7. (index.css) [Bug 4651]
+ * Hide category links for non-collapsible categories. (BoardIndex template, index.css, rtl.css) [Bug 4652]
+ * Partial fix for problems caused by category collapse/expand in some browsers. (index.css) [Bug 4639]
+ & Corrected menu text for consistency. (index language file) [Bug 4648]
+ * Fix for untracked validation errors with collapsed categories. (BoardIndex template)
+ ! Making a board child of itself crashed the forum. (Subs-Boards.php) [Bug 4710]
+ & Added the language string necessary for the above change. (Errors language file)
+
+
 April 2011
 --------------------------------------------------------------------------------
  ! Made functions removeEvent, getEventProperties and removeHolidays use the parameter value instead of a request variable. (Subs-Calender.php)
@@ -24,12 +36,6 @@ April 2011
  ! integrate_menu_buttons hook was triggered too late in the code. (Subs.php) [Bug 4637,4670]
  * Undefined index errors when there were not any recent posts. (BoardIndex template) [Bug 4650]
  ! CAPTCHA settings were linked to the incorrect area in admin search results. (Admin.php) [Bug 4707]
- * Change of header bar classes for admin main page, core features page, and reports. (Admin.template.php, Reports.template.php) [Bug 4647]
- ! Fix to stop linktree anchors scrunching in IE6 and IE7. (index.css) [Bug 4651]
- * Hide category links for non-collapsible categories. (BoardIndex.template.php, index.css, rtl.css) [Bug 4652]
- ! Partial fix for problems caused by category collapse/expand in some browsers. Related to Bug 4639. (index.css)
- ! Corrected menu text for consistency. (index.english.php) [Bug 4648]
- * Fix for untracked validation errors with collapsed categories. (BoardIndex.template.php)
 
 
 February 2011
