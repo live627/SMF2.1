@@ -2165,9 +2165,9 @@ function loadThemeOptions($memID)
 	if ($context['user']['is_owner'])
 	{
 		$context['member']['options'] = $options;
-		foreach ($context['member']['options'] as $k => $v)
-			if (isset($_POST['options'][$k]))
-				$context['member']['options'][$k] = $_POST['options'][$k];
+		if (isset($_POST['options']) && is_array($_POST['options']))
+			foreach ($_POST['options'] as $k => $v)
+				$context['member']['options'][$k] = $v;
 	}
 	else
 	{
