@@ -1234,7 +1234,7 @@ WHERE attachment_type = 3
 ---# Calculating attachment mime types.
 ---{
 // Don't ever bother doing this twice.
-if (@$modSettings['smfVersion'] < '2.0')
+if (@$modSettings['smfVersion'] < '2.0' || @$modSettings['smfVersion'] === '2.0 a')
 {
 	$request = upgrade_query("
 		SELECT MAX(id_attach)

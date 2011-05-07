@@ -17,6 +17,7 @@ May 2011
  ! Theme option changes were not loaded after profile changes in some cases. (Profile-Modify.php) [Bug 4675]
  * Bringing back the good, old welcome guest note along with activation link. (index template, index.css) [Bug 4703]
  ! Fixing MySQL 5.5 compatibility for a timestamp field. (upgrade_1-0.sql, upgrade_1-1.sql) [Bug 4698]
+ ! Attachment mime type calcuation was ignored while upgrading from 1.0 and 1.1 versions. (upgrade_2-0_mysql.sql) [Bug 4700]
 
 
 April 2011
