@@ -16,6 +16,7 @@ May 2011
  & Added the language string necessary for the above change. (Errors language file)
  ! Theme option changes were not loaded after profile changes in some cases. (Profile-Modify.php) [Bug 4675]
  * Bringing back the good, old welcome guest note along with activation link. (index template, index.css) [Bug 4703]
+ ! Fixing MySQL 5.5 compatibility for a timestamp field. (upgrade_1-0.sql, upgrade_1-1.sql) [Bug 4698]
 
 
 April 2011

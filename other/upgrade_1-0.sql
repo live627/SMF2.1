@@ -241,7 +241,7 @@ ADD PRIMARY KEY (variable(30));
 DROP TABLE IF EXISTS {$db_prefix}log_online;
 CREATE TABLE {$db_prefix}log_online (
 	session char(32) NOT NULL default '                                ',
-	logTime timestamp(14),
+	logTime timestamp,
 	ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
 	ip int(11) unsigned NOT NULL default '0',
 	url text NOT NULL default '',

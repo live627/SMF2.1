@@ -904,7 +904,7 @@ ADD INDEX ip (ip(16));
 DROP TABLE IF EXISTS {$db_prefix}log_online;
 CREATE TABLE {$db_prefix}log_online (
 	session char(32) NOT NULL default '                                ',
-	logTime timestamp(14) /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */,
+	logTime timestamp /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */,
 	ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
 	ip int(10) unsigned NOT NULL default '0',
 	url text NOT NULL,
