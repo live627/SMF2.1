@@ -1309,6 +1309,17 @@ function ModifyLanguage()
 			if (is_dir($curPath))
 				deltree($curPath);
 
+		// Members can no longer use this language.
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}members
+			SET lngfile = {string:empty_string}
+			WHERE lngfile = {string:current_language}',
+			array(
+				'empty_string' => '',
+				'current_language' => $context['lang_id'],
+			)
+		);
+
 		// Fifth, update getLanguages() cache.
 		if (!empty($modSettings['cache_enable']))
 		{
