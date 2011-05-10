@@ -21,6 +21,7 @@ May 2011
  ! Member language selection was not reset upon a language deletion. (ManageServer.php) [Bug 4641]
  * JavaScript quick topic modify did not work when quick moderation mode was 'icons'. (MessageIndex template) [Bug 4715]
  ! It was possible to create permission profiles without names. (ManagePermissions.php) [Bug 4709]
+ ! Additional group changes were not tracked properly. (Profile-Modify.php) [Bug 4718]
 
 
 April 2011

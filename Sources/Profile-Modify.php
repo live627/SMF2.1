@@ -963,7 +963,7 @@ function saveProfileFields()
 			// Prepare additional groups for comparison.
 			$additional_groups = array(
 				'previous' => !empty($old_profile['additional_groups']) ? explode(',', $old_profile['additional_groups']) : array(),
-				'new' => !empty($_POST['additional_groups']) ? $_POST['additional_groups'] : array(),
+				'new' => !empty($_POST['additional_groups']) ? array_diff($_POST['additional_groups'], array(0)) : array(),
 			);
 
 			sort($additional_groups['previous']);
