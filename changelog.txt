@@ -24,6 +24,7 @@ May 2011
  ! Additional group changes were not tracked properly. (Profile-Modify.php) [Bug 4718]
  ! Ignore boards options were ignored in MessageIndex. (Subs-BoardIndex.php) [Bug 4719]
  ! Remove Inactive Members maintenance removed members it should not. (ManageMaintenance.php) [Bug 4716]
+ ! Reserved member name check failed with HTML entities. (Subs-Members.php) [Bug 4717]
 
 
 April 2011
