@@ -23,6 +23,7 @@ May 2011
  ! It was possible to create permission profiles without names. (ManagePermissions.php) [Bug 4709]
  ! Additional group changes were not tracked properly. (Profile-Modify.php) [Bug 4718]
  ! Ignore boards options were ignored in MessageIndex. (Subs-BoardIndex.php) [Bug 4719]
+ ! Remove Inactive Members maintenance removed members it should not. (ManageMaintenance.php) [Bug 4716]
 
 
 April 2011
