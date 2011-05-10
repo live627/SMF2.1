@@ -20,6 +20,7 @@ May 2011
  ! Attachment mime type calcuation was ignored while upgrading from 1.0 and 1.1 versions. (upgrade_2-0_mysql.sql) [Bug 4700]
  ! Member language selection was not reset upon a language deletion. (ManageServer.php) [Bug 4641]
  * JavaScript quick topic modify did not work when quick moderation mode was 'icons'. (MessageIndex template) [Bug 4715]
+ ! It was possible to create permission profiles without names. (ManagePermissions.php) [Bug 4709]
 
 
 April 2011

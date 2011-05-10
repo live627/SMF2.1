@@ -1901,7 +1901,7 @@ function EditPermissionProfiles()
 	$context['sub_template'] = 'edit_profiles';
 
 	// If we're creating a new one do it first.
-	if (isset($_POST['create']))
+	if (isset($_POST['create']) && trim($_POST['profile_name']) != '')
 	{
 		checkSession();
 
