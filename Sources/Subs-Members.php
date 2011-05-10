@@ -962,7 +962,7 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 				return true;
 
 	// Get rid of any SQL parts of the reserved name...
-	$checkName = strtr($name, array('_' => '\\_', '%' => '\\%'));
+	$checkName = strtr($checkName, array('_' => '\\_', '%' => '\\%'));
 
 	// Make sure they don't want someone else's name.
 	$request = $smcFunc['db_query']('', '
