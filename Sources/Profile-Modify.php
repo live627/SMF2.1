@@ -2408,10 +2408,6 @@ function profileLoadAvatarData()
 		'allow_external' => allowedTo('profile_remote_avatar') || (!$context['user']['is_owner'] && allowedTo('profile_extra_any')),
 	);
 
-	// Actually - nothing?
-	if (!$context['member']['avatar']['allow_external'] && !$context['member']['avatar']['allow_server_stored'] && !$context['member']['avatar']['allow_upload'])
-		return false;
-
 	if ($cur_profile['avatar'] == '' && $cur_profile['id_attach'] > 0 && $context['member']['avatar']['allow_upload'])
 		$context['member']['avatar'] += array(
 			'choice' => 'upload',
@@ -2424,7 +2420,7 @@ function profileLoadAvatarData()
 			'server_pic' => 'blank.gif',
 			'external' => $cur_profile['avatar']
 		);
-	elseif (file_exists($modSettings['avatar_directory'] . '/' . $cur_profile['avatar']) && $context['member']['avatar']['allow_server_stored'])
+	elseif ($cur_profile['avatar'] != '' && file_exists($modSettings['avatar_directory'] . '/' . $cur_profile['avatar']) && $context['member']['avatar']['allow_server_stored'])
 		$context['member']['avatar'] += array(
 			'choice' => 'server_stored',
 			'server_pic' => $cur_profile['avatar'] == '' ? 'blank.gif' : $cur_profile['avatar'],
@@ -2432,7 +2428,7 @@ function profileLoadAvatarData()
 		);
 	else
 		$context['member']['avatar'] += array(
-			'choice' => 'server_stored',
+			'choice' => 'none',
 			'server_pic' => 'blank.gif',
 			'external' => 'http://'
 		);
@@ -2605,7 +2601,12 @@ function profileSaveAvatarData(&$value)
 		}
 	}
 
-	if ($value == 'server_stored' && allowedTo('profile_server_avatar'))
+	if ($value == 'none')
+	{
+		$profile_vars['avatar'] = '';
+		removeAttachments(array('id_member' => $memID));
+	}
+	elseif ($value == 'server_stored' && allowedTo('profile_server_avatar'))
 	{
 		$profile_vars['avatar'] = strtr(empty($_POST['file']) ? (empty($_POST['cat']) ? '' : $_POST['cat']) : $_POST['file'], array('&amp;' => '&'));
 		$profile_vars['avatar'] = preg_match('~^([\w _!@%*=\-#()\[\]&.,]+/)?[\w _!@%*=\-#()\[\]&.,]+$~', $profile_vars['avatar']) != 0 && preg_match('/\.\./', $profile_vars['avatar']) == 0 && file_exists($modSettings['avatar_directory'] . '/' . $profile_vars['avatar']) ? ($profile_vars['avatar'] == 'blank.gif' ? '' : $profile_vars['avatar']) : '';
