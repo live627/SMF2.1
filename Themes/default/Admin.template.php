@@ -993,7 +993,7 @@ function template_show_settings()
 			if ($config_var == '')
 				echo '
 					</dl>
-					<hr class="hrcolor clear clear" />
+					<hr class="hrcolor clear" />
 					<dl class="settings">';
 			else
 				echo '

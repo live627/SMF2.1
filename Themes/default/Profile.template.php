@@ -2716,7 +2716,7 @@ function template_profile_avatar_select()
 	{
 		echo '
 								<div id="avatar_upload">
-									<input type="file" size="48" name="attachment" value="" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'upload\');" class="input_file" />
+									<input type="file" size="44" name="attachment" value="" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'upload\');" class="input_file" />
 									', ($context['member']['avatar']['id_attach'] > 0 ? '<br /><br /><img src="' . $context['member']['avatar']['href'] . (strpos($context['member']['avatar']['href'], '?') === false ? '?' : '&amp;') . 'time=' . time() . '" alt="" /><input type="hidden" name="id_attach" value="' . $context['member']['avatar']['id_attach'] . '" />' : ''), '
 								</div>';
 	}

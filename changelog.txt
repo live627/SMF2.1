@@ -36,6 +36,7 @@ May 2011
  & Added the language string necessary for the above change. (Profile language file) [Bug 4636]
  ! Automated conversion of URLs to hyperlinks failed with URLs containing exclamation mark. (Subs.php) [Bug 4624]
  * Topic moderation using checkboxes did not function correctly for non-moderators. (topic.js) [Bug 4706]
+ * Minor correction in admin. Fixes for sidebar menus on narrow resolution. (Admin.template.php, Profile.template.php, index.css)
 
 
 April 2011

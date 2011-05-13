@@ -2915,7 +2915,10 @@ dl
 {
 	float: left;
 }
-
+#avatar_upload
+{
+	overflow: auto;
+}
 #main_admsection #basicinfo, #main_admsection #detailedinfo
 {
 	width: 100%;
@@ -3147,6 +3150,7 @@ div#profile_success
 	float: right;
 	width: 55%;
 	margin: 0 0 10px 2px;
+	overflow: auto;
 }
 
 .ignoreboards
