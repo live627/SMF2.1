@@ -25,10 +25,11 @@ May 2011
  ! Ignore boards options were ignored in MessageIndex. (Subs-BoardIndex.php) [Bug 4719]
  ! Remove Inactive Members maintenance removed members it should not. (ManageMaintenance.php) [Bug 4716]
  ! Reserved member name check failed with HTML entities. (Subs-Members.php) [Bug 4717]
- * Minor break in PM replies fixed. (PersonalMessage.template.php) [Bug 4713]
+ * Minor break in PM replies fixed. (PersonalMessage template) [Bug 4713]
  * Fixed incorrect class on checkbox. Changed default removal selection to safest option.(ManageMaintenance.template.php)
- ! Fixed Webkit/Presto bug with sidebar menus enabled. Deleted superfluous code from webkit.css and rtl.css (index.css, rtl.css, webkit.css)
- * A stack of minor bugfixes, primarily for better IE6 support (fourteen files edited).
+ ! Fixed Webkit/Presto bug with sidebar menus enabled and deleted superfluous code from webkit.css and rtl.css (index.css, rtl.css, webkit.css)
+ * A stack of minor bugfixes, primarily for better IE6 support. (many files)
+ ! Categories which could not be collapsed were still given collapse links. (Subs-BoardIndex.php) [Bug 4639]
 
 
 April 2011
