@@ -34,6 +34,7 @@ May 2011
  & Added the language strings necessary for the above change. (Modlog language file) [Bug 4669]
  * It was not possible to remove avatar when selecting avatar from gallery was disabled. (Profile-Modify.php, Profile template) [Bug 4636]
  & Added the language string necessary for the above change. (Profile language file) [Bug 4636]
+ ! Automated conversion of URLs to hyperlinks failed with URLs containing exclamation mark. (Subs.php) [Bug 4624]
 
 
 April 2011
