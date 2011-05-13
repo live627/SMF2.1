@@ -669,7 +669,7 @@ function template_edit_censored()
 							setOuterHTML(document.getElementById("moreCensoredWords"), \'<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" class="input_text" /> => <input type="text" name="censor_proper[]" size="20" class="input_text" /><\' + \'/div><div id="moreCensoredWords"><\' + \'/div>\');
 						}
 					// ]]></script>
-					<hr width="100%" size="1" class="hrcolor" />
+					<hr width="100%" size="1" class="hrcolor clear" />
 					<dl class="settings">
 						<dt>
 							<strong><label for="censorWholeWord_check">', $txt['censor_whole_words'], ':</label></strong>
@@ -993,7 +993,7 @@ function template_show_settings()
 			if ($config_var == '')
 				echo '
 					</dl>
-					<hr class="hrcolor" />
+					<hr class="hrcolor clear clear" />
 					<dl class="settings">';
 			else
 				echo '
@@ -1009,7 +1009,7 @@ function template_show_settings()
 
 	if (empty($context['settings_save_dont_show']))
 		echo '
-					<hr class="hrcolor" />
+					<hr class="hrcolor clear" />
 					<div class="righttext">
 						<input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), (!empty($context['settings_save_onclick']) ? ' onclick="' . $context['settings_save_onclick'] . '"' : ''), ' class="button_submit" />
 					</div>';

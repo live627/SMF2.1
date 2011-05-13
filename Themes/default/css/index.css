@@ -698,7 +698,7 @@ dl.settings
 }
 dl.settings dt
 {
-	width: 48%;
+	width: 40%;
 	float: left;
 	margin: 0 0 10px 0;
 	padding: 0;
@@ -723,8 +723,9 @@ dl.settings dt.windowbg
 }
 dl.settings dd
 {
-	width: 48%;
+	width: 56%;
 	float: right;
+	overflow: auto;
 	margin: 0 0 3px 0;
 	padding: 0;
 }
@@ -780,11 +781,6 @@ h3.catbg img.icon, h4.titlebg img.icon
 {
 	vertical-align: middle;
 	margin: -2px 5px 0 0;
-}
-h3.catbg .nocollapse
-{
-	float:left;
-	margin-left:-99em;
 }
 h4.catbg a.toggle img
 {
@@ -3148,7 +3144,7 @@ div#profile_success
 }
 #creator dd
 {
-	float: left;
+	float: right;
 	width: 55%;
 	margin: 0 0 10px 2px;
 }

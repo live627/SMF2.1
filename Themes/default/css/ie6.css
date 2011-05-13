@@ -148,7 +148,7 @@ h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
 ------------------------------------------------------- */
 #main_admsection
 {
-	height: 655px;
+	height: 100%;
 }
 #main_admsection table
 {

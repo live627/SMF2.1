@@ -47,7 +47,7 @@ function template_main()
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
-					<ul id="category_', $category['id'], '">';
+					<ul id="category_', $category['id'], '" style="float:left; width:100%;">';
 
 		if (!empty($category['move_link']))
 			echo '

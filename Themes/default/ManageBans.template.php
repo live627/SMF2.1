@@ -28,21 +28,21 @@ function template_ban_edit()
 							<strong>', $txt['ban_name'], ':</strong>
 						</dt>
 						<dd>
-							<input type="text" name="ban_name" value="', $context['ban']['name'], '" size="25" maxlength="20" class="input_text" />
+							<input type="text" name="ban_name" value="', $context['ban']['name'], '" size="45" maxlength="60" class="input_text" />
 						</dd>
 						<dt>
 							<strong>', $txt['ban_reason'], ':</strong><br />
 							<span class="smalltext">', $txt['ban_reason_desc'], '</span>
 						</dt>
 						<dd>
-							<textarea name="reason" cols="50" rows="3">', $context['ban']['reason'], '</textarea>
+							<textarea name="reason" cols="44" rows="3">', $context['ban']['reason'], '</textarea>
 						</dd>
 						<dt>
 							<strong>', $txt['ban_notes'], ':</strong><br />
 							<span class="smalltext">', $txt['ban_notes_desc'], '</span>
 						</dt>
 						<dd>
-							<textarea name="notes" cols="50" rows="3">', $context['ban']['notes'], '</textarea>
+							<textarea name="notes" cols="44" rows="3">', $context['ban']['notes'], '</textarea>
 						</dd>
 					</dl>
 					<fieldset class="ban_settings floatleft">
@@ -78,7 +78,7 @@ function template_ban_edit()
 								<label for="main_ip_check">', $txt['ban_on_ip'], '</label>
 							</dt>
 							<dd>
-								<input type="text" name="main_ip" value="', $context['ban_suggestions']['main_ip'], '" size="50" onfocus="document.getElementById(\'main_ip_check\').checked = true;" class="input_text" />
+								<input type="text" name="main_ip" value="', $context['ban_suggestions']['main_ip'], '" size="44" onfocus="document.getElementById(\'main_ip_check\').checked = true;" class="input_text" />
 							</dd>';
 
 		if (empty($modSettings['disableHostnameLookup']))
@@ -88,7 +88,7 @@ function template_ban_edit()
 								<label for="hostname_check">', $txt['ban_on_hostname'], '</label>
 							</dt>
 							<dd>
-								<input type="text" name="hostname" value="', $context['ban_suggestions']['hostname'], '" size="50" onfocus="document.getElementById(\'hostname_check\').checked = true;" class="input_text" />
+								<input type="text" name="hostname" value="', $context['ban_suggestions']['hostname'], '" size="44" onfocus="document.getElementById(\'hostname_check\').checked = true;" class="input_text" />
 							</dd>';
 
 		echo '
@@ -97,7 +97,7 @@ function template_ban_edit()
 								<label for="email_check">', $txt['ban_on_email'], '</label>
 							</dt>
 							<dd>
-								<input type="text" name="email" value="', $context['ban_suggestions']['email'], '" size="50" onfocus="document.getElementById(\'email_check\').checked = true;" class="input_text" />
+								<input type="text" name="email" value="', $context['ban_suggestions']['email'], '" size="44" onfocus="document.getElementById(\'email_check\').checked = true;" class="input_text" />
 							</dd>
 							<dt>
 								<input type="checkbox" name="ban_suggestion[]" id="user_check" value="user" class="input_check" checked="checked" />
@@ -107,7 +107,7 @@ function template_ban_edit()
 
 		if (empty($context['ban_suggestions']['member']['id']))
 			echo '
-								<input type="text" name="user" id="user" value="" size="40" class="input_text" />';
+								<input type="text" name="user" id="user" value="" size="44" class="input_text" />';
 		else
 			echo '
 								', $context['ban_suggestions']['member']['link'], '

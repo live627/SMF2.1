@@ -973,13 +973,13 @@ function template_servers()
 								<strong>' . $txt['server_name'] . ':</strong>
 							</dt>
 							<dd>
-								<input type="text" name="servername" size="40" value="SMF" class="input_text" />
+								<input type="text" name="servername" size="44" value="SMF" class="input_text" />
 							</dd>
 							<dt>
 								<strong>' . $txt['serverurl'] . ':</strong>
 							</dt>
 							<dd>
-								<input type="text" name="serverurl" size="50" value="http://" class="input_text" />
+								<input type="text" name="serverurl" size="44" value="http://" class="input_text" />
 							</dd>
 						</dl>
 						<div class="righttext">
@@ -996,13 +996,13 @@ function template_servers()
 								<strong>' . $txt['serverurl'] . ':</strong>
 							</dt>
 							<dd>
-								<input type="text" name="package" size="50" value="http://" class="input_text" />
+								<input type="text" name="package" size="44" value="http://" class="input_text" />
 							</dd>
 							<dt>
 								<strong>', $txt['package_download_filename'], ':</strong>
 							</dt>
 							<dd>
-								<input type="text" name="filename" size="50" class="input_text" /><br />
+								<input type="text" name="filename" size="44" class="input_text" /><br />
 								<span class="smalltext">', $txt['package_download_filename_info'], '</span>
 							</dd>
 						</dl>

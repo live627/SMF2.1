@@ -71,11 +71,11 @@ function template_modify_weights()
 							<span class="search_weight"><strong>100%</strong></span>
 						</dd>
 					</dl>
+					<input type="submit" name="save" value="', $txt['search_weights_save'], '" class="button_submit floatright" />
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" /><br class="clear" />
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
-			<input type="submit" name="save" value="', $txt['search_weights_save'], '" class="button_submit" />
-			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>
 	<br class="clear" />
@@ -214,7 +214,7 @@ function template_select_search_method()
 						<input type="checkbox" name="search_match_words" id="search_match_words_check" value="1"', empty($modSettings['search_match_words']) ? '' : ' checked="checked"', ' class="input_check" /><label for="search_match_words_check">', $txt['search_match_words'], '</label>
 					</fieldset>
 					<div class="clear">
-						<input type="submit" name="save" value="', $txt['search_method_save'], '" class="button_submit" />
+						<input type="submit" name="save" value="', $txt['search_method_save'], '" class="button_submit floatright" />
 						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					</div>
 				</div>

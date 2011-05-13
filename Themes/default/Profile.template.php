@@ -1172,7 +1172,7 @@ function template_edit_options()
 		{
 			echo '
 					</dl>
-					<hr width="100%" size="1" class="hrcolor" />
+					<hr width="100%" size="1" class="hrcolor clear" />
 					<dl>';
 		}
 		elseif ($field['type'] == 'callback')
@@ -1260,7 +1260,7 @@ function template_edit_options()
 	{
 		if ($lastItem != 'hr')
 			echo '
-					<hr width="100%" size="1" class="hrcolor" />';
+					<hr width="100%" size="1" class="hrcolor clear" />';
 
 		echo '
 					<dl>';
@@ -1288,7 +1288,7 @@ function template_edit_options()
 					<div>', $context['profile_posthtml'], '</div>';
 	elseif ($lastItem != 'hr')
 		echo '
-					<hr width="100%" size="1" class="hrcolor" />';
+					<hr width="100%" size="1" class="hrcolor clear" />';
 
 	// Only show the password box if it's actually needed.
 	if ($context['require_password'])
@@ -2386,7 +2386,7 @@ function template_profile_save()
 
 	echo '
 
-					<hr width="100%" size="1" class="hrcolor" />';
+					<hr width="100%" size="1" class="hrcolor clear" />';
 
 	// Only show the password box if it's actually needed.
 	if ($context['require_password'])
@@ -2891,7 +2891,7 @@ function template_authentication_method()
 
 	if ($context['require_password'])
 		echo '
-					<hr width="100%" size="1" class="hrcolor" />
+					<hr width="100%" size="1" class="hrcolor clear" />
 					<dl>
 						<dt>
 							<strong', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' class="error"' : '', '>', $txt['current_password'], ': </strong><br />

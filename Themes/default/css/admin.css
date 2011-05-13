@@ -369,16 +369,6 @@ dl.right dt
 	color: green;
 	background: #efe;
 }
-/* Fix for narrow screens in conjunction with sidebar menus.
-------------------------------------------------- */
-#main_admsection dl.settings dt
-{
-	width:25%;
-}
-#main_admsection dl.settings dd
-{
-	width: 71%;
-}
 /* Styles for the manage calendar section.
 ------------------------------------------------- */
 dl.settings dt.small_caption
