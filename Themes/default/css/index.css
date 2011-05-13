@@ -2676,6 +2676,7 @@ tr.titlebg td
 {
 	border-bottom: 1px solid #ccc;
 	margin-bottom: 5px;
+	position: relative;
 }
 .left_admmenu li
 {
@@ -2687,7 +2688,9 @@ tr.titlebg td
 }
 #main_admsection
 {
-	margin-left: 172px;
+	position: relative;
+	left: 0;
+	right: 0;
 	overflow: hidden;
 }
 
