@@ -26,6 +26,7 @@ May 2011
  ! Remove Inactive Members maintenance removed members it should not. (ManageMaintenance.php) [Bug 4716]
  ! Reserved member name check failed with HTML entities. (Subs-Members.php) [Bug 4717]
  * Minor break in PM replies fixed. (PersonalMessage.template.php) [Bug 4713]
+ * Fixed incorrect class on checkbox. Changed default removal selection to safest option.(ManageMaintenance.template.php)
 
 
 April 2011
