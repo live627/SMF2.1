@@ -413,11 +413,25 @@ InTopicModeration.prototype.init = function()
 
 InTopicModeration.prototype.handleClick = function(oCheckbox)
 {
-	if (!this.bButtonsShown)
+	if (!this.bButtonsShown && this.opt.sButtonStripDisplay)
 	{
+		var oButtonStrip = document.getElementById(this.opt.sButtonStrip);
+		var oButtonStripDisplay = document.getElementById(this.opt.sButtonStripDisplay);
+
 		// Make sure it can go somewhere.
-		if (this.opt.sButtonStripDisplay && document.getElementById(this.opt.sButtonStripDisplay))
-			document.getElementById(this.opt.sButtonStripDisplay).style.display = "";
+		if (typeof(oButtonStripDisplay) == 'object' && oButtonStripDisplay != null)
+			oButtonStripDisplay.style.display = "";
+		else
+		{
+			var oNewDiv = document.createElement('div');
+			var oNewList = document.createElement('ul');
+
+			oNewDiv.id = this.opt.sButtonStripDisplay;
+			oNewDiv.className = this.opt.sButtonStripClass ? this.opt.sButtonStripClass : 'buttonlist floatbottom';
+
+			oNewDiv.appendChild(oNewList);
+			oButtonStrip.appendChild(oNewDiv);
+		}
 
 		// Add the 'remove selected items' button.
 		if (this.opt.bCanRemove)
@@ -461,17 +475,19 @@ InTopicModeration.prototype.handleClick = function(oCheckbox)
 
 	// Try to restore the correct position.
 	var aItems = document.getElementById(this.opt.sButtonStrip).getElementsByTagName('span');
-	if (this.iNumSelected < 1)
+	if (aItems.length > 3)
 	{
-		aItems[aItems.length - 3].className = aItems[aItems.length - 3].className.replace(/\s*position_holder/, 'last');
-		aItems[aItems.length - 2].className = aItems[aItems.length - 2].className.replace(/\s*position_holder/, 'last');
+		if (this.iNumSelected < 1)
+		{
+			aItems[aItems.length - 3].className = aItems[aItems.length - 3].className.replace(/\s*position_holder/, 'last');
+			aItems[aItems.length - 2].className = aItems[aItems.length - 2].className.replace(/\s*position_holder/, 'last');
+		}
+		else
+		{
+			aItems[aItems.length - 2].className = aItems[aItems.length - 2].className.replace(/\s*last/, 'position_holder');
+			aItems[aItems.length - 3].className = aItems[aItems.length - 3].className.replace(/\s*last/, 'position_holder');
+		}
 	}
-	else
-	{
-		aItems[aItems.length - 2].className = aItems[aItems.length - 2].className.replace(/\s*last/, 'position_holder');
-		aItems[aItems.length - 3].className = aItems[aItems.length - 3].className.replace(/\s*last/, 'position_holder');
-	}
-
 }
 
 InTopicModeration.prototype.handleSubmit = function (sSubmitType)
