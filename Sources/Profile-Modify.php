@@ -2409,11 +2409,14 @@ function profileLoadAvatarData()
 	);
 
 	if ($cur_profile['avatar'] == '' && $cur_profile['id_attach'] > 0 && $context['member']['avatar']['allow_upload'])
+	{
 		$context['member']['avatar'] += array(
 			'choice' => 'upload',
 			'server_pic' => 'blank.gif',
 			'external' => 'http://'
 		);
+		$context['member']['avatar']['href'] = $scripturl . '?action=dlattach;attach=' . $cur_profile['id_attach'] . ';type=avatar';
+	}
 	elseif (stristr($cur_profile['avatar'], 'http://') && $context['member']['avatar']['allow_external'])
 		$context['member']['avatar'] += array(
 			'choice' => 'external',
@@ -2552,11 +2555,6 @@ function profileSaveAvatarData(&$value)
 	if (empty($memID) && !empty($context['password_auth_failed']))
 		return false;
 
-	// Reset the attach ID.
-	$cur_profile['id_attach'] = 0;
-	$cur_profile['attachment_type'] = 0;
-	$cur_profile['filename'] = '';
-
 	require_once($sourcedir . '/ManageAttachments.php');
 
 	// We need to know where we're going to be putting it..
@@ -2604,6 +2602,12 @@ function profileSaveAvatarData(&$value)
 	if ($value == 'none')
 	{
 		$profile_vars['avatar'] = '';
+
+		// Reset the attach ID.
+		$cur_profile['id_attach'] = 0;
+		$cur_profile['attachment_type'] = 0;
+		$cur_profile['filename'] = '';
+
 		removeAttachments(array('id_member' => $memID));
 	}
 	elseif ($value == 'server_stored' && allowedTo('profile_server_avatar'))
@@ -2611,11 +2615,21 @@ function profileSaveAvatarData(&$value)
 		$profile_vars['avatar'] = strtr(empty($_POST['file']) ? (empty($_POST['cat']) ? '' : $_POST['cat']) : $_POST['file'], array('&amp;' => '&'));
 		$profile_vars['avatar'] = preg_match('~^([\w _!@%*=\-#()\[\]&.,]+/)?[\w _!@%*=\-#()\[\]&.,]+$~', $profile_vars['avatar']) != 0 && preg_match('/\.\./', $profile_vars['avatar']) == 0 && file_exists($modSettings['avatar_directory'] . '/' . $profile_vars['avatar']) ? ($profile_vars['avatar'] == 'blank.gif' ? '' : $profile_vars['avatar']) : '';
 
+		// Clear current profile...
+		$cur_profile['id_attach'] = 0;
+		$cur_profile['attachment_type'] = 0;
+		$cur_profile['filename'] = '';
+
 		// Get rid of their old avatar. (if uploaded.)
 		removeAttachments(array('id_member' => $memID));
 	}
 	elseif ($value == 'external' && allowedTo('profile_remote_avatar') && strtolower(substr($_POST['userpicpersonal'], 0, 7)) == 'http://' && empty($modSettings['avatar_download_external']))
 	{
+		// We need these clean...
+		$cur_profile['id_attach'] = 0;
+		$cur_profile['attachment_type'] = 0;
+		$cur_profile['filename'] = '';
+
 		// Remove any attached avatar...
 		removeAttachments(array('id_member' => $memID));
 
@@ -2685,6 +2699,11 @@ function profileSaveAvatarData(&$value)
 					require_once($sourcedir . '/Subs-Graphics.php');
 					if (!downloadAvatar($uploadDir . '/avatar_tmp_' . $memID, $memID, $modSettings['avatar_max_width_upload'], $modSettings['avatar_max_height_upload']))
 						return 'bad_avatar';
+
+					// Reset attachment avatar data.
+					$cur_profile['id_attach'] = $modSettings['new_avatar_data']['id'];
+					$cur_profile['filename'] = $modSettings['new_avatar_data']['filename'];
+					$cur_profile['attachment_type'] = $modSettings['new_avatar_data']['type'];
 				}
 				else
 					return 'bad_avatar';
@@ -2765,8 +2784,6 @@ function profileSaveAvatarData(&$value)
 	// Setup the profile variables so it shows things right on display!
 	$cur_profile['avatar'] = $profile_vars['avatar'];
 
-	// If we're here we've done good - but don't save based on avatar_choice - skip it ;)
-	$profile_vars['avatar'] = $profile_vars['avatar'];
 	return false;
 }
 
