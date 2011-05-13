@@ -25,6 +25,7 @@ May 2011
  ! Ignore boards options were ignored in MessageIndex. (Subs-BoardIndex.php) [Bug 4719]
  ! Remove Inactive Members maintenance removed members it should not. (ManageMaintenance.php) [Bug 4716]
  ! Reserved member name check failed with HTML entities. (Subs-Members.php) [Bug 4717]
+ * Minor break in PM replies fixed. (PersonalMessage.template.php) [Bug 4713]
 
 
 April 2011

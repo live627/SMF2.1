@@ -1067,7 +1067,7 @@ function template_send()
 			', $context['quoted_message']['body'], '
 		</div>
 		<span class="botslice"><span></span></span>
-	</div>';
+	</div><br class="clear" />';
 
 	echo '
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/PersonalMessage.js?rc5"></script>
