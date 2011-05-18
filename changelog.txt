@@ -38,6 +38,8 @@ May 2011
  * Topic moderation using checkboxes did not function correctly for non-moderators. (topic.js) [Bug 4706]
  * Minor correction in admin. Fixes for sidebar menus on narrow resolution. (Admin template, Profile template, index.css)
  ! Profile updates did not load all previously saved data. (Profile.php, Profile-Modify.php) [Bug 4635]
+ ! Login session data was cleared when it shouldn't have. (LogInOut.php) [Bug 4644]
+ ! Login by $_GET is not needed. (LogInOut.php)
 
 
 April 2011
