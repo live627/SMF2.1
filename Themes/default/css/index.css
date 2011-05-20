@@ -328,7 +328,7 @@ code.bbc_code
 	line-height: 1.5em;
 	padding: 3px 1em;
 	overflow: auto;
-	white-space: pre;
+	white-space: nowrap;
 	/* Show a scrollbar after about 24 lines. */
 	max-height: 24em;
 }

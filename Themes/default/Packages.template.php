@@ -1509,9 +1509,6 @@ function template_view_operations()
 {
 	global $context, $txt, $settings;
 
-	// Determine the position text.
-	$operation_text = $context['operations']['position'] == 'replace' ? 'operation_replace' : ($context['operations']['position'] == 'before' ? 'operation_after' : 'operation_before');
-
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"', $context['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
@@ -1524,26 +1521,15 @@ function template_view_operations()
 	</head>
 	<body>
 		<div class="padding windowbg">
-			<div class="cat_bar">
-				<h3 class="catbg">
-				', $txt['operation_find'], '<a href="javascript:void(0);" onclick="return smfSelectText(\'find_code\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
-				</h3>
+			<div class="padding">
+				', $context['operations']['search'], '
 			</div>
 			<div class="padding">
-				<code id="find_code" style="overflow: auto; max-height: 200px; white-space: pre;">', $context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search'], '</code>
-			</div>
-			<div class="cat_bar">
-				<h3 class="catbg topmargin">
-				', $txt[$operation_text], '<a href="javascript:void(0);" onclick="return smfSelectText(\'replace_code\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
-				</h3>
-			</div>
-			<div class="padding">
-				<code id="replace_code" style="overflow: auto; max-height: 200px; white-space: pre;">', $context['operations']['replace'], '</code>
+				', $context['operations']['replace'], '
 			</div>
 		</div>
 	</body>
 </html>';
-
 }
 
 function template_file_permissions()

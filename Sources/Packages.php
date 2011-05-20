@@ -1527,10 +1527,15 @@ function ViewOperations()
 
 	// Ok lets get the content of the file.
 	$context['operations'] = array(
-		'search' => $smcFunc['htmlspecialchars']($mod_actions[$_REQUEST['operation_key']]['search_original'], ENT_QUOTES),
-		'replace' => $smcFunc['htmlspecialchars']($mod_actions[$_REQUEST['operation_key']]['replace_original'], ENT_QUOTES),
+		'search' => strtr(htmlspecialchars($mod_actions[$_REQUEST['operation_key']]['search_original']), array('[' => '&#91;', ']' => '&#93;')),
+		'replace' => strtr(htmlspecialchars($mod_actions[$_REQUEST['operation_key']]['replace_original']), array('[' => '&#91;', ']' => '&#93;')),
 		'position' => $mod_actions[$_REQUEST['operation_key']]['position'],
 	);
+
+	// Let's do some formatting...
+	$operation_text = $context['operations']['position'] == 'replace' ? 'operation_replace' : ($context['operations']['position'] == 'before' ? 'operation_after' : 'operation_before');
+	$context['operations']['search'] = parse_bbc('[code=' . $txt['operation_find'] . ']' . ($context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search']) . '[/code]');
+	$context['operations']['replace'] = parse_bbc('[code=' . $txt[$operation_text] . ']' . $context['operations']['replace'] . '[/code]');
 
 	// No layers
 	$context['template_layers'] = array();

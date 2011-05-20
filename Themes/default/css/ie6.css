@@ -3,6 +3,10 @@
 	width: 96%;
 	margin: 0 auto;
 }
+code.bbc_code
+{
+	white-space: normal;
+}
 h3.catbg input.input_check
 {
 	margin: 0 4px;
