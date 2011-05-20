@@ -2767,7 +2767,7 @@ if (!isset($modSettings['attachment_thumb_png']))
 // This is Grudge's secret "I'm not a developer" theme install code - keep this quiet ;)
 
 // Firstly, I'm going out of my way to not do this twice!
-if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC2') && empty($modSettings['dont_repeat_theme_core']))
+if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC2' || $modSettings['smfVersion'] === '2.0 a') && empty($modSettings['dont_repeat_theme_core']))
 {
 	// Check it's not already here, just in case.
 	$theme_request = upgrade_query("
