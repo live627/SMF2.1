@@ -40,6 +40,7 @@ May 2011
  ! Profile updates did not load all previously saved data. (Profile.php, Profile-Modify.php) [Bug 4635]
  ! Login session data was cleared when it shouldn't have. (LogInOut.php) [Bug 4644]
  ! Login by $_GET is not needed. (LogInOut.php)
+ ! Incorrect custom menu URL for unapproved posts moderation area. (ModerationCenter.php) [Bug 4728]
 
 
 April 2011
