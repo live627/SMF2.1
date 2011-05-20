@@ -41,6 +41,8 @@ May 2011
  ! Login session data was cleared when it shouldn't have. (LogInOut.php) [Bug 4644]
  ! Login by $_GET is not needed. (LogInOut.php)
  ! Incorrect custom menu URL for unapproved posts moderation area. (ModerationCenter.php) [Bug 4728]
+ ! Languages which doesn't support 12 hour time format had their 'am/pm's stripped. (Subs.php) [Bug 4720]
+ & Added the language strings necessary for the above change. (index language file) [Bug 4720]
 
 
 April 2011

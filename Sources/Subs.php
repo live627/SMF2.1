@@ -757,6 +757,7 @@ function comma_format($number, $override_decimal_count = false)
 function timeformat($log_time, $show_today = true, $offset_type = false)
 {
 	global $context, $user_info, $txt, $modSettings, $smcFunc;
+	static $non_twelve_hour;
 
 	// Offset the time.
 	if (!$offset_type)
@@ -803,6 +804,11 @@ function timeformat($log_time, $show_today = true, $offset_type = false)
 
 	if (setlocale(LC_TIME, $txt['lang_locale']))
 	{
+		if (!isset($non_twelve_hour))
+			$non_twelve_hour = trim(strftime('%p')) === '';
+		if (!empty($non_twelve_hour) && strpos($str, '%p') !== false)
+			$str = str_replace('%p', (strftime('%H', $time) < 12 ? $txt['time_am'] : $txt['time_pm']), $str);
+
 		foreach (array('%a', '%A', '%b', '%B') as $token)
 			if (strpos($str, $token) !== false)
 				$str = str_replace($token, !empty($txt['lang_capitalize_dates']) ? $smcFunc['ucwords'](strftime($token, $time)) : strftime($token, $time), $str);
@@ -813,8 +819,9 @@ function timeformat($log_time, $show_today = true, $offset_type = false)
 		foreach (array('%a' => 'days_short', '%A' => 'days', '%b' => 'months_short', '%B' => 'months') as $token => $text_label)
 			if (strpos($str, $token) !== false)
 				$str = str_replace($token, $txt[$text_label][(int) strftime($token === '%a' || $token === '%A' ? '%w' : '%m', $time)], $str);
-		if (strpos($str, '%p'))
-			$str = str_replace('%p', (strftime('%H', $time) < 12 ? 'am' : 'pm'), $str);
+
+		if (strpos($str, '%p') !== false)
+			$str = str_replace('%p', (strftime('%H', $time) < 12 ? $txt['time_am'] : $txt['time_pm']), $str);
 	}
 
 	// Windows doesn't support %e; on some versions, strftime fails altogether if used, so let's prevent that.
