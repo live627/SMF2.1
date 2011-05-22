@@ -769,6 +769,11 @@ function PlushSearch2()
 			$context['search_errors']['query_not_specific_enough'] = true;
 			break;
 		}
+		elseif ($search_params['subject_only'] && empty($searchWords[$orIndex]['subject_words']) && empty($excludedSubjectWords))
+		{
+			$context['search_errors']['query_not_specific_enough'] = true;
+			break;
+		}
 
 		// Make sure we aren't searching for too many indexed words.
 		else

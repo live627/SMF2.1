@@ -49,6 +49,7 @@ May 2011
  & Copyright and trademarks changes, and messing up [SiNaN]'s work (index language file, Subs.php)
  ! Credits updates (Who.php)
  ! Cookie shouldn't be reset. (Subs-Auth.php)
+ ! Search strips so much it may end up with nothing. (Search.php)
 
 
 April 2011
