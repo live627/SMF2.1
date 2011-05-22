@@ -3435,31 +3435,9 @@ function template_header()
 function theme_copyright($get_it = false)
 {
 	global $forum_copyright, $context, $boardurl, $forum_version, $txt, $modSettings;
-	static $found = false;
-
-	// DO NOT MODIFY THIS FUNCTION.  DO NOT REMOVE YOUR COPYRIGHT.
-	// DOING SO VOIDS YOUR LICENSE AND IS ILLEGAL.
-
-	// Meaning, this is the footer checking in..
-	if ($get_it === true)
-		return $found;
-
-	// Naughty, naughty.
-	if (mt_rand(0, 2) == 1)
-	{
-		$temporary = preg_replace('~<!--.+?-->~s', '', ob_get_contents());
-		if (strpos($temporary, '<!--') !== false)
-			echo '-->';
-	}
-
-	// Fool me once, shame on me. Fool me twice, shame on you.
-	if (strpos($forum_copyright, '<!--') !== false)
-		$forum_copyright = preg_replace('~<!--(.+?)-->~is', '$1', $forum_copyright);
-	if (strpos($forum_copyright, '<div') !== false)
-		$forum_copyright = preg_replace('~<div[^>]+>(.+?)(?:</div>)?~is', '$1', $forum_copyright);
 
 	// For SSI and other things, detect the version.
-	if (!isset($forum_version) || strpos($forum_version, 'SMF') === false || isset($_GET['checkcopyright']))
+	if (!isset($forum_version))
 	{
 		$data = substr(file_get_contents(__FILE__), 0, 4096);
 		if (preg_match('~\*\s*Software\s+Version:\s+(SMF\s+.+?)[\s]{2}~i', $data, $match) == 0)
@@ -3471,13 +3449,8 @@ function theme_copyright($get_it = false)
 		$forum_copyright = sprintf($forum_copyright, $forum_version);
 
 	echo '
-		<span class="smalltext" style="display: inline; visibility: visible; font-family: Verdana, Arial, sans-serif;">';
-
-	// If it's in the copyright, and we are outputting it... it's been found.
-	if (isset($modSettings['copyright_key']) && sha1($modSettings['copyright_key'] . 'banjo') == '1d01885ece7a9355bdeb22ed107f0ffa8c323026'){$found = true;}elseif (preg_match('~<a\shref="http://www.simplemachines.org/"[^<>]*>(SMF|Powered by SMF)~', $forum_copyright) && preg_match('~<a\shref="http://www.simplemachines.org/about/copyright.php"[^<>]*>SMF\s.{1,6}[\s\d,ndash\-&;]*Simple Machines LLC~', $forum_copyright)){$found = true; echo $forum_copyright;}
-
-	echo '
-		</span>';
+			<span class="smalltext" style="display: inline; visibility: visible; font-family: Verdana, Arial, sans-serif;">' . $forum_copyright . '
+			</span>';
 }
 
 function template_footer()
@@ -3499,21 +3472,6 @@ function template_footer()
 	foreach (array_reverse($context['template_layers']) as $layer)
 		loadSubTemplate($layer . '_below', true);
 
-	// Do not remove hard-coded text - it's in here so users cannot change the text easily. (as if it were in language file)
-	if (!theme_copyright(true) && !empty($context['template_layers']) && SMF !== 'SSI' && !WIRELESS)
-	{
-		// DO NOT MODIFY THIS SECTION.  DO NOT REMOVE YOUR COPYRIGHT.
-		// DOING SO VOIDS YOUR LICENSE AND IS ILLEGAL.
-
-		echo '
-			<div style="text-align: center !important; display: block !important; visibility: visible !important; font-size: large !important; font-weight: bold; color: black !important; background-color: white !important;">
-				Sorry, the copyright must be in the template.<br />
-				Please notify this forum\'s administrator that this site is missing the copyright message for <a href="http://www.simplemachines.org/" style="color: black !important; font-size: large !important;">SMF</a> so they can rectify the situation. Display of copyright is a <a href="http://www.simplemachines.org/about/license.php" style="color: red;">legal requirement</a>. For more information on this please visit the <a href="http://www.simplemachines.org">Simple Machines</a> website.', empty($context['user']['is_admin']) ? '' : '<br />
-				Not sure why this message is appearing?  <a href="http://www.simplemachines.org/redirect/index.php?copyright_error">Take a look at some common causes.</a>', '
-			</div>';
-
-		log_error('Copyright removed!!');
-	}
 }
 
 // Debugging.

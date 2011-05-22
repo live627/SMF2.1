@@ -26,9 +26,6 @@ $txt['months'] = array(1 => 'January', 'February', 'March', 'April', 'May', 'Jun
 $txt['months_titles'] = array(1 => 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 $txt['months_short'] = array(1 => 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
 
-$txt['time_am'] = 'am';
-$txt['time_pm'] = 'pm';
-
 $txt['newmessages0'] = 'is new';
 $txt['newmessages1'] = 'are new';
 $txt['newmessages3'] = 'New';
@@ -436,7 +433,7 @@ $txt['go_up'] = 'Go Up';
 $txt['go_down'] = 'Go Down';
 
 $forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank" class="new_win">Powered by %1$s</a> |
- <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank" class="new_win">SMF &copy; 2006&ndash;2011, Simple Machines LLC</a>';
+ <a href="index.php?action=credits" title="Credits" target="_blank" class="new_win">Free Forum Software</a> | <a href="http://www.simplemachines.org/about/smf/copyright.php" title="Copyright" target="_blank" class="new_win">SMF &copy; 2011, Simple Machines</a>';
 
 $txt['birthdays'] = 'Birthdays:';
 $txt['events'] = 'Events:';
