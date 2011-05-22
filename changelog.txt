@@ -48,6 +48,7 @@ May 2011
  ! Upgrading from earlier versions did not update themes. (upgrade_2-0_mysql.sql) [Bug 4724]
  & Copyright and trademarks changes, and messing up [SiNaN]'s work (index language file, Subs.php)
  ! Credits updates (Who.php)
+ ! Cookie shouldn't be reset. (Subs-Auth.php)
 
 
 April 2011
