@@ -46,6 +46,7 @@ May 2011
  ! Incorrect error message when attempting to remove a non-existing post. (RemoveTopic.php) [Bug 4705]
  * Tabs and line endings within code tags were not parsed correctly for some browsers. (Packages.php, Subs.php, Packages template, index.css, ie6.css, ie7.css) [Bug 4578]
  ! Upgrading from earlier versions did not update themes. (upgrade_2-0_mysql.sql) [Bug 4724]
+ & Copyright and trademarks changes, and messing up [SiNaN]'s work (index language file, Subs.php)
 
 
 April 2011
