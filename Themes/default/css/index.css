@@ -55,8 +55,8 @@ body, td, th, tr
 div#wrapper
 {
 	margin: 0 auto;
-	min-width: 780px;
-	max-width: 2300px;	
+	min-width: 764px;
+	max-width: 2300px;
 }
 
 /* lets give all forms zero padding/margins */
@@ -2089,7 +2089,7 @@ ul.quickbuttons li.inline_mod_check
 	margin: 0 1em 0 0;
 	border-top: 1px solid #99a;
 }
-.inner img.smiley
+img.smiley
 {
 	vertical-align: bottom;
 }

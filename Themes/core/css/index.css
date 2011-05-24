@@ -1778,6 +1778,10 @@ div#pollmoderation
 {
 	clear: right;
 }
+img.smiley
+{
+	vertical-align: bottom;
+}
 .postarea
 {
 	margin-left: 16em;
