@@ -621,6 +621,7 @@ dl.settings dd
 {
 	width: 48%;
 	float: left;
+	overflow: auto;
 	margin: 0 0 3px 0;
 	padding: 0;
 }
@@ -2430,6 +2431,10 @@ tr.titlebg td
 	font-size: 95%;
 	margin-bottom: 5px;
 }
+#main_container
+{
+	position: relative;
+}
 .left_admmenu li
 {
 	padding: 0 0 0 0.5em;
@@ -2440,7 +2445,10 @@ tr.titlebg td
 }
 #main_admsection
 {
-	margin-left: 174px;
+	position: relative;
+	left: 0;
+	right: 0;
+	overflow: hidden;
 }
 
 tr.windowbg td, tr.windowbg2 td, tr.approvebg td, tr.highlight2 td
@@ -2948,6 +2956,7 @@ div.core_posts div.content
 	float: left;
 	width: 60%;
 	margin: 0 0 10px 0;
+	overflow: auto;
 }
 
 .ignoreboards

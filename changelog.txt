@@ -51,6 +51,7 @@ May 2011
  ! Cookie shouldn't be reset. (Subs-Auth.php)
  ! Search strips so much it may end up with nothing. (Search.php)
  ! Minor smiley misalignment fixed. (index.css, core/css/index.css) [Bug 4727]
+ ! Added some fixes to core, removed core ie6_rtl.css, minor correction in default/index.css (index.css, core/css/index.css, core/index.template.php)
 
 
 April 2011

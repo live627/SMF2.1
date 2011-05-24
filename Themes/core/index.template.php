@@ -89,13 +89,6 @@ function template_html_above()
 		echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/rtl.css" />';
 
-	// The combination of IE6 and RTL languages requires an additional stylesheet.
-	// Well, preferably it requires a whole 'nother browser that actually works but in the absence of that..........
-	// Death to IE6. Come to think of it: death to IE7, 8 and 9 too. Bleh.
-	if ($context['browser']['is_ie6'] && $context['right_to_left'])
-		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ie6_rtl.css" />';
-
 	// Here comes the JavaScript bits!
 	echo '
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc5"></script>

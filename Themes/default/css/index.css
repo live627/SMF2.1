@@ -2668,10 +2668,8 @@ tr.titlebg td
 	font-size: 95%;
 	margin-bottom: 5px;
 }
-#adm_container
+#main_container
 {
-	border-bottom: 1px solid #ccc;
-	margin-bottom: 5px;
 	position: relative;
 }
 .left_admmenu li
