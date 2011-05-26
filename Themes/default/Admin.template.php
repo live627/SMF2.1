@@ -82,19 +82,6 @@ function template_admin()
 							<em id="smfVersion" style="white-space: nowrap;">??</em><br />
 							', $context['can_admin'] ? '<a href="' . $scripturl . '?action=admin;area=maintain;sa=routine;activity=version">' . $txt['version_check_more'] . '</a>' : '', '<br />';
 
-	// Have they paid to remove copyright?
-	if (!empty($context['copyright_expires']))
-	{
-		echo '
-							<br />', sprintf($txt['copyright_ends_in'], $context['copyright_expires']);
-
-		if ($context['copyright_expires'] < 30)
-			echo '
-							<div class="alert">', sprintf($txt['copyright_click_renew'], $context['copyright_key']), '</div>';
-
-		echo '<br />';
-	}
-
 	// Display all the members who can administrate the forum.
 	echo '
 							<br />
@@ -193,43 +180,6 @@ function template_admin()
 
 			});
 		// ]]></script>';
-}
-
-// Mangage the copyright.
-function template_manage_copyright()
-{
-	global $context, $settings, $options, $scripturl, $txt;
-
-	echo '
-	<div id="admincenter">
-		<form action="', $scripturl, '?action=admin;area=copyright" method="post" accept-charset="', $context['character_set'], '">
-			<div class="cat_bar">
-				<h3 class="catbg">
-					', $txt['copyright_removal'], '
-				</h3>
-			</div>
-			<div class="windowbg">
-				<span class="topslice"><span></span></span>
-				<div class="content">
-					<span class="smalltext">', $txt['copyright_removal_desc'], '</span>
-					<dl class="settings">
-						<dt>
-							<strong>', $txt['copyright_code'], ':</strong>
-						</dt>
-						<dd>
-							<input type="text" name="copy_code" value="" class="input_text" />
-						</dd>
-					</dl>
-					<p>
-						<input type="submit" value="', $txt['copyright_proceed'], '" class="button_submit" />
-					</p>
-				</div>
-				<span class="botslice"><span></span></span>
-			</div>
-			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-		</form>
-	</div>
-	<br class="clear" />';
 }
 
 // Show some support information and credits to those who helped make this.

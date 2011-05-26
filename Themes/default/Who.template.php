@@ -196,9 +196,6 @@ function template_credits()
 					<dt><strong>', $txt['credits_forum'], '</strong></dt>', '
 					<dd>', $context['copyrights']['smf'];
 
-	if (!empty($context['copyright_removal_validate']))
-		echo '<br />', $context['copyright_removal_validate'];
-
 	echo '
 					</dd>
 				</dl>';
