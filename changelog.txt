@@ -54,6 +54,7 @@ May 2011
  ! Minor smiley misalignment fixed. (index.css, core/css/index.css) [Bug 4727]
  ! Added some fixes to core, removed core ie6_rtl.css, minor correction in default/index.css (index.css, core/css/index.css, core/index.template.php)
  ! A few more copyright changes (several files)
+ * Minor bugfixes. (index.css, PersonalMessage.template.php, Profile.template.php)
 
 
 April 2011

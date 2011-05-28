@@ -69,7 +69,7 @@ function template_summary()
 	if (!empty($context['custom_fields']))
 	{
 		foreach ($context['custom_fields'] as $field)
-			if ($field['placement'] == 1 || empty($field['output_html']))
+			if (($field['placement'] == 1 || empty($field['output_html'])) && !empty($field['value']))
 				echo '
 					<li class="custom_field">', $field['output_html'], '</li>';
 	}

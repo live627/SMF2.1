@@ -946,7 +946,7 @@ function template_send()
 		echo '
 				<div class="errorbox">
 					<strong>', $txt['error_while_submitting'], '</strong>
-					<ul>';
+					<ul class="reset">';
 
 		foreach ($context['post_error']['messages'] as $error)
 			echo '
