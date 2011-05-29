@@ -2767,7 +2767,7 @@ if (!isset($modSettings['attachment_thumb_png']))
 // This is Grudge's secret "I'm not a developer" theme install code - keep this quiet ;)
 
 // Firstly, I'm going out of my way to not do this twice!
-if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC2' || $modSettings['smfVersion'] === '2.0 a') && empty($modSettings['dont_repeat_theme_core']))
+if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC5' || $modSettings['smfVersion'] === '2.0 a') && empty($modSettings['dont_repeat_theme_core']))
 {
 	// Check it's not already here, just in case.
 	$theme_request = upgrade_query("
@@ -2836,14 +2836,6 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 			WHERE id_theme = 1
 				AND variable = 'name'");
 
-		$newSettings = array();
-		// Now that we have the old theme details - switch anyone who used the default to it (Make sense?!)
-		if (!empty($modSettings['theme_default']) && $modSettings['theme_default'] == 1)
-			$newSettings[] = "('theme_default', $id_core_theme)";
-		// Did guests use to use the default?
-		if (!empty($modSettings['theme_guests']) && $modSettings['theme_guests'] == 1)
-			$newSettings[] = "('theme_guests', $id_core_theme)";
-
 		// If known themes aren't set, let's just pick all themes available.
 		if (empty($modSettings['knownThemes']))
 		{
@@ -2863,6 +2855,7 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 		// Known themes.
 		$allThemes = explode(',', $modSettings['knownThemes']);
 		$allThemes[] = $id_core_theme;
+		$newSettings = array();
 		$newSettings[] = "('knownThemes', '" . implode(',', $allThemes) . "')";
 
 		upgrade_query("
@@ -2870,18 +2863,6 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 				(variable, value)
 			VALUES
 				" . implode(', ', $newSettings));
-
-		// What about members?
-		upgrade_query("
-			UPDATE {$db_prefix}members
-			SET id_theme = $id_core_theme
-			WHERE id_theme = 1");
-
-		// Boards?
-		upgrade_query("
-			UPDATE {$db_prefix}boards
-			SET id_theme = $id_core_theme
-			WHERE id_theme = 1");
 
 		// The other themes used to use core as their base theme.
 		if (isset($core['theme_dir']) && isset($core['theme_url']))
