@@ -592,6 +592,7 @@ function Credits($in_admin = false)
 						'Michele &quot;Illori&quot; Davis',
 						'MrPhil',
 						'Nick &quot;Fizzy&quot; Dyer',
+						'Nick &quot;Ha&sup2;&quot;',
 						'Paul_Pauline',
 						'Piro &quot;Sarge&quot; Dhima',
 						'Rumbaar',
@@ -694,6 +695,7 @@ function Credits($in_admin = false)
 				'title' => $txt['credits_groups_consultants'],
 				'members' => array(
 					'Brett Flannigan',
+					'Mark Rose',
 					'Ren&eacute;-Gilles &quot;Nao &#23578;&quot; Deberdt',
 				),
 			),
