@@ -1567,8 +1567,18 @@ function EditMessageIcons()
 
 			// Do a huge replace ;)
 			$iconInsert = array();
+			$iconInsert_new = array();
 			foreach ($context['icons'] as $id => $icon)
-				$iconInsert[] = array($id, $icon['board_id'], $icon['title'], $icon['filename'], $icon['true_order']);
+			{
+				if ($id != 0)
+				{
+					$iconInsert[] = array($id, $icon['board_id'], $icon['title'], $icon['filename'], $icon['true_order']);
+				}
+				else
+				{
+					$iconInsert_new[] = array($icon['board_id'], $icon['title'], $icon['filename'], $icon['true_order']);
+				}
+			}
 
 			$smcFunc['db_insert']('replace',
 				'{db_prefix}message_icons',
@@ -1576,6 +1586,16 @@ function EditMessageIcons()
 				$iconInsert,
 				array('id_icon')
 			);
+
+			if (!empty($iconInsert_new))
+			{
+				$smcFunc['db_insert']('replace',
+					'{db_prefix}message_icons',
+					array('id_board' => 'int', 'title' => 'string-80', 'filename' => 'string-80', 'icon_order' => 'int'),
+					$iconInsert_new,
+					array('id_icon')
+				);
+			}
 		}
 
 		// Sort by order, so it is quicker :)

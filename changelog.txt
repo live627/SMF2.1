@@ -6,6 +6,7 @@ SMF 2.0 ??                                                                    ??
 
 May 2011
 --------------------------------------------------------------------------------
+ ! Adding new post icons didn't work properly in PostgreSQL (ManageSmileys.php) [Bug 4731]
  ! Don't try to set a temporary order for the smileys table in PostgreSQL (Subs-Db-Postgresql.php, thank you habakuk!)
  * Change of header bar classes for admin main page, core features page, and reports. (Admin template, Reports template) [Bug 4647]
  * Fix to stop linktree anchors scrunching in IE6 and IE7. (index.css) [Bug 4651]
