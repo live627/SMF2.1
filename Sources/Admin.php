@@ -613,11 +613,11 @@ function AdminHome()
 
 	// Lastly, fill in the blanks in the support resources paragraphs.
 	$txt['support_resources_p1'] = sprintf($txt['support_resources_p1'],
-		'http://docs.simplemachines.org/',
-		'http://docs.simplemachines.org/redirect/features',
-		'http://docs.simplemachines.org/redirect/settings',
-		'http://docs.simplemachines.org/redirect/themes',
-		'http://docs.simplemachines.org/redirect/packages'
+		'http://wiki.simplemachines.org/',
+		'http://wiki.simplemachines.org/smf/features2',
+		'http://wiki.simplemachines.org/smf/options2',
+		'http://wiki.simplemachines.org/smf/themes2',
+		'http://wiki.simplemachines.org/smf/packages2'
 	);
 	$txt['support_resources_p2'] = sprintf($txt['support_resources_p2'],
 		'http://www.simplemachines.org/community/',
