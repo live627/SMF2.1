@@ -199,6 +199,9 @@ function read_tgz_file($gzfilename, $destination, $single_file = false, $overwri
 // Extract tar.gz data.  If destination is null, return a listing.
 function read_tgz_data($data, $destination, $single_file = false, $overwrite = false, $files_to_extract = null)
 {
+	// Make sure we have this loaded.
+	loadLanguage('Packages');
+
 	// This function sorta needs gzinflate!
 	if (!function_exists('gzinflate'))
 		fatal_lang_error('package_no_zlib', 'critical');

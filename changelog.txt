@@ -56,6 +56,7 @@ May 2011
  ! Added some fixes to core, removed core ie6_rtl.css, minor correction in default/index.css (index.css, core/css/index.css, core/index.template.php)
  ! A few more copyright changes (several files)
  * Minor bugfixes. (index.css, PersonalMessage.template.php, Profile.template.php)
+ ! A necessary language file was not loaded when using read_tgz_data() function outside Packages area. (Subs-Package.php) [Bug 4732]
 
 
 April 2011
