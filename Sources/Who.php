@@ -557,7 +557,7 @@ function Credits($in_admin = false)
 						'Karl &quot;RegularExpression&quot; Benson',
 						$user_info['is_admin'] ? 'Matt &quot;Grudge&quot; Wolf': 'Grudge',
 						'Michael &quot;Thantos&quot; Miller',
-						'Sinan &quot;[SiNaN]&quot; &Ccedil;evik',
+						'Selman &quot;[SiNaN]&quot; Eser',
 						'Theodore &quot;Orstio&quot; Hildebrandt',
 						'Thorsten &quot;TE&quot; Eurich',
 						'winrules',
