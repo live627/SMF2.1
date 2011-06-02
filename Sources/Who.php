@@ -608,7 +608,6 @@ function Credits($in_admin = false)
 					'members' => array(
 						'Brad &quot;IchBin&trade;&quot; Grow',
 						'&#12487;&#12451;&#12531;1031',
-						'Arantor',
 						'Brannon &quot;B&quot; Hall',
 						'Bryan &quot;Runic&quot; Deakin',
 						'Bulakbol',
@@ -626,6 +625,7 @@ function Credits($in_admin = false)
 						'Matthew &quot;Labradoodle-360&quot; Kerle',
 						'Nibogo',
 						'Niko',
+						'Peter &quot;Arantor&quot; Spicer',
 						'snork13',
 						'Spuds',
 						'Steven &quot;Fustrate&quot; Hoffman',
