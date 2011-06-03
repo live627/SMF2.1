@@ -567,7 +567,8 @@ function AddMembergroup()
 
 	$result = $smcFunc['db_query']('', '
 		SELECT id_board, name, child_level
-		FROM {db_prefix}boards',
+		FROM {db_prefix}boards
+		ORDER BY board_order',
 		array(
 		)
 	);
@@ -967,7 +968,8 @@ function EditMembergroup()
 	{
 		$result = $smcFunc['db_query']('', '
 			SELECT id_board, name, child_level, FIND_IN_SET({string:current_group}, member_groups) != 0 AS can_access
-			FROM {db_prefix}boards',
+			FROM {db_prefix}boards
+			ORDER BY board_order',
 			array(
 				'current_group' => (int) $_REQUEST['group'],
 			)
