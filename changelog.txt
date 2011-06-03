@@ -58,6 +58,7 @@ May 2011
  * Minor bugfixes. (index.css, PersonalMessage.template.php, Profile.template.php)
  ! A necessary language file was not loaded when using read_tgz_data() function outside Packages area. (Subs-Package.php) [Bug 4732]
  ! Boards weren't sorted in the correct order in PostgreSQL when adding/editing membergroups (ManageMembergroups.php) [Bug 4737]
+ ! Spaces in usernames and passwords messed up the connection string for PostgreSQL [Bug 4736]
 
 
 April 2011
