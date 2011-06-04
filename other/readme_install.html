@@ -4,6 +4,10 @@
 		<title>SMF 2.0 Installation Guide</title>
 		<link rel="stylesheet" type="text/css" href="Themes/default/css/index.css?rc2" />
 		<style type="text/css">
+			h1.forumtitle
+			{
+				color: #346;
+			}
 			#upper_section .user
 			{
 				height: 4em;
@@ -22,6 +26,10 @@
 				border-bottom: solid 1px #d05800;
 				line-height: 2em;
 				margin: 0 0 0.5em 0;
+				color: #d05800;
+			}
+			h3
+			{
 				color: #d05800;
 			}
 			#content_section
@@ -46,6 +54,11 @@
 			{
 				line-height: 1.6em;
 				font-weight: bold;
+				color: #555;
+			}
+			#main_content_section li ul
+			{
+				padding-bottom: 0.7em;
 			}
 			#main_content_section li li
 			{
@@ -60,12 +73,7 @@
 			#footer_section
 			{
 				position: relative;
-				top: -20px;
-			}
-			#footer_section
-			{
-				position: relative;
-				top: -20px;
+				top: -60px;
 			}
 			tt
 			{
@@ -75,19 +83,36 @@
 				font-size: 90%;
 				font-style: italic;
 			}
-			dt {
+			dt
+			{
 				font-weight: bold;
+				color: #555;
 				margin-bottom: .1em;
 			}
-			dl {
+			dl
+			{
 				margin-top: .2em;
 				margin-left: 2em;
 				margin-bottom: .5em;
 			}
-			dd {
+			dd
+			{
 				line-height: 1.5em;
 				margin-left: 2em;
 				margin-bottom: .1em;
+			}
+			#header, #content_section, #footer_section
+			{
+				width: 90%;
+				margin: 0 auto;
+			}
+			a:link, a:visited
+			{
+				color: #3E5D8F;
+			}
+			a:hover
+			{
+				color: #346;
 			}
 		</style>
 	</head>
@@ -113,6 +138,7 @@
 						<p>You can find the following information in this file:</p>
 						<ul style="list-style-type: none;">
 							<li>&raquo; <a href="#requirements">Minimum installation requirements</a></li>
+							<li>&raquo; <a href="#recommendations">Recommendations for best performance</a></li>
 							<li>&raquo; <a href="#uploadingftp">Upload files method 1: manually uploading files</a></li>
 							<li>&raquo; <a href="#Set_File_Permissions">Set file permissions</a></li>
 							<li>&raquo; <a href="#Create_a_Database_and_a_Database_User">Create a database and a database user</a></li>
@@ -146,8 +172,8 @@
 							<li>at least 2 megabytes of storage space in the database, although more is highly recommended.</li>
 							<li>The database user must have at least the following privileges: SELECT, INSERT, UPDATE, DELETE, ALTER, and INDEX.</li>
 							<li>about 20 megabytes of storage space on the web server, although more is recommended.</li>
-						</ul>
-						<p>Recommendations for best performance:</p>
+						</ul><br />
+						<h2 id="recommendations">Recommendations for best performance</h2>
 						<ul>
 							<li>Windows, <a href="http://www.linux.org/" target="_blank">Linux</a> or another Unix based operating system.</li>
 							<li>the <a href="http://aspell.sf.net/" target="_blank">GNU Aspell</a> 0.50 or higher and <a href="http://ftp.gnu.org/gnu/aspell/dict/" target="_blank">its dictionaries</a> for spell checking functionality.</li>
@@ -274,7 +300,7 @@
 			</div>
 		</div></div>
 		<div id="footer_section"><div class="frame">
-			<div class="smalltext"><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</div>
+			<div class="smalltext padding"><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0; margin-bottom: 0.7em;" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</div>
 			<div class="smalltext"><a href="http://www.simplemachines.org">Simple Machines Forum</a></div>
 		</div></div>
 	</body>
