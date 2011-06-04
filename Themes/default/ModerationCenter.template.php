@@ -482,7 +482,7 @@ function template_unapproved_attachments()
 		echo '
 			</tbody>
 			</table>';
-			
+
 		echo '
 			<div class="pagesection">
 				<div class="floatright">

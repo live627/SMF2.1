@@ -97,17 +97,17 @@ $row['signature'] = substr(strtr(strtr($row['signature'], '<>', '[]'), array('[b
 SELECT
 	m.member_id AS id_member, SUBSTRING(m.name, 1, 80) AS member_name,
 	SUBSTRING(m.members_display_name, 1, 255) AS real_name, m.email AS email_address,
-	SUBSTRING(m.members_pass_hash, 1, 64) AS passwd, SUBSTRING(m.members_pass_salt, 1, 8) AS password_salt, 
-		SUBSTRING(pp.pp_bio_content, 1, 255) AS usertitle, m.last_visit AS last_login, 
+	SUBSTRING(m.members_pass_hash, 1, 64) AS passwd, SUBSTRING(m.members_pass_salt, 1, 8) AS password_salt,
+		SUBSTRING(pp.pp_bio_content, 1, 255) AS usertitle, m.last_visit AS last_login,
 		m.joined AS date_registered, SUBSTRING(pc.field_3, 1, 255) AS website_url,
 	SUBSTRING(pc.field_3, 1, 255) AS website_title,
 	SUBSTRING(pc.field_4, 1, 255) AS icq, SUBSTRING(pc.field_1, 1, 16) AS aim,
 	SUBSTRING(pc.field_8, 1, 32) AS yim, SUBSTRING(pc.field_2, 1, 255) AS msn,
 	SUBSTRING(pp.signature, 1, 65534) AS signature, m.ip_address AS member_ip, m.ip_address AS member_ip2, '0' AS total_time_logged_in,
 	IF (ISNULL(m.bday_year) AND ISNULL(m.bday_month) AND ISNULL(m.bday_day), '0001-01-01', IF (m.bday_year = 0 AND m.bday_month != 0 AND m.bday_day != 0, CONCAT('1000-', m.bday_month, '-', m.bday_day),
-		 CONCAT_WS('-', IF(m.bday_year <= 1000 OR ISNULL( m.bday_year ), 1000, m.bday_year),
-		 	 IF(m.bday_month = 0 OR ISNULL( m.bday_month ), 1, m.bday_month), 
-		 	 IF(m.bday_day = 0 OR ISNULL( m.bday_day ), 1, m.bday_day)))) AS birthdate,
+		CONCAT_WS('-', IF(m.bday_year <= 1000 OR ISNULL( m.bday_year ), 1000, m.bday_year),
+		 	IF(m.bday_month = 0 OR ISNULL( m.bday_month ), 1, m.bday_month),
+		 	IF(m.bday_day = 0 OR ISNULL( m.bday_day ), 1, m.bday_day)))) AS birthdate,
 	IFNULL(m.email_pm, 0) AS pm_email_notify,
 		CASE
 		WHEN (m.member_group_id = '4') THEN 1
@@ -121,8 +121,8 @@ SELECT
 		ELSE 0
 	END AS gender
 FROM {$from_prefix}members AS m
-	 LEFT JOIN {$from_prefix}pfields_content AS pc ON (pc.member_id = m.member_id)
-	 LEFT JOIN {$from_prefix}profile_portal AS pp ON (pp.pp_member_id = m.member_id);
+	LEFT JOIN {$from_prefix}pfields_content AS pc ON (pc.member_id = m.member_id)
+	LEFT JOIN {$from_prefix}profile_portal AS pp ON (pp.pp_member_id = m.member_id);
 
 ---{
 // Get the buddies.
@@ -161,7 +161,7 @@ if (!empty($row['additional_groups']))
 	{
 		if (empty($grp))
 			continue;
-		
+
 		if ($grp > 5)
 			$groups[] = $grp + 3;
 		elseif ($grp == $INFO['admin_group'])
@@ -202,7 +202,7 @@ WHERE id_group > 4;
 SELECT
 	b.id AS id_board, SUBSTRING(b.name, 1, 255) AS name,
 	SUBSTRING(b.description, 1, 65534) AS description, b.position AS board_order,
-	b.posts AS num_posts, IF (p.parent_id = -1, 0, p.parent_id) AS id_parent, b.inc_postcount AS count_posts, 
+	b.posts AS num_posts, IF (p.parent_id = -1, 0, p.parent_id) AS id_parent, b.inc_postcount AS count_posts,
 		'-1,0' AS member_groups
 FROM {$from_prefix}forums AS b
 		LEFT JOIN {$from_prefix}forums AS p ON (b.parent_id = p.id)
@@ -540,7 +540,7 @@ if (is_array($invited_members) && !empty($invited_members))
 	}
 }
 ---}
-SELECT pm.msg_id AS id_pm, mt.mt_to_member_id AS id_member, '-1' AS labels, 
+SELECT pm.msg_id AS id_pm, mt.mt_to_member_id AS id_member, '-1' AS labels,
 		IF(IFNULL(mtum.map_has_unread, 1) > 0, 0, 1) AS is_read,
 		mt.mt_invited_members AS invited_members, pm.msg_author_id, mt.mt_starter_id, IF(mt.mt_is_deleted = 1 AND mt.mt_starter_id = pm.msg_author_id, 1, 0) AS deleted
 FROM {$from_prefix}message_topics AS mt
@@ -638,7 +638,7 @@ $row['end_date'] = date('Y-m-d', $row['end_date']);
 ---}
 SELECT
 	event_id AS id_event, event_unixstamp AS start_date, event_unixstamp AS end_date,
-	'0' AS id_board, '0' AS id_topic, SUBSTRING(event_title, 1, 30) AS title, 
+	'0' AS id_board, '0' AS id_topic, SUBSTRING(event_title, 1, 30) AS title,
 		event_member_id AS id_member
 FROM {$from_prefix}cal_events;
 ---*
@@ -855,7 +855,7 @@ if (strlen($smf_avatar_filename) <= 255 && copy($ipb_avatar, $avatar_dir . '/' .
 	// Get width, height, filename and ID_MEMBER
 	list ($width, $height) = explode('x', $row['dimension']);
 	$filesize = filesize($ipb_avatar);
-	
+
 		$rows[] = array(
 		'id_attach' => $id_attach,
 		'size' => $filesize,

@@ -75,13 +75,13 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics 20
 ---{
-// 
+
 $request = convert_query("
-	SELECT 
+	SELECT
 		meta_value
 	FROM {$from_prefix}meta
-	WHERE object_id = $row[id_topic] 
-		AND object_type = 'bb_topic' 
+	WHERE object_id = $row[id_topic]
+		AND object_type = 'bb_topic'
 		AND meta_key = 'views'");
 
 list ($views) = convert_fetch_row($request);
