@@ -61,7 +61,7 @@ May 2011
  ! Spaces in usernames and passwords messed up the connection string for PostgreSQL [Bug 4736]
  * Minor consistency fix on admin centre template edit page (Themes.template.php)
  * Final fix for IE8 jumpy cursor bug (Display.template.php, GenericControls.template.php, editor.css, editor_ie.css, index.css, ie6.css, ie7.css, core/Display.template.php, core/index.css, core/ie6.css, core/ie7.css)
-
+ * Fixed W3 XHTML validation links (index.template.php, core/index.template.php) [Bug 4740]
 
 
 April 2011
