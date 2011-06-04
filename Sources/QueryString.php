@@ -136,7 +136,7 @@ function cleanRequest()
 
 		// Magic quotes still applies with parse_str - so clean it up.
 		if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc() != 0 && empty($modSettings['integrate_magic_quotes']))
-			$_GET = $removeMagicQuoteFunction($_GET);		
+			$_GET = $removeMagicQuoteFunction($_GET);
 	}
 	elseif (strpos(@ini_get('arg_separator.input'), ';') !== false)
 	{
