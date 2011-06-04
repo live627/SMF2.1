@@ -1889,6 +1889,13 @@ ul.postingbuttons li
 {
 	overflow: hidden;
 }
+#quickReplyOptions form textarea
+{
+	height: 100px;
+	width: 635px;
+	max-width: 100%;
+	min-width: 100%;
+}
 
 /* The jump to box */
 #display_jump_to

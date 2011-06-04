@@ -1116,9 +1116,11 @@ function template_edit_template()
 					</div>';
 
 	echo '
-					<input type="submit" name="submit" value="', $txt['theme_edit_save'], '"', $context['allow_save'] ? '' : ' disabled="disabled"', ' class="button_submit" />
-					<input type="hidden" name="filename" value="', $context['edit_filename'], '" />
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					<div class="padding righttext">
+						<input type="submit" name="submit" value="', $txt['theme_edit_save'], '"', $context['allow_save'] ? '' : ' disabled="disabled"', ' class="button_submit" />
+						<input type="hidden" name="filename" value="', $context['edit_filename'], '" />
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					</div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

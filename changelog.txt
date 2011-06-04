@@ -59,6 +59,9 @@ May 2011
  ! A necessary language file was not loaded when using read_tgz_data() function outside Packages area. (Subs-Package.php) [Bug 4732]
  ! Boards weren't sorted in the correct order in PostgreSQL when adding/editing membergroups (ManageMembergroups.php) [Bug 4737]
  ! Spaces in usernames and passwords messed up the connection string for PostgreSQL [Bug 4736]
+ * Minor consistency fix on admin centre template edit page (Themes.template.php)
+ * Final fix for IE8 jumpy cursor bug (Display.template.php, GenericControls.template.php, editor.css, editor_ie.css, index.css, ie6.css, ie7.css, core/Display.template.php, core/index.css, core/ie6.css, core/ie7.css)
+
 
 
 April 2011

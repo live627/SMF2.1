@@ -673,7 +673,7 @@ function template_main()
 				<strong>', $txt['verification'], ':</strong>', template_control_verification($context['visual_verification_id'], 'quick_reply'), '<br />';
 
 		echo '
-				<textarea cols="75" rows="7" style="', $context['browser']['is_ie8'] ? 'max-width: 100%; min-width: 100%' : 'width: 100%', '; height: 100px;" name="message" tabindex="', $context['tabindex']++, '"></textarea><br />
+				<textarea cols="600" rows="7" name="message" tabindex="', $context['tabindex']++, '"></textarea><br />
 				<input type="submit" name="post" value="', $txt['post'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="', $context['tabindex']++, '" class="button_submit" />
 				<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="', $context['tabindex']++, '" class="button_submit" />';
 		if ($context['show_spellchecking'])

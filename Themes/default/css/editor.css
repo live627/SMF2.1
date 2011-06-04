@@ -1,4 +1,11 @@
 /* This is the editor's playground (textarea for non-wysiwyg, iframe for wysiwyg). */
+.editor
+{
+	width: 100%;
+	max-width: 100%;
+	min-width: 100%;
+}
+
 .editor, .rich_editor_frame
 {
 	border: 1px solid #808080;
@@ -20,4 +27,6 @@
 	border: 1px solid #ddd;
 	border-top-width: 0;
 	cursor: s-resize;
+	width: 100%;
+	padding: 0 2px;
 }

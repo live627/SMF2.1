@@ -135,6 +135,10 @@ h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
 {
 	clear: both;
 }
+#quickReplyOptions form textarea
+{
+	width: 98%;
+}
 
 /* Styles for the statistics center.
 ------------------------------------------------- */

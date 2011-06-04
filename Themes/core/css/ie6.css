@@ -48,7 +48,10 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.
 {
 	padding: 0 0 0.8em 0;
 }
-
+#quickReplyOptions form textarea
+{
+	width: 98%;
+}
 code.bbc_code
 {
 	white-space: normal;

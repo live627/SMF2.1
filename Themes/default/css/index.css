@@ -2128,8 +2128,6 @@ img.smiley
 /* Styles for the quick reply area.
 ---------------------------------------------------- */
 
-/* The quick-reply area. Horizontal alignments go a bit wonky in IE6 and IE7 but is it really worth worrying about? */
-
 #quickreplybox
 {
 	padding-bottom: 1px;
@@ -2141,6 +2139,9 @@ img.smiley
 #quickReplyOptions form textarea
 {
 	height: 100px;
+	width: 635px;
+	max-width: 100%;
+	min-width: 100%;
 	margin: 0.25em 0 1em 0;
 }
 /* The jump to box */
