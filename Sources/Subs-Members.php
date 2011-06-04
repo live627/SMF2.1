@@ -714,9 +714,11 @@ function registerMember(&$regOptions, $return_errors = false)
 		$request = $smcFunc['db_query']('', '
 			SELECT id_group
 			FROM {db_prefix}membergroups
-			WHERE min_posts != {int:min_posts}',
+			WHERE min_posts != {int:min_posts}' . (allowedTo('admin_forum') ? '' : '
+				OR group_type = {int:is_protected}'),
 			array(
 				'min_posts' => -1,
+				'is_protected' => 1,
 			)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))

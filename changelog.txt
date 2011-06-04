@@ -13,6 +13,8 @@ June 2011
  * Final fix for IE8 jumpy cursor bug (Display.template.php, GenericControls.template.php, editor.css, editor_ie.css, index.css, ie6.css, ie7.css, core/Display.template.php, core/index.css, core/ie6.css, core/ie7.css)
  * Fixed W3 XHTML validation links (index.template.php, core/index.template.php) [Bug 4740]
  ! urldecoding parameters values breaks OpenID, which relies on urlencoded values for parameters.
+ ! Members only with manage membergroups permission could create groups that inherit from or based of off protected groups. (ManageMembergroups.php)
+ ! Members having manage membergroups and moderate forum members could register members protected groups as their primary group. (ManageRegistration.php, Subs-Members.php)
 
 
 May 2011
