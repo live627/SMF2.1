@@ -128,7 +128,7 @@ function cleanRequest()
 		$_GET = array();
 
 		// Was this redirected? If so, get the REDIRECT_QUERY_STRING.
-		$_SERVER['QUERY_STRING'] = urldecode(substr($_SERVER['QUERY_STRING'], 0, 5) === 'url=/' ? $_SERVER['REDIRECT_QUERY_STRING'] : $_SERVER['QUERY_STRING']);
+		$_SERVER['QUERY_STRING'] = substr($_SERVER['QUERY_STRING'], 0, 5) === 'url=/' ? $_SERVER['REDIRECT_QUERY_STRING'] : $_SERVER['QUERY_STRING'];
 
 		// Replace ';' with '&' and '&something&' with '&something=&'.  (this is done for compatibility...)
 		// !!! smflib
@@ -136,7 +136,7 @@ function cleanRequest()
 
 		// Magic quotes still applies with parse_str - so clean it up.
 		if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc() != 0 && empty($modSettings['integrate_magic_quotes']))
-			$_GET = $removeMagicQuoteFunction($_GET);
+			$_GET = $removeMagicQuoteFunction($_GET);		
 	}
 	elseif (strpos(@ini_get('arg_separator.input'), ';') !== false)
 	{
