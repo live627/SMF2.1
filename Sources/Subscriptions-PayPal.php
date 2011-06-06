@@ -14,6 +14,9 @@
 // This won't be dedicated without this - this must exist in each gateway!
 // SMF Payment Gateway: paypal
 
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
 class paypal_display
 {
 	public $title = 'PayPal';

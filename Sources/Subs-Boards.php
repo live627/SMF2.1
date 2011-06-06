@@ -10,6 +10,7 @@
  *
  * @version 2.0
  */
+
 if (!defined('SMF'))
 	die('Hacking attempt...');
 

@@ -11,6 +11,9 @@
  * @version 2.0
  */
 
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
 function getBoardList($boardListOptions = array())
 {
 	global $smcFunc, $user_info;

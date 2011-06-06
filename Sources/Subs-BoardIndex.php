@@ -13,6 +13,7 @@
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
+
 /*	This file currently only contains one function to collect the data needed to
 	show a list of boards for the board index and the message index.
 
