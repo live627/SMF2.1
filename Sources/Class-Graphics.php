@@ -11,11 +11,10 @@
  * @version 2.0
  */
 
-/**
-* Gif Util copyright 2003 by Yamasoft (S/C). All rights reserved.
-* Do not remove this portion of the header, or use these functions except
-* from the original author. To get it, please navigate to:
-* http://www.yamasoft.com/php-gif.zip
+/*	Gif Util copyright 2003 by Yamasoft (S/C). All rights reserved.
+	Do not remove this portion of the header, or use these functions except
+	from the original author. To get it, please navigate to:
+	http://www.yamasoft.com/php-gif.zip
 */
 
 if (!defined('SMF'))
@@ -23,7 +22,6 @@ if (!defined('SMF'))
 
 /*	Classes used for reading gif files (in case PHP's GD doesn't provide the
 	proper gif-functions).
-
 */
 
 class gif_lzw_compression
