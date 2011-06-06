@@ -3425,16 +3425,12 @@ function theme_copyright($get_it = false)
 {
 	global $forum_copyright, $context, $boardurl, $forum_version, $txt, $modSettings;
 
-	// For SSI and other things, detect the version.
+	// Don't display copyright for things like SSI.
 	if (!isset($forum_version))
-	{
-		$data = substr(file_get_contents(__FILE__), 0, 4096);
-		preg_match('~\*\s@version\s+(.+)[\s]{2}~i', $data, $match);
-		$forum_copyright = sprintf($forum_copyright, empty($match[1]) ? 'SMF' : 'SMF ' . $match[1]);
-	}
+		return;
+
 	// Put in the version...
-	else
-		$forum_copyright = sprintf($forum_copyright, $forum_version);
+	$forum_copyright = sprintf($forum_copyright, $forum_version);
 
 	echo '
 			<span class="smalltext" style="display: inline; visibility: visible; font-family: Verdana, Arial, sans-serif;">' . $forum_copyright . '

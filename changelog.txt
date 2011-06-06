@@ -15,6 +15,7 @@ June 2011
  ! urldecoding parameters values breaks OpenID, which relies on urlencoded values for parameters.
  ! Members only with manage membergroups permission could create groups that inherit from or based of off protected groups. (ManageMembergroups.php)
  ! Members having manage membergroups and moderate forum members could register members protected groups as their primary group. (ManageRegistration.php, Subs-Members.php)
+ ! Removed unreliable code for detecting forum version and copyright requirement on SSI pages. (Subs.php)
 
 
 May 2011
