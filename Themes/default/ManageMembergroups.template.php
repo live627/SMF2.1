@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC5; ManageMembergroups
+// Version: 2.0; ManageMembergroups
 
 function template_main()
 {

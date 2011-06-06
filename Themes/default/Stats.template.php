@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC5; Stats
+// Version: 2.0; Stats
 
 function template_main()
 {

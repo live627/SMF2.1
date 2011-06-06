@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC5; Recent
+// Version: 2.0; Recent
 
 function template_main()
 {

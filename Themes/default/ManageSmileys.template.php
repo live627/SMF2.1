@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC5; ManageSmileys
+// Version: 2.0; ManageSmileys
 
 // Editing the smiley sets.
 function template_editsets()
