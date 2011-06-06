@@ -1743,7 +1743,7 @@ function EditTheme()
 						fclose($fp);
 
 						// Can we find a version comment, at all?
-						if (preg_match('~\*\s@version\s+(.+)[\s]{2}~i' . $template . '(?:[\s]{2}|\*/)~i', $header, $match) == 1)
+						if (preg_match('~\*\s@version\s+(.+)[\s]{2}~i', $header, $match) == 1)
 						{
 							$ver = $match[1];
 							if (!isset($context['themes'][$key]['version']) || $context['themes'][$key]['version'] > $ver)
