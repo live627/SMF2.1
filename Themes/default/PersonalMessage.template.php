@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0; PersonalMessage
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // This is the main sidebar for the personal messages section.
 function template_pm_above()

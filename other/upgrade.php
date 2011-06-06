@@ -3008,7 +3008,7 @@ Usage: /path/to/php -f ' . basename(__FILE__) . ' -- [OPTION]...
 
 	// Do a quick version spot check.
 	$temp = substr(@implode('', @file($boarddir . '/index.php')), 0, 4096);
-	preg_match('~\*\s*Software\s+Version:\s+SMF\s+(.+?)[\s]{2}~i', $temp, $match);
+	preg_match('~\*\s@version\s+(.+)[\s]{2}~i', $temp, $match);
 	if (empty($match[1]) || $match[1] != SMF_VERSION)
 		print_error('Error: Some files have not yet been updated properly.');
 

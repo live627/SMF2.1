@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0; Register
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // Before showing users a registration form, show them the registration agreement.
 function template_registration_agreement()

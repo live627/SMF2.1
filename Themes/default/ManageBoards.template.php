@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0; ManageBoards
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // Template for listing all the current categories and boards.
 function template_main()

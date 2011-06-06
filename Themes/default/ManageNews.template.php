@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0; ManageNews
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // Form for editing current news on the site.
 function template_edit_news()
