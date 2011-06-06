@@ -130,7 +130,7 @@ function getFileVersions(&$versionOptions)
 		fclose($fp);
 
 		// The comment looks rougly like... that.
-		if (preg_match('~\*\s*Software\s+Version:\s+SMF\s+(.+?)[\s]{2}~i', $header, $match) == 1)
+		if (preg_match('~\*\s@version\s+(.+)[\s]{2}~i', $header, $match) == 1)
 			$version_info['file_versions']['SSI.php'] = $match[1];
 		// Not found!  This is bad.
 		else
@@ -145,7 +145,7 @@ function getFileVersions(&$versionOptions)
 		fclose($fp);
 
 		// Found it?
-		if (preg_match('~\*\s*Software\s+Version:\s+SMF\s+(.+?)[\s]{2}~i', $header, $match) == 1)
+		if (preg_match('~\*\s@version\s+(.+)[\s]{2}~i', $header, $match) == 1)
 			$version_info['file_versions']['subscriptions.php'] = $match[1];
 		// If we haven't how do we all get paid?
 		else
@@ -164,7 +164,7 @@ function getFileVersions(&$versionOptions)
 			fclose($fp);
 
 			// Look for the version comment in the file header.
-			if (preg_match('~\*\s*Software\s+Version:\s+SMF\s+(.+?)[\s]{2}~i', $header, $match) == 1)
+			if (preg_match('~\*\s@version\s+(.+)[\s]{2}~i', $header, $match) == 1)
 				$version_info['file_versions'][$entry] = $match[1];
 			// It wasn't found, but the file was... show a '??'.
 			else
@@ -191,7 +191,7 @@ function getFileVersions(&$versionOptions)
 				fclose($fp);
 
 				// Look for the version comment in the file header.
-				if (preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*' . preg_quote(basename($entry, '.template.php'), '~') . '(?:[\s]{2}|\*/)~i', $header, $match) == 1)
+				if (preg_match('~\*\s@version\s+(.+)[\s]{2}~i' . preg_quote(basename($entry, '.template.php'), '~') . '(?:[\s]{2}|\*/)~i', $header, $match) == 1)
 					$version_info[$type][$entry] = $match[1];
 				// It wasn't found, but the file was... show a '??'.
 				else
