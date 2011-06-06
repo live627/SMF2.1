@@ -10,8 +10,8 @@
  *
  * @version 2.0
  */
-/* Special thanks to Spaceman-Spiff for his contributions to this page.           *
-**********************************************************************************/
+
+// Special thanks to Spaceman-Spiff for his contributions to this page.
 
 /* Define $ssi_guest_access variable just before including SSI.php to handle guest access to your script.
 	false: (default) fallback to forum setting
