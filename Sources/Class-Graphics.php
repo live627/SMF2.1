@@ -10,12 +10,13 @@
  *
  * @version 2.0
  */
-/**********************************************************************************
-* Gif Util copyright 2003 by Yamasoft (S/C). All rights reserved.                 *
-* Do not remove this portion of the header, or use these functions except         *
-* from the original author. To get it, please navigate to:                        *
-* http://www.yamasoft.com/php-gif.zip                                             *
-**********************************************************************************/
+
+/**
+* Gif Util copyright 2003 by Yamasoft (S/C). All rights reserved.
+* Do not remove this portion of the header, or use these functions except
+* from the original author. To get it, please navigate to:
+* http://www.yamasoft.com/php-gif.zip
+*/
 
 if (!defined('SMF'))
 	die('Hacking attempt...');

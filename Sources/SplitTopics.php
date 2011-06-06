@@ -10,8 +10,8 @@
  *
  * @version 2.0
  */
-/* Original module by Mach8 - We'll never forget you.                             *
-/*********************************************************************************/
+
+// Original module by Mach8 - We'll never forget you.
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
