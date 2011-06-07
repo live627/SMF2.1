@@ -17,6 +17,7 @@ June 2011
  ! Members having manage membergroups and moderate forum members could register members protected groups as their primary group. (ManageRegistration.php, Subs-Members.php)
  ! Removed unreliable code for detecting forum version and copyright requirement on SSI pages. (Subs.php)
  ! CSS and JavaScript includes cache suffix updates. (many files)
+ ! PHP's empty() function doesn't work too well with PostgreSQL's boolean values (ManageMembergroups.php) [Bug 4744]
 
 
 May 2011
