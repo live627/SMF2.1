@@ -18,6 +18,7 @@ June 2011
  ! Removed unreliable code for detecting forum version and copyright requirement on SSI pages. (Subs.php)
  ! CSS and JavaScript includes cache suffix updates. (many files)
  ! PHP's empty() function doesn't work too well with PostgreSQL's boolean values (ManageMembergroups.php) [Bug 4744]
+ ! Correction to language string (ManagePermissions.english.php) [Bug 4745]
 
 
 May 2011
