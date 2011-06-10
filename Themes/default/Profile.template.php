@@ -1686,7 +1686,7 @@ function template_groupMembership()
 				<span class="upperframe"><span></span></span>
 				<div class="roundframe"><div class="innerframe">
 					', $txt['request_group_membership_desc'], ':
-					<textarea name="reason" rows="4" style="width: 99%;"></textarea>
+					<textarea name="reason" rows="4" style="' . ($context['browser']['is_ie8'] ? 'width: 635px; max-width: 99%; min-width: 99%' : 'width: 99%') . ';"></textarea>
 					<div class="righttext" style="margin: 0.5em 0.5% 0 0.5%;">
 						<input type="hidden" name="gid" value="', $context['group_request']['id'], '" />
 						<input type="submit" name="req" value="', $txt['submit_request'], '" class="button_submit" />

@@ -21,6 +21,7 @@ June 2011
  & Correction to a language string (ManagePermissions language file) [Bug 4745]
  ! Current avatar image URL was broken in profile when avatars were stored in a custom directory. (Profile-Modify.php)
  ! Minor change for better variant support (Subs-BoardIndex.php)
+ * IE8 Fixes for all minor textareas, just to be sure. (twelve templates, default and core)
 
 
 May 2011
