@@ -1437,7 +1437,7 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 	return $not_done;
 }
 
-// This is such a pain I created a function for it :P.
+// This function tries to match $version into any of the ranges given in $versions
 function matchPackageVersion($version, $versions)
 {
 	// Make sure everything is lowercase and clean of spaces and unpleasant history.
