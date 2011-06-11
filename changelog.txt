@@ -23,6 +23,7 @@ June 2011
  ! Minor change for better variant support (Subs-BoardIndex.php)
  * IE8 Fixes for all minor textareas, just to be sure. (twelve templates, default and core)
  * Replaced the JavaScript version compare with a better implementation. (admin.js)
+ ! Replaced matchPackageVersion with a better implementation. (Subs-Package.php)
 
 
 May 2011
