@@ -312,6 +312,7 @@ function PlushSearch2()
 	isAllowedTo('search_posts');
 
 	require_once($sourcedir . '/Display.php');
+	require_once($sourcedir . '/Subs-Package.php');
 
 	// Search has a special database set.
 	db_extend('search');
@@ -325,7 +326,7 @@ function PlushSearch2()
 	// Create an instance of the search API and check it is valid for this version of SMF.
 	$search_class_name = $modSettings['search_index'] . '_search';
 	$searchAPI = new $search_class_name();
-	if (!$searchAPI || ($searchAPI->supportsMethod('isValid') && !$searchAPI->isValid()) || $search_versions['forum_version'] < $searchAPI->min_smf_version || $search_versions['search_version'] > $searchAPI->version_compatible)
+	if (!$searchAPI || ($searchAPI->supportsMethod('isValid') && !$searchAPI->isValid()) || !matchPackageVersion($search_versions['forum_version'], $searchAPI->min_smf_version . '-' . $searchAPI->version_compatible))
 	{
 		// Log the error.
 		loadLanguage('Errors');

@@ -24,6 +24,7 @@ June 2011
  * IE8 Fixes for all minor textareas, just to be sure. (twelve templates, default and core)
  * Replaced the JavaScript version compare with a better implementation. (admin.js)
  ! Replaced matchPackageVersion with a better implementation. (Subs-Package.php)
+ ! Search API version check did not use proper version checking functions. (Search.php)
 
 
 May 2011
