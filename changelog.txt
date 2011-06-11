@@ -25,7 +25,7 @@ June 2011
  * Replaced the JavaScript version compare with a better implementation. (admin.js)
  ! Replaced matchPackageVersion with a better implementation. (Subs-Package.php)
  ! Search API version check did not use proper version checking functions. (Search.php)
- * Removed the serial comma in credits page, which is less common in English and ungrammatical in some languages. (Who template) [Bug 4746]
+ & added a trademark (Manual language file)
 
 
 May 2011
