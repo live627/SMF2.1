@@ -152,6 +152,10 @@ smf_ViewVersions.prototype.compareVersions = function (sCurrent, sTarget)
 		var sClean = aCompare[i].toLowerCase().replace(/ /g, '').replace(/2.0rc1-1/, '2.0rc1.1');
 		aParts = sClean.match(/(\d+)(?:\.(\d+|))?(?:\.)?(\d+|)(?:(alpha|beta|rc)(\d+|)(?:\.)?(\d+|))?(?:(dev))?(\d+|)/);
 
+		// No matches?
+		if (aParts == null)
+			return false;
+
 		// Build an array of parts.
 		aVersions[i] = [
 			aParts[1] > 0 ? parseInt(aParts[1]) : 0,
