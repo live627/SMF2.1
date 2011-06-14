@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; Register
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // Before showing users a registration form, show them the registration agreement.
 function template_registration_agreement()
@@ -684,7 +693,7 @@ function template_edit_reserved_words()
 			<div class="content">
 				<h4>', $txt['admin_reserved_line'], '</h4>
 				<p class="reserved_names">
-					<textarea cols="30" rows="6" name="reserved" style="width: 100%;">', implode("\n", $context['reserved_words']), '</textarea>
+					<textarea cols="30" rows="6" name="reserved" id="reserved">', implode("\n", $context['reserved_words']), '</textarea>
 				</p>
 				<ul class="reset">
 					<li><label for="matchword"><input type="checkbox" name="matchword" id="matchword" tabindex="', $context['tabindex']++, '" ', $context['reserved_word_options']['match_word'] ? 'checked="checked"' : '', ' class="input_check" /> ', $txt['admin_match_whole'], '</label></li>

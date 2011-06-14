@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* Packages.php                                                                    *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -362,7 +351,11 @@ function PackageInstallTest()
 				$context['package_readme'] = htmlspecialchars(trim(file_get_contents($action['filename']), "\n\r"));
 
 			if (!empty($action['parse_bbc']))
+			{
+				require_once($sourcedir . '/Subs-Post.php');
+				preparsecode($context['package_readme']);
 				$context['package_readme'] = parse_bbc($context['package_readme']);
+			}
 			else
 				$context['package_readme'] = nl2br($context['package_readme']);
 
@@ -1105,6 +1098,9 @@ function PackageInstall()
 	if (file_exists($boarddir . '/Packages/temp'))
 		deltree($boarddir . '/Packages/temp');
 
+	// Log what we just did.
+	logAction($context['uninstalling'] ? 'uninstall_package' : (!empty($is_upgrade) ? 'upgrade_package' : 'install_package'), array('package' => $smcFunc['htmlspecialchars']($packageInfo['name']), 'version' => $smcFunc['htmlspecialchars']($packageInfo['version'])), 'admin');
+
 	// Just in case, let's clear the whole cache to avoid anything going up the swanny.
 	clean_cache();
 
@@ -1520,10 +1516,15 @@ function ViewOperations()
 
 	// Ok lets get the content of the file.
 	$context['operations'] = array(
-		'search' => $smcFunc['htmlspecialchars']($mod_actions[$_REQUEST['operation_key']]['search_original'], ENT_QUOTES),
-		'replace' => $smcFunc['htmlspecialchars']($mod_actions[$_REQUEST['operation_key']]['replace_original'], ENT_QUOTES),
+		'search' => strtr(htmlspecialchars($mod_actions[$_REQUEST['operation_key']]['search_original']), array('[' => '&#91;', ']' => '&#93;')),
+		'replace' => strtr(htmlspecialchars($mod_actions[$_REQUEST['operation_key']]['replace_original']), array('[' => '&#91;', ']' => '&#93;')),
 		'position' => $mod_actions[$_REQUEST['operation_key']]['position'],
 	);
+
+	// Let's do some formatting...
+	$operation_text = $context['operations']['position'] == 'replace' ? 'operation_replace' : ($context['operations']['position'] == 'before' ? 'operation_after' : 'operation_before');
+	$context['operations']['search'] = parse_bbc('[code=' . $txt['operation_find'] . ']' . ($context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search']) . '[/code]');
+	$context['operations']['replace'] = parse_bbc('[code=' . $txt[$operation_text] . ']' . $context['operations']['replace'] . '[/code]');
 
 	// No layers
 	$context['template_layers'] = array();

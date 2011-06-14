@@ -447,7 +447,7 @@ $smcFunc['db_alter_table']('{db_prefix}calendar', array(
 			'name' => 'title',
 			'null' => false,
 			'type' => 'varchar',
-			'size' => 60,
+			'size' => 255,
 			'default' => ''
 		)
 	)
@@ -463,7 +463,7 @@ $smcFunc['db_alter_table']('{db_prefix}calendar_holidays', array(
 			'name' => 'title',
 			'null' => false,
 			'type' => 'varchar',
-			'size' => 60,
+			'size' => 255,
 			'default' => ''
 		)
 	)
@@ -945,11 +945,51 @@ $smcFunc['db_alter_table']('{db_prefix}log_reported_comments', array(
 ---#
 
 /******************************************************************************/
---- Changing the group type for Administrator group.
+--- Adjusting group types.
 /******************************************************************************/
+
+---# Fixing the group types.
+---{
+// Get the admin group type.
+$request = upgrade_query("
+	SELECT group_type
+	FROM {$db_prefix}membergroups
+	WHERE id_group = 1
+	LIMIT 1");
+list ($admin_group_type) = mysql_fetch_row($request);
+mysql_free_result($request);
+
+// Not protected means we haven't updated yet!
+if ($admin_group_type != 1)
+{
+	// Increase by one.
+	upgrade_query("
+		UPDATE {$db_prefix}membergroups
+		SET group_type = group_type + 1
+		WHERE group_type > 0");
+}
+---}
+---#
 
 ---# Changing the group type for Administrator group.
 UPDATE {$db_prefix}membergroups
 SET group_type = 1
 WHERE id_group = 1;
+---#
+
+/******************************************************************************/
+--- Adjusting calendar maximum year.
+/******************************************************************************/
+
+---# Adjusting calendar maximum year.
+---{
+if (!isset($modSettings['cal_maxyear']) || $modSettings['cal_maxyear'] == '2010')
+{
+	upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('cal_maxyear', '2020')");
+}
+---}
 ---#

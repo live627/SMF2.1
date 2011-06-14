@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; ManageNews
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // Form for editing current news on the site.
 function template_edit_news()
@@ -25,7 +34,7 @@ function template_edit_news()
 					<tr class="windowbg2">
 						<td align="center">
 
-							<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" name="news[]" style="width: 85%;">', $admin_news['unparsed'], '</textarea></div>
+							<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" name="news[]" style="' . ($context['browser']['is_ie8'] ? 'width: 635px; max-width: 85%; min-width: 85%' : 'width: 85%') . ';">', $admin_news['unparsed'], '</textarea></div>
 						</td><td align="left" valign="top">
 							<div style="overflow: auto; width: 100%; height: 10ex;">', $admin_news['parsed'], '</div>
 						</td><td align="center">
@@ -53,11 +62,11 @@ function template_edit_news()
 					function addNewsItem()
 					{
 						document.getElementById("moreNews").style.display = "";
-						setOuterHTML(document.getElementById("moreNewsItems"), \'<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" name="news[]" style="width: 85%;"><\' + \'/textarea><\' + \'/div><div id="moreNewsItems"><\' + \'/div>\');
+						setOuterHTML(document.getElementById("moreNewsItems"), \'<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" name="news[]" style="' . ($context['browser']['is_ie8'] ? 'width: 635px; max-width: 85%; min-width: 85%' : 'width: 85%') . ';"><\' + \'/textarea><\' + \'/div><div id="moreNewsItems"><\' + \'/div>\');
 					}
 				// ]]></script>
 				<noscript>
-					<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" style="width: 85%;" name="news[]"></textarea></div>
+					<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" style="' . ($context['browser']['is_ie8'] ? 'width: 635px; max-width: 85%; min-width: 85%' : 'width: 85%') . ';" name="news[]"></textarea></div>
 				</noscript>
 			</div>
 			<div class="floatrightpadding">
@@ -89,7 +98,7 @@ function template_email_members()
 
 	echo '
 	<div id="admincenter">
-		<form action="', $scripturl, '?action=admin;area=news;sa=mailingcompose" method="post" accept-charset="', $context['character_set'], '">
+		<form action="', $scripturl, '?action=admin;area=news;sa=mailingcompose" method="post" class="flow_hidden" accept-charset="', $context['character_set'], '">
 			<div class="cat_bar">
 				<h3 class="catbg">', $txt['admin_newsletters'], '</h3>
 			</div>
@@ -116,7 +125,7 @@ function template_email_members()
 
 	echo '
 						</dd>
-					</dl>
+					</dl><br class="clear" />
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
@@ -140,7 +149,7 @@ function template_email_members()
 							<span class="smalltext">', $txt['admin_news_select_email_desc'], '</span>
 						</dt>
 						<dd>
-							<textarea name="emails" rows="5" cols="30" style="width: 98%;"></textarea>
+							<textarea name="emails" rows="5" cols="30" style="' . ($context['browser']['is_ie8'] ? 'width: 635px; max-width: 98%; min-width: 98%' : 'width: 98%') . ';"></textarea>
 						</dd>
 						<dt>
 							<strong>', $txt['admin_news_select_members'], ':</strong><br />
@@ -185,7 +194,7 @@ function template_email_members()
 						<dd>
 							<input type="checkbox" name="email_force" id="email_force" value="1" class="input_check" />
 						</dd>
-					</dl>
+					</dl><br class="clear" />
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
@@ -199,7 +208,7 @@ function template_email_members()
 
 	// Make the javascript stuff visible.
 	echo '
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?fin20"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		document.getElementById("advanced_select_div").style.display = "";
 		var oMemberSuggest = new smc_AutoSuggest({

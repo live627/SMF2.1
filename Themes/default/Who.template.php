@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; Who
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // The only template in the file.
 function template_main()
@@ -165,7 +174,7 @@ function template_credits()
 			else
 			{
 				$last_peep = array_pop($group['members']);
-				echo implode(', ', $group['members']), ', ', $txt['credits_and'], ' ', $last_peep;
+				echo implode(', ', $group['members']), ' ', $txt['credits_and'], ' ', $last_peep;
 			}
 
 			echo '
@@ -195,9 +204,6 @@ function template_credits()
 				<dl>
 					<dt><strong>', $txt['credits_forum'], '</strong></dt>', '
 					<dd>', $context['copyrights']['smf'];
-
-	if (!empty($context['copyright_removal_validate']))
-		echo '<br />', $context['copyright_removal_validate'];
 
 	echo '
 					</dd>

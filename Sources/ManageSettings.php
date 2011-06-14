@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* ManageSettings.php                                                              *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -189,6 +178,9 @@ function ModifyModSettings()
 		// Mod authors, once again, if you have a whole section to add do it AFTER this line, and keep a comma at the end.
 	);
 
+	// Make it easier for mods to add new areas.
+	call_integration_hook('integrate_modify_modifications', array(&$subActions));
+
 	loadGeneralSettingParameters($subActions, 'general');
 
 	// Load up all the tabs...
@@ -288,6 +280,27 @@ function ModifyCoreFeatures($return_config = false)
 			'settings' => array(
 				'paid_enabled' => 1,
 			),
+			'setting_callback' => create_function('$value', '
+				global $smcFunc, $sourcedir;
+
+				// Set the correct disabled value for scheduled task.
+				$smcFunc[\'db_query\'](\'\', \'
+					UPDATE {db_prefix}scheduled_tasks
+					SET disabled = {int:disabled}
+					WHERE task = {string:task}\',
+					array(
+						\'disabled\' => $value ? 0 : 1,
+						\'task\' => \'paid_subscriptions\',
+					)
+				);
+
+				// Should we calculate next trigger?
+				if ($value)
+				{
+					require_once($sourcedir . \'/ScheduledTasks.php\');
+					CalculateNextTrigger(\'paid_subscriptions\');
+				}
+			'),
 		),
 		// rg = report generator.
 		'rg' => array(
@@ -341,6 +354,9 @@ function ModifyCoreFeatures($return_config = false)
 			'),
 		),
 	);
+
+	// Anyone who would like to add a core feature?
+	call_integration_hook('integrate_core_features', array(&$core_features));
 
 	// Are we getting info for the help section.
 	if ($return_config)
@@ -1890,7 +1906,7 @@ function EditCustomProfiles()
 		checkSession();
 
 		$request = $smcFunc['db_query']('', '
-			SELECT col_name, field_name, bbc, enclose, placement
+			SELECT col_name, field_name, field_type, bbc, enclose, placement
 			FROM {db_prefix}custom_fields
 			WHERE show_display = {int:is_displayed}
 				AND active = {int:active}
@@ -1910,6 +1926,7 @@ function EditCustomProfiles()
 			$fields[] = array(
 				'colname' => strtr($row['col_name'], array('|' => '', ';' => '')),
 				'title' => strtr($row['field_name'], array('|' => '', ';' => '')),
+				'type' => $row['field_type'],
 				'bbc' => $row['bbc'] ? '1' : '0',
 				'placement' => !empty($row['placement']) ? $row['placement'] : '0',
 				'enclose' => !empty($row['enclose']) ? $row['enclose'] : '',
@@ -2002,6 +2019,9 @@ function ModifyGeneralModSettings($return_config = false)
 	$config_vars = array(
 		// Mod authors, add any settings UNDER this line. Include a comma at the end of the line and don't remove this statement!!
 	);
+
+	// Make it even easier to add new settings.
+	call_integration_hook('integrate_general_mod_settings', array(&$config_vars));
 
 	if ($return_config)
 		return $config_vars;

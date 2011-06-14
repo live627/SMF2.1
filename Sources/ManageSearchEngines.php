@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* ManageSearchEngines.php                                                         *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -76,7 +65,7 @@ function ManageSearchEngineSettings($return_config = false)
 	);
 
 	// Set up a message.
-	$context['settings_message'] = '<span class="smalltext">' . sprintf($txt['spider_settings_desc'], $scripturl . '?action=admin;area=featuresettings;sa=pruning;' . $context['session_var'] . '=' . $context['session_id']) . '</span>';
+	$context['settings_message'] = '<span class="smalltext">' . sprintf($txt['spider_settings_desc'], $scripturl . '?action=admin;area=logs;sa=pruning;' . $context['session_var'] . '=' . $context['session_id']) . '</span>';
 
 	// Do some javascript.
 	$javascript_function = '
@@ -669,6 +658,7 @@ function SpiderLogs()
 	$listOptions = array(
 		'id' => 'spider_logs',
 		'items_per_page' => 20,
+		'title' => $txt['spider_logs'],
 		'no_items_label' => $txt['spider_logs_empty'],
 		'base_href' => $context['admin_area'] == 'sengines' ? $scripturl . '?action=admin;area=sengines;sa=logs' : $scripturl . '?action=admin;area=logs;sa=spiderlog',
 		'default_sort_col' => 'log_time',
@@ -716,7 +706,7 @@ function SpiderLogs()
 		),
 		'additional_rows' => array(
 			array(
-				'position' => 'above_column_headers',
+				'position' => 'after_title',
 				'value' => $txt['spider_logs_info'],
 				'class' => 'smalltext',
 			),

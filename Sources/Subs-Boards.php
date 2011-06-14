@@ -1,26 +1,16 @@
 <?php
-/**********************************************************************************
-* Subs-Boards.php                                                                 *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it         *
-* under the terms of the provided license as published by Lewis Media.            *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful,          *
-* but WITHOUT ANY WARRANTIES; without even any implied warranty of                *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
+
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
@@ -525,9 +515,11 @@ function modifyBoard($board_id, &$boardOptions)
 			$child_level = $boards[$boardOptions['target_board']]['level'] + 1;
 			$id_parent = $boardOptions['target_board'];
 
-			// !!! Change error message.
+			// People can be creative, in many ways...
 			if (isChildOf($id_parent, $board_id))
-				fatal_error('Unable to make a parent its own child');
+				fatal_lang_error('mboards_parent_own_child_error', false);
+			elseif ($id_parent == $board_id)
+				fatal_lang_error('mboards_board_own_child_error', false);
 
 			$after = $boards[$boardOptions['target_board']]['order'];
 
@@ -741,6 +733,8 @@ function modifyBoard($board_id, &$boardOptions)
 	if (isset($boardOptions['move_to']))
 		reorderBoards();
 
+	clean_cache('data');
+
 	if (empty($boardOptions['dont_log']))
 		logAction('edit_board', array('board' => $board_id), 'admin');
 }
@@ -821,6 +815,9 @@ function createBoard($boardOptions)
 			);
 		}
 	}
+
+	// Clean the data cache.
+	clean_cache('data');
 
 	// Created it.
 	logAction('add_board', array('board' => $board_id), 'admin');
@@ -950,6 +947,9 @@ function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 
 	// Plus reset the cache to stop people getting odd results.
 	updateSettings(array('settings_updated' => time()));
+
+	// Clean the cache as well.
+	clean_cache('data');
 
 	// Let's do some serious logging.
 	foreach ($boards_to_remove as $id_board)

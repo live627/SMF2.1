@@ -1,28 +1,17 @@
 <?php
-/**********************************************************************************
-* install.php                                                                     *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC5                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it         *
-* under the terms of the provided license as published by Lewis Media.            *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful,          *
-* but WITHOUT ANY WARRANTIES; without even any implied warranty of                *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
 
-$GLOBALS['current_smf_version'] = '2.0 RC5';
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
+
+$GLOBALS['current_smf_version'] = '2.0';
 $GLOBALS['db_script_version'] = '2-0';
 
 $GLOBALS['required_php_version'] = '4.1.0';
@@ -2037,8 +2026,8 @@ function template_install_above()
 		<meta http-equiv="Content-Type" content="text/html; charset=', isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1', '" />
 		<meta name="robots" content="noindex" />
 		<title>', $txt['smf_installer'], '</title>
-		<link rel="stylesheet" type="text/css" href="Themes/default/css/index.css?rc3" />
-		<link rel="stylesheet" type="text/css" href="Themes/default/css/install.css?rc3" />
+		<link rel="stylesheet" type="text/css" href="Themes/default/css/index.css?fin20" />
+		<link rel="stylesheet" type="text/css" href="Themes/default/css/install.css?fin20" />
 		<script type="text/javascript" src="Themes/default/scripts/script.js"></script>
 	</head>
 	<body>
@@ -2129,7 +2118,7 @@ function template_install_below()
 		</div>
 	</div></div>
 	<div id="footer_section"><div class="frame" style="height: 40px;">
-		<div class="smalltext"><a href="http://www.simplemachines.org/" title="Free Forum Software" target="_blank" class="new_win">SMF &copy; 2006&ndash;2010, Simple Machines LLC</a></div>
+		<div class="smalltext"><a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank" class="new_win">SMF &copy; 2011, Simple Machines</a></div>
 	</div></div>
 	</body>
 </html>';

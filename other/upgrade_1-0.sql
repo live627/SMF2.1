@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}themes (
 	variable tinytext NOT NULL default '',
 	value text NOT NULL default '',
 	PRIMARY KEY (ID_MEMBER, ID_THEME, variable(30))
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 ALTER TABLE {$db_prefix}themes
 CHANGE COLUMN ID_MEMBER ID_MEMBER mediumint(8) NOT NULL default '0';
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}collapsed_categories (
 	ID_CAT tinyint(4) unsigned NOT NULL default '0',
 	ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
 	PRIMARY KEY (ID_CAT, ID_MEMBER)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Creating and verifying "permissions"...
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}permissions (
 	permission varchar(30) NOT NULL default '',
 	addDeny tinyint(4) NOT NULL default '1',
 	PRIMARY KEY (ID_GROUP, permission)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 ALTER TABLE {$db_prefix}permissions
 ADD addDeny tinyint(4) NOT NULL default '1';
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}board_permissions (
 	permission varchar(30) NOT NULL default '',
 	addDeny tinyint(4) NOT NULL default '1',
 	PRIMARY KEY (ID_GROUP, ID_BOARD, permission)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 ALTER TABLE {$db_prefix}board_permissions
 ADD addDeny tinyint(4) NOT NULL default '1';
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}moderators (
 	ID_BOARD smallint(5) unsigned NOT NULL default '0',
 	ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
 	PRIMARY KEY (ID_BOARD, ID_MEMBER)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Creating "attachments"...
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}attachments (
 	PRIMARY KEY (ID_ATTACH),
 	UNIQUE ID_MEMBER (ID_MEMBER, ID_ATTACH),
 	KEY ID_MSG (ID_MSG)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Creating "log_notify"...
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_notify (
 	ID_BOARD smallint(5) unsigned NOT NULL default '0',
 	sent tinyint(1) unsigned NOT NULL default '0',
 	PRIMARY KEY (ID_MEMBER, ID_TOPIC, ID_BOARD)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Creating "log_polls"...
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_polls (
 	ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
 	ID_CHOICE tinyint(4) unsigned NOT NULL default '0',
 	PRIMARY KEY (ID_POLL, ID_MEMBER, ID_CHOICE)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Creating "log_actions"...
@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_actions (
 	PRIMARY KEY (ID_ACTION),
 	KEY logTime (logTime),
 	KEY ID_MEMBER (ID_MEMBER)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Creating "poll_choices"...
@@ -164,7 +164,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}poll_choices (
 	label tinytext NOT NULL default '',
 	votes smallint(5) unsigned NOT NULL default '0',
 	PRIMARY KEY (ID_POLL, ID_CHOICE)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Creating "smileys"...
@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}smileys (
 	hidden tinyint(4) unsigned NOT NULL default '0',
 	PRIMARY KEY (id_smiley),
 	KEY smileyOrder (smileyOrder)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Loading default smileys...
@@ -214,7 +214,7 @@ CREATE TABLE {$db_prefix}log_search (
 	relevance smallint(5) unsigned NOT NULL default '0',
 	num_matches smallint(5) unsigned NOT NULL default '0',
 	PRIMARY KEY (ID_SEARCH, ID_TOPIC)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Dropping "sessions" and recreating it...
@@ -224,7 +224,7 @@ CREATE TABLE {$db_prefix}sessions (
 	last_update int(10) unsigned NOT NULL,
 	data text NOT NULL,
 	PRIMARY KEY (session_id)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Verifying "settings"...
@@ -241,14 +241,14 @@ ADD PRIMARY KEY (variable(30));
 DROP TABLE IF EXISTS {$db_prefix}log_online;
 CREATE TABLE {$db_prefix}log_online (
 	session char(32) NOT NULL default '                                ',
-	logTime timestamp(14),
+	logTime timestamp,
 	ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
 	ip int(11) unsigned NOT NULL default '0',
 	url text NOT NULL default '',
 	PRIMARY KEY (session),
 	KEY online (logTime, ID_MEMBER),
 	KEY ID_MEMBER (ID_MEMBER)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Converting "log_floodcontrol"...
@@ -258,7 +258,7 @@ CREATE TABLE {$db_prefix}log_floodcontrol (
 	logTime int(10) unsigned NOT NULL default '0',
 	PRIMARY KEY (ip(16)),
 	KEY logTime (logTime)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Converting "log_karma"...
@@ -270,7 +270,7 @@ CREATE TABLE {$db_prefix}log_karma (
 	action tinyint(4) NOT NULL default '0',
 	PRIMARY KEY (ID_TARGET, ID_EXECUTOR),
 	KEY logTime (logTime)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Retiring "log_clicks"...
@@ -1064,7 +1064,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}im_recipients (
 	deleted tinyint(3) unsigned NOT NULL default '0',
 	PRIMARY KEY (ID_PM, ID_MEMBER),
 	KEY ID_MEMBER (ID_MEMBER, deleted)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Updating "im_recipients"...
@@ -1224,7 +1224,7 @@ if ($result === false)
 			stars tinytext NOT NULL default '',
 			PRIMARY KEY (ID_GROUP),
 			KEY minPosts (minPosts)
-		) TYPE=MyISAM");
+		) ENGINE=MyISAM");
 
 	upgrade_query("
 		INSERT INTO {$db_prefix}membergroups
@@ -1516,7 +1516,7 @@ if ($request !== false)
 			reason tinytext NOT NULL default '',
 			notes text NOT NULL default '',
 			PRIMARY KEY (id_ban)
-		) TYPE=MyISAM");
+		) ENGINE=MyISAM");
 
 	upgrade_query("
 		INSERT INTO {$db_prefix}banned2
@@ -1597,7 +1597,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}calendar_holidays (
 	title varchar(30) NOT NULL default '',
 	PRIMARY KEY (ID_HOLIDAY),
 	KEY eventDate (eventDate)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Updating data in "calendar_holidays"...

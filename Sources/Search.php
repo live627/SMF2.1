@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* Search.php                                                                      *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -57,7 +46,7 @@ if (!defined('SMF'))
 // This defines two version types for checking the API's are compatible with this version of SMF.
 $GLOBALS['search_versions'] = array(
 	// This is the forum version but is repeated due to some people rewriting $forum_version.
-	'forum_version' => 'SMF 2.0 RC4',
+	'forum_version' => 'SMF 2.0',
 	// This is the minimum version of SMF that an API could have been written for to work. (strtr to stop accidentally updating version on release)
 	'search_version' => strtr('SMF 2+0=Beta=2', array('+' => '.', '=' => ' ')),
 );
@@ -323,6 +312,7 @@ function PlushSearch2()
 	isAllowedTo('search_posts');
 
 	require_once($sourcedir . '/Display.php');
+	require_once($sourcedir . '/Subs-Package.php');
 
 	// Search has a special database set.
 	db_extend('search');
@@ -336,7 +326,7 @@ function PlushSearch2()
 	// Create an instance of the search API and check it is valid for this version of SMF.
 	$search_class_name = $modSettings['search_index'] . '_search';
 	$searchAPI = new $search_class_name();
-	if (!$searchAPI || ($searchAPI->supportsMethod('isValid') && !$searchAPI->isValid()) || $search_versions['forum_version'] < $searchAPI->min_smf_version || $search_versions['search_version'] > $searchAPI->version_compatible)
+	if (!$searchAPI || ($searchAPI->supportsMethod('isValid') && !$searchAPI->isValid()) || !matchPackageVersion($search_versions['forum_version'], $searchAPI->min_smf_version . '-' . $searchAPI->version_compatible))
 	{
 		// Log the error.
 		loadLanguage('Errors');
@@ -765,6 +755,11 @@ function PlushSearch2()
 
 		// Search_force_index requires all AND parts to have at least one fulltext word.
 		if (!empty($modSettings['search_force_index']) && empty($searchWords[$orIndex]['indexed_words']))
+		{
+			$context['search_errors']['query_not_specific_enough'] = true;
+			break;
+		}
+		elseif ($search_params['subject_only'] && empty($searchWords[$orIndex]['subject_words']) && empty($excludedSubjectWords))
 		{
 			$context['search_errors']['query_not_specific_enough'] = true;
 			break;
@@ -1378,7 +1373,7 @@ function PlushSearch2()
 					{
 						$main_query['weights']['subject'] = 'CASE WHEN MAX(lst.id_topic) IS NULL THEN 0 ELSE 1 END';
 						$main_query['left_join'][] = '{db_prefix}' . ($createTemporary ? 'tmp_' : '') . 'log_search_topics AS lst ON (' . ($createTemporary ? '' : 'lst.id_search = {int:id_search} AND ') . 'lst.id_topic = t.id_topic)';
-						if ($createTemporary)
+						if (!$createTemporary)
 							$main_query['parameters']['id_search'] = $_SESSION['search_cache']['id_search'];
 					}
 				}
@@ -1406,6 +1401,7 @@ function PlushSearch2()
 						)
 					) !== false;
 
+					// Clear, all clear!
 					if (!$createTemporary)
 						$smcFunc['db_search_query']('delete_log_search_messages', '
 							DELETE FROM {db_prefix}log_search_messages
@@ -1624,8 +1620,9 @@ function PlushSearch2()
 							t.id_first_msg,
 							1
 						FROM {db_prefix}topics AS t
-							INNER JOIN {db_prefix}' . ($createTemporary ? 'tmp_' : '') . 'log_search_topics AS lst ON (lst.id_topic = t.id_topic)
-						' . (empty($modSettings['search_max_results']) ? '' : '
+							INNER JOIN {db_prefix}' . ($createTemporary ? 'tmp_' : '') . 'log_search_topics AS lst ON (lst.id_topic = t.id_topic)'
+						. ($createTemporary ? '' : 'WHERE lst.id_search = {int:id_search}')
+						. (empty($modSettings['search_max_results']) ? '' : '
 						LIMIT ' . ($modSettings['search_max_results'] - $_SESSION['search_cache']['num_results'])),
 						array(
 							'id_search' => $_SESSION['search_cache']['id_search'],

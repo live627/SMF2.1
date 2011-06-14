@@ -1,26 +1,16 @@
 <?php
-/**********************************************************************************
-* ManageSearch.php                                                                *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
+
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
@@ -122,7 +112,7 @@ function ManageSearch()
 
 function EditSearchSettings($return_config = false)
 {
-	global $txt, $context, $scripturl, $sourcedir;
+	global $txt, $context, $scripturl, $sourcedir, $modSettings;
 
 	// What are we editing anyway?
 	$config_vars = array(
@@ -136,6 +126,17 @@ function EditSearchSettings($return_config = false)
 			// Some limitations.
 			array('int', 'search_floodcontrol_time', 'subtext' => $txt['search_floodcontrol_time_desc']),
 	);
+
+	// Perhaps the search method wants to add some settings?
+	$modSettings['search_index'] = empty($modSettings['search_index']) ? 'standard' : $modSettings['search_index'];
+	if (file_exists($sourcedir . '/SearchAPI-' . ucwords($modSettings['search_index']) . '.php'))
+	{
+		loadClassFile('SearchAPI-' . ucwords($modSettings['search_index']) . '.php');
+
+		$method_call = array($modSettings['search_index'] . '_search', 'searchSettings');
+		if (is_callable($method_call))
+			call_user_func_array($method_call, array(&$config_vars));
+	}
 
 	if ($return_config)
 		return $config_vars;
@@ -736,7 +737,7 @@ function loadSearchAPIs()
 	{
 		while (($file = readdir($dh)) !== false)
 		{
-			if (!is_dir($file) && preg_match('~SearchAPI-([A-Za-z\d_]+)\.php~', $file, $matches))
+			if (is_file($sourcedir . '/' . $file) && preg_match('~SearchAPI-([A-Za-z\d_]+)\.php~', $file, $matches))
 			{
 				// Check this is definitely a valid API!
 				$fp = fopen($sourcedir . '/' . $file, 'rb');

@@ -55,8 +55,8 @@ body, td, th, tr
 div#wrapper
 {
 	margin: 0 auto;
-	min-width: 780px;
-	max-width: 2300px;	
+	min-width: 764px;
+	max-width: 2300px;
 }
 
 /* lets give all forms zero padding/margins */
@@ -328,7 +328,7 @@ code.bbc_code
 	line-height: 1.5em;
 	padding: 3px 1em;
 	overflow: auto;
-	white-space: pre;
+	white-space: nowrap;
 	/* Show a scrollbar after about 24 lines. */
 	max-height: 24em;
 }
@@ -351,7 +351,12 @@ code.bbc_code
 /* Styling for BBC tags */
 .bbc_link:link, .bbc_link:visited
 {
-	color: #778899;
+	border-bottom: 1px solid #A8B6CF;
+}
+.bbc_link:hover
+{
+	text-decoration: none;
+	border-bottom: 1px solid #346;
 }
 .bbc_size
 {
@@ -693,7 +698,7 @@ dl.settings
 }
 dl.settings dt
 {
-	width: 48%;
+	width: 40%;
 	float: left;
 	margin: 0 0 10px 0;
 	padding: 0;
@@ -718,8 +723,9 @@ dl.settings dt.windowbg
 }
 dl.settings dd
 {
-	width: 48%;
-	float: left;
+	width: 56%;
+	float: right;
+	overflow: auto;
 	margin: 0 0 3px 0;
 	padding: 0;
 }
@@ -818,6 +824,7 @@ div.title_bar
 div.roundframe div.cat_bar
 {
 	background: #99abbf url(../images/theme/main_block.png) no-repeat 0 -240px;
+	margin-bottom: 0;
 }
 div.roundframe div.cat_bar h3.catbg
 {
@@ -852,6 +859,8 @@ table.table_list a.unreadlink, table.table_list a.collapse
 table.table_list a.collapse
 {
 	margin: 10px 5px 0 1em;
+	height: 31px;
+	line-height: 31px;
 }
 
 /* The half-round header bars for some tables. */
@@ -1132,6 +1141,7 @@ span.lowerframe span
 	padding-left: 5px;
 	height: 22px;
 	line-height: 19px;
+	white-space: pre;
 }
 .dropmenu li
 {
@@ -1314,10 +1324,7 @@ ul#navigation li
 #adm_submenus
 {
 	padding-left: 2em;
-}
-#adm_submenus, #adm_submenus ul
-{
-	height: 3em;
+	overflow: hidden;
 }
 
 /* Styles for the general looks for the Curve theme.
@@ -1411,6 +1418,7 @@ img#smflogo
 #guest_form .info
 {
 	padding: 4px 0 ;
+	line-height: 1.3em;
 }
 div#upper_section div.user
 {
@@ -1476,6 +1484,10 @@ div#upper_section div.news form
 	float: left;
 	padding: 0 0.5em 0 0;
 	font-size: 0.95em;
+}
+.navigate_section ul li a
+{
+	white-space: pre;
 }
 
 /* The footer wih copyright links etc. */
@@ -1985,7 +1997,7 @@ p#whoisviewing
 {
 	clear: right;
 	float: right;
-	margin: 8px 20px 10px 0;
+	margin: 6px 20px 10px 0;
 	text-align: right;
 	font: bold 0.85em arial, sans-serif;
 	color: #334466;	
@@ -2073,11 +2085,11 @@ ul.quickbuttons li.inline_mod_check
 }
 .inner
 {
-	padding: 1em 1em 0 0;
+	padding: 1em 1em 2px 0;
 	margin: 0 1em 0 0;
 	border-top: 1px solid #99a;
 }
-.inner img.smiley
+img.smiley
 {
 	vertical-align: bottom;
 }
@@ -2116,8 +2128,6 @@ ul.quickbuttons li.inline_mod_check
 /* Styles for the quick reply area.
 ---------------------------------------------------- */
 
-/* The quick-reply area. Horizontal alignments go a bit wonky in IE6 and IE7 but is it really worth worrying about? */
-
 #quickreplybox
 {
 	padding-bottom: 1px;
@@ -2129,6 +2139,9 @@ ul.quickbuttons li.inline_mod_check
 #quickReplyOptions form textarea
 {
 	height: 100px;
+	width: 635px;
+	max-width: 100%;
+	min-width: 100%;
 	margin: 0.25em 0 1em 0;
 }
 /* The jump to box */
@@ -2535,7 +2548,6 @@ dl.register_form
 {
 	margin: 0;
 	clear: right;
-	/* overflow: auto; */
 }
 
 dl.register_form dt
@@ -2656,10 +2668,9 @@ tr.titlebg td
 	font-size: 95%;
 	margin-bottom: 5px;
 }
-#adm_container
+#main_container
 {
-	border-bottom: 1px solid #ccc;
-	margin-bottom: 5px;
+	position: relative;
 }
 .left_admmenu li
 {
@@ -2671,7 +2682,10 @@ tr.titlebg td
 }
 #main_admsection
 {
-	margin-left: 172px;
+	position: relative;
+	left: 0;
+	right: 0;
+	overflow: hidden;
 }
 
 tr.windowbg td, tr.windowbg2 td, tr.approvebg td, tr.highlight2 td
@@ -2899,7 +2913,10 @@ dl
 {
 	float: left;
 }
-
+#avatar_upload
+{
+	overflow: auto;
+}
 #main_admsection #basicinfo, #main_admsection #detailedinfo
 {
 	width: 100%;
@@ -3128,9 +3145,10 @@ div#profile_success
 }
 #creator dd
 {
-	float: left;
+	float: right;
 	width: 55%;
 	margin: 0 0 10px 2px;
+	overflow: auto;
 }
 
 .ignoreboards
@@ -3576,55 +3594,14 @@ span.hidelink
 {
 	padding: 0 1em;
 }
-
-/* Samples should be easily distinguishable. */
-#helpmain .help_sample
-{
-	border: 1px solid #99a;
-	background: #fff;
-	padding: 1em;
-	overflow: auto;
-	margin-bottom: 1em;
-}
-#helpmain .help_sample .navigate_section
-{
-	margin: 0;
-}
-#helpmain .help_sample .navigate_section ul
-{
-	padding-top: 0;
-	border: none;
-}
-
-/* We need some air between the lines */
 #helpmain p
 {
 	margin: 0 0 1.5em 0;
 	line-height: 1.5em;
 }
-#helpmain ol
+#helpmain ul
 {
-	font-weight: bold;
-	list-style-type: disc;
-	margin-bottom: 1em;
-	margin-top: 1em;
 	line-height: 1.5em;
-}
-#helpmain ol.la
-{
-	font-weight: normal;
-	list-style-type: circle;
-	margin: 0.5em 0 1em 0;
-	padding-left: 1.5em;
-}
-ul.basic_helplist
-{
-	padding: 0.8em 1.5em;
-	line-height: 1.5em;
-}
-#helpmain #messageindex
-{
-	clear: right;
 }
 
 /* Styles for print media.
@@ -3641,5 +3618,3 @@ ul.basic_helplist
 		border: none;
 	}
 }
-
-.new_win{width: 400px; height: 400px;}

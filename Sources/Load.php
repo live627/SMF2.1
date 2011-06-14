@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* Load.php                                                                        *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -137,7 +126,7 @@ if (!defined('SMF'))
 // Load the $modSettings array.
 function reloadSettings()
 {
-	global $modSettings, $boarddir, $smcFunc, $txt, $db_character_set, $context;
+	global $modSettings, $boarddir, $smcFunc, $txt, $db_character_set, $context, $sourcedir;
 
 	// Most database systems have not set UTF-8 as their default input charset.
 	if (!empty($db_character_set))
@@ -297,7 +286,7 @@ function reloadSettings()
 		$pre_includes = explode(',', $modSettings['integrate_pre_include']);
 		foreach ($pre_includes as $include)
 		{
-			$include = strtr(trim($include), array('$boarddir' => $boarddir));
+			$include = strtr(trim($include), array('$boarddir' => $boarddir, '$sourcedir' => $sourcedir));
 			if (file_exists($include))
 				require_once($include);
 		}
@@ -391,7 +380,7 @@ function loadUserSettings()
 			$id_member = 0;
 
 		// If we no longer have the member maybe they're being all hackey, stop brute force!
-		if (!$id_member || !empty($user_settings['passwd_flood']))
+		if (!$id_member)
 		{
 			require_once($sourcedir . '/LogInOut.php');
 			validatePasswordFlood(!empty($user_settings['id_member']) ? $user_settings['id_member'] : $id_member, !empty($user_settings['passwd_flood']) ? $user_settings['passwd_flood'] : false, $id_member != 0);
@@ -1257,6 +1246,9 @@ function loadMemberContext($user, $display_custom_fields = false)
 			// BBC?
 			if ($custom['bbc'])
 				$value = parse_bbc($value);
+			// ... or checkbox?
+			elseif (isset($custom['type']) && $custom['type'] == 'check')
+				$value = $value ? $txt['yes'] : $txt['no'];
 
 			// Enclosing the user input within some other text?
 			if (!empty($custom['enclose']))
@@ -1332,7 +1324,7 @@ function detectBrowser()
 // Load a theme, by ID.
 function loadTheme($id_theme = 0, $initialize = true)
 {
-	global $user_info, $user_settings, $board_info, $sc;
+	global $user_info, $user_settings, $board_info, $sc, $boarddir;
 	global $txt, $boardurl, $scripturl, $mbname, $modSettings, $language;
 	global $context, $settings, $options, $sourcedir, $ssi_theme, $smcFunc;
 
@@ -1757,6 +1749,18 @@ function loadTheme($id_theme = 0, $initialize = true)
 		}
 	}
 
+	// Any files to include at this point?
+	if (!empty($modSettings['integrate_theme_include']))
+	{
+		$theme_includes = explode(',', $modSettings['integrate_theme_include']);
+		foreach ($theme_includes as $include)
+		{
+			$include = strtr(trim($include), array('$boarddir' => $boarddir, '$sourcedir' => $sourcedir, '$themedir' => $settings['theme_dir']));
+			if (file_exists($include))
+				require_once($include);
+		}
+	}
+
 	// Call load theme integration functions.
 	call_integration_hook('integrate_load_theme');
 
@@ -1967,51 +1971,58 @@ function getBoardParents($id_parent)
 {
 	global $scripturl, $smcFunc;
 
-	$boards = array();
-
-	// Loop while the parent is non-zero.
-	while ($id_parent != 0)
+	// First check if we have this cached already.
+	if (($boards = cache_get_data('board_parents-' . $id_parent, 480)) === null)
 	{
-		$result = $smcFunc['db_query']('', '
-			SELECT
-				b.id_parent, b.name, {int:board_parent} AS id_board, IFNULL(mem.id_member, 0) AS id_moderator,
-				mem.real_name, b.child_level
-			FROM {db_prefix}boards AS b
-				LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
-				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
-			WHERE b.id_board = {int:board_parent}',
-			array(
-				'board_parent' => $id_parent,
-			)
-		);
-		// In the EXTREMELY unlikely event this happens, give an error message.
-		if ($smcFunc['db_num_rows']($result) == 0)
-			fatal_lang_error('parent_not_found', 'critical');
-		while ($row = $smcFunc['db_fetch_assoc']($result))
+		$boards = array();
+		$original_parent = $id_parent;
+
+		// Loop while the parent is non-zero.
+		while ($id_parent != 0)
 		{
-			if (!isset($boards[$row['id_board']]))
+			$result = $smcFunc['db_query']('', '
+				SELECT
+					b.id_parent, b.name, {int:board_parent} AS id_board, IFNULL(mem.id_member, 0) AS id_moderator,
+					mem.real_name, b.child_level
+				FROM {db_prefix}boards AS b
+					LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
+				WHERE b.id_board = {int:board_parent}',
+				array(
+					'board_parent' => $id_parent,
+				)
+			);
+			// In the EXTREMELY unlikely event this happens, give an error message.
+			if ($smcFunc['db_num_rows']($result) == 0)
+				fatal_lang_error('parent_not_found', 'critical');
+			while ($row = $smcFunc['db_fetch_assoc']($result))
 			{
-				$id_parent = $row['id_parent'];
-				$boards[$row['id_board']] = array(
-					'url' => $scripturl . '?board=' . $row['id_board'] . '.0',
-					'name' => $row['name'],
-					'level' => $row['child_level'],
-					'moderators' => array()
-				);
-			}
-			// If a moderator exists for this board, add that moderator for all children too.
-			if (!empty($row['id_moderator']))
-				foreach ($boards as $id => $dummy)
+				if (!isset($boards[$row['id_board']]))
 				{
-					$boards[$id]['moderators'][$row['id_moderator']] = array(
-						'id' => $row['id_moderator'],
-						'name' => $row['real_name'],
-						'href' => $scripturl . '?action=profile;u=' . $row['id_moderator'],
-						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_moderator'] . '">' . $row['real_name'] . '</a>'
+					$id_parent = $row['id_parent'];
+					$boards[$row['id_board']] = array(
+						'url' => $scripturl . '?board=' . $row['id_board'] . '.0',
+						'name' => $row['name'],
+						'level' => $row['child_level'],
+						'moderators' => array()
 					);
 				}
+				// If a moderator exists for this board, add that moderator for all children too.
+				if (!empty($row['id_moderator']))
+					foreach ($boards as $id => $dummy)
+					{
+						$boards[$id]['moderators'][$row['id_moderator']] = array(
+							'id' => $row['id_moderator'],
+							'name' => $row['real_name'],
+							'href' => $scripturl . '?action=profile;u=' . $row['id_moderator'],
+							'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_moderator'] . '">' . $row['real_name'] . '</a>'
+						);
+					}
+			}
+			$smcFunc['db_free_result']($result);
 		}
-		$smcFunc['db_free_result']($result);
+
+		cache_put_data('board_parents-' . $original_parent, $boards, 480);
 	}
 
 	return $boards;

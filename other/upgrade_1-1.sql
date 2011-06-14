@@ -825,7 +825,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}message_icons (
 	iconOrder smallint(5) unsigned NOT NULL default 0,
 	PRIMARY KEY (id_icon),
 	KEY ID_BOARD (ID_BOARD)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Inserting "message_icons"...
@@ -862,7 +862,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}package_servers (
 	name tinytext NOT NULL,
 	url tinytext NOT NULL,
 	PRIMARY KEY (id_server)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Inserting "package_servers"...
@@ -904,14 +904,14 @@ ADD INDEX ip (ip(16));
 DROP TABLE IF EXISTS {$db_prefix}log_online;
 CREATE TABLE {$db_prefix}log_online (
 	session char(32) NOT NULL default '                                ',
-	logTime timestamp(14) /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */,
+	logTime timestamp /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */,
 	ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
 	ip int(10) unsigned NOT NULL default '0',
 	url text NOT NULL,
 	PRIMARY KEY (session),
 	KEY online (logTime, ID_MEMBER),
 	KEY ID_MEMBER (ID_MEMBER)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Updating poll column sizes...
@@ -1286,7 +1286,7 @@ if ($upgradeBanTable)
 			hits mediumint(8) unsigned NOT NULL default '0',
 			PRIMARY KEY (id_ban),
 			KEY id_ban_group (id_ban_group)
-		) TYPE=MyISAM");
+		) ENGINE=MyISAM");
 
 	upgrade_query("
 		INSERT INTO {$db_prefix}ban_items
@@ -1555,13 +1555,13 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_search_messages (
   id_search tinyint(3) unsigned NOT NULL default '0',
   ID_MSG int(10) NOT NULL default '0',
   PRIMARY KEY (id_search, ID_MSG)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_search_topics (
   id_search tinyint(3) unsigned NOT NULL default '0',
   ID_TOPIC mediumint(9) NOT NULL default '0',
   PRIMARY KEY (id_search, ID_TOPIC)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_search_results (
   id_search tinyint(3) unsigned NOT NULL default '0',
@@ -1571,14 +1571,14 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_search_results (
   num_matches smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY (id_search, ID_TOPIC),
   KEY relevance (relevance)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_search_subjects (
   word varchar(20) NOT NULL default '',
   ID_TOPIC mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY (word, ID_TOPIC),
   KEY ID_TOPIC (ID_TOPIC)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 ---#
 
 ---# Rebuilding fulltext index...

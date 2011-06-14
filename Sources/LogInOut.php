@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* LogInOut.php                                                                    *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -149,12 +138,12 @@ function Login2()
 	if (!$user_info['is_guest'])
 		redirectexit();
 
+	// Are you guessing with a script?
+	spamProtection('login');
+
 	// Set the login_url if it's not already set (but careful not to send us to an attachment).
 	if (empty($_SESSION['login_url']) && isset($_SESSION['old_url']) && strpos($_SESSION['old_url'], 'dlattach') === false && preg_match('~(board|topic)[=,]~', $_SESSION['old_url']) != 0)
 		$_SESSION['login_url'] = $_SESSION['old_url'];
-
-	// Are you guessing with a script that doesn't keep the session id?
-	spamProtection('login');
 
 	// Been guessing a lot, haven't we?
 	if (isset($_SESSION['failed_login']) && $_SESSION['failed_login'] >= $modSettings['failed_login_threshold'] * 3)
@@ -177,7 +166,7 @@ function Login2()
 	}
 
 	// Set up the default/fallback stuff.
-	$context['default_username'] = isset($_REQUEST['user']) ? preg_replace('~&amp;#(\\d{1,7}|x[0-9a-fA-F]{1,6});~', '&#\\1;', htmlspecialchars($_REQUEST['user'])) : '';
+	$context['default_username'] = isset($_POST['user']) ? preg_replace('~&amp;#(\\d{1,7}|x[0-9a-fA-F]{1,6});~', '&#\\1;', htmlspecialchars($_POST['user'])) : '';
 	$context['default_password'] = '';
 	$context['never_expire'] = $modSettings['cookieTime'] == 525600 || $modSettings['cookieTime'] == 3153600;
 	$context['login_errors'] = array($txt['error_occured']);
@@ -189,36 +178,36 @@ function Login2()
 		'name' => $txt['login'],
 	);
 
-	if (!empty($_REQUEST['openid_identifier']) && !empty($modSettings['enableOpenID']))
+	if (!empty($_POST['openid_identifier']) && !empty($modSettings['enableOpenID']))
 	{
 		require_once($sourcedir . '/Subs-OpenID.php');
-		if (($open_id = smf_openID_validate($_REQUEST['openid_identifier'])) !== 'no_data')
+		if (($open_id = smf_openID_validate($_POST['openid_identifier'])) !== 'no_data')
 			return $open_id;
 	}
 
 	// You forgot to type your username, dummy!
-	if (!isset($_REQUEST['user']) || $_REQUEST['user'] == '')
+	if (!isset($_POST['user']) || $_POST['user'] == '')
 	{
 		$context['login_errors'] = array($txt['need_username']);
 		return;
 	}
 
 	// Hmm... maybe 'admin' will login with no password. Uhh... NO!
-	if ((!isset($_POST['passwrd']) || $_POST['passwrd'] == '') && (!isset($_REQUEST['hash_passwrd']) || strlen($_REQUEST['hash_passwrd']) != 40))
+	if ((!isset($_POST['passwrd']) || $_POST['passwrd'] == '') && (!isset($_POST['hash_passwrd']) || strlen($_POST['hash_passwrd']) != 40))
 	{
 		$context['login_errors'] = array($txt['no_password']);
 		return;
 	}
 
 	// No funky symbols either.
-	if (preg_match('~[<>&"\'=\\\]~', preg_replace('~(&#(\\d{1,7}|x[0-9a-fA-F]{1,6});)~', '', $_REQUEST['user'])) != 0)
+	if (preg_match('~[<>&"\'=\\\]~', preg_replace('~(&#(\\d{1,7}|x[0-9a-fA-F]{1,6});)~', '', $_POST['user'])) != 0)
 	{
 		$context['login_errors'] = array($txt['error_invalid_characters_username']);
 		return;
 	}
 
 	// Are we using any sort of integration to validate the login?
-	if (in_array('retry', call_integration_hook('integrate_validate_login', array($_REQUEST['user'], isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40 ? $_REQUEST['hash_passwrd'] : null, $modSettings['cookieTime'])), true))
+	if (in_array('retry', call_integration_hook('integrate_validate_login', array($_POST['user'], isset($_POST['hash_passwrd']) && strlen($_POST['hash_passwrd']) == 40 ? $_POST['hash_passwrd'] : null, $modSettings['cookieTime'])), true))
 	{
 		$context['login_errors'] = array($txt['login_hash_error']);
 		$context['disable_login_hashing'] = true;
@@ -233,7 +222,7 @@ function Login2()
 		WHERE ' . ($smcFunc['db_case_sensitive'] ? 'LOWER(member_name) = LOWER({string:user_name})' : 'member_name = {string:user_name}') . '
 		LIMIT 1',
 		array(
-			'user_name' => $smcFunc['db_case_sensitive'] ? strtolower($_REQUEST['user']) : $_REQUEST['user'],
+			'user_name' => $smcFunc['db_case_sensitive'] ? strtolower($_POST['user']) : $_POST['user'],
 		)
 	);
 	// Probably mistyped or their email, try it as an email address. (member_name first, though!)
@@ -248,7 +237,7 @@ function Login2()
 			WHERE email_address = {string:user_name}
 			LIMIT 1',
 			array(
-				'user_name' => $_REQUEST['user'],
+				'user_name' => $_POST['user'],
 			)
 		);
 		// Let them try again, it didn't match anything...
@@ -263,7 +252,7 @@ function Login2()
 	$smcFunc['db_free_result']($request);
 
 	// Figure out the password using SMF's encryption - if what they typed is right.
-	if (isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40)
+	if (isset($_POST['hash_passwrd']) && strlen($_POST['hash_passwrd']) == 40)
 	{
 		// Needs upgrading?
 		if (strlen($user_settings['passwd']) != 40)
@@ -274,7 +263,7 @@ function Login2()
 			return;
 		}
 		// Challenge passed.
-		elseif ($_REQUEST['hash_passwrd'] == sha1($user_settings['passwd'] . $sc))
+		elseif ($_POST['hash_passwrd'] == sha1($user_settings['passwd'] . $sc))
 			$sha_passwd = $user_settings['passwd'];
 		else
 		{
@@ -318,6 +307,7 @@ function Login2()
 			$other_passwords[] = sha1($_POST['passwrd']);
 			$other_passwords[] = md5_hmac($_POST['passwrd'], strtolower($user_settings['member_name']));
 			$other_passwords[] = md5($_POST['passwrd'] . strtolower($user_settings['member_name']));
+			$other_passwords[] = md5(md5($_POST['passwrd']));
 			$other_passwords[] = $_POST['passwrd'];
 
 			// This one is a strange one... MyPHP, crypt() on the MD5 hash.
@@ -331,7 +321,7 @@ function Login2()
 			$other_passwords[] = phpBB3_password_check($_POST['passwrd'], $user_settings['passwd']);
 
 			// APBoard 2 Login Method.
-			$other_passwords[] = md5(crypt($_REQUEST['passwrd'], 'CRYPT_MD5'));
+			$other_passwords[] = md5(crypt($_POST['passwrd'], 'CRYPT_MD5'));
 		}
 		// The hash should be 40 if it's SHA-1, so we're safe with more here too.
 		elseif (strlen($user_settings['passwd']) == 32)
@@ -345,8 +335,6 @@ function Login2()
 			// Some common md5 ones.
 			$other_passwords[] = md5($user_settings['password_salt'] . $_POST['passwrd']);
 			$other_passwords[] = md5($_POST['passwrd'] . $user_settings['password_salt']);
-			$other_passwords[] = md5($_POST['passwrd']);
-			$other_passwords[] = md5(md5($_POST['passwrd']));
 		}
 		elseif (strlen($user_settings['passwd']) == 40)
 		{
@@ -354,7 +342,7 @@ function Login2()
 			$other_passwords[] = sha1(strtolower($user_settings['member_name']) . un_htmlspecialchars($_POST['passwrd']));
 
 			// BurningBoard3 style of hashing.
-			$other_passwords[] = sha1($user_settings['password_salt'] . sha1($user_settings['password_salt'] . sha1($_REQUEST['passwrd'])));
+			$other_passwords[] = sha1($user_settings['password_salt'] . sha1($user_settings['password_salt'] . sha1($_POST['passwrd'])));
 
 			// Perhaps we converted to UTF-8 and have a valid password being hashed differently.
 			if ($context['character_set'] == 'utf8' && !empty($modSettings['previousCharacterSet']) && $modSettings['previousCharacterSet'] != 'utf8')
@@ -483,7 +471,7 @@ function DoLogin()
 	require_once($sourcedir . '/Subs-Auth.php');
 
 	// Call login integration functions.
-	call_integration_hook('integrate_login', array($user_settings['member_name'], isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40 ? $_REQUEST['hash_passwrd'] : null, $modSettings['cookieTime']));
+	call_integration_hook('integrate_login', array($user_settings['member_name'], isset($_POST['hash_passwrd']) && strlen($_POST['hash_passwrd']) == 40 ? $_POST['hash_passwrd'] : null, $modSettings['cookieTime']));
 
 	// Get ready to set the cookie...
 	$username = $user_settings['member_name'];
@@ -682,8 +670,8 @@ function validatePasswordFlood($id_member, $password_flood_value = false, $was_c
 
 	// Destroy any session or cookie data about this member, as they validated wrong.
 	require_once($sourcedir . '/Subs-Auth.php');
-
 	setLoginCookie(-3600, 0);
+
 	if (isset($_SESSION['login_' . $cookiename]))
 		unset($_SESSION['login_' . $cookiename]);
 

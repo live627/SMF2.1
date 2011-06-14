@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; Calendar
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // The main calendar - January, for example.
 function template_main()
@@ -125,7 +134,7 @@ function template_event_post()
 				<div class="roundframe">
 					<fieldset id="event_main">
 						<legend><span', isset($context['post_error']['no_event']) ? ' class="error"' : '', '>', $txt['calendar_event_title'], '</span></legend>
-						<input type="text" name="evtitle" maxlength="70" size="70" value="', $context['event']['title'], '" class="input_text" />
+						<input type="text" name="evtitle" maxlength="255" size="70" value="', $context['event']['title'], '" class="input_text" />
 						<div class="smalltext">
 							<input type="hidden" name="calendar" value="1" />', $txt['calendar_year'], '
 							<select name="year" id="year" onchange="generateDays();">';

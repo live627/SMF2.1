@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; GenericControls
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // This function displays all the stuff you get with a richedit box - BBC, smileys etc.
 function template_control_richedit($editor_id, $smileyContainer = null, $bbcContainer = null)
@@ -12,9 +21,9 @@ function template_control_richedit($editor_id, $smileyContainer = null, $bbcCont
 		<div>
 			<div style="width: 98.8%;">
 				<div>
-					<textarea class="editor" name="', $editor_id, '" id="', $editor_id, '" rows="', $editor_context['rows'], '" cols=" ', $context['browser']['is_ie8'] ? '600' : $editor_context['columns'], '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex="', $context['tabindex']++, '" style="width: ', $editor_context['width'], '; height: ', $editor_context['height'], '; ', isset($context['post_error']['no_message']) || isset($context['post_error']['long_message']) ? 'border: 1px solid red;' : '', '">', $editor_context['value'], '</textarea>
+					<textarea class="editor" name="', $editor_id, '" id="', $editor_id, '" rows="', $editor_context['rows'], '" cols="600" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex="', $context['tabindex']++, '" style="height: ', $editor_context['height'], '; ', isset($context['post_error']['no_message']) || isset($context['post_error']['long_message']) ? 'border: 1px solid red;' : '', '">', $editor_context['value'], '</textarea>
 				</div>
-				<div id="', $editor_id, '_resizer" style="display: none; width: ', $editor_context['width'], '; padding: 0 2px;" class="richedit_resize"></div>
+				<div id="', $editor_id, '_resizer" class="richedit_resize"></div>
 			</div>
 		</div>
 		<input type="hidden" name="', $editor_id, '_mode" id="', $editor_id, '_mode" value="0" />
@@ -71,7 +80,7 @@ function template_control_richedit($editor_id, $smileyContainer = null, $bbcCont
 						<html>
 							<head>
 								<title>' . $txt['more_smileys_title'] . '</title>
-								<link rel="stylesheet" type="text/css" href="' . $settings['theme_url'] . '/css/index' . $context['theme_variant'] . '.css?rc3" />
+								<link rel="stylesheet" type="text/css" href="' . $settings['theme_url'] . '/css/index' . $context['theme_variant'] . '.css?fin20" />
 							</head>
 							<body id="help_popup">
 								<div class="padding windowbg">

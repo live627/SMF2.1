@@ -1,26 +1,16 @@
 <?php
-/**********************************************************************************
-* Admin.php                                                                       *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ *
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -41,27 +31,24 @@ if (!defined('SMF'))
 		- uses the index administrative area.
 		- can be found by going to ?action=admin.
 
-	void ManageCopyright()
-		// !!!
-
 	void AdminSearch()
-		// !!
+		- allocates out all the search stuff.
 
 	void AdminSearchInternal()
-		// !!
+		- a complicated but relatively quick internal search.
 
 	void AdminSearchMember()
-		// !!
+		- pass through to manage members.
 
 	void DisplayAdminFile()
-		// !!
+		- get one of the admin information files from Simple Machines.
 
 */
 
 // The main admin handling function.
 function AdminMain()
 {
-	global $txt, $context, $scripturl, $sc, $modSettings, $user_info, $settings, $sourcedir, $options, $smcFunc;
+	global $txt, $context, $scripturl, $sc, $modSettings, $user_info, $settings, $sourcedir, $options, $smcFunc, $boarddir;
 
 	// Load the language and templates....
 	loadLanguage('Admin');
@@ -98,7 +85,7 @@ function AdminMain()
 					'icon' => 'news.gif',
 					'permission' => array('edit_news', 'send_mail', 'admin_forum'),
 					'subsections' => array(
-						'edit_news' => array($txt['admin_edit_news'], 'edit_news'),
+						'editnews' => array($txt['admin_edit_news'], 'edit_news'),
 						'mailingmembers' => array($txt['admin_newsletters'], 'send_mail'),
 						'settings' => array($txt['settings'], 'admin_forum'),
 					),
@@ -116,11 +103,6 @@ function AdminMain()
 						'perms' => array($txt['package_file_perms']),
 						'options' => array($txt['package_settings']),
 					),
-				),
-				'copyright' => array(
-					'function' => 'ManageCopyright',
-					'permission' => array('admin_forum'),
-					'select' => 'index'
 				),
 				'search' => array(
 					'function' => 'AdminSearch',
@@ -467,6 +449,18 @@ function AdminMain()
 		),
 	);
 
+	// Any files to include for administration?
+	if (!empty($modSettings['integrate_admin_include']))
+	{
+		$admin_includes = explode(',', $modSettings['integrate_admin_include']);
+		foreach ($admin_includes as $include)
+		{
+			$include = strtr(trim($include), array('$boarddir' => $boarddir, '$sourcedir' => $sourcedir, '$themedir' => $settings['theme_dir']));
+			if (file_exists($include))
+				require_once($include);
+		}
+	}
+
 	// Let them modify admin areas easily.
 	call_integration_hook('integrate_admin_areas', array(&$admin_areas));
 
@@ -530,76 +524,6 @@ function AdminHome()
 	// Load the credits stuff.
 	require_once($sourcedir . '/Who.php');
 	Credits(true);
-
-	// Fill in the blanks in the support resources paragraphs.
-	$txt['support_resources_p1'] = sprintf($txt['support_resources_p1'],
-		'http://docs.simplemachines.org/',
-		'http://docs.simplemachines.org/redirect/features',
-		'http://docs.simplemachines.org/redirect/settings',
-		'http://docs.simplemachines.org/redirect/themes',
-		'http://docs.simplemachines.org/redirect/packages'
-		);
-	$txt['support_resources_p2'] = sprintf($txt['support_resources_p2'],
-		'http://www.simplemachines.org/community/',
-		'http://www.simplemachines.org/redirect/english_support',
-		'http://www.simplemachines.org/redirect/international_support_boards',
-		'http://www.simplemachines.org/redirect/smf_support',
-		'http://www.simplemachines.org/redirect/customize_support'
-		);
-
-	// Copyright?
-	if (!empty($modSettings['copy_settings']) || !empty($modSettings['copyright_key']))
-	{
-		if (empty($modSettings['copy_settings']))
-			$modSettings['copy_settings'] = 'a,0';
-
-		// Not done it yet...
-		if (empty($_SESSION['copy_expire']))
-		{
-			list ($key, $expires) = explode(',', $modSettings['copy_settings']);
-			// Get the expired date.
-			require_once($sourcedir . '/Subs-Package.php');
-			$return_data = fetch_web_data('http://www.simplemachines.org/smf/copyright/check_copyright.php?site=' . base64_encode($boardurl) . '&key=' . $key . '&version=' . base64_encode($forum_version));
-
-			// Get the expire date.
-			$return_data = substr($return_data, strpos($return_data, 'STARTCOPY') + 9);
-			$return_data = trim(substr($return_data, 0, strpos($return_data, 'ENDCOPY')));
-
-			$deletekeys = true;
-			if ($return_data != 'void')
-			{
-				list ($_SESSION['copy_expire'], $copyright_key) = explode('|', $return_data);
-				$_SESSION['copy_key'] = $key;
-
-				if ($_SESSION['copy_expire'] > time())
-				{
-					$deletekeys = false;
-					$copy_settings = $key . ',' . (int) $_SESSION['copy_expire'];
-					updateSettings(array('copy_settings' => $copy_settings, 'copyright_key' => $copyright_key));
-				}
-			}
-
-			if ($deletekeys)
-			{
-				$_SESSION['copy_expire'] = '';
-				$smcFunc['db_query']('', '
-					DELETE FROM {db_prefix}settings
-					WHERE variable = {string:copy_settings}
-						OR variable = {string:copyright_key}',
-					array(
-						'copy_settings' => 'copy_settings',
-						'copyright_key' => 'copyright_key',
-					)
-				);
-			}
-		}
-
-		if (isset($_SESSION['copy_expire']) && $_SESSION['copy_expire'] > time())
-		{
-			$context['copyright_expires'] = (int) (($_SESSION['copy_expire'] - time()) / 3600 / 24);
-			$context['copyright_key'] = $_SESSION['copy_key'];
-		}
-	}
 
 	// This makes it easier to get the latest news with your time format.
 	$context['time_format'] = urlencode($user_info['time_format']);
@@ -676,53 +600,22 @@ function AdminHome()
 		$context['quick_admin_tasks'][count($context['quick_admin_tasks']) - 1]['is_last'] = true;
 		$context['quick_admin_tasks'][count($context['quick_admin_tasks']) - 2]['is_last'] = true;
 	}
-}
 
-// Allow users to remove their copyright.
-function ManageCopyright()
-{
-	global $forum_version, $txt, $sourcedir, $context, $boardurl, $modSettings;
-
-	isAllowedTo('admin_forum');
-
-	if (isset($_POST['copy_code']))
-	{
-		checkSession('post');
-
-		$_POST['copy_code'] = urlencode($_POST['copy_code']);
-
-		// Check the actual code.
-		require_once($sourcedir . '/Subs-Package.php');
-		$return_data = fetch_web_data('http://www.simplemachines.org/smf/copyright/check_copyright.php?site=' . base64_encode($boardurl) . '&key=' . $_POST['copy_code'] . '&version=' . base64_encode($forum_version));
-
-		// Get the data back
-		$return_data = substr($return_data, strpos($return_data, 'STARTCOPY') + 9);
-		$return_data = trim(substr($return_data, 0, strpos($return_data, 'ENDCOPY')));
-
-		if ($return_data != 'void')
-		{
-			list ($_SESSION['copy_expire'], $copyright_key) = explode('|', $return_data);
-
-			if ($_SESSION['copy_expire'] <= time())
-			{
-				// So sorry but that has already expired.
-				$_SESSION['copy_expire'] = '';
-				fatal_lang_error('copyright_failed');
-			}
-
-			$_SESSION['copy_key'] = $_POST['copy_code'];
-			$copy_settings = $_POST['copy_code'] . ',' . (int) $_SESSION['copy_expire'];
-			updateSettings(array('copy_settings' => $copy_settings, 'copyright_key' => $copyright_key));
-			redirectexit('action=admin');
-		}
-		else
-		{
-			fatal_lang_error('copyright_failed');
-		}
-	}
-
-	$context['sub_template'] = 'manage_copyright';
-	$context['page_title'] = $txt['copyright_removal'];
+	// Lastly, fill in the blanks in the support resources paragraphs.
+	$txt['support_resources_p1'] = sprintf($txt['support_resources_p1'],
+		'http://wiki.simplemachines.org/',
+		'http://wiki.simplemachines.org/smf/features2',
+		'http://wiki.simplemachines.org/smf/options2',
+		'http://wiki.simplemachines.org/smf/themes2',
+		'http://wiki.simplemachines.org/smf/packages2'
+	);
+	$txt['support_resources_p2'] = sprintf($txt['support_resources_p2'],
+		'http://www.simplemachines.org/community/',
+		'http://www.simplemachines.org/redirect/english_support',
+		'http://www.simplemachines.org/redirect/international_support_boards',
+		'http://www.simplemachines.org/redirect/smf_support',
+		'http://www.simplemachines.org/redirect/customize_support'
+	);
 }
 
 // Get one of the admin information files from Simple Machines.
@@ -844,7 +737,7 @@ function AdminSearchInternal()
 		),
 		'settings' => array(
 			array('COPPA', 'area=regcenter;sa=settings'),
-			array('CAPTCHA', 'area=regcenter;sa=settings'),
+			array('CAPTCHA', 'area=securitysettings;sa=spam'),
 		),
 	);
 

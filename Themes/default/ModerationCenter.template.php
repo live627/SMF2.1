@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; ModerationCenter
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 function template_moderation_center()
 {
@@ -63,7 +72,7 @@ function template_latest_news()
 	echo '
 		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=current-version.js"></script>
 		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-news.js"></script>
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/admin.js?rc3"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/admin.js?fin20"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var oAdminIndex = new smf_AdminIndex({
 				sSelf: \'oAdminCenter\',
@@ -358,7 +367,7 @@ function template_unapproved_posts()
 		echo '
 		<div class="cat_bar">
 			<h3 class="catbg">
-				<span class="smalltext floatleft">', $item['counter'], '</span>
+				<span class="smalltext floatleft">', $item['counter'], '&nbsp;</span>
 				<span class="smalltext floatleft"><a href="', $scripturl, '#c', $item['category']['id'], '">', $item['category']['name'], '</a> / <a href="', $scripturl, '?board=', $item['board']['id'], '.0">', $item['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $item['topic']['id'], '.msg', $item['id'], '#msg', $item['id'], '">', $item['subject'], '</a></span>
 				<span class="smalltext floatright">', $txt['mc_unapproved_by'], ' ', $item['poster']['link'], ' ', $txt['on'], ': ', $item['time'], '</span>
 			</h3>
@@ -421,8 +430,8 @@ function template_unapproved_attachments()
 	echo '
 	<div id="modcenter">
 		<form action="', $scripturl, '?action=moderate;area=attachmod;sa=attachments;start=', $context['start'], '" method="post" accept-charset="', $context['character_set'], '">
-			<div class="title_bar">
-				<h3 class="titlebg">', $txt['mc_unapproved_attachments'], '</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['mc_unapproved_attachments'], '</h3>
 			</div>';
 
 	// The ever popular approve button, with the massively unpopular delete.
@@ -478,9 +487,12 @@ function template_unapproved_attachments()
 				</tr>';
 	}
 
-	echo '
+	if (!empty($context['unapproved_items']))
+		echo '
 			</tbody>
-			</table>
+			</table>';
+
+		echo '
 			<div class="pagesection">
 				<div class="floatright">
 					<select name="do" onchange="if (this.value != 0 &amp;&amp; confirm(\'', $txt['mc_unapproved_sure'], '\')) submit();">
@@ -577,7 +589,7 @@ function template_viewmodreport()
 					'<p>', $comment['member']['link'], ': ', $comment['message'], ' <em class="smalltext">(', $comment['time'], ')</em></p>';
 
 	echo '
-					<textarea rows="2" cols="60" style="width: 60%;" name="mod_comment"></textarea>
+					<textarea rows="2" cols="60" style="' . ($context['browser']['is_ie8'] ? 'width: 635px; max-width: 60%; min-width: 60%' : 'width: 60%') . ';" name="mod_comment"></textarea>
 					<div>
 						<input type="submit" name="add_comment" value="', $txt['mc_modreport_add_mod_comment'], '" class="button_submit" />
 					</div>

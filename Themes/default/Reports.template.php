@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; Reports
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // Choose which type of report to run?
 function template_report_type()
@@ -9,8 +18,8 @@ function template_report_type()
 	echo '
 	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=reports" method="post" accept-charset="', $context['character_set'], '">
-			<div class="title_bar">
-				<h3 class="titlebg">', $txt['generate_reports'], '</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['generate_reports'], '</h3>
 			</div>
 			<div class="information">
 				', $txt['generate_reports_desc'], '

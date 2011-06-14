@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* Profile-Actions.php                                                             *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -424,6 +413,9 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 {
 	global $user_info, $sourcedir, $context, $cur_profile, $modSettings, $smcFunc;
 
+	// Try get more time...
+	@set_time_limit(600);
+
 	// !!! Add a way to delete pms as well?
 
 	if (!$context['user']['is_owner'])
@@ -509,7 +501,12 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 			);
 			// This could take a while... but ya know it's gonna be worth it in the end.
 			while ($row = $smcFunc['db_fetch_assoc']($request))
+			{
+				if (function_exists('apache_reset_timeout'))
+					@apache_reset_timeout();
+
 				removeMessage($row['id_msg']);
+			}
 			$smcFunc['db_free_result']($request);
 		}
 

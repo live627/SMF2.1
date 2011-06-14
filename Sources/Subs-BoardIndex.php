@@ -1,29 +1,19 @@
 <?php
-/**********************************************************************************
-* Subs-BoardIndex.php                                                             *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
+
 /*	This file currently only contains one function to collect the data needed to
 	show a list of boards for the board index and the message index.
 
@@ -90,10 +80,12 @@ function getBoardIndex($boardIndexOptions)
 	// Run through the categories and boards (or only boards)....
 	while ($row_board = $smcFunc['db_fetch_assoc']($result_boards))
 	{
+		// Perhaps we are ignoring this board?
+		$ignoreThisBoard = in_array($row_board['id_board'], $user_info['ignoreboards']);
+		$row_board['is_read'] = !empty($row_board['is_read']) || $ignoreThisBoard ? '1' : '0';
+
 		if ($boardIndexOptions['include_categories'])
 		{
-			$ignoreThisBoard = in_array($row_board['id_board'], $user_info['ignoreboards']);
-			$row_board['is_read'] = !empty($row_board['is_read']) || $ignoreThisBoard ? '1' : '0';
 			// Haven't set this category yet.
 			if (empty($categories[$row_board['id_cat']]))
 			{
@@ -103,12 +95,12 @@ function getBoardIndex($boardIndexOptions)
 					'is_collapsed' => isset($row_board['can_collapse']) && $row_board['can_collapse'] == 1 && $row_board['is_collapsed'] > 0,
 					'can_collapse' => isset($row_board['can_collapse']) && $row_board['can_collapse'] == 1,
 					'collapse_href' => isset($row_board['can_collapse']) ? $scripturl . '?action=collapse;c=' . $row_board['id_cat'] . ';sa=' . ($row_board['is_collapsed'] > 0 ? 'expand;' : 'collapse;') . $context['session_var'] . '=' . $context['session_id'] . '#c' . $row_board['id_cat'] : '',
-					'collapse_image' => isset($row_board['can_collapse']) ? '<img src="' . $settings['images_url'] . '/' . ($row_board['is_collapsed'] > 0 ? 'expand.gif" alt="+"' : 'collapse.gif" alt="-"') . ' />' : '',
+					'collapse_image' => isset($row_board['can_collapse']) ? '<img src="' . $settings['images_url'] . '/' . $context['theme_variant_url'] . ($row_board['is_collapsed'] > 0 ? 'expand.gif" alt="+"' : 'collapse.gif" alt="-"') . ' />' : '',
 					'href' => $scripturl . '#c' . $row_board['id_cat'],
 					'boards' => array(),
 					'new' => false
 				);
-				$categories[$row_board['id_cat']]['link'] = '<a id="c' . $row_board['id_cat'] . '" href="' . (isset($row_board['can_collapse']) ? $categories[$row_board['id_cat']]['collapse_href'] : $categories[$row_board['id_cat']]['href']) . '">' . $row_board['cat_name'] . '</a>';
+				$categories[$row_board['id_cat']]['link'] = '<a id="c' . $row_board['id_cat'] . '"></a>' . ($categories[$row_board['id_cat']]['can_collapse'] ? '<a href="' . $categories[$row_board['id_cat']]['collapse_href'] . '">' . $row_board['cat_name'] . '</a>' : $row_board['cat_name']);
 			}
 
 			// If this board has new posts in it (and isn't the recycle bin!) then the category is new.

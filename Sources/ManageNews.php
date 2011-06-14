@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* ManageNews.php                                                                  *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -39,7 +28,7 @@ if (!defined('SMF'))
 		- requires the edit_news permission.
 		- writes an entry into the moderation log.
 		- uses the edit_news administration area.
-		- can be accessed with ?action=editnews.
+		- can be accessed with ?action=admin;sa=editnews.
 
 	void SelectMailingMembers()
 		- allows a user to select the membergroups to send their mailing to.
@@ -102,7 +91,7 @@ function ManageNews()
 		'help' => 'edit_news',
 		'description' => $txt['admin_news_desc'],
 		'tabs' => array(
-			'edit_news' => array(
+			'editnews' => array(
 			),
 			'mailingmembers' => array(
 				'description' => $txt['news_mailing_desc'],
@@ -156,7 +145,10 @@ function EditNews()
 			if (trim($news) == '')
 				unset($_POST['news'][$i]);
 			else
+			{
+				$_POST['news'][$i] = $smcFunc['htmlspecialchars']($_POST['news'][$i], ENT_QUOTES);
 				preparsecode($_POST['news'][$i]);
+			}
 		}
 
 		// Send the new news to the database.
@@ -170,7 +162,7 @@ function EditNews()
 	foreach (explode("\n", $modSettings['news']) as $id => $line)
 		$context['admin_current_news'][$id] = array(
 			'id' => $id,
-			'unparsed' => $smcFunc['htmlspecialchars'](un_preparsecode($line)),
+			'unparsed' => un_preparsecode($line),
 			'parsed' => preg_replace('~<([/]?)form[^>]*?[>]*>~i', '<em class="smalltext">&lt;$1form&gt;</em>', parse_bbc($line)),
 		);
 

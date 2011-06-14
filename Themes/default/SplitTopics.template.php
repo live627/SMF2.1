@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; SplitTopics
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 function template_ask()
 {
@@ -46,7 +55,7 @@ function template_main()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<div id="split_topic">
+	<div id="split_topics">
 		<div class="cat_bar">
 			<h3 class="catbg">', $txt['split'], '</h3>
 		</div>
@@ -244,7 +253,7 @@ function template_merge_done()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-		<div id="split_topics">
+		<div id="merge_topics">
 			<div class="cat_bar">
 				<h3 class="catbg">', $txt['merge'], '</h3>
 			</div>

@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; ManagePermissions
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 function template_permission_index()
 {
@@ -137,7 +146,7 @@ function template_permission_index()
 		echo '
 								</select>
 							</dt>
-							<dd>
+							<dd style="overflow:auto;">
 								<select name="permissions">
 									<option value="">(', $txt['permissions_select_permission'], ')</option>';
 		foreach ($context['permissions'] as $permissionType)

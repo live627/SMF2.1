@@ -84,6 +84,9 @@ ADD placement smallint NOT NULL default '0';
 ---# Fixing default value for the "show_profile" column
 ALTER TABLE {$db_prefix}custom_fields
 ALTER COLUMN show_profile SET DEFAULT 'forumprofile';
+
+UPDATE {$db_prefix}custom_fields
+SET show_profile='forumprofile' WHERE show_profile='forumProfile';
 ---#
 
 /******************************************************************************/
@@ -629,12 +632,12 @@ ALTER COLUMN error_type TYPE varchar(15);
 
 ---# Changing event title column to a larger field type...
 ALTER TABLE {$db_prefix}calendar
-ALTER COLUMN title TYPE varchar(60);
+ALTER COLUMN title TYPE varchar(255);
 ---#
 
 ---# Changing holiday title column to a larger field type...
 ALTER TABLE {$db_prefix}calendar_holidays
-ALTER COLUMN title TYPE varchar(60);
+ALTER COLUMN title TYPE varchar(255);
 ---#
 
 /******************************************************************************/
@@ -1266,6 +1269,12 @@ CREATE OR REPLACE FUNCTION DATE_FORMAT (timestamp, text) RETURNS text AS
     ''%d'', to_char($1, ''DD'')) AS result'
 LANGUAGE 'sql';
 
+---# Updating TO_DAYS()
+CREATE OR REPLACE FUNCTION TO_DAYS (timestamp) RETURNS integer AS
+  'SELECT DATE_PART(''DAY'', $1 - ''0001-01-01bc'')::integer AS result'
+LANGUAGE 'sql';
+---#
+
 /******************************************************************************/
 --- Adding extra columns to reported post comments
 /******************************************************************************/
@@ -1320,11 +1329,52 @@ else
 ---#
 
 /******************************************************************************/
---- Changing the group type for Administrator group.
+--- Adjusting group types.
 /******************************************************************************/
+
+---# Fixing the group types.
+---{
+// Get the admin group type.
+$request = upgrade_query("
+	SELECT group_type
+	FROM {$db_prefix}membergroups
+	WHERE id_group = 1
+	LIMIT 1");
+list ($admin_group_type) = pg_fetch_row($request);
+pg_free_result($request);
+
+// Not protected means we haven't updated yet!
+if ($admin_group_type != 1)
+{
+	// Increase by one.
+	upgrade_query("
+		UPDATE {$db_prefix}membergroups
+		SET group_type = group_type + 1
+		WHERE group_type > 0");
+}
+---}
+---#
 
 ---# Changing the group type for Administrator group.
 UPDATE {$db_prefix}membergroups
 SET group_type = 1
 WHERE id_group = 1;
+---#
+
+/******************************************************************************/
+--- Adjusting calendar maximum year.
+/******************************************************************************/
+
+---# Adjusting calendar maximum year.
+---{
+if (!isset($modSettings['cal_maxyear']) || $modSettings['cal_maxyear'] == '2010')
+{
+	$smcFunc['db_insert']('replace',
+		'{db_prefix}settings',
+		array('variable' => 'string-255', 'value' => 'string-255'),
+		array('cal_maxyear', '2020'),
+		array('variable', 'value')
+	);
+}
+---}
 ---#

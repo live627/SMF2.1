@@ -136,11 +136,6 @@ hr.hrcolor
 {
 	margin: 10px 0;
 }
-h3.titlebg
-{
-	padding: 0;
-	margin: 0 0 3px 0;
-}
 h3.titlebg form
 {
 	font-size: 80%;
@@ -374,7 +369,6 @@ dl.right dt
 	color: green;
 	background: #efe;
 }
-
 /* Styles for the manage calendar section.
 ------------------------------------------------- */
 dl.settings dt.small_caption
@@ -541,11 +535,11 @@ dl.themes_list dd
 ------------------------------------------------- */
 .agreement, .reserved_names
 {
-	padding: 0 5px;
+	padding: 0;
 }
-#agreement
+#agreement, #reserved
 {
-	width: 100%;
+	width: 99%;
 }
 
 /* Styles for the moderation center.
@@ -627,7 +621,7 @@ h3.grid_header
 {
 	margin: 0 0 0 1ex;
 }
-#admincenter span.botslice, #manage_boards span.botslice, #manage_maintenance span.botslice, #manage_mail span.botslice
+#manage_boards span.botslice, #manage_maintenance span.botslice, #manage_mail span.botslice
 {
 	margin-bottom: 4px;
 }

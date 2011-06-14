@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* Subs-Admin.php                                                                  *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -141,7 +130,7 @@ function getFileVersions(&$versionOptions)
 		fclose($fp);
 
 		// The comment looks rougly like... that.
-		if (preg_match('~\*\s*Software\s+Version:\s+SMF\s+(.+?)[\s]{2}~i', $header, $match) == 1)
+		if (preg_match('~\*\s@version\s+(.+)[\s]{2}~i', $header, $match) == 1)
 			$version_info['file_versions']['SSI.php'] = $match[1];
 		// Not found!  This is bad.
 		else
@@ -156,7 +145,7 @@ function getFileVersions(&$versionOptions)
 		fclose($fp);
 
 		// Found it?
-		if (preg_match('~\*\s*Software\s+Version:\s+SMF\s+(.+?)[\s]{2}~i', $header, $match) == 1)
+		if (preg_match('~\*\s@version\s+(.+)[\s]{2}~i', $header, $match) == 1)
 			$version_info['file_versions']['subscriptions.php'] = $match[1];
 		// If we haven't how do we all get paid?
 		else
@@ -164,8 +153,8 @@ function getFileVersions(&$versionOptions)
 	}
 
 	// Load all the files in the Sources directory, except this file and the redirect.
-	$Sources_dir = dir($sourcedir);
-	while ($entry = $Sources_dir->read())
+	$sources_dir = dir($sourcedir);
+	while ($entry = $sources_dir->read())
 	{
 		if (substr($entry, -4) === '.php' && !is_dir($sourcedir . '/' . $entry) && $entry !== 'index.php')
 		{
@@ -175,14 +164,14 @@ function getFileVersions(&$versionOptions)
 			fclose($fp);
 
 			// Look for the version comment in the file header.
-			if (preg_match('~\*\s*Software\s+Version:\s+SMF\s+(.+?)[\s]{2}~i', $header, $match) == 1)
+			if (preg_match('~\*\s@version\s+(.+)[\s]{2}~i', $header, $match) == 1)
 				$version_info['file_versions'][$entry] = $match[1];
 			// It wasn't found, but the file was... show a '??'.
 			else
 				$version_info['file_versions'][$entry] = '??';
 		}
 	}
-	$Sources_dir->close();
+	$sources_dir->close();
 
 	// Load all the files in the default template directory - and the current theme if applicable.
 	$directories = array('default_template_versions' => $settings['default_theme_dir']);
@@ -191,8 +180,8 @@ function getFileVersions(&$versionOptions)
 
 	foreach ($directories as $type => $dirname)
 	{
-		$This_dir = dir($dirname);
-		while ($entry = $This_dir->read())
+		$this_dir = dir($dirname);
+		while ($entry = $this_dir->read())
 		{
 			if (substr($entry, -12) == 'template.php' && !is_dir($dirname . '/' . $entry))
 			{
@@ -202,19 +191,19 @@ function getFileVersions(&$versionOptions)
 				fclose($fp);
 
 				// Look for the version comment in the file header.
-				if (preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*' . preg_quote(basename($entry, '.template.php'), '~') . '(?:[\s]{2}|\*/)~i', $header, $match) == 1)
+				if (preg_match('~\*\s@version\s+(.+)[\s]{2}~i', $header, $match) == 1)
 					$version_info[$type][$entry] = $match[1];
 				// It wasn't found, but the file was... show a '??'.
 				else
 					$version_info[$type][$entry] = '??';
 			}
 		}
-		$This_dir->close();
+		$this_dir->close();
 	}
 
 	// Load up all the files in the default language directory and sort by language.
-	$This_dir = dir($lang_dir);
-	while ($entry = $This_dir->read())
+	$this_dir = dir($lang_dir);
+	while ($entry = $this_dir->read())
 	{
 		if (substr($entry, -4) == '.php' && $entry != 'index.php' && !is_dir($lang_dir . '/' . $entry))
 		{
@@ -234,7 +223,7 @@ function getFileVersions(&$versionOptions)
 				$version_info['default_language_versions'][$language][$name] = '??';
 		}
 	}
-	$This_dir->close();
+	$this_dir->close();
 
 	// Sort the file versions by filename.
 	if (!empty($versionOptions['sort_results']))

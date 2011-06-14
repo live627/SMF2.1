@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC4; Who
+// Version: 2.0; Who
 
 global $scripturl, $context;
 
@@ -130,7 +130,6 @@ $txt['credits_special'] = 'Special Thanks';
 $txt['credits_and'] = 'and';
 $txt['credits_anyone'] = 'And for anyone we may have missed, thank you!';
 $txt['credits_copyright'] = 'Copyrights';
-$txt['credits_removal_good'] = 'This forum has been authorized to remove the copyright display until %1$s. (<a href="%2$s" target="_blank">Validate</a>)';
 $txt['credits_forum'] = 'Forum';
 $txt['credits_modifications'] = 'Modifications';
 $txt['credits_groups_ps'] = 'Project Support';
@@ -139,7 +138,9 @@ $txt['credits_groups_support'] = 'Support Specialists';
 $txt['credits_groups_customize'] = 'Customizers';
 $txt['credits_groups_docs'] = 'Documentation Writers';
 $txt['credits_groups_marketing'] = 'Marketing';
-$txt['credits_groups_internationalizers'] = 'Internationalizers';
+$txt['credits_groups_internationalizers'] = 'Localizers';
+$txt['credits_groups_servers'] = 'Servers Administrators';
+$txt['credits_groups_site'] = 'Site Administrators';
 // Replace "English" with the name of this language pack in the string below.
 $txt['credits_groups_translation'] = 'English Translation';
 $txt['credits_groups_translators'] = 'Language Translators';

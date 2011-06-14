@@ -1,7 +1,7 @@
 /* ATTENTION: You don't need to run or use this file!  The convert.php script does everything for you! */
 
 /******************************************************************************/
----~ name: "vBulletin 3"
+---~ name: "vBulletin 3.0 - 3.4"
 /******************************************************************************/
 ---~ version: "SMF 2.0"
 ---~ settings: "/admin/config.php", "/includes/config.php"

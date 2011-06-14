@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* RemoveTopic.php                                                                 *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -121,7 +110,7 @@ function DeleteMessage()
 	$smcFunc['db_free_result']($request);
 
 	// Verify they can see this!
-	if ($modSettings['postmod_active'] && !$approved && $poster != $user_info['id'])
+	if ($modSettings['postmod_active'] && !$approved && !empty($poster) && $poster != $user_info['id'])
 		isAllowedTo('approve_posts');
 
 	if ($poster == $user_info['id'])
@@ -287,6 +276,9 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 			$recycleTopics = array();
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 			{
+				if (function_exists('apache_reset_timeout'))
+					@apache_reset_timeout();
+
 				$recycleTopics[] = $row['id_topic'];
 
 				// Set the id_previous_board for this topic - and make it not sticky.
@@ -385,6 +377,9 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 	// Decrease the posts/topics...
 	foreach ($adjustBoards as $stats)
 	{
+		if (function_exists('apache_reset_timeout'))
+			@apache_reset_timeout();
+
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}boards
 			SET
@@ -470,6 +465,9 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
+			if (function_exists('apache_reset_timeout'))
+				@apache_reset_timeout();
+
 			$words = array_merge($words, text2words($row['body'], $customIndexSettings['bytes_per_word'], true));
 			$messages[] = $row['id_msg'];
 		}

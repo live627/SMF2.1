@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* Themes.php                                                                      *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -56,7 +45,7 @@ if (!defined('SMF'))
 		- loads the Admin language file.
 		- calls ThemeAdmin() if no theme is specified. (the theme center.)
 		- requires an administrator.
-		- accessed with ?action=admin;area=theme;sa=settings&id=xx.
+		- accessed with ?action=admin;area=theme;sa=settings&th=xx.
 
 	void RemoveTheme()
 		- removes an installed theme.
@@ -357,7 +346,7 @@ function ThemeList()
 			fclose($fp);
 
 			// Can we find a version comment, at all?
-			if (preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*index(?:[\s]{2}|\*/)~i', $header, $match) == 1)
+			if (preg_match('~\*\s@version\s+(.+)[\s]{2}~i', $header, $match) == 1)
 				$context['themes'][$i]['version'] = $match[1];
 		}
 
@@ -779,6 +768,9 @@ function SetThemeSettings()
 
 	// Also load the actual themes language file - in case of special settings.
 	loadLanguage('Settings', '', true, true);
+
+	// And the custom language strings...
+	loadLanguage('ThemeStrings', '', false, true);
 
 	// Let the theme take care of the settings.
 	loadTemplate('Settings');
@@ -1751,7 +1743,7 @@ function EditTheme()
 						fclose($fp);
 
 						// Can we find a version comment, at all?
-						if (preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*' . $template . '(?:[\s]{2}|\*/)~i', $header, $match) == 1)
+						if (preg_match('~\*\s@version\s+(.+)[\s]{2}~i', $header, $match) == 1)
 						{
 							$ver = $match[1];
 							if (!isset($context['themes'][$key]['version']) || $context['themes'][$key]['version'] > $ver)

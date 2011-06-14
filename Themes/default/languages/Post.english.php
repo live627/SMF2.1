@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC4; Post
+// Version: 2.0; Post
 
 global $context;
 
@@ -91,7 +91,7 @@ $txt['reset_votes'] = 'Reset Vote Count';
 $txt['reset_votes_check'] = 'Check this if you want to reset all vote counts to 0.';
 $txt['votes'] = 'votes';
 $txt['attach'] = 'Attach';
-$txt['clean_attach'] = 'Clean Attachment';
+$txt['clean_attach'] = 'Clear Attachment';
 $txt['attached'] = 'Attached';
 $txt['allowed_types'] = 'Allowed file types';
 $txt['cant_upload_type'] = 'You cannot upload that type of file. The only allowed extensions are';

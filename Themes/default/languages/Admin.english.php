@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC4; Admin
+// Version: 2.0; Admin
 
 global $settings, $scripturl;
 
@@ -48,7 +48,7 @@ $txt['admin_agreement_select_language_change'] = 'Change';
 $txt['admin_delete_members'] = 'Delete Selected Members';
 $txt['admin_repair'] = 'Repair All Boards and Topics';
 $txt['admin_main_welcome'] = 'This is your &quot;%1$s&quot;.  From here, you can edit settings, maintain your forum, view logs, install packages, manage themes, and many other things.<div style="margin-top: 1ex;">If you have any trouble, please look at the &quot;Support &amp; Credits&quot; page.  If the information there doesn\'t help you, feel free to <a href="http://www.simplemachines.org/community/index.php" target="_blank" class="new_win">look to us for help</a> with the problem.</div>You may also find answers to your questions or problems by clicking the <img src="' . $settings['images_url'] . '/helptopics.gif" alt="%2$s" title="%3$s" /> symbols for more information on the related functions.';
-$txt['admin_news_desc'] = 'Please place one news item per box. Some BBC tags, such as <span title="Are you bold?">[b]</span>, <span title="I tall icks!!">[i]</span> and <span title="Brackets are great, no?">[u]</span> are allowed in your news, as well as smileys and HTML. Clear a news item\'s text box to remove it.';
+$txt['admin_news_desc'] = 'Please place one news item per box. BBC tags, such as <span title="Are you bold?">[b]</span>, <span title="I tall icks!!">[i]</span> and <span title="Brackets are great, no?">[u]</span> are allowed in your news, as well as smileys. Clear a news item\'s text box to remove it.';
 $txt['administrators'] = 'Forum Administrators';
 $txt['admin_reserved_desc'] = 'Reserved names will keep members from registering certain usernames or using these words in their displayed names. Choose the options you wish to use from the bottom before submitting.';
 $txt['admin_activation_email'] = 'Send activation email to new members upon registration';
@@ -439,7 +439,7 @@ $txt['news_mailing_desc'] = 'From this menu you can send messages to all members
 $txt['groups_edit_news'] = 'Groups allowed to edit news items';
 $txt['groups_send_mail'] = 'Groups allowed to send out forum newsletters';
 $txt['xmlnews_enable'] = 'Enable XML/RSS news';
-$txt['xmlnews_maxlen'] = 'Maximum post length:<div class="smalltext">(0 to disable, bad idea.)</div>';
+$txt['xmlnews_maxlen'] = 'Maximum message length:<div class="smalltext">(0 to disable, bad idea.)</div>';
 $txt['editnews_clickadd'] = 'Click here to add another item.';
 $txt['editnews_remove_selected'] = 'Remove selected';
 $txt['editnews_remove_confirm'] = 'Are you sure you want to delete the selected news items?';
@@ -512,7 +512,7 @@ $txt['hotTopicPosts'] = 'Number of posts for a hot topic';
 $txt['hotTopicVeryPosts'] = 'Number of posts for a very hot topic';
 $txt['enableAllMessages'] = 'Max topic size to show &quot;All&quot; posts';
 $txt['enableAllMessages_zero'] = '0 to never show &quot;All&quot;';
-$txt['disableCustomPerPage'] = 'Disable customizing topic/message count per page';
+$txt['disableCustomPerPage'] = 'Disable user defined topic/message count per page';
 $txt['enablePreviousNext'] = 'Enable previous/next topic links';
 
 $txt['not_done_title'] = 'Not done yet!';
@@ -530,13 +530,6 @@ $txt['language_description'] = 'This section allows you to edit languages instal
 $txt['language_edit'] = 'Edit Languages';
 $txt['language_add'] = 'Add Language';
 $txt['language_settings'] = 'Settings';
-
-$txt['copyright_ends_in'] = 'Your subscription to remove the SMF copyright notice ends in <strong>%1$s</strong> days.';
-$txt['copyright_click_renew'] = 'Click <a href="http://www.simplemachines.org/copyright/renew.php?key=%1$s" class="alert">here</a> to renew';
-$txt['copyright_removal'] = 'Copyright Removal';
-$txt['copyright_removal_desc'] = 'In order to remove the copyright from your SMF installation you will need the code purchased from the Simple Machines website. If you have not yet purchased a code please click <a href="http://www.simplemachines.org/copyright/index.php">here</a>. Once the code has been entered and verified the copyright will be hidden until your subscription expires. The time remaining will be shown on the admin center.';
-$txt['copyright_code'] = 'Copyright Code';
-$txt['copyright_proceed'] = 'Proceed';
 
 $txt['advanced'] = 'Advanced';
 $txt['simple'] = 'Simple';

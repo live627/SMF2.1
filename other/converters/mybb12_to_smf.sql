@@ -16,6 +16,10 @@
 TRUNCATE {$to_prefix}members;
 
 ---{
+/* fix invalid birthdates */
+if(!preg_match('/\d{4}-\d{2}-\d{2}/', $row['birthdate']))
+	$row['birthdate'] = '0001-01-01';
+
 alterDatabase('members', 'change column', array(
 	'old_name' => 'password_salt',
 	'name' => 'password_salt',

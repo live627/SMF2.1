@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; PersonalMessage
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // This is the main sidebar for the personal messages section.
 function template_pm_above()
@@ -1096,8 +1105,8 @@ function template_send()
 	</div>';
 
 	echo '
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/PersonalMessage.js?rc3"></script>
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/PersonalMessage.js?fin20"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?fin20"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var oPersonalMessageSend = new smf_PersonalMessageSend({
 				sSelf: \'oPersonalMessageSend\',
@@ -1313,7 +1322,7 @@ function template_report_message()
 						<strong>', $txt['pm_report_reason'], ':</strong>
 					</dt>
 					<dd>
-						<textarea name="reason" rows="4" cols="70" style="width: 80%;"></textarea>
+						<textarea name="reason" rows="4" cols="70" style="' . ($context['browser']['is_ie8'] ? 'width: 635px; max-width: 80%; min-width: 80%' : 'width: 80%') . ';"></textarea>
 					</dd>
 				</dl>
 				<input type="submit" name="report" value="', $txt['pm_report_message'], '" class="button_submit" />

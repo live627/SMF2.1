@@ -3,6 +3,10 @@
 	width: 96%;
 	margin: 0 auto;
 }
+code.bbc_code
+{
+	white-space: normal;
+}
 h3.catbg input.input_check
 {
 	margin: 0 4px;
@@ -59,11 +63,14 @@ h3.catbg span.ie6_header, h4.catbg span.ie6_header, h3.titlebg span.ie6_header, 
 }
 
 /* the tabled definition lists */
-dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.options dd, .login dd
+/* I commented the following out. Not sure why it was there. 
+/* Changing float: left; to float: right; sorts the settings dd class in index.css*/
+/* All the others seem fine too.*/
+/*dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd, #poll_options dl.options dd, .login dd
 {
 	float: none !important;
 	width: auto;
-}
+}*/
 /* generic lists header */
 /* Side paddings must NOT be defined here.*/
 .table_grid thead th
@@ -128,9 +135,9 @@ h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
 {
 	clear: both;
 }
-.signature
+#quickReplyOptions form textarea
 {
-	padding: 0 0 0.8em 0;
+	width: 98%;
 }
 
 /* Styles for the statistics center.
@@ -149,7 +156,7 @@ h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
 ------------------------------------------------------- */
 #main_admsection
 {
-	height: 655px;
+	height: 100%;
 }
 #main_admsection table
 {

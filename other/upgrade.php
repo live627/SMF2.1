@@ -1,30 +1,19 @@
 <?php
-/**********************************************************************************
-* upgrade.php                                                                     *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC5                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // Version information...
-define('SMF_VERSION', '2.0 RC5');
-define('SMF_LANG_VERSION', '2.0 RC5');
+define('SMF_VERSION', '2.0');
+define('SMF_LANG_VERSION', '2.0');
 
 $GLOBALS['required_php_version'] = '4.1.0';
 $GLOBALS['required_mysql_version'] = '4.0.18';
@@ -187,12 +176,13 @@ if (!function_exists('clean_cache'))
 	// Empty out the cache folder.
 	function clean_cache($type = '')
 	{
-		global $cachedir;
+		global $cachedir, $sourcedir;
 
 		// No directory = no game.
 		if (!is_dir($cachedir))
 			return;
 
+		// Remove the files in SMF's own disk cache, if any
 		$dh = opendir($cachedir);
 		while ($file = readdir($dh))
 		{
@@ -200,6 +190,11 @@ if (!function_exists('clean_cache'))
 				@unlink($cachedir . '/' . $file);
 		}
 		closedir($dh);
+
+		// Invalidate cache, to be sure!
+		// ... as long as Load.php can be modified, anyway.
+		@touch($sourcedir . '/' . 'Load.php');
+		clearstatcache();
 	}
 }
 
@@ -968,7 +963,7 @@ function WelcomeLogin()
 
 	// Do a quick version spot check.
 	$temp = substr(@implode('', @file($boarddir . '/index.php')), 0, 4096);
-	preg_match('~\*\s*Software\s+Version:\s+SMF\s+(.+?)[\s]{2}~i', $temp, $match);
+	preg_match('~\*\s@version\s+(.+)[\s]{2}~i', $temp, $match);
 	if (empty($match[1]) || $match[1] != SMF_VERSION)
 		return throw_error('The upgrader found some old or outdated files.<br /><br />Please make certain you uploaded the new versions of all the files included in the package.');
 
@@ -2106,36 +2101,26 @@ function changeSettings($config_vars)
 	for ($i = 0, $n = count($settingsArray); $i < $n; $i++)
 	{
 		// Don't trim or bother with it if it's not a variable.
-		if (substr($settingsArray[$i], 0, 1) != '$')
-			continue;
-
-		$settingsArray[$i] = trim($settingsArray[$i]) . "\n";
-
-		foreach ($config_vars as $var => $val)
+		if (substr($settingsArray[$i], 0, 1) == '$')
 		{
-			if (isset($settingsArray[$i]) && strncasecmp($settingsArray[$i], '$' . $var, 1 + strlen($var)) == 0)
+			$settingsArray[$i] = trim($settingsArray[$i]) . "\n";
+
+			foreach ($config_vars as $var => $val)
 			{
-				// This fixes a bug where cachedir may of been lost, causing upgrade to fail.
-				if ($var == 'upgradeData' && substr($settingsArray[$i - 1], 0, 2) == 'if')
+				if (isset($settingsArray[$i]) && strncasecmp($settingsArray[$i], '$' . $var, 1 + strlen($var)) == 0)
 				{
-					if (strpos($settingsArray[$i - 1], 'cachedir') !== false)
-						$settingsArray[$i++] = '	$cachedir = $boarddir . \'/cache\';' . "\n";
-					elseif (strpos($settingsArray[$i - 1], 'sourcedir') !== false)
-						$settingsArray[$i++] = '	$sourcedir = $boarddir . \'/Sources\';' . "\n";
-				}
+					if ($val == '#remove#')
+						unset($settingsArray[$i]);
+					else
+					{
+						$comment = strstr(substr($settingsArray[$i], strpos($settingsArray[$i], ';')), '#');
+						$settingsArray[$i] = '$' . $var . ' = ' . $val . ';' . ($comment != '' ? "\t\t" . $comment : "\n");
+					}
 
-				if ($val == '#remove#')
-					unset($settingsArray[$i]);
-				else
-				{
-					$comment = strstr(substr($settingsArray[$i], strpos($settingsArray[$i], ';')), '#');
-					$settingsArray[$i] = '$' . $var . ' = ' . $val . ';' . ($comment != '' ? "\t\t" . $comment : "\n");
+					unset($config_vars[$var]);
 				}
-
-				unset($config_vars[$var]);
 			}
 		}
-
 		if (isset($settingsArray[$i]))
 		{
 			if (trim(substr($settingsArray[$i], 0, 2)) == '?' . '>')
@@ -2145,7 +2130,7 @@ function changeSettings($config_vars)
 
 	// Assume end-of-file if the end wasn't found.
 	if (empty($end) || $end < 10)
-		$end = count($settingsArray) - 1;
+		$end = count($settingsArray);
 
 	if (!empty($config_vars))
 	{
@@ -3023,7 +3008,7 @@ Usage: /path/to/php -f ' . basename(__FILE__) . ' -- [OPTION]...
 
 	// Do a quick version spot check.
 	$temp = substr(@implode('', @file($boarddir . '/index.php')), 0, 4096);
-	preg_match('~\*\s*Software\s+Version:\s+SMF\s+(.+?)[\s]{2}~i', $temp, $match);
+	preg_match('~\*\s@version\s+(.+)[\s]{2}~i', $temp, $match);
 	if (empty($match[1]) || $match[1] != SMF_VERSION)
 		print_error('Error: Some files have not yet been updated properly.');
 
@@ -3433,8 +3418,8 @@ function template_upgrade_above()
 		<meta http-equiv="Content-Type" content="text/html; charset=', isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1', '" />
 		<meta name="robots" content="noindex" />
 		<title>', $txt['upgrade_upgrade_utility'], '</title>
-		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css?rc3" />
-		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/install.css?rc3" />
+		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css?fin20" />
+		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/install.css?fin20" />
 				<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var smf_scripturl = \'', $upgradeurl, '\';
@@ -3565,7 +3550,7 @@ function template_upgrade_below()
 		</div>
 	</div></div>
 	<div id="footer_section"><div class="frame" style="height: 40px;">
-		<div class="smalltext"><a href="http://www.simplemachines.org/" title="Free Forum Software" target="_blank" class="new_win">SMF &copy; 2006&ndash;2010, Simple Machines LLC</a></div>
+		<div class="smalltext"><a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank" class="new_win">SMF &copy;2011, Simple Machines</a></div>
 	</div></div>
 	</body>
 </html>';
@@ -4166,8 +4151,7 @@ function template_database_changes()
 
 		if ($is_debug)
 			echo '
-					setOuterHTML(document.getElementById(\'debuginfo\'), \'done<span id="debuginfo"><\' + \'/span>\');
-					document.getElementById(\'debug_section\').style.display = "none"';
+					document.getElementById(\'debug_section\').style.display = "none";';
 
 		echo '
 
@@ -4192,7 +4176,7 @@ function template_database_changes()
 
 		if ($is_debug)
 			echo '
-					setOuterHTML(document.getElementById(\'debuginfo\'), \'done<br />Moving to next script file...<span id="debuginfo"><\' + \'/span>\');';
+					setOuterHTML(document.getElementById(\'debuginfo\'), \'Moving to next script file...done<br /><span id="debuginfo"><\' + \'/span>\');';
 
 		echo '
 					getNextItem();

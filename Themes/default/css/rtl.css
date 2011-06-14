@@ -74,7 +74,7 @@ dl.settings dt.windowbg
 }
 dl.settings dd
 {
-	float: right;
+	float: left;
 }
 dl.settings img
 {
@@ -167,10 +167,6 @@ tr.titlebg th.last_th
 .buttonlist ul
 {
 	margin: 0 0 0 0.2em;
-}
-.buttonlist ul li
-{
-	float: right;
 }
 .buttonlist ul li a
 {
@@ -688,11 +684,6 @@ tr.titlebg td
 .left_admmenu li
 {
 	padding: 0 0.5em 0 0;
-}
-#main_admsection
-{
-	margin-right: 172px;
-	margin-left: 0;
 }
 /* Styles for generic tables.
 ------------------------------------------------------- */

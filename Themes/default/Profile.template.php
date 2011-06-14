@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; Profile
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // Template for the profile side bar - goes before any other profile template.
 function template_profile_above()
@@ -69,7 +78,7 @@ function template_summary()
 	if (!empty($context['custom_fields']))
 	{
 		foreach ($context['custom_fields'] as $field)
-			if ($field['placement'] == 1 || empty($field['output_html']))
+			if (($field['placement'] == 1 || empty($field['output_html'])) && !empty($field['value']))
 				echo '
 					<li class="custom_field">', $field['output_html'], '</li>';
 	}
@@ -543,7 +552,7 @@ function template_editBuddies()
 			<span class="lowerframe"><span></span></span>
 		</div>
 	</form>
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?fin20"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var oAddBuddySuggest = new smc_AutoSuggest({
 			sSelf: \'oAddBuddySuggest\',
@@ -629,7 +638,7 @@ function template_editIgnoreList()
 			<span class="lowerframe"><span></span></span>
 		</div>
 	</form>
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?fin20"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var oAddIgnoreSuggest = new smc_AutoSuggest({
 			sSelf: \'oAddIgnoreSuggest\',
@@ -1172,7 +1181,7 @@ function template_edit_options()
 		{
 			echo '
 					</dl>
-					<hr width="100%" size="1" class="hrcolor" />
+					<hr width="100%" size="1" class="hrcolor clear" />
 					<dl>';
 		}
 		elseif ($field['type'] == 'callback')
@@ -1260,7 +1269,7 @@ function template_edit_options()
 	{
 		if ($lastItem != 'hr')
 			echo '
-					<hr width="100%" size="1" class="hrcolor" />';
+					<hr width="100%" size="1" class="hrcolor clear" />';
 
 		echo '
 					<dl>';
@@ -1288,7 +1297,7 @@ function template_edit_options()
 					<div>', $context['profile_posthtml'], '</div>';
 	elseif ($lastItem != 'hr')
 		echo '
-					<hr width="100%" size="1" class="hrcolor" />';
+					<hr width="100%" size="1" class="hrcolor clear" />';
 
 	// Only show the password box if it's actually needed.
 	if ($context['require_password'])
@@ -1394,7 +1403,7 @@ function template_profile_pm_settings()
 								</dt>
 								<dd>
 										<select name="pm_receive_from" id="pm_receive_from">
-												<option value="0"', empty($context['receive_from']) ? ' selected="selected"' : '', '>', $txt['pm_receive_from_everyone'], '</option>';
+												<option value="0"', empty($context['receive_from']) || (empty($modSettings['enable_buddylist']) && $context['receive_from'] < 3) ? ' selected="selected"' : '', '>', $txt['pm_receive_from_everyone'], '</option>';
 
 	if (!empty($modSettings['enable_buddylist']))
 		echo '
@@ -1402,7 +1411,7 @@ function template_profile_pm_settings()
 												<option value="2"', !empty($context['receive_from']) && $context['receive_from'] == 2 ? ' selected="selected"' : '', '>', $txt['pm_receive_from_buddies'], '</option>';
 
 	echo '
-												<option value="3"', ((!empty($context['receive_from']) && $context['receive_from'] > 2) || (empty($modSettings['enable_buddylist']) && !empty($context['receive_from']))) ? ' selected="selected"' : '', '>', $txt['pm_receive_from_admins'], '</option>
+												<option value="3"', !empty($context['receive_from']) && $context['receive_from'] > 2 ? ' selected="selected"' : '', '>', $txt['pm_receive_from_admins'], '</option>
 										</select>
 								</dd>
 								<dt>
@@ -1677,8 +1686,8 @@ function template_groupMembership()
 				<span class="upperframe"><span></span></span>
 				<div class="roundframe"><div class="innerframe">
 					', $txt['request_group_membership_desc'], ':
-					<textarea name="reason" rows="4" style="width: 95%"></textarea>
-					<div class="righttext">
+					<textarea name="reason" rows="4" style="' . ($context['browser']['is_ie8'] ? 'width: 635px; max-width: 99%; min-width: 99%' : 'width: 99%') . ';"></textarea>
+					<div class="righttext" style="margin: 0.5em 0.5% 0 0.5%;">
 						<input type="hidden" name="gid" value="', $context['group_request']['id'], '" />
 						<input type="submit" name="req" value="', $txt['submit_request'], '" class="button_submit" />
 					</div>
@@ -1935,9 +1944,9 @@ function template_viewWarning()
 			</h3>
 		</div>
 		<div class="windowbg">
-			<span class="topslice"><span></span</span>
+			<span class="topslice"><span></span></span>
 			<div class="content">
-				<dl>
+				<dl class="settings">
 					<dt>
 						<strong>', $txt['profile_warning_name'], ':</strong>
 					</dt>
@@ -2386,7 +2395,7 @@ function template_profile_save()
 
 	echo '
 
-					<hr width="100%" size="1" class="hrcolor" />';
+					<hr width="100%" size="1" class="hrcolor clear" />';
 
 	// Only show the password box if it's actually needed.
 	if ($context['require_password'])
@@ -2573,6 +2582,7 @@ function template_profile_avatar_select()
 	echo '
 							<dt>
 								<strong id="personal_picture">', $txt['personal_picture'], '</strong>
+								<input type="radio" onclick="swap_avatar(this); return true;" name="avatar_choice" id="avatar_choice_none" value="none"' . ($context['member']['avatar']['choice'] == 'none' ? ' checked="checked"' : '') . ' class="input_radio" /><label for="avatar_choice_none"' . (isset($context['modify_error']['bad_avatar']) ? ' class="error"' : '') . '>' . $txt['no_avatar'] . '</label><br />
 								', !empty($context['member']['avatar']['allow_server_stored']) ? '<input type="radio" onclick="swap_avatar(this); return true;" name="avatar_choice" id="avatar_choice_server_stored" value="server_stored"' . ($context['member']['avatar']['choice'] == 'server_stored' ? ' checked="checked"' : '') . ' class="input_radio" /><label for="avatar_choice_server_stored"' . (isset($context['modify_error']['bad_avatar']) ? ' class="error"' : '') . '>' . $txt['choose_avatar_gallery'] . '</label><br />' : '', '
 								', !empty($context['member']['avatar']['allow_external']) ? '<input type="radio" onclick="swap_avatar(this); return true;" name="avatar_choice" id="avatar_choice_external" value="external"' . ($context['member']['avatar']['choice'] == 'external' ? ' checked="checked"' : '') . ' class="input_radio" /><label for="avatar_choice_external"' . (isset($context['modify_error']['bad_avatar']) ? ' class="error"' : '') . '>' . $txt['my_own_pic'] . '</label><br />' : '', '
 								', !empty($context['member']['avatar']['allow_upload']) ? '<input type="radio" onclick="swap_avatar(this); return true;" name="avatar_choice" id="avatar_choice_upload" value="upload"' . ($context['member']['avatar']['choice'] == 'upload' ? ' checked="checked"' : '') . ' class="input_radio" /><label for="avatar_choice_upload"' . (isset($context['modify_error']['bad_avatar']) ? ' class="error"' : '') . '>' . $txt['avatar_will_upload'] . '</label>' : '', '
@@ -2715,7 +2725,7 @@ function template_profile_avatar_select()
 	{
 		echo '
 								<div id="avatar_upload">
-									<input type="file" size="48" name="attachment" value="" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'upload\');" class="input_file" />
+									<input type="file" size="44" name="attachment" value="" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'upload\');" class="input_file" />
 									', ($context['member']['avatar']['id_attach'] > 0 ? '<br /><br /><img src="' . $context['member']['avatar']['href'] . (strpos($context['member']['avatar']['href'], '?') === false ? '?' : '&amp;') . 'time=' . time() . '" alt="" /><input type="hidden" name="id_attach" value="' . $context['member']['avatar']['id_attach'] . '" />' : ''), '
 								</div>';
 	}
@@ -2723,8 +2733,8 @@ function template_profile_avatar_select()
 	echo '
 								<script type="text/javascript"><!-- // --><![CDATA[
 									', !empty($context['member']['avatar']['allow_server_stored']) ? 'document.getElementById("avatar_server_stored").style.display = "' . ($context['member']['avatar']['choice'] == 'server_stored' ? '' : 'none') . '";' : '', '
-									', !empty($context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "' . (($context['member']['avatar']['choice'] == 'external' || (empty($context['member']['avatar']['allow_server_stored']))) ? '' : 'none') . '";' : '', '
-									', !empty($context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "' . (($context['member']['avatar']['choice'] == 'upload' || (empty($context['member']['avatar']['allow_server_stored']) && empty($context['member']['avatar']['allow_external']))) ? '' : 'none') . '";' : '', '
+									', !empty($context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "' . ($context['member']['avatar']['choice'] == 'external' ? '' : 'none') . '";' : '', '
+									', !empty($context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "' . ($context['member']['avatar']['choice'] == 'upload' ? '' : 'none') . '";' : '', '
 
 									function swap_avatar(type)
 									{
@@ -2745,11 +2755,15 @@ function template_profile_avatar_select()
 												', !empty($context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "none";' : '', '
 												', !empty($context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "";' : '', '
 												break;
+											case "avatar_choice_none":
+												', !empty($context['member']['avatar']['allow_server_stored']) ? 'document.getElementById("avatar_server_stored").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "none";' : '', '
+												break;
 										}
 									}
 								// ]]></script>
 							</dd>';
-
 }
 
 // Callback for modifying karam.
@@ -2891,7 +2905,7 @@ function template_authentication_method()
 
 	if ($context['require_password'])
 		echo '
-					<hr width="100%" size="1" class="hrcolor" />
+					<hr width="100%" size="1" class="hrcolor clear" />
 					<dl>
 						<dt>
 							<strong', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' class="error"' : '', '>', $txt['current_password'], ': </strong><br />

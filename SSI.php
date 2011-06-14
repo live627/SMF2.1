@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* SSI.php                                                                         *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // Don't do anything if SMF is already loaded.
 if (defined('SMF'))
@@ -76,8 +65,8 @@ require_once($sourcedir . '/Errors.php');
 require_once($sourcedir . '/Load.php');
 require_once($sourcedir . '/Security.php');
 
-// Using an pre-PHP5 version?
-if (@version_compare(PHP_VERSION, '5') == -1)
+// Using an pre-PHP 5.1 version?
+if (@version_compare(PHP_VERSION, '5.1') == -1)
 	require_once($sourcedir . '/Subs-Compat.php');
 
 // Create a variable to store some SMF specific functions in.
@@ -159,6 +148,14 @@ loadTheme(isset($ssi_theme) ? (int) $ssi_theme : 0);
 if (isset($_REQUEST['ssi_ban']) || (isset($ssi_ban) && $ssi_ban === true))
 	is_not_banned();
 
+// Do we allow guests in here?
+if (empty($ssi_guest_access) && empty($modSettings['allow_guestAccess']) && $user_info['is_guest'] && basename($_SERVER['PHP_SELF']) != 'SSI.php')
+{
+	require_once($sourcedir . '/Subs-Auth.php');
+	KickGuest();
+	obExit(null, true);
+}
+
 // Load the stuff like the menu bar, etc.
 if (isset($ssi_layers))
 {
@@ -177,7 +174,7 @@ if (!isset($_SESSION['USER_AGENT']) && (!isset($_GET['ssi_function']) || $_GET['
 	$_SESSION['USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
 
 // Call a function passed by GET.
-if (isset($_GET['ssi_function']) && function_exists('ssi_' . $_GET['ssi_function']))
+if (isset($_GET['ssi_function']) && function_exists('ssi_' . $_GET['ssi_function']) && (!empty($modSettings['allow_guestAccess']) || !$user_info['is_guest']))
 {
 	call_user_func('ssi_' . $_GET['ssi_function']);
 	exit;

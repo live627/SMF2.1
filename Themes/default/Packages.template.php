@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; Packages
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 function template_main()
 {
@@ -973,13 +982,13 @@ function template_servers()
 								<strong>' . $txt['server_name'] . ':</strong>
 							</dt>
 							<dd>
-								<input type="text" name="servername" size="40" value="SMF" class="input_text" />
+								<input type="text" name="servername" size="44" value="SMF" class="input_text" />
 							</dd>
 							<dt>
 								<strong>' . $txt['serverurl'] . ':</strong>
 							</dt>
 							<dd>
-								<input type="text" name="serverurl" size="50" value="http://" class="input_text" />
+								<input type="text" name="serverurl" size="44" value="http://" class="input_text" />
 							</dd>
 						</dl>
 						<div class="righttext">
@@ -996,13 +1005,13 @@ function template_servers()
 								<strong>' . $txt['serverurl'] . ':</strong>
 							</dt>
 							<dd>
-								<input type="text" name="package" size="50" value="http://" class="input_text" />
+								<input type="text" name="package" size="44" value="http://" class="input_text" />
 							</dd>
 							<dt>
 								<strong>', $txt['package_download_filename'], ':</strong>
 							</dt>
 							<dd>
-								<input type="text" name="filename" size="50" class="input_text" /><br />
+								<input type="text" name="filename" size="44" class="input_text" /><br />
 								<span class="smalltext">', $txt['package_download_filename_info'], '</span>
 							</dd>
 						</dl>
@@ -1509,9 +1518,6 @@ function template_view_operations()
 {
 	global $context, $txt, $settings;
 
-	// Determine the position text.
-	$operation_text = $context['operations']['position'] == 'replace' ? 'operation_replace' : ($context['operations']['position'] == 'before' ? 'operation_after' : 'operation_before');
-
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"', $context['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
@@ -1519,31 +1525,20 @@ function template_view_operations()
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index.css" />
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/admin.css" />
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc3"></script>
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc3"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?fin20"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?fin20"></script>
 	</head>
 	<body>
 		<div class="padding windowbg">
-			<div class="cat_bar">
-				<h3 class="catbg">
-				', $txt['operation_find'], '<a href="javascript:void(0);" onclick="return smfSelectText(\'find_code\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
-				</h3>
+			<div class="padding">
+				', $context['operations']['search'], '
 			</div>
 			<div class="padding">
-				<code id="find_code" style="overflow: auto; max-height: 200px; white-space: pre;">', $context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search'], '</code>
-			</div>
-			<div class="cat_bar">
-				<h3 class="catbg topmargin">
-				', $txt[$operation_text], '<a href="javascript:void(0);" onclick="return smfSelectText(\'replace_code\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
-				</h3>
-			</div>
-			<div class="padding">
-				<code id="replace_code" style="overflow: auto; max-height: 200px; white-space: pre;">', $context['operations']['replace'], '</code>
+				', $context['operations']['replace'], '
 			</div>
 		</div>
 	</body>
 </html>';
-
 }
 
 function template_file_permissions()

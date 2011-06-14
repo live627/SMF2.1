@@ -118,7 +118,6 @@ FROM {$from_prefix}threads;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}messages;
-TRUNCATE {$to_prefix}attachments;
 
 ---* {$to_prefix}messages 200
 ---{
@@ -198,6 +197,7 @@ FROM {$from_prefix}thread_notify;
 /******************************************************************************/
 --- Converting attachments...
 /******************************************************************************/
+TRUNCATE {$to_prefix}attachments;
 
 ---* {$to_prefix}attachments
 ---{
@@ -238,29 +238,6 @@ SELECT
 FROM {$from_prefix}forum_attachments;
 ---*
 
-/******************************************************************************/
---- Converting moderators...
-/******************************************************************************/
-
-TRUNCATE {$to_prefix}moderators;
-
----* {$to_prefix}moderators 25
----{
-$no_add = true;
-
-// All moderators are held in a period seperated array.
-$moderators = explode('.', $row['forum_moderators']);
-
-// Do a loop and get them corrected for inserting
-foreach ($moderators AS $mod)
-	$rows[] = array(
-		'id_board' => $row['id_board'],
-		'id_member' => $mod
-	);
----}
-SELECT forum_id AS id_board, forum_moderators
-FROM {$from_prefix}forums;
----*
 
 /******************************************************************************/
 --- Converting membergroups...

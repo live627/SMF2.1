@@ -1,28 +1,23 @@
 <?php
-/**********************************************************************************
-* ssi_examples.php                                                                *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
-/* Special thanks to Spaceman-Spiff for his contributions to this page.           *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
+
+// Special thanks to Spaceman-Spiff for his contributions to this page.
+
+/* Define $ssi_guest_access variable just before including SSI.php to handle guest access to your script.
+	false: (default) fallback to forum setting
+	true: allow guest access to the script regardless
+*/
+$ssi_guest_access = false;
 
 // Include the SSI file.
 require(dirname(__FILE__) . '/SSI.php');
@@ -39,7 +34,7 @@ template_ssi_above();
 ?>
 
 			<h2>SMF SSI.php Functions</h2>
-			<p><strong>Current Version:</strong> 2.0 RC4</p>
+			<p><strong>Current Version:</strong> 2.0</p>
 			<p>This file is used to demonstrate the capabilities of SSI.php using PHP include functions. The examples show the include tag, then the results of it.</p>
 
 			<h2>Include Code</h2>
@@ -422,10 +417,14 @@ function template_ssi_above()
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>SMF 2.0 RC4 SSI.php Examples</title>
-		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css?rc3" />
+		<title>SMF 2.0 SSI.php Examples</title>
+		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css?fin20" />
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<style type="text/css">
+			#wrapper
+			{
+				width: 90%;
+			}
 			#upper_section .user
 			{
 				height: 4em;
@@ -453,11 +452,6 @@ function template_ssi_above()
 				top: -70px;
 				padding: 1em 2em 1em 1em;
 				line-height: 1.6em;
-			}
-			#footer_section
-			{
-				position: relative;
-				top: -20px;
 			}
 			#footer_section
 			{
@@ -524,20 +518,21 @@ function template_ssi_above()
 		// ]]></script>
 	</head>
 	<body>
-		<div id="header"><div class="frame">
-			<div id="top_section">
-				<h1 class="forumtitle">SMF 2.0 RC4 SSI.php Examples</h1>
-				<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />
-			</div>
-			<div id="upper_section" class="middletext" style="overflow: hidden;">
-				<div class="user"></div>
-				<div class="news normaltext">
+		<div id="wrapper">
+			<div id="header"><div class="frame">
+				<div id="top_section">
+					<h1 class="forumtitle">SMF 2.0 SSI.php Examples</h1>
+					<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />
 				</div>
-			</div>
-		</div></div>
-		<div id="content_section"><div class="frame">
-			<div id="main_content_section">
-				<div id="liftup" class="flow_auto">';
+				<div id="upper_section" class="middletext" style="overflow: hidden;">
+					<div class="user"></div>
+					<div class="news normaltext">
+					</div>
+				</div>
+			</div></div>
+			<div id="content_section"><div class="frame">
+				<div id="main_content_section">
+					<div id="liftup" class="flow_auto">';
 }
 
 function template_ssi_below()
@@ -545,15 +540,16 @@ function template_ssi_below()
 	global $time_start;
 
 	echo '
-					<script type="text/javascript"><!-- // --><![CDATA[
-						showSSIBlock("ssi_recentTopics");
-					// ]]></script>
+						<script type="text/javascript"><!-- // --><![CDATA[
+							showSSIBlock("ssi_recentTopics");
+						// ]]></script>
+					</div>
 				</div>
-			</div>
-		</div></div>
-		<div id="footer_section"><div class="frame">
-			<div class="smalltext"><a href="http://www.simplemachines.org">Simple Machines Forum</a></div>
-		</div></div>
+			</div></div>
+			<div id="footer_section"><div class="frame">
+				<div class="smalltext"><a href="http://www.simplemachines.org">Simple Machines Forum</a></div>
+			</div></div>
+		</div>
 	</body>
 </html>';
 }

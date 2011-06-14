@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* Subs-Db-postgresql.php                                                          *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -64,9 +53,9 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix
 		);
 
 	if (!empty($db_options['persist']))
-		$connection = @pg_pconnect('host=' . $db_server . ' dbname=' . $db_name . ' user=' . $db_user . ' password=' . $db_passwd);
+		$connection = @pg_pconnect('host=' . $db_server . ' dbname=' . $db_name . ' user=\'' . $db_user . '\' password=\'' . $db_passwd . '\'');
 	else
-		$connection = @pg_connect( 'host=' . $db_server . ' dbname=' . $db_name . ' user=' . $db_user . ' password=' . $db_passwd);
+		$connection = @pg_connect( 'host=' . $db_server . ' dbname=' . $db_name . ' user=\'' . $db_user . '\' password=\'' . $db_passwd . '\'');
 
 	// Something's wrong, show an error if its fatal (which we assume it is)
 	if (!$connection)
@@ -305,6 +294,9 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		),
 		'profile_board_stats' => array(
 			'~COUNT\(\*\) \/ MAX\(b.num_posts\)~' => 'CAST(COUNT(*) AS DECIMAL) / CAST(b.num_posts AS DECIMAL)',
+		),
+		'set_smiley_order' => array(
+			'~(.+)~' => '',
 		),
 	);
 
@@ -706,7 +698,7 @@ function smf_db_error_backtrace($error_message, $log_message = '', $error_type =
 		foreach (debug_backtrace() as $step)
 		{
 			// Found it?
-			if (strpos($step['function'], 'query') === false && !in_array(substr($step['function'], 0, 7), array('smf_db_', 'preg_re', 'db_erro')))
+			if (strpos($step['function'], 'query') === false && !in_array(substr($step['function'], 0, 7), array('smf_db_', 'preg_re', 'db_erro', 'call_us')) && substr($step['function'], 0, 2) != '__')
 			{
 				$log_message .= '<br />Function: ' . $step['function'];
 				break;

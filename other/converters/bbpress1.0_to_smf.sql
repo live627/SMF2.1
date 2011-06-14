@@ -74,10 +74,27 @@ TRUNCATE {$to_prefix}log_boards;
 TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics 20
+---{
+
+$request = convert_query("
+	SELECT
+		meta_value
+	FROM {$from_prefix}meta
+	WHERE object_id = $row[id_topic]
+		AND object_type = 'bb_topic'
+		AND meta_key = 'views'");
+
+list ($views) = convert_fetch_row($request);
+convert_free_result($request);
+
+if (isset($views) && $views > 0)
+	$row['num_views'] = $views;
+
+---}
 SELECT
 	t.topic_id AS id_topic, t.topic_sticky AS is_sticky, t.forum_id AS id_board,
 	IFNULL(MIN(p.post_id), 0) AS id_first_msg, IFNULL(MAX(p.post_id), 0) AS id_last_msg,
-	t.topic_poster AS id_member_started, t.topic_last_poster AS id_member_updated,
+	t.topic_poster AS id_member_started, t.topic_last_poster AS id_member_updated, 0 AS num_views,
 	t.topic_posts AS num_replies, CASE t.topic_open WHEN 1 THEN 0 ELSE 1 END AS locked
 FROM {$from_prefix}topics AS t
 	LEFT JOIN {$from_prefix}posts AS p ON (p.topic_id = t.topic_id)

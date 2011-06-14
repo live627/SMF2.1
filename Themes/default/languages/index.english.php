@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC4; index
+// Version: 2.0; index
 
 global $forum_copyright, $forum_version, $webmaster_email, $scripturl, $context, $boardurl;
 
@@ -25,6 +25,9 @@ $txt['days_short'] = array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
 $txt['months'] = array(1 => 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 $txt['months_titles'] = array(1 => 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 $txt['months_short'] = array(1 => 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+
+$txt['time_am'] = 'am';
+$txt['time_pm'] = 'pm';
 
 $txt['newmessages0'] = 'is new';
 $txt['newmessages1'] = 'are new';
@@ -432,8 +435,8 @@ $txt['status'] = 'Status';
 $txt['go_up'] = 'Go Up';
 $txt['go_down'] = 'Go Down';
 
-$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank" class="new_win">Powered by %1$s</a> |
- <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank" class="new_win">SMF &copy; 2006&ndash;2010, Simple Machines LLC</a>';
+$forum_copyright = '<a href="' . $scripturl . '?action=credits" title="Simple Machines Forum" target="_blank" class="new_win">%1$s</a> |
+ <a href="http://www.simplemachines.org/about/smf/license.php" title="License" target="_blank" class="new_win">SMF &copy; 2011</a>, <a href="http://www.simplemachines.org" title="Simple Machines" target="_blank" class="new_win">Simple Machines</a>';
 
 $txt['birthdays'] = 'Birthdays:';
 $txt['events'] = 'Events:';
@@ -501,7 +504,7 @@ $txt['never'] = 'Never';
 $txt['more'] = 'more';
 
 $txt['hostname'] = 'Hostname';
-$txt['you_are_post_banned'] = 'Sorry %1$s, you are banned from posting or sending personal messages on this forum.';
+$txt['you_are_post_banned'] = 'Sorry %1$s, you are banned from posting and sending personal messages on this forum.';
 $txt['ban_reason'] = 'Reason';
 
 $txt['tables_optimized'] = 'Database tables optimized';
@@ -689,7 +692,7 @@ $txt['account'] = 'Account Settings';
 $txt['forumprofile'] = 'Forum Profile';
 
 $txt['modSettings_title'] = 'Features and Options';
-$txt['package'] = 'Packages';
+$txt['package'] = 'Package Manager';
 $txt['errlog'] = 'Error Log';
 $txt['edit_permissions'] = 'Permissions';
 $txt['mc_unapproved_attachments'] = 'Unapproved Attachments';

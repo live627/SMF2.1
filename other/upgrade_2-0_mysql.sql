@@ -714,6 +714,19 @@ if (!isset($modSettings['cal_showholidays']) || !isset($modSettings['cal_showbda
 		'cal_holidaycolor', 'cal_bdaycolor', 'cal_eventcolor');
 ---#
 
+---# Adjusting calendar maximum year...
+---{
+if (!isset($modSettings['cal_maxyear']) || $modSettings['cal_maxyear'] == '2010')
+{
+	upgrade_query("
+		REPLACE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('cal_maxyear', '2020')");
+}
+---}
+---#
+
 ---# Adding advanced signature settings...
 ---{
 if (empty($modSettings['signature_settings']))
@@ -1221,7 +1234,7 @@ WHERE attachment_type = 3
 ---# Calculating attachment mime types.
 ---{
 // Don't ever bother doing this twice.
-if (@$modSettings['smfVersion'] < '2.0')
+if (@$modSettings['smfVersion'] < '2.0' || @$modSettings['smfVersion'] === '2.0 a')
 {
 	$request = upgrade_query("
 		SELECT MAX(id_attach)
@@ -2354,12 +2367,12 @@ CHANGE ignore_boards ignore_boards text NOT NULL;
 
 ---# Changing event title column to a larger field type...
 ALTER TABLE {$db_prefix}calendar
-CHANGE title title varchar(60) NOT NULL default '';
+CHANGE title title varchar(255) NOT NULL default '';
 ---#
 
 ---# Changing holidays title column to a larger field type...
 ALTER TABLE {$db_prefix}calendar_holidays
-CHANGE title title varchar(60) NOT NULL default '';
+CHANGE title title varchar(255) NOT NULL default '';
 ---#
 
 /******************************************************************************/
@@ -2754,7 +2767,7 @@ if (!isset($modSettings['attachment_thumb_png']))
 // This is Grudge's secret "I'm not a developer" theme install code - keep this quiet ;)
 
 // Firstly, I'm going out of my way to not do this twice!
-if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC2') && empty($modSettings['dont_repeat_theme_core']))
+if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC5' || $modSettings['smfVersion'] === '2.0 a') && empty($modSettings['dont_repeat_theme_core']))
 {
 	// Check it's not already here, just in case.
 	$theme_request = upgrade_query("
@@ -2823,14 +2836,6 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 			WHERE id_theme = 1
 				AND variable = 'name'");
 
-		$newSettings = array();
-		// Now that we have the old theme details - switch anyone who used the default to it (Make sense?!)
-		if (!empty($modSettings['theme_default']) && $modSettings['theme_default'] == 1)
-			$newSettings[] = "('theme_default', $id_core_theme)";
-		// Did guests use to use the default?
-		if (!empty($modSettings['theme_guests']) && $modSettings['theme_guests'] == 1)
-			$newSettings[] = "('theme_guests', $id_core_theme)";
-
 		// If known themes aren't set, let's just pick all themes available.
 		if (empty($modSettings['knownThemes']))
 		{
@@ -2850,6 +2855,7 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 		// Known themes.
 		$allThemes = explode(',', $modSettings['knownThemes']);
 		$allThemes[] = $id_core_theme;
+		$newSettings = array();
 		$newSettings[] = "('knownThemes', '" . implode(',', $allThemes) . "')";
 
 		upgrade_query("
@@ -2857,18 +2863,6 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 				(variable, value)
 			VALUES
 				" . implode(', ', $newSettings));
-
-		// What about members?
-		upgrade_query("
-			UPDATE {$db_prefix}members
-			SET id_theme = $id_core_theme
-			WHERE id_theme = 1");
-
-		// Boards?
-		upgrade_query("
-			UPDATE {$db_prefix}boards
-			SET id_theme = $id_core_theme
-			WHERE id_theme = 1");
 
 		// The other themes used to use core as their base theme.
 		if (isset($core['theme_dir']) && isset($core['theme_url']))
@@ -3097,8 +3091,31 @@ ADD COLUMN email_address varchar(255) NOT NULL default '' AFTER membername;
 ---#
 
 /******************************************************************************/
---- Changing the group type for Administrator group.
+--- Adjusting group types.
 /******************************************************************************/
+
+---# Fixing the group types.
+---{
+// Get the admin group type.
+$request = upgrade_query("
+	SELECT group_type
+	FROM {$db_prefix}membergroups
+	WHERE id_group = 1
+	LIMIT 1");
+list ($admin_group_type) = mysql_fetch_row($request);
+mysql_free_result($request);
+
+// Not protected means we haven't updated yet!
+if ($admin_group_type != 1)
+{
+	// Increase by one.
+	upgrade_query("
+		UPDATE {$db_prefix}membergroups
+		SET group_type = group_type + 1
+		WHERE group_type > 0");
+}
+---}
+---#
 
 ---# Changing the group type for Administrator group.
 UPDATE {$db_prefix}membergroups

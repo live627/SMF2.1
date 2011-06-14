@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* DbPackages-postgresql.php                                                       *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -47,8 +36,6 @@ if (!defined('SMF'))
 			+ 'columns' => Array containing columns that form part of key - in the order the index is to be created.
 		- parameters: (None yet)
 		- if_exists values:
-			+ 'update' will add missing columns - but NOT remove old ones.
-			+ 'update_remove' will add missing columns AND remove old ones.
 			+ 'ignore' will do nothing if the table exists. (And will return true)
 			+ 'overwrite' will drop any existing table of the same name.
 			+ 'error' will return false if the table already exists.
@@ -97,7 +84,7 @@ function db_packages_init()
 }
 
 // Create a table.
-function smf_db_create_table($table_name, $columns, $indexes = array(), $parameters = array(), $if_exists = 'update', $error = 'fatal')
+function smf_db_create_table($table_name, $columns, $indexes = array(), $parameters = array(), $if_exists = 'ignore', $error = 'fatal')
 {
 	global $reservedTables, $smcFunc, $db_package_log, $db_prefix;
 
@@ -509,17 +496,17 @@ function smf_db_add_index($table_name, $index_info, $parameters = array(), $if_e
 	$db_package_log[] = array('remove_index', $table_name, $index_info['name']);
 
 	// Let's get all our indexes.
-	$indexes = $smcFunc['db_list_indexes']($table_name, false);
+	$indexes = $smcFunc['db_list_indexes']($table_name, true);
 	// Do we already have it?
 	foreach ($indexes as $index)
 	{
-		if ($index['name'] == $index_info['name'] || ($index['is_primary'] && isset($index_info['type']) && $index_info['type'] == 'primary'))
+		if ($index['name'] == $index_info['name'] || ($index['type'] == 'primary' && isset($index_info['type']) && $index_info['type'] == 'primary'))
 		{
 			// If we want to overwrite simply remove the current one then continue.
-			if ($if_exists == 'update')
-				$smcFunc['db_remove_index']($table_name, $index_info['name']);
-			else
+			if ($if_exists != 'update' || $index['type'] == 'primary')
 				return false;
+			else
+				$smcFunc['db_remove_index']($table_name, $index_info['name']);
 		}
 	}
 

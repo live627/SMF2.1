@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* Subs-Package.php                                                                *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -112,6 +101,12 @@ if (!defined('SMF'))
 		- supports lower and upper bounds. (1.0-1.2)
 		- returns true if the version matched.
 
+	int compareVersions(string version1, string version2)
+		- compares two versions.
+		- returns 0 if version1 is equal to version2.
+		- returns -1 if version1 is lower than version2.
+		- returns 1 if version1 is higher than version2.
+
 	string parse_path(string path)
 		- parses special identifiers out of the specified path.
 		- returns the parsed path.
@@ -199,6 +194,9 @@ function read_tgz_file($gzfilename, $destination, $single_file = false, $overwri
 // Extract tar.gz data.  If destination is null, return a listing.
 function read_tgz_data($data, $destination, $single_file = false, $overwrite = false, $files_to_extract = null)
 {
+	// Make sure we have this loaded.
+	loadLanguage('Packages');
+
 	// This function sorta needs gzinflate!
 	if (!function_exists('gzinflate'))
 		fatal_lang_error('package_no_zlib', 'critical');
@@ -411,7 +409,7 @@ function read_zip_data($data, $destination, $single_file = false, $overwrite = f
 			return false;
 
 		// Get the actual compressed data.
-		$file_info['data'] = substr($data, $file_info['offset'] + 30 + $file_info['filename_len'] + $file_info['extra_len'], $file_info['compressed_size']);
+		$file_info['data'] = substr($data, $file_info['offset'] + 30 + $file_info['filename_len'], $file_info['compressed_size']);
 
 		// Only inflate it if we need to ;).
 		if ($file_info['compressed_size'] != $file_info['size'])
@@ -1439,56 +1437,93 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 	return $not_done;
 }
 
-// This is such a pain I created a function for it :P.
+// This function tries to match $version into any of the ranges given in $versions
 function matchPackageVersion($version, $versions)
 {
-	$version = strtolower($version);
-	$for = explode(',', strtolower($versions));
+	// Make sure everything is lowercase and clean of spaces and unpleasant history.
+	$version = str_replace(array(' ', '2.0rc1-1'), array('', '2.0rc1.1'), strtolower($version));
+	$versions = explode(',', str_replace(array(' ', '2.0rc1-1'), array('', '2.0rc1.1'), strtolower($versions)));
 
-	// Trim them all!
-	for ($i = 0, $n = count($for); $i < $n; $i++)
-		$for[$i] = trim($for[$i]);
-
-	// The version is explicitly defined... too easy.
-	if (in_array($version, $for) || in_array('all', $for))
+	// Perhaps we do accept anything?
+	if (in_array('all', $versions))
 		return true;
 
-	foreach ($for as $list)
+	// Loop through each version.
+	foreach ($versions as $for)
 	{
-		if (substr($list, -1) == '*' && strpos($list, '-') === false)
+		// Wild card spotted?
+		if (strpos($for, '*') !== false)
+			$for = str_replace('*', '0dev0', $for) . '-' . str_replace('*', '999', $for);
+
+		// Do we have a range?
+		if (strpos($for, '-') !== false)
 		{
-			// "Nothing" is the lowest alphanumeric character, z the highest.
-			$list = substr($list, 0, -1) . '-' . substr($list, 0, -1) . 'z';
+			list ($lower, $upper) = explode('-', $for);
+
+			// Compare the version against lower and upper bounds.
+			if (compareVersions($version, $lower) > -1 && compareVersions($version, $upper) < 1)
+				return true;
 		}
-		// Look for a version specification like "1.0-1.2".
-		elseif (strpos($list, '-') === false)
-			continue;
-
-		list ($lower, $upper) = explode('-', $list);
-		$lower = explode('.', $lower);
-		$upper = explode('.', $upper);
-		$version = explode('.', $version);
-
-		foreach ($upper as $key => $high)
-		{
-			// Let's check that this is at or below the upper... obviously.
-			if (isset($version[$key]) && trim($version[$key]) > trim($high))
-				return false;
-
-			// OK, let's check it's above the lower key... if it exists!
-			if (isset($lower[$key]))
-			{
-				// The version either needs to have something here (i.e. can't be 1.0 on a 1.0.11) AND needs to be greater or equal to.
-				// Note that if it's a range lower[key] might be blank, in that case version can not be set!
-				if (!empty($lower[$key]) && (!isset($version[$key]) || trim($version[$key]) < trim($lower[$key])))
-					return false;
-			}
-		}
-		return true;
+		// Otherwise check if they are equal...
+		elseif (compareVersions($version, $for) === 0)
+			return true;
 	}
 
-	// Well, I guess it doesn't match...
 	return false;
+}
+
+// The geek version of versioning checks for dummies, which basically compares two versions.
+function compareVersions($version1, $version2)
+{
+	static $categories;
+
+	$versions = array();
+	foreach (array(1 => $version1, $version2) as $id => $version)
+	{
+		// Clean the version and extract the version parts.
+		$clean = str_replace(array(' ', '2.0rc1-1'), array('', '2.0rc1.1'), strtolower($version));
+		preg_match('~(\d+)(?:\.(\d+|))?(?:\.)?(\d+|)(?:(alpha|beta|rc)(\d+|)(?:\.)?(\d+|))?(?:(dev))?(\d+|)~', $clean, $parts);
+
+		// Build an array of parts.
+		$versions[$id] = array(
+			'major' => (int) $parts[1],
+			'minor' => (int) $parts[2],
+			'patch' => (int) $parts[3],
+			'type' => empty($parts[4]) ? 'stable' : $parts[4],
+			'type_major' => (int) $parts[5],
+			'type_minor' => (int) $parts[6],
+			'dev' => !empty($parts[7]),
+		);
+	}
+
+	// Are they the same, perhaps?
+	if ($versions[1] === $versions[2])
+		return 0;
+
+	// Get version numbering categories...
+	if (!isset($categories))
+		$categories = array_keys($versions[1]);
+
+	// Loop through each category.
+	foreach ($categories as $category)
+	{
+		// Is there something for us to calculate?
+		if ($versions[1][$category] !== $versions[2][$category])
+		{
+			// Dev builds are a problematic exception.
+			// (stable) dev < (stable) but (unstable) dev = (unstable)
+			if ($category == 'type')
+				return $versions[1][$category] > $versions[2][$category] ? ($versions[1]['dev'] ? -1 : 1) : ($versions[2]['dev'] ? 1 : -1);
+			elseif ($category == 'dev')
+				return $versions[1]['dev'] ? ($versions[2]['type'] == 'stable' ? -1 : 0) : ($versions[1]['type'] == 'stable' ? 1 : 0);
+			// Otherwise a simple comparison.
+			else
+				return $versions[1][$category] > $versions[2][$category] ? 1 : -1;
+		}
+	}
+
+	// They are the same!
+	return 0;
 }
 
 function parse_path($path)

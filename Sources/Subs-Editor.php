@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* Subs-Editor.php                                                                 *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -372,11 +361,11 @@ function html_to_bbc($text)
 					}
 				}
 
-				// Preserve the a tag stripping the styling.
-				if ($matches[2] === 'a')
+				// Preserve some tags stripping the styling.
+				if (in_array($matches[2], array('a', 'font')))
 				{
 					$replacement .= $precedingStyle . $afterStyle;
-					$curCloseTags = '</a>' . $curCloseTags;
+					$curCloseTags = '</' . $matches[2] . '>' . $curCloseTags;
 				}
 
 				// If there's something that still needs closing, push it to the stack.
@@ -1457,7 +1446,7 @@ function create_control_richedit($editorOptions)
 				prompt_text_img: \'' . addcslashes($txt['prompt_text_img'], "'") . '\'
 			}
 		// ]]></script>
-		<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/editor.js?rc3"></script>';
+		<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/editor.js?fin20"></script>';
 
 		$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
 		if ($context['show_spellchecking'])
@@ -2037,6 +2026,7 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 		$_SESSION[$verificationOptions['id'] . '_vv']['errors'] = 0;
 		$_SESSION[$verificationOptions['id'] . '_vv']['did_pass'] = false;
 		$_SESSION[$verificationOptions['id'] . '_vv']['q'] = array();
+		$_SESSION[$verificationOptions['id'] . '_vv']['code'] = '';
 
 		// Generating a new image.
 		if ($thisVerification['show_visual'])
@@ -2044,7 +2034,6 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 			// Are we overriding the range?
 			$character_range = !empty($verificationOptions['override_range']) ? $verificationOptions['override_range'] : $context['standard_captcha_range'];
 
-			$_SESSION[$verificationOptions['id'] . '_vv']['code'] = '';
 			for ($i = 0; $i < 6; $i++)
 				$_SESSION[$verificationOptions['id'] . '_vv']['code'] .= $character_range[array_rand($character_range)];
 		}

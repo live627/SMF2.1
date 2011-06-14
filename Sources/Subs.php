@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* Subs.php                                                                        *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -282,7 +271,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			$smcFunc['db_free_result']($result);
 
 			// Are we using registration approval?
-			if (!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 2)
+			if ((!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 2) || !empty($modSettings['approveAccountDeletion']))
 			{
 				// Update the amount of members awaiting approval - ignoring COPPA accounts, as you can't approve them until you get permission.
 				$result = $smcFunc['db_query']('', '
@@ -642,6 +631,7 @@ function constructPageIndex($base_url, &$start, $max_value, $num_per_page, $flex
 	global $modSettings;
 
 	// Save whether $start was less than 0 or not.
+	$start = (int) $start;
 	$start_invalid = $start < 0;
 
 	// Make sure $start is a proper variable - not less than 0.
@@ -756,6 +746,7 @@ function comma_format($number, $override_decimal_count = false)
 function timeformat($log_time, $show_today = true, $offset_type = false)
 {
 	global $context, $user_info, $txt, $modSettings, $smcFunc;
+	static $non_twelve_hour;
 
 	// Offset the time.
 	if (!$offset_type)
@@ -802,6 +793,11 @@ function timeformat($log_time, $show_today = true, $offset_type = false)
 
 	if (setlocale(LC_TIME, $txt['lang_locale']))
 	{
+		if (!isset($non_twelve_hour))
+			$non_twelve_hour = trim(strftime('%p')) === '';
+		if ($non_twelve_hour && strpos($str, '%p') !== false)
+			$str = str_replace('%p', (strftime('%H', $time) < 12 ? $txt['time_am'] : $txt['time_pm']), $str);
+
 		foreach (array('%a', '%A', '%b', '%B') as $token)
 			if (strpos($str, $token) !== false)
 				$str = str_replace($token, !empty($txt['lang_capitalize_dates']) ? $smcFunc['ucwords'](strftime($token, $time)) : strftime($token, $time), $str);
@@ -812,8 +808,9 @@ function timeformat($log_time, $show_today = true, $offset_type = false)
 		foreach (array('%a' => 'days_short', '%A' => 'days', '%b' => 'months_short', '%B' => 'months') as $token => $text_label)
 			if (strpos($str, $token) !== false)
 				$str = str_replace($token, $txt[$text_label][(int) strftime($token === '%a' || $token === '%A' ? '%w' : '%m', $time)], $str);
-		if (strpos($str, '%p'))
-			$str = str_replace('%p', (strftime('%H', $time) < 12 ? 'am' : 'pm'), $str);
+
+		if (strpos($str, '%p') !== false)
+			$str = str_replace('%p', (strftime('%H', $time) < 12 ? $txt['time_am'] : $txt['time_pm']), $str);
 	}
 
 	// Windows doesn't support %e; on some versions, strftime fails altogether if used, so let's prevent that.
@@ -1083,7 +1080,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'code',
 				'type' => 'unparsed_content',
-				'content' => '<div class="codeheader">' . $txt['code'] . ': <a href="javascript:void(0);" onclick="return smfSelectText(this);" class="codeoperation">' . $txt['code_select'] . '</a></div><code class="bbc_code">$1</code>',
+				'content' => '<div class="codeheader">' . $txt['code'] . ': <a href="javascript:void(0);" onclick="return smfSelectText(this);" class="codeoperation">' . $txt['code_select'] . '</a></div>' . ($context['browser']['is_gecko'] || $context['browser']['is_opera'] ? '<pre style="margin: 0; padding: 0;">' : '') . '<code class="bbc_code">$1</code>' . ($context['browser']['is_gecko'] || $context['browser']['is_opera'] ? '</pre>' : ''),
 				// !!! Maybe this can be simplified?
 				'validate' => isset($disabled['code']) ? null : create_function('&$tag, &$data, $disabled', '
 					global $context;
@@ -1113,10 +1110,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 						// Older browsers are annoying, aren\'t they?
 						if ($context[\'browser\'][\'is_ie4\'] || $context[\'browser\'][\'is_ie5\'] || $context[\'browser\'][\'is_ie5.5\'])
 							$data = str_replace("\t", "<pre style=\"display: inline;\">\t</pre>", $data);
-						elseif (!$context[\'browser\'][\'is_gecko\'])
-							$data = str_replace("\t", "<span style=\"white-space: pre;\">\t</span>", $data);
 						else
-							$data = str_replace("\t", "&nbsp;&nbsp;&nbsp;", $data);
+							$data = str_replace("\t", "<span style=\"white-space: pre;\">\t</span>", $data);
 
 						// Recent Opera bug requiring temporary fix. &nsbp; is needed before </code> to avoid broken selection.
 						if ($context[\'browser\'][\'is_opera\'])
@@ -1127,7 +1122,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'code',
 				'type' => 'unparsed_equals_content',
-				'content' => '<div class="codeheader">' . $txt['code'] . ': ($2) <a href="#" onclick="return smfSelectText(this);" class="codeoperation">' . $txt['code_select'] . '</a></div><code class="bbc_code">$1</code>',
+				'content' => '<div class="codeheader">' . $txt['code'] . ': ($2) <a href="#" onclick="return smfSelectText(this);" class="codeoperation">' . $txt['code_select'] . '</a></div>' . ($context['browser']['is_gecko'] || $context['browser']['is_opera'] ? '<pre style="margin: 0; padding: 0;">' : '') . '<code class="bbc_code">$1</code>' . ($context['browser']['is_gecko'] || $context['browser']['is_opera'] ? '</pre>' : ''),
 				// !!! Maybe this can be simplified?
 				'validate' => isset($disabled['code']) ? null : create_function('&$tag, &$data, $disabled', '
 					global $context;
@@ -1157,10 +1152,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 						// Older browsers are annoying, aren\'t they?
 						if ($context[\'browser\'][\'is_ie4\'] || $context[\'browser\'][\'is_ie5\'] || $context[\'browser\'][\'is_ie5.5\'])
 							$data[0] = str_replace("\t", "<pre style=\"display: inline;\">\t</pre>", $data[0]);
-						elseif (!$context[\'browser\'][\'is_gecko\'])
-							$data[0] = str_replace("\t", "<span style=\"white-space: pre;\">\t</span>", $data[0]);
 						else
-							$data[0] = str_replace("\t", "&nbsp;&nbsp;&nbsp;", $data[0]);
+							$data[0] = str_replace("\t", "<span style=\"white-space: pre;\">\t</span>", $data[0]);
 
 						// Recent Opera bug requiring temporary fix. &nsbp; is needed before </code> to avoid broken selection.
 						if ($context[\'browser\'][\'is_opera\'])
@@ -1495,7 +1488,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'size',
 				'type' => 'unparsed_equals',
-				'test' => '([1-9][\d]?p[xt]|(?:x-)?small(?:er)?|(?:x-)?large[r]?|(0\.[1-9]|[1-9](\.[\d][\d]?)?)?em)\]',
+				'test' => '([1-9][\d]?p[xt]|small(?:er)?|large[r]?|x[x]?-(?:small|large)|medium|(0\.[1-9]|[1-9](\.[\d][\d]?)?)?em)\]',
 				'before' => '<span style="font-size: $1;" class="bbc_size">',
 				'after' => '</span>',
 			),
@@ -1572,7 +1565,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'url',
 				'type' => 'unparsed_content',
-				'content' => '<a href="$1" class="bbc_link new_win" target="_blank">$1</a>',
+				'content' => '<a href="$1" class="bbc_link" target="_blank">$1</a>',
 				'validate' => create_function('&$tag, &$data, $disabled', '
 					$data = strtr($data, array(\'<br />\' => \'\'));
 					if (strpos($data, \'http://\') !== 0 && strpos($data, \'https://\') !== 0)
@@ -1582,7 +1575,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'url',
 				'type' => 'unparsed_equals',
-				'before' => '<a href="$1" class="bbc_link new_win" target="_blank">',
+				'before' => '<a href="$1" class="bbc_link" target="_blank">',
 				'after' => '</a>',
 				'validate' => create_function('&$tag, &$data, $disabled', '
 					if (strpos($data, \'http://\') !== 0 && strpos($data, \'https://\') !== 0)
@@ -1835,9 +1828,9 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 						// Only do this if the preg survives.
 						if (is_string($result = preg_replace(array(
-							'~(?<=[\s>\.(;\'"]|^)((?:http|https)://[\w\-_%@:|]+(?:\.[\w\-_%]+)*(?::\d+)?(?:/[\w\-_\~%\.@,\?&;=#(){}+:\'\\\\]*)*[/\w\-_\~%@\?;=#}\\\\])~i',
+							'~(?<=[\s>\.(;\'"]|^)((?:http|https)://[\w\-_%@:|]+(?:\.[\w\-_%]+)*(?::\d+)?(?:/[\w\-_\~%\.@!,\?&;=#(){}+:\'\\\\]*)*[/\w\-_\~%@\?;=#}\\\\])~i',
 							'~(?<=[\s>\.(;\'"]|^)((?:ftp|ftps)://[\w\-_%@:|]+(?:\.[\w\-_%]+)*(?::\d+)?(?:/[\w\-_\~%\.@,\?&;=#(){}+:\'\\\\]*)*[/\w\-_\~%@\?;=#}\\\\])~i',
-							'~(?<=[\s>(\'<]|^)(www(?:\.[\w\-_]+)+(?::\d+)?(?:/[\w\-_\~%\.@,\?&;=#(){}+:\'\\\\]*)*[/\w\-_\~%@\?;=#}\\\\])~i'
+							'~(?<=[\s>(\'<]|^)(www(?:\.[\w\-_]+)+(?::\d+)?(?:/[\w\-_\~%\.@!,\?&;=#(){}+:\'\\\\]*)*[/\w\-_\~%@\?;=#}\\\\])~i'
 						), array(
 							'[url]$1[/url]',
 							'[ftp]$1[/ftp]',
@@ -2786,10 +2779,14 @@ function obExit($header = null, $do_footer = null, $from_index = false, $from_fa
 			$buffers = array_merge(explode(',', $modSettings['integrate_buffer']), $buffers);
 
 		if (!empty($buffers))
-			foreach ($buffers as $buffer_function)
+			foreach ($buffers as $function)
 			{
-				if (function_exists(trim($buffer_function)))
-					ob_start(trim($buffer_function));
+				$function = trim($function);
+				$call = strpos($function, '::') !== false ? explode('::', $function) : $function;
+
+				// Is it valid?
+				if (is_callable($call))
+					ob_start($call);
 			}
 
 		// Display the screen in the logical order.
@@ -3427,49 +3424,17 @@ function template_header()
 function theme_copyright($get_it = false)
 {
 	global $forum_copyright, $context, $boardurl, $forum_version, $txt, $modSettings;
-	static $found = false;
 
-	// DO NOT MODIFY THIS FUNCTION.  DO NOT REMOVE YOUR COPYRIGHT.
-	// DOING SO VOIDS YOUR LICENSE AND IS ILLEGAL.
+	// Don't display copyright for things like SSI.
+	if (!isset($forum_version))
+		return;
 
-	// Meaning, this is the footer checking in..
-	if ($get_it === true)
-		return $found;
-
-	// Naughty, naughty.
-	if (mt_rand(0, 2) == 1)
-	{
-		$temporary = preg_replace('~<!--.+?-->~s', '', ob_get_contents());
-		if (strpos($temporary, '<!--') !== false)
-			echo '-->';
-	}
-
-	// Fool me once, shame on me. Fool me twice, shame on you.
-	if (strpos($forum_copyright, '<!--') !== false)
-		$forum_copyright = preg_replace('~<!--(.+?)-->~is', '$1', $forum_copyright);
-	if (strpos($forum_copyright, '<div') !== false)
-		$forum_copyright = preg_replace('~<div[^>]+>(.+?)(?:</div>)?~is', '$1', $forum_copyright);
-
-	// For SSI and other things, detect the version.
-	if (!isset($forum_version) || strpos($forum_version, 'SMF') === false || isset($_GET['checkcopyright']))
-	{
-		$data = substr(file_get_contents(__FILE__), 0, 4096);
-		if (preg_match('~\*\s*Software\s+Version:\s+(SMF\s+.+?)[\s]{2}~i', $data, $match) == 0)
-			$match = array('', 'SMF');
-		$forum_copyright = sprintf($forum_copyright, $match[1]);
-	}
 	// Put in the version...
-	else
-		$forum_copyright = sprintf($forum_copyright, $forum_version);
+	$forum_copyright = sprintf($forum_copyright, $forum_version);
 
 	echo '
-		<span class="smalltext" style="display: inline; visibility: visible; font-family: Verdana, Arial, sans-serif;">';
-
-	// If it's in the copyright, and we are outputting it... it's been found.
-	if (isset($modSettings['copyright_key']) && sha1($modSettings['copyright_key'] . 'banjo') == '1d01885ece7a9355bdeb22ed107f0ffa8c323026'){$found = true;}elseif (preg_match('~<a\shref="http://www.simplemachines.org/"[^<>]*>(SMF|Powered by SMF)~', $forum_copyright) && preg_match('~<a\shref="http://www.simplemachines.org/about/copyright.php"[^<>]*>SMF\s.{1,6}[\s\d,ndash\-&;]*Simple Machines LLC~', $forum_copyright)){$found = true; echo $forum_copyright;}
-
-	echo '
-		</span>';
+			<span class="smalltext" style="display: inline; visibility: visible; font-family: Verdana, Arial, sans-serif;">' . $forum_copyright . '
+			</span>';
 }
 
 function template_footer()
@@ -3491,21 +3456,6 @@ function template_footer()
 	foreach (array_reverse($context['template_layers']) as $layer)
 		loadSubTemplate($layer . '_below', true);
 
-	// Do not remove hard-coded text - it's in here so users cannot change the text easily. (as if it were in language file)
-	if (!theme_copyright(true) && !empty($context['template_layers']) && SMF !== 'SSI' && !WIRELESS)
-	{
-		// DO NOT MODIFY THIS SECTION.  DO NOT REMOVE YOUR COPYRIGHT.
-		// DOING SO VOIDS YOUR LICENSE AND IS ILLEGAL.
-
-		echo '
-			<div style="text-align: center !important; display: block !important; visibility: visible !important; font-size: large !important; font-weight: bold; color: black !important; background-color: white !important;">
-				Sorry, the copyright must be in the template.<br />
-				Please notify this forum\'s administrator that this site is missing the copyright message for <a href="http://www.simplemachines.org/" style="color: black !important; font-size: large !important;">SMF</a> so they can rectify the situation. Display of copyright is a <a href="http://www.simplemachines.org/about/license.php" style="color: red;">legal requirement</a>. For more information on this please visit the <a href="http://www.simplemachines.org">Simple Machines</a> website.', empty($context['user']['is_admin']) ? '' : '<br />
-				Not sure why this message is appearing?  <a href="http://www.simplemachines.org/redirect/index.php?copyright_error">Take a look at some common causes.</a>', '
-			</div>';
-
-		log_error('Copyright removed!!');
-	}
 }
 
 // Debugging.
@@ -3858,12 +3808,13 @@ function create_button($name, $alt, $label = '', $custom = '', $force_use = fals
 // Empty out the cache folder.
 function clean_cache($type = '')
 {
-	global $cachedir;
+	global $cachedir, $sourcedir;
 
 	// No directory = no game.
 	if (!is_dir($cachedir))
 		return;
 
+	// Remove the files in SMF's own disk cache, if any
 	$dh = opendir($cachedir);
 	while ($file = readdir($dh))
 	{
@@ -3871,6 +3822,11 @@ function clean_cache($type = '')
 			@unlink($cachedir . '/' . $file);
 	}
 	closedir($dh);
+
+	// Invalidate cache, to be sure!
+	// ... as long as Load.php can be modified, anyway.
+	@touch($sourcedir . '/' . 'Load.php');
+	clearstatcache();
 }
 
 // Load classes that are both (E_STRICT) PHP 4 and PHP 5 compatible.
@@ -4114,6 +4070,9 @@ function setupMenuContext()
 			),
 		);
 
+		// Allow editing menu buttons easily.
+		call_integration_hook('integrate_menu_buttons', array(&$buttons));
+
 		// Now we put the buttons in the context so the theme can use them.
 		$menu_buttons = array();
 		foreach ($buttons as $act => $button)
@@ -4136,12 +4095,12 @@ function setupMenuContext()
 						if (empty($subbutton['show']))
 							unset($button['sub_buttons'][$key]);
 
-						// 2nd level sub buttons next
-						if(!empty($subbutton['sub_buttons']))
+						// 2nd level sub buttons next...
+						if (!empty($subbutton['sub_buttons']))
 						{
-							foreach($subbutton['sub_buttons'] as $key2 => $sub_button2)
+							foreach ($subbutton['sub_buttons'] as $key2 => $sub_button2)
 							{
-								if(empty($sub_button2['show']))
+								if (empty($sub_button2['show']))
 									unset($button['sub_buttons'][$key]['sub_buttons'][$key2]);
 							}
 						}
@@ -4153,9 +4112,6 @@ function setupMenuContext()
 		if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
 			cache_put_data('menu_buttons-' . implode('_', $user_info['groups']) . '-' . $user_info['language'], $menu_buttons, $cacheTime);
 	}
-
-	// Allow editing menu buttons easily.
-	call_integration_hook('integrate_menu_buttons', array(&$menu_buttons));
 
 	$context['menu_buttons'] = $menu_buttons;
 
@@ -4239,8 +4195,37 @@ function call_integration_hook($hook, $parameters = array())
 // Add a function for integration hook.
 function add_integration_function($hook, $function, $permanent = true)
 {
-	global $modSettings;
+	global $smcFunc, $modSettings;
 
+	// Is it going to be permanent?
+	if ($permanent)
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT value
+			FROM {db_prefix}settings
+			WHERE variable = {string:variable}',
+			array(
+				'variable' => $hook,
+			)
+		);
+		list($current_functions) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+
+		if (!empty($current_functions))
+		{
+			$current_functions = explode(',', $current_functions);
+			if (in_array($function, $current_functions))
+				return;
+
+			$permanent_functions = array_merge($current_functions, array($function));
+		}
+		else
+			$permanent_functions = array($function);
+
+		updateSettings(array($hook => implode(',', $permanent_functions)));
+	}
+
+	// Make current function list usable.
 	$functions = empty($modSettings[$hook]) ? array() : explode(',', $modSettings[$hook]);
 
 	// Do nothing, if it's already there.
@@ -4248,29 +4233,43 @@ function add_integration_function($hook, $function, $permanent = true)
 		return;
 
 	$functions[] = $function;
-
-	// Add it!
-	if ($permanent)
-		updateSettings(array($hook => implode(',', $functions)));
-	else
-		$modSettings[$hook] = implode(',', $functions);
+	$modSettings[$hook] = implode(',', $functions);
 }
 
 // Remove an integration hook function.
 function remove_integration_function($hook, $function)
 {
-	global $modSettings;
+	global $smcFunc, $modSettings;
 
+	// Get the permanent functions.
+	$request = $smcFunc['db_query']('', '
+		SELECT value
+		FROM {db_prefix}settings
+		WHERE variable = {string:variable}',
+		array(
+			'variable' => $hook,
+		)
+	);
+	list($current_functions) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
+	if (!empty($current_functions))
+	{
+		$current_functions = explode(',', $current_functions);
+
+		if (in_array($function, $current_functions))
+			updateSettings(array($hook => implode(',', array_diff($current_functions, array($function)))));
+	}
+
+	// Turn the function list into something usable.
 	$functions = empty($modSettings[$hook]) ? array() : explode(',', $modSettings[$hook]);
 
-	// You can only remove it's available.
+	// You can only remove it if it's available.
 	if (!in_array($function, $functions))
 		return;
 
 	$functions = array_diff($functions, array($function));
-
-	// Now officially, it's no longer a part of our family...
-	updateSettings(array($hook => implode(',', $functions)));
+	$modSettings[$hook] = implode(',', $functions);
 }
 
 ?>

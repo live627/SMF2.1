@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>smf:smf-1.1.13</id>
+	<version>1.0</version>
+
+	<file name="$languagedir/index.english.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[// Version: 1.1.9; index]]></search>
+			<add><![CDATA[// Version: 1.1.13; index]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by ' . $forum_version . '</a> | 
+<a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2006-2009, Simple Machines LLC</a>';]]></search>
+			<add><![CDATA[$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by ' . $forum_version . '</a> |
+<a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2006-2011, Simple Machines LLC</a>';]]></add>
+		</operation>
+	</file>
+
+	<file name="$languagedir/Admin.english.php" error="skip">
+		<operation error="ignore">
+			<search position="replace"><![CDATA[// Version: 1.1; Admin]]></search>
+			<add><![CDATA[// Version: 1.1.13; Admin]]></add>
+		</operation>
+		<operation error="ignore">
+			<search position="replace"><![CDATA[$txt[670] = 'Please place one news item per box. Some BBC tags, such as <span title="Are you bold?">[b]</span>, <span title="I tall icks!!">[i]</span> and <span title="Brackets are great, no?">[u]</span> are allowed in your news, as well as smileys and HTML. Clear a news item\'s text box to remove it.';]]></search>
+			<add><![CDATA[$txt[670] = 'Please place one news item per box. BBC tags, such as <span title="Are you bold?">[b]</span>, <span title="I tall icks!!">[i]</span> and <span title="Brackets are great, no?">[u]</span> are allowed in your news, as well as smileys. Clear a news item\'s text box to remove it.';]]></add>
+		</operation>
+	</file>
+
+</modification>

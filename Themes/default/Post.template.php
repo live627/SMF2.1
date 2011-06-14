@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; Post
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // The main template for the post page.
 function template_main()
@@ -216,7 +225,7 @@ function template_main()
 					<div id="post_event">
 						<fieldset id="event_main">
 							<legend><span', isset($context['post_error']['no_event']) ? ' class="error"' : '', ' id="caption_evtitle">', $txt['calendar_event_title'], '</span></legend>
-							<input type="text" name="evtitle" maxlength="60" size="60" value="', $context['event']['title'], '" tabindex="', $context['tabindex']++, '" class="input_text" />
+							<input type="text" name="evtitle" maxlength="255" size="60" value="', $context['event']['title'], '" tabindex="', $context['tabindex']++, '" class="input_text" />
 							<div class="smalltext">
 								<input type="hidden" name="calendar" value="1" />', $txt['calendar_year'], '
 								<select name="year" id="year" tabindex="', $context['tabindex']++, '" onchange="generateDays();">';
@@ -439,7 +448,7 @@ function template_main()
 		foreach ($context['current_attachments'] as $attachment)
 			echo '
 						<dd class="smalltext">
-							<label for="attachment_', $attachment['id'], '"><input type="checkbox" id= "attachment_', $attachment['id'], '" name="attach_del[]" value="', $attachment['id'], '"', empty($attachment['unchecked']) ? ' checked="checked"' : '', ' class="input_check" /> ', $attachment['name'], (empty($attachment['approved']) ? ' (' . $txt['awaiting_approval'] . ')' : ''), '</label>
+							<label for="attachment_', $attachment['id'], '"><input type="checkbox" id="attachment_', $attachment['id'], '" name="attach_del[]" value="', $attachment['id'], '"', empty($attachment['unchecked']) ? ' checked="checked"' : '', ' class="input_check" /> ', $attachment['name'], (empty($attachment['approved']) ? ' (' . $txt['awaiting_approval'] . ')' : ''), '</label>
 						</dd>';
 		echo '
 					</dl>';

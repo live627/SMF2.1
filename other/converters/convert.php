@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* convert.php                                                                     *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0                                             *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 define('SMF', 'convert');
 error_reporting(E_ALL);
 
@@ -338,11 +327,12 @@ function loadSettings()
 
 	// Everything should be alright now... no cross server includes, we hope...
 	require($_POST['path_to'] . '/Settings.php');
-	require($sourcedir . '/QueryString.php');
-	require($sourcedir . '/Subs.php');
-	require($sourcedir . '/Errors.php');
-	require($sourcedir . '/Load.php');
-	require($sourcedir . '/Security.php');
+	require_once($sourcedir . '/QueryString.php');
+	require_once($sourcedir . '/Subs.php');
+	require_once($sourcedir . '/Errors.php');
+	require_once($sourcedir . '/Load.php');
+	require_once($sourcedir . '/Security.php');
+	require_once($sourcedir . '/Subs-Admin.php');
 	// PHP4 users compatibility
 	if (@version_compare(PHP_VERSION, '5') == -1)
 		require_once($sourcedir . '/Subs-Compat.php');
@@ -2074,7 +2064,7 @@ function doStep2()
 				'name' => 'id_member',
 				'columns' => array('id_member', 'id_msg')),
 				array('no_prefix' => true));
-		if (!isset($indexes['ipIndex']))
+		if (!isset($indexes['ip_index']))
 			$smcFunc['db_add_index']($to_prefix . 'messages', array(
 				'type' => 'INDEX', // no key
 				'name' => 'ip_index',
@@ -2086,7 +2076,7 @@ function doStep2()
 				'name' => 'participation',
 				'columns' => array('id_member', 'id_topic')),
 				array('no_prefix' => true));
-		if (!isset($indexes['showPosts']))
+		if (!isset($indexes['show_posts']))
 			$smcFunc['db_add_index']($to_prefix . 'messages', array(
 				'type' => 'INDEX', // no key
 				'name' => 'show_posts',

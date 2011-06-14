@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC4; Help
+// Version: 2.0; Help
 
 global $helptxt;
 
@@ -99,7 +99,7 @@ $helptxt['ban_members'] = '<strong>Ban Members</strong><br />
 	you simply type that IP address in, save, and they can no longer post from that location.<br />You can also
 	ban people through their email address.';
 
-$helptxt['featuresettings'] = '<strong>Edit Features and Options</strong><br />
+$helptxt['featuresettings'] = '<strong>Features and Options</strong><br />
 	There are several features in this section that can be changed to your preference.';
 
 $helptxt['securitysettings'] = '<strong>Security and Moderation</strong><br />
@@ -280,7 +280,7 @@ $helptxt['databaseSession_enable'] = 'This option makes use of the database for 
 $helptxt['databaseSession_loose'] = 'Turning this on will decrease the bandwidth your forum uses, and make it so clicking back will not reload the page - the downside is that the (new) icons won\'t update, among other things. (unless you click to that page instead of going back to it.)';
 $helptxt['databaseSession_lifetime'] = 'This is the number of seconds for sessions to last after they haven\'t been accessed.  If a session is not accessed for too long, it is said to have &quot;timed out&quot;.  Anything higher than 2400 is recommended.';
 $helptxt['enableErrorLogging'] = 'This will log any errors, like a failed login, so you can see what went wrong.';
-$helptxt['enableErrorQueryLogging'] = 'This will include the full query sent to the database in with any database error.  Requires error logging to be turned on.<br /><br /><strong>Note:  This will affect the ability to filter the error log by the error message.</strong>';
+$helptxt['enableErrorQueryLogging'] = 'This will include the full query sent to the database in the error log.  Requires error logging to be turned on.<br /><br /><strong>Note:  This will affect the ability to filter the error log by the error message.</strong>';
 $helptxt['allow_disableAnnounce'] = 'This will allow users to opt out of notification of topics you announce by checking the &quot;announce topic&quot; checkbox when posting.';
 $helptxt['disallow_sendBody'] = 'This option removes the option to receive the text of replies and posts in notification emails.<br /><br />Often, members will reply to the notification email, which in most cases means the webmaster receives the reply.';
 $helptxt['compactTopicPagesEnable'] = 'This will just show a selection of the number of pages.<br /><em>Example:</em>
@@ -311,10 +311,8 @@ $helptxt['karmaMode'] = 'Karma is a feature that shows the popularity of a membe
 		number of posts needed to have a &quot;karma&quot;, the time between smites or applauds, and if administrators
 		have to wait this time as well.<br /><br />Whether or not groups of members can smite others is controlled by
 		a permission.  If you have trouble getting this feature to work for everyone, double check your permissions.';
-// !!! This should be reused or removed.
 $helptxt['cal_enabled'] = 'The calendar can be used for showing birthdays, or for showing important moments happening in your community.<br /><br />
 		<strong>Show days as link to \'Post Event\'</strong>:<br />This will allow members to post events for that day, when they click on that date<br />
-		<strong>Show week numbers</strong>:<br />Show which week it is.<br />
 		<strong>Max days in advance on board index</strong>:<br />If this is set to 7, the next week\'s worth of events will be shown.<br />
 		<strong>Show holidays on board index</strong>:<br />Show today\'s holidays in a calendar bar on the board index.<br />
 		<strong>Show birthdays on board index</strong>:<br />Show today\'s birthdays in a calendar bar on the board index.<br />
@@ -480,7 +478,7 @@ $helptxt['latest_support'] = 'This panel shows you some of the most common probl
 $helptxt['latest_packages'] = 'Here you can see some of the most popular and some random packages or mods, with quick and easy installations.<br /><br />If this section doesn\'t show up, your computer probably cannot connect to <a href="http://www.simplemachines.org/" target="_blank" class="new_win">www.simplemachines.org</a>.';
 $helptxt['latest_themes'] = 'This area shows a few of the latest and most popular themes from <a href="http://www.simplemachines.org/" target="_blank" class="new_win">www.simplemachines.org</a>.  It may not show up properly if your computer can\'t find <a href="http://www.simplemachines.org/" target="_blank" class="new_win">www.simplemachines.org</a>, though.';
 
-$helptxt['secret_why_blank'] = 'For your security, the answer to your question (as well as your password) is encrypted in such a way that SMF can only tell you if get it right, so it can never tell you (or anyone else, importantly!) what your answer or password is.';
+$helptxt['secret_why_blank'] = 'For your security, your password and the answer to your secret question are encrypted so that the SMF software will never tell you, or anyone else, what they are.';
 $helptxt['moderator_why_missing'] = 'Since moderation is done on a board-by-board basis, you have to make members moderators from the <a href="javascript:window.open(\'%1$s?action=admin;area=manageboards\'); self.close();">board management interface</a>.';
 
 $helptxt['permissions'] = 'Permissions are how you either allow groups to, or deny groups from, doing specific things.<br /><br />You can modify multiple boards at once with the checkboxes, or look at the permissions for a specific group by clicking \'Modify.\'';
@@ -561,7 +559,7 @@ $helptxt['show_spider_online'] = 'This setting allows you to select whether spid
 		</li>
 	</ul>';
 
-$helptxt['birthday_email'] = 'Choose the index of the birthday email message to use.  A preview will be shown in the Email Subject and Email Body fields.<br /><strong>Note:</strong> Setting this option does not automatically enable birthday emails.  To enable birthday emails use the <a href="%1$s?action=admin;area=maintain;sa=tasks;%3$s=%2$s" target="_blank" class="new_win">Scheduled Tasks</a> page and enable the birthday email task.';
+$helptxt['birthday_email'] = 'Choose the index of the birthday email message to use.  A preview will be shown in the Email Subject and Email Body fields.<br /><strong>Note:</strong> Setting this option does not automatically enable birthday emails.  To enable birthday emails use the <a href="%1$s?action=admin;area=scheduledtasks;%3$s=%2$s" target="_blank" class="new_win">Scheduled Tasks</a> page and enable the birthday email task.';
 $helptxt['pm_bcc'] = 'When sending a personal message you can choose to add a recipient as BCC or &quot;Blind Carbon Copy&quot;. BCC recipients do not have their identities revealed to other recipients of the message.';
 
 $helptxt['move_topics_maintenance'] = 'This will allow you to move all the posts from one board to another board.';

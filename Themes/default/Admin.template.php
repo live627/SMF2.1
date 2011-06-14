@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; Admin
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // This is the administration center home.
 function template_admin()
@@ -9,8 +18,8 @@ function template_admin()
 	// Welcome message for the admin.
 	echo '
 	<div id="admincenter">
-		<div class="title_bar">
-			<h3 class="titlebg">';
+		<div class="cat_bar">
+			<h3 class="catbg">';
 
 	if ($context['user']['is_admin'])
 		echo '
@@ -82,19 +91,6 @@ function template_admin()
 							<em id="smfVersion" style="white-space: nowrap;">??</em><br />
 							', $context['can_admin'] ? '<a href="' . $scripturl . '?action=admin;area=maintain;sa=routine;activity=version">' . $txt['version_check_more'] . '</a>' : '', '<br />';
 
-	// Have they paid to remove copyright?
-	if (!empty($context['copyright_expires']))
-	{
-		echo '
-							<br />', sprintf($txt['copyright_ends_in'], $context['copyright_expires']);
-
-		if ($context['copyright_expires'] < 30)
-			echo '
-							<div class="alert">', sprintf($txt['copyright_click_renew'], $context['copyright_key']), '</div>';
-
-		echo '<br />';
-	}
-
 	// Display all the members who can administrate the forum.
 	echo '
 							<br />
@@ -143,7 +139,7 @@ function template_admin()
 
 	// This sets the announcements and current versions themselves ;).
 	echo '
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/admin.js?rc3"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/admin.js?fin20"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var oAdminIndex = new smf_AdminIndex({
 				sSelf: \'oAdminCenter\',
@@ -193,43 +189,6 @@ function template_admin()
 
 			});
 		// ]]></script>';
-}
-
-// Mangage the copyright.
-function template_manage_copyright()
-{
-	global $context, $settings, $options, $scripturl, $txt;
-
-	echo '
-	<div id="admincenter">
-		<form action="', $scripturl, '?action=admin;area=copyright" method="post" accept-charset="', $context['character_set'], '">
-			<div class="cat_bar">
-				<h3 class="catbg">
-					', $txt['copyright_removal'], '
-				</h3>
-			</div>
-			<div class="windowbg">
-				<span class="topslice"><span></span></span>
-				<div class="content">
-					<span class="smalltext">', $txt['copyright_removal_desc'], '</span>
-					<dl class="settings">
-						<dt>
-							<strong>', $txt['copyright_code'], ':</strong>
-						</dt>
-						<dd>
-							<input type="text" name="copy_code" value="" class="input_text" />
-						</dd>
-					</dl>
-					<p>
-						<input type="submit" value="', $txt['copyright_proceed'], '" class="button_submit" />
-					</p>
-				</div>
-				<span class="botslice"><span></span></span>
-			</div>
-			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-		</form>
-	</div>
-	<br class="clear" />';
 }
 
 // Show some support information and credits to those who helped make this.
@@ -287,7 +246,7 @@ function template_credits()
 	echo '
 		<div class="cat_bar">
 			<h3 class="catbg">
-				<span class="ie6_header floatleft"><a href="', $scripturl, '?action=helpadmin;help=latest_support" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['support_latest'], '</span>
+				<span class="ie6_header floatleft"><a href="', $scripturl, '?action=helpadmin;help=latest_support" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" /></a> ', $txt['support_latest'], '</span>
 			</h3>
 		</div>
 		<div class="windowbg2">
@@ -613,7 +572,7 @@ function template_view_versions()
 	   file categories. (sources, languages, and templates.) */
 	echo '
 		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=detailed-version.js"></script>
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/admin.js?rc3"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/admin.js?fin20"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var oViewVersions = new smf_ViewVersions({
 				aKnownLanguages: [
@@ -669,7 +628,7 @@ function template_edit_censored()
 							setOuterHTML(document.getElementById("moreCensoredWords"), \'<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" class="input_text" /> => <input type="text" name="censor_proper[]" size="20" class="input_text" /><\' + \'/div><div id="moreCensoredWords"><\' + \'/div>\');
 						}
 					// ]]></script>
-					<hr width="100%" size="1" class="hrcolor" />
+					<hr width="100%" size="1" class="hrcolor clear" />
 					<dl class="settings">
 						<dt>
 							<strong><label for="censorWholeWord_check">', $txt['censor_whole_words'], ':</label></strong>
@@ -853,7 +812,7 @@ function template_show_settings()
 				echo '
 					<div class="cat_bar">
 						<h3 class="', !empty($config_var['class']) ? $config_var['class'] : 'catbg', '"', !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>
-							', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), '
+							', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" class="icon" alt="' . $txt['help'] . '" /></a>' : ''), '
 							', $config_var['label'], '
 						</h3>
 					</div>';
@@ -914,7 +873,7 @@ function template_show_settings()
 				// Show the [?] button.
 				if ($config_var['help'])
 					echo '
-							<a id="setting_', $config_var['name'], '" href="', $scripturl, '?action=helpadmin;help=', $config_var['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a><span', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><em>' . $txt['admin_confirm_password'] . '</em>' : ''), '</span>
+							<a id="setting_', $config_var['name'], '" href="', $scripturl, '?action=helpadmin;help=', $config_var['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" /></a><span', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><em>' . $txt['admin_confirm_password'] . '</em>' : ''), '</span>
 						</dt>';
 				else
 					echo '
@@ -993,7 +952,7 @@ function template_show_settings()
 			if ($config_var == '')
 				echo '
 					</dl>
-					<hr class="hrcolor" />
+					<hr class="hrcolor clear" />
 					<dl class="settings">';
 			else
 				echo '
@@ -1009,7 +968,7 @@ function template_show_settings()
 
 	if (empty($context['settings_save_dont_show']))
 		echo '
-					<hr class="hrcolor" />
+					<hr class="hrcolor clear" />
 					<div class="righttext">
 						<input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), (!empty($context['settings_save_onclick']) ? ' onclick="' . $context['settings_save_onclick'] . '"' : ''), ' class="button_submit" />
 					</div>';
@@ -1167,7 +1126,7 @@ function template_edit_profile_field()
 								</select>
 							</dd>
 							<dt>
-								<a id="field_show_enclosed" href="', $scripturl, '?action=helpadmin;help=field_show_enclosed" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a>
+								<a id="field_show_enclosed" href="', $scripturl, '?action=helpadmin;help=field_show_enclosed" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" align="top" /></a>
 								<strong>', $txt['custom_edit_enclose'], ':</strong><br />
 								<span class="smalltext">', $txt['custom_edit_enclose_desc'], '</span>
 							</dt>
@@ -1212,7 +1171,7 @@ function template_edit_profile_field()
 								<input type="checkbox" name="bbc"', $context['field']['bbc'] ? ' checked="checked"' : '', ' class="input_check" />
 							</dd>
 							<dt id="options_dt">
-								<a href="', $scripturl, '?action=helpadmin;help=customoptions" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a>
+								<a href="', $scripturl, '?action=helpadmin;help=customoptions" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" /></a>
 								<strong>', $txt['custom_edit_options'], ':</strong><br />
 								<span class="smalltext">', $txt['custom_edit_options_desc'], '</span>
 							</dt>
@@ -1241,7 +1200,7 @@ function template_edit_profile_field()
 						<legend>', $txt['custom_edit_advanced'], '</legend>
 						<dl class="settings">
 							<dt id="mask_dt">
-								<a id="custom_mask" href="', $scripturl, '?action=helpadmin;help=custom_mask" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a>
+								<a id="custom_mask" href="', $scripturl, '?action=helpadmin;help=custom_mask" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" align="top" /></a>
 								<strong>', $txt['custom_edit_mask'], ':</strong><br />
 								<span class="smalltext">', $txt['custom_edit_mask_desc'], '</span>
 							</dt>
@@ -1421,8 +1380,8 @@ function template_core_features()
 
 	echo '
 		<form action="', $scripturl, '?action=admin;area=corefeatures;" method="post" accept-charset="', $context['character_set'], '">
-			<div class="title_bar">
-				<h3 class="titlebg">
+			<div class="cat_bar">
+				<h3 class="catbg">
 					', $txt['core_settings_title'], '
 				</h3>
 			</div>';
@@ -1525,7 +1484,7 @@ function template_add_language()
 							<th scope="col">', $txt['add_language_smf_desc'], '</th>
 							<th scope="col">', $txt['add_language_smf_version'], '</th>
 							<th scope="col">', $txt['add_language_smf_utf8'], '</th>
-							<th class="first_th" scope="col">', $txt['add_language_smf_install'], '</th>
+							<th class="last_th" scope="col">', $txt['add_language_smf_install'], '</th>
 						</tr>
 					</thead>
 					<tbody>';
@@ -1912,11 +1871,11 @@ function template_modify_language_entries()
 						</dd>
 						<dt>
 							<input type="hidden" name="comp[', $cached['key'], ']" value="', $cached['value'], '" />
-							<textarea name="entry[', $cached['key'], ']" cols="40" rows="', $cached['rows'] < 2 ? 2 : $cached['rows'], '" style="width: 96%;">', $cached['value'], '</textarea>
+							<textarea name="entry[', $cached['key'], ']" cols="40" rows="', $cached['rows'] < 2 ? 2 : $cached['rows'], '" style="' . ($context['browser']['is_ie8'] ? 'width: 635px; max-width: 96%; min-width: 96%' : 'width: 96%') . ';">', $cached['value'], '</textarea>
 						</dt>
 						<dd>
 							<input type="hidden" name="comp[', $entry['key'], ']" value="', $entry['value'], '" />
-							<textarea name="entry[', $entry['key'], ']" cols="40" rows="', $entry['rows'] < 2 ? 2 : $entry['rows'], '" style="width: 96%;">', $entry['value'], '</textarea>
+							<textarea name="entry[', $entry['key'], ']" cols="40" rows="', $entry['rows'] < 2 ? 2 : $entry['rows'], '" style="' . ($context['browser']['is_ie8'] ? 'width: 635px; max-width: 96%; min-width: 96%' : 'width: 96%') . ';">', $entry['value'], '</textarea>
 						</dd>';
 			$cached = array();
 		}
@@ -1932,7 +1891,7 @@ function template_modify_language_entries()
 						</dd>
 						<dt>
 							<input type="hidden" name="comp[', $cached['key'], ']" value="', $cached['value'], '" />
-							<textarea name="entry[', $cached['key'], ']" cols="40" rows="2" style="width: 96%;">', $cached['value'], '</textarea>
+							<textarea name="entry[', $cached['key'], ']" cols="40" rows="2" style="' . ($context['browser']['is_ie8'] ? 'width: 635px; max-width: 96%; min-width: 96%' : 'width: 96%') . ';">', $cached['value'], '</textarea>
 						</dt>
 						<dd>
 						</dd>';

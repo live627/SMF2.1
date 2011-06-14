@@ -1,7 +1,224 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0                                                                      ???
+SMF 2.0                                                             05 June 2011
+================================================================================
+
+June 2011
+--------------------------------------------------------------------------------
+ ! A necessary language file was not loaded when using read_tgz_data() function outside Packages area. (Subs-Package.php) [Bug 4732]
+ ! Boards weren't sorted in the correct order in PostgreSQL when adding/editing membergroups (ManageMembergroups.php) [Bug 4737]
+ ! Spaces in usernames and passwords messed up the connection string for PostgreSQL [Bug 4736]
+ * Minor consistency fix on admin centre template edit page (Themes.template.php)
+ * Final fix for IE8 jumpy cursor bug (Display.template.php, GenericControls.template.php, editor.css, editor_ie.css, index.css, ie6.css, ie7.css, core/Display.template.php, core/index.css, core/ie6.css, core/ie7.css)
+ * Fixed W3 XHTML validation links (index.template.php, core/index.template.php) [Bug 4740]
+ ! urldecoding parameters values breaks OpenID, which relies on urlencoded values for parameters.
+ ! Members only with manage membergroups permission could create groups that inherit from or based of off protected groups. (ManageMembergroups.php)
+ ! Members having manage membergroups and moderate forum members could register members protected groups as their primary group. (ManageRegistration.php, Subs-Members.php)
+ ! Removed unreliable code for detecting forum version and copyright requirement on SSI pages. (Subs.php)
+ ! CSS and JavaScript includes cache suffix updates. (many files)
+ ! PHP's empty() function doesn't work too well with PostgreSQL's boolean values (ManageMembergroups.php) [Bug 4744]
+ & Correction to a language string (ManagePermissions language file) [Bug 4745]
+ ! Current avatar image URL was broken in profile when avatars were stored in a custom directory. (Profile-Modify.php)
+ ! Minor change for better variant support (Subs-BoardIndex.php)
+ * IE8 Fixes for all minor textareas, just to be sure. (twelve templates, default and core)
+ * Replaced the JavaScript version compare with a better implementation. (admin.js)
+ ! Replaced matchPackageVersion with a better implementation. (Subs-Package.php)
+ ! Search API version check did not use proper version checking functions. (Search.php)
+ & added a trademark (Manual language file)
+
+
+May 2011
+--------------------------------------------------------------------------------
+ ! Adding new post icons didn't work properly in PostgreSQL (ManageSmileys.php) [Bug 4731]
+ ! Don't try to set a temporary order for the smileys table in PostgreSQL (Subs-Db-Postgresql.php, thank you habakuk!)
+ * Change of header bar classes for admin main page, core features page, and reports. (Admin template, Reports template) [Bug 4647]
+ * Fix to stop linktree anchors scrunching in IE6 and IE7. (index.css) [Bug 4651]
+ * Hide category links for non-collapsible categories. (BoardIndex template, index.css, rtl.css) [Bug 4652]
+ * Partial fix for problems caused by category collapse/expand in some browsers. (index.css) [Bug 4639]
+ & Corrected menu text for consistency. (index language file) [Bug 4648]
+ * Fix for untracked validation errors with collapsed categories. (BoardIndex template)
+ ! Making a board child of itself crashed the forum. (Subs-Boards.php) [Bug 4710]
+ & Added the language string necessary for the above change. (Errors language file)
+ ! Theme option changes were not loaded after profile changes in some cases. (Profile-Modify.php) [Bug 4675]
+ * Bringing back the good, old welcome guest note along with activation link. (index template, index.css) [Bug 4703]
+ ! Fixing MySQL 5.5 compatibility for a timestamp field. (upgrade_1-0.sql, upgrade_1-1.sql) [Bug 4698]
+ ! Attachment mime type calcuation was ignored while upgrading from 1.0 and 1.1 versions. (upgrade_2-0_mysql.sql) [Bug 4700]
+ ! Member language selection was not reset upon a language deletion. (ManageServer.php) [Bug 4641]
+ * JavaScript quick topic modify did not work when quick moderation mode was 'icons'. (MessageIndex template) [Bug 4715]
+ ! It was possible to create permission profiles without names. (ManagePermissions.php) [Bug 4709]
+ ! Additional group changes were not tracked properly. (Profile-Modify.php) [Bug 4718]
+ ! Ignore boards options were ignored in MessageIndex. (Subs-BoardIndex.php) [Bug 4719]
+ ! Remove Inactive Members maintenance removed members it should not. (ManageMaintenance.php) [Bug 4716]
+ ! Reserved member name check failed with HTML entities. (Subs-Members.php) [Bug 4717]
+ * Minor break in PM replies fixed. (PersonalMessage template) [Bug 4713]
+ * Fixed incorrect class on checkbox. Changed default removal selection to safest option.(ManageMaintenance.template.php)
+ ! Fixed Webkit/Presto bug with sidebar menus enabled and deleted superfluous code from webkit.css and rtl.css (index.css, rtl.css, webkit.css)
+ * A stack of minor bugfixes, primarily for better IE6 support. (many files)
+ ! Categories which could not be collapsed were still given collapse links. (Subs-BoardIndex.php) [Bug 4639]
+ ! Installing, upgrading and uninstalling packages were not logged in admin log. (Packages.php) [Bug 4669]
+ & Added the language strings necessary for the above change. (Modlog language file) [Bug 4669]
+ * It was not possible to remove avatar when selecting avatar from gallery was disabled. (Profile-Modify.php, Profile template) [Bug 4636]
+ & Added the language string necessary for the above change. (Profile language file) [Bug 4636]
+ ! Automated conversion of URLs to hyperlinks failed with URLs containing exclamation mark. (Subs.php) [Bug 4624]
+ * Topic moderation using checkboxes did not function correctly for non-moderators. (topic.js) [Bug 4706]
+ * Minor correction in admin. Fixes for sidebar menus on narrow resolution. (Admin template, Profile template, index.css)
+ ! Profile updates did not load all previously saved data. (Profile.php, Profile-Modify.php) [Bug 4635]
+ ! Login session data was cleared when it shouldn't have. (LogInOut.php) [Bug 4644]
+ ! Login by $_GET is not needed. (LogInOut.php)
+ ! Incorrect custom menu URL for unapproved posts moderation area. (ModerationCenter.php) [Bug 4728]
+ ! Languages which doesn't support 12 hour time format had their 'am/pm's stripped. (Subs.php) [Bug 4720]
+ & Added the language strings necessary for the above change. (index language file) [Bug 4720]
+ ! Incorrect error message when attempting to remove a non-existing post. (RemoveTopic.php) [Bug 4705]
+ * Tabs and line endings within code tags were not parsed correctly for some browsers. (Packages.php, Subs.php, Packages template, index.css, ie6.css, ie7.css) [Bug 4578]
+ ! Upgrading from earlier versions did not update themes. (upgrade_2-0_mysql.sql) [Bug 4724]
+ & Copyright and trademarks changes, and messing up [SiNaN]'s work (index language file, Subs.php)
+ ! Credits updates (Who.php)
+ ! Cookie shouldn't be reset. (Subs-Auth.php)
+ ! Search strips so much it may end up with nothing. (Search.php)
+ ! Minor smiley misalignment fixed. (index.css, core/css/index.css) [Bug 4727]
+ ! Added some fixes to core, removed core ie6_rtl.css, minor correction in default/index.css (index.css, core/css/index.css, core/index.template.php)
+ ! A few more copyright changes (several files)
+ * Minor bugfixes. (index.css, PersonalMessage.template.php, Profile.template.php)
+
+
+April 2011
+--------------------------------------------------------------------------------
+ ! Made functions removeEvent, getEventProperties and removeHolidays use the parameter value instead of a request variable. (Subs-Calender.php)
+ ! viewquery action generated errors when necessary data was not loaded in some cases. (ViewQuery.php) [Bug 4628]
+ ! Attachment links in attachment management area wasn't mod_security compliant. (ManageAttachments.php) [Bug 4629]
+ * Ban creation form did not have any default triggers set. (ManageBans template) [Bug 4659]
+ ! Incorrect href in news management area. (Admin.php, ManageNews.php) [Bug 4671]
+ * The URL for setting theme options via JavaScript wasn't mod_security compliant. (script.js) [Bug 4701]
+ ! Chrome was displaying a warning when scheduled tasks were triggered via JavaScript. (ScheduledTasks.php) [Bug 4673]
+ ! 'db_create_table' package database function 'if_exists' parameter default was misleading. (DbPackages-*.php) [Bug 4672]
+ ! The re-attribute posts feature was broken on PostgreSQL. (Subs-Members.php) [Bug 4676]
+ ! Missing preparsecode() call for package readme files with BBC. (Packages.php) [Bug 4678]
+ ! Unauthorized users were able to see warning status in some cases. (Display.php, PersonalMessage.php) [Bug 4696]
+ ! Setting base_theme_dir caused undefined index errors in manage languages area. (ManageServer.php) [Bug 4634]
+ ! Personal message preview did not display post errors. (PersonalMessages.php) [Bug 4653]
+ ! Custom language strings were not loaded when editing theme settings. (Themes.php) [Bug 4658]
+ ! integrate_modify_modifications hook should be triggered earlier in the code. (ManageSettings.php) [Bug 4638]
+ ! integrate_menu_buttons hook was triggered too late in the code. (Subs.php) [Bug 4637,4670]
+ * Undefined index errors when there were not any recent posts. (BoardIndex template) [Bug 4650]
+ ! CAPTCHA settings were linked to the incorrect area in admin search results. (Admin.php) [Bug 4707]
+
+
+February 2011
+--------------------------------------------------------------------------------
+ ! In some cases, you couldn't edit calendar events after upgrading to Postgres 8.4 from an older version (upgrade_2-0_postgresql.sql) [Bug 4642] 
+ & Better text for attachment clearing box. (Post language file)
+ ! Some custom profile fields weren't being displayed in PostgreSQL (Profile-Modify.php, upgrade_2-0_postgresql.sql) [Bug 4626]
+ ! zip files decompression fix (thank you Brett!) (Subs-Package)
+ ! Postgres upgrade script fix (upgrade_2-0_postgresql.sql)
+
+
+SMF 2.0 RC5                                                      8 February 2011
+================================================================================
+
+February 2011
+--------------------------------------------------------------------------------
+ * Finalizing the help section. (Help.php, Help template) [Bug 2924]
+ & Updated the help language strings accordingly. (Manual language file)
+ * Help section was not displayed correctly in Core theme. (Help template, index.css) [Bug 4611]
+ ! Checking for search API files could cause an open_basedir error. (ManageSearch.php) [Bug 4605]
+ ! Visual verification could cause undefined index errors in some cases. (Subs-Editor.php) [Bug 4546]
+ ! add_index function failed on duplicate indexes. (DbPackages-*.php) [Bug 4536]
+ ! Allow search APIs to modify search settings. (ManageSearch.php) [Bug 4606]
+ ! Undefined index when a non-moderator edited polls. (Poll.php) [Bug 4544]
+ ! Non-existent permission profiles could cause undefined index errors. (ManagePermissions.php) [Bug 4612]
+ ! Incorrect dots during upgrade with multiple script files. (upgrade.php) [Bug 4617]
+ ! It was possible to add the same integration function twice. (Subs.php) [Bug 4616]
+ ! Who's Online integration hook was too restrictive. (Who.php) [Bug 4615]
+ * Auto suggest could not handle display names with html special characters. (suggest.js) [Bug 4604]
+ ! Minor improvements to integration hooks. (Admin.php, Load.php, ManagePermissions.php, ManageSettings.php)
+ ! Tabs within code tags were not parsed correctly for some browsers. (Subs.php) [Bug 4578]
+ ! Validate odd URLs (QueryString, Subs.php)
+ ! Users were logged out when other failed attempts to login were made (Load.php)
+ ! Remove completely incorrect protection against $cachedir removal. (upgrade.php)
+ ! sprintf call for support resources language string was overriden. (Admin.php)
+ ! MySQL 5.5 compatibility. (upgrade from older versions to 2.0)
+
+
+January 2011
+--------------------------------------------------------------------------------
+ ! Fixed converted passwords not recognized with encryption using md5(md5($_POST['passwrd'])) (LogInOut.php) [Bug 4584]
+ & Incorrect link to Scheduled Tasks area in 'birthday_email' help string. (Help language file) [Bug 4598]
+ ! Text color was lost when additional styling was applied using WYSIWYG editor. (Subs-Editor.php) [Bug 4600]
+ * Replaced or removed the remaining deprecated <b> tags. (Reminder.php, PersonalMessage template) [Bug 4594]
+ ! It was possible define wildcard-only censor words. (ManagePosts.php) [Bug 4574]
+ ! The value of checkbox custom fields were displayed incorrectly on topic display. (Load.php, ManageSettings.php) [Bug 4601]
+ ! Paid subscriptions scheduled taks should be disabled when paid subscriptions feature is disabled. (ManageSettings.php, install_2-0_*.sql) [Bug 4599]
+ & Unclear help strings for post unapproved replies and attachments permissions. (ManagePermissions language file) [Bug 4561]
+ & Outdated information in calendar help string. (Help language file) [Bug 4556]
+ ! Post action caused errors on wap protocol, trying to load a nonexistent template. (Post.php) [Bug 4570]
+ ! The check for empty body on personal message body failed in some cases. (PersonalMessage.php) [Bug 4597]
+ ! Calendar maximum year was not adjusted on forums upgraded from older versions. (install_2-0_*.sql, upgrade_2-0_*.sql) [Bug 4592]
+ ! Member approvals did not take account deletion requests into account when registration method is not set to member approval. (ManageMembers.php, Subs.php) [Bug 4529]
+ ! News items didn't get their html special chars encoded. (ManageNews.php, thank you Ghost!)
+ & Updated the area description matching the change above. (Admin language file)
+ ! SSI.php did not handle guest access correctly for forums having guest access disabled. (SSI.php, ssi_examples.php)
+ ! ssi_examples.php was missing padding on the sides. (ssi_examples.php) [Bug 4602]
+ * Replaced the help section with a page linking to Online Manual. (Help.php, Help.template.php, index.css)
+ & Updated the help language strings accordingly. (Manual language file)
+ ! Integrated output buffers can use static functions in classes too (Subs.php) [Bug 4603]
+ * Incorrect fallback for pm receive options when buddy/ignore lists are disabled. (Profile template) [Bug 4596]
+ ! Upgrade did not update group types. (upgrade_2-0_*.sql) [Bug 4577]
+ ! Protected but visible group details could not be viewed by non-admins. (Groups.php) [Bug 4525]
+ ! Search returned incorrect results for database users without create_temporary privilege. (Search.php, thank you ioszilla!)
+ ! Search may result in database errors for database users without create_temporary privilege. (Search.php)
+ & Copyright years update (index.english.php and a few more files)
+ ! SSI.php should not give information through functions called by $_GET either, if guest access is disabled (SSI.php)
+ & Fixed a couple of languages strings. [Bug 4566]
+ * Fixed validation error and header bar markup. [Bug 4549]
+ * Fixed newsletter IE7 issue and some other IE issues. (ie6.css, ie7.css, index.css, rtl.css, ManageNews.template.php, Login.template.php) [Bug 4567]
+ ! Fixed admin titlebg padding. (admin.css) [Bug 4576]
+ * Missing class on some help icons. (Admin.template.php, Themes.template.php) [Bug 4580]
+ ! Fixed admin submenus glitch on very narrow screens and break on edit themes page. (index.css, admin.css) [Bug 4571] [Bug 4581]
+ * Incorrect id's fixed. (SplitTopics.template.php) [Bug 4582]
+ * Minor markup fixes. (Profile.template.php) [Bug 4607]
+ ! Fixed display of spider log title/information. (ManageSearchEngines.php) [Bug 4608]
+ ! Broken function call in ManageMail (ManageMail.php) 
+ * All browsers (inc.IE6) fix for adm_submenus on narrow screens. Also untracked IE6/IE7 bug for span.firstlevel. (index.css, GenericMenu.template.php) [Bug 4571]
+ ! css caches preliminary updates (many files)
+ * Added array flip for buttonlists to fix untracked ltr/rtl issues in IE6/7. (rtl.css, index.template.php)
+
+
+December 2010
+--------------------------------------------------------------------------------
+ ! HTTPS cookie detection was incorrectly detected for some configurations (ManageServer.php)
+ ! Check for spam with emails before sending the email. (ported from Tools, thank you Brett!) (SendTopic.php)
+ & Tweaks to language strings (thank you, Akyhne!) (a few language files)
+ & Tweak to language string (Admin file) [bug 4558]
+ ! Minor tweaks (ModerationCenter.template.php, index.css) [Bug 4523] [Bug 4548]
+ * Added ie6_rtl.css file to core theme (core/index.template.php, core/ie6_rtl.css)
+ ! New css for bbc_link class, with new_win secondary removed (index.css, Subs.php)
+ ! Tweak to a language string (ManagePermission file) [Bug 4564]
+ ! Fixed link to pruning logs under Search Engines Settings (ManageSearchEngines.php) [Bug 4569]
+ ! Fixed formatting of birthday email on mail settings page (ManageMail.php) [Bug 4573]
+ ! Added timeout protection for removing posts and topics when deleting a user (RemoveTopic.php, Profile-Actions.php) [Bug 4575]
+ ! Made title column for calender events and holidays larger to handle long events and holidays (install*.sql upgrade*.sql) [Bug 4583]
+
+
+November 2010
+--------------------------------------------------------------------------------
+ & Language strings for "sent items" in PM updated. (Profile, Manual language files)
+ ! Reapplied the fix of 10194, even though the cache is only cleared if using SMF's disk cache. (Load.php, Subs-Boards.php)
+ * Typo (Post.template.php)
+ ! array_diff_key() compatibility added - ported from bug fixes (index.php, SSI.php, Subs-Compat.php)
+ ! integration hooks fix for temporary/permanent hooks - ported from bug fixes (Subs.php)
+ & Added a language string for cannot_moderate_board (Errors file)
+ ! Invalidate cache (as long as Load.php can be modified, at least) (Subs.php)
+ ! Tweak the size regex to accept the standard valid values (Subs.php)
+ ! Fixed signature padding for IE6 and IE7 (ie6.css, ie7.css) [Bug 4535]
+ ! Allow fallback to non-utf8 languages for UTF8 forums, in case the corresponding UTF8 files are not installed (still prefer UTF8) (Profile-Modify.php) [Bug 4534]
+ * Minor spacing tweaks for request membergroup and edit registration agreement pages. (Profile.template.php, Register.template.php, admin.css) [Bugs 4530, 4531]
+ ! Typo in OpenID handling. (Subs-OpenID.php)
+ ! Trivial change, to check for spam a tad bit sooner. (LogInOut.php)
+
+
+--------------------------------------------------------------------------------
+SMF 2.0 RC4                                                      1 November 2010
 ================================================================================
 
 October 2010
@@ -83,6 +300,7 @@ October 2010
  ! Small addition to clean_cache() documentation (Subs.php)
  ! Manage Posts area should only check for admin_forum permission. (ManagePosts.php) [Bug 4520]
  * Undefined index in Subs.php for Core theme (Display template)
+ ! Mail functions broken (ManageMail.php)
 
 
 September 2010

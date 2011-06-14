@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; ManageMembergroups
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 function template_main()
 {
@@ -326,7 +335,7 @@ function template_edit_group()
 		</form>
 	</div>
 	<br class="clear" />
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?fin20"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var oModeratorSuggest = new smc_AutoSuggest({
 				sSelf: \'oModeratorSuggest\',
@@ -539,7 +548,7 @@ function template_group_members()
 
 	if (!empty($context['group']['assignable']))
 		echo '
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?fin20"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var oAddMemberSuggest = new smc_AutoSuggest({
 				sSelf: \'oAddMemberSuggest\',
@@ -582,7 +591,7 @@ function template_group_request_reason()
 						</dt>
 						<dd>
 							<input type="hidden" name="groupr[]" value="', $request['id'], '" />
-							<textarea name="groupreason[', $request['id'], ']" rows="3" cols="40" style="width: 96%;"></textarea>
+							<textarea name="groupreason[', $request['id'], ']" rows="3" cols="40" style="' . ($context['browser']['is_ie8'] ? 'width: 635px; max-width: 96%; min-width: 96%' : 'width: 96%') . ';"></textarea>
 						</dd>';
 
 	echo '

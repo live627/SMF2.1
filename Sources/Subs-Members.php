@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* Subs-Members.php                                                                *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -499,7 +488,7 @@ function registerMember(&$regOptions, $return_errors = false)
 			fatal_lang_error('register_only_once', false);
 	}
 
-	// What method of authorizaton are we going to use?
+	// What method of authorization are we going to use?
 	if (empty($regOptions['auth_method']) || !in_array($regOptions['auth_method'], array('password', 'openid')))
 	{
 		if (!empty($regOptions['openid']))
@@ -714,9 +703,11 @@ function registerMember(&$regOptions, $return_errors = false)
 		$request = $smcFunc['db_query']('', '
 			SELECT id_group
 			FROM {db_prefix}membergroups
-			WHERE min_posts != {int:min_posts}',
+			WHERE min_posts != {int:min_posts}' . (allowedTo('admin_forum') ? '' : '
+				OR group_type = {int:is_protected}'),
 			array(
 				'min_posts' => -1,
+				'is_protected' => 1,
 			)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -915,7 +906,8 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 		return $num < 0x20 || $num > 0x10FFFF || ($num >= 0xD800 && $num <= 0xDFFF) ? \'\' : ($num < 0x80 ? chr($num) : ($num < 0x800 ? chr(192 | $num >> 6) . chr(128 | $num & 63) : ($num < 0x10000 ? chr(224 | $num >> 12) . chr(128 | $num >> 6 & 63) . chr(128 | $num & 63) : chr(240 | $num >> 18) . chr(128 | $num >> 12 & 63) . chr(128 | $num >> 6 & 63) . chr(128 | $num & 63))));')
 	);
 
-	$checkName = $smcFunc['strtolower'](preg_replace('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e', '$replaceEntities(\'\\2\')', $name));
+	$name = preg_replace('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e', '$replaceEntities(\'\\2\')', $name);
+	$checkName = $smcFunc['strtolower']($name);
 
 	// Administrators are never restricted ;).
 	if (!allowedTo('moderate_forum') && ((!empty($modSettings['reserveName']) && $is_name) || !empty($modSettings['reserveUser']) && !$is_name))
@@ -1131,13 +1123,6 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 		$smcFunc['db_free_result']($request);
 	}
 
-	$query_parts = array();
-	if (!empty($email))
-		$query_parts[] = 'm.poster_email = {string:email_address}';
-	if (!empty($membername))
-		$query_parts[] = 'm.poster_name = {string:member_name}';
-	$query = implode(' AND ', $query_parts);
-
 	// If they want the post count restored then we need to do some research.
 	if ($post_count)
 	{
@@ -1147,8 +1132,9 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND b.count_posts = {int:count_posts})
 			WHERE m.id_member = {int:guest_id}
 				AND m.approved = {int:is_approved}
-				AND m.icon != {string:recycled_icon}
-				AND ' . $query,
+				AND m.icon != {string:recycled_icon}' . (empty($email) ? '' : '
+				AND m.poster_email = {string:email_address}') . (empty($membername) ? '' : '
+				AND m.poster_name = {string:member_name}'),
 			array(
 				'count_posts' => 0,
 				'guest_id' => 0,
@@ -1164,10 +1150,17 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 		updateMemberData($memID, array('posts' => 'posts + ' . $messageCount));
 	}
 
+	$query_parts = array();
+	if (!empty($email))
+		$query_parts[] = 'poster_email = {string:email_address}';
+	if (!empty($membername))
+		$query_parts[] = 'poster_name = {string:member_name}';
+	$query = implode(' AND ', $query_parts);
+
 	// Finally, update the posts themselves!
 	$smcFunc['db_query']('', '
-		UPDATE {db_prefix}messages AS m
-		SET m.id_member = {int:memID}
+		UPDATE {db_prefix}messages
+		SET id_member = {int:memID}
 		WHERE ' . $query,
 		array(
 			'memID' => $memID,

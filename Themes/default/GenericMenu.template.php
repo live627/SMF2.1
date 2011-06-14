@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; GenericMenu
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // This contains the html for the side bar of the admin center, which is used for all admin pages.
 function template_generic_menu_sidebar_above()
@@ -322,7 +331,7 @@ function template_generic_menu_tabs(&$menu_context)
 		// the end of tabs
 		echo '
 		</ul>
-	</div>';
+	</div><br class="clear" />';
 	}
 	// ...if not use the old style
 	else

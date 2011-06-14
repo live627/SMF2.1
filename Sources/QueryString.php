@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* QueryString.php                                                                 *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -128,7 +117,8 @@ function cleanRequest()
 		$_GET = array();
 
 		// Was this redirected? If so, get the REDIRECT_QUERY_STRING.
-		$_SERVER['QUERY_STRING'] = urldecode(substr($_SERVER['QUERY_STRING'], 0, 5) === 'url=/' ? $_SERVER['REDIRECT_QUERY_STRING'] : $_SERVER['QUERY_STRING']);
+		// Do not urldecode() the querystring, unless you so much wish to break OpenID implementation. :)
+		$_SERVER['QUERY_STRING'] = substr($_SERVER['QUERY_STRING'], 0, 5) === 'url=/' ? $_SERVER['REDIRECT_QUERY_STRING'] : $_SERVER['QUERY_STRING'];
 
 		// Replace ';' with '&' and '&something&' with '&something=&'.  (this is done for compatibility...)
 		// !!! smflib
@@ -219,6 +209,7 @@ function cleanRequest()
 			list ($_REQUEST['board'], $_REQUEST['start']) = explode('.', $_REQUEST['board']);
 		// Now make absolutely sure it's a number.
 		$board = (int) $_REQUEST['board'];
+		$_REQUEST['start'] = isset($_REQUEST['start']) ? (int) $_REQUEST['start'] : 0;
 
 		// This is for "Who's Online" because it might come via POST - and it should be an int here.
 		$_GET['board'] = $board;
@@ -253,7 +244,7 @@ function cleanRequest()
 		$topic = 0;
 
 	// There should be a $_REQUEST['start'], some at least.  If you need to default to other than 0, use $_GET['start'].
-	if (empty($_REQUEST['start']) || $_REQUEST['start'] < 0)
+	if (empty($_REQUEST['start']) || $_REQUEST['start'] < 0 || (int) $_REQUEST['start'] > 2147473647)
 		$_REQUEST['start'] = 0;
 
 	// The action needs to be a string and not an array or anything else

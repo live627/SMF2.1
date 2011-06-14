@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC4; Errors
+// Version: 2.0; Errors
 
 global $scripturl, $modSettings;
 
@@ -58,8 +58,6 @@ $txt['session_verify_fail'] = 'Session verification failed.  Please try logging 
 $txt['verify_url_fail'] = 'Unable to verify referring url.  Please go back and try again.';
 $txt['guest_vote_disabled'] = 'Guests cannot vote in this poll.';
 
-$txt['copyright_failed'] = 'Sorry - but the code you entered is incorrect. Please ensure that your forum URL matches that entered when purchasing the subscription.';
-
 $txt['cannot_access_mod_center'] = 'You do not have permission to access the moderation center.';
 $txt['cannot_admin_forum'] = 'You are not allowed to administrate this forum.';
 $txt['cannot_announce_topic'] = 'You are not allowed to announce topics on this board.';
@@ -91,6 +89,7 @@ $txt['cannot_mark_any_notify'] = 'You don\'t have the permissions necessary to g
 $txt['cannot_mark_notify'] = 'Sorry, but you are not permitted to request notifications from this board.';
 $txt['cannot_merge_any'] = 'You aren\'t allowed to merge topics on one of the selected board(s).';
 $txt['cannot_moderate_forum'] = 'You are not allowed to moderate this forum.';
+$txt['cannot_moderate_board'] = 'You are not allowed to moderate this board.';
 $txt['cannot_modify_any'] = 'You aren\'t allowed to modify just any post.';
 $txt['cannot_modify_own'] = 'Sorry, but you aren\'t allowed to edit your own posts.';
 $txt['cannot_modify_replies'] = 'Even though this post is a reply to your topic, you cannot edit it.';
@@ -242,7 +241,7 @@ $txt['error_session_timeout'] = 'Your session timed out while posting. Please tr
 $txt['error_no_to'] = 'No recipients specified.';
 $txt['error_bad_to'] = 'One or more \'to\'-recipients could not be found.';
 $txt['error_bad_bcc'] = 'One or more \'bcc\'-recipients could not be found.';
-$txt['error_form_already_submitted'] = 'You already submitted this post!  You might have accidentally double clicked or tried to refresh.';
+$txt['error_form_already_submitted'] = 'You already submitted this post!  You might have accidentally double clicked or tried to refresh the page.';
 $txt['error_poll_few'] = 'You must have at least two choices!';
 $txt['error_need_qr_verification'] = 'Please complete the verification section below to complete your post.';
 $txt['error_wrong_verification_code'] = 'The letters you typed don\'t match the letters that were shown in the picture.';
@@ -356,6 +355,9 @@ $txt['ignoreboards_disallowed'] = 'The option to ignore boards has not been enab
 
 $txt['mboards_delete_error'] = 'No category selected!';
 $txt['mboards_delete_board_error'] = 'No board selected!';
+
+$txt['mboards_parent_own_child_error'] = 'Unable to make a parent its own child!';
+$txt['mboards_board_own_child_error'] = 'Unable to make a board its own child!';
 
 $txt['smileys_upload_error_notwritable'] = 'The following smiley directories are not writable: %1$s';
 $txt['smileys_upload_error_types'] = 'Smiley images can only have the following extensions: %1$s.';

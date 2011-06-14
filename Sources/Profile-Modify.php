@@ -1,26 +1,15 @@
 <?php
-/**********************************************************************************
-* Profile-Modify.php                                                              *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 RC4                                         *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006-2010 by:     Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
+
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines http://www.simplemachines.org
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
@@ -963,7 +952,7 @@ function saveProfileFields()
 			// Prepare additional groups for comparison.
 			$additional_groups = array(
 				'previous' => !empty($old_profile['additional_groups']) ? explode(',', $old_profile['additional_groups']) : array(),
-				'new' => !empty($_POST['additional_groups']) ? $_POST['additional_groups'] : array(),
+				'new' => !empty($_POST['additional_groups']) ? array_diff($_POST['additional_groups'], array(0)) : array(),
 			);
 
 			sort($additional_groups['previous']);
@@ -1625,7 +1614,7 @@ function forumProfile($memID)
 
 	loadThemeOptions($memID);
 	if (allowedTo(array('profile_extra_own', 'profile_extra_any')))
-		loadCustomFields($memID, 'forumProfile');
+		loadCustomFields($memID, 'forumprofile');
 
 	$context['sub_template'] = 'edit_options';
 	$context['page_desc'] = $txt['forumProfile_info'];
@@ -2165,9 +2154,9 @@ function loadThemeOptions($memID)
 	if ($context['user']['is_owner'])
 	{
 		$context['member']['options'] = $options;
-		foreach ($context['member']['options'] as $k => $v)
-			if (isset($_POST['options'][$k]))
-				$context['member']['options'][$k] = $_POST['options'][$k];
+		if (isset($_POST['options']) && is_array($_POST['options']))
+			foreach ($_POST['options'] as $k => $v)
+				$context['member']['options'][$k] = $v;
 	}
 	else
 	{
@@ -2288,15 +2277,12 @@ function profileLoadLanguages()
 	$context['profile_languages'] = array();
 
 	// Get our languages!
-	getLanguages(true, false);
+	getLanguages(true, true);
 
 	// Setup our languages.
 	foreach ($context['languages'] as $lang)
 	{
-		if ($context['character_set'] == 'UTF-8' && substr($lang['filename'], -5) === '-utf8')
-			$context['profile_languages'][$lang['filename']] = strtr($lang['name'], array('-utf8' => ''));
-		elseif ($context['character_set'] != 'UTF-8' && substr($lang['filename'], -5) !== '-utf8')
-			$context['profile_languages'][$lang['filename']] = $lang['name'];
+		$context['profile_languages'][$lang['filename']] = strtr($lang['name'], array('-utf8' => ''));
 	}
 	ksort($context['profile_languages']);
 
@@ -2411,23 +2397,22 @@ function profileLoadAvatarData()
 		'allow_external' => allowedTo('profile_remote_avatar') || (!$context['user']['is_owner'] && allowedTo('profile_extra_any')),
 	);
 
-	// Actually - nothing?
-	if (!$context['member']['avatar']['allow_external'] && !$context['member']['avatar']['allow_server_stored'] && !$context['member']['avatar']['allow_upload'])
-		return false;
-
 	if ($cur_profile['avatar'] == '' && $cur_profile['id_attach'] > 0 && $context['member']['avatar']['allow_upload'])
+	{
 		$context['member']['avatar'] += array(
 			'choice' => 'upload',
 			'server_pic' => 'blank.gif',
 			'external' => 'http://'
 		);
+		$context['member']['avatar']['href'] = empty($cur_profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $cur_profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $cur_profile['filename'];
+	}
 	elseif (stristr($cur_profile['avatar'], 'http://') && $context['member']['avatar']['allow_external'])
 		$context['member']['avatar'] += array(
 			'choice' => 'external',
 			'server_pic' => 'blank.gif',
 			'external' => $cur_profile['avatar']
 		);
-	elseif (file_exists($modSettings['avatar_directory'] . '/' . $cur_profile['avatar']) && $context['member']['avatar']['allow_server_stored'])
+	elseif ($cur_profile['avatar'] != '' && file_exists($modSettings['avatar_directory'] . '/' . $cur_profile['avatar']) && $context['member']['avatar']['allow_server_stored'])
 		$context['member']['avatar'] += array(
 			'choice' => 'server_stored',
 			'server_pic' => $cur_profile['avatar'] == '' ? 'blank.gif' : $cur_profile['avatar'],
@@ -2435,7 +2420,7 @@ function profileLoadAvatarData()
 		);
 	else
 		$context['member']['avatar'] += array(
-			'choice' => 'server_stored',
+			'choice' => 'none',
 			'server_pic' => 'blank.gif',
 			'external' => 'http://'
 		);
@@ -2559,11 +2544,6 @@ function profileSaveAvatarData(&$value)
 	if (empty($memID) && !empty($context['password_auth_failed']))
 		return false;
 
-	// Reset the attach ID.
-	$cur_profile['id_attach'] = 0;
-	$cur_profile['attachment_type'] = 0;
-	$cur_profile['filename'] = '';
-
 	require_once($sourcedir . '/ManageAttachments.php');
 
 	// We need to know where we're going to be putting it..
@@ -2608,16 +2588,37 @@ function profileSaveAvatarData(&$value)
 		}
 	}
 
-	if ($value == 'server_stored' && allowedTo('profile_server_avatar'))
+	if ($value == 'none')
+	{
+		$profile_vars['avatar'] = '';
+
+		// Reset the attach ID.
+		$cur_profile['id_attach'] = 0;
+		$cur_profile['attachment_type'] = 0;
+		$cur_profile['filename'] = '';
+
+		removeAttachments(array('id_member' => $memID));
+	}
+	elseif ($value == 'server_stored' && allowedTo('profile_server_avatar'))
 	{
 		$profile_vars['avatar'] = strtr(empty($_POST['file']) ? (empty($_POST['cat']) ? '' : $_POST['cat']) : $_POST['file'], array('&amp;' => '&'));
 		$profile_vars['avatar'] = preg_match('~^([\w _!@%*=\-#()\[\]&.,]+/)?[\w _!@%*=\-#()\[\]&.,]+$~', $profile_vars['avatar']) != 0 && preg_match('/\.\./', $profile_vars['avatar']) == 0 && file_exists($modSettings['avatar_directory'] . '/' . $profile_vars['avatar']) ? ($profile_vars['avatar'] == 'blank.gif' ? '' : $profile_vars['avatar']) : '';
+
+		// Clear current profile...
+		$cur_profile['id_attach'] = 0;
+		$cur_profile['attachment_type'] = 0;
+		$cur_profile['filename'] = '';
 
 		// Get rid of their old avatar. (if uploaded.)
 		removeAttachments(array('id_member' => $memID));
 	}
 	elseif ($value == 'external' && allowedTo('profile_remote_avatar') && strtolower(substr($_POST['userpicpersonal'], 0, 7)) == 'http://' && empty($modSettings['avatar_download_external']))
 	{
+		// We need these clean...
+		$cur_profile['id_attach'] = 0;
+		$cur_profile['attachment_type'] = 0;
+		$cur_profile['filename'] = '';
+
 		// Remove any attached avatar...
 		removeAttachments(array('id_member' => $memID));
 
@@ -2687,6 +2688,11 @@ function profileSaveAvatarData(&$value)
 					require_once($sourcedir . '/Subs-Graphics.php');
 					if (!downloadAvatar($uploadDir . '/avatar_tmp_' . $memID, $memID, $modSettings['avatar_max_width_upload'], $modSettings['avatar_max_height_upload']))
 						return 'bad_avatar';
+
+					// Reset attachment avatar data.
+					$cur_profile['id_attach'] = $modSettings['new_avatar_data']['id'];
+					$cur_profile['filename'] = $modSettings['new_avatar_data']['filename'];
+					$cur_profile['attachment_type'] = $modSettings['new_avatar_data']['type'];
 				}
 				else
 					return 'bad_avatar';
@@ -2767,8 +2773,6 @@ function profileSaveAvatarData(&$value)
 	// Setup the profile variables so it shows things right on display!
 	$cur_profile['avatar'] = $profile_vars['avatar'];
 
-	// If we're here we've done good - but don't save based on avatar_choice - skip it ;)
-	$profile_vars['avatar'] = $profile_vars['avatar'];
 	return false;
 }
 

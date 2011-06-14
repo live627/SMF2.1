@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; SendTopic
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 //------------------------------------------------------------------------------
 /*	This template contains two humble sub templates - main. Its job is pretty
@@ -168,7 +177,7 @@ function template_custom_email()
 							<label for="email_body"><strong>', $txt['message'], ':</strong></label>
 						</dt>
 						<dd>
-							<textarea id="email_body" name="email_body" rows="10" cols="20" style="width: 90%;"></textarea>
+							<textarea id="email_body" name="email_body" rows="10" cols="20" style="' . ($context['browser']['is_ie8'] ? 'width: 635px; max-width: 90%; min-width: 90%' : 'width: 90%') . ';"></textarea>
 						</dd>
 					</dl>
 					<div class="righttext">

@@ -1,5 +1,14 @@
 <?php
-// Version: 2.0 RC4; ManageBoards
+/**
+ * Simple Machines Forum (SMF)
+ *
+ * @package SMF
+ * @author Simple Machines
+ * @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+ */
 
 // Template for listing all the current categories and boards.
 function template_main()
@@ -47,7 +56,7 @@ function template_main()
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
 				<div class="content">
-					<ul id="category_', $category['id'], '">';
+					<ul id="category_', $category['id'], '" style="float:left; width:100%;">';
 
 		if (!empty($category['move_link']))
 			echo '
@@ -320,7 +329,7 @@ function template_modify_board()
 							<span class="smalltext">', $txt['mboards_description_desc'], '</span>
 						</dt>
 						<dd>
-							<textarea name="desc" rows="3" cols="35" style="width: 99%">', $context['board']['description'], '</textarea>
+							<textarea name="desc" rows="3" cols="35" style="' . ($context['browser']['is_ie8'] ? 'width: 635px; max-width: 99%; min-width: 99%' : 'width: 99%') . ';">', $context['board']['description'], '</textarea>
 						</dd>
 						<dt>
 							<strong>', $txt['permission_profile'], ':</strong><br />
@@ -503,7 +512,7 @@ function template_modify_board()
 		</form>
 	</div>
 	<br class="clear" />
-<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc3"></script>
+<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?fin20"></script>
 <script type="text/javascript"><!-- // --><![CDATA[
 	var oModeratorSuggest = new smc_AutoSuggest({
 		sSelf: \'oModeratorSuggest\',
