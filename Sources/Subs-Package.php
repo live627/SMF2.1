@@ -1491,7 +1491,7 @@ function compareVersions($version1, $version2)
 			'patch' => (int) $parts[3],
 			'type' => empty($parts[4]) ? 'stable' : $parts[4],
 			'type_major' => (int) $parts[5],
-			'type_minor' => (int) $parts[6],
+			'type_minor' => !empty($parts[6]) ? (int) $parts[6] : 0,
 			'dev' => !empty($parts[7]),
 		);
 	}
