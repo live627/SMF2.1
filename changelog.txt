@@ -5,7 +5,7 @@ SMF 2.0.1
 ================================================================================
 July 2011
  ! Some versions may not contain a minor type. (Subs-Package.php) [Bug 4775]
-
+ ! Some upgrades could fail due to file hash not existing in the attachments table. (upgrade_2-0_mysql.sql) [Bug 4801]
 
 SMF 2.0                                                             05 June 2011
 ================================================================================

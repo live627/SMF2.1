@@ -1207,6 +1207,11 @@ ALTER TABLE {$db_prefix}attachments
 ADD COLUMN id_folder tinyint(3) NOT NULL default '1';
 ---#
 
+---# Adding file hash.
+ALTER TABLE {$db_prefix}attachments
+ADD COLUMN file_hash varchar(40) NOT NULL default '';
+---#
+
 ---# Populate the attachment extension.
 UPDATE {$db_prefix}attachments
 SET fileext = LOWER(SUBSTRING(filename, 1 - (INSTR(REVERSE(filename), '.'))))
@@ -1349,11 +1354,6 @@ if (@$modSettings['smfVersion'] < '2.0' || @$modSettings['smfVersion'] === '2.0 
 	unset($_GET['a']);
 }
 ---}
----#
-
----# Adding file hash.
-ALTER TABLE {$db_prefix}attachments
-ADD COLUMN file_hash varchar(40) NOT NULL default '';
 ---#
 
 /******************************************************************************/
