@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.1
  */
 
 /*	This, as you have probably guessed, is the crux on which SMF functions.
@@ -22,7 +22,7 @@
 	with the URL index.php?action=action-in-url.  Relatively simple, no?
 */
 
-$forum_version = 'SMF 2.0';
+$forum_version = 'SMF 2.0.1';
 
 // Get everything started up...
 define('SMF', 1);

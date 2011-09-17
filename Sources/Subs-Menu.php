@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.1
  */
 
 if (!defined('SMF'))
@@ -99,10 +99,6 @@ function createMenu($menuData, $menuOptions = array())
 	if (!empty($menuOptions['extra_url_parameters']))
 		foreach ($menuOptions['extra_url_parameters'] as $key => $value)
 			$menu_context['extra_parameters'] .= ';' . $key . '=' . $value;
-
-	// Only include the session ID in the URL if it's strictly necessary.
-	if (empty($menuOptions['disable_url_session_check']))
-		$menu_context['extra_parameters'] .= ';' . $context['session_var'] . '=' . $context['session_id'];
 
 	$include_data = array();
 
