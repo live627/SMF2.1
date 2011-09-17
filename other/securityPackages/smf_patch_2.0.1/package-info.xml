@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	This is a simplified package manifest for SMF packages.
+
+	ATTENTION: If you are trying to install this manually, you should try
+	the package manager.  If it will not work for you, please take a look
+	at the following for information on this format:
+		http://mods.simplemachines.org/docs/manual-install.php
+
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
+	<id>smf:smf-2.0.1</id>
+	<name>SMF 2.0.1 Update</name>
+	<version>1.0</version>
+
+	<type>modification</type>
+
+	<install for="2.0">
+		<readme type="inline">
+			This patch file will provide security fixes to your SMF 2.0 forum.
+		</readme>
+		<modification type="file" format="xml">smf_2-0-1_patch.xml</modification>
+	</install>
+	<uninstall for="2.0.1">
+		<readme type="inline">
+			This will uninstall the security fixes of your SMF 2.0 forum.
+		</readme>
+		<modification type="file" format="xml" reverse="true">smf_2-0-1_patch.xml</modification>
+	</uninstall>
+</package-info>

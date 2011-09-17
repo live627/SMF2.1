@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>smf:smf-2.0.1</id>
+	<version>1.0</version>
+	
+	<file name="$boarddir/index.php">
+		<operation>
+			 <search position="replace"><![CDATA[* @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+]]></search>
+ 			<add><![CDATA[* @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0.1
+]]></add>
+		</operation>
+		
+		<operation>
+			<search position="replace"><![CDATA[$forum_version = 'SMF 2.0';
+]]></search>
+			<add><![CDATA[$forum_version = 'SMF 2.0.1';
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs-Menu.php">
+		<operation>
+			 <search position="replace"><![CDATA[* @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+]]></search>
+ 			<add><![CDATA[* @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0.1
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[			$menu_context['extra_parameters'] .= ';' . $key . '=' . $value;
+
+	// Only include the session ID in the URL if it's strictly necessary.
+	if (empty($menuOptions['disable_url_session_check']))
+		$menu_context['extra_parameters'] .= ';' . $context['session_var'] . '=' . $context['session_id'];
+
+	$include_data = array();
+]]></search>
+			<add><![CDATA[			$menu_context['extra_parameters'] .= ';' . $key . '=' . $value;
+
+	$include_data = array();
+]]></add>
+		</operation>
+	</file>
+		
+	<file name="$sourcedir/Subs-Members.php">
+		<operation>
+			 <search position="replace"><![CDATA[* @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+]]></search>
+ 			<add><![CDATA[* @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0.1
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[create_function('$string', '
+		$num = substr($string, 0, 1) === \'x\' ? hexdec(substr($string, 1)) : (int) $string;' . (empty($context['utf8']) ? '
+		return $num < 0x20 ? \'\' : ($num < 0x80 ? chr($num) : \'&#\' . $string . \';\');' : '
+]]></search>
+			<add><![CDATA[create_function('$string', '
+		$num = substr($string, 0, 1) === \'x\' ? hexdec(substr($string, 1)) : (int) $string;' .
+		' if ($num === 0x202E || $num === 0x202D) return \'\'; if (in_array($num, array(0x22, 0x26, 0x27, 0x3C, 0x3E))) return \'&#\' . $num . \';\';' .
+		(empty($context['utf8']) ? 'return $num < 0x20 ? \'\' : ($num < 0x80 ? chr($num) : \'&#\' . $string . \';\');' : '
+]]></add>
+		</operation>
+	</file>
+		
+	<file name="$sourcedir/Load.php">
+		<operation>
+			<search position="replace"><![CDATA[create_function('$string', '
+			$num = substr($string, 0, 1) === \'x\' ? hexdec(substr($string, 1)) : (int) $string;
+			return $num < 0x20 || $num > 0x10FFFF || ($num >= 0xD800 && $num <= 0xDFFF) || $num == 0x202E ? \'\' : \'&#\' . $num . \';\';'),
+]]></search>
+			<add><![CDATA[create_function('$string', '
+			$num = substr($string, 0, 1) === \'x\' ? hexdec(substr($string, 1)) : (int) $string;
+			return $num < 0x20 || $num > 0x10FFFF || ($num >= 0xD800 && $num <= 0xDFFF) || $num === 0x202E || $num === 0x202D ? \'\' : \'&#\' . $num . \';\';'),
+]]></add>
+		</operation>
+
+		<operation>
+			 <search position="replace"><![CDATA[* @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+]]></search>
+ 			<add><![CDATA[* @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0.1
+]]></add>
+		</operation>
+	</file>
+	
+	<file name="$sourcedir/ManageMaintenance.php">
+		<operation>
+			<search position="replace"><![CDATA[* @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+]]></search>
+ 			<add><![CDATA[* @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0.1
+]]></add>
+		</operation>
+		
+		<operation>
+			<search position="replace"><![CDATA[	$_POST['maxdays'] = (int) $_POST['maxdays'];
+	if (!empty($_POST['groups']) && $_POST['maxdays'])]]></search>
+			<add><![CDATA[	$_POST['maxdays'] = empty($_POST['maxdays']) ? 0 : (int) $_POST['maxdays'];
+	if (!empty($_POST['groups']) && $_POST['maxdays'] > 0)]]></add>
+		</operation>
+	</file>
+	
+	<file name="$sourcedir/Subs-Package.php">
+		<operation>
+			<search position="replace"><![CDATA[* @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0
+]]></search>
+ 			<add><![CDATA[* @copyright 2011 Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 2.0.1
+]]></add>
+		</operation>
+		
+		<operation>
+			<search position="replace"><![CDATA[		// Build an array of parts.
+		$versions[$id] = array(
+			'major' => (int) $parts[1],
+			'minor' => (int) $parts[2],
+			'patch' => (int) $parts[3],
+			'type' => empty($parts[4]) ? 'stable' : $parts[4],
+			'type_major' => (int) $parts[5],
+			'type_minor' => (int) $parts[6],
+			'dev' => !empty($parts[7]),
+		);]]></search>
+			<add><![CDATA[		// Build an array of parts.
+		$versions[$id] = array(
+			'major' => (int) $parts[1],
+			'minor' => !empty($parts[2]) ? (int) $parts[2] : 0,
+			'patch' => !empty($parts[3]) ? (int) $parts[3] : 0,
+			'type' => empty($parts[4]) ? 'stable' : $parts[4],
+			'type_major' => !empty($parts[6]) ? (int) $parts[5] : 0,
+			'type_minor' => !empty($parts[6]) ? (int) $parts[6] : 0,
+			'dev' => !empty($parts[7]),
+		);]]></add>
+		</operation>
+	</file>
+
+</modification>
