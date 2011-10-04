@@ -7,7 +7,7 @@ SMF 2.0.1                                                      18 September 2011
 September 2011
  ! A sensitive token was sent in the URL, allowing CSRF vulnerability (ModerationCenter.php)
  ! Html entities fixes for spoofing and injection prevention. (Load.php, Subs-Members.php)
- ! Sorting the memberlist by online status caused an error in PostgreSQL (Memberlist.php, thank you TheStupidOne!) [Bug 4835]
+ ! Sorting the memberlist by online status caused an error in PostgreSQL (Memberlist.php, thank you TheStupidOne!) [Bug 4837]
  
 
 July 2011
