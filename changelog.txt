@@ -3,21 +3,28 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0.2
 ===============================================================================
+
 November 2011
 --------------------------------------------------------------------------------
 ! Sanitize parameters in package options page (admin-only) (Packages.php). (Reported by Luis Santana.)
+
+
+October 2011
+--------------------------------------------------------------------------------
+ ! Sorting the memberlist by online status caused an error in PostgreSQL (Memberlist.php, thank you TheStupidOne!) [Bug 4837]
 
 
 SMF 2.0.1                                                      18 September 2011
 ================================================================================
 
 September 2011
+--------------------------------------------------------------------------------
  ! A sensitive token was sent in the URL, allowing CSRF vulnerability (ModerationCenter.php)
  ! Html entities fixes for spoofing and injection prevention. (Load.php, Subs-Members.php)
- ! Sorting the memberlist by online status caused an error in PostgreSQL (Memberlist.php, thank you TheStupidOne!) [Bug 4837]
- 
+
 
 July 2011
+--------------------------------------------------------------------------------
  ! Fix undefined index (ManageMaintenance.php)
  ! Some versions may not contain a minor type. (Subs-Package.php) [Bug 4775]
  ! Some upgrades could fail due to file hash not existing in the attachments table. (upgrade_2-0_mysql.sql) [Bug 4801]
