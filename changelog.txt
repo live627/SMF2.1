@@ -6,6 +6,7 @@ SMF 2.0.2
 
 November 2011
 --------------------------------------------------------------------------------
+! Using the correct variable for the online list filter [Bug 4840]
 ! Sanitize parameters in package options page (admin-only) (Packages.php). (Reported by Luis Santana.)
 
 
@@ -15,6 +16,7 @@ October 2011
  ! Disabling guest access would break subscriptions. (subscriptions.php) [Bug 4835]
  ! Bad password checks still resulting in the language changing (Profile-Modify.php) [Bug 4805]
  ! Postgresql does not like && (Load.php) [Bug 4819]
+ ! Disabling showing spiders could cause sql errors in Whos online (Who.php) [Bug 4840]
 
 
 SMF 2.0.1                                                      18 September 2011
