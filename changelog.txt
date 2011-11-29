@@ -1,6 +1,13 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
+SMF 2.0.2
+===============================================================================
+November 2011
+--------------------------------------------------------------------------------
+! Sanitize parameters in package options page (admin-only) (Packages.php). (Reported by Luis Santana.)
+
+
 SMF 2.0.1                                                      18 September 2011
 ================================================================================
 
