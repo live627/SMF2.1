@@ -4,6 +4,11 @@ Changelog started January 1, 2004; Currently at $Revision$.
 SMF 2.0.2
 ===============================================================================
 
+December 2011
+--------------------------------------------------------------------------------
+! Send email to the correct user (PersonalMessage template) (thank you, Lex!)
+
+
 November 2011
 --------------------------------------------------------------------------------
 ! Using the correct variable for the online list filter [Bug 4840]
