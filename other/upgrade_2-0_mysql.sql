@@ -1341,7 +1341,7 @@ if (@$modSettings['smfVersion'] < '2.0' || @$modSettings['smfVersion'] === '2.0 
 			upgrade_query("
 				UPDATE {$db_prefix}attachments
 				SET mime_type = '$update[mime]'
-				WHERE id_attach IN (" . implode(',', $update[files]) . ")");
+				WHERE id_attach IN (" . implode(',', $update['files']) . ")");
 
 			// Remove it.
 			unset($ext_updates[$key]);
