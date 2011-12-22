@@ -8,6 +8,7 @@ December 2011
 --------------------------------------------------------------------------------
 ! Send email to the correct user (PersonalMessage template) (thank you, Lex!)
 ! Typo in upgrade script, when updating attachments. (upgrade MySQL script) (thanks SpudsMan!)
+! Make sure db_character_set doesn't end up set when it shouldn't be. (index.php)
 
 
 November 2011
