@@ -1,20 +1,21 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0.2
+SMF 2.0.2                                                      December 22 2011
 ===============================================================================
 
 December 2011
 --------------------------------------------------------------------------------
-! Send email to the correct user (PersonalMessage template) (thank you, Lex!)
-! Typo in upgrade script, when updating attachments. (upgrade MySQL script) (thanks SpudsMan!)
-! Make sure db_character_set doesn't end up set when it shouldn't be. (index.php)
+ ! Send email to the correct user (PersonalMessage template) (thank you, Lex!)
+ ! Typo in upgrade script, when updating attachments. (upgrade MySQL script) (thanks SpudsMan!)
+ ! Make sure db_character_set doesn't end up set when it shouldn't be. (index.php)
+ ! Check for invalid sort methods in message index. (MessageIndex.php)
 
 
 November 2011
 --------------------------------------------------------------------------------
-! Using the correct variable for the online list filter [Bug 4840]
-! Sanitize parameters in package options page (admin-only) (Packages.php). (Reported by Luis Santana.)
+ ! Using the correct variable for the online list filter [Bug 4840]
+ ! Sanitize parameters in package options page (admin-only) (Packages.php). (Reported by Luis Santana.)
 
 
 October 2011
