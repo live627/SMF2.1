@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>SMF 2.0 RC4 Conversion Guide</title>
+		<link rel="stylesheet" type="text/css" href="Themes/default/css/index.css?rc2" />
+		<style type="text/css">
+			h1.forumtitle
+			{
+				color: #346;
+			}
+			#upper_section .user
+			{
+				height: 4em;
+			}
+			#upper_section .news
+			{
+				height: 80px;
+			}
+			#main_screen
+			{
+				padding: 0 40px;
+			}
+			#main_screen h2
+			{
+				font-size: 2em;
+				border-bottom: solid 1px #d05800;
+				line-height: 2em;
+				margin: 0 0 0.5em 0;
+				color: #d05800;
+			}
+			h3
+			{
+				color: #d05800;
+			}
+			#content_section
+			{
+				position: relative;
+				top: -20px;
+			}
+			#main_content_section .panel
+			{
+				padding: 1em 2em 1em 1em;
+				line-height: 1.6em;
+			}
+			#main_content_section h2
+			{
+				font-size: 1.5em;
+				border-bottom: solid 1px #d05800;
+				line-height: 1.5em;
+				margin: 0 2em 0.5em 0;
+				color: #d05800;
+			}
+			#main_content_section li
+			{
+				line-height: 1.6em;
+				font-weight: bold;
+				color: #555;
+			}
+			#main_content_section li ul
+			{
+				padding-bottom: 0.7em;
+			}
+			#main_content_section li li
+			{
+				font-weight: normal;
+				line-height: 1.6em;
+			}
+			#liftup
+			{
+				position: relative;
+				top: -70px;
+			}
+			#footer_section
+			{
+				position: relative;
+				top: -60px;
+			}
+			tt
+			{
+				font-family: verdana, sans-serif;
+				letter-spacing: 1px;
+				font-weight: bold;
+				font-size: 90%;
+				font-style: italic;
+			}
+			dt
+			{
+				font-weight: bold;
+				color: #555;
+				margin-bottom: .1em;
+			}
+			dl
+			{
+				margin-top: .2em;
+				margin-left: 2em;
+				margin-bottom: .5em;
+			}
+			dd
+			{
+				line-height: 1.5em;
+				margin-left: 2em;
+				margin-bottom: .1em;
+			}
+			#header, #content_section, #footer_section
+			{
+				width: 90%;
+				margin: 0 auto;
+			}
+			a:link, a:visited
+			{
+				color: #3E5D8F;
+			}
+			a:hover
+			{
+				color: #346;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="header"><div class="frame">
+			<div id="top_section">
+				<h1 class="forumtitle">SMF 2.0 RC4 Conversion Guide</h1>
+				<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />
+			</div>
+			<div id="upper_section" class="middletext" style="overflow: hidden;">
+				<div class="user"></div>
+				<div class="news normaltext">
+				</div>
+			</div>
+		</div></div>
+		<div id="content_section"><div class="frame">
+			<div id="main_content_section">
+				<div id="liftup">
+					<div class="panel">
+						<h2 id="contents">Converting to SMF</h2>
+						<p>Thank you for deciding to convert to, or at least test the conversion to, <a href="http://www.simplemachines.org/smf/">SMF</a>.  Before you get started, please remember that the conversion will not overwrite or change your existing forum, and that there is <a href="http://www.simplemachines.org/community/index.php">a place for help at www.simplemachines.org</a> if you run into any problems at all.</p>
+						<p>You can find the following information in this file:</p>
+						<ul style="list-style-type: none;">
+							<li>&raquo; <a href="#requirements">Minimum installation requirements</a></li>
+							<li>&raquo; <a href="#recommendations">Recommendations for best performance</a></li>
+							<li>&raquo; <a href="#installing">Installing SMF on your webserver.</a></li>
+							<li>&raquo; <a href="#convert">Beginning the conversion process.</a></li>
+							<li>&raquo; <a href="#finishing">Finishing the upgrade and cleaning up.</a></li>
+						</ul>
+					</div>
+					<div class="panel">
+						<h2 id="requirements">What's required to run SMF?</h2>
+						<p>Your server must meet a few requirements to be able to run SMF.  If you unsure as to whether your webserver meets these, please try the installation and conversion anyway - it should detect any problems.</p>
+						<ul>
+							<li>Any webserver that properly supports PHP, such as <a href="http://httpd.apache.org/" target="_blank">Apache</a> or <a href="http://www.microsoft.com/iis" target="_blank">Internet Information Services (IIS)</a>.</li>
+							<li>
+								<a href="http://www.php.net" target="_blank">PHP</a> 4.1.0 or higher.  The following directives are required to be set correctly in php.ini:
+								<ul>
+									<li>the engine directive must be On.</li>
+									<li>the <a href="http://www.php.net/sybase#ini.magic-quotes-sybase" target="_blank">magic_quotes_sybase</a> directive must be set to Off.</li>
+									<li>the <a href="http://www.php.net/session#ini.session.save-path" target="_blank">session.save_path</a> directive must be set to a valid directory.</li>
+									<li>the <a href="http://www.php.net/manual/en/ini.core.php#ini.file-uploads" target="_blank">file_uploads</a> directive must be On.</li>
+									<li>the <a href="http://www.php.net/manual/en/ini.core.php#ini.upload-tmp-dir" target="_blank">upload_tmp_dir</a> must be set to a valid directory.</li>
+								</ul>
+							</li>
+							<li>Any of the following database systems (MySQL only for 1.0 and 1.1)
+								<ul>
+									<li><a href="http://www.mysql.com/" target="_blank">MySQL</a> 3.23.28 or higher.</li>
+									<li><a href="http://www.postgresql.org/" target="_blank">PostgreSQL</a> 7.4.10 or higher.</li>
+									<li><a href="http://www.sqlite.org/" target="_blank">SQLite</a> 2.8 or higher.</li>
+								</ul>
+							</li>
+							<li>at least 512 kilobytes of storage space in the database, although more is highly recommended.</li>
+							<li>about two and a half megabytes of storage space on the web server, although more is recommended.</li>
+						</ul><br />
+						<h2 id="recommendations">Recommendations for best performance</h2>
+						<ul>
+							<li><a href="http://www.linux.org/" target="_blank">Linux</a> or another Unix based operating system.</li>
+							<li>the <a href="http://aspell.sf.net/" target="_blank">GNU Aspell</a> and <a href="http://ftp.gnu.org/gnu/aspell/dict/" target="_blank">its dictionaries</a> for spell checking support.</li>
+							<li><a href="http://httpd.apache.org/" target="_blank">Apache</a> with <a href="http://httpd.apache.org/docs-2.0/mod/core.html#acceptpathinfo" target="_blank">AcceptPathInfo</a> set to On (Apache 2 and later only) for queryless URL support.</li>
+							<li>
+								<a href="http://www.php.net" target="_blank">PHP</a> 5.0.0 or higher, with the following set in php.ini:
+								<ul>
+									<li>the <a href="http://www.php.net/manual/en/info.configuration.php#ini.max-input-time" target="_blank">max_input_time</a> directive is set to a value of at least 30.</li>
+									<li>the <a href="http://www.php.net/manual/en/ini.core.php#ini.post-max-size" target="_blank">post_max_size</a> and <a href="http://www.php.net/configuration.directives#ini.upload-max-filesize" target="_blank">upload_max_filesize</a> directives are set to the size of the largest attachments you wish to be able to upload.</li>
+									<li>the <a href="http://www.php.net/session#ini.session.use-trans-sid" target="_blank">session.use_trans_sid</a> directive set to Off.</li>
+									<li>the <a href="http://www.php.net/manual/en/ini.core.php#ini.memory-limit" target="_blank">memory_limit</a> directive is set to at least 8M.</li>
+									<li>the <a href="http://www.php.net/manual/en/info.configuration.php#ini.max-execution-time" target="_blank">max_execution_time</a> directive is set to at least 15.</li>
+									<li>the <a href="http://www.php.net/manual/en/ini.core.php#ini.register-globals" target="_blank">register_globals</a> directive is set to Off.</li>
+								</ul>
+							</li>
+							<li><a href="http://www.mysql.com/" target="_blank">MySQL</a> 4.0.15 or higher with query caching enabled.</li>
+							<li>Any of the following database systems (MySQL only for 1.0 and 1.1)
+								<ul>
+									<li><a href="http://www.mysql.com/" target="_blank">MySQL</a> 5.0 or higher.</li>
+									<li><a href="http://www.postgresql.org/" target="_blank">PostgreSQL</a> 8.2.13 or higher.</li>
+									<li><a href="http://www.sqlite.org/" target="_blank">SQLite</a> 2.8 or higher.</li>
+								</ul>
+							</li>
+							<li><a href="http://www.boutell.com/gd/" target="_blank">GD Graphics Library</a> 2.0 or higher.</li>
+						</ul>
+						<p>If your server does not meet these requirements, SMF may not work properly.</p>
+					</div>
+					<div class="panel">
+						<h2 id="installing">Installing SMF</h2>
+						<p>The first thing you need to do, before you can convert, is upload all of the files in the installation package found on <a href="http://www.simplemachines.org/download.php">the downloads page</a> to your server in, preferably, a directory other than your current software.  You can upload it to any directory accessable by URL, but if you're not sure where to put it, a directory named &quot;forum&quot; or &quot;smf&quot; is a good choice.  You may wish to make sure that all of the folders were uploaded, such as <tt>Themes/default/languages</tt>, because some FTP clients have been known to drop files.</p>
+						<p>If you want or need to install any languages other than English, download the corresponding versions from the download page, and upload them to the same directory you uploaded SMF to.  This should put additional files in <tt>Themes/default/languages</tt> and, in most cases, <tt>Themes/default/images</tt>.</p>
+						<p>After you have finished uploading the files, point your browser to http://www.yourdomain.tld/forum/install.php - where www.yourdomain.tld/forum is the URL to where you uploaded it.  You should then see an installer interface.</p>
+						<p>The first page you see may request your FTP information.  If you see this screen, it is because the installer found some files or folders with inadequate permissions for SMF to run properly.  If you enter your FTP information here, the installer can automatically fix these permissions for you.  Please note that the path should be the same path you see in your FTP client.  For example, it might be &quot;public_html/forum&quot;.  And remember, the installer will not save your FTP password anywhere.</p>
+						<p>When you are asked for database login information, make sure the user you specify has access to the database your current software is using (if it uses MySQL.)  Often, the easiest way to do this is to install with the same database name, username, and password as your other software (but with a prefix like &quot;smf_&quot;.)</p>
+					</div>
+					<div class="panel">
+						<h2 id="convert">Converting from your current software</h2>
+						<p>After you have finished with the installer (it should walk you through the rest of the process) and deleted the install.php file, you're ready to get the conversion process going.  Be warned, however, that the process can take some time for larger forums, because it has been engineered not to disrupt the server's normal operations.</p>
+						<p>To begin, download the converter you want from <a href="http://download.simplemachines.org/?converters">the download page</a>.  If there is no converter available for the software or version you're using, please check our forum for information about one.  Otherwise, download the file (for example, it might be yoursoftware_to_smf.zip) and upload its contents to the same folder as SMF.</p>
+						<p>Once that's done, use your browser to go to http://www.example.com/forum/convert.php, where www.example.com/forum is the URL to where you have installed SMF.  For most converters, you should be presented with two boxes - one the path to SMF, which should already be correct, and another for your software.  The converters will detect if the path is correct for you, so if it takes a few tries, don't worry.  You will also see a box for the current password - this should be the password for the database account you installed SMF with.</p>
+						<p>After you hit continue, the conversion process will begin.  Depending on the size of your forum, it may take quite some time, but it will continue for you automatically.  You may, near the end, be prompted to specify whether you wish for some extra feature converted, but that is very converter-specific.</p>
+					</div>
+					<div class="panel">
+						<h2 id="finishing">Finishing everything up</h2>
+						<p>From this point, the converter should walk you through everything.</p>
+						<p>Please remember to delete the converter and install.php files after the process is complete.  If you do not delete it, it is possible that someone could compromise the security of your forum with it.</p>
+						<p>Good luck!<br />
+						Simple Machines</p>
+					</div>
+				</div>
+			</div>
+		</div></div>
+		<div id="footer_section"><div class="frame">
+			<div class="smalltext padding"><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0; margin-bottom: 0.7em;" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</div>
+			<div class="smalltext"><a href="http://www.simplemachines.org">Simple Machines Forum</a></div>
+		</div></div>
+	</body>
+</html>
