@@ -12,7 +12,7 @@
  */
 
 // Version information...
-define('SMF_VERSION', '2.0.2');
+define('SMF_VERSION', '2.0.3');
 define('SMF_LANG_VERSION', '2.0');
 
 $GLOBALS['required_php_version'] = '4.1.0';
