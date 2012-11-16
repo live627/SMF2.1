@@ -1,6 +1,20 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
+SMF 2.0.3                                                      November 16 2012
+===============================================================================
+
+November 2012
+--------------------------------------------------------------------------------
+ ! PCRE engine starting at rev 8.3, will not allow you to specify the surrogate range D800–DFFF - From Spuds (similar to commit 10994)
+ ! Fixed lacking of check on referer URL when adminLogin comes into play (1.0, 1.1 and 2.0 versions)
+
+
+October 2012
+--------------------------------------------------------------------------------
+ ! Applied all the changes proposed by rawlogic to fix the intermittent session verification failures
+
+
 SMF 2.0.2                                                      December 22 2011
 ===============================================================================
 
