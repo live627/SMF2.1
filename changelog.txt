@@ -8,6 +8,11 @@ November 2012
 --------------------------------------------------------------------------------
  ! PCRE engine starting at rev 8.3, will not allow you to specify the surrogate range D800–DFFF - From Spuds (similar to commit 10994)
  ! Fixed lacking of check on referer URL when adminLogin comes into play (1.0, 1.1 and 2.0 versions)
+ ! Fixes for paypal moving to HTTP 1.1 [bug 5009]
+ ! update sandbox to use https, the former address results in a redirect
+ ! curl did not work due to improper check
+ ! subscriptions should also check for approved payment
+ Cherry-picked from git commit 07d4bc9fba8942fd284d3d0c3c732889a7bc2e6f by Spuds
 
 
 October 2012
