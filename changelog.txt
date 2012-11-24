@@ -13,6 +13,7 @@ November 2012
  ! curl did not work due to improper check
  ! subscriptions should also check for approved payment
  Cherry-picked from git commit 07d4bc9fba8942fd284d3d0c3c732889a7bc2e6f by Spuds
+ ! Fixed the upgrade.php failing when the Themes directory was in a directory other than $boarddir (thanks iacchi for finding the cause)
 
 
 October 2012
