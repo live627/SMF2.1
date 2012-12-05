@@ -4,6 +4,10 @@ Changelog started January 1, 2004; Currently at $Revision$.
 SMF 2.0.3                                                      November 16 2012
 ===============================================================================
 
+December 2012
+--------------------------------------------------------------------------------
+! ManagePaid fails if copies of Subscriptions-Paypal,php are present
+
 November 2012
 --------------------------------------------------------------------------------
  ! PCRE engine starting at rev 8.3, will not allow you to specify the surrogate range D800–DFFF - From Spuds (similar to commit 10994)
