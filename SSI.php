@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.3
  */
 
 // Don't do anything if SMF is already loaded.
@@ -1633,11 +1633,13 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 
 	// Find the post ids.
 	$request = $smcFunc['db_query']('', '
-		SELECT id_first_msg
-		FROM {db_prefix}topics
-		WHERE id_board = {int:current_board}' . ($modSettings['postmod_active'] ? '
-			AND approved = {int:is_approved}' : '') . '
-		ORDER BY id_first_msg DESC
+		SELECT t.id_first_msg
+		FROM {db_prefix}topics as t
+		LEFT JOIN {db_prefix}boards as b ON (b.id_board = t.id_board)
+		WHERE t.id_board = {int:current_board}' . ($modSettings['postmod_active'] ? '
+			AND t.approved = {int:is_approved}' : '') . '
+			AND {query_see_board}
+		ORDER BY t.id_first_msg DESC
 		LIMIT ' . $start . ', ' . $limit,
 		array(
 			'current_board' => $board,
