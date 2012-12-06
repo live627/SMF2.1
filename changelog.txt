@@ -6,6 +6,7 @@ SMF 2.0.3                                                      November 16 2012
 
 December 2012
 --------------------------------------------------------------------------------
+! XSS in moderation log page (thanks kingW3 for the report)
 ! ManagePaid fails if copies of Subscriptions-Paypal,php are present
 
 November 2012
