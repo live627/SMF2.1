@@ -1791,6 +1791,12 @@ function EditTheme()
 				if (empty($temp) || substr($temp, 0, strlen(realpath($theme_dir))) != realpath($theme_dir))
 					$_GET['directory'] = '';
 			}
+
+			if (!file_exists($theme_dir . '/index.template.php') && !file_exists($theme_dir . '/css/index.css'))
+			{
+				$_GET['directory'] = '';
+				$does_not_exist = true;
+			}
 		}
 
 		if (isset($_GET['directory']) && $_GET['directory'] != '')
@@ -1809,8 +1815,10 @@ function EditTheme()
 				'size' => '',
 			));
 		}
-		else
+		elseif (empty($does_not_exist))
 			$context['theme_files'] = get_file_listing($theme_dir, '');
+		else
+			fatal_lang_error('theme_edit_missing', false);
 
 		$context['sub_template'] = 'edit_browse';
 
@@ -1826,6 +1834,8 @@ function EditTheme()
 
 			$temp = realpath($theme_dir . '/' . $_REQUEST['filename']);
 			if (empty($temp) || substr($temp, 0, strlen(realpath($theme_dir))) != realpath($theme_dir))
+				$_REQUEST['filename'] = '';
+			if (!file_exists($theme_dir . '/index.template.php') && !file_exists($theme_dir . '/css/index.css'))
 				$_REQUEST['filename'] = '';
 		}
 
