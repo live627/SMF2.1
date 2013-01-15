@@ -938,7 +938,7 @@ function ModifyLanguages()
 		$lang_exists = false;
 		foreach ($context['languages'] as $lang)
 		{
-			if ($_POST['def_language'] == $lang)
+			if ($_POST['def_language'] == $lang['filename'])
 			{
 				$lang_exists = true;
 				break;
