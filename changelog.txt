@@ -1,8 +1,9 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-January 2012
+January 2013
 --------------------------------------------------------------------------------
+ ! Missing arguments in SSI functions called through ?ssi= generated error messages showing full server file path 
  ! Directory listing and editing of arbitrary files from the theme editing page in the admin panel
 
 
