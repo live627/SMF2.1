@@ -6,6 +6,7 @@ SMF 2.0.4                                                      Febuary 1 2013
 
 January 2013
 --------------------------------------------------------------------------------
+ ! Arantor fix for database error on lost connections
  ! Quick fix for Admin Password Reset vulnerability reported by Raz0r
  ! Directory traversal vulnerability in the function ViewFile (thanks yan.uniko.102 for reporting and Arantor for proposing the fix and Spuds for spotting the undefined variable)
  ! active users cannot change anymore the email from action activate without deactivation/confirmation (thanks BarteX for reporting the issueand suggesting a fix)
