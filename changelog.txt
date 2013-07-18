@@ -6,6 +6,7 @@ SMF 2.0.5
 
 July 2013
 --------------------------------------------------------------------------------
+ ! Fixed code injection in manage language pages (thanks HauntIT for the report)
  ! Fixed XSS in the news page, emails field (thanks HauntIT for the report)
  ! XSS in personal messages page (thanks HauntIT for the report)
 
