@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.1
+ * @version 2.0.7
  */
 
 if (!defined('SMF'))
@@ -869,7 +869,7 @@ function ConvertEntities()
 					if ($column_name !== $primary_key && strpos($column_value, '&#') !== false)
 					{
 						$changes[] = $column_name . ' = {string:changes_' . $column_name . '}';
-						$insertion_variables['changes_' . $column_name] = preg_replace('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e', '$entity_replace(\'\\2\')', $column_value);
+						$insertion_variables['changes_' . $column_name] = preg_replace_callback('~&#(\d{1,7}|x[0-9a-fA-F]{1,6});~', 'fixchar__callback', $column_value);
 					}
 
 				$where = array();

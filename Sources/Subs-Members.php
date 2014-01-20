@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.6
+ * @version 2.0.7
  */
 
 if (!defined('SMF'))
@@ -907,7 +907,7 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 		return $num < 0x20 || $num > 0x10FFFF || ($num >= 0xD800 && $num <= 0xDFFF) ? \'\' : ($num < 0x80 ? chr($num) : ($num < 0x800 ? chr(192 | $num >> 6) . chr(128 | $num & 63) : ($num < 0x10000 ? chr(224 | $num >> 12) . chr(128 | $num >> 6 & 63) . chr(128 | $num & 63) : chr(240 | $num >> 18) . chr(128 | $num >> 12 & 63) . chr(128 | $num >> 6 & 63) . chr(128 | $num & 63))));')
 	);
 
-	$name = preg_replace('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e', '$replaceEntities(\'\\2\')', $name);
+	$name = preg_replace_callback('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~', 'replaceEntities__callback', $name);
 	$checkName = $smcFunc['strtolower']($name);
 
 	// Administrators are never restricted ;).
@@ -924,7 +924,7 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 				continue;
 
 			// The admin might've used entities too, level the playing field.
-			$reservedCheck = preg_replace('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e', '$replaceEntities(\'\\2\')', $reserved);
+			$reservedCheck = preg_replace('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~', 'replaceEntities__callback', $reserved);
 
 			// Case sensitive name?
 			if (empty($modSettings['reserveCase']))

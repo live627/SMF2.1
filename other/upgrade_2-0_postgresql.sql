@@ -1378,3 +1378,35 @@ if (!isset($modSettings['cal_maxyear']) || $modSettings['cal_maxyear'] == '2010'
 }
 ---}
 ---#
+
+---# Fixing the calendar holidays if they were somehow wrong before...
+UPDATE {$db_prefix}calendar_holidays
+SET event_date = '2013-11-28'
+WHERE event_date = '2013-11-21'
+	AND title = 'Thanksgiving';
+
+UPDATE {$db_prefix}calendar_holidays
+SET event_date = '2014-11-27'
+WHERE event_date = '2014-11-20'
+	AND title = 'Thanksgiving';
+
+UPDATE {$db_prefix}calendar_holidays
+SET event_date = '2019-11-28'
+WHERE event_date = '2019-11-21'
+	AND title = 'Thanksgiving';
+
+UPDATE {$db_prefix}calendar_holidays
+SET event_date = '2013-09-02'
+WHERE event_date = '2013-09-09'
+	AND title = 'Labor Day';
+
+UPDATE {$db_prefix}calendar_holidays
+SET event_date = '2014-09-01'
+WHERE event_date = '2014-09-08'
+	AND title = 'Labor Day';
+
+UPDATE {$db_prefix}calendar_holidays
+SET event_date = '2019-09-02'
+WHERE event_date = '2019-09-09'
+	AND title = 'Labor Day';
+---#

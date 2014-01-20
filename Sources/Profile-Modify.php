@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.6
+ * @version 2.0.7
  */
 
 if (!defined('SMF'))
@@ -1293,7 +1293,7 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 				{
 					$value = (int) $value;
 				}
-				elseif (substr($row['mask'], 0, 5) == 'regex' && preg_match(substr($row['mask'], 5), $value) === 0)
+				elseif (substr($row['mask'], 0, 5) == 'regex' && trim($value) != '' && preg_match(substr($row['mask'], 5), $value) === 0)
 					$value = '';
 			}
 		}

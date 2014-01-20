@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.7
  */
 
 if (!defined('SMF'))
@@ -60,7 +60,7 @@ function smf_db_search_query($identifier, $db_string, $db_values = array(), $con
 		'create_tmp_log_search_topics' => array(
 			'~mediumint\(\d\)~i' => 'int',
 			'~unsigned~i' => '',
-			'~TYPE=HEAP~i' => '',
+			'~ENGINE=MEMORY~i' => '',
 		),
 		'create_tmp_log_search_messages' => array(
 			'~mediumint\(\d\)' => 'int',

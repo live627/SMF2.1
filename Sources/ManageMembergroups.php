@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.7
  */
 
 if (!defined('SMF'))
@@ -656,7 +656,7 @@ function EditMembergroup()
 		checkSession();
 
 		// Can they really inherit from this group?
-		if ($_POST['group_inherit'] != -2 && !allowedTo('admin_forum'))
+		if ($_REQUEST['group'] > 1 && $_REQUEST['group'] != 3 && isset($_POST['group_inherit']) && $_POST['group_inherit'] != -2 && !allowedTo('admin_forum'))
 		{
 			$request = $smcFunc['db_query']('', '
 				SELECT group_type

@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.6
+ * @version 2.0.7
  */
 
 if (!defined('SMF'))
@@ -471,9 +471,9 @@ function ob_sessrewrite($buffer)
 	{
 		// Let's do something special for session ids!
 		if (defined('SID') && SID != '')
-			$buffer = preg_replace('/"' . preg_quote($scripturl, '/') . '\?(?:' . SID . '(?:;|&|&amp;))((?:board|topic)=[^#"]+?)(#[^"]*?)?"/e', "'\"' . \$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html?' . SID . '\$2\"'", $buffer);
+			$buffer = preg_replace_callback('~"' . preg_quote($scripturl, '/') . '\?(?:' . SID . '(?:;|&|&amp;))((?:board|topic)=[^#"]+?)(#[^"]*?)?"~', create_function('$m', 'global $scripturl; return \'"\' . $scripturl . "/" . strtr("$m[1]", \'&;=\', \'//,\') . ".html?" . SID . (isset($m[2]) ? $m[2] : "") . \'"\';'), $buffer);
 		else
-			$buffer = preg_replace('/"' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?"/e', "'\"' . \$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2\"'", $buffer);
+			$buffer = preg_replace_callback('~"' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?"~', create_function('global $scripturl; return \'"\' . $scripturl . \'/\' . strtr("$m[1]" . \'&;=\', \'//,\') . \'.html\' . (isset($m[2]) ? "$m[2]" : "");'), $buffer);
 	}
 
 	// Return the changed buffer.
