@@ -1,6 +1,25 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
+SMF 2.0.8														   June 16 2014
+===============================================================================
+
+June 2014
+-------------------------------------------------------------------------------
+ ! nobbc should work across multiple lines
+ ! package manager shouldn't fail when only 32M of memory is available
+ ! quoting posts with smileys in, in the WYSIWYG editor, shouldn't spout nonsense into the editor (in the way certain versions of 2.0.7 did)
+ ! td tags with a colspan should still function and not consume vast amounts of memory
+ ! using lots of html bbcode tags when not an admin should not consume vast amounts of memory
+ ! using queryless URLs, and/or when the PHPSESSID is present, should not consume vast amounts of memory
+ ! breaking long words should function without consuming lots of memory
+ ! adding posts with many smileys or bbc with specific parameter types (many times especially) should not consume vast amounts of memory, e.g. [acronym=definition]term[/acronym]
+ ! emails should work without consuming vast amounts of memory
+ ! time tags should work without consuming vast amounts of memory
+ ! the copyright year should be updated
+ ! board order should always work correctly (if at a performance hit, a la the mod I prepared)
+
+
 SMF 2.0.7                                                       January 20 2014
 ===============================================================================
 
