@@ -1522,6 +1522,13 @@ function smc_BBCButtonBox(oOptions)
 {
 	this.opt = oOptions;
 	this.init();
+
+	var items = ['sActiveButtonBackgroundImageHover', 'sActiveButtonBackgroundImage', 'sButtonBackgroundImageHover', 'sButtonBackgroundImage'];
+	for (var i = 0; i < items.length; i++)
+	{
+		if (items[i] in this.opt)
+			this.opt[items[i]] = this.opt[items[i]].replace(' ', '%20');
+	}
 }
 
 smc_BBCButtonBox.prototype.init = function ()

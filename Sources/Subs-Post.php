@@ -233,7 +233,12 @@ function preparsecode(&$message, $previewing = false)
 			if (!$previewing && strpos($parts[$i], '[html]') !== false)
 			{
 				if (allowedTo('admin_forum'))
-					$parts[$i] = preg_replace('~\[html\](.+?)\[/html\]~ise', '\'[html]\' . strtr(un_htmlspecialchars(\'$1\'), array("\n" => \'&#13;\', \'  \' => \' &#32;\', \'[\' => \'&#91;\', \']\' => \'&#93;\')) . \'[/html]\'', $parts[$i]);
+				{
+					static $htmlfunc = null;
+					if ($htmlfunc === null)
+						$htmlfunc = create_function('$m', 'return \'[html]\' . strtr(un_htmlspecialchars("$m[1]"), array("\n" => \'&#13;\', \' \' => \' &#32;\', \'[\' => \'&#91;\', \']\' => \'&#93;\')) . \'[/html]\';');
+					$parts[$i] = preg_replace_callback('~\[html\](.+?)\[/html\]~is', $htmlfunc, $parts[$i]);
+				}
 
 				// We should edit them out, or else if an admin edits the message they will get shown...
 				else
