@@ -10,6 +10,7 @@ September 2014
  ! Fix possible XSS exploits with forum name and maintenance mode message (Reported by guest)
  ! Fix problems caused by opcode cache extensions (Reported by psrustik)
  ! Fix bug with select lists when the value hasn't been selected yet (Reported by Suki)
+ ! SMF tries to stick ORDER BY NULL onto INSERT IGNORE queries containing sub-selects with a GROUP BY statement, causing a database error (Reported by guest)
 
 SMF 2.0.8														   June 18 2014
 ===============================================================================
