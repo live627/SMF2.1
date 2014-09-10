@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.5
+ * @version 2.0.9
  */
 
 if (!defined('SMF'))
@@ -1972,7 +1972,7 @@ function prepareDBSettingContext(&$config_vars)
 function saveSettings(&$config_vars)
 {
 	global $boarddir, $sc, $cookiename, $modSettings, $user_settings;
-	global $sourcedir, $context, $cachedir;
+	global $sourcedir, $context, $cachedir, $smcFunc;
 
 	// Fix the darn stupid cookiename! (more may not be allowed, but these for sure!)
 	if (isset($_POST['cookiename']))
@@ -2012,6 +2012,9 @@ function saveSettings(&$config_vars)
 		'db_persist', 'db_error_send',
 		'maintenance',
 	);
+
+	$_POST['mbname'] = $smcFunc['htmlspecialchars']($_POST['mbname']);
+	$_POST['mtitle'] = $smcFunc['htmlspecialchars']($_POST['mmessage']);
 
 	// Now sort everything into a big array, and figure out arrays and etc.
 	$new_settings = array();

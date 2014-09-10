@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.9
  */
 
 if (!defined('SMF'))
@@ -31,7 +31,7 @@ if (!defined('SMF'))
 // Show the board index!
 function BoardIndex()
 {
-	global $txt, $user_info, $sourcedir, $modSettings, $context, $settings, $scripturl;
+	global $txt, $user_info, $sourcedir, $modSettings, $context, $settings, $scripturl, $smcFunc;
 
 	// For wireless, we use the Wireless template...
 	if (WIRELESS)
@@ -112,7 +112,7 @@ function BoardIndex()
 	else
 		$context['show_calendar'] = false;
 
-	$context['page_title'] = sprintf($txt['forum_index'], $context['forum_name']);
+	$context['page_title'] = sprintf($txt['forum_index'], un_htmlspecialchars($context['forum_name']));
 }
 
 // Collapse or expand a category
