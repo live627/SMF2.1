@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.2
+ * @version 2.0.9
  */
 
 if (!defined('SMF'))
@@ -1064,7 +1064,7 @@ function PackageInstall()
 					'member_removed' => 'int', 'db_changes' => 'string',
 				),
 				array(
-					$packageInfo['filename'], $packageInfo['name'], $packageInfo['id'], $packageInfo['version'],
+					un_htmlspecialchars($packageInfo['filename']), $packageInfo['name'], $packageInfo['id'], un_htmlspecialchars($packageInfo['version']),
 					$user_info['id'], $user_info['name'], time(),
 					$is_upgrade ? 2 : 1, $failed_step_insert, $themes_installed,
 					0, $db_changes,

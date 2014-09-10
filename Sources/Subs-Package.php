@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.1
+ * @version 2.0.9
  */
 
 if (!defined('SMF'))
@@ -517,10 +517,10 @@ function loadInstalledPackages()
 
 		$installed[] = array(
 			'id' => $row['id_install'],
-			'name' => $row['name'],
+			'name' => $smcFunc['htmlspecialchars']($row['name']),
 			'filename' => $row['filename'],
 			'package_id' => $row['package_id'],
-			'version' => $row['version'],
+			'version' => $smcFunc['htmlspecialchars']($row['version']),
 		);
 	}
 	$smcFunc['db_free_result']($request);
@@ -530,7 +530,7 @@ function loadInstalledPackages()
 
 function getPackageInfo($gzfilename)
 {
-	global $boarddir;
+	global $boarddir, $smcFunc;
 
 	// Extract package-info.xml from downloaded file. (*/ is used because it could be in any directory.)
 	if (strpos($gzfilename, 'http://') !== false)
@@ -565,6 +565,8 @@ function getPackageInfo($gzfilename)
 	$package = $packageInfo->to_array();
 	$package['xml'] = $packageInfo;
 	$package['filename'] = $gzfilename;
+	$package['name'] = $smcFunc['htmlspecialchars']($package['name']);
+	$package['version'] = $smcFunc['htmlspecialchars']($package['version']);
 
 	if (!isset($package['type']))
 		$package['type'] = 'modification';
