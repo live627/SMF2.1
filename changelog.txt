@@ -8,7 +8,7 @@ September 2014
 -------------------------------------------------------------------------------
  ! Fix possible XSS exploits in package manager (Reported by Arantor)
  ! Fix possible XSS exploits with forum name and maintenance mode message (Reported by guest)
-
+ ! Fix problems caused by opcode cache extensions (Reported by psrustik)
 
 SMF 2.0.8														   June 18 2014
 ===============================================================================
