@@ -500,7 +500,7 @@ function MLSearch()
 		if (in_array('email', $_POST['fields']))
 		{
 			$fields += array(2 => allowedTo('moderate_forum') ? 'email_address' : '(hide_email = 0 AND email_address');
-			$serach_fields[] = 'email';
+			$search_fields[] = 'email';
 			$condition = allowedTo('moderate_forum') ? '' : ')';
 		}
 		else
