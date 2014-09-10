@@ -1,6 +1,14 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
+SMF 2.0.9
+===============================================================================
+
+September 2014
+-------------------------------------------------------------------------------
+ ! Fix possible XSS exploits in package manager (Reported by Arantor)
+
+
 SMF 2.0.8														   June 18 2014
 ===============================================================================
 
