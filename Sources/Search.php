@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.8
+ * @version 2.0.9
  */
 
 if (!defined('SMF'))
@@ -1922,7 +1922,7 @@ function prepareSearchContext($reset = false)
 				$message['body'] = '';
 				foreach ($matches[0] as $index => $match)
 				{
-					$match = strtr(htmlspecialchars($match, ENT_QUOTES), array("\n" => '&nbsp;'));
+					$match = strtr(htmlspecialchars($match, ENT_QUOTES, $context['character_set']), array("\n" => '&nbsp;'));
 					$message['body'] .= '<strong>......</strong>&nbsp;' . $match . '&nbsp;<strong>......</strong>';
 				}
 			}
