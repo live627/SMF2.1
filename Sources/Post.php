@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.8
+ * @version 2.0.9
  */
 
 if (!defined('SMF'))
@@ -1236,7 +1236,10 @@ function Post2()
 
 	// Previewing? Go back to start.
 	if (isset($_REQUEST['preview']))
+	{
+		checkSession();
 		return Post();
+	}
 
 	// Prevent double submission of this form.
 	checkSubmitOnce('check');

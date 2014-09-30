@@ -515,12 +515,15 @@ function loadInstalledPackages()
 
 		$found[] = $row['package_id'];
 
+		// Clean things up first...
+		$row = htmlspecialchars__recursive($row);
+
 		$installed[] = array(
 			'id' => $row['id_install'],
-			'name' => $smcFunc['htmlspecialchars']($row['name']),
+			'name' => $row['name'],
 			'filename' => $row['filename'],
 			'package_id' => $row['package_id'],
-			'version' => $smcFunc['htmlspecialchars']($row['version']),
+			'version' => $row['version'],
 		);
 	}
 	$smcFunc['db_free_result']($request);
@@ -530,7 +533,7 @@ function loadInstalledPackages()
 
 function getPackageInfo($gzfilename)
 {
-	global $boarddir, $smcFunc;
+	global $boarddir;
 
 	// Extract package-info.xml from downloaded file. (*/ is used because it could be in any directory.)
 	if (strpos($gzfilename, 'http://') !== false)
@@ -563,10 +566,19 @@ function getPackageInfo($gzfilename)
 	$packageInfo = $packageInfo->path('package-info[0]');
 
 	$package = $packageInfo->to_array();
+	$package = htmlspecialchars__recursive($package);
 	$package['xml'] = $packageInfo;
 	$package['filename'] = $gzfilename;
-	$package['name'] = $smcFunc['htmlspecialchars']($package['name']);
-	$package['version'] = $smcFunc['htmlspecialchars']($package['version']);
+
+	// Don't want to mess with code...
+	$types = array('install', 'uninstall', 'upgrade');
+	foreach($types as $type)
+	{
+		if (isset($package[$type]['code']))
+		{
+			$package[$type]['code'] = un_htmlspecialchars($package[$type]['code']);
+		}
+	}
 
 	if (!isset($package['type']))
 		$package['type'] = 'modification';

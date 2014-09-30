@@ -1,7 +1,7 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0.9
+SMF 2.0.9													  September 30 2014
 ===============================================================================
 
 September 2014
@@ -10,10 +10,11 @@ September 2014
  ! "Show Results" button always shown for polls as long as you can vote in them (Reported by Chainy)
  ! Multi-select boxes for settings were broken when no value had been selected (Reported by Suki)
  ! Some mail providers screw up the activation link (Reported by NanoSector)
- ! PHP 5.4 changes default charset to UTF-8, which can cause problems with search results (Reported by fun4us)
+ ! PHP 5.4 changes default charset to UTF-8, which can cause problems with search results and PM notification emails (Reported by fun4us)
  ! Make sure opcode cache gets cleared when regular cache does
  ! Log pruning should only delete closed mod reports, not open ones
  ! Fix layout issue with manage permissions page (Reported by Antes)
+ ! Adjust image check to not fail on "cellTextIsHtml", unless paranoid... (Reported by Arantor)
 
 SMF 2.0.8														   June 18 2014
 ===============================================================================

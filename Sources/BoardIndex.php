@@ -112,7 +112,7 @@ function BoardIndex()
 	else
 		$context['show_calendar'] = false;
 
-	$context['page_title'] = sprintf($txt['forum_index'], un_htmlspecialchars($context['forum_name']));
+	$context['page_title'] = sprintf($txt['forum_index'], $context['forum_name']);
 }
 
 // Collapse or expand a category
