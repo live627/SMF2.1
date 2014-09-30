@@ -15,6 +15,10 @@ September 2014
  ! Log pruning should only delete closed mod reports, not open ones
  ! Fix layout issue with manage permissions page (Reported by Antes)
  ! Adjust image check to not fail on "cellTextIsHtml", unless paranoid... (Reported by Arantor)
+ ! Sanitize all package XML to prevent any XSS attacks (Reported by Arantor)
+ ! Add session check when previewing posts to prevent XSS via [html] from forged forms (Reported by emanuele)
+ ! Sanitize maintenance mode title to prevent XSS attacks if HTML is used in it (Reported by guest)
+
 
 SMF 2.0.8														   June 18 2014
 ===============================================================================
