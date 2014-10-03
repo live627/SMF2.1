@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.9
+ * @version 2.0
  */
 
 if (!defined('SMF'))
@@ -31,7 +31,7 @@ if (!defined('SMF'))
 // Show the board index!
 function BoardIndex()
 {
-	global $txt, $user_info, $sourcedir, $modSettings, $context, $settings, $scripturl, $smcFunc;
+	global $txt, $user_info, $sourcedir, $modSettings, $context, $settings, $scripturl;
 
 	// For wireless, we use the Wireless template...
 	if (WIRELESS)
