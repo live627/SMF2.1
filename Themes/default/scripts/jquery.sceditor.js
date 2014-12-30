@@ -39,7 +39,7 @@
 					'<body contenteditable="true" {spellcheck}></body>' +
 				'</html>',
 
-		toolbarButton:	'<a class="sceditor-button sceditor-button-{name}" data-sceditor-command="{name}" unselectable="on"><div unselectable="on">{dispName}</div></a>',
+		toolbarButton:	'<button class="btn btn-sm btn-default fa fa-{name}" data-sceditor-command="{name}" unselectable="on" title="{dispName}"<div>',
 
 		emoticon:	'<img src="{url}" data-sceditor-emoticon="{key}" alt="{key}" title="{tooltip}">',
 
@@ -83,8 +83,52 @@
 	 * @param {Boolean} createHTML
 	 * @private
 	 */
-	var _tmpl = function(name, params, createHTML) {
-		var template = _templates[name];
+	var _tmpl = function (name2, params, createHTML) {
+		var template = _templates[name2];
+
+		if (name2 == 'toolbarButton')
+			switch (params['name'])
+			{
+				case 'emoticon':
+					params['name'] = 'smile-o';
+					break;
+				case 'strike':
+					params['name'] = 'strikethrough';
+					break;
+				case 'left': case 'center': case 'right':
+					params['name'] = 'align-' + params['name'];
+					break;
+				case 'size':
+					params['name'] = 'text-height';
+					break;
+				case 'color':
+					params['name'] = 'tint';
+					break;
+				case 'image':
+					params['name'] = 'picture-o';
+					break;
+				case 'email':
+					params['name'] = 'envelope-o';
+					break;
+				case 'quote':
+					params['name'] = 'quote-left';
+					break;
+				case 'bulletlist':
+					params['name'] = 'list-ol';
+					break;
+				case 'orderedlist':
+					params['name'] = 'list-ul';
+					break;
+				case 'horizontalrule':
+					params['name'] = 'arrows-h';
+					break;
+				case 'removeformat':
+					params['name'] = 'times-circle-o';
+					break;
+				case 'source':
+					params['name'] = 'file-text-o';
+					break;
+			}
 
 		$.each(params, function(name, val) {
 			template = template.replace(new RegExp('\\{' + name + '\\}', 'g'), val);
@@ -576,9 +620,9 @@
 				exclude = (options.toolbarExclude || '').split(','),
 				groups  = options.toolbar.split('|');
 
-			$toolbar = $('<div class="sceditor-toolbar" unselectable="on">');
+			$toolbar = $('<div class="btn-toolbar" role="toolbar" unselectable="on">');
 			$.each(groups, function(idx, group) {
-				$group  = $('<div class="sceditor-group">');
+				$group  = $('<div class="btn-group">');
 
 				$.each(group.split(','), function(idx, button) {
 					// The button must be a valid command and not excluded
