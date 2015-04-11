@@ -1,10 +1,29 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 11057 $.
+Changelog started January 1, 2004; Currently at $Revision: 11060 $.
+
+SMF 2.0.6                                                       October 22 2013
+===============================================================================
+
+October 2013
+-------------------------------------------------------------------------------
+ ! Added some headers to help protect against clickjacking (thanks Jakob Lell for the report)
+ ! Invalid avatars were not always properly cleaned up (thanks chaoztc for the report)
+ ! Added protection against usernames being impersonated with Unicode space characters (thanks Jakob Lell for the report)
+ ! Sessions weren't always cleaned up properly on logout (thanks creepernex for the report)
+ ! Certain fields were accepted during registration even when they shouldn't be (thanks tomreyn for the report)
+ ! Certain errors were unnecessarily shown during a failed registration and some of those were inappropriate anyway (thanks Labradoodle-360 for the report)
+ ! Approving an account from a member's profile was not logged (thanks emanuele for the report)
+ ! Approving an account from a member's profile did not always properly enforce security rules (thanks emanuele for the report)
+ ! The PHPSESSID injector would also add it to the canonical link, breaking it (thanks to all who reported it)
+ ! An invalid character was indicated in legacy attachment handling
+ ! Under some circumstances the admin panel would not accept the number of verification questions you had entered (thanks BurkeKnight for the report)
+ ! The help pages could sometimes accidentally direct users to non-existing pages (thanks AngelinaBelle for the report and Illori for the fix)
+
 
 SMF 2.0.5                                                        August 12 2013
 ===============================================================================
 
-August 2013
+Auguest 2013
 --------------------------------------------------------------------------------
  ! Updated the WHOIS search URL for RIPE (thanks Runic)
 
