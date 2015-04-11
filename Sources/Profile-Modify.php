@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.2
  */
 
 if (!defined('SMF'))
@@ -415,7 +415,7 @@ function loadProfileFields($force_reload = false)
 
 				if (isset($context[\'profile_languages\'][$value]))
 				{
-					if ($context[\'user\'][\'is_owner\'])
+					if ($context[\'user\'][\'is_owner\'] && empty($context[\'password_auth_failed\']))
 						$_SESSION[\'language\'] = $value;
 					return true;
 				}

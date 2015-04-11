@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.2
  */
 
 if (!defined('SMF'))
@@ -772,7 +772,7 @@ function ViewSubscribedUsers()
 				'position' => 'below_table_data',
 				'value' => '
 					<div class="floatleft">
-						<input type="submit" name="add" value="' . $txt['paid_add_subscription'] . '" class="button_submit" />
+						<input type="submit" name="add" value="' . $txt['add_subscriber'] . '" class="button_submit" />
 					</div>
 					<div class="floatright">
 						<input type="submit" name="finished" value="' . $txt['complete_selected'] . '" onclick="return confirm(\'' . $txt['complete_are_sure'] . '\');" class="button_submit" />

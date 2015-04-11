@@ -174,15 +174,13 @@ $nameChanges = array(
 		'timeRun' => 'timeRun time_run int(10) NOT NULL default \'0\'',
 		'timeTaken' => 'timeTaken time_taken float NOT NULL default \'0\'',
 	),
-	'log_search_results' => array(
-		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default \'0\'',
-		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
-	),
 	'log_search_messages' => array(
 		'ID_SEARCH' => 'ID_SEARCH id_search tinyint(3) unsigned NOT NULL default \'0\'',
 		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
 	),
 	'log_search_results' => array(
+		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
 		'ID_SEARCH' => 'ID_SEARCH id_search tinyint(3) unsigned NOT NULL default \'0\'',
 	),
 	'log_search_subjects' => array(
@@ -1341,7 +1339,7 @@ if (@$modSettings['smfVersion'] < '2.0' || @$modSettings['smfVersion'] === '2.0 
 			upgrade_query("
 				UPDATE {$db_prefix}attachments
 				SET mime_type = '$update[mime]'
-				WHERE id_attach IN (" . implode(',', $update[files]) . ")");
+				WHERE id_attach IN (" . implode(',', $update['files']) . ")");
 
 			// Remove it.
 			unset($ext_updates[$key]);

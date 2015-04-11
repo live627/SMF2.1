@@ -1,15 +1,44 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 10803 $.
+Changelog started January 1, 2004; Currently at $Revision: 10930 $.
+
+SMF 2.0.2                                                      December 22 2011
+===============================================================================
+
+December 2011
+--------------------------------------------------------------------------------
+ ! Send email to the correct user (PersonalMessage template) (thank you, Lex!)
+ ! Typo in upgrade script, when updating attachments. (upgrade MySQL script) (thanks SpudsMan!)
+ ! Make sure db_character_set doesn't end up set when it shouldn't be. (index.php)
+ ! Check for invalid sort methods in message index. (MessageIndex.php)
+
+
+November 2011
+--------------------------------------------------------------------------------
+ ! Using the correct variable for the online list filter [Bug 4840]
+ ! Sanitize parameters in package options page (admin-only) (Packages.php). (Reported by Luis Santana.)
+
+
+October 2011
+--------------------------------------------------------------------------------
+ ! Sorting the memberlist by online status caused an error in PostgreSQL (Memberlist.php, thank you TheStupidOne!) [Bug 4837]
+ ! Disabling guest access would break subscriptions. (subscriptions.php) [Bug 4835]
+ ! Bad password checks still resulting in the language changing (Profile-Modify.php) [Bug 4805]
+ ! Postgresql does not like && (Load.php) [Bug 4819]
+ ! Disabling showing spiders could cause sql errors in Whos online (Who.php) [Bug 4840]
+ ! We used the wrong text to add subscribers (ManagePaid.php) [Bug 4783]
+
 
 SMF 2.0.1                                                      18 September 2011
 ================================================================================
 
 September 2011
+--------------------------------------------------------------------------------
  ! A sensitive token was sent in the URL, allowing CSRF vulnerability (ModerationCenter.php)
  ! Html entities fixes for spoofing and injection prevention. (Load.php, Subs-Members.php)
- 
+
 
 July 2011
+--------------------------------------------------------------------------------
  ! Fix undefined index (ManageMaintenance.php)
  ! Some versions may not contain a minor type. (Subs-Package.php) [Bug 4775]
  ! Some upgrades could fail due to file hash not existing in the attachments table. (upgrade_2-0_mysql.sql) [Bug 4801]
