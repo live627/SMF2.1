@@ -1,5 +1,20 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 11015 $.
+Changelog started January 1, 2004; Currently at $Revision: 11043 $.
+
+SMF 2.0.4                                                      Febuary 1 2013
+===============================================================================
+
+January 2013
+--------------------------------------------------------------------------------
+ ! Joshua's fix for validatePasswordFlood logic error (reported by Raz0r)
+ ! Arantor fix for database error on lost connections
+ ! Quick fix for Admin Password Reset vulnerability reported by Raz0r
+ ! Directory traversal vulnerability in the function ViewFile (thanks yan.uniko.102 for reporting and Arantor for proposing the fix and Spuds for spotting the undefined variable)
+ ! active users cannot change anymore the email from action activate without deactivation/confirmation (thanks BarteX for reporting the issueand suggesting a fix)
+ ! Change language from the admin panel could allow XSS, path disclosure and code injection (thanks Jakub Galczyk for reporting the issue)
+ ! Missing arguments in SSI functions called through ?ssi= generated error messages showing full server file path (thanks yan.uniko.102 for reporting it)
+ ! Directory listing and editing of arbitrary files from the theme editing page in the admin panel
+
 
 SMF 2.0.3                                                      November 16 2012
 ===============================================================================

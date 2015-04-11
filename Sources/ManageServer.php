@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.4
  */
 
 if (!defined('SMF'))
@@ -934,7 +934,18 @@ function ModifyLanguages()
 	{
 		checkSession();
 
-		if ($_POST['def_language'] != $language)
+		getLanguages(true, false);
+		$lang_exists = false;
+		foreach ($context['languages'] as $lang)
+		{
+			if ($_POST['def_language'] == $lang['filename'])
+			{
+				$lang_exists = true;
+				break;
+			}
+		}
+
+		if ($_POST['def_language'] != $language && $lang_exists)
 		{
 			require_once($sourcedir . '/Subs-Admin.php');
 			updateSettingsFile(array('language' => '\'' . $_POST['def_language'] . '\''));
