@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.6
+ * @version 2.0.7
  */
 
 if (!defined('SMF'))
@@ -204,6 +204,13 @@ function Login2()
 	{
 		$context['login_errors'] = array($txt['error_invalid_characters_username']);
 		return;
+	}
+
+	// And if it's too long, trim it back.
+	if ($smcFunc['strlen']($_POST['user']) > 80)
+	{
+		$_POST['user'] = $smcFunc['substr']($_POST['user'], 0, 79);
+		$context['default_username'] = preg_replace('~&amp;#(\\d{1,7}|x[0-9a-fA-F]{1,6});~', '&#\\1;', $smcFunc['htmlspecialchars']($_POST['user']));
 	}
 
 	// Are we using any sort of integration to validate the login?

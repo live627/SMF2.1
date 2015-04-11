@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.7
  */
 
 if (!defined('SMF'))
@@ -922,7 +922,7 @@ function ReduceMailQueue($number = false, $override_limit = false, $force_send =
 
 	// Now we know how many we're sending, let's send them.
 	$request = $smcFunc['db_query']('', '
-		SELECT /*!40001 SQL_NO_CACHE */ id_mail, recipient, body, subject, headers, send_html
+		SELECT /*!40001 SQL_NO_CACHE */ id_mail, recipient, body, subject, headers, send_html, time_sent, private
 		FROM {db_prefix}mail_queue
 		ORDER BY priority ASC, id_mail ASC
 		LIMIT ' . $number,
@@ -941,6 +941,8 @@ function ReduceMailQueue($number = false, $override_limit = false, $force_send =
 			'subject' => $row['subject'],
 			'headers' => $row['headers'],
 			'send_html' => $row['send_html'],
+			'time_sent' => $row['time_sent'],
+			'private' => $row['private'],
 		);
 	}
 	$smcFunc['db_free_result']($request);
@@ -1004,7 +1006,7 @@ function ReduceMailQueue($number = false, $override_limit = false, $force_send =
 
 		// Hopefully it sent?
 		if (!$result)
-			$failed_emails[] = array($email['to'], $email['body'], $email['subject'], $email['headers'], $email['send_html']);
+			$failed_emails[] = array($email['to'], $email['body'], $email['subject'], $email['headers'], $email['send_html'], $email['time_sent'], $email['private']);
 	}
 
 	// Any emails that didn't send?
@@ -1022,8 +1024,8 @@ function ReduceMailQueue($number = false, $override_limit = false, $force_send =
 		if ($modSettings['mail_failed_attempts'] > 5)
 			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}settings
-				SET value = {string:mail_next_send}
-				WHERE variable = {string:next_mail_send}
+				SET value = {string:next_mail_send}
+				WHERE variable = {string:mail_next_send}
 					AND value = {string:last_send}',
 				array(
 					'next_mail_send' => time() + 60,
@@ -1034,7 +1036,7 @@ function ReduceMailQueue($number = false, $override_limit = false, $force_send =
 		// Add our email back to the queue, manually.
 		$smcFunc['db_insert']('insert',
 			'{db_prefix}mail_queue',
-			array('recipient' => 'string', 'body' => 'string', 'subject' => 'string', 'headers' => 'string', 'send_html' => 'string'),
+			array('recipient' => 'string', 'body' => 'string', 'subject' => 'string', 'headers' => 'string', 'send_html' => 'string', 'time_sent' => 'string', 'private' => 'int'),
 			$failed_emails,
 			array('id_mail')
 		);
@@ -1470,9 +1472,13 @@ function scheduled_weekly_maintenance()
 			$result = $smcFunc['db_query']('', '
 				SELECT id_report
 				FROM {db_prefix}log_reported
-				WHERE time_started < {int:time_started}',
+				WHERE time_started < {int:time_started}
+					AND closed = {int:not_closed}
+					AND ignore_all = {int:not_ignored}',
 				array(
 					'time_started' => $t,
+					'not_closed' => 0,
+					'not_ignored' => 0,
 				)
 			);
 

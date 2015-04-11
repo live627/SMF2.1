@@ -1,6 +1,32 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 11060 $.
+Changelog started January 1, 2004; Currently at $Revision: 11067 $.
 
+SMF 2.0.7                                                       January 20 2014
+===============================================================================
+
+January 2014
+-------------------------------------------------------------------------------
+ ! PHP 5.5 compatibility fixes merged in. (Thanks to all who contributed but especially SleePy and Spuds)
+ ! Trim the username if oversized when logging in. (Thanks to TMcomputering for the report)
+ ! Check that group inheritance is actually going to be viable before trying to do further inquiry. (Thanks to tfs for the report)
+ ! Made sure some of the calendar holidays are corrected when previously incorrect.
+
+December 2013
+-------------------------------------------------------------------------------
+ ! Don't let the prune reports function prune open, or for that matter, ignored, reports. (Reported by Kimmie)
+ ! If an uploaded file somehow has an image size but isn't really an image, don't try to treat it as an image.
+ ! Make file cache somewhat less fragile.
+ ! ssi_fetchPosts didn't honour overriding permissions. (Thanks to IchBin for a fix)
+ ! Privacy and original sending time were not kept in the mail queue in the event of sending failure.
+ ! Wrong variable used in the mail queue handling (Thanks to Nao for originally finding the bug)
+ ! Themes with spaces in could break the editor handling. (Thanks to akyhne for the report and akabugeyes for a suggested fix)
+ ! Made the anti-XSS header a little less picky.
+ ! FIND_IN_SET wasn't always properly set up for PostgreSQL use.
+ ! Multiple installed themes with variants wouldn't all be able to be selected properly.
+ ! Fields that are regex-validated couldn't be left empty (thanks HappyBits and emanuele)
+ ! Fixing legacy TYPE=HEAP (thanks heusdens for the report)
+
+ 
 SMF 2.0.6                                                       October 22 2013
 ===============================================================================
 

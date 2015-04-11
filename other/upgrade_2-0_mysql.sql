@@ -705,6 +705,38 @@ if (!isset($modSettings['cal_showholidays']) || !isset($modSettings['cal_showbda
 ---}
 ---#
 
+---# Fixing the calendar holidays if they were somehow wrong before...
+UPDATE {$db_prefix}calendar_holidays
+SET event_date = '2013-11-28'
+WHERE event_date = '2013-11-21'
+	AND title = 'Thanksgiving';
+
+UPDATE {$db_prefix}calendar_holidays
+SET event_date = '2014-11-27'
+WHERE event_date = '2014-11-20'
+	AND title = 'Thanksgiving';
+
+UPDATE {$db_prefix}calendar_holidays
+SET event_date = '2019-11-28'
+WHERE event_date = '2019-11-21'
+	AND title = 'Thanksgiving';
+
+UPDATE {$db_prefix}calendar_holidays
+SET event_date = '2013-09-02'
+WHERE event_date = '2013-09-09'
+	AND title = 'Labor Day';
+
+UPDATE {$db_prefix}calendar_holidays
+SET event_date = '2014-09-01'
+WHERE event_date = '2014-09-08'
+	AND title = 'Labor Day';
+
+UPDATE {$db_prefix}calendar_holidays
+SET event_date = '2019-09-02'
+WHERE event_date = '2019-09-09'
+	AND title = 'Labor Day';
+---#
+
 ---# Deleting old calendar settings...
 	DELETE FROM {$db_prefix}settings
 	WHERE VARIABLE IN ('cal_showholidaysonindex', 'cal_showbdaysonindex', 'cal_showeventsonindex',
