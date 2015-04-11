@@ -2629,12 +2629,21 @@ function cache_put_data($key, $value, $ttl = 120)
 		else
 		{
 			$cache_data = '<' . '?' . 'php if (!defined(\'SMF\')) die; if (' . (time() + $ttl) . ' < time()) $expired = true; else{$expired = false; $value = \'' . addcslashes($value, '\\\'') . '\';}' . '?' . '>';
+			// Write the file.
+			if (function_exists('file_put_contents'))
+			{
+				$cache_bytes = @file_put_contents($cachedir . '/data_' . $key . '.php', $cache_data, LOCK_EX);
+				if ($cache_bytes != strlen($cache_data))
+					@unlink($cachedir . '/data_' . $key . '.php');
+			}
+			else
+			{
 				// Write the file.
 				if (function_exists('file_put_contents'))
 				{
 					$cache_bytes = @file_put_contents($cachedir . '/data_' . $key . '.php', $cache_data, LOCK_EX);
 					if ($cache_bytes != strlen($cache_data))
-						@unlink($cachedir . '/data_' . $key . '.php');
+					@unlink($cachedir . '/data_' . $key . '.php');
 				}
 				else
 				{
@@ -2654,6 +2663,7 @@ function cache_put_data($key, $value, $ttl = 120)
 							@unlink($cachedir . '/data_' . $key . '.php');
 					}
 				}
+			}
 		}
 	}
 

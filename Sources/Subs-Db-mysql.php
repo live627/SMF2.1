@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.4
+ * @version 2.0.8
  */
 
 if (!defined('SMF'))
@@ -242,6 +242,28 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 
 	// Decide which connection to use.
 	$connection = $connection == null ? $db_connection : $connection;
+
+	// Special queries that need processing.
+	$replacements = array(
+		'alter_table_boards' => array(
+			'~(.+)~' => '',
+		),
+		'boardindex_fetch_boards' => array(
+			'~(.)$~' => '$1 ORDER BY b.board_order',
+		),
+		'messageindex_fetch_boards' => array(
+			'~(.)$~' => '$1 ORDER BY b.board_order',
+		),
+		'order_by_board_order' => array(
+			'~(.)$~' => '$1 ORDER BY b.board_order',
+		),
+	);
+
+	if (isset($replacements[$identifier]))
+		$db_string = preg_replace(array_keys($replacements[$identifier]), array_values($replacements[$identifier]), $db_string);
+
+	if (trim($db_string) == '')
+		return false;
 
 	// One more query....
 	$db_count = !isset($db_count) ? 1 : $db_count + 1;

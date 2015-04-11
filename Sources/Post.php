@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.7
+ * @version 2.0.8
  */
 
 if (!defined('SMF'))
@@ -850,7 +850,7 @@ function Post()
 				{
 					// It goes 0 = outside, 1 = begin tag, 2 = inside, 3 = close tag, repeat.
 					if ($i % 4 == 0)
-						$parts[$i] = preg_replace_callback('~\[html\](.+?)\[/html\]~is', create_function('$m', ' return \'[html]\' . preg_replace(\'~<br\s?/?' . '>~i\', \'&lt;br /&gt;<br />\', "$m[1]") . \'[/html]\';'), $parts[$i]);
+						$parts[$i] = preg_replace_callback('~\[html\](.+?)\[/html\]~is', 'strip_html_bbc__preg_callback', $parts[$i]);
 				}
 				$form_message = implode('', $parts);
 			}
@@ -2891,4 +2891,8 @@ function JavaScriptModify()
 		obExit(false);
 }
 
+function strip_html_bbc__preg_callback($matches)
+{
+	return '[html]' . preg_replace('~<br\s?/?' . '>~i', '&lt;br /&gt;<br />', $matches[1]) . '[/html]';
+}
 ?>
