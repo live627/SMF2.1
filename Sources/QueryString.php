@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.3
  */
 
 if (!defined('SMF'))
@@ -429,7 +429,7 @@ function cleanXml($string)
 	global $context;
 
 	// http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
-	return preg_replace('~[\x00-\x08\x0B\x0C\x0E-\x19' . ($context['utf8'] ? (@version_compare(PHP_VERSION, '4.3.3') != -1 ? '\x{D800}-\x{DFFF}\x{FFFE}\x{FFFF}' : "\xED\xA0\x80-\xED\xBF\xBF\xEF\xBF\xBE\xEF\xBF\xBF") : '') . ']~' . ($context['utf8'] ? 'u' : ''), '', $string);
+	return preg_replace('~[\x00-\x08\x0B\x0C\x0E-\x19' . ($context['utf8'] ? (@version_compare(PHP_VERSION, '4.3.3') != -1 ? '\x{FFFE}\x{FFFF}' : "\xED\xA0\x80-\xED\xBF\xBF\xEF\xBF\xBE\xEF\xBF\xBF") : '') . ']~' . ($context['utf8'] ? 'u' : ''), '', $string);
 }
 
 function JavaScriptEscape($string)

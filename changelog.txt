@@ -1,5 +1,32 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 10930 $.
+Changelog started January 1, 2004; Currently at $Revision: 11015 $.
+
+SMF 2.0.3                                                      November 16 2012
+===============================================================================
+
+December 2012
+--------------------------------------------------------------------------------
+! SSI showed hidden boards on non-properly configured forums (part 2)
+! SSI showed hidden boards on non-properly configured forums
+! XSS in moderation log page (thanks kingW3 for the report)
+! ManagePaid fails if copies of Subscriptions-Paypal,php are present
+
+November 2012
+--------------------------------------------------------------------------------
+ ! PCRE engine starting at rev 8.3, will not allow you to specify the surrogate range D800–DFFF - From Spuds (similar to commit 10994)
+ ! Fixed lacking of check on referer URL when adminLogin comes into play (1.0, 1.1 and 2.0 versions)
+ ! Fixes for paypal moving to HTTP 1.1 [bug 5009]
+ ! update sandbox to use https, the former address results in a redirect
+ ! curl did not work due to improper check
+ ! subscriptions should also check for approved payment
+ Cherry-picked from git commit 07d4bc9fba8942fd284d3d0c3c732889a7bc2e6f by Spuds
+ ! Fixed the upgrade.php failing when the Themes directory was in a directory other than $boarddir (thanks iacchi for finding the cause)
+
+
+October 2012
+--------------------------------------------------------------------------------
+ ! Applied all the changes proposed by rawlogic to fix the intermittent session verification failures
+
 
 SMF 2.0.2                                                      December 22 2011
 ===============================================================================
