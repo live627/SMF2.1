@@ -1,5 +1,20 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 11043 $.
+Changelog started January 1, 2004; Currently at $Revision: 11057 $.
+
+SMF 2.0.5                                                        August 12 2013
+===============================================================================
+
+August 2013
+--------------------------------------------------------------------------------
+ ! Updated the WHOIS search URL for RIPE (thanks Runic)
+
+July 2013
+--------------------------------------------------------------------------------
+ ! Fixed a problem with upgrade.php that wasn't able to continue after db errors (thanks akc42 for the fix)
+ ! Fixed code injection in manage language pages (thanks HauntIT for the report)
+ ! Fixed XSS in the news page, emails field (thanks HauntIT for the report)
+ ! XSS in personal messages page (thanks HauntIT for the report)
+
 
 SMF 2.0.4                                                      Febuary 1 2013
 ===============================================================================

@@ -8,11 +8,11 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.4
+ * @version 2.0.5
  */
 
 // Version information...
-define('SMF_VERSION', '2.0.4');
+define('SMF_VERSION', '2.0.5');
 define('SMF_LANG_VERSION', '2.0.4');
 
 $GLOBALS['required_php_version'] = '4.1.0';
@@ -639,6 +639,31 @@ if ($command_line)
 // Don't error if we're using xml.
 if (isset($_GET['xml']))
 	$upcontext['return_error'] = true;
+
+// These three checks are necessary to workaround an issue with the upgrade stucking when encountering a db error
+if (!isset($context))
+{
+	$context = Array();
+	$context['error'] = '';
+	if (!isset($txt['database_error']))
+		$txt['database_error'] = 'Database Error';
+}
+
+if (!function_exists('allowedTo'))
+{
+	function allowedTo($p,$b)
+	{
+		return true;
+	}
+}
+
+if (!function_exists('fatal_error'))
+{
+	function fatal_error($error,$log)
+	{
+		return ($error);
+	}
+}
 
 // Loop through all the steps doing each one as required.
 $upcontext['overall_percent'] = 0;
@@ -2516,7 +2541,7 @@ function upgrade_query($string, $unbuffered = false)
 	// Get the query result - working around some SMF specific security - just this once!
 	$modSettings['disableQueryCheck'] = true;
 	$db_unbuffered = $unbuffered;
-	$result = $smcFunc['db_query']('', $string, 'security_override');
+	$result = $smcFunc['db_query']('', $string, Array('security_override'=>1,'db_error_skip'=>1));
 	$db_unbuffered = false;
 
 	// Failure?!
