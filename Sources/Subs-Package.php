@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.1
  */
 
 if (!defined('SMF'))
@@ -1487,11 +1487,11 @@ function compareVersions($version1, $version2)
 		// Build an array of parts.
 		$versions[$id] = array(
 			'major' => (int) $parts[1],
-			'minor' => (int) $parts[2],
-			'patch' => (int) $parts[3],
+			'minor' => !empty($parts[2]) ? (int) $parts[2] : 0,
+			'patch' => !empty($parts[3]) ? (int) $parts[3] : 0,
 			'type' => empty($parts[4]) ? 'stable' : $parts[4],
-			'type_major' => (int) $parts[5],
-			'type_minor' => (int) $parts[6],
+			'type_major' => !empty($parts[6]) ? (int) $parts[5] : 0,
+			'type_minor' => !empty($parts[6]) ? (int) $parts[6] : 0,
 			'dev' => !empty($parts[7]),
 		);
 	}

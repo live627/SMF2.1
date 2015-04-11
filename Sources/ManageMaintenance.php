@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.1
  */
 
 if (!defined('SMF'))
@@ -1535,8 +1535,8 @@ function MaintainPurgeInactiveMembers()
 {
 	global $sourcedir, $context, $smcFunc, $txt;
 
-	$_POST['maxdays'] = (int) $_POST['maxdays'];
-	if (!empty($_POST['groups']) && $_POST['maxdays'])
+	$_POST['maxdays'] = empty($_POST['maxdays']) ? 0 : (int) $_POST['maxdays'];
+	if (!empty($_POST['groups']) && $_POST['maxdays'] > 0)
 	{
 		checkSession();
 
