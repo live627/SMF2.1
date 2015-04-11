@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.2
+ * @version 2.0.9
  */
 
 if (!defined('SMF'))
@@ -353,6 +353,7 @@ function PackageInstallTest()
 			if (!empty($action['parse_bbc']))
 			{
 				require_once($sourcedir . '/Subs-Post.php');
+				$context['package_readme'] = preg_replace('~\[[/]?html\]~i', '', $context['package_readme']);
 				preparsecode($context['package_readme']);
 				$context['package_readme'] = parse_bbc($context['package_readme']);
 			}
@@ -1055,6 +1056,14 @@ function PackageInstall()
 			// What failed steps?
 			$failed_step_insert = serialize($failed_steps);
 
+			// Un-sanitize things before we insert them...
+			$keys = array('filename', 'name', 'id', 'version');
+			foreach ($keys as $key)
+			{
+				// Yay for variable variables...
+				${"package_$key"} = un_htmlspecialchars($packageInfo[$key]);
+			}
+
 			$smcFunc['db_insert']('',
 				'{db_prefix}log_packages',
 				array(
@@ -1064,7 +1073,7 @@ function PackageInstall()
 					'member_removed' => 'int', 'db_changes' => 'string',
 				),
 				array(
-					$packageInfo['filename'], $packageInfo['name'], $packageInfo['id'], $packageInfo['version'],
+					$package_filename, $package_name, $package_id, $package_version,
 					$user_info['id'], $user_info['name'], time(),
 					$is_upgrade ? 2 : 1, $failed_step_insert, $themes_installed,
 					0, $db_changes,
@@ -1099,7 +1108,7 @@ function PackageInstall()
 		deltree($boarddir . '/Packages/temp');
 
 	// Log what we just did.
-	logAction($context['uninstalling'] ? 'uninstall_package' : (!empty($is_upgrade) ? 'upgrade_package' : 'install_package'), array('package' => $smcFunc['htmlspecialchars']($packageInfo['name']), 'version' => $smcFunc['htmlspecialchars']($packageInfo['version'])), 'admin');
+	logAction($context['uninstalling'] ? 'uninstall_package' : (!empty($is_upgrade) ? 'upgrade_package' : 'install_package'), array('package' => $packageInfo['name'], 'version' => $packageInfo['version']), 'admin');
 
 	// Just in case, let's clear the whole cache to avoid anything going up the swanny.
 	clean_cache();
