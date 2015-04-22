@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.9
+ * @version 2.0.10
  */
 
 if (!defined('SMF'))
@@ -180,7 +180,41 @@ function reloadSettings()
 			return $num < 0x20 || $num > 0x10FFFF || ($num >= 0xD800 && $num <= 0xDFFF) || $num === 0x202E || $num === 0x202D ? \'\' : \'&#\' . $num . \';\';'),
 		'htmlspecialchars' => create_function('$string, $quote_style = ENT_COMPAT, $charset = \'ISO-8859-1\'', '
 			global $smcFunc;
-			return ' . strtr($ent_check[0], array('&' => '&amp;')) . 'htmlspecialchars($string, $quote_style, ' . ($utf8 ? '\'UTF-8\'' : '$charset') . ')' . $ent_check[1] . ';'),
+			return ' . ($utf8 ? '$smcFunc[\'fix_utf8mb4\'](' : '') . strtr($ent_check[0], array('&' => '&amp;')) . 'htmlspecialchars($string, $quote_style, ' . ($utf8 ? '\'UTF-8\'' : '$charset') . ')' . $ent_check[1] . ($utf8 ? ')' : '') . ';'),
+		'fix_utf8mb4' => create_function('$string', '
+			$i = 0;
+			$len = strlen($string);
+			$new_string = \'\';
+			while ($i < $len)
+			{
+				$ord = ord($string[$i]);
+				if ($ord < 128)
+				{
+					$new_string .= $string[$i];
+					$i++;
+				}
+				elseif ($ord < 224)
+				{
+					$new_string .= $string[$i] . $string[$i+1];
+					$i += 2;
+				}
+				elseif ($ord < 240)
+				{
+					$new_string .= $string[$i] . $string[$i+1] . $string[$i+2];
+					$i += 3;
+				}
+				elseif ($ord < 248)
+				{
+					// Magic happens.
+					$val = (ord($string[$i]) & 0x07) << 18;
+					$val += (ord($string[$i+1]) & 0x3F) << 12;
+					$val += (ord($string[$i+2]) & 0x3F) << 6;
+					$val += (ord($string[$i+3]) & 0x3F);
+					$new_string .= \'&#\' . $val . \';\';
+					$i += 4;
+				}
+			}
+			return $new_string;'),
 		'htmltrim' => create_function('$string', '
 			global $smcFunc;
 			return preg_replace(\'~^(?:[ \t\n\r\x0B\x00' . $space_chars . ']|&nbsp;)+|(?:[ \t\n\r\x0B\x00' . $space_chars . ']|&nbsp;)+$~' . ($utf8 ? 'u' : '') . '\', \'\', ' . implode('$string', $ent_check) . ');'),

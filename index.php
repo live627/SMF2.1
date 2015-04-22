@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.9
+ * @version 2.0.10
  */
 
 /*	This, as you have probably guessed, is the crux on which SMF functions.
@@ -22,7 +22,7 @@
 	with the URL index.php?action=action-in-url.  Relatively simple, no?
 */
 
-$forum_version = 'SMF 2.0.9';
+$forum_version = 'SMF 2.0.10';
 @ini_set('memory_limit', '128M');
 
 // Get everything started up...

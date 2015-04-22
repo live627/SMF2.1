@@ -8,12 +8,12 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.9
+ * @version 2.0.10
  */
 
 // Version information...
-define('SMF_VERSION', '2.0.9');
-define('SMF_LANG_VERSION', '2.0.8');
+define('SMF_VERSION', '2.0.10');
+define('SMF_LANG_VERSION', '2.0.10');
 
 $GLOBALS['required_php_version'] = '4.1.0';
 $GLOBALS['required_mysql_version'] = '4.0.18';

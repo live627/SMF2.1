@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.9
+ * @version 2.0.10
  */
 
 if (!defined('SMF'))
@@ -236,7 +236,7 @@ function preparsecode(&$message, $previewing = false)
 				{
 					static $htmlfunc = null;
 					if ($htmlfunc === null)
-						$htmlfunc = create_function('$m', 'return \'[html]\' . strtr(un_htmlspecialchars("$m[1]"), array("\n" => \'&#13;\', \' \' => \' &#32;\', \'[\' => \'&#91;\', \']\' => \'&#93;\')) . \'[/html]\';');
+						$htmlfunc = create_function('$m', 'return \'[html]\' . strtr(un_htmlspecialchars("$m[1]"), array("\n" => \'&#13;\', \'  \' => \' &#32;\', \'[\' => \'&#91;\', \']\' => \'&#93;\')) . \'[/html]\';');
 					$parts[$i] = preg_replace_callback('~\[html\](.+?)\[/html\]~is', $htmlfunc, $parts[$i]);
 				}
 

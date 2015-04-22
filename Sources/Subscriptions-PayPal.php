@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.3
+ * @version 2.0.10
  */
 
 // This won't be dedicated without this - this must exist in each gateway!
@@ -27,6 +27,7 @@ class paypal_display
 
 		$setting_data = array(
 			array('text', 'paypal_email', 'subtext' => $txt['paypal_email_desc']),
+			array('text', 'paypal_additional_emails', 'subtext' =>  $txt['paypal_additional_emails_desc']),
 		);
 
 		return $setting_data;
@@ -117,7 +118,7 @@ class paypal_payment
 		// Correct email address?
 		if (!isset($_POST['business']))
 			$_POST['business'] = $_POST['receiver_email'];
-		if ($modSettings['paypal_email'] != $_POST['business'] && (empty($modSettings['paypal_additional_emails']) || !in_array($_POST['business'], explode(',', $modSettings['paypal_additional_emails']))))
+		if (strtolower($modSettings['paypal_email']) != strtolower($_POST['business']) && (empty($modSettings['paypal_additional_emails']) || !in_array($_POST['business'], explode(',', $modSettings['paypal_additional_emails']))))
 			return false;
 		return true;
 	}
@@ -205,7 +206,7 @@ class paypal_payment
 			exit;
 
 		// Check that this is intended for us.
-		if ($modSettings['paypal_email'] != $_POST['business'] && (empty($modSettings['paypal_additional_emails']) || !in_array($_POST['business'], explode(',', $modSettings['paypal_additional_emails']))))
+		if (strtolower($modSettings['paypal_email']) != strtolower($_POST['business']) && (empty($modSettings['paypal_additional_emails']) || !in_array($_POST['business'], explode(',', $modSettings['paypal_additional_emails']))))
 			exit;
 
 		// Is this a subscription - and if so it's it a secondary payment that we need to process?
@@ -214,7 +215,7 @@ class paypal_payment
 			$this->_findSubscription();
 
 		// Verify the currency!
-		if (strtolower($_POST['mc_currency']) != $modSettings['paid_currency_code'])
+		if (strtolower($_POST['mc_currency']) != strtolower($modSettings['paid_currency_code']))
 			exit;
 
 		// Can't exist if it doesn't contain anything.

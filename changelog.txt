@@ -1,6 +1,40 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
+SMF 2.0.10														  April 22 2015
+===============================================================================
+
+April 2015
+-------------------------------------------------------------------------------
+ ! The instructions on ManagePaid page need to be updated
+ ! PayPal emails are case insensitive
+ ! Long standing problem with ManageNews and PostgreSQL
+ ! Long standing problem with Smiley sets and PostgreSQL
+ ! Errors show in log when handling certain tar.gz packages
+
+March 2015
+-------------------------------------------------------------------------------
+ ! Forum Maintenance - Topics fails if header is collapsed
+ ! Fix for unsupported UTF8mb4 characters
+
+February 2015
+-------------------------------------------------------------------------------
+ ! SSI.php doesn't handle "hide results until user has voted" properly
+ ! Sanitize package redirects
+
+January 2015
+-------------------------------------------------------------------------------
+ ! Can't use WYSIWYG editor in Pale Moon browser
+ ! Search dialogue can overflow inappropriately
+ - Excessive line in ManageServer.php in the patch upgrade from 2.0.8
+ ! HTML tag broken in 2.0.9 install package
+ ! Wrong link in ManageAttachments
+ * Error suppression missing in Subs-Package
+ ! XML post preview was broken in 2.0.9
+ ! Chrome doesn't like opacity for the news fader anymore
+ + Add additional emails in Paid Subscriptions settings for PayPal business accounts.
+
+
 SMF 2.0.9                                                        October 1 2014
 ===============================================================================
 

@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.9
+ * @version 2.0.10
  */
 
 if (!defined('SMF'))
@@ -1237,7 +1237,12 @@ function Post2()
 	// Previewing? Go back to start.
 	if (isset($_REQUEST['preview']))
 	{
-		checkSession();
+		if (checkSession('post', '', false) != '')
+		{
+			loadLanguage('Errors');
+			$context['post_errors']['message'][] = $txt['error_session_timeout'];
+			unset ($_POST['preview'], $_REQUEST['xml']); // just in case
+		}
 		return Post();
 	}
 
