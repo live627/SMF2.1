@@ -25,6 +25,7 @@ class paypal_display
 	{
 		global $txt;
 
+		/// We add email and additional emails (the latter for recurring payments)
 		$setting_data = array(
 			array('text', 'paypal_email', 'subtext' => $txt['paypal_email_desc']),
 			array('text', 'paypal_additional_emails', 'subtext' =>  $txt['paypal_additional_emails_desc']),
@@ -118,7 +119,7 @@ class paypal_payment
 		// Correct email address?
 		if (!isset($_POST['business']))
 			$_POST['business'] = $_POST['receiver_email'];
-		if (strtolower($modSettings['paypal_email']) != strtolower($_POST['business']) && (empty($modSettings['paypal_additional_emails']) || !in_array($_POST['business'], explode(',', $modSettings['paypal_additional_emails']))))
+		if (strtolower($modSettings['paypal_email']) != strtolower($_POST['business']) && (empty($modSettings['paypal_additional_emails']) || !in_array(strtolower($_POST['business']), explode(',', strtolower($modSettings['paypal_additional_emails'])))))
 			return false;
 		return true;
 	}
@@ -206,7 +207,7 @@ class paypal_payment
 			exit;
 
 		// Check that this is intended for us.
-		if (strtolower($modSettings['paypal_email']) != strtolower($_POST['business']) && (empty($modSettings['paypal_additional_emails']) || !in_array($_POST['business'], explode(',', $modSettings['paypal_additional_emails']))))
+		if (strtolower($modSettings['paypal_email']) != strtolower($_POST['business']) && (empty($modSettings['paypal_additional_emails']) || !in_array(strtolower($_POST['business']), explode(',', strtolower($modSettings['paypal_additional_emails'])))))
 			exit;
 
 		// Is this a subscription - and if so it's it a secondary payment that we need to process?
