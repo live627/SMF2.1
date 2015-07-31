@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class TOTP\Auth</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li>
+					<a href="namespace-None.html">
+						None					</a>
+
+						</li>
+				<li class="active">
+					<a href="namespace-TOTP.html">
+						TOTP					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-TOTP.Auth.html">Auth</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-TOTP.html" title="Summary of TOTP"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Auth</h1>
+
+
+	<div class="description">
+	<p>A class for generating the codes compatible with the Google Authenticator and similar TOTP
+clients.</p>
+
+<p>NOTE: A lot of the logic from this class has been borrowed from this class:
+http://www.idontplaydarts.com/wp-content/uploads/2011/07/ga.php_.txt</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-TOTP.html">TOTP</a><br>
+		<b>Package:</b> GAuth<br>
+
+				<b>Copyright:</b>
+				2015 Simple Machines and individual contributors<br>
+				<b>License:</b>
+				<a href="MIT">Simple Machines Forum (SMF)</a><br>
+				<b>License:</b>
+				<a href="http://www.simplemachines.org/about/smf/license.php">BSD</a><br>
+				<b>Author:</b>
+				Chris Cornutt <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#x63;&#99;&#111;&#114;&#110;&#117;&#116;&#116;&#64;&#112;&#104;p&#x64;&#x65;&#x76;&#x65;&#x6c;&#x6f;&#x70;&#x65;&#x72;&#46;&#111;&#114;&#103;">&#x63;&#99;&#111;&#114;&#110;&#117;&#116;&#116;&#64;&#112;&#104;p&#x64;&#x65;&#x76;&#x65;&#x6c;&#x6f;&#x70;&#x65;&#x72;&#46;&#111;&#114;&#103;</a><br>
+				<b>Author:</b>
+				Simple Machines http://www.simplemachines.org<br>
+				<b>Version:</b>
+				2.1 Beta 2<br>
+			<b>Located at</b> <a href="source-class-TOTP.Auth.html#6-355" title="Go to source code">Sources/Class-TOTP.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-TOTP.Auth.html#58-71" title="Go to source code">__construct</a>( <span>string <var>$initKey</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Initialize the object and set up the lookup table
+    Optionally the Initialization key</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Initialize the object and set up the lookup table Optionally the Initialization key</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$initKey</var></dt>
+					<dd>Initialization key</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="buildLookup" id="_buildLookup">
+
+		<td class="attributes"><code>
+			 public 
+
+			null
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_buildLookup">#</a>
+		<code><a href="source-class-TOTP.Auth.html#73-85" title="Go to source code">buildLookup</a>( )</code>
+
+		<div class="description short">
+			<p>Build the base32 lookup table</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Build the base32 lookup table</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					null
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getRange" id="_getRange">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getRange">#</a>
+		<code><a href="source-class-TOTP.Auth.html#87-94" title="Go to source code">getRange</a>( )</code>
+
+		<div class="description short">
+			<p>Get the current "range" value</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get the current "range" value</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer<br>Range value
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setRange" id="_setRange">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-TOTP.Auth.html">TOTP\Auth</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setRange">#</a>
+		<code><a href="source-class-TOTP.Auth.html#96-109" title="Go to source code">setRange</a>( <span>integer <var>$range</var></span> )</code>
+
+		<div class="description short">
+			<p>Set the "range" value</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Set the "range" value</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$range</var></dt>
+					<dd>Range value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-TOTP.Auth.html">TOTP\Auth</a></code><br>instance
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setInitKey" id="_setInitKey">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-TOTP.Auth.html">TOTP\Auth</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setInitKey">#</a>
+		<code><a href="source-class-TOTP.Auth.html#111-125" title="Go to source code">setInitKey</a>( <span>string <var>$key</var></span> )</code>
+
+		<div class="description short">
+			<p>Set the initialization key for the object</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Set the initialization key for the object</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$key</var></dt>
+					<dd>Initialization key</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-TOTP.Auth.html">TOTP\Auth</a></code><br>instance
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					InvalidArgumentException<br>If hash is not valid base32
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getInitKey" id="_getInitKey">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getInitKey">#</a>
+		<code><a href="source-class-TOTP.Auth.html#127-135" title="Go to source code">getInitKey</a>( )</code>
+
+		<div class="description short">
+			<p>Get the current Initialization key</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get the current Initialization key</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					string<br>Initialization key
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setLookup" id="_setLookup">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-TOTP.Auth.html">TOTP\Auth</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setLookup">#</a>
+		<code><a href="source-class-TOTP.Auth.html#137-151" title="Go to source code">setLookup</a>( <span>array <var>$lookup</var></span> )</code>
+
+		<div class="description short">
+			<p>Set the contents of the internal lookup table</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Set the contents of the internal lookup table</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$lookup</var></dt>
+					<dd>Lookup data set</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-TOTP.Auth.html">TOTP\Auth</a></code><br>instance
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					InvalidArgumentException<br>If lookup given is not an array
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getLookup" id="_getLookup">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getLookup">#</a>
+		<code><a href="source-class-TOTP.Auth.html#153-161" title="Go to source code">getLookup</a>( )</code>
+
+		<div class="description short">
+			<p>Get the current lookup data set</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get the current lookup data set</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					array<br>Lookup data
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getRefresh" id="_getRefresh">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getRefresh">#</a>
+		<code><a href="source-class-TOTP.Auth.html#163-171" title="Go to source code">getRefresh</a>( )</code>
+
+		<div class="description short">
+			<p>Get the number of seconds for code refresh currently set</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get the number of seconds for code refresh currently set</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer<br>Refresh in seconds
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setRefresh" id="_setRefresh">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-TOTP.Auth.html">TOTP\Auth</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setRefresh">#</a>
+		<code><a href="source-class-TOTP.Auth.html#173-187" title="Go to source code">setRefresh</a>( <span>integer <var>$seconds</var></span> )</code>
+
+		<div class="description short">
+			<p>Set the number of seconds to refresh codes</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Set the number of seconds to refresh codes</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$seconds</var></dt>
+					<dd>Seconds to refresh</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-TOTP.Auth.html">TOTP\Auth</a></code><br>instance
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					InvalidArgumentException<br>If seconds value is not numeric
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getCodeLength" id="_getCodeLength">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getCodeLength">#</a>
+		<code><a href="source-class-TOTP.Auth.html#189-197" title="Go to source code">getCodeLength</a>( )</code>
+
+		<div class="description short">
+			<p>Get the current length for generated codes</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get the current length for generated codes</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer<br>Code length
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setCodeLength" id="_setCodeLength">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-TOTP.Auth.html">TOTP\Auth</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setCodeLength">#</a>
+		<code><a href="source-class-TOTP.Auth.html#199-209" title="Go to source code">setCodeLength</a>( <span>integer <var>$length</var></span> )</code>
+
+		<div class="description short">
+			<p>Set the length of the generated codes</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Set the length of the generated codes</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$length</var></dt>
+					<dd>Code length</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-TOTP.Auth.html">TOTP\Auth</a></code><br>instance
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateCode" id="_validateCode">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateCode">#</a>
+		<code><a href="source-class-TOTP.Auth.html#211-239" title="Go to source code">validateCode</a>( <span>string <var>$code</var></span>, <span>string <var>$initKey</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$timestamp</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$range</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Validate the given code</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate the given code</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$code</var></dt>
+					<dd>Code entered by user</dd>
+					<dt><var>$initKey</var></dt>
+					<dd>Initialization key</dd>
+					<dt><var>$timestamp</var></dt>
+					<dd>Timestamp for calculation</dd>
+					<dt><var>$range</var></dt>
+					<dd>Seconds before/after to validate hash against</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br>Pass/fail of validation
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					InvalidArgumentException<br>If incorrect code length
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="generateOneTime" id="_generateOneTime">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_generateOneTime">#</a>
+		<code><a href="source-class-TOTP.Auth.html#241-261" title="Go to source code">generateOneTime</a>( <span>string <var>$initKey</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$timestamp</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Generate a one-time code</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Generate a one-time code</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$initKey</var></dt>
+					<dd>Initialization key [optional]</dd>
+					<dt><var>$timestamp</var></dt>
+					<dd>Timestamp for calculation [optional]</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string<br>Generated code/hash
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="generateCode" id="_generateCode">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_generateCode">#</a>
+		<code><a href="source-class-TOTP.Auth.html#263-280" title="Go to source code">generateCode</a>( <span>integer <var>$length</var> = <span class="php-num">16</span></span> )</code>
+
+		<div class="description short">
+			<p>Generate a code/hash
+    Useful for making Initialization codes</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Generate a code/hash Useful for making Initialization codes</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$length</var></dt>
+					<dd>Length for the generated code</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string<br>Generated code
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="generateTimestamp" id="_generateTimestamp">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_generateTimestamp">#</a>
+		<code><a href="source-class-TOTP.Auth.html#282-290" title="Go to source code">generateTimestamp</a>( )</code>
+
+		<div class="description short">
+			<p>Geenrate the timestamp for the calculation</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Geenrate the timestamp for the calculation</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer<br>Timestamp
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="truncateHash" id="_truncateHash">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_truncateHash">#</a>
+		<code><a href="source-class-TOTP.Auth.html#292-308" title="Go to source code">truncateHash</a>( <span>string <var>$hash</var></span> )</code>
+
+		<div class="description short">
+			<p>Truncate the given hash down to just what we need</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Truncate the given hash down to just what we need</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$hash</var></dt>
+					<dd>Hash to truncate</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string<br>Truncated hash value
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="base32_decode" id="_base32_decode">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_base32_decode">#</a>
+		<code><a href="source-class-TOTP.Auth.html#310-342" title="Go to source code">base32_decode</a>( <span>string <var>$hash</var></span> )</code>
+
+		<div class="description short">
+			<p>Base32 decoding function</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Base32 decoding function</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$hash</var></dt>
+					<dd>encoded hash</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string<br>Binary value of hash
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					InvalidArgumentException<br>When hash is not valid
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getQrCodeUrl" id="_getQrCodeUrl">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getQrCodeUrl">#</a>
+		<code><a href="source-class-TOTP.Auth.html#344-354" title="Go to source code">getQrCodeUrl</a>( <span>string <var>$name</var></span>, <span> <var>$code</var></span> )</code>
+
+		<div class="description short">
+			<p>Returns a URL to QR code for embedding the QR code</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns a URL to QR code for embedding the QR code</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd>code</dd>
+					<dt><var>$code</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string<br>URL
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>
