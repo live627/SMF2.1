@@ -8,11 +8,11 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.10
+ * @version 2.0.11
  */
 
 // Version information...
-define('SMF_VERSION', '2.0.10');
+define('SMF_VERSION', '2.0.11');
 define('SMF_LANG_VERSION', '2.0.10');
 
 $GLOBALS['required_php_version'] = '4.1.0';
@@ -3575,7 +3575,7 @@ function template_upgrade_below()
 		</div>
 	</div></div>
 	<div id="footer_section"><div class="frame" style="height: 40px;">
-		<div class="smalltext"><a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank" class="new_win">SMF &copy;2013, Simple Machines</a></div>
+		<div class="smalltext"><a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank" class="new_win">SMF &copy;2015, Simple Machines</a></div>
 	</div></div>
 	</body>
 </html>';

@@ -1,6 +1,16 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
+SMF 2.0.11                                                    September 18 2015
+===============================================================================
+
+September 2015
+-------------------------------------------------------------------------------
+ ! Security vulnerability patched
+ ! safe_unserialize() function added to Subs.php
+ ! Instances of unserialize() with user-supplied data changed to safe_unserialize()
+
+
 SMF 2.0.10														  April 22 2015
 ===============================================================================
 

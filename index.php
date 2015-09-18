@@ -22,7 +22,7 @@
 	with the URL index.php?action=action-in-url.  Relatively simple, no?
 */
 
-$forum_version = 'SMF 2.0.10';
+$forum_version = 'SMF 2.0.11';
 @ini_set('memory_limit', '128M');
 
 // Get everything started up...
