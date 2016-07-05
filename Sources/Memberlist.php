@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.8
+ * @version 2.0.12
  */
 
 if (!defined('SMF'))
@@ -173,7 +173,7 @@ function MLAll()
 	{
 		// Maybe there's something cached already.
 		if (!empty($modSettings['memberlist_cache']))
-			$memberlist_cache = @unserialize($modSettings['memberlist_cache']);
+			$memberlist_cache = safe_unserialize($modSettings['memberlist_cache']);
 
 		// The chunk size for the cached index.
 		$cache_step_size = 500;

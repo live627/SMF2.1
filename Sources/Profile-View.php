@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.5
+ * @version 2.0.12
  */
 
 if (!defined('SMF'))
@@ -1622,7 +1622,7 @@ function list_getProfileEdits($start, $items_per_page, $sort, $memID)
 	$members = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$extra = @unserialize($row['extra']);
+		$extra = safe_unserialize($row['extra']);
 		if (!empty($extra['applicator']))
 			$members[] = $extra['applicator'];
 

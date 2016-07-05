@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.10
+ * @version 2.0.12
  */
 
 if (!defined('SMF'))
@@ -158,6 +158,9 @@ if (!defined('SMF'))
 function preparsecode(&$message, $previewing = false)
 {
 	global $user_info, $modSettings, $smcFunc, $context;
+
+	// Remove empty bbc.
+	$message = preg_replace('~\[([^\]]+)\](?>(?R)|.)*?\[\/\1\]~i', '', $message);
 
 	// This line makes all languages *theoretically* work even with the wrong charset ;).
 	$message = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', $message);
@@ -977,7 +980,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	// Check whether we have to apply anything...
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$criteria = unserialize($row['criteria']);
+		$criteria = safe_unserialize($row['criteria']);
 		// Note we don't check the buddy status, cause deletion from buddy = madness!
 		$delete = false;
 		foreach ($criteria as $criterium)
@@ -1994,7 +1997,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	// If there's a custom search index, it needs updating...
 	if (!empty($modSettings['search_custom_index_config']))
 	{
-		$customIndexSettings = unserialize($modSettings['search_custom_index_config']);
+		$customIndexSettings = safe_unserialize($modSettings['search_custom_index_config']);
 
 		$inserts = array();
 		foreach (text2words($msgOptions['body'], $customIndexSettings['bytes_per_word'], true) as $word)
@@ -2050,7 +2053,7 @@ function createAttachment(&$attachmentOptions)
 	if (!empty($modSettings['currentAttachmentUploadDir']))
 	{
 		if (!is_array($modSettings['attachmentUploadDir']))
-			$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+			$modSettings['attachmentUploadDir'] = safe_unserialize($modSettings['attachmentUploadDir']);
 
 		// Just use the current path for temp files.
 		$attach_dir = $modSettings['attachmentUploadDir'][$modSettings['currentAttachmentUploadDir']];
@@ -2516,7 +2519,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	// If there's a custom search index, it needs to be modified...
 	if (isset($msgOptions['body']) && !empty($modSettings['search_custom_index_config']))
 	{
-		$customIndexSettings = unserialize($modSettings['search_custom_index_config']);
+		$customIndexSettings = safe_unserialize($modSettings['search_custom_index_config']);
 
 		$stopwords = empty($modSettings['search_stopwords']) ? array() : explode(',', $modSettings['search_stopwords']);
 		$old_index = text2words($old_body, $customIndexSettings['bytes_per_word'], true);

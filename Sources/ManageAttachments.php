@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.10
+ * @version 2.0.12
  */
 
 if (!defined('SMF'))
@@ -576,7 +576,7 @@ function MaintainFiles()
 	$context['sub_template'] = 'maintenance';
 
 	if (!empty($modSettings['currentAttachmentUploadDir']))
-		$attach_dirs = unserialize($modSettings['attachmentUploadDir']);
+		$attach_dirs = safe_unserialize($modSettings['attachmentUploadDir']);
 	else
 		$attach_dirs = array($modSettings['attachmentUploadDir']);
 
@@ -1149,7 +1149,7 @@ function RepairAttachments()
 						$attachment_name = !empty($row['file_hash']) ? $row['id_attach'] . '_' . $row['file_hash'] : getLegacyAttachmentFilename($row['filename'], $row['id_attach'], null, true);
 
 						if (!is_array($modSettings['attachmentUploadDir']))
-							$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+							$modSettings['attachmentUploadDir'] = safe_unserialize($modSettings['attachmentUploadDir']);
 
 						// Loop through the other folders.
 						foreach ($modSettings['attachmentUploadDir'] as $id => $dir)
@@ -1658,7 +1658,7 @@ function ManageAttachmentPaths()
 	}
 	// Otherwise just load up their attachment paths.
 	else
-		$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+		$modSettings['attachmentUploadDir'] = safe_unserialize($modSettings['attachmentUploadDir']);
 
 	$listOptions = array(
 		'id' => 'attach_paths',

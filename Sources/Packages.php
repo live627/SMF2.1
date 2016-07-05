@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.11
+ * @version 2.0.12
  */
 
 if (!defined('SMF'))
@@ -251,7 +251,7 @@ function PackageInstallTest()
 	{
 		$old_themes = explode(',', $row['themes_installed']);
 		$old_version = $row['version'];
-		$db_changes = empty($row['db_changes']) ? array() : unserialize($row['db_changes']);
+		$db_changes = empty($row['db_changes']) ? array() : safe_unserialize($row['db_changes']);
 	}
 	$smcFunc['db_free_result']($request);
 
@@ -800,7 +800,7 @@ function PackageInstall()
 		{
 			if (empty($change))
 				continue;
-			$theme_data = unserialize(base64_decode($change));
+			$theme_data = safe_unserialize(base64_decode($change));
 			if (empty($theme_data['type']))
 				continue;
 
@@ -847,7 +847,7 @@ function PackageInstall()
 	{
 		$old_themes = explode(',', $row['themes_installed']);
 		$old_version = $row['version'];
-		$db_changes = empty($row['db_changes']) ? array() : unserialize($row['db_changes']);
+		$db_changes = empty($row['db_changes']) ? array() : safe_unserialize($row['db_changes']);
 	}
 	$smcFunc['db_free_result']($request);
 
@@ -1014,7 +1014,7 @@ function PackageInstall()
 			else
 			{
 				$is_upgrade = true;
-				$old_db_changes = empty($row['db_changes']) ? array() : unserialize($row['db_changes']);
+				$old_db_changes = empty($row['db_changes']) ? array() : safe_unserialize($row['db_changes']);
 			}
 		}
 
@@ -1689,7 +1689,7 @@ function PackagePermissions()
 		unset($context['file_tree'][strtr($boarddir, array('\\' => '/'))]['contents']['attachments']);
 
 		if (!is_array($modSettings['attachmentUploadDir']))
-			$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+			$modSettings['attachmentUploadDir'] = safe_unserialize($modSettings['attachmentUploadDir']);
 
 		// !!! Should we suggest non-current directories be read only?
 		foreach ($modSettings['attachmentUploadDir'] as $dir)

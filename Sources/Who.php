@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.2
+ * @version 2.0.12
  */
 
 if (!defined('SMF'))
@@ -184,7 +184,7 @@ function Who()
 	$url_data = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$actions = @unserialize($row['url']);
+		$actions = safe_unserialize($row['url']);
 		if ($actions === false)
 			continue;
 
@@ -224,7 +224,7 @@ function Who()
 	$spiderContext = array();
 	if (!empty($modSettings['show_spider_online']) && ($modSettings['show_spider_online'] == 2 || allowedTo('admin_forum')) && !empty($modSettings['spider_name_cache']))
 	{
-		foreach (unserialize($modSettings['spider_name_cache']) as $id => $name)
+		foreach (safe_unserialize($modSettings['spider_name_cache']) as $id => $name)
 			$spiderContext[$id] = array(
 				'id' => 0,
 				'name' => $name,
@@ -314,7 +314,7 @@ function determineActions($urls, $preferred_prefix = false)
 	foreach ($url_list as $k => $url)
 	{
 		// Get the request parameters..
-		$actions = @unserialize($url[0]);
+		$actions = safe_unserialize($url[0]);
 		if ($actions === false)
 			continue;
 
