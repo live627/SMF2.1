@@ -1746,7 +1746,7 @@ function list_getAttachDirs()
 
 	// The dirs should already have been unserialized but just in case...
 	if (!is_array($modSettings['attachmentUploadDir']))
-		$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+		$modSettings['attachmentUploadDir'] = safe_unserialize($modSettings['attachmentUploadDir']);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_folder, COUNT(id_attach) AS num_attach

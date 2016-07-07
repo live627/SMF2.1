@@ -159,14 +159,14 @@ function preparsecode(&$message, $previewing = false)
 {
 	global $user_info, $modSettings, $smcFunc, $context;
 
-	// Remove empty bbc.
-	$message = preg_replace('~\[([^\]]+)\](?>(?R)|.)*?\[\/\1\]~i', '', $message);
-
 	// This line makes all languages *theoretically* work even with the wrong charset ;).
 	$message = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', $message);
 
 	// Clean up after nobbc ;).
 	$message = preg_replace_callback('~\[nobbc\](.+?)\[/nobbc\]~is', 'nobbc__preg_callback', $message);
+
+	// Remove empty bbc.
+	$message = preg_replace('~\[([^\]=\s]+)[^\]]*\](?' . '>\s|(?R))*?\[/\1\]\s?~i', '', $message);
 
 	// Remove \r's... they're evil!
 	$message = strtr($message, array("\r" => ''));

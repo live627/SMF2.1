@@ -1,7 +1,7 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0.12													       July 5, 2016
+SMF 2.0.12													       July 7, 2016
 ===============================================================================
  ! Fixed word censor injection by disallowing an empty 'proper word'
  ! Fixed vulnerable unserialize() code by converting all instances to safe_unserialize()
