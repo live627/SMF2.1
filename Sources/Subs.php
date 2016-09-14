@@ -4496,10 +4496,6 @@ function safe_serialize($value)
  */
 function _safe_unserialize($str)
 {
-	// Input exceeds 4096.
-	if(strlen($str) > 4096)
-		return false;
-
 	// Input  is not a string.
 	if(empty($str) || !is_string($str))
 		return false;
@@ -4546,7 +4542,7 @@ function _safe_unserialize($str)
 			$value = substr($matches[2], 0, (int)$matches[1]);
 			$str = substr($matches[2], (int)$matches[1] + 2);
 		}
-		else if($type == 'a' && preg_match('/^a:([0-9]+):{(.*)/s', $str, $matches) && $matches[1] < 256)
+		else if($type == 'a' && preg_match('/^a:([0-9]+):{(.*)/s', $str, $matches))
 		{
 			$expectedLength = (int)$matches[1];
 			$str = $matches[2];
@@ -4561,10 +4557,6 @@ function _safe_unserialize($str)
 			case 3: // In array, expecting value or another array.
 				if($type == 'a')
 				{
-					// Array nesting exceeds 3.
-					if(count($stack) >= 3)
-						return false;
-
 					$stack[] = &$list;
 					$list[$key] = array();
 					$list = &$list[$key];
@@ -4604,10 +4596,6 @@ function _safe_unserialize($str)
 
 				if($type == 'i' || $type == 's')
 				{
-					// Array size exceeds 256.
-					if(count($list) >= 256)
-						return false;
-
 					// Array size exceeds expected length.
 					if(count($list) >= end($expected))
 						return false;
@@ -4624,10 +4612,6 @@ function _safe_unserialize($str)
 			case 0:
 				if($type == 'a')
 				{
-					// Array nesting exceeds 3.
-					if(count($stack) >= 3)
-						return false;
-
 					$data = array();
 					$list = &$data;
 					$expected[] = $expectedLength;
