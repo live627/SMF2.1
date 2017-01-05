@@ -1,6 +1,18 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
+SMF 2.0.13													    January 4, 2017
+===============================================================================
+ ! Some file versions didn't get modified in the 2.0.12 patch
+ ! Added check and sanitization for $_REQUEST['u'] in LogInOut.php and Reminder.php
+ ! Added check and sanitization for $_REQUEST['uid'] in Reminder.php
+ ! Properly sanitize author's website for packages
+ ! Added session check when uploading packages
+ ! Added session check when copying template files from one theme to another
+ ! The code to remove empty BBCode was sometimes breaking things (reported by @rjen; fix provided by Sesquipedalian)
+ ! Remove hardcoded limits for safe_unserialize as it was causing cache problems
+ ! Update the cal_max_year setting to 2030
+
 SMF 2.0.12													       July 7, 2016
 ===============================================================================
  ! Fixed word censor injection by disallowing an empty 'proper word'
