@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.12
+ * @version 2.0.13
  */
 
 if (!defined('SMF'))
@@ -166,7 +166,10 @@ function preparsecode(&$message, $previewing = false)
 	$message = preg_replace_callback('~\[nobbc\](.+?)\[/nobbc\]~is', 'nobbc__preg_callback', $message);
 
 	// Remove empty bbc.
-	$message = preg_replace('~\[([^\]=\s]+)[^\]]*\](?' . '>\s|(?R))*?\[/\1\]\s?~i', '', $message);
+	while (preg_match('~\[([^\]=\s]+)[^\]]*\]\s*\[/\1\]\s?~i', $message))
+	{
+		$message = preg_replace('~\[([^\]=\s]+)[^\]]*\]\s*\[/\1\]\s?~i', '', $message);
+	}
 
 	// Remove \r's... they're evil!
 	$message = strtr($message, array("\r" => ''));

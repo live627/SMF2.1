@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.12
+ * @version 2.0.13
  */
 
 if (!defined('SMF'))
@@ -57,7 +57,7 @@ if (!defined('SMF'))
 // Ask them for their login information.
 function Login()
 {
-	global $txt, $context, $scripturl;
+	global $txt, $context, $scripturl, $smcFunc;
 
 	// In wireless?  If so, use the correct sub template.
 	if (WIRELESS)
@@ -72,7 +72,7 @@ function Login()
 
 	// Get the template ready.... not really much else to do.
 	$context['page_title'] = $txt['login'];
-	$context['default_username'] = &$_REQUEST['u'];
+	$context['default_username'] = isset($_REQUEST['u']) ? preg_replace('~&amp;#(\\d{1,7}|x[0-9a-fA-F]{1,6});~', '&#\\1;', $smcFunc['htmlspecialchars']($_REQUEST['u'])) : '';
 	$context['default_password'] = '';
 	$context['never_expire'] = false;
 

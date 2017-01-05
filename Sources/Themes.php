@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.12
+ * @version 2.0.13
  */
 
 if (!defined('SMF'))
@@ -2022,6 +2022,8 @@ function CopyTemplate()
 
 	isAllowedTo('admin_forum');
 	loadTemplate('Themes');
+
+	checkSession();
 
 	$context[$context['admin_menu_name']]['current_subsection'] = 'edit';
 

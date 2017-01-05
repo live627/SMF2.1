@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.10
+ * @version 2.0.12
  */
 
 // This won't be dedicated without this - this must exist in each gateway!

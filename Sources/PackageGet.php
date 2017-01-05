@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.9
+ * @version 2.0.13
  */
 
 if (!defined('SMF'))
@@ -446,7 +446,7 @@ function PackageGBrowse()
 						$package['author']['website']['name'] = $default_website;
 
 					if ($thisPackage->exists('website') && $thisPackage->fetch('website') != '')
-						$authorhompage = $thisPackage->fetch('website');
+						$authorhompage = $smcFunc['htmlspecialchars']($thisPackage->fetch('website'));
 					else
 						$authorhompage = $default_website;
 
@@ -629,6 +629,8 @@ function PackageDownload()
 function PackageUpload()
 {
 	global $txt, $scripturl, $boarddir, $context, $sourcedir;
+
+	checkSession();
 
 	// Setup the correct template, even though I'll admit we ain't downloading ;)
 	$context['sub_template'] = 'downloaded';

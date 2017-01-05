@@ -983,13 +983,13 @@ WHERE id_group = 1;
 
 ---# Adjusting calendar maximum year.
 ---{
-if (!isset($modSettings['cal_maxyear']) || $modSettings['cal_maxyear'] == '2010')
+if (!isset($modSettings['cal_maxyear']) || $modSettings['cal_maxyear'] < 2030)
 {
 	upgrade_query("
 		REPLACE INTO {$db_prefix}settings
 			(variable, value)
 		VALUES
-			('cal_maxyear', '2020')");
+			('cal_maxyear', '2030')");
 }
 ---}
 ---#
