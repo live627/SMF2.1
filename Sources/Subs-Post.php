@@ -165,12 +165,6 @@ function preparsecode(&$message, $previewing = false)
 	// Clean up after nobbc ;).
 	$message = preg_replace_callback('~\[nobbc\](.+?)\[/nobbc\]~is', 'nobbc__preg_callback', $message);
 
-	// Remove empty bbc.
-	while (preg_match('~\[([^\]=\s]+)[^\]]*\]\s*\[/\1\]\s?~i', $message))
-	{
-		$message = preg_replace('~\[([^\]=\s]+)[^\]]*\]\s*\[/\1\]\s?~i', '', $message);
-	}
-
 	// Remove \r's... they're evil!
 	$message = strtr($message, array("\r" => ''));
 
