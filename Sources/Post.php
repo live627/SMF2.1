@@ -243,8 +243,8 @@ function Post()
 		// Set up the poll options.
 		$context['poll_options'] = array(
 			'max_votes' => empty($_POST['poll_max_votes']) ? '1' : max(1, $_POST['poll_max_votes']),
-			'hide' => empty($_POST['poll_hide']) ? 0 : $_POST['poll_hide'],
-			'expire' => !isset($_POST['poll_expire']) ? '' : $_POST['poll_expire'],
+			'hide' => empty($_POST['poll_hide']) ? 0 : (int) $_POST['poll_hide'],
+			'expire' => !isset($_POST['poll_expire']) ? '' : (int) $_POST['poll_expire'],
 			'change_vote' => isset($_POST['poll_change_vote']),
 			'guest_vote' => isset($_POST['poll_guest_vote']),
 			'guest_vote_enabled' => in_array(-1, $allowedVoteGroups['allowed']),
