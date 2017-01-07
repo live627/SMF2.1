@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.12
+ * @version 2.0.14
  */
 
 if (!defined('SMF'))
@@ -1214,9 +1214,9 @@ function loadMemberContext($user, $display_custom_fields = false)
 		'posts' => $profile['posts'] > 500000 ? $txt['geek'] : comma_format($profile['posts']),
 		'avatar' => array(
 			'name' => $profile['avatar'],
-			'image' => $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? '<img class="avatar" src="' . (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) . '" alt="" />' : '') : (stristr($profile['avatar'], 'http://') ? '<img class="avatar" src="' . $profile['avatar'] . '"' . $avatar_width . $avatar_height . ' alt="" />' : '<img class="avatar" src="' . $modSettings['avatar_url'] . '/' . htmlspecialchars($profile['avatar']) . '" alt="" />'),
-			'href' => $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) : '') : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar']),
-			'url' => $profile['avatar'] == '' ? '' : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar'])
+			'image' => $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? '<img class="avatar" src="' . (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) . '" alt="" />' : '') : ((stristr($profile['avatar'], 'http://') || stristr($profile['avatar'], 'https://')) ? '<img class="avatar" src="' . $profile['avatar'] . '"' . $avatar_width . $avatar_height . ' alt="" />' : '<img class="avatar" src="' . $modSettings['avatar_url'] . '/' . htmlspecialchars($profile['avatar']) . '" alt="" />'),
+			'href' => $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) : '') : ((stristr($profile['avatar'], 'http://') || stristr($profile['avatar'], 'https://')) ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar']),
+			'url' => $profile['avatar'] == '' ? '' : ((stristr($profile['avatar'], 'http://') || stristr($profile['avatar'], 'https://')) ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar'])
 		),
 		'last_login' => empty($profile['last_login']) ? $txt['never'] : timeformat($profile['last_login']),
 		'last_login_timestamp' => empty($profile['last_login']) ? 0 : forum_time(0, $profile['last_login']),
@@ -2459,7 +2459,7 @@ function sessionRead($session_id)
 	list ($sess_data) = $smcFunc['db_fetch_row']($result);
 	$smcFunc['db_free_result']($result);
 
-	return $sess_data;
+	return $sess_data != null ? $sess_data : '';
 }
 
 function sessionWrite($session_id, $data)
@@ -2490,7 +2490,7 @@ function sessionWrite($session_id, $data)
 			array('session_id')
 		);
 
-	return $result;
+	return true;
 }
 
 function sessionDestroy($session_id)
@@ -2501,13 +2501,15 @@ function sessionDestroy($session_id)
 		return false;
 
 	// Just delete the row...
-	return $smcFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}sessions
 		WHERE session_id = {string:session_id}',
 		array(
 			'session_id' => $session_id,
 		)
 	);
+
+	return true;
 }
 
 function sessionGC($max_lifetime)
@@ -2519,13 +2521,15 @@ function sessionGC($max_lifetime)
 		$max_lifetime = max($modSettings['databaseSession_lifetime'], 60);
 
 	// Clean up ;).
-	return $smcFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}sessions
 		WHERE last_update < {int:last_update}',
 		array(
 			'last_update' => time() - $max_lifetime,
 		)
 	);
+
+	return $smcFunc['db_affected_rows']() != 0;
 }
 
 // Load up a database connection.
