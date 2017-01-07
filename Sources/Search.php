@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.9
+ * @version 2.0.14
  */
 
 if (!defined('SMF'))
@@ -2059,14 +2059,9 @@ function prepareSearchContext($reset = false)
 		}
 	}
 
-	foreach ($context['key_words'] as $query)
-	{
-		// Fix the international characters in the keyword too.
-		$query = strtr($smcFunc['htmlspecialchars']($query), array('\\\'' => '\''));
-
-		$body_highlighted = preg_replace_callback('/((<[^>]*)|' . preg_quote(strtr($query, array('\'' => '&#039;')), '/') . ')/i' . ($context['utf8'] ? 'u' : ''), 'search_highlight__preg_callback', $body_highlighted);
-		$subject_highlighted = preg_replace('/(' . preg_quote($query, '/') . ')/i' . ($context['utf8'] ? 'u' : ''), '<strong class="highlight">$1</strong>', $subject_highlighted);
-	}
+	
+	$body_highlighted = highlight($message['body'], $context['key_words']);
+	$subject_highlighted = highlight($message['subject'], $context['key_words']);
 
 	$output['matches'][] = array(
 		'id' => $message['id_msg'],
@@ -2102,8 +2097,24 @@ function searchSort($a, $b)
 	return $searchAPI->searchSort($a, $b);
 }
 
-function search_highlight__preg_callback($matches)
+/**
+ * Highlighting matching string
+ *
+ * @param string $text Text to search through
+ * @param array $words List of keywords to search
+ *
+ * @return string Text with highlighted keywords
+ */
+function highlight($text, array $words)
 {
-	return isset($matches[2]) && $matches[2] == $matches[1] ? stripslashes($matches[1]) : '<strong class="highlight">' . $matches[1] . '</strong>';
+	$words = implode('|', array_map('preg_quote', $words));
+	$highlighted = preg_filter('/' . $words . '/i', '<span class="highlight">$0</span>', $text);
+	if (!empty($highlighted))
+	{
+		$text = $highlighted;
+	}
+
+	return $text;
 }
+
 ?>
