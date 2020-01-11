@@ -4,23 +4,38 @@ sudo: required
 language: php
 
 php:
-  - 5.4
-  - 5.5
   - 5.6
-  - 7.0
-  - 7.1
   - 7.2
-  - 7.3
-  - 7.4
+env:
+  - DB=mysql
+  - DB=postgres
+services:
+  - memcached
+  - mysql
+  - postgresql
+jobs:
+  include:
+    - stage: File integrity
+      php: 5.6
+      install: skip
+      before_install:
+       - git submodule foreach git pull origin master
+       - if find . -name "*.php" ! -path "./vendor/*" -exec php -l {} 2>&1 \; | grep "syntax error, unexpected"; then exit 1; fi
+       - if php other/buildTools/check-signed-off.php travis | grep "Error:"; then php other/buildTools/check-signed-off.php travis; exit 1; fi
+       - if php other/buildTools/check-version.php | grep "Error:"; then exit 1; fi
+       - if find . -name "*.php" -exec php other/buildTools/check-smf-license.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
+       - if find . -name "./Themes/default/languages/*.english.php" -exec php other/buildTools/check-smf-langauge.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
+      - if find . -name "*.php" -exec php other/buildTools/check-eof.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
 
-script:
-  - sudo add-apt-repository ppa:git-core/ppa -y
-  - sudo apt-get update
-  - sudo apt-get install git
-  - git submodule foreach git pull origin master
-  - if find . -name "*.php" ! -path "./vendor/*" -exec php -l {} 2>&1 \; | grep "syntax error, unexpected"; then exit 1; fi
-  - if php other/buildTools/check-signed-off.php travis | grep "Error:"; then php other/buildTools/check-signed-off.php travis; exit 1; fi
-  - if php other/buildTools/check-version.php | grep "Error:"; then exit 1; fi
-  - if find . -name "*.php" -exec php other/buildTools/check-smf-license.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
-  - if find . -name "./Themes/default/languages/*.english.php" -exec php other/buildTools/check-smf-langauge.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
-  - if find . -name "*.php" -exec php other/buildTools/check-eof.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
+
+before_install:
+  - sh -c "if [ '$DB' = 'postgres' ]; then psql -c 'CREATE DATABASE smf;' -U postgres; fi"
+  - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE smf;'; fi"
+
+install: composer install
+
+script: phpunit
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
