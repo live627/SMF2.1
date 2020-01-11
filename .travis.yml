@@ -10,7 +10,7 @@ services:
   - memcached
   - mysql
   - postgresql
-  stages:
+stages:
   - File integrity
   - test
 jobs:
