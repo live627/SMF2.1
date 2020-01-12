@@ -1,3 +1,15 @@
 #!/bin/bash
 
-find . -exec echo {} \; -exec grep banana {} \;
+reldir=`dirname $0`
+cd $reldir
+directory=`pwd`
+
+echo "Directory is $directory"
+
+find . -type f -name '*.php"
+ ! -path "./vendor/*"
+ ! -path "./other/*'
+  -print0 |
+while IFS= read -r -d '' file; do
+    printf '%s\n' "$file"
+done
