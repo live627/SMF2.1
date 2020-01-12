@@ -1,0 +1,10 @@
+#!/bin/bash
+
+while IFS= read -r -d '' file; do
+    # single filename is in $file
+    echo "$file"
+    # your code here
+done < <(find . -name "*.php"
+! -path "./vendor/*"
+! -path "./other/*"
+ -print0)
