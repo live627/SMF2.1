@@ -1,6 +1,6 @@
 #!/bin/bash
 
-find . -type f -name '*.php" ! -path "./vendor/*" ! -path "./other/*' |
+find . -type f -name "*.php" ! -path "./vendor/*" ! -path "./other/*" |
 while IFS= read -r -d '' file; do
     printf '%s\n' "$file"
 done
