@@ -7,8 +7,7 @@ directory=`pwd`
 
 echo "Directory is $directory"
 
-find . -type f -name "*.php" ! -path "./vendor/*"
- ! -path "./other/*" |
+find . -type f -name "*.php" ! -path "./vendor/*" |
 while IFS= read -r -d '' file; do
     printf '%s\n' "$file"
     tail -c 100 $file  # returns the last 100 bytes in the file
