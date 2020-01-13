@@ -10,6 +10,4 @@ echo "Directory is $directory"
 find . -type f -name "*.php" ! -path "./vendor/*" ! -path "./other/*" |
 while IFS= read -r -d '' file; do
     printf '%s\n' "$file"
-    tag=$( tail -c 100 ${file} ) # returns the last 100 bytes in the file
-    printf '%s\n' "$tag"
 done
