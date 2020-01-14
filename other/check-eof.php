@@ -48,7 +48,7 @@ $ignoreFiles = array(
 foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('.')) as $currentFile => $fileInfo)
 {
 	foreach ($ignoreFiles as $if)
-		if ($fileInfo->getExtension() == 'php' && !preg_match('~' . $if . '~i', $currentFile)
+		if ($fileInfo->getExtension() == 'php' && !preg_match('~' . $if . '~i', $currentFile))
 		{
 			$file = fopen($currentFile, 'r');
 
