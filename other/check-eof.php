@@ -75,7 +75,7 @@ if (preg_match('~\?>\s+$~', $contents, $matches))
 	die('Error: End of File contains extra spaces in ' . $currentFile . "\n");
 
 // Test to see if its there even, SMF 2.1 base package needs it there in our main files to allow package manager to properly handle end operations.  Customizations do not need it.
-if (strrpos('?>', $contents, -2) === false)
+if (strrpos($contents, '?>', -2) === false)
 	die('Error: End of File missing in ' . $currentFile . "\n");
 
 // Test to see if a function/class ending is here but with no return (because we are OCD).
