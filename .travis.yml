@@ -23,7 +23,7 @@ jobs:
        - if find . -name "*.php" -exec php other/buildTools/check-smf-license.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
        - if find . -name "./Themes/default/languages/*.english.php" -exec php other/buildTools/check-smf-langauge.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
        - if find . -name "*.php" -exec php other/buildTools/check-eof.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
-       - if php other/check-eof.php | grep "Error:" then exit 1 fi
+       - if php other/check-eof.php | grep "Error:"; then exit 1; fi
       install: skip
       script: skip
       after_script: skip
@@ -33,7 +33,7 @@ before_install:
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE smf;'; fi"
   - cp ./other/*.* .
 
-install: php -f install.php -- -u test -p test --dbname smf --dbuser travis
+install: php -f install.php --  -u test -p test --dbname smf --dbuser travis
 
 script: phpunit
 
