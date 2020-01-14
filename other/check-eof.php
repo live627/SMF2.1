@@ -86,3 +86,5 @@ if (preg_match('~}([\r]?\n)?\?>~', $contents, $matches))
 // Test to see if a string ending is here but with no return (because we are OCD).
 if (preg_match('~;([\r]?\n)?\?>~', $contents, $matches))
 	echo('Error: Incorrect return(s) after last string but before EOF in ' . $currentFile . "\n");
+
+	?>
