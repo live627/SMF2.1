@@ -78,4 +78,4 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('.')) as $
 		}
 }
 
-?>>
+?>
