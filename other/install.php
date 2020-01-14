@@ -49,7 +49,7 @@ $databases = array(
 			return true;
 		},
 		'utf8_version' => '5.0.22',
-		'utf8_version_check' => 'echo mysqli_get_server_version($db_connection);echo mysqli_get_server_info($db_connection);return mysqli_get_server_info($db_connection);',
+		'utf8_version_check' => 'return mysqli_get_server_info($db_connection);',
 		'utf8_default' => true,
 		'utf8_required' => true,
 		'alter_support' => true,
@@ -1115,7 +1115,7 @@ function ForumSettings()
 				$incontext['error'] = sprintf($txt['error_utf8_support']);
 				return false;
 			}
-
+echo mysqli_get_server_version($db_connection);echo mysqli_get_server_info($db_connection);
 			if (!empty($databases[$db_type]['utf8_version_check']) && version_compare($databases[$db_type]['utf8_version'], preg_replace('~\-.+?$~', '', eval($databases[$db_type]['utf8_version_check'])), '>'))
 			{
 				$incontext['error'] = sprintf($txt['error_utf8_version'], $databases[$db_type]['utf8_version']);
