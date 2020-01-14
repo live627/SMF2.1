@@ -129,30 +129,88 @@ $incontext['current_step'] = isset($_GET['step']) ? (int) $_GET['step'] : 0;
 
 // Loop through all the steps doing each one as required.
 $incontext['overall_percent'] = 0;
-
-foreach ($incontext['steps'] as $num => $step)
+if ('cli' === PHP_SAPI)
 {
-	if ($num >= $incontext['current_step'])
+	$options = getopt('n:u:p:e', ['dbtype:', 'dbserver:', 'dbuser:', 'dbpass:', 'dbname:', 'dbprefix:', 'boardurl:']);
+
+	if (isset($options['u'], $options['p'], $options['dbname'], $options['dbuser']))
 	{
-		// The current weight of this step in terms of overall progress.
-		$incontext['step_weight'] = $step[3];
-		// Make sure we reset the skip button.
-		$incontext['skip'] = false;
+		$_POST = array(
+			'contbutt' => '1',
+			'mbname' => $options['n'] ?? 'My Commnunity',
+			'boardurl' => $options['boardurl'] ?? 'http://127.0.0.1/smf',
+			'username' => $options['u'],
+			'password1' => $options['p'],
+			'password2' => $options['p'],
+			'email' => $options['e'] ?? 'noreply@myserver.com',
+			'server_email' => $options['e'] ?? 'noreply@myserver.com',
+			'db_type' => $options['dbtype'] ?? 'mysql',
+			'db_name' => $options['dbname'],
+			'db_user' => $options['dbuser'],
+			'db_passwd' => isset($options['dbpasswd']) ? $options['dbpasswd'] : '',
+			'db_server' => $options['dbserver'] ?? '127.0.0.1',
+			'db_prefix' => $options['dbprefix'] ?? 'smf_',
+		);
+		foreach ($incontext['steps'] as $num => $step)
+		{
+			if (function_exists($step[2]))
+			{
+				$step[2]();
 
-		// Call the step and if it returns false that means pause!
-		if (function_exists($step[2]) && $step[2]() === false)
-			break;
-		elseif (function_exists($step[2]))
-			$incontext['current_step']++;
+				if (!empty($incontext['error']))
+				{
+					echo $incontext['error'], "\n";
+					break;
+				}
+				elseif (!empty($incontext['warning']))
+				{
+					echo $incontext['warning'], "\n";
+					break;
+				}
+				if (!empty($incontext['sql_results']))
+				{
+					echo implode("\n", $incontext['sql_results']);
 
-		// No warnings pass on.
-		$incontext['warning'] = '';
+					if (!empty($incontext['failures']))
+					{
+						echo $txt['error_db_queries'], "\n\n";
+
+						foreach ($incontext['failures'] as $line => $fail)
+							echo $txt['error_db_queries_line'], $line + 1, ': ', $fail, "\n\n";
+
+						break;
+					}
+				}
+			}
+		}
 	}
-	$incontext['overall_percent'] += $step[3];
 }
+else
+{
+	foreach ($incontext['steps'] as $num => $step)
+	{
+		if ($num >= $incontext['current_step'])
+		{
+			// The current weight of this step in terms of overall progress.
+			$incontext['step_weight'] = $step[3];
+			// Make sure we reset the skip button.
+			$incontext['skip'] = false;
 
-// Actually do the template stuff.
-installExit();
+			// Call the step and if it returns false that means pause!
+			if (function_exists($step[2]) && $step[2]() === false)
+				break;
+			elseif (function_exists($step[2]))
+				$incontext['current_step']++;
+
+			// No warnings pass on.
+			$incontext['warning'] = '';
+		}
+		$incontext['overall_percent'] += $step[3];
+	}
+
+	// Actually do the template stuff.
+	installExit();
+}
 
 function initialize_inputs()
 {

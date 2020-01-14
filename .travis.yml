@@ -1,5 +1,5 @@
 language: php
-sudo: required
+
 php:
   - 5.6
   - 7.2
@@ -25,16 +25,17 @@ jobs:
        - if find . -name "*.php" -exec php other/buildTools/check-smf-license.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
        - if find . -name "./Themes/default/languages/*.english.php" -exec php other/buildTools/check-smf-langauge.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
        - if find . -name "*.php" -exec php other/buildTools/check-eof.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
-       - chmod +x other/check-eof
+       - if find . -name "*.php" -exec php other/check-eof.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
       install: skip
-      script: other/check-eof
+      script: skip
       after_script: skip
 
 before_install:
   - sh -c "if [ '$DB' = 'postgres' ]; then psql -c 'CREATE DATABASE smf;' -U postgres; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE smf;'; fi"
+  - cp ./other/* .
 
-install: php -f install.php
+install: php -f install.php -u test -p test --dbname smf --dbuser travis
 
 script: phpunit
 
