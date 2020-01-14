@@ -45,46 +45,37 @@ $ignoreFiles = array(
 	'\./db_last_error.php',
 );
 
-// No file? Thats bad.
-if (!isset($_SERVER['argv'], $_SERVER['argv'][1]))
-	die('Error: No File specified' . "\n");
+foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('.')) as $currentFile => $fileInfo)
+{
+	foreach ($ignoreFiles as $if)
+		if ($fileInfo->getExtension() == 'php' && !preg_match('~' . $if . '~i', $currentFile)
+		{
+			$file = fopen($currentFile, 'r');
 
-// The file has to exist.
-$currentFile = $_SERVER['argv'][1];
-if (!file_exists($currentFile))
-	die('Error: File does not exist' . "\n");
+			// Error?
+			if ($file === false)
+				die('Error: Unable to open file ' . $currentFile . "\n");
 
-// Is this ignored?
-$count_all = count($ignoreFiles);
-for($i=0;$i<$count_all;$i++)
-	if (preg_match('~' . $ignoreFiles[$i] . '~i', $currentFile))
-		die;
+			// Seek the end minus some bytes.
+			fseek($file, -100, SEEK_END);
+			$contents = fread($file, 100);
 
-// Less efficent than opening a file with fopen, but we want to be sure to get the right end of the file. file_get_contents
-$file = fopen($currentFile, 'r');
+			// There is some white space here.
+			if (preg_match('~\?>\s+$~', $contents, $matches))
+				die('Error: End of File contains extra spaces in ' . $currentFile . "\n");
 
-// Error?
-if ($file === false)
-	die('Error: Unable to open file ' . $currentFile . "\n");
+			// Test to see if its there even, SMF 2.1 base package needs it there in our main files to allow package manager to properly handle end operations.  Customizations do not need it.
+			if (!preg_match('~\?>$~', $contents, $matches))
+				die('Error: End of File missing in ' . $currentFile . "\n");
 
-// Seek the end minus some bytes.
-fseek($file, -100, SEEK_END);
-$contents = fread($file, 100);
+			// Test to see if a function/class ending is here but with no return (because we are OCD).
+			if (preg_match('~}([\r]?\n)?\?>~', $contents, $matches))
+				echo('Error: Incorrect return(s) after last function/class but before EOF in ' . $currentFile . "\n");
 
-// There is some white space here.
-if (preg_match('~\?>\s+$~', $contents, $matches))
-	die('Error: End of File contains extra spaces in ' . $currentFile . "\n");
+			// Test to see if a string ending is here but with no return (because we are OCD).
+			if (preg_match('~;([\r]?\n)?\?>~', $contents, $matches))
+				echo('Error: Incorrect return(s) after last string but before EOF in ' . $currentFile . "\n");
+		}
+}
 
-// Test to see if its there even, SMF 2.1 base package needs it there in our main files to allow package manager to properly handle end operations.  Customizations do not need it.
-if (!preg_match('~\?>$~', $contents, $matches))
-	die('Error: End of File missing in ' . $currentFile . "\n");
-
-// Test to see if a function/class ending is here but with no return (because we are OCD).
-if (preg_match('~}([\r]?\n)?\?>~', $contents, $matches))
-	echo('Error: Incorrect return(s) after last function/class but before EOF in ' . $currentFile . "\n");
-
-// Test to see if a string ending is here but with no return (because we are OCD).
-if (preg_match('~;([\r]?\n)?\?>~', $contents, $matches))
-	echo('Error: Incorrect return(s) after last string but before EOF in ' . $currentFile . "\n");
-
-	?>
+?>>
