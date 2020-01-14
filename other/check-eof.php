@@ -47,35 +47,38 @@ $ignoreFiles = array(
 
 foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('.')) as $currentFile => $fileInfo)
 {
-	foreach ($ignoreFiles as $if)
-		if ($fileInfo->getExtension() == 'php' && !preg_match('~' . $if . '~i', $currentFile))
-		{
-			$file = fopen($currentFile, 'r');
+	if ($fileInfo->getExtension() == 'php')
+	{
+		foreach ($ignoreFiles as $if)
+			if (preg_match('~' . $if . '~i', $currentFile))
+				continue 2;
 
-			// Error?
-			if ($file === false)
-				die('Error: Unable to open file ' . $currentFile . "\n");
+		$file = fopen($currentFile, 'r');
 
-			// Seek the end minus some bytes.
-			fseek($file, -100, SEEK_END);
-			$contents = fread($file, 100);
+		// Error?
+		if ($file === false)
+			die('Error: Unable to open file ' . $currentFile . "\n");
 
-			// There is some white space here.
-			if (preg_match('~\?>\s+$~', $contents, $matches))
-				die('Error: End of File contains extra spaces in ' . $currentFile . "\n");
+		// Seek the end minus some bytes.
+		fseek($file, -100, SEEK_END);
+		$contents = fread($file, 100);
 
-			// Test to see if its there even, SMF 2.1 base package needs it there in our main files to allow package manager to properly handle end operations.  Customizations do not need it.
-			if (!preg_match('~\?>$~', $contents, $matches))
-				die('Error: End of File missing in ' . $currentFile . "\n");
+		// There is some white space here.
+		if (preg_match('~\?>\s+$~', $contents, $matches))
+			die('Error: End of File contains extra spaces in ' . $currentFile . "\n");
 
-			// Test to see if a function/class ending is here but with no return (because we are OCD).
-			if (preg_match('~}([\r]?\n)?\?>~', $contents, $matches))
-				echo('Error: Incorrect return(s) after last function/class but before EOF in ' . $currentFile . "\n");
+		// Test to see if its there even, SMF 2.1 base package needs it there in our main files to allow package manager to properly handle end operations.  Customizations do not need it.
+		if (!preg_match('~\?>$~', $contents, $matches))
+			die('Error: End of File missing in ' . $currentFile . "\n");
 
-			// Test to see if a string ending is here but with no return (because we are OCD).
-			if (preg_match('~;([\r]?\n)?\?>~', $contents, $matches))
-				echo('Error: Incorrect return(s) after last string but before EOF in ' . $currentFile . "\n");
-		}
+		// Test to see if a function/class ending is here but with no return (because we are OCD).
+		if (preg_match('~}([\r]?\n)?\?>~', $contents, $matches))
+			echo('Error: Incorrect return(s) after last function/class but before EOF in ' . $currentFile . "\n");
+
+		// Test to see if a string ending is here but with no return (because we are OCD).
+		if (preg_match('~;([\r]?\n)?\?>~', $contents, $matches))
+			echo('Error: Incorrect return(s) after last string but before EOF in ' . $currentFile . "\n");
+	}
 }
 
 ?>
