@@ -19,7 +19,7 @@ $ignoreFiles = array(
 	// Cache and miscellaneous.
 	'\./cache/data_[A-Za-z0-9-_]\.php',
 	'\./other/db_last_error.php',
-	'\./tests/[A-Za-z0-9-_]\.php',
+	'\./tests/[A-Za-z0-9-_]+.php',
 
 	// Installer and ugprade are not a worry.
 	'\./other/install.php',
