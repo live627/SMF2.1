@@ -639,7 +639,7 @@ class BBCTest extends BaseTestCase
 	 */
 	public function testLegacyBBC($tag, $test, $expected)
 	{
-		$result = preparsecode($test);
+		preparsecode($test);
 		$this->assertEquals($expected, $test);
 
 		//~ $result = parse_bbc($test, false);

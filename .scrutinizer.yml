@@ -2,6 +2,7 @@ filter:
     excluded_paths:
         - '*.min.js'
         - 'Sources/minify/*'
+        - 'Sources/random_compat/*'
         - 'Sources/ReCaptcha/*'
 checks:
     php:

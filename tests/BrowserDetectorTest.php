@@ -10,7 +10,12 @@ class BrowserDetectorTest extends BaseTestCase
 	{
 		global $sourcedir;
 
-	require_once($sourcedir . '/Class-BrowserDetect.php');
+		require_once($sourcedir . '/Class-BrowserDetect.php');
+	}
+
+	protected function tearDown()
+	{
+		$_SERVER['HTTP_USER_AGENT'] = '';
 	}
 
 	public function data()

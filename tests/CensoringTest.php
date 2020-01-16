@@ -8,8 +8,8 @@ class CensoringTest extends BaseTestCase
 			'This' => array('This' => 'not_case_this'),
 			'ex' => array('ex' => 'not_ex'),
 		);
-		
-	function keepCaseWholeWordProvider()
+
+	public function keepCaseWholeWordProvider()
 	{
 		return[
 			['This is some jumbled text', 'not_case_this is some jumbled text'],
@@ -17,11 +17,11 @@ class CensoringTest extends BaseTestCase
 			['foobar', 'foobar'],
 		];
 	}
-	
+
 	/**
 	 * @dataProvider keepCaseWholeWordProvider
 	 */
-	function testWholeWordsCaseSensitive($inputText, $expected)
+	public function testWholeWordsCaseSensitive($inputText, $expected)
 	{
 		global $modSettings;
 
@@ -33,7 +33,7 @@ class CensoringTest extends BaseTestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-	function wholeWordsCaseInsensitiveProvider()
+	public function wholeWordsCaseInsensitiveProvider()
 	{
 		return[
 			['This is some jumbled text', 'not_this is some jumbled text'],
@@ -45,7 +45,7 @@ class CensoringTest extends BaseTestCase
 	/**
 	 * @dataProvider wholeWordsCaseInsensitiveProvider
 	 */
-	function testWholeWordsCaseInsensitive($inputText, $expected)
+	public function testWholeWordsCaseInsensitive($inputText, $expected)
 	{
 		global $modSettings;
 
@@ -57,7 +57,7 @@ class CensoringTest extends BaseTestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-	function notWholeWordsCaseSensitiveProvider()
+	public function notWholeWordsCaseSensitiveProvider()
 	{
 		return[
 			['This is some jumbled text', 'not_case_this is some jumbled tnot_ext'],
@@ -70,7 +70,7 @@ class CensoringTest extends BaseTestCase
 	/**
 	 * @dataProvider notWholeWordsCaseSensitiveProvider
 	 */
-	function testNotWholeWordsCaseSensitive($inputText, $expected)
+	public function testNotWholeWordsCaseSensitive($inputText, $expected)
 	{
 		global $modSettings;
 
@@ -82,7 +82,7 @@ class CensoringTest extends BaseTestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-	function notWholeWordsCaseInsensitiveProvider()
+	public function notWholeWordsCaseInsensitiveProvider()
 	{
 		return[
 			['This is some jumbled text', 'not_not_case_this is some jumbled tnot_ext'],
@@ -95,19 +95,19 @@ class CensoringTest extends BaseTestCase
 	/**
 	 * @dataProvider notWholeWordsCaseInsensitiveProvider
 	 */
-	function testNotWholeWordsCaseInsensitive($inputText, $expected)
+	public function testNotWholeWordsCaseInsensitive($inputText, $expected)
 	{
 		global $modSettings;
 
 		$modSettings['censorWholeWord'] = false;
 		$modSettings['censorIgnoreCase'] = true;
-		
+
 		$actual = censorText($inputText);
 
 		$this->assertEquals($expected, $actual);
 	}
 
-	function setUp()
+	public function setUp()
 	{
 		global $modSettings;
 
