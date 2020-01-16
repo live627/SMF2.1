@@ -52,6 +52,6 @@ class TestxmlArray extends BaseTestCase
 		$cdatalessResult = preg_replace('#<!\[CDATA\[(.+?)\]\]>#s', '$1', $result->create_xml());
 
 		// Remove whitespace since they no longer match.
-		$this->assertEquals(preg_replace('/\s\s+/', '', $xml),preg_replace('/\s\s+/', '', $cdatalessResult));
+		$this->assertEquals(preg_replace('/\s\s+/', '', $xml), preg_replace('/\s\s+/', '', $cdatalessResult));
 	}
 }

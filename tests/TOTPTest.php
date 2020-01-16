@@ -14,27 +14,27 @@ class TOTPTest extends BaseTestCase
 		require_once($sourcedir . '/Class-TOTP.php');
 	}
 
-	public function test_instantiate () {
+	public function test_instantiate() {
 		$auth = new Auth();
 		$this->assertInstanceOf(Auth::class, $auth);
 	}
 
 
-	public function test_invalid_init_key_fails () {
+	public function test_invalid_init_key_fails() {
 
 		$this->expectException(InvalidArgumentException::class, 'Invalid base32 hash!');
 		new Auth('~');
 	}
 
 
-	public function test_valid_init_key_gets_set () {
+	public function test_valid_init_key_gets_set() {
 		$key = 'ABC';
 		$auth = new Auth($key);
 		$this->assertEquals($key, $auth->getInitKey(), 'Valid key can be got');
 	}
 
 
-	public function test_base64_lookup_is_correct () {
+	public function test_base64_lookup_is_correct() {
 
 		$expected = $this->base64values;
 
@@ -43,7 +43,7 @@ class TOTPTest extends BaseTestCase
 	}
 
 
-	public function test_get_and_set_range () {
+	public function test_get_and_set_range() {
 
 		$range = 54;
 		$auth = new Auth();
@@ -51,7 +51,7 @@ class TOTPTest extends BaseTestCase
 		$this->assertEquals($range, $auth->getRange(), 'Range is set correctly');
 	}
 
-	public function test_invalid_range_fails () {
+	public function test_invalid_range_fails() {
 
 		$this->expectException(InvalidArgumentException::class);
 		$auth = new Auth();
@@ -60,7 +60,7 @@ class TOTPTest extends BaseTestCase
 	}
 
 
-	public function test_set_and_get_refresh () {
+	public function test_set_and_get_refresh() {
 
 		$refresh = 43;
 		$auth = new Auth();
@@ -70,7 +70,7 @@ class TOTPTest extends BaseTestCase
 	}
 
 
-	public function test_invalid_refresh_fails () {
+	public function test_invalid_refresh_fails() {
 
 		$this->expectException(InvalidArgumentException::class);
 		$auth = new Auth();
@@ -79,7 +79,7 @@ class TOTPTest extends BaseTestCase
 	}
 
 
-	public function test_set_and_get_code_length () {
+	public function test_set_and_get_code_length() {
 
 		$length = 123;
 		$auth = new Auth();
@@ -88,7 +88,7 @@ class TOTPTest extends BaseTestCase
 	}
 
 
-	public function test_generate_a_init_code () {
+	public function test_generate_a_init_code() {
 
 		$auth = new Auth();
 		$code = $auth->generateCode();
@@ -103,14 +103,14 @@ class TOTPTest extends BaseTestCase
 	}
 
 
-	public function test_generate_a_code_of_length () {
+	public function test_generate_a_code_of_length() {
 		$auth = new Auth();
 		$code = $auth->generateCode(4);
 		$this->assertEquals(4, strlen($code), 'Default code is 16 chars');
 	}
 
 
-	public function test_validate_a_valid_code () {
+	public function test_validate_a_valid_code() {
 
 		$key = 'ABC';
 		$auth = new Auth($key);
@@ -123,7 +123,7 @@ class TOTPTest extends BaseTestCase
 	}
 
 
-	public function test_validate_a_valid_code_false_when_out_of_range () {
+	public function test_validate_a_valid_code_false_when_out_of_range() {
 
 		$key = 'ABC';
 		$code = '424535';
@@ -137,7 +137,7 @@ class TOTPTest extends BaseTestCase
 	}
 
 
-	public function test_validate_a_code_of_wrong_length_fails () {
+	public function test_validate_a_code_of_wrong_length_fails() {
 
 		$this->expectException(InvalidArgumentException::class);
 
@@ -148,7 +148,7 @@ class TOTPTest extends BaseTestCase
 	}
 
 
-	public function test_validate_with_different_init_key_is_false () {
+	public function test_validate_with_different_init_key_is_false() {
 
 		$key = 'DEF';
 		$auth = new Auth($key);
@@ -161,7 +161,7 @@ class TOTPTest extends BaseTestCase
 	}
 
 
-	public function test_validate_after_time_has_passed_is_false () {
+	public function test_validate_after_time_has_passed_is_false() {
 
 		$key = 'ABC';
 		$auth = new Auth($key);

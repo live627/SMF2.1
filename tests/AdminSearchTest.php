@@ -54,12 +54,12 @@ class TestAdminSearch extends BaseTestCase
 
 		return array_filter(
 			array_map(
-				function ($search_result)
+				function($search_result)
 				{
 					return array($search_result['url'], strtolower($search_result['name']));
 				}, $context['search_results']
 			),
-			function ($search_result) use ($context)
+			function($search_result) use ($context)
 			{
 				return stripos($search_result[1], $context['search_term']) !== false;
 			}
