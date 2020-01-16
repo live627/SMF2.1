@@ -13,3 +13,4 @@ if (!array_key_exists('db_add_column', $smcFunc)) {
 require_once "./vendor/autoload.php";
 loadSession();
 loadTheme();
+$db_show_debug = true;

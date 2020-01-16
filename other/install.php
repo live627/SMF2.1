@@ -221,9 +221,6 @@ function initialize_inputs()
 	if (!isset($_SERVER['PHP_SELF']))
 		$_SERVER['PHP_SELF'] = isset($GLOBALS['HTTP_SERVER_VARS']['PHP_SELF']) ? $GLOBALS['HTTP_SERVER_VARS']['PHP_SELF'] : 'install.php';
 
-	// Enable error reporting for fatal errors.
-	error_reporting(E_ERROR | E_PARSE);
-
 	// Fun.  Low PHP version...
 	if (!isset($_GET))
 	{
@@ -233,8 +230,6 @@ function initialize_inputs()
 
 	if (!isset($_GET['obgz']))
 	{
-		ob_start();
-
 		if (ini_get('session.save_handler') == 'user')
 			@ini_set('session.save_handler', 'files');
 		if (function_exists('session_start'))
@@ -242,8 +237,6 @@ function initialize_inputs()
 	}
 	else
 	{
-		ob_start('ob_gzhandler');
-
 		if (ini_get('session.save_handler') == 'user')
 			@ini_set('session.save_handler', 'files');
 		session_start();

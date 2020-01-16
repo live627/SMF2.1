@@ -84,14 +84,16 @@ class TestSettingsForm extends BaseTestCase
 		$this->assertEquals(7, $context['config_vars'][$this->configVars[12][1]]['size']);
 		$this->assertEquals(0, $context['config_vars'][$this->configVars[5][1]]['size']);
 		$this->assertContains(array('tag' => 'b', 'show_help' => false), $context['bbc_sections'][$this->configVars[9][1]]['columns'][0]);
-		$context['config_vars'][$this->configVars[6][1]]['name'] = str_replace('[]', '', $context['config_vars'][$this->configVars[6][1]]['name']);
 		foreach ($this->configVars as $configVar)
 		{
 			if (is_array($configVar))
 			{
 				$this->assertTrue(isset($context['config_vars'][$configVar[1]]));
 				$this->assertSame($configVar[0], $context['config_vars'][$configVar[1]]['type']);
-				$this->assertSame($configVar[1], $context['config_vars'][$configVar[1]]['name']);
+				if ($configVar[0] == 'select' && !empty($configVar['multiple']))
+					$this->assertSame($configVar[1] . '[]', $context['config_vars'][$configVar[1]]['name']);
+				else
+					$this->assertSame($configVar[1], $context['config_vars'][$configVar[1]]['name']);
 			}
 		}
 		$context[$this->configVars[8][1]] = array_slice($context[$this->configVars[8][1]], 0, 3, true);

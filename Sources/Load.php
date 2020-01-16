@@ -3120,7 +3120,7 @@ function censorText(&$text, $force = false)
 		return $text;
 
 	// If they haven't yet been loaded, load them.
-	if ($censor_vulgar == null)
+	//if ($censor_vulgar == null)
 	{
 		$censor_vulgar = explode("\n", $modSettings['censor_vulgar']);
 		$censor_proper = explode("\n", $modSettings['censor_proper']);

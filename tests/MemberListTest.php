@@ -9,6 +9,7 @@ class TestMemberList extends BaseTestCase
 		global $context, $sourcedir, $user_info;
 
 		require_once($sourcedir . '/Memberlist.php');
+		$user_info['permissions'][] = 'view_mlist';
 	}
 
 	public function testActionIndexMembers()
