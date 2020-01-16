@@ -594,7 +594,7 @@ class BBCTest extends BaseTestCase
 			['tt',
 				'[tt]blah[/tt]',
 				'&#91;tt]blah&#91;/tt]',
-				'<span class="monospace">blah</span>',],
+				'<span class="monospace">blah</span>', ],
 			['flash',
 				'[flash]blah[/flash]',
 				'&#91;flash]http://blah&#91;/flash]'],

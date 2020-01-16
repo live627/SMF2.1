@@ -12,9 +12,9 @@ class CensoringTest extends BaseTestCase
 	function keepCaseWholeWordProvider()
 	{
 		return[
-			['This is some jumbled text','not_case_this is some jumbled text'],
-			['Example of random text','Example of random text'],
-			['foobar','foobar'],
+			['This is some jumbled text', 'not_case_this is some jumbled text'],
+			['Example of random text', 'Example of random text'],
+			['foobar', 'foobar'],
 		];
 	}
 	
@@ -36,9 +36,9 @@ class CensoringTest extends BaseTestCase
 	function wholeWordsCaseInsensitiveProvider()
 	{
 		return[
-			['This is some jumbled text','not_this is some jumbled text'],
-			['Example of random text','Example of random text'],
-			['foobar','foobar'],
+			['This is some jumbled text', 'not_this is some jumbled text'],
+			['Example of random text', 'Example of random text'],
+			['foobar', 'foobar'],
 		];
 	}
 
@@ -60,10 +60,10 @@ class CensoringTest extends BaseTestCase
 	function notWholeWordsCaseSensitiveProvider()
 	{
 		return[
-			['This is some jumbled text','not_case_this is some jumbled tnot_ext'],
-			['All hell breaks loose in this here set of example texts','All hell breaks loose in not_this here set of not_example tnot_exts'],
-			['Example of random text','Example of random tnot_ext'],
-			['foobar','foobar'],
+			['This is some jumbled text', 'not_case_this is some jumbled tnot_ext'],
+			['All hell breaks loose in this here set of example texts', 'All hell breaks loose in not_this here set of not_example tnot_exts'],
+			['Example of random text', 'Example of random tnot_ext'],
+			['foobar', 'foobar'],
 		];
 	}
 
@@ -85,10 +85,10 @@ class CensoringTest extends BaseTestCase
 	function notWholeWordsCaseInsensitiveProvider()
 	{
 		return[
-			['This is some jumbled text','not_not_case_this is some jumbled tnot_ext'],
-			['All hell breaks loose in this here set of example texts','All hell breaks loose in not_not_case_this here set of not_example tnot_exts'],
-			['Example of random text','not_example of random tnot_ext'],
-			['foobar','foobar'],
+			['This is some jumbled text', 'not_not_case_this is some jumbled tnot_ext'],
+			['All hell breaks loose in this here set of example texts', 'All hell breaks loose in not_not_case_this here set of not_example tnot_exts'],
+			['Example of random text', 'not_example of random tnot_ext'],
+			['foobar', 'foobar'],
 		];
 	}
 

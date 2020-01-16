@@ -138,5 +138,5 @@ class BrowserDetectorTest extends BaseTestCase
 		$this->assertArrayHasKey($browserVar, $context['browser']);
 		$this->assertTrue(isBrowser($browser));
 		$this->assertTrue($context['browser'][$browserVar]);
-    }
+	}
 }
