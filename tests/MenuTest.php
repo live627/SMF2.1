@@ -81,7 +81,7 @@ class MenuTest extends BaseTestCase
 					'areas' => [
 						'area1' => [
 							'label' => 'Area1 Label',
-							'function' => function ()
+							'function' => function()
 							{
 							},
 						],
@@ -94,7 +94,7 @@ class MenuTest extends BaseTestCase
 					'areas' => [
 						'area2' => [
 							'label' => 'Area2 Label',
-							'function' => function ()
+							'function' => function()
 							{
 							},
 							'select' => 'area3',
@@ -104,7 +104,7 @@ class MenuTest extends BaseTestCase
 							'permission' => 'area3 permission',
 							'label' => 'Area3 Label',
 							'custom_url' => 'some url',
-							'function' => function ()
+							'function' => function()
 							{
 							},
 							'subsections' => [
@@ -116,7 +116,7 @@ class MenuTest extends BaseTestCase
 						],
 						'area4' => [
 							'label' => 'Area4 Label',
-							'function' => function ()
+							'function' => function()
 							{
 							},
 							'enabled' => false,
@@ -131,7 +131,7 @@ class MenuTest extends BaseTestCase
 					'areas' => [
 						'area5' => [
 							'label' => 'Area5 Label',
-							'function' => function ()
+							'function' => function()
 							{
 							},
 							'icon' => 'transparent.png',
@@ -146,13 +146,13 @@ class MenuTest extends BaseTestCase
 					'areas' => [
 						'area6' => [
 							'label' => 'Area6 Label',
-							'function' => function ()
+							'function' => function()
 							{
 							},
 						],
 						'area7' => [
 							'label' => 'Area7 Label',
-							'function' => function ()
+							'function' => function()
 							{
 							},
 						],

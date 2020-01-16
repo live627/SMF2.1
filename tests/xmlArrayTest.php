@@ -53,5 +53,5 @@ class TestxmlArray extends BaseTestCase
 
 		// Remove whitespace since they no longer match.
 		$this->assertEquals(preg_replace('/\s\s+/', '', $xml),preg_replace('/\s\s+/', '', $cdatalessResult));
-    }
+	}
 }
