@@ -767,7 +767,7 @@ if (!function_exists('imagecreatefrombmp'))
  */
 function gif_outputAsPng($gif, $lpszFileName, $background_color = -1)
 {
-	if (!isset($gif) || @get_class($gif) != 'cgif' || !$gif->loaded || $lpszFileName == '')
+	if (!isset($gif) || @get_class($gif) != 'gif_file' || !$gif->loaded || $lpszFileName == '')
 		return false;
 
 	$fd = $gif->get_png_data($background_color);
@@ -1120,7 +1120,6 @@ function showCodeImage($code)
 
 	// Bail out.
 	imagedestroy($code_image);
-	die();
 }
 
 /**

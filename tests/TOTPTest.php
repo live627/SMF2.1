@@ -24,7 +24,7 @@ class TOTPTest extends BaseTestCase
 	public function test_invalid_init_key_fails()
 	{
 
-		$this->expectException(InvalidArgumentException::class, 'Invalid base32 hash!');
+		$this->expectException(InvalidArgumentException::class);
 		new Auth('~');
 	}
 

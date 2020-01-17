@@ -13,37 +13,24 @@
 
 // Stuff we will ignore.
 $ignoreFiles = array(
-	// Build tools
-	'./other/buildtools/[A-Za-z0-9-_]+.php',
-
-	// Cache and miscellaneous.
-	'\./cache/data_[A-Za-z0-9-_]\.php',
-	'\./other/db_last_error.php',
-	'\./tests/[A-Za-z0-9-_]+.php',
-
-	// Installer and ugprade are not a worry.
-	'\./other/install.php',
-	'\./other/upgrade.php',
-	'\./other/upgrade-helper.php',
+	'./cache/',
+	'./other/',
+	'./tests/',
+	'./vendor/',
 
 	// Minify Stuff.
-	'\./Sources/minify/[A-Za-z0-9/-]+\.php',
+	'./Sources/minify/',
 
 	// random_compat().
-	'\./Sources/random_compat/\w+\.php',
+	'./Sources/random_compat/',
 
 	// ReCaptcha Stuff.
-	'\./Sources/ReCaptcha/[A-Za-z0-9]+\.php',
-	'\./Sources/ReCaptcha/RequestMethod/[A-Za-z0-9]+\.php',
-
-	// Punycode Stuff.
-	'\./Sources/punycode/[A-Za-z0-9]+\.php',
-	'\./Sources/punycode/Exception/[A-Za-z0-9]+\.php',
+	'./Sources/ReCaptcha/',
 
 	// We will ignore Settings.php if this is a live dev site.
-	'\./Settings.php',
-	'\./Settings_bak.php',
-	'\./db_last_error.php',
+	'./Settings.php',
+	'./Settings_bak.php',
+	'./db_last_error.php',
 );
 
 foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('.')) as $currentFile => $fileInfo)
@@ -51,7 +38,7 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('.')) as $
 	if ($fileInfo->getExtension() == 'php')
 	{
 		foreach ($ignoreFiles as $if)
-			if (preg_match('~' . $if . '~i', $currentFile))
+			if (stripos(strtr($currentFile, '\\', '/'), $if) !== false)
 				continue 2;
 
 		$file = fopen($currentFile, 'r');

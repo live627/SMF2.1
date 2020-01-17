@@ -2595,7 +2595,7 @@ function attachDirStatus($dir, $expected_files)
 	if ($num_files < $expected_files)
 		return array('files_missing', true, $num_files);
 	// Empty?
-	elseif ($expected_files == 0)
+	elseif ($num_files == 0)
 		return array('unused', false, $num_files);
 	// All good!
 	else

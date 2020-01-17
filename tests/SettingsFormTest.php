@@ -139,15 +139,16 @@ class TestSettingsForm extends BaseTestCase
 
 	public function tearDown()
 	{
-	global $smcFunc;
-				$request = $smcFunc['db_query']('', '
+		global $smcFunc;
+
+		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}settings
 			WHERE variable IN ({array_string:setting_name})',
 			array(
 				'setting_name' => array_column($this->configVars, 1),
 			)
 		);
-				$request = $smcFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}permissions
 			WHERE permission IN ({array_string:setting_name})',
 			array(

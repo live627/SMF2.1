@@ -33,7 +33,7 @@ function createWaveFile($word)
 
 	// Allow max 2 requests per 20 seconds.
 	if (($ip = cache_get_data('wave_file/' . $user_info['ip'], 20)) > 2 || ($ip2 = cache_get_data('wave_file/' . $user_info['ip2'], 20)) > 2)
-		die(send_http_status(400));
+		return false;
 	cache_put_data('wave_file/' . $user_info['ip'], $ip ? $ip + 1 : 1, 20);
 	cache_put_data('wave_file/' . $user_info['ip2'], $ip2 ? $ip2 + 1 : 1, 20);
 
@@ -99,7 +99,7 @@ function createWaveFile($word)
 	$sample_rate = 16000;
 
 	// Disable compression.
-	ob_end_clean();
+//	ob_end_clean();
 	header('content-encoding: none');
 
 	// Output the wav.
@@ -107,10 +107,7 @@ function createWaveFile($word)
 	header('expires: ' . gmdate('D, d M Y H:i:s', time() + 525600 * 60) . ' GMT');
 	header('content-length: ' . ($file_size + 0x08));
 
-	echo pack('nnVnnnnnnnnVVnnnnV', 0x5249, 0x4646, $file_size, 0x5741, 0x5645, 0x666D, 0x7420, 0x1000, 0x0000, 0x0100, 0x0100, $sample_rate, $sample_rate, 0x0100, 0x0800, 0x6461, 0x7461, $data_size), $sound_word;
-
-	// Noting more to add.
-	die();
+	echo pack('nnVnnnnnnnnVVnnnnV', 0x5249, 0x4646, $file_size, 0x5741, 0x5645, 0x666D, 0x7420, 0x1000, 0x0000, 0x0100, 0x0100, $sample_rate, $sample_rate * 0x08, 0x0100, 0x0800, 0x6461, 0x7461, $data_size), $sound_word;
 }
 
 ?>

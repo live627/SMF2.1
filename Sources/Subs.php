@@ -5464,13 +5464,6 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 			}
 
 			$response = fgets($fp, 768);
-			var_dump
-
-
-
-
-
-			(	$response);
 
 			// Redirect in case this location is permanently or temporarily moved.
 			if ($redirection_level < 3 && preg_match('~^HTTP/\S+\s+30[127]~i', $response) === 1)
