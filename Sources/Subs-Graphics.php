@@ -420,7 +420,7 @@ function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $
 
 		if (checkImagick())
 		{
-			$imagick = New Imagick($destName);
+			$imagick = new Imagick($destName);
 			$src_width = empty($src_width) ? $imagick->getImageWidth() : $src_width;
 			$src_height = empty($src_height) ? $imagick->getImageHeight() : $src_height;
 			$dest_width = empty($max_width) ? $src_width : $max_width;
