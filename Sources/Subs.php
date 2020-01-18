@@ -1188,7 +1188,7 @@ function permute($array)
  * @param bool $smileys Whether to parse smileys as well
  * @param string $cache_id The cache ID
  * @param array $parse_tags If set, only parses these tags rather than all of them
- * @return string|array The parsed message or a list of tags if $message is false
+ * @return string The parsed message
  */
 function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = array())
 {
