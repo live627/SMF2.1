@@ -655,7 +655,7 @@ class BBCTest extends BaseTestCase
 		$message = str_repeat('0', 1001);
 		$key = 'message-cache-test';
 		$expected = parse_bbc($message, false, $key);
-		$actual = cache_get_data('parse:' . $key . '-' . md5(md5($message) . '-' . false . $smcFunc['json_encode']($context['browser']) . $txt['lang_locale'] . $user_info['time_offset'] . $user_info['time_format']), 240);
+		$actual = cache_get_data('parse:' . $key . '-' . md5(md5($message) . '-' . $smcFunc['json_encode']($context['browser']) . $txt['lang_locale'] . $user_info['time_offset'] . $user_info['time_format']), 240);
 		$this->assertEquals($expected, $actual);
 	}
 }

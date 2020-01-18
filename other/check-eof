@@ -1,13 +1,10 @@
 #!/bin/bash
 
-cd ..
-
 find . -name "*.php" \
     -o -path "./Sources/minify" -prune \
     -o -path "./Sources/random_compat" -prune \
     -o -path "./Sources/ReCaptcha" -prune
 
-find . -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
 
 find . -name "*.php" ! -path '*/NonPHP7.php' -print0 \
   | xargs -0 -n1 -P8 php -l \
