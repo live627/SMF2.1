@@ -448,8 +448,8 @@ class BBCTest extends BaseTestCase
 		$result = parse_bbc($test);
 		$this->assertEquals($expected, $result);
 
-		$result = array_column(parse_bbc(false), 'tag');
-		$this->assertContains($tag, $result);
+		if (is_array($tags = parse_bbc(false)))
+			$this->assertContains($tag, array_column($tags), 'tag');
 	}
 
 	public function html_to_bbcProvider()
