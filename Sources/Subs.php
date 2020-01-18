@@ -2159,7 +2159,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			'tag' => 'cowsay',
 			'parameters' => array(
 				'e' => array('optional' => true, 'quoted' => true, 'match' => '(.*?)', 'default' => 'oo', 'validate' => function($eyes) use ($smcFunc)
-					{
+				{
 						static $css_added;
 
 						if (empty($css_added))
@@ -2176,7 +2176,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					},
 				),
 				't' => array('optional' => true, 'quoted' => true, 'match' => '(.*?)', 'default' => '  ', 'validate' => function($tongue) use ($smcFunc)
-					{
+				{
 						return $smcFunc['substr']($tongue . '  ', 0, 2);
 					},
 				),
@@ -7182,7 +7182,6 @@ function array_length($array, $deep = 3)
 
 			$length += array_length($value, $deep_count);
 		}
-
 		else
 			$length += strlen($value);
 	}

@@ -138,20 +138,26 @@ class Punycode
 
 		$i = 0;
 		$length = mb_strlen($input, $this->encoding);
-		while ($h < $length) {
+		while ($h < $length)
+		{
 			$m = $codePoints['nonBasic'][$i++];
 			$delta = $delta + ($m - $n) * ($h + 1);
 			$n = $m;
 
-			foreach ($codePoints['all'] as $c) {
-				if ($c < $n || $c < static::INITIAL_N) {
+			foreach ($codePoints['all'] as $c)
+			{
+				if ($c < $n || $c < static::INITIAL_N)
+				{
 					$delta++;
 				}
-				if ($c === $n) {
+				if ($c === $n)
+				{
 					$q = $delta;
-					for ($k = static::BASE; ; $k += static::BASE) {
+					for ($k = static::BASE; ; $k += static::BASE)
+					{
 						$t = $this->calculateThreshold($k, $bias);
-						if ($q < $t) {
+						if ($q < $t)
+						{
 							break;
 						}
 
