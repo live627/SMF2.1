@@ -17,11 +17,13 @@ jobs:
     - stage: File integrity
       before_install:
        - git submodule foreach git pull origin master
+       - find . -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
        - if find . -name "*.php" ! -path "./vendor/*" -exec php -l {} 2>&1 \; | grep "syntax error, unexpected"; then exit 1; fi
        - if php other/buildTools/check-signed-off.php travis | grep "Error:"; then php other/buildTools/check-signed-off.php travis; exit 1; fi
        - if php other/buildTools/check-version.php | grep "Error:"; then exit 1; fi
        - if find . -name "./Themes/default/languages/*.english.php" -exec php other/buildTools/check-smf-langauge.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
        - if php other/check-eof.php | grep "Error:"; then exit 1; fi
+       - sh other/check-eof
       install: skip
       script: skip
       after_script: skip

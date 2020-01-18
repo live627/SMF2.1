@@ -760,7 +760,7 @@ if (!function_exists('imagecreatefrombmp'))
 /**
  * Writes a gif file to disk as a png file.
  *
- * @param resource $gif A gif image resource
+ * @param gif_file $gif A gif image resource
  * @param string $lpszFileName The name of the file
  * @param int $background_color The background color
  * @return boolean Whether the operation was successful

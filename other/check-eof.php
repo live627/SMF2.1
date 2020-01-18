@@ -13,24 +13,24 @@
 
 // Stuff we will ignore.
 $ignoreFiles = array(
-	'./cache/',
-	'./other/',
-	'./tests/',
-	'./vendor/',
+	'\./cache/',
+	'\./other/',
+	'\./tests/',
+	'\./vendor/',
 
-	// Minify Stuff.
-	'./Sources/minify/',
+	// Minify Stuff\.
+	'\./Sources/minify/',
 
-	// random_compat().
-	'./Sources/random_compat/',
+	// random_compat()\.
+	'\./Sources/random_compat/',
 
-	// ReCaptcha Stuff.
-	'./Sources/ReCaptcha/',
+	// ReCaptcha Stuff\.
+	'\./Sources/ReCaptcha/',
 
-	// We will ignore Settings.php if this is a live dev site.
-	'./Settings.php',
-	'./Settings_bak.php',
-	'./db_last_error.php',
+	// We will ignore Settings\.php if this is a live dev site\.
+	'\./Settings\.php',
+	'\./Settings_bak\.php',
+	'\./db_last_error\.php',
 );
 
 foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('.')) as $currentFile => $fileInfo)
@@ -38,7 +38,7 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('.')) as $
 	if ($fileInfo->getExtension() == 'php')
 	{
 		foreach ($ignoreFiles as $if)
-			if (stripos(strtr($currentFile, '\\', '/'), $if) !== false)
+			if (preg_match('~' . $if . '~i', $currentFile))
 				continue 2;
 
 		$file = fopen($currentFile, 'r');
