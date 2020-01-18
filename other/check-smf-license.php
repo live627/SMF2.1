@@ -75,11 +75,11 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('.')) as $
 			$indexContents = fread($indexFile, 1250);
 
 			if (!preg_match('~define\(\'SMF_VERSION\', \'([^\']+)\'\);~i', $indexContents, $versionResults))
-				throw new Exception('Error: Could not locate SMF_VERSION' . "\n");
+				throw new Exception('Could not locate SMF_VERSION' . "\n");
 			$currentVersion = $versionResults[1];
 
 			if (!preg_match('~define\(\'SMF_SOFTWARE_YEAR\', \'(\d{4})\'\);~i', $indexContents, $yearResults))
-				throw new Exception('Error: Could not locate SMF_SOFTWARE_YEAR' . "\n");
+				throw new Exception('Could not locate SMF_SOFTWARE_YEAR' . "\n");
 			$currentSoftwareYear = (int) $yearResults[1];
 
 			if (($file = fopen($currentFile, 'r')) !== false)
@@ -101,25 +101,25 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('.')) as $
 
 				// Just see if the license is there.
 				if (!preg_match('~' . implode('', $match) . '~i', $contents))
-					throw new Exception('Error: License File is invalid or not found in ' . $currentFile . "\n");
+					throw new Exception('License File is invalid or not found in ' . $currentFile . "\n");
 
 				// Check the year is correct.
 				$yearMatch = $match;
 				$yearMatch[4] = ' \* @copyright ' . $currentSoftwareYear . ' Simple Machines and individual contributors' . '[\r]?\n';
 				if (!preg_match('~' . implode('', $yearMatch) . '~i', $contents))
-					throw new Exception('Error: The software year is incorrect in ' . $currentFile . "\n");
+					throw new Exception('The software year is incorrect in ' . $currentFile . "\n");
 
 				// Check the version is correct.
 				$versionMatch = $match;
 				$versionMatch[7] = ' \* @version ' . $currentVersion . '[\r]?\n';
 				if (!preg_match('~' . implode('', $versionMatch) . '~i', $contents))
-					throw new Exception('Error: The version is incorrect in ' . $currentFile . "\n");
+					throw new Exception('The version is incorrect in ' . $currentFile . "\n");
 			}
 			else
-				throw new Exception('Error: Unable to open file ./index.php');
+				throw new Exception('Unable to open file ./index.php');
 		}
 		else
-			throw new Exception('Error: Unable to open file ' . $currentFile . "\n");
+			throw new Exception('Unable to open file ' . $currentFile . "\n");
 	}
 }
 

@@ -52,22 +52,22 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('.')) as $
 
 			// There is some white space here.
 			if (preg_match('~\?>\s+$~', $contents, $matches))
-				throw new Exception('Error: End of File contains extra spaces in ' . $currentFile . "\n");
+				throw new Exception('End of File contains extra spaces in ' . $currentFile . "\n");
 
 			// Test to see if its there even, SMF 2.1 base package needs it there in our main files to allow package manager to properly handle end operations.  Customizations do not need it.
 			if (!preg_match('~\?>$~', $contents, $matches))
-				throw new Exception('Error: End of File missing in ' . $currentFile . "\n");
+				throw new Exception('End of File missing in ' . $currentFile . "\n");
 
 			// Test to see if a function/class ending is here but with no return (because we are OCD).
 			if (preg_match('~}([\r]?\n)?\?>~', $contents, $matches))
-				echo('Error: Incorrect return(s) after last function/class but before EOF in ' . $currentFile . "\n");
+				echo('Incorrect return(s) after last function/class but before EOF in ' . $currentFile . "\n");
 
 			// Test to see if a string ending is here but with no return (because we are OCD).
 			if (preg_match('~;([\r]?\n)?\?>~', $contents, $matches))
-				echo('Error: Incorrect return(s) after last string but before EOF in ' . $currentFile . "\n");
+				echo('Incorrect return(s) after last string but before EOF in ' . $currentFile . "\n");
 		}
 		else
-			throw new Exception('Error: Unable to open file ' . $currentFile . "\n");
+			throw new Exception('Unable to open file ' . $currentFile . "\n");
 	}
 }
 
