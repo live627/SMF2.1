@@ -1304,7 +1304,6 @@ function mimespecialchars($string, $with_charset = true, $hotmail_fix = false, $
 
 		return array($charset, $string, 'base64');
 	}
-
 	else
 		return array($charset, $string, '7bit');
 }

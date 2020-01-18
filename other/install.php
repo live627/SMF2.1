@@ -1014,7 +1014,7 @@ function ForumSettings()
 	$incontext['continue'] = 1;
 
 	// Check Postgres setting
-	if ( $db_type === 'postgresql')
+	if ($db_type === 'postgresql')
 	{
 		load_database();
 		$result = $smcFunc['db_query']('', '
@@ -1028,7 +1028,7 @@ function ForumSettings()
 		{
 			$row = $smcFunc['db_fetch_assoc']($result);
 			if ($row['standard_conforming_strings'] !== 'on')
-				{
+			{
 					$incontext['continue'] = 0;
 					$incontext['error'] = $txt['error_pg_scs'];
 				}
@@ -1098,7 +1098,7 @@ function ForumSettings()
 		// Make sure it works.
 		require(dirname(__FILE__) . '/Settings.php');
 
-echo mysqli_get_server_version($db_connection);echo mysqli_get_server_info($db_connection);
+echo mysqli_get_server_version($db_connection); echo mysqli_get_server_info($db_connection);
 		// UTF-8 requires a setting to override the language charset.
 		if ((!empty($databases[$db_type]['utf8_support']) && !empty($databases[$db_type]['utf8_required'])) || (empty($databases[$db_type]['utf8_required']) && !empty($databases[$db_type]['utf8_support']) && isset($_POST['utf8'])))
 		{
