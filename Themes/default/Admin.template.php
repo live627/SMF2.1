@@ -757,7 +757,7 @@ function template_show_settings()
 
 	// Filter out any redundant separators before we start the loop
 	$context['config_vars'] = array_filter($context['config_vars'], function ($v) use ($context)
-		{
+	{
 			static $config_vars, $prev;
 
 			$at_start = is_null($config_vars);

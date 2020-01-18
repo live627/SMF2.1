@@ -1838,7 +1838,7 @@ function init_inline_permissions($permissions, $excluded_groups = array())
 	if (!empty($excluded_groups))
 	{
 		// Make sure this is an array of integers
-		$excluded_groups = array_filter((array) $excluded_groups, function ($v)
+		$excluded_groups = array_filter((array) $excluded_groups, function($v)
 			{
 				return is_int($v) || is_string($v) && (string) intval($v) === $v;
 			});
