@@ -94,7 +94,8 @@ class Punycode
 	{
 		$input = mb_strtolower($input, $this->encoding);
 		$parts = explode('.', $input);
-		foreach ($parts as &$part) {
+		foreach ($parts as &$part)
+		{
 			$part = $this->encodePart($part);
 		}
 		$output = implode('.', $parts);
@@ -119,13 +120,16 @@ class Punycode
 		$h = $b = count($codePoints['basic']);
 
 		$output = '';
-		foreach ($codePoints['basic'] as $code) {
+		foreach ($codePoints['basic'] as $code)
+		{
 			$output .= $this->codePointToChar($code);
 		}
-		if ($input === $output) {
+		if ($input === $output)
+		{
 			return $output;
 		}
-		if ($b > 0) {
+		if ($b > 0)
+		{
 			$output .= static::DELIMITER;
 		}
 
@@ -145,7 +149,7 @@ class Punycode
 				}
 				if ($c === $n) {
 					$q = $delta;
-					for ($k = static::BASE;; $k += static::BASE) {
+					for ($k = static::BASE; ; $k += static::BASE) {
 						$t = $this->calculateThreshold($k, $bias);
 						if ($q < $t) {
 							break;
@@ -227,7 +231,7 @@ class Punycode
 			$oldi = $i;
 			$w = 1;
 
-			for ($k = static::BASE;; $k += static::BASE)
+			for ($k = static::BASE; ; $k += static::BASE)
 			{
 				$digit = static::$decodeTable[$input[$pos++]];
 				$i = $i + ($digit * $w);
