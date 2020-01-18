@@ -18,16 +18,16 @@ $ignoreFiles = array(
 	'\./tests/',
 	'\./vendor/',
 
-	// Minify Stuff\.
+	// Minify Stuff.
 	'\./Sources/minify/',
 
-	// random_compat()\.
+	// random_compat().
 	'\./Sources/random_compat/',
 
-	// ReCaptcha Stuff\.
+	// ReCaptcha Stuff.
 	'\./Sources/ReCaptcha/',
 
-	// We will ignore Settings\.php if this is a live dev site\.
+	// We will ignore Settings.php if this is a live dev site\.
 	'\./Settings\.php',
 	'\./Settings_bak\.php',
 	'\./db_last_error\.php',
@@ -37,35 +37,37 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('.')) as $
 {
 	if ($fileInfo->getExtension() == 'php')
 	{
+		if (defined('PHP_WINDOWS_VERSION_MAJOR'))
+			$currentFile = strtr($currentFile, '\\', '/');
+
 		foreach ($ignoreFiles as $if)
 			if (preg_match('~' . $if . '~i', $currentFile))
 				continue 2;
 
-		$file = fopen($currentFile, 'r');
+		if (($file = fopen($currentFile, 'r')) !== false)
+		{
+			// Seek the end minus some bytes.
+			fseek($file, -100, SEEK_END);
+			$contents = fread($file, 100);
 
-		// Error?
-		if ($file === false)
-			die('Error: Unable to open file ' . $currentFile . "\n");
+			// There is some white space here.
+			if (preg_match('~\?>\s+$~', $contents, $matches))
+				throw new Exception('Error: End of File contains extra spaces in ' . $currentFile . "\n");
 
-		// Seek the end minus some bytes.
-		fseek($file, -100, SEEK_END);
-		$contents = fread($file, 100);
+			// Test to see if its there even, SMF 2.1 base package needs it there in our main files to allow package manager to properly handle end operations.  Customizations do not need it.
+			if (!preg_match('~\?>$~', $contents, $matches))
+				throw new Exception('Error: End of File missing in ' . $currentFile . "\n");
 
-		// There is some white space here.
-		if (preg_match('~\?>\s+$~', $contents, $matches))
-			die('Error: End of File contains extra spaces in ' . $currentFile . "\n");
+			// Test to see if a function/class ending is here but with no return (because we are OCD).
+			if (preg_match('~}([\r]?\n)?\?>~', $contents, $matches))
+				echo('Error: Incorrect return(s) after last function/class but before EOF in ' . $currentFile . "\n");
 
-		// Test to see if its there even, SMF 2.1 base package needs it there in our main files to allow package manager to properly handle end operations.  Customizations do not need it.
-		if (!preg_match('~\?>$~', $contents, $matches))
-			die('Error: End of File missing in ' . $currentFile . "\n");
-
-		// Test to see if a function/class ending is here but with no return (because we are OCD).
-		if (preg_match('~}([\r]?\n)?\?>~', $contents, $matches))
-			echo('Error: Incorrect return(s) after last function/class but before EOF in ' . $currentFile . "\n");
-
-		// Test to see if a string ending is here but with no return (because we are OCD).
-		if (preg_match('~;([\r]?\n)?\?>~', $contents, $matches))
-			echo('Error: Incorrect return(s) after last string but before EOF in ' . $currentFile . "\n");
+			// Test to see if a string ending is here but with no return (because we are OCD).
+			if (preg_match('~;([\r]?\n)?\?>~', $contents, $matches))
+				echo('Error: Incorrect return(s) after last string but before EOF in ' . $currentFile . "\n");
+		}
+		else
+			throw new Exception('Error: Unable to open file ' . $currentFile . "\n");
 	}
 }
 

@@ -20,7 +20,8 @@ jobs:
        - if php other/buildTools/check-signed-off.php travis | grep "Error:"; then php other/buildTools/check-signed-off.php travis; exit 1; fi
        - if php other/buildTools/check-version.php | grep "Error:"; then exit 1; fi
        - if find . -name "./Themes/default/languages/*.english.php" -exec php other/buildTools/check-smf-langauge.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
-       - if php other/check-eof.php | grep "Error:"; then exit 1; fi
+       - php other/check-eof.php
+       - php other/check-smf-license.php
        - sh other/check-eof
       install: skip
       script: skip
