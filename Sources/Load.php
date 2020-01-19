@@ -3433,7 +3433,7 @@ function loadCacheAccelerator($overrideCache = null, $fallbackSMF = true)
 		{
 			// Can we save ourselves?
 			if (!empty($fallbackSMF) && is_null($overrideCache) && $tryAccelerator != 'smf')
-				return loadCacheAccelerator(null, false);
+				return loadCacheAccelerator('smf', false);
 			return false;
 		}
 

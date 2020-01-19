@@ -87,6 +87,7 @@ class smf_cache extends cache_api
 	{
 		$key = $this->prefix . strtr($key, ':/', '-_');
 		$cachedir = $this->cachedir;
+		$ttl = $ttl !== null ? $ttl : $this->ttl;
 
 		// Work around Zend's opcode caching (PHP 5.5+), they would cache older files for a couple of seconds
 		// causing newer files to take effect a while later.
@@ -98,7 +99,7 @@ class smf_cache extends cache_api
 
 		// Otherwise custom cache?
 		if ($value === null)
-			@unlink($cachedir . '/data_' . $key . '.php');
+			return @unlink($cachedir . '/data_' . $key . '.php');
 		else
 		{
 			$cache_data = '<' . '?' . 'php if (!defined(\'SMF\')) die; if (' . (time() + $ttl) . ' < time()) $expired = true; else{$expired = false; $value = \'' . addcslashes($value, "\0" . '\\\'') . '\';}' . '?' . '>';

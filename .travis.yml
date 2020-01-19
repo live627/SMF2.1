@@ -30,6 +30,7 @@ jobs:
 before_install:
   - sh -c "if [ '$DB' = 'postgres' ]; then psql -c 'CREATE DATABASE smf;' -U postgres; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE smf;'; fi"
+  - phpenv config-add tests/config.ini
   - cp ./other/*.* .
   - composer install
 

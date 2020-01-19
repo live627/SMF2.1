@@ -78,8 +78,7 @@ class sqlite_cache extends cache_api
 	 */
 	public function getData($key, $ttl = null)
 	{
-		$ttl = time() - $ttl;
-		$query = 'SELECT value FROM cache WHERE key = \'' . $this->cacheDB->escapeString($key) . '\' AND ttl >= ' . $ttl . ' LIMIT 1';
+		$query = 'SELECT value FROM cache WHERE key = \'' . $this->cacheDB->escapeString($key) . '\' AND ttl >= ' . time() . ' LIMIT 1';
 		$result = $this->cacheDB->query($query);
 
 		$value = null;
@@ -94,8 +93,12 @@ class sqlite_cache extends cache_api
 	 */
 	public function putData($key, $value, $ttl = null)
 	{
+		$ttl = $ttl !== null ? $ttl : $this->ttl;
 		$ttl = $this->cacheTime + $ttl;
-		$query = 'REPLACE INTO cache VALUES (\'' . $this->cacheDB->escapeString($key) . '\', \'' . $this->cacheDB->escapeString($value) . '\', ' . $this->cacheDB->escapeString($ttl) . ');';
+		if ($value === null)
+			$query = 'DELETE FROM cache WHERE key = \'' . $this->cacheDB->escapeString($key) . '\';';
+		else
+			$query = 'REPLACE INTO cache VALUES (\'' . $this->cacheDB->escapeString($key) . '\', \'' . $this->cacheDB->escapeString($value) . '\', ' . $this->cacheDB->escapeString($ttl) . ');';
 		$result = $this->cacheDB->exec($query);
 
 		return $result;
