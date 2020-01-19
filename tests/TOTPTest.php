@@ -20,6 +20,12 @@ class TOTPTest extends BaseTestCase
 		$this->assertInstanceOf(Auth::class, $auth);
 	}
 
+	public function test_invalid_init_key_fails()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		new Auth('~');
+	}
+
 	public function test_valid_init_key_gets_set()
 	{
 		$key = 'ABC';
@@ -41,6 +47,13 @@ class TOTPTest extends BaseTestCase
 		$auth = new Auth();
 		$auth->setRange($range);
 		$this->assertEquals($range, $auth->getRange(), 'Range is set correctly');
+	}
+
+	public function test_invalid_range_fails()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$auth = new Auth();
+		$auth->setRange('cat');
 	}
 
 	public function test_set_and_get_refresh()
