@@ -78,6 +78,7 @@ class memcached_cache extends cache_api
 				$this->memcached->addServer($tempServer[0], $tempServer[1]);
 		}
 
+print_r($this->memcached->getStats());
 		// Best guess is this worked.
 		return true;
 	}
