@@ -18,3 +18,4 @@ require_once "./vendor/autoload.php";
 loadSession();
 loadTheme();
 $db_show_debug = true;
+$cache_memcached = 'localhost';

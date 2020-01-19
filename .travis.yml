@@ -32,6 +32,7 @@ before_install:
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE smf;'; fi"
   - pecl install apcu_bc
   - phpenv config-add tests/config.ini
+  - php -i
   - cp ./other/*.* .
   - composer install
 
