@@ -8,6 +8,7 @@ use smf_cache;
 use sqlite_cache;
 use apcu_cache;
 use apc_cache;
+use memcached_cache;
 use memcache_cache;
 
 class CacheTest extends BaseTestCase
@@ -91,6 +92,10 @@ class CacheTest extends BaseTestCase
 			array(
 				'apc',
 				apc_cache::class,
+			),
+			array(
+				'memcached',
+				memcached_cache::class,
 			),
 			array(
 				'memcache',
