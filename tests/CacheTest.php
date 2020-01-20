@@ -115,24 +115,24 @@ class CacheTest extends BaseTestCase
 		$this->assertInstanceOf($fqcn, $this->_cache_obj);
 		$this->assertTrue($this->_cache_obj->isSupported());
 
-		$this->assertTrue($this->_cache_obj->putData('test2', 'val', -10));
+		$this->_cache_obj->putData('test2', 'val', -10);
 		$this->assertNull($this->_cache_obj->getData('test2'));
-		$this->assertTrue($this->_cache_obj->putData('test2', null, -10));
+		$this->_cache_obj->putData('test2', null, -10);
 
 		$this->assertTrue($this->_cache_obj->setDefaultTTL(-10));
 		$this->assertEquals(-10, $this->_cache_obj->getDefaultTTL());
 
-		$this->assertTrue($this->_cache_obj->putData('test2', 'val'));
+		$this->_cache_obj->putData('test2', 'val');
 		$this->assertNull($this->_cache_obj->getData('test2'));
-		$this->assertTrue($this->_cache_obj->putData('test2', null));
+		$this->_cache_obj->putData('test2', null);
 
 		$this->assertTrue($this->_cache_obj->setDefaultTTL());
 		$this->assertEquals(120, $this->_cache_obj->getDefaultTTL());
 
-		$this->assertFalse($this->_cache_obj->putData('test', null));
+		$this->_cache_obj->putData('test', null);
 		$this->assertNull($this->_cache_obj->getData('test'));
 
-		$this->assertTrue($this->_cache_obj->putData('test', 'val'));
+		$this->_cache_obj->putData('test', 'val');
 		$this->assertSame('val', $this->_cache_obj->getData('test'));
 
 		$this->assertTrue($this->_cache_obj->cleanCache());
