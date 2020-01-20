@@ -10,6 +10,7 @@ use apcu_cache;
 use apc_cache;
 use memcached_cache;
 use memcache_cache;
+use postgres_cache;
 
 class CacheTest extends BaseTestCase
 {
@@ -51,22 +52,6 @@ class CacheTest extends BaseTestCase
 		$this->assertInstanceOf(smf_cache::class, $this->_cache_obj);
 	}
 
-	public function testInvalid()
-	{
-		$this->_cache_obj = loadCacheAccelerator('test', false);
-		$this->assertFalse($this->_cache_obj);
-	}
-
-	public function testApc()
-	{
-		$this->_cache_obj = new \ElkArte\Cache\CacheMethod\Apc(array());
-
-		if (!$this->_cache_obj->isAvailable())
-			$this->markTestSkipped('APCu is not loaded; skipping this test method');
-
-		$this->doCacheTests();
-	}
-
 	public function testMemcached()
 	{
 		$this->_cache_obj = new MockMemcached(array('servers' => array('localhost', 'localhost:11212', 'localhost:11213')));
@@ -100,6 +85,10 @@ class CacheTest extends BaseTestCase
 			array(
 				'memcache',
 				memcache_cache::class,
+			),
+			array(
+				'postgres',
+				postgres_cache::class,
 			),
 		);
 	}
