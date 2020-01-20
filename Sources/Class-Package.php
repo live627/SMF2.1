@@ -85,6 +85,7 @@ class xmlArray
 	 */
 	public function name()
 	{
+		var_dump($this->array);
 		return isset($this->array['name']) ? $this->array['name'] : '';
 	}
 
