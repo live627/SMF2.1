@@ -52,13 +52,6 @@ class CacheTest extends BaseTestCase
 		$this->assertInstanceOf(smf_cache::class, $this->_cache_obj);
 	}
 
-	public function testMemcached()
-	{
-		$this->_cache_obj = new MockMemcached(array('servers' => array('localhost', 'localhost:11212', 'localhost:11213')));
-		$this->assertCount(3, $this->_cache_obj->getNumServers());
-		$this->doCacheTests();
-	}
-
 	public function data()
 	{
 		return array(
