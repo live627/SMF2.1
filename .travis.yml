@@ -22,7 +22,7 @@ jobs:
        - if find . -name "./Themes/default/languages/*.english.php" -exec php other/buildTools/check-smf-langauge.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
        - php other/check-eof.php > /dev/null
        - php other/check-smf-license.php > /dev/null
-       - sh other/check-eof
+       - sh other/lint-php
       install: skip
       script: skip
       after_script: skip
