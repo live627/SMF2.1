@@ -19,3 +19,7 @@ loadSession();
 loadTheme();
 $db_show_debug = true;
 $cache_memcached = 'localhost';
+$pg_cache_server = 'localhost';
+$pg_cache_name = '';
+$pg_cache_user = 'postgres';
+$pg_cache_passwd = '';
