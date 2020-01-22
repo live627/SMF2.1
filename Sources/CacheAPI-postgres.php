@@ -43,6 +43,13 @@ class postgres_cache extends cache_api
 	{
 		global $db_prefix, $db_connection;
 
+		$this->pg_get_data_prep = pg_prepare($db_connection, 'smf_cache_get_data', 'SELECT value FROM ' . $db_prefix . 'cache WHERE key = $1 AND ttl >= $2 LIMIT 1');
+		$this->pg_put_data_prep = pg_prepare($db_connection, 'smf_cache_put_data',
+			'INSERT INTO ' . $db_prefix . 'cache(key,value,ttl) VALUES($1,$2,$3)
+			ON CONFLICT(key) DO UPDATE SET value = $2, ttl = $3'
+		);
+		$this->pg_get_data_prep = pg_prepare($db_connection, 'smf_cache_delete_data', 'DELETE FROM ' . $db_prefix . 'cache WHERE key = $1');
+
 		pg_prepare($db_connection, '', 'SELECT 1
 			FROM   pg_tables
 			WHERE  schemaname = $1
@@ -78,10 +85,7 @@ class postgres_cache extends cache_api
 	 */
 	public function getData($key, $ttl = null)
 	{
-		global $db_prefix, $db_connection;
-
-		if (empty($this->pg_get_data_prep))
-			$this->pg_get_data_prep = pg_prepare($db_connection, 'smf_cache_get_data', 'SELECT value FROM ' . $db_prefix . 'cache WHERE key = $1 AND ttl >= $2 LIMIT 1');
+		global $db_connection;
 
 		$result = pg_execute($db_connection, 'smf_cache_get_data', array($key, time()));
 
@@ -98,20 +102,11 @@ class postgres_cache extends cache_api
 	 */
 	public function putData($key, $value, $ttl = null)
 	{
-		global $db_prefix, $db_connection;
-
-		if (!isset($value))
-			$value = '';
+		global $db_connection;
 
 		$ttl = time() + (int) ($ttl !== null ? $ttl : $this->ttl);
 
-		if (empty($this->pg_put_data_prep))
-			$this->pg_put_data_prep = pg_prepare($db_connection, 'smf_cache_put_data',
-				'INSERT INTO ' . $db_prefix . 'cache(key,value,ttl) VALUES($1,$2,$3)
-				ON CONFLICT(key) DO UPDATE SET value = $2, ttl = $3'
-			);
-
-		$result = pg_execute($db_connection, 'smf_cache_put_data', array($key, $value, $ttl));
+		$result = pg_execute($db_connection, $value === null ? 'smf_cache_delete_data' : 'smf_cache_put_data', array($key, $value, $ttl));
 
 		return pg_affected_rows($result) > 0;
 	}

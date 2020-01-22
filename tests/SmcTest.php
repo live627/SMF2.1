@@ -60,7 +60,7 @@ class SMCTest extends BaseTestCase
 				array('var' => '2010-11-30'),
 				array(
 					'MySQL' => '\'2010-11-30\'',
-					'PostgreSQL' => '\'2010-11-30::\'date',
+					'PostgreSQL' => '\'2010-11-30\'::date',
 				)
 			),
 			array(
@@ -76,7 +76,7 @@ class SMCTest extends BaseTestCase
 				array('var' => '2010-11-30 23:59:59'),
 				array(
 					'MySQL' => 'str_to_date(\'2010-11-30 23:59:59\',\'%Y-%m-%d %h:%i:%s\')',
-					'PostgreSQL' => 'to_timestamp(\'2010-11-30 23:59:59,\'YYYY-MM-DD HH24:MI:SS\')\'',
+					'PostgreSQL' => 'to_timestamp(\'2010-11-30 23:59:59\',\'YYYY-MM-DD HH24:MI:SS\')',
 				)
 			),
 			array(
