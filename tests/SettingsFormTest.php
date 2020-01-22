@@ -9,9 +9,9 @@ class TestSettingsForm extends BaseTestCase
 
 	public function setUp()
 	{
-	global $sourcedir, $user_info;
+		global $sourcedir, $user_info;
 
-	require_once($sourcedir . '/ManageServer.php');
+		require_once($sourcedir . '/ManageServer.php');
 		loadLanguage('Admin', 'english', true, true);
 
 		// Elevate the user.

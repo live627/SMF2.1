@@ -151,7 +151,7 @@ class memcached_cache extends cache_api
 	 */
 	public function getVersion()
 	{
-		return $this->memcached->getVersion();
+		return current($this->memcached->getVersion());
 	}
 }
 
