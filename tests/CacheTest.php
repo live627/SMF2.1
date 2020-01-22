@@ -92,6 +92,9 @@ class CacheTest extends BaseTestCase
 	public function test(string $api, string $fqcn)
 	{
 		$this->_cache_obj = loadCacheAccelerator($api, false);
+		if (!$this->_cache_obj)
+			$this->markTestSkipped();
+
 		$this->assertInstanceOf(cache_api_interface::class, $this->_cache_obj);
 		$this->assertInstanceOf(cache_api::class, $this->_cache_obj);
 		$this->assertInstanceOf($fqcn, $this->_cache_obj);
@@ -116,6 +119,9 @@ class CacheTest extends BaseTestCase
 
 		$this->_cache_obj->putData('test', 'val');
 		$this->assertSame('val', $this->_cache_obj->getData('test'));
+
+		$this->_cache_obj->putData('test', 'val1');
+		$this->assertSame('val1', $this->_cache_obj->getData('test'));
 
 		$this->assertTrue($this->_cache_obj->cleanCache());
 		$this->assertNull($this->_cache_obj->getData('test'));

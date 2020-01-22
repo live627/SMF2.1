@@ -87,11 +87,11 @@ class sqlite_cache extends cache_api
 	 */
 	public function putData($key, $value, $ttl = null)
 	{
-		$ttl = time() + $ttl !== null ? $ttl : $this->ttl;
+		$ttl = time() + (int) ($ttl !== null ? $ttl : $this->ttl);
 		if ($value === null)
 			$query = 'DELETE FROM cache WHERE key = \'' . $this->cacheDB->escapeString($key) . '\';';
 		else
-			$query = 'REPLACE INTO cache VALUES (\'' . $this->cacheDB->escapeString($key) . '\', \'' . $this->cacheDB->escapeString($value) . '\', ' . $this->cacheDB->escapeString($ttl) . ');';
+			$query = 'REPLACE INTO cache VALUES (\'' . $this->cacheDB->escapeString($key) . '\', \'' . $this->cacheDB->escapeString($value) . '\', ' . $ttl . ');';
 		$result = $this->cacheDB->exec($query);
 
 		return $result;

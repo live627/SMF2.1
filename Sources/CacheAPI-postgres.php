@@ -103,7 +103,7 @@ class postgres_cache extends cache_api
 		if (!isset($value))
 			$value = '';
 
-		$ttl = time() + $ttl !== null ? $ttl : $this->ttl;
+		$ttl = time() + (int) ($ttl !== null ? $ttl : $this->ttl);
 
 		if (empty($this->pg_put_data_prep))
 			$this->pg_put_data_prep = pg_prepare($db_connection, 'smf_cache_put_data',

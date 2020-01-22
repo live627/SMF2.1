@@ -57,6 +57,7 @@ class TestxmlArray extends BaseTestCase
 
 		// no work
 		//$this->assertEquals('characters', $result->name());
+		$this->assertEquals('', $result->name());
 
 		$this->assertEquals('LOTR', $result->fetch('characters[0]/character[1]/@film'));
 		$this->assertInstanceOf(xmlArray::class, $result->path('characters[0]/character[1]/'));
