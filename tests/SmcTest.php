@@ -60,7 +60,7 @@ class SMCTest extends BaseTestCase
 				array('var' => '2010-11-30'),
 				array(
 					'MySQL' => '\'2010-11-30\'',
-					'PostgreSQL' => '\'2010-11-30\'',
+					'PostgreSQL' => '\'2010-11-30::date\'',
 				)
 			),
 			array(
@@ -68,7 +68,7 @@ class SMCTest extends BaseTestCase
 				array('var' => '23:59:59'),
 				array(
 					'MySQL' => '\'23:59:59\'',
-					'PostgreSQL' => '\'23:59:59\'',
+					'PostgreSQL' => '\'23:59:59::time\'',
 				)
 			),
 			array(
@@ -76,7 +76,7 @@ class SMCTest extends BaseTestCase
 				array('var' => '2010-11-30 23:59:59'),
 				array(
 					'MySQL' => 'str_to_date(\'2010-11-30 23:59:59\',\'%Y-%m-%d %h:%i:%s\')',
-					'PostgreSQL' => 'str_to_date(\'2010-11-30 23:59:59,\'%Y-%m-%d %h:%i:%s\')\'',
+					'PostgreSQL' => 'to_timestamp(\'2010-11-30 23:59:59,\'%Y-%m-%d %h:%i:%s\')\'',
 				)
 			),
 			array(
@@ -108,7 +108,7 @@ class SMCTest extends BaseTestCase
 				array('a_string' => 'a_string'),
 				array(
 					'MySQL' => '`a_string`',
-					'PostgreSQL' => 'a_string',
+					'PostgreSQL' => '"a_string"',
 				)
 			),
 		);

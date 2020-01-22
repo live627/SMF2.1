@@ -27,7 +27,7 @@ class postgres_cache extends cache_api
 	/** @var false|resource of the pg_prepare from put_data. */
 	private $pg_put_data_prep;
 
-	/** @var false|resource result of pg_connect. */
+	/** @var resource result of pg_connect. */
 	private $db_connection;
 
 	public function __construct()
@@ -60,14 +60,21 @@ class postgres_cache extends cache_api
 	{
 		global $pg_cache_name, $pg_cache_user, $pg_cache_passwd, $pg_cache_options;
 
-		if (!empty($pg_cache_options['persist']))
-			$this->db_connection = @pg_pconnect((empty($pg_cache_server) ? '' : 'host=' . $pg_cache_server . ' ') . 'dbname=' . $pg_cache_name . ' user=\'' . $pg_cache_user . '\' password=\'' . $pg_cache_passwd . '\'' . (empty($pg_cache_options['port']) ? '' : ' port=\'' . $pg_cache_options['port'] . '\''));
-		else
-			$this->db_connection = @pg_connect((empty($pg_cache_server) ? '' : 'host=' . $pg_cache_server . ' ') . 'dbname=' . $pg_cache_name . ' user=\'' . $pg_cache_user . '\' password=\'' . $pg_cache_passwd . '\'' . (empty($pg_cache_options['port']) ? '' : ' port=\'' . $pg_cache_options['port'] . '\''));
+		$fn = !empty($pg_cache_options['persist']) ? 'pg_pconnect' : 'pg_connect';
+		$connection = @$fn(
+			sprintf(
+				'host=%s port=%d user=%s password=%s',
+				$pg_cache_server,
+				$pg_cache_options['port'],
+				$pg_cache_user,
+				$pg_cache_passwd
+			)
+		);
 
 		if (!$this->db_connection)
 			return false;
 
+		$this->db_connection = $connection;
 		$result = pg_query($this->db_connection, 'SHOW server_version_num');
 		$res = pg_fetch_assoc($result);
 

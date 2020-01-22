@@ -94,5 +94,7 @@ class TestxmlArray extends BaseTestCase
 	{
 		$result = new xmlArray($xml, true, 0);
 		$this->assertFalse($result->to_array('error'));
+		$this->assertFalse($result->path('error'));
+		$this->assertFalse($result->create_xml('error'));
 	}
 }

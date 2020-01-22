@@ -31,11 +31,6 @@ class sqlite_cache extends cache_api
 	 */
 	private $cacheDB = null;
 
-	/**
-	 * @var int
-	 */
-	private $cacheTime = 0;
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -57,7 +52,6 @@ class sqlite_cache extends cache_api
 			$this->cacheDB->exec('CREATE TABLE cache (key text unique, value blob, ttl int);');
 			$this->cacheDB->exec('CREATE INDEX ttls ON cache(ttl);');
 		}
-		$this->cacheTime = time();
 	}
 
 	/**
@@ -93,8 +87,7 @@ class sqlite_cache extends cache_api
 	 */
 	public function putData($key, $value, $ttl = null)
 	{
-		$ttl = $ttl !== null ? $ttl : $this->ttl;
-		$ttl = $this->cacheTime + $ttl;
+		$ttl = time() + $ttl !== null ? $ttl : $this->ttl;
 		if ($value === null)
 			$query = 'DELETE FROM cache WHERE key = \'' . $this->cacheDB->escapeString($key) . '\';';
 		else

@@ -108,7 +108,7 @@ class postgres_cache extends cache_api
 		if (empty($this->pg_put_data_prep))
 			$this->pg_put_data_prep = pg_prepare($db_connection, 'smf_cache_put_data',
 				'INSERT INTO ' . $db_prefix . 'cache(key,value,ttl) VALUES($1,$2,$3)
-				ON CONFLICT(key) DO UPDATE SET value = excluded.value, ttl = excluded.ttl'
+				ON CONFLICT(key) DO UPDATE SET value = $2, ttl = $3'
 			);
 
 		$result = pg_execute($db_connection, 'smf_cache_put_data', array($key, $value, $ttl));
