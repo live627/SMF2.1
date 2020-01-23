@@ -42,7 +42,7 @@ class postgres_cache extends cache_api
 	 */
 	public function connect()
 	{
-		pg_query_params($this->db_connection, 'SELECT 1
+		$result = pg_query_params($this->db_connection, 'SELECT 1
 			FROM   pg_tables
 			WHERE  schemaname = $1
 			AND    tablename = $2',
