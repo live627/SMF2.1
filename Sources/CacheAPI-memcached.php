@@ -21,10 +21,11 @@ if (!defined('SMF'))
  */
 class memcached_cache extends cache_api
 {
-	/**
-	 * @var \Memcached The memcache instance.
-	 */
+	/** @var Memcached The memcache instance. */
 	private $memcached = null;
+
+	/** @var string[] */
+	private $servers;
 
 	/**
 	 * {@inheritDoc}
@@ -47,7 +48,7 @@ class memcached_cache extends cache_api
 	{
 		global $cache_memcached;
 
-		$servers = explode(',', $cache_memcached);
+		$this->servers = explode(',', $cache_memcached);
 
 		parent::__construct();
 	}
@@ -74,10 +75,11 @@ class memcached_cache extends cache_api
 		// script under modes like FastCGI. So check to see if servers exist or not.
 		$currentServers = $this->memcached->getServerList();
 		$retVal = !empty($currentServers);
-		foreach ($servers as $server)
+		foreach ($this->servers as $server)
 		{
 			$tempServer = explode(':', trim($server));
 			$tempServer[1] = !empty($tempServer[1]) ? $tempServer[1] : 11211;
+
 			// Figure out if we have this server or not
 			$foundServer = false;
 			foreach ($currentServers as $currentServer)
