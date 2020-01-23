@@ -71,15 +71,27 @@ class memcached_cache extends cache_api
 
 		$servers = explode(',', $cache_memcached);
 
-		// memcached does not remove servers from the list upon completing
-		// the script under modes like FastCGI. So check to see if servers exist or not.
-		$currentServers = $this->getServers();
+		// memcached does not remove servers from the list upon completing the
+		// script under modes like FastCGI. So check to see if servers exist or not.
+		$currentServers = $this->memcached->getServerList();
 		$retVal = !empty($currentServers);
 		foreach ($servers as $server)
 		{
 			$tempServer = explode(':', trim($server));
 			$tempServer[1] = !empty($tempServer[1]) ? $tempServer[1] : 11211;
-			if (!in_array(implode(':', $tempServer), $currentServers, true))
+			// Figure out if we have this server or not
+			$foundServer = false;
+			foreach ($currentServers as $currentServer)
+			{
+				if ($tempServer[0] == $currentServer['host'] && $tempServer[1] == $currentServer['port'])
+				{
+					$foundServer = true;
+					break;
+				}
+			}
+
+			// Found it?
+			if (empty($foundServer))
 				$retVal |= $this->memcached->addServer($tempServer[0], $tempServers[1]);
 		}
 
