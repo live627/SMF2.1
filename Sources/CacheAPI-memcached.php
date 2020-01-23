@@ -45,7 +45,9 @@ class memcached_cache extends cache_api
 	 */
 	public function __construct()
 	{
-		$this->memcached = new Memcached;
+		global $cache_memcached;
+
+		$servers = explode(',', $cache_memcached);
 
 		parent::__construct();
 	}
@@ -55,6 +57,7 @@ class memcached_cache extends cache_api
 	 */
 	public function connect()
 	{
+		$this->memcached = new Memcached;
 		return $this->addServers();
 	}
 
@@ -67,10 +70,6 @@ class memcached_cache extends cache_api
 	 */
 	protected function addServers()
 	{
-		global $cache_memcached;
-
-		$servers = explode(',', $cache_memcached);
-
 		// memcached does not remove servers from the list upon completing the
 		// script under modes like FastCGI. So check to see if servers exist or not.
 		$currentServers = $this->memcached->getServerList();

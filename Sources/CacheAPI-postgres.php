@@ -69,11 +69,9 @@ class postgres_cache extends cache_api
 				'smf_cache_delete_data',
 				'DELETE FROM ' . $this->db_prefix . 'cache WHERE key = $1'
 			);
-
-			return true;
 		}
 
-		return false;
+		return true;
 	}
 
 	/**
@@ -158,7 +156,7 @@ class postgres_cache extends cache_api
 	 */
 	public function getVersion()
 	{
-		return pg_version();
+		return pg_version()['server'];
 	}
 
 	/**

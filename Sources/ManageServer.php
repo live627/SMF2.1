@@ -1564,11 +1564,8 @@ function loadCacheAPIs()
 				$cache_class_name = $tryCache . '_cache';
 				$testAPI = new $cache_class_name();
 
-				// No Support?  NEXT!
-				if (!$testAPI->isSupported(true))
-					continue;
-
-				$apis[$tryCache] = $testAPI;
+				if ($testAPI->isSupported(true) && $testAPI->connect())
+					$apis[$tryCache] = $testAPI;
 			}
 		}
 	}
