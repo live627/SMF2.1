@@ -85,7 +85,7 @@ class postgres_cache extends cache_api
 	private function prepareQuery($stmtname, $query)
 	{
 		$result = pg_query_params(
-			$this->db_connection
+			$this->db_connection,
 			'SELECT name FROM pg_prepared_statements WHERE name = $1',
 			array($stmtname)
 		);
