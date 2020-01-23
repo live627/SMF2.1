@@ -58,7 +58,7 @@ class postgres_cache extends cache_api
 	 */
 	public function isSupported($test = false)
 	{
-		global $pg_cache_name, $pg_cache_user, $pg_cache_passwd, $pg_cache_options;
+		global $pg_cache_server, $pg_cache_user, $pg_cache_passwd, $pg_cache_options;
 
 		$fn = !empty($pg_cache_options['persist']) ? 'pg_pconnect' : 'pg_connect';
 		$connection = @$fn(
