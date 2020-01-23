@@ -24,7 +24,13 @@ class MiscTest extends BaseTestCase
 				'apc',
 			),
 			array(
+				'apcu',
+			),
+			array(
 				'memcache',
+			),
+			array(
+				'memcached',
 			),
 			array(
 				'xcache',

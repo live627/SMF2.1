@@ -92,20 +92,10 @@ class memcached_cache extends cache_api
 
 			// Found it?
 			if (empty($foundServer))
-				$retVal |= $this->memcached->addServer($tempServer[0], $tempServers[1]);
+				$retVal |= $this->memcached->addServer($tempServer[0], $tempServer[1]);
 		}
 
 		return $retVal;
-	}
-
-	/**
-	 * Get memcache servers.
-	 *
-	 * @return array A list of servers in the daemon.
-	 */
-	protected function getServers()
-	{
-		return array_keys($this->memcached->getStats());
 	}
 
 	/**
