@@ -21,7 +21,7 @@ if (!defined('SMF'))
  */
 class postgres_cache extends cache_api
 {
-	/** @var strring */
+	/** @var string */
 	private $db_prefix;
 
 	/** @var resource result of pg_connect. */

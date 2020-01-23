@@ -59,6 +59,7 @@ class memcached_cache extends cache_api
 	public function connect()
 	{
 		$this->memcached = new Memcached;
+
 		return $this->addServers();
 	}
 
