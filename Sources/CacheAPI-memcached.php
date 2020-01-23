@@ -35,6 +35,7 @@ class memcached_cache extends cache_api
 
 		$supported = class_exists('Memcached');
 
+		$this->memcached = new Memcached;
 		if ($test)
 			return $supported;
 		return parent::isSupported() && $supported && !empty($cache_memcached);
@@ -45,41 +46,46 @@ class memcached_cache extends cache_api
 	 */
 	public function connect()
 	{
+
+		return $this->addServers();
+	}
+
+	/**
+	 * Add memcached servers.
+	 *
+	 * Don't add servers if they already exist. Ideal for persistent connections.
+	 *
+	 * @return bool True if there are servers in the daemon, false if not.
+	 */
+	protected function addServers()
+	{
 		global $cache_memcached;
 
 		$servers = explode(',', $cache_memcached);
 
-		// memcached does not remove servers from the list upon completing the script under modes like FastCGI. So check to see if servers exist or not.
-		$this->memcached = new Memcached;
-		$currentServers = $this->memcached->getServerList();
+		// memcached does not remove servers from the list upon completing
+		// the script under modes like FastCGI. So check to see if servers exist or not.
+		$currentServers = $this->getServers();
+		$retVal = !empty($currentServers);
 		foreach ($servers as $server)
 		{
-			if (strpos($server, '/') !== false)
-				$tempServer = array($server, 0);
-			else
-			{
-				$server = explode(':', $server);
-				$tempServer = array($server[0], isset($server[1]) ? $server[1] : 11211);
-			}
-
-			// Figure out if we have this server or not
-			$foundServer = false;
-			foreach ($currentServers as $currentServer)
-			{
-				if ($tempServer[0] == $currentServer['host'] && $tempServer[1] == $currentServer['port'])
-				{
-					$foundServer = true;
-					break;
-				}
-			}
-
-			// Found it?
-			if (empty($foundServer))
-				$this->memcached->addServer($tempServer[0], $tempServer[1]);
+			$tempServer = explode(':', trim($server));
+			$tempServer[1] = !empty($tempServer[1]) ? $tempServer[1] : 11211;
+			if (!in_array(implode(':', $tempServer), $currentServers, true))
+				$retVal |= $this->memcached->addServer($tempServer[0], $tempServers[1]);
 		}
 
-		// Best guess is this worked.
-		return true;
+		return $retVal;
+	}
+
+	/**
+	 * Get memcache servers.
+	 *
+	 * @return array A list of servers in the daemon.
+	 */
+	protected function getServers()
+	{
+		return array_keys($this->memcached->getStats());
 	}
 
 	/**

@@ -59,7 +59,11 @@ class postgres_cache extends cache_api
 				ON CONFLICT(key) DO UPDATE SET value = $2, ttl = $3'
 			);
 			pg_prepare($this->db_connection, 'smf_cache_delete_data', 'DELETE FROM ' . $this->db_prefix . 'cache WHERE key = $1');
+
+			return true;
 		}
+
+		return false;
 	}
 
 	/**
