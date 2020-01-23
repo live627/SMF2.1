@@ -120,12 +120,7 @@ class postgres_cache extends cache_api
 	 */
 	public function cleanCache($type = '')
 	{
-		global $smcFunc;
-
-		$smcFunc['db_query']('', '
-			TRUNCATE TABLE {this->db_prefix}cache',
-			array()
-		);
+		pg_query($this->db_connection, 'TRUNCATE TABLE {this->db_prefix}cache');
 
 		return true;
 	}
@@ -135,9 +130,7 @@ class postgres_cache extends cache_api
 	 */
 	public function getVersion()
 	{
-		global $smcFunc;
-
-		return $smcFunc['db_server_info']();
+		return pg_version();
 	}
 
 	/**

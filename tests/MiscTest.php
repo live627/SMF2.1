@@ -43,6 +43,7 @@ class MiscTest extends BaseTestCase
 		$versions = getServerVersions([$checkFor]);
 		if (empty($versions))
 			$this->markTestSkipped();
+			var_dump($versions);
 		$this->assertTrue(version_compare($versions[$checkFor]['version'], '0.0.1', '>='));
 	}
 }

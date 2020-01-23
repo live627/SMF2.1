@@ -22,9 +22,9 @@ if (!defined('SMF'))
 class memcached_cache extends cache_api
 {
 	/**
-	 * @var \Memcached The memcache instance.
+	 * @var Memcached The memcache instance.
 	 */
-	private $memcached = null;
+	private $memcached = new Memcached;
 
 	/**
 	 * {@inheritDoc}
@@ -35,7 +35,6 @@ class memcached_cache extends cache_api
 
 		$supported = class_exists('Memcached');
 
-		$this->memcached = new Memcached;
 		if ($test)
 			return $supported;
 		return parent::isSupported() && $supported && !empty($cache_memcached);
@@ -46,7 +45,6 @@ class memcached_cache extends cache_api
 	 */
 	public function connect()
 	{
-
 		return $this->addServers();
 	}
 

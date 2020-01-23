@@ -1574,11 +1574,6 @@ function loadCacheAPIs()
 	}
 	closedir($dh);
 
-
-
-
-
-var_dump($apis);
 	return $apis;
 }
 
