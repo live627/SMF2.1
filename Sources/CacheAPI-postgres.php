@@ -42,28 +42,56 @@ class postgres_cache extends cache_api
 	 */
 	public function connect()
 	{
-		pg_prepare($this->db_connection, '', 'SELECT 1
+		pg_query_params($this->db_connection, 'SELECT 1
 			FROM   pg_tables
 			WHERE  schemaname = $1
-			AND    tablename = $2');
-
-		$result = pg_execute($this->db_connection, '', array('public', $this->db_prefix . 'cache'));
+			AND    tablename = $2',
+			array(
+				'public',
+				$this->db_prefix . 'cache',
+			)
+		);
 
 		if (pg_affected_rows($result) === 0)
 		{
 			pg_query($this->db_connection, 'CREATE UNLOGGED TABLE ' . $this->db_prefix . 'cache (key text, value text, ttl bigint, PRIMARY KEY (key))');
 
-			pg_prepare($this->db_connection, 'smf_cache_get_data', 'SELECT value FROM ' . $this->db_prefix . 'cache WHERE key = $1 AND ttl >= $2 LIMIT 1');
-			pg_prepare($this->db_connection, 'smf_cache_put_data',
+			prepareQuery(
+				'smf_cache_get_data',
+				'SELECT value FROM ' . $this->db_prefix . 'cache WHERE key = $1 AND ttl >= $2 LIMIT 1'
+			);
+			prepareQuery(
+				'smf_cache_put_data',
 				'INSERT INTO ' . $this->db_prefix . 'cache(key,value,ttl) VALUES($1,$2,$3)
 				ON CONFLICT(key) DO UPDATE SET value = $2, ttl = $3'
 			);
-			pg_prepare($this->db_connection, 'smf_cache_delete_data', 'DELETE FROM ' . $this->db_prefix . 'cache WHERE key = $1');
+			prepareQuery(
+				'smf_cache_delete_data',
+				'DELETE FROM ' . $this->db_prefix . 'cache WHERE key = $1'
+			);
 
 			return true;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Stores a prepared SQL statement, ensuring that it's not done twice.
+	 *
+	 * @param string $stmtname
+	 * @param string $query
+	 */
+	private function prepareQuery($stmtname, $query)
+	{
+		$result = pg_query_params(
+			$this->db_connection
+			'SELECT name FROM pg_prepared_statements WHERE name = $1',
+			array($stmtname)
+		);
+
+		if (pg_num_rows($result) == 0)
+			pg_prepare($this->db_connection, $stmtname, $query);
 	}
 
 	/**
@@ -120,7 +148,7 @@ class postgres_cache extends cache_api
 	 */
 	public function cleanCache($type = '')
 	{
-		pg_query($this->db_connection, 'TRUNCATE TABLE {this->db_prefix}cache');
+		pg_query($this->db_connection, 'TRUNCATE ' . $this->db_prefix . 'cache');
 
 		return true;
 	}
