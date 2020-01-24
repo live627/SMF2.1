@@ -56,14 +56,12 @@ class postgres_cache extends cache_api
 			pg_query($this->db_connection, 'CREATE UNLOGGED TABLE ' . $this->db_prefix . 'cache (key text, value text, ttl bigint, PRIMARY KEY (key))');
 
 		pg_query($this->db_connection,
-			'BEGIN
+			'
 					PREPARE smf_cache_get_data AS SELECT value FROM ' . $this->db_prefix . 'cache WHERE key = $1 AND ttl >= $2 LIMIT 1;
 					PREPARE smf_cache_put_data AS
 						INSERT INTO ' . $this->db_prefix . 'cache(key,value,ttl) VALUES($1,$2,$3)
 						ON CONFLICT(key) DO UPDATE SET value = $2, ttl = $3;
-				EXCEPTION
-        NULL;  -- ignore the error
-END;'
+					PREPARE smf_cache_delete_data AS DELETE FROM ' . $this->db_prefix . 'cache WHERE key = $1;'
 		);
 
 		return true;
