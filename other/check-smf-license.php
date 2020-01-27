@@ -53,19 +53,16 @@ $ignoreFiles = array(
 	// ReCaptcha Stuff.
 	'\./Sources/ReCaptcha/',
 
-	// We will ignore Settings.php if this is a live dev site\.
+	// We will ignore Settings.php if this is a live dev site.
 	'\./Settings\.php',
 	'\./Settings_bak\.php',
 	'\./db_last_error\.php',
 );
 
-foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('.')) as $currentFile => $fileInfo)
+foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('.', FilesystemIterator::UNIX_PATHS)) as $currentFile => $fileInfo)
 {
 	if ($fileInfo->getExtension() == 'php')
 	{
-		if (defined('PHP_WINDOWS_VERSION_MAJOR'))
-			$currentFile = strtr($currentFile, '\\', '/');
-
 		foreach ($ignoreFiles as $if)
 			if (preg_match('~' . $if . '~i', $currentFile))
 				continue 2;
