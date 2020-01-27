@@ -49,35 +49,64 @@ class smf_cache extends cache_api
 		return parent::isSupported() && $supported;
 	}
 
+	private function readFile($file)
+	{
+		if (($fp = fopen($file, 'rb')) !== false)
+		{
+			if (!flock($fp, LOCK_SH | LOCK_NB))
+			{
+				fclose($fp);
+				return false;
+			}
+			$string = '';
+			while (!feof($fp))
+				$string .= fread($fp, 8192);
+
+			flock($fp, LOCK_UN);
+			fclose($fp);
+		}
+
+		return $string;
+	}
+
+	private function writeFile($file)
+	{
+		if (($fp = fopen($file, 'cb')) !== false)
+		{
+			if (!flock($fp, LOCK_SH | LOCK_NB))
+			{
+				fclose($fp);
+				return false;
+			}
+			$string = '';
+			while (!feof($fp))
+				$string .= fread($fp, 8192);
+
+			flock($fp, LOCK_UN);
+			fclose($fp);
+		}
+
+		return $string;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public function getData($key, $ttl = null)
 	{
 		$key = $this->prefix . strtr($key, ':/', '-_');
-		$cachedir = $this->cachedir;
+		$file = $this->cachedir . '/data_' . $key . '.cache';
 
 		// SMF Data returns $value and $expired.  $expired has a unix timestamp of when this expires.
-		if (file_exists($cachedir . '/data_' . $key . '.php') && filesize($cachedir . '/data_' . $key . '.php') > 10)
+		if (file_exists($file) && ($fp = fopen('ppk.wav', 'r')) !== false)
 		{
-			// Work around Zend's opcode caching (PHP 5.5+), they would cache older files for a couple of seconds
-			// causing newer files to take effect a while later.
-			if (function_exists('opcache_invalidate'))
-				opcache_invalidate($cachedir . '/data_' . $key . '.php', true);
-
-			if (function_exists('apc_delete_file'))
-				@apc_delete_file($cachedir . '/data_' . $key . '.php');
-
-			// php will cache file_exists et all, we can't 100% depend on its results so proceed with caution
-			@include($cachedir . '/data_' . $key . '.php');
-			if (!empty($expired) && isset($value))
-			{
-				@unlink($cachedir . '/data_' . $key . '.php');
-				unset($value);
-			}
+			if ($value === null || $value->expiration < time())
+				@unlink($file);
+			else
+				$return = $value->data;
 		}
 
-		return !empty($value) ? $value : null;
+		return $return;
 	}
 
 	/**
@@ -86,30 +115,22 @@ class smf_cache extends cache_api
 	public function putData($key, $value, $ttl = null)
 	{
 		$key = $this->prefix . strtr($key, ':/', '-_');
-		$cachedir = $this->cachedir;
+		$tempfile = tempnam($this->cachedir, $key	);
+		$file = $this->cachedir . '/data_' . $key . '.cache';
 		$ttl = $ttl !== null ? $ttl : $this->ttl;
 
-		// Work around Zend's opcode caching (PHP 5.5+), they would cache older files for a couple of seconds
-		// causing newer files to take effect a while later.
-		if (function_exists('opcache_invalidate'))
-			opcache_invalidate($cachedir . '/data_' . $key . '.php', true);
-
-		if (function_exists('apc_delete_file'))
-			@apc_delete_file($cachedir . '/data_' . $key . '.php');
-
-		// Otherwise custom cache?
 		if ($value === null)
-			return @unlink($cachedir . '/data_' . $key . '.php');
+			@unlink($file);
 		else
 		{
-			$cache_data = '<' . '?' . 'php if (!defined(\'SMF\')) die; if (' . (time() + $ttl) . ' < time()) $expired = true; else{$expired = false; $value = \'' . addcslashes($value, "\0" . '\\\'') . '\';}' . '?' . '>';
+			$cache_data = json_encode(array('expired' => time() + $ttl, 'value' => $value));
 
 			// Write out the cache file, check that the cache write was successful; all the data must be written
 			// If it fails due to low diskspace, or other, remove the cache file
-			$fileSize = file_put_contents($cachedir . '/data_' . $key . '.php', $cache_data, LOCK_EX);
+			$fileSize = file_put_contents($cachedir . '/data_' . $key . '.cache', $cache_data, LOCK_EX);
 			if ($fileSize !== strlen($cache_data))
 			{
-				@unlink($cachedir . '/data_' . $key . '.php');
+				@unlink($file);
 				return false;
 			}
 			else
@@ -122,20 +143,15 @@ class smf_cache extends cache_api
 	 */
 	public function cleanCache($type = '')
 	{
-		$cachedir = $this->cachedir;
-
 		// No directory = no game.
-		if (!is_dir($cachedir))
+		if (!is_dir($this->cachedir))
 			return;
 
 		// Remove the files in SMF's own disk cache, if any
-		$dh = opendir($cachedir);
-		while ($file = readdir($dh))
-		{
-			if ($file != '.' && $file != '..' && $file != 'index.php' && $file != '.htaccess' && (!$type || substr($file, 0, strlen($type)) == $type))
-				@unlink($cachedir . '/' . $file);
-		}
-		closedir($dh);
+		$files = new GlobIterator($this->cachedir . '/' . $type . '*.cache', FilesystemIterator::NEW_CURRENT_AND_KEY);
+
+		foreach ($files as $file => $info)
+			@unlink($this->cachedir . '/' . $file);
 
 		// Make this invalid.
 		$this->invalidateCache();
