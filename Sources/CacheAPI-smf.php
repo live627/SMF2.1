@@ -105,9 +105,9 @@ class smf_cache extends cache_api
 	 */
 	public function getData($key, $ttl = null)
 	{
-		$file = sprintf('/data_$s.cache',
-			$this->prefix . strtr($key, ':/', '-_'),
-			$this->cachedir
+		$file = sprintf('$s/data_$s.cache',
+			$this->cachedir,
+			$this->prefix . strtr($key, ':/', '-_')
 		);
 
 		// SMF Data returns $value and $expired.  $expired has a unix timestamp of when this expires.
@@ -127,9 +127,9 @@ class smf_cache extends cache_api
 	 */
 	public function putData($key, $value, $ttl = null)
 	{
-		$file = sprintf('/data_$s.cache',
-			$this->prefix . strtr($key, ':/', '-_'),
-			$this->cachedir
+		$file = sprintf('%s/data_$s.cache',
+			$this->cachedir,
+			$this->prefix . strtr($key, ':/', '-_')
 		);
 		$ttl = $ttl !== null ? $ttl : $this->ttl;
 
