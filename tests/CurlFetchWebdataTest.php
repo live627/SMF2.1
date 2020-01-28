@@ -49,7 +49,7 @@ class CurlFetchWebdataTest extends BaseTestCase
 
 	/**
 	 * @dataProvider getProvider
-     * @group slow
+	 * @group slow
 	 */
 	public function testGet(string $url, int $responseCode, string $responseBody)
 	{
@@ -61,7 +61,7 @@ class CurlFetchWebdataTest extends BaseTestCase
 
 	/**
 	 * @dataProvider postProvider
-     * @group slow
+	 * @group slow
 	 */
 	public function testPost(string $url, array $postData, int $responseCode, string $responseBody)
 	{
