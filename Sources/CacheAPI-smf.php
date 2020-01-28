@@ -64,29 +64,40 @@ class smf_cache extends cache_api
 
 			flock($fp, LOCK_UN);
 			fclose($fp);
+
+			return $string;
 		}
 
-		return $string;
+		return false;
 	}
 
 	private function writeFile($file)
 	{
 		if (($fp = fopen($file, 'cb')) !== false)
 		{
-			if (!flock($fp, LOCK_SH | LOCK_NB))
+			if (!flock($fp, LOCK_EX | LOCK_NB))
 			{
 				fclose($fp);
 				return false;
 			}
-			$string = '';
-			while (!feof($fp))
-				$string .= fread($fp, 8192);
-
+			ftruncate($fp, 0);
+			$bytes = 0;
+			$pieces = str_split($content, 8192);
+			foreach ($pieces as $piece)
+			{
+				if (($val = fwrite($fp, 8192)) !== false)
+					$bytes += $val;
+				else
+					return false;
+			}
+			fflush($fp);
 			flock($fp, LOCK_UN);
 			fclose($fp);
+
+			return $byted;
 		}
 
-		return $string;
+		return false;
 	}
 
 	/**
@@ -94,19 +105,21 @@ class smf_cache extends cache_api
 	 */
 	public function getData($key, $ttl = null)
 	{
-		$key = $this->prefix . strtr($key, ':/', '-_');
-		$file = $this->cachedir . '/data_' . $key . '.cache';
+		$file = sprintf('/data_$s.cache',
+			$this->prefix . strtr($key, ':/', '-_'),
+			$this->cachedir
+		);
 
 		// SMF Data returns $value and $expired.  $expired has a unix timestamp of when this expires.
-		if (file_exists($file) && ($fp = fopen('ppk.wav', 'r')) !== false)
+		if (file_exists($file) && ($value = $this->readFile($file)) !== false)
 		{
 			if ($value === null || $value->expiration < time())
 				@unlink($file);
-			else
-				$return = $value->data;
+
+			return $value->data;
 		}
 
-		return $return;
+		return false;
 	}
 
 	/**
@@ -114,9 +127,10 @@ class smf_cache extends cache_api
 	 */
 	public function putData($key, $value, $ttl = null)
 	{
-		$key = $this->prefix . strtr($key, ':/', '-_');
-		$tempfile = tempnam($this->cachedir, $key	);
-		$file = $this->cachedir . '/data_' . $key . '.cache';
+		$file = sprintf('/data_$s.cache',
+			$this->prefix . strtr($key, ':/', '-_'),
+			$this->cachedir
+		);
 		$ttl = $ttl !== null ? $ttl : $this->ttl;
 
 		if ($value === null)
@@ -127,8 +141,7 @@ class smf_cache extends cache_api
 
 			// Write out the cache file, check that the cache write was successful; all the data must be written
 			// If it fails due to low diskspace, or other, remove the cache file
-			$fileSize = file_put_contents($cachedir . '/data_' . $key . '.cache', $cache_data, LOCK_EX);
-			if ($fileSize !== strlen($cache_data))
+			if ($this->writeFile($file, $cache_data) !== strlen($cache_data))
 			{
 				@unlink($file);
 				return false;
