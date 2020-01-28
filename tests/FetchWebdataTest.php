@@ -27,7 +27,7 @@ class FetchWebdataTest extends BaseTestCase
 
 	/**
 	 * @dataProvider getProvider
-     * @group slow
+	 * @group slow
 	 */
 	public function testGet(string $url, string $responseBody)
 	{
@@ -37,7 +37,7 @@ class FetchWebdataTest extends BaseTestCase
 
 	/**
 	 * @dataProvider postProvider
-     * @group slow
+	 * @group slow
 	 */
 	public function testPost(string $url, string $postData, string $responseBody)
 	{
