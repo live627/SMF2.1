@@ -10,7 +10,7 @@ class CurlFetchWebdataTest extends BaseTestCase
 	{
 		global $sourcedir;
 
-	require_once($sourcedir . '/Class-CurlFetchWeb.php');
+		require_once($sourcedir . '/Class-CurlFetchWeb.php');
 	}
 
 	public function postProvider()
@@ -49,6 +49,7 @@ class CurlFetchWebdataTest extends BaseTestCase
 
 	/**
 	 * @dataProvider getProvider
+     * @group slow
 	 */
 	public function testGet(string $url, int $responseCode, string $responseBody)
 	{
@@ -60,6 +61,7 @@ class CurlFetchWebdataTest extends BaseTestCase
 
 	/**
 	 * @dataProvider postProvider
+     * @group slow
 	 */
 	public function testPost(string $url, array $postData, int $responseCode, string $responseBody)
 	{

@@ -126,6 +126,7 @@ class CacheTest extends BaseTestCase
 		$this->assertTrue($this->_cache_obj->cleanCache());
 		$this->assertNull($this->_cache_obj->getData('test'));
 
+		$this->assertNull($this->_cache_obj->getData('test'));
 		$this->assertNull($this->_cache_obj->getData('test_undef'));
 
 		$this->assertTrue(version_compare($this->_cache_obj->getCompatibleVersion(), '0.0.1', '>='));

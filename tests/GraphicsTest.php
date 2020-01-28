@@ -52,6 +52,7 @@ class GraphicsTest extends BaseTestCase
 
 	/**
 	 * @dataProvider data
+     * @group slow
 	 */
 	public function test(string $url)
 	{

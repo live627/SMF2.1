@@ -27,15 +27,17 @@ class FetchWebdataTest extends BaseTestCase
 
 	/**
 	 * @dataProvider getProvider
+     * @group slow
 	 */
 	public function testGet(string $url, string $responseBody)
 	{
-		$data =  fetch_web_data($url);
-		$this->assertContains($responseBody,	$data);
+		$data = fetch_web_data($url);
+		$this->assertContains($responseBody, $data);
 	}
 
 	/**
 	 * @dataProvider postProvider
+     * @group slow
 	 */
 	public function testPost(string $url, string $postData, string $responseBody)
 	{

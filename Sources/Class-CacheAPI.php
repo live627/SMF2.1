@@ -110,7 +110,7 @@ interface cache_api_interface
 	 * Closes connections to the cache method.
 	 *
 	 * @access public
-	 * @return bool Whether or not we could close connections.
+	 * @return bool Whether the connections were closed.
 	 */
 	public function quit();
 
@@ -119,7 +119,6 @@ interface cache_api_interface
 	 *
 	 * @access public
 	 * @param array $config_vars Additional config_vars, see ManageSettings.php for usage.
-	 * @return void No return is needed.
 	 */
 	public function cacheSettings(array &$config_vars);
 
@@ -209,6 +208,7 @@ abstract class cache_api implements cache_api_interface
 	 */
 	public function connect()
 	{
+		return true;
 	}
 
 	/**
@@ -259,27 +259,6 @@ abstract class cache_api implements cache_api_interface
 	public function getDefaultTTL()
 	{
 		return $this->ttl;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getData($key, $ttl = null)
-	{
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function putData($key, $value, $ttl = null)
-	{
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function cleanCache($type = '')
-	{
 	}
 
 	/**

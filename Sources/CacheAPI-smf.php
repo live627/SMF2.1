@@ -71,7 +71,7 @@ class smf_cache extends cache_api
 		return false;
 	}
 
-	private function writeFile($file)
+	private function writeFile($file, $string)
 	{
 		if (($fp = fopen($file, 'cb')) !== false)
 		{
@@ -82,10 +82,10 @@ class smf_cache extends cache_api
 			}
 			ftruncate($fp, 0);
 			$bytes = 0;
-			$pieces = str_split($content, 8192);
+			$pieces = str_split($string, 8192);
 			foreach ($pieces as $piece)
 			{
-				if (($val = fwrite($fp, 8192)) !== false)
+				if (($val = fwrite($fp, $piece, 8192)) !== false)
 					$bytes += $val;
 				else
 					return false;
@@ -94,7 +94,7 @@ class smf_cache extends cache_api
 			flock($fp, LOCK_UN);
 			fclose($fp);
 
-			return $byted;
+			return $bytes;
 		}
 
 		return false;
@@ -105,21 +105,21 @@ class smf_cache extends cache_api
 	 */
 	public function getData($key, $ttl = null)
 	{
-		$file = sprintf('$s/data_$s.cache',
+		$file = sprintf('%s/data_%s.cache',
 			$this->cachedir,
 			$this->prefix . strtr($key, ':/', '-_')
 		);
 
 		// SMF Data returns $value and $expired.  $expired has a unix timestamp of when this expires.
-		if (file_exists($file) && ($value = $this->readFile($file)) !== false)
+		if (file_exists($file) && ($raw = $this->readFile($file)) !== false)
 		{
-			if ($value === null || $value->expiration < time())
+			if (($value = smf_json_decode($raw, true, false)) !== array() && $value['expiration'] >= time())
+				return $value['value'];
+			else
 				@unlink($file);
-
-			return $value->data;
 		}
 
-		return false;
+		return null;
 	}
 
 	/**
@@ -127,7 +127,7 @@ class smf_cache extends cache_api
 	 */
 	public function putData($key, $value, $ttl = null)
 	{
-		$file = sprintf('%s/data_$s.cache',
+		$file = sprintf('%s/data_%s.cache',
 			$this->cachedir,
 			$this->prefix . strtr($key, ':/', '-_')
 		);
@@ -137,7 +137,13 @@ class smf_cache extends cache_api
 			@unlink($file);
 		else
 		{
-			$cache_data = json_encode(array('expired' => time() + $ttl, 'value' => $value));
+			$cache_data = json_encode(
+				array(
+					'expiration' => time() + $ttl,
+					'value' => $value
+				),
+				JSON_NUMERIC_CHECK
+			);
 
 			// Write out the cache file, check that the cache write was successful; all the data must be written
 			// If it fails due to low diskspace, or other, remove the cache file
