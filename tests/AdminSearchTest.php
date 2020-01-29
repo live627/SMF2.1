@@ -15,6 +15,8 @@ class TestAdminSearch extends BaseTestCase
 	 * Hacky solution to generate coverage for the internal search methods
 	 * since calling the function within the data provider doesn't seem
 	 * to indicate any extra coverage generation.
+	 *
+	 * @group slow
 	 */
 	public function testBeforeSearchSettings()
 	{
@@ -26,6 +28,7 @@ class TestAdminSearch extends BaseTestCase
 
 	/**
 	 * @dataProvider settingsProvider
+	 * @group slow
 	 */
 	public function testSearchSettings($url, $name)
 	{
@@ -39,11 +42,7 @@ class TestAdminSearch extends BaseTestCase
 	{
 		global $context, $sourcedir, $user_info;
 
-		/*
-		 * Forcefully reload language files to combat PHPUnit
-		 * messing up globals between tests.
-		 */
-		loadLanguage('Admin', 'english', true, true);
+		loadLanguage('Admin');
 		$user_info['permissions'][] = 'admin_forum';
 
 		$context['search_term'] = 'enable';

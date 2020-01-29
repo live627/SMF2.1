@@ -420,7 +420,7 @@ function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $
 
 		if (checkImagick())
 		{
-			$imagick = new Imagick($destName);
+			$imagick = New Imagick($destName);
 			$src_width = empty($src_width) ? $imagick->getImageWidth() : $src_width;
 			$src_height = empty($src_height) ? $imagick->getImageHeight() : $src_height;
 			$dest_width = empty($max_width) ? $src_width : $max_width;
@@ -763,18 +763,17 @@ if (!function_exists('imagecreatefrombmp'))
  * @param gif_file $gif A gif image resource
  * @param string $lpszFileName The name of the file
  * @param int $background_color The background color
- * @return boolean Whether the operation was successful
+ * @return bool Whether the operation was successful
  */
 function gif_outputAsPng($gif, $lpszFileName, $background_color = -1)
 {
 	if (!is_a($gif, 'gif_file') || !$gif->loaded || $lpszFileName == '')
 		return false;
 
-	$fd = $gif->get_png_data($background_color);
-	if (strlen($fd) <= 0)
+	if (($fd = $gif->get_png_data($background_color)) === false || strlen($fd) <= 0)
 		return false;
 
-	if (!($fh = @fopen($lpszFileName, 'wb')))
+	if (($fp = @fopen($lpszFileName, 'wb')) === false)
 		return false;
 
 	@fwrite($fh, $fd, strlen($fd));

@@ -78,6 +78,19 @@ class GraphicsTest extends BaseTestCase
 		$this->assertTrue(checkImageContents($modSettings['custom_avatar_dir'] . '/' . $filename));
 	}
 
+	public function testGif()
+	{
+		touch('vv.gif');
+		$this->assertTrue(file_exists('vv.gif'));
+		$gif = new gif_file;
+		$gif->loadFile('vv.gif', 0);
+		$this->assertFalse($gif->loaded);
+		$this->assertFalse(gif_outputAsPng($gif, 'vv.png'));
+		$this->assertFalse(file_exists('vv.png'));
+		unlink('vv.gif');
+		$this->assertFalse(file_exists('vv.gif'));
+	}
+
 	public function testText()
 	{
 		ob_start();
