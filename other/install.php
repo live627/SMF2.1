@@ -170,7 +170,7 @@ if ('cli' === PHP_SAPI)
 				}
 				if (!empty($incontext['sql_results']) && $num == 4)
 				{
-					echo implode("\n", $incontext['sql_results'], "\n");
+					echo implode("\n", $incontext['sql_results']), "\n";
 
 					if (!empty($incontext['failures']))
 					{
