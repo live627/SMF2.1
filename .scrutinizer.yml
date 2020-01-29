@@ -1,9 +1,15 @@
 filter:
     excluded_paths:
         - '*.min.js'
-        - 'Sources/minify/*'
-        - 'Sources/random_compat/*'
-        - 'Sources/ReCaptcha/*'
+        - 'Sources/minify/'
+        - 'Sources/random_compat/'
+        - 'Sources/ReCaptcha/'
+        - "tests/"
+    dependency_paths:
+        - 'Sources/minify/'
+        - 'Sources/random_compat/'
+        - 'Sources/ReCaptcha/'
+
 checks:
     php:
         variable_existence: true
@@ -163,8 +169,8 @@ coding_style:
                 opening: new-line
                 always: false
             do_while:
-                opening: undefined
-                always: true
+                opening: new-line
+                always: false
                 while_on_new_line: true
             switch:
                 opening: new-line
@@ -177,7 +183,6 @@ coding_style:
                 general: lower
             constants:
                 true_false_null: lower
-
 
 build:
     nodes:
