@@ -767,10 +767,10 @@ if (!function_exists('imagecreatefrombmp'))
  */
 function gif_outputAsPng($gif, $lpszFileName, $background_color = -1)
 {
-	if (!is_a($gif, 'gif_file') || !$gif->loaded || $lpszFileName == '')
+	if (!is_a($gif, 'gif_file') || $lpszFileName == '')
 		return false;
 
-	if (($fd = $gif->get_png_data($background_color)) === false || strlen($fd) <= 0)
+	if (($fd = $gif->get_png_data($background_color)) === false)
 		return false;
 
 	if (($fp = @fopen($lpszFileName, 'wb')) === false)
