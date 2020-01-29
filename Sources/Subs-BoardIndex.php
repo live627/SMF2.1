@@ -48,12 +48,89 @@ function getBoardIndex($boardIndexOptions)
 	if (empty($modSettings['boardindex_max_depth']))
 		$modSettings['boardindex_max_depth'] = 1;
 
-	// Find all boards and categories, as well as related information.  This will be sorted by the natural order of boards and categories, which we control.
+	$query_select = array(
+		'b.id_board',
+		'b.name AS board_name',
+		'b.description',
+		'CASE WHEN b.redirect != {string:blank_string} THEN 1 ELSE 0 END AS is_redirect',
+		'b.num_posts',
+		'b.num_topics',
+		'b.unapproved_posts',
+		'b.unapproved_topics',
+		'b.id_parent',
+		'COALESCE(m.poster_time, 0) AS poster_time',
+		'COALESCE(mem.member_name, m.poster_name) AS poster_name',
+		'm.subject',
+		'm.id_topic',
+		'COALESCE(mem.real_name, m.poster_name) AS real_name',
+		'COALESCE(mem.id_member, 0) AS id_member',
+		'mem.avatar',
+		'm.id_msg',
+	);
+	$query_join = array(
+		'LEFT JOIN {db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)',
+		'LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)',
+	);
+	$query_sort = array(
+		'b.child_level DESC',
+		'b.board_order DESC',
+	);
+	$query_params = array(
+		'current_member' => $user_info['id'],
+		'child_level' => $boardIndexOptions['base_level'],
+		'max_child_level' => $boardIndexOptions['base_level'] + $modSettings['boardindex_max_depth'],
+		'blank_string' => '',
+		'id_parent' => $boardIndexOptions['parent_id'],
+	);
+
+	if ($boardIndexOptions['include_categories'])
+	{
+		$query_select = array_merge($query_select, array(
+			'c.id_cat',
+			'c.name AS cat_name',
+			'c.description AS cat_desc',
+			'c.can_collapse',
+		));
+		$query_join[] = 'LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)';
+		$query_sort[] = 'c.cat_order';
+	}
+
+	if ($user_info['is_guest'])
+	{
+		$query_select = array_merge($query_select, array(
+			'1 AS is_read',
+			'0 AS new_from',
+		));
+	}
+	else
+	{
+		$query_select = array_merge($query_select, array(
+			'CASE WHEN COALESCE(lb.id_msg, 0) >= b.id_last_msg THEN 1 ELSE 0 END AS is_read',
+			'COALESCE(lb.id_msg, -1) + 1 AS new_from',
+		));
+		$query_join[] = 'LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})';
+	}
+
+	if (!empty($settings['avatars_on_boardIndex']))
+	{
+		$query_select = array_merge($query_select, array(
+			'mem.email_address',
+			'mem.avatar',
+			'COALESCE(am.id_attach, 0) AS member_id_attach',
+			'am.filename AS member_filename',
+			'am.attachment_type AS member_attach_type',
+		));
+		$query_join[] = 'LEFT JOIN {db_prefix}attachments AS am ON (am.id_member = m.id_member)';
+	}
+
+
+	// Find all boards and categories, as well as related information.
+	// This will be sorted by the natural order of boards and categories, which we control.
 	if ($boardIndexOptions['parent_id'] != 0 && $smcFunc['db_cte_support']())
 		$result_boards = $smcFunc['db_query']('', '
 			WITH RECURSIVE
 				boards_cte (child_level, id_board, name , description, redirect, num_posts, num_topics, unapproved_posts, unapproved_topics, id_parent, id_msg_updated, id_cat, id_last_msg, board_order)
-			as
+			AS
 			(
 				SELECT b.child_level, b.id_board, b.name , b.description, b.redirect, b.num_posts, b.num_topics, b.unapproved_posts, b.unapproved_topics, b.id_parent, b.id_msg_updated, b.id_cat, b.id_last_msg, b.board_order
 				FROM {db_prefix}boards as b
@@ -65,61 +142,24 @@ function getBoardIndex($boardIndexOptions)
 				WHERE {query_see_board}
 					AND b.child_level BETWEEN {int:child_level} AND {int:max_child_level}
 			)
-			SELECT' . ($boardIndexOptions['include_categories'] ? '
-				c.id_cat, c.name AS cat_name, c.description AS cat_desc,' : '') . '
-				b.id_board, b.name AS board_name, b.description,
-				CASE WHEN b.redirect != {string:blank_string} THEN 1 ELSE 0 END AS is_redirect,
-				b.num_posts, b.num_topics, b.unapproved_posts, b.unapproved_topics, b.id_parent,
-				COALESCE(m.poster_time, 0) AS poster_time, COALESCE(mem.member_name, m.poster_name) AS poster_name,
-				m.subject, m.id_topic, COALESCE(mem.real_name, m.poster_name) AS real_name,
-				' . ($user_info['is_guest'] ? ' 1 AS is_read, 0 AS new_from,' : '
-				(CASE WHEN COALESCE(lb.id_msg, 0) >= b.id_last_msg THEN 1 ELSE 0 END) AS is_read, COALESCE(lb.id_msg, -1) + 1 AS new_from,' . ($boardIndexOptions['include_categories'] ? '
-				c.can_collapse,' : '')) . '
-				COALESCE(mem.id_member, 0) AS id_member, mem.avatar, m.id_msg' . (!empty($settings['avatars_on_boardIndex']) ? ',  mem.email_address, mem.avatar, COALESCE(am.id_attach, 0) AS member_id_attach, am.filename AS member_filename, am.attachment_type AS member_attach_type' : '') . '
-			FROM boards_cte AS b' . ($boardIndexOptions['include_categories'] ? '
-				LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)' : '') . '
-				LEFT JOIN {db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)
-				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)' . (!empty($settings['avatars_on_boardIndex']) ? '
-				LEFT JOIN {db_prefix}attachments AS am ON (am.id_member = m.id_member)' : '') . '' . ($user_info['is_guest'] ? '' : '
-				LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})') . '
+			SELECT ' .  implode(', ', $query_select) . '
+			FROM boards_cte AS b
+				' .  implode('
+				', $query_join) . '
 			WHERE b.id_parent != 0
-			ORDER BY ' . (!empty($boardIndexOptions['include_categories']) ? 'c.cat_order, ' : '') . 'b.child_level DESC, b.board_order DESC',
-			array(
-				'current_member' => $user_info['id'],
-				'child_level' => $boardIndexOptions['base_level'],
-				'max_child_level' => $boardIndexOptions['base_level'] + $modSettings['boardindex_max_depth'],
-				'blank_string' => '',
-				'id_parent' => $boardIndexOptions['parent_id'],
-			)
+			ORDER BY ' . implode(', ', $query_sort),
+			$query_params
 		);
 	else
 		$result_boards = $smcFunc['db_query']('', '
-			SELECT' . ($boardIndexOptions['include_categories'] ? '
-				c.id_cat, c.name AS cat_name, c.description AS cat_desc,' : '') . '
-				b.id_board, b.name AS board_name, b.description,
-				CASE WHEN b.redirect != {string:blank_string} THEN 1 ELSE 0 END AS is_redirect,
-				b.num_posts, b.num_topics, b.unapproved_posts, b.unapproved_topics, b.id_parent,
-				COALESCE(m.poster_time, 0) AS poster_time, COALESCE(mem.member_name, m.poster_name) AS poster_name,
-				m.subject, m.id_topic, COALESCE(mem.real_name, m.poster_name) AS real_name,
-				' . ($user_info['is_guest'] ? ' 1 AS is_read, 0 AS new_from,' : '
-				(CASE WHEN COALESCE(lb.id_msg, 0) >= b.id_last_msg THEN 1 ELSE 0 END) AS is_read, COALESCE(lb.id_msg, -1) + 1 AS new_from,' . ($boardIndexOptions['include_categories'] ? '
-				c.can_collapse,' : '')) . '
-				COALESCE(mem.id_member, 0) AS id_member, mem.avatar, m.id_msg' . (!empty($settings['avatars_on_boardIndex']) ? ',  mem.email_address, mem.avatar, COALESCE(am.id_attach, 0) AS member_id_attach, am.filename AS member_filename, am.attachment_type AS member_attach_type' : '') . '
-			FROM {db_prefix}boards AS b' . ($boardIndexOptions['include_categories'] ? '
-				LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)' : '') . '
-				LEFT JOIN {db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)
-				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)' . (!empty($settings['avatars_on_boardIndex']) ? '
-				LEFT JOIN {db_prefix}attachments AS am ON (am.id_member = m.id_member)' : '') . '' . ($user_info['is_guest'] ? '' : '
-				LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})') . '
+			SELECT ' .  implode(', ', $query_select) . '
+			FROM {db_prefix}boards AS b
+				' .  implode('
+				', $query_join) . '
 			WHERE {query_see_board}
 				AND b.child_level BETWEEN {int:child_level} AND {int:max_child_level}
-			ORDER BY ' . (!empty($boardIndexOptions['include_categories']) ? 'c.cat_order, ' : '') . 'b.child_level DESC, b.board_order DESC',
-			array(
-				'current_member' => $user_info['id'],
-				'child_level' => $boardIndexOptions['base_level'],
-				'max_child_level' => $boardIndexOptions['base_level'] + $modSettings['boardindex_max_depth'],
-				'blank_string' => '',
-			)
+			ORDER BY ' . implode(', ', $query_sort),
+			$query_params
 		);
 
 	// Start with an empty array.
@@ -164,15 +204,14 @@ function getBoardIndex($boardIndexOptions)
 					'id' => $row_board['id_cat'],
 					'name' => $name,
 					'description' => $description,
-					'is_collapsed' => isset($row_board['can_collapse']) && $row_board['can_collapse'] == 1 && !empty($options['collapse_category_' . $row_board['id_cat']]),
-					'can_collapse' => isset($row_board['can_collapse']) && $row_board['can_collapse'] == 1,
+					'is_collapsed' => $row_board['can_collapse'] == 1 && !empty($options['collapse_category_' . $row_board['id_cat']]),
+					'can_collapse' => !$user_info['is_guest'] && $row_board['can_collapse'] == 1,
 					'href' => $scripturl . '#c' . $row_board['id_cat'],
 					'boards' => array(),
 					'new' => false,
 					'css_class' => '',
+					'link' => '<a id="c' . $row_board['id_cat'] . '"></a>' . (!$user_info['is_guest'] ? '<a href="' . $scripturl . '?action=unread;c=' . $row_board['id_cat'] . '" title="' . sprintf($txt['new_posts_in_category'], $name) . '">' . $name . '</a>' : $name),
 				);
-
-				$categories[$row_board['id_cat']]['link'] = '<a id="c' . $row_board['id_cat'] . '"></a>' . (!$context['user']['is_guest'] ? '<a href="' . $scripturl . '?action=unread;c=' . $row_board['id_cat'] . '" title="' . sprintf($txt['new_posts_in_category'], $name) . '">' . $name . '</a>' : $name);
 			}
 
 			// If this board has new posts in it (and isn't the recycle bin!) then the category is new.
@@ -223,6 +262,7 @@ function getBoardIndex($boardIndexOptions)
 					'can_approve_posts' => !empty($user_info['mod_cache']['ap']) && ($user_info['mod_cache']['ap'] == array(0) || in_array($row_board['id_board'], $user_info['mod_cache']['ap'])),
 					'href' => $scripturl . '?board=' . $row_board['id_board'] . '.0',
 					'link' => '<a href="' . $scripturl . '?board=' . $row_board['id_board'] . '.0">' . $board_name . '</a>',
+					'board_tooltip' => $txt['old_posts'],
 					'board_class' => 'off',
 					'css_class' => '',
 				);
@@ -239,10 +279,6 @@ function getBoardIndex($boardIndexOptions)
 					// If we're showing to guests, we want to give them the idea that something interesting is going on!
 					$this_category[$row_board['id_board']]['board_class'] = 'on';
 					$this_category[$row_board['id_board']]['board_tooltip'] = $txt['new_posts'];
-				}
-				else
-				{
-					$this_category[$row_board['id_board']]['board_tooltip'] = $txt['old_posts'];
 				}
 			}
 		}
@@ -304,8 +340,7 @@ function getBoardIndex($boardIndexOptions)
 			// Propagate some values to the parent board
 			if (isset($row_boards[$row_board['id_parent']]))
 			{
-				if (empty($row_board['is_read']))
-					$row_boards[$row_board['id_parent']]['is_read'] = $row_board['is_read'];
+				$row_boards[$row_board['id_parent']]['is_read'] |= $row_board['is_read'];
 
 				if (!empty($boardIndexOptions['countChildPosts']) && !$row_board['is_redirect'])
 				{
@@ -353,7 +388,10 @@ function getBoardIndex($boardIndexOptions)
 				'link' => $row_board['poster_name'] != '' ? (!empty($row_board['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row_board['id_member'] . '">' . $row_board['real_name'] . '</a>' : $row_board['real_name']) : $txt['not_applicable'],
 			),
 			'start' => 'msg' . $row_board['new_from'],
-			'topic' => $row_board['id_topic']
+			'topic' => $row_board['id_topic'],
+			'href' => '',
+			'link' => $row_board['id_topic'],
+			'last_post_message' => '',
 		);
 
 		if (!empty($settings['avatars_on_boardIndex']))
@@ -368,12 +406,6 @@ function getBoardIndex($boardIndexOptions)
 		{
 			$this_last_post['href'] = $scripturl . '?topic=' . $row_board['id_topic'] . '.msg' . ($user_info['is_guest'] ? $row_board['id_msg'] : $row_board['new_from']) . (empty($row_board['is_read']) ? ';boardseen' : '') . '#new';
 			$this_last_post['link'] = '<a href="' . $this_last_post['href'] . '" title="' . $row_board['subject'] . '">' . $row_board['short_subject'] . '</a>';
-		}
-		else
-		{
-			$this_last_post['href'] = '';
-			$this_last_post['link'] = $txt['not_applicable'];
-			$this_last_post['last_post_message'] = '';
 		}
 
 		// Set the last post in the parent board.
@@ -404,13 +436,14 @@ function getBoardIndex($boardIndexOptions)
 	/* The board's and children's 'last_post's have:
 	time, timestamp (a number that represents the time.), id (of the post), topic (topic id.),
 	link, href, subject, start (where they should go for the first unread post.),
-	and member. (which has id, name, link, href, username in it.)
-	timeformat is a pricy call do it only for thos how get shown */
+	and member. (which has id, name, link, href, username in it.) */
+
 	// Fetch the board's moderators and moderator groups
 	$boards = array_unique($boards);
 	$moderators = getBoardModerators($boards);
 	$groups = getBoardModeratorGroups($boards);
 	if ($boardIndexOptions['include_categories'])
+	{
 		foreach ($categories as &$category)
 		{
 			foreach ($category['boards'] as &$board)
@@ -434,7 +467,9 @@ function getBoardIndex($boardIndexOptions)
 					$board['last_post']['last_post_message'] = sprintf($txt['last_post_message'], $board['last_post']['member']['link'], $board['last_post']['link'], $board['last_post']['time'] > 0 ? timeformat($board['last_post']['time']) : $txt['not_applicable']);
 			}
 		}
-		else
+	}
+	else
+	{
 		foreach ($this_category as &$board)
 		{
 			if (!empty($moderators[$board['id']]))
@@ -455,7 +490,7 @@ function getBoardIndex($boardIndexOptions)
 			if (!empty($board['last_post']))
 				$board['last_post']['last_post_message'] = sprintf($txt['last_post_message'], $board['last_post']['member']['link'], $board['last_post']['link'], $board['last_post']['time'] > 0 ? timeformat($board['last_post']['time']) : $txt['not_applicable']);
 		}
-
+	}
 	unset($category, $board);
 
 	if ($boardIndexOptions['include_categories'])
