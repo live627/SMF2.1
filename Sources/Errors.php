@@ -196,7 +196,7 @@ function fatal_lang_error($error, $log = 'general', $sprintf = array(), $status 
 	global $txt, $language, $user_info, $context;
 	static $fatal_error_called = false;
 
-	die($error);
+	throw new Exception($error);
 
 	// Send the status header - set this to 0 or false if you don't want to send one at all
 	if (!empty($status))

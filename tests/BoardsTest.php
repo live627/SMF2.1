@@ -5,13 +5,12 @@ namespace PHPTDD;
 class BoardsTest extends BaseTestCase
 {
 	private $options = array();
-	private $boards = array();
 
 	protected function setUp()
 	{
 		global $sourcedir;
 
-	require_once($sourcedir . '/Subs-BoardIndex.php');
+		require_once($sourcedir . '/Subs-BoardIndex.php');
 		require_once($sourcedir . '/Subs-Boards.php');
 
 		$this->options = array(
@@ -36,19 +35,29 @@ class BoardsTest extends BaseTestCase
 				'access_groups' => [-1],
 				'deny_groups' => [0],
 			),
+			array(
+				'board_name' => 'Search 4',
+				'moderator_string' => 'test',
+				'moderator_group_string' => 'Moderator',
+				'move_to' => 'before',
+				'target_board' => 1,
+				'target_category' => 1,
+				'access_groups' => [-1],
+				'num_posts' => 0,
+			),
 		);
 	}
 
 	public function testAddBoards()
 	{
-		global $cat_tree, $boards, $boardList, $smcFunc;
+		global $boards, $boardsTest;
 
+		$boardsTest = array();
 		foreach ($this->options as $options)
-			$this->boards[] = createBoard($options);
+			$boardsTest[] = createBoard($options);
 
 		getBoardTree();
-
-		foreach ($this->boards as $board)
+		foreach ($boardsTest as $board)
 		{
 			$this->assertArrayHasKey($board, $boards);
 			$this->assertEquals($board, $boards[$board]['id']);
@@ -56,15 +65,14 @@ class BoardsTest extends BaseTestCase
 			$this->assertInternalType('array', $boards[$board]['member_groups']);
 		}
 
-		$this->assertCount(4, $boards);
+		$this->assertCount(5, $boards);
 	}
 
 	public function testBoardIndex()
 	{
-		global $boards;
+		global $boardsTest;
 
 		getBoardTree();
-		$this->boards = array_diff(array_keys($boards), array(1));
 		$boardIndexOptions = array(
 			'include_categories' => true,
 			'base_level' => 0,
@@ -76,7 +84,7 @@ class BoardsTest extends BaseTestCase
 		$this->assertCount(1, $categories);
 		foreach ($categories as $category)
 		{
-			$this->assertCount(3, $category['boards']);
+			$this->assertCount(4, $category['boards']);
 
 			foreach ($category['boards'] as $board)
 			{
@@ -87,19 +95,69 @@ class BoardsTest extends BaseTestCase
 				$this->assertInternalType('array', $board['link_moderator_groups']);
 			}
 		}
+		$this->assertCount(1, $categories[1]['boards'][1]['children']);
+		$this->assertCount(1, $categories[1]['boards'][1]['link_children']);
+		$this->assertCount(1, $categories[1]['boards'][$boardsTest[3]]['moderators']);
+		$this->assertCount(1, $categories[1]['boards'][$boardsTest[3]]['link_moderators']);
+		//$this->assertCount(1, $categories[1]['boards'][$boardsTest[3]]['link_moderator_groups']);
+		$this->assertEquals('test', $categories[1]['boards'][$boardsTest[3]]['moderators'][0]['name']);
+	}
 
+	/**
+	 * @expectedException PHPUnit\Framework\Error\Error
+	 */
+	public function testMoveChildError()
+	{
+		$options = array(
+			'move_to' => 'test',
+		);
+		modifyBoard(1, $options);
+	}
+
+	public function testMarkBoardsRead()
+	{
+		global $boardsTest, $smcFunc, $user_info;
+
+		$user_info['id'] = 1;
+		markBoardsRead($boardsTest);
+		$result = $smcFunc['db_query']('', '
+			SELECT COUNT(id_board)
+			FROM {db_prefix}log_boards
+				WHERE id_board IN ({array_int:board_list})
+					AND id_member = 1',
+				array(
+					'board_list' => $boardsTest,
+			)
+		);
+		list ($actual) = $smcFunc['db_fetch_row']($result);
+		$smcFunc['db_free_result']($result);
+		$this->assertEquals(4, $actual);
+
+		markBoardsRead($boardsTest, true);
+		$result = $smcFunc['db_query']('', '
+			SELECT COUNT(id_board)
+			FROM {db_prefix}log_boards
+				WHERE id_board IN ({array_int:board_list})
+					AND id_member = 1',
+				array(
+					'board_list' => $boardsTest,
+			)
+		);
+		list ($actual) = $smcFunc['db_fetch_row']($result);
+		$smcFunc['db_free_result']($result);
+		$this->assertEquals(0, $actual);
+
+		unset($user_info);
 	}
 
 	public function testRemoveBoards()
 	{
-		global $boards;
+		global $boards, $boardsTest;
 
-		getBoardTree();
-		$this->boards = array_diff(array_keys($boards), array(1));
-		deleteBoards($this->boards);
+		deleteBoards($boardsTest);
 		getBoardTree();
 
-		foreach ($this->boards as $board)
+		foreach ($boardsTest as $board)
 			$this->assertArrayNotHasKey($board, $boards);
 
 		$this->assertCount(1, $boards);

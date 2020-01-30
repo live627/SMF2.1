@@ -1203,13 +1203,10 @@ function getTreeOrder()
 {
 	global $smcFunc;
 
-	static $tree_order = array(
+	$tree_order = array(
 		'cats' => array(),
 		'boards' => array(),
 	);
-
-	if (!empty($tree_order['boards']))
-		return $tree_order;
 
 	if (($cached = cache_get_data('board_order', 86400)) !== null)
 	{
