@@ -11,7 +11,7 @@ class BoardsTest extends BaseTestCase
 	{
 		global $sourcedir;
 
-		require_once($sourcedir . '/Subs-BoardIndex.php');
+	require_once($sourcedir . '/Subs-BoardIndex.php');
 		require_once($sourcedir . '/Subs-Boards.php');
 
 		$this->options = array(
@@ -37,6 +37,10 @@ class BoardsTest extends BaseTestCase
 				'deny_groups' => [0],
 			),
 		);
+	}
+
+	public function testAddBoards()
+	{
 		global $cat_tree, $boards, $boardList, $smcFunc;
 
 		foreach ($this->options as $options)
@@ -55,9 +59,6 @@ class BoardsTest extends BaseTestCase
 		$this->assertCount(4, $boards);
 	}
 
-	/**
-	 * @depends testAddBoards
-	 */
 	public function testBoardIndex()
 	{
 		global $boards;
@@ -75,7 +76,6 @@ class BoardsTest extends BaseTestCase
 		$this->assertCount(1, $categories);
 		foreach ($categories as $category)
 		{
-			var_dump($category);
 			$this->assertCount(3, $category['boards']);
 
 			foreach ($category['boards'] as $board)
@@ -87,9 +87,10 @@ class BoardsTest extends BaseTestCase
 				$this->assertInternalType('array', $board['link_moderator_groups']);
 			}
 		}
+
 	}
 
-	public function tearDown()
+	public function testRemoveBoards()
 	{
 		global $boards;
 
