@@ -138,7 +138,7 @@ if ('cli' === PHP_SAPI)
 	{
 		$_POST = array(
 			'contbutt' => '1',
-			'mbname' => $options['n'] ?? 'My Commnunity',
+			'mbname' => $options['n'] ?? 'My Community',
 			'boardurl' => $options['boardurl'] ?? 'http://127.0.0.1',
 			'username' => $options['u'],
 			'password1' => $options['p'],
@@ -457,25 +457,12 @@ function installExit($fallThrough = false)
 		// The top install bit.
 		template_install_above();
 
-		// Call the template.
-		if (isset($incontext['sub_template']))
-		{
-			$incontext['form_url'] = $installurl . '?step=' . $incontext['current_step'];
+		$incontext['form_url'] = $installurl . '?step=' . $incontext['current_step'];
 
-			call_user_func('template_' . $incontext['sub_template']);
-		}
-		// @todo REMOVE THIS!!
-		else
-		{
-			if (function_exists('doStep' . $_GET['step']))
-				call_user_func('doStep' . $_GET['step']);
-		}
-		// Show the footer.
+		call_user_func('template_' . $incontext['sub_template']);
+
 		template_install_below();
 	}
-
-	// Bang - gone!
-	die();
 }
 
 function Welcome()

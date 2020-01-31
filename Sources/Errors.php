@@ -164,6 +164,8 @@ function fatal_error($error, $log = 'general', $status = 500)
 {
 	global $txt;
 
+	throw new Exception($error);
+
 	// Send the appropriate HTTP status header - set this to 0 or false if you don't want to send one at all
 	if (!empty($status))
 		send_http_status($status);

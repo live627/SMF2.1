@@ -71,7 +71,12 @@ class BoardsTest extends BaseTestCase
 
 	public function testBoardIndexController()
 	{
-		global $boardsTest, $context;
+		global $boardsTest, $db_show_debug, $context, $modSettings, $settings;
+
+		$settings['number_recent_posts'] = 2;
+		$modSettings['cal_enabled'] = true;
+		$settings['show_group_key'] = true;
+		$settings['show_newsfader'] = true;
 
 		BoardIndex();
 		$this->assertCount(1, $context['categories']);
@@ -94,6 +99,24 @@ class BoardsTest extends BaseTestCase
 		$this->assertCount(1, $context['categories'][1]['boards'][$boardsTest[3]]['link_moderators']);
 		//$this->assertCount(1, $context['categories'][1]['boards'][$boardsTest[3]]['link_moderator_groups']);
 		$this->assertEquals('test', $context['categories'][1]['boards'][$boardsTest[3]]['moderators'][0]['name']);
+
+		$this->assertInternalType('array', $context['latest_posts']);
+		$this->assertCount(1, $context['latest_posts']);
+		$this->assertEquals('Welcome to SMF!', $context['latest_posts'][0]['subject']);
+		$this->assertEquals('Welcome to SMF!', $context['latest_post']['subject']);
+		$this->assertContains(array('tpl' => 'recent', 'txt' => 'recent_posts'), $context['info_center']);
+
+		$this->assertContains(array('tpl' => 'stats', 'txt' => 'forum_stats'), $context['info_center']);
+
+		$this->assertFalse($context['show_buddies']);
+		$this->assertFalse($context['show_who']);
+		$this->assertContains(array('tpl' => 'online', 'txt' => 'online_users'), $context['info_center']);
+
+		$this->assertEquals('My Community - Index', $context['page_title']);
+		$this->assertArrayHasKey('markread', $context['mark_read_button']);
+
+		$this->assertTrue($db_show_debug === true);
+		$this->assertContains('integrate_mark_read_button', $context['debug']['hooks']);
 	}
 
 	public function testBoardIndex()

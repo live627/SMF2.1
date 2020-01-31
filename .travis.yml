@@ -42,7 +42,9 @@ install:
   - sh -c "if [ '$DB' = 'postgres' ]; then php -f install.php -- -u test -p test --dbtype postgresql --dbname smf --dbuser postgres; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then php -f install.php -- -u test -p test --dbname smf --dbuser travis; fi"
 
-script: vendor/phpunit/phpunit/phpunit
+script:
+  - sh -c "if [ '$DB' = 'postgres' ]; then vendor/phpunit/phpunit/phpunit --exclude-group slow; fi"
+  - sh -c "if [ '$DB' = 'mysql' ]; then vendor/phpunit/phpunit/phpunit; fi"
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
