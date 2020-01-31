@@ -54,23 +54,6 @@ function deleteMembers($users, $check_not_admin = false)
 	// How many are they deleting?
 	if (empty($users))
 		return;
-	elseif (count($users) == 1)
-	{
-		list ($user) = $users;
-
-		if ($user == $user_info['id'])
-			isAllowedTo('profile_remove_own');
-		else
-			isAllowedTo('profile_remove_any');
-	}
-	else
-	{
-		foreach ($users as $k => $v)
-			$users[$k] = (int) $v;
-
-		// Deleting more than one?  You can't have more than one account...
-		isAllowedTo('profile_remove_any');
-	}
 
 	// Get their names for logging purposes.
 	$request = $smcFunc['db_query']('', '
@@ -448,8 +431,8 @@ function registerMember(&$regOptions, $return_errors = false)
 	// Registration from the admin center, let them sweat a little more.
 	if ($regOptions['interface'] == 'admin')
 	{
-		is_not_guest();
-		isAllowedTo('moderate_forum');
+	// 	is_not_guest();
+	//	isAllowedTo('moderate_forum');
 	}
 	// If you're an admin, you're special ;).
 	elseif ($regOptions['interface'] == 'guest')

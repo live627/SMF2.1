@@ -6,7 +6,7 @@ class TestMemberList extends BaseTestCase
 {
 	protected function setUp()
 	{
-		global $context, $sourcedir, $user_info;
+		global $sourcedir, $user_info;
 
 		require_once($sourcedir . '/Memberlist.php');
 		$user_info['permissions'][] = 'view_mlist';
@@ -21,6 +21,7 @@ class TestMemberList extends BaseTestCase
 		$this->assertEquals(1, $context['num_members']);
 		$this->assertEquals('t', $context['members'][1]['sort_letter']);
 	}
+
 	public function testActionMlSearch()
 	{
 		global $context;
