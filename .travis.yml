@@ -36,7 +36,7 @@ before_install:
   - phpenv config-add tests/config.ini
   - cp ./other/*.* .
   - composer install
-  - sh lint-php - Copy
+  - sh other/prepare-files
 
 install:
   - sh -c "if [ '$DB' = 'postgres' ]; then php -f install.php -- -u test -p test --dbtype postgresql --dbname smf --dbuser postgres; fi"
