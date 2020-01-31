@@ -10,6 +10,7 @@ class BoardsTest extends BaseTestCase
 	{
 		global $sourcedir;
 
+		require_once($sourcedir . '/BoardIndex.php');
 		require_once($sourcedir . '/Subs-BoardIndex.php');
 		require_once($sourcedir . '/Subs-Boards.php');
 
@@ -66,6 +67,33 @@ class BoardsTest extends BaseTestCase
 		}
 
 		$this->assertCount(5, $boards);
+	}
+
+	public function testBoardIndexController()
+	{
+		global $boardsTest, $context;
+
+		BoardIndex();
+		$this->assertCount(1, $context['categories']);
+		foreach ($context['categories'] as $category)
+		{
+			$this->assertCount(4, $category['boards']);
+
+			foreach ($category['boards'] as $board)
+			{
+				$this->assertInternalType('array', $board['children']);
+				$this->assertInternalType('array', $board['link_children']);
+				$this->assertInternalType('array', $board['moderators']);
+				$this->assertInternalType('array', $board['link_moderators']);
+				$this->assertInternalType('array', $board['link_moderator_groups']);
+			}
+		}
+		$this->assertCount(1, $context['categories'][1]['boards'][1]['children']);
+		$this->assertCount(1, $context['categories'][1]['boards'][1]['link_children']);
+		$this->assertCount(1, $context['categories'][1]['boards'][$boardsTest[3]]['moderators']);
+		$this->assertCount(1, $context['categories'][1]['boards'][$boardsTest[3]]['link_moderators']);
+		//$this->assertCount(1, $context['categories'][1]['boards'][$boardsTest[3]]['link_moderator_groups']);
+		$this->assertEquals('test', $context['categories'][1]['boards'][$boardsTest[3]]['moderators'][0]['name']);
 	}
 
 	public function testBoardIndex()

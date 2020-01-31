@@ -4,7 +4,7 @@ filter:
         - 'Sources/minify/'
         - 'Sources/random_compat/'
         - 'Sources/ReCaptcha/'
-        - "tests/"
+        #- "tests/"
     dependency_paths:
         - 'Sources/minify/'
         - 'Sources/random_compat/'
