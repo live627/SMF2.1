@@ -1,4 +1,5 @@
 {
+    "name": "SimpleMachines/SMF2.1",
     "require": {
         "composer/composer": "^1.7"
     },

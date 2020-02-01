@@ -21,8 +21,7 @@ class MembersTest extends BaseTestCase
 				'interface' => 'admin',
 				'username' => 'User 1',
 				'email' => 'search@email1.tld',
-				'password' => 'password',
-				'password_check' => 'password',
+				'password' => '',
 				'check_reserved_name' => false,
 				'check_password_strength' => false,
 				'check_email_ban' => false,
@@ -36,33 +35,62 @@ class MembersTest extends BaseTestCase
 				'email' => 'search@email2.tld',
 				'password' => 'password',
 				'password_check' => 'password',
-				'check_reserved_name' => false,
-				'check_password_strength' => false,
-				'check_email_ban' => false,
-				'send_welcome_email' => false,
+				'check_reserved_name' => true,
+				'check_password_strength' => true,
+				'check_email_ban' => true,
+				'send_welcome_email' => true,
 				'require' => 'nothing',
-				'memberGroup' => 0,
+				'birthdate' => '11-11-1111',
+				'timezone' => 'time',
+			),
+			array(
+				'interface' => 'admin',
+				'username' => 'User 3',
+				'email' => 'search@email.tld',
+				'password' => 'password',
+				'password_check' => 'password',
+				'check_reserved_name' => true,
+				'check_password_strength' => true,
+				'check_email_ban' => true,
+				'send_welcome_email' => true,
+				'require' => 'activation',
+				'birthdate' => '11-11-1111',
+				'timezone' => 'time',
+			),
+			array(
+				'interface' => 'admin',
+				'username' => 'User 4',
+				'email' => 'search4@email.tld',
+				'password' => 'password',
+				'password_check' => 'password',
+				'check_reserved_name' => true,
+				'check_password_strength' => true,
+				'check_email_ban' => true,
+				'send_welcome_email' => true,
+				'require' => 'nothing',
+				'birthdate' => '11-11-1111',
+				'timezone' => 'time',
 			),
 		);
 		global $members, $membersTest;
 
 		$membersTest = array();
 		foreach ($this->options as $options)
-			$membersTest[] = registerMember($options);
+		{
+			$memID = registerMember($options, true);
+			$this->assertInternalType('int', $memID);
+			$membersTest[] = $memID;
+		}
 	}
 
 	public function testAddMembers()
 	{
 
 		global $members, $membersTest;
-		$members = list_getMembers(0, 30, 'id_member', '1');
-		foreach ($membersTest as $member)
-		{
-			$this->assertEquals($member, $members['id_member']);
-			$this->assertEquals('User ' . $member + 1, $members['real_name']);
-		}
-
-		$this->assertCount(3, $members);
+		$members = list_getMembers(0, 30, 'id_member', 'id_member IN({array_int:members})', ['members' => $membersTest]);
+		$this->assertCount(count($this->options), $members);
+		foreach ($members as $member)
+			$this->assertContains($member['id_member'], $membersTest);
 	}
 
 	public function tearDown()
