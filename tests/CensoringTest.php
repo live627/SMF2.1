@@ -107,7 +107,7 @@ class CensoringTest extends BaseTestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function setUp()
+	public function setUp() : void
 	{
 		global $modSettings;
 

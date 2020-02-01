@@ -7,7 +7,7 @@ class TestSettingsForm extends BaseTestCase
 	protected $configVars = array();
 	protected $permissionResults = array();
 
-	public function setUp()
+	public function setUp() : void
 	{
 		global $sourcedir, $user_info;
 
@@ -137,7 +137,7 @@ class TestSettingsForm extends BaseTestCase
 		$this->assertSame(array('b', 'i'), $context['bbc_sections'][$this->configVars[9][1]]['disabled']);
 	}
 
-	public function tearDown()
+	public function tearDown() : void
 	{
 		global $smcFunc;
 

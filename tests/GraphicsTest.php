@@ -6,7 +6,7 @@ use gif_file;
 
 class GraphicsTest extends BaseTestCase
 {
-	protected function setUp()
+	public function setUp() : void
 	{
 		global $sourcedir;
 
@@ -15,7 +15,7 @@ class GraphicsTest extends BaseTestCase
 		require_once($sourcedir . '/ManageAttachments.php');
 	}
 
-	protected function tearDown()
+	public function tearDown() : void
 	{
 		removeAttachments(array('id_member' => 1));
 	}

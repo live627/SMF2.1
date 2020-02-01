@@ -41,7 +41,7 @@ class BBCTest extends BaseTestCase
 			),
 			array(
 				'/me likes this',
-				'[me=]likes this[/me]'
+				'[me=test]likes this[/me]'
 			),
 			array(
 				'[url=//www.google.com]Google[/url]',

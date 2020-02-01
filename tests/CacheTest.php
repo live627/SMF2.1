@@ -16,7 +16,7 @@ class CacheTest extends BaseTestCase
 {
 	private $_cache_obj;
 
-	public function setUp()
+	public function setUp() : void
 	{
 		global $cache_accelerator, $cache_enable;
 
@@ -24,7 +24,7 @@ class CacheTest extends BaseTestCase
 		$cache_enable = 1;
 	}
 
-	public function tearDown()
+	public function tearDown() : void
 	{
 		global $cache_accelerator, $cache_enable, $cacheAPI;
 

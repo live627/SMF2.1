@@ -1,24 +1,29 @@
 <?php
 
-if (file_exists('./SSI.php') && !defined('SMF'))
-{
-	$ssi = true;
-	require_once('./SSI.php');
-}
-elseif (!defined('SMF'))
-{
-	exit('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
-}
-if (!array_key_exists('db_add_column', $smcFunc))
-{
-	db_extend('packages');
-}
-
+require_once('./SSI.php');
 require_once "./vendor/autoload.php";
-loadSession();
-loadTheme();
 $db_show_debug = true;
 $cache_memcached = 'localhost';
 $pg_cache_server = 'localhost';
 $pg_cache_user = 'postgres';
 $pg_cache_passwd = '';
+
+add_integration_function('integrate_verify_user', 'FeignLogin', false);
+
+function FeignLogin()
+{
+	remove_integration_function('integrate_verify_user', 'FeignLogin', false);
+
+	return 1;
+}
+loadUserSettings();
+loadTheme();
+
+add_integration_function('integrate_outgoing_email', 'SendMailToQueue', false);
+
+function SendMailToQueue(&$subject, &$message, &$headers, &$to_array)
+{
+	return AddMailQueue(false, $to_array, $subject, $message, $headers);
+
+	//return true;
+}

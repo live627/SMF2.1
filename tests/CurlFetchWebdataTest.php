@@ -6,7 +6,7 @@ use curl_fetch_web_data;
 
 class CurlFetchWebdataTest extends BaseTestCase
 {
-	protected function setUp()
+	public function setUp() : void
 	{
 		global $sourcedir;
 

@@ -6,12 +6,13 @@ class MembersTest extends BaseTestCase
 {
 	private $options = array();
 
-	protected function setUp()
+	public function setUp() : void
 	{
-		global $sourcedir;
+		global $modSettings, $sourcedir;
 
 		require_once($sourcedir . '/Subs-Membergroups.php');
 		require_once($sourcedir . '/Subs-Members.php');
+		require_once($sourcedir . '/Subs-Boards.php');
 
 		// Hash password is slow with the default 10 on the hash cost, reducing this helps.
 		$modSettings['bcrypt_hash_cost'] = 4;
@@ -40,7 +41,7 @@ class MembersTest extends BaseTestCase
 				'check_email_ban' => true,
 				'send_welcome_email' => true,
 				'require' => 'nothing',
-				'birthdate' => '11-11-1111',
+				'birthdate' => '1111-11-11',
 				'timezone' => 'time',
 			),
 			array(
@@ -54,7 +55,7 @@ class MembersTest extends BaseTestCase
 				'check_email_ban' => true,
 				'send_welcome_email' => true,
 				'require' => 'activation',
-				'birthdate' => '11-11-1111',
+				'birthdate' => '1111-11-11',
 				'timezone' => 'time',
 			),
 			array(
@@ -63,39 +64,89 @@ class MembersTest extends BaseTestCase
 				'email' => 'search4@email.tld',
 				'password' => 'password',
 				'password_check' => 'password',
+				'extra_register_vars' => array(
+					'member_ip' => long2ip(rand(0, 2147483647)),
+					'member_ip2' => long2ip(rand(0, 2147483647)),
+				),
 				'check_reserved_name' => true,
 				'check_password_strength' => true,
 				'check_email_ban' => true,
 				'send_welcome_email' => true,
 				'require' => 'nothing',
-				'birthdate' => '11-11-1111',
+				'birthdate' => '1111-11-11',
 				'timezone' => 'time',
 			),
 		);
-		global $members, $membersTest;
+	}
+
+	/**
+	 * @group slowcv
+	 */
+	public function testAddMembers()
+	{
+		global $membersTest;
 
 		$membersTest = array();
 		foreach ($this->options as $options)
 		{
 			$memID = registerMember($options, true);
-			$this->assertInternalType('int', $memID);
+			$this->assertIsInt($memID);
 			$membersTest[] = $memID;
 		}
-	}
-
-	public function testAddMembers()
-	{
-
-		global $members, $membersTest;
 		$members = list_getMembers(0, 30, 'id_member', 'id_member IN({array_int:members})', ['members' => $membersTest]);
-		$this->assertCount(count($this->options), $members);
+		$this->assertCount(4, $members);
 		foreach ($members as $member)
 			$this->assertContains($member['id_member'], $membersTest);
 	}
 
-	public function tearDown()
+	/**
+	 * @depends testAddMembers
+	 */
+	public function testDuplicateMembers() : void
 	{
-		global $members, $membersTest;
+		global $membersTest;
+
+		$members = list_getMembers(0, 30, 'id_member', 'id_member IN({array_int:members})', ['members' => $membersTest], true);
+		$this->assertCount(2, $members[0]['duplicate_members']);
+		$this->assertCount(2, $members[1]['duplicate_members']);
+		$this->assertCount(2, $members[2]['duplicate_members']);
+		$this->assertCount(0, $members[3]['duplicate_members']);
+	}
+
+	/**
+	 * @depends testAddMembers
+	 */
+	public function testReattributePosts() : void
+	{
+		global $membersTest;
+
+		reattributePosts($membersTest[0], 'info@simplemachines.org', 'Simple Machines', true);
+		$this->assertEquals($membersTest[0], getMsgMemberID(1));
+
+		reattributePosts(0, 'info@simplemachines.org', 'Simple Machines', true);
+		$this->assertEquals(0, getMsgMemberID(1));
+	}
+
+	/**
+	 * @depends testAddMembers
+	 */
+	public function testMembersAllowedTo() : void
+	{
+		global $membersTest;
+
+		$members = membersAllowedTo('moderate_forum');
+		$this->assertCount(2, $members);
+
+		$members = membersAllowedTo('delete_any', 1);
+		$this->assertCount(2, $members);
+	}
+
+	/**
+	 * @depends testAddMembers
+	 */
+	public function testRemoveMembers() : void
+	{
+		global $membersTest;
 
 		deleteMembers($membersTest);
 		$members = list_getMembers(0, 30, 'id_member', '1');

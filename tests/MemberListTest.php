@@ -4,12 +4,11 @@ namespace PHPTDD;
 
 class TestMemberList extends BaseTestCase
 {
-	protected function setUp()
+	public function setUp() : void
 	{
-		global $sourcedir, $user_info;
+		global $sourcedir;
 
 		require_once($sourcedir . '/Memberlist.php');
-		$user_info['permissions'][] = 'view_mlist';
 	}
 
 	public function testActionIndexMembers()
@@ -30,6 +29,6 @@ class TestMemberList extends BaseTestCase
 		$_GET['search'] = 'admin';
 		$_GET['fields'] = 'name, email';
 		Memberlist();
-		$this->assertContains('test', $context['members'][1]['name']);
+		$this->assertStringContainsString('test', $context['members'][1]['name']);
 	}
 }

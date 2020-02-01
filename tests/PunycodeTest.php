@@ -7,7 +7,7 @@ use \Punycode as Punycode;
 class PunycodeTest extends BaseTestCase
 {
 
-	public function setUp()
+	public function setUp() : void
 	{
 		global $sourcedir, $user_info;
 

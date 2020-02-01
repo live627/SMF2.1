@@ -6,14 +6,14 @@ use browser_detector;
 
 class BrowserDetectorTest extends BaseTestCase
 {
-	protected function setUp()
+	public function setUp() : void
 	{
 		global $sourcedir;
 
 		require_once($sourcedir . '/Class-BrowserDetect.php');
 	}
 
-	protected function tearDown()
+	public function tearDown() : void
 	{
 		$_SERVER['HTTP_USER_AGENT'] = '';
 	}

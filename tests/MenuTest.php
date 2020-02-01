@@ -7,7 +7,7 @@ class MenuTest extends BaseTestCase
 	protected $test_areas;
 	protected $test_options;
 
-	protected function setUp()
+	public function setUp() : void
 	{
 		global $context, $sourcedir, $user_info;
 
@@ -169,7 +169,7 @@ class MenuTest extends BaseTestCase
 		$context['current_action'] = 'bubbh';
 	}
 
-	protected function tearDown()
+	public function tearDown() : void
 	{
 		global $context;
 

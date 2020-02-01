@@ -4,7 +4,7 @@ namespace PHPTDD;
 
 class MiscTest extends BaseTestCase
 {
-	protected function setUp()
+	public function setUp() : void
 	{
 		global $sourcedir;
 
