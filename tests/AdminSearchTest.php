@@ -34,8 +34,8 @@ class TestAdminSearch extends BaseTestCase
 	{
 		global $context, $scripturl;
 
-		$this->assertContains($scripturl, $url);
-		$this->assertContains($context['search_term'], $name);
+		$this->assertStringContainsString($scripturl, $url);
+		$this->assertStringContainsString($context['search_term'], $name);
 	}
 
 	public function settingsProvider()

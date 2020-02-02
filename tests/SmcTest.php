@@ -113,13 +113,15 @@ class SMCTest extends BaseTestCase
 			),
 		);
 	}
+
 	/**
 	 * @dataProvider callbackProvider
 	 */
 	public function testCallback($test, $params, $expected)
 	{
-	global $smcFunc;
-			$db_string = $smcFunc['db_quote']($test, $params);
-			$this->assertEquals($db_string, $expected[$smcFunc['db_title']]);
+		global $smcFunc;
+
+		$db_string = $smcFunc['db_quote']($test, $params);
+		$this->assertEquals($db_string, $expected[$smcFunc['db_title']]);
 	}
 }
