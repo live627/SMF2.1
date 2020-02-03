@@ -32,7 +32,7 @@ class FetchWebdataTest extends BaseTestCase
 	public function testGet(string $url, string $responseBody)
 	{
 		$data = fetch_web_data($url);
-		$this->assertContains($responseBody, $data);
+		$this->assertStringContainsString($responseBody, $data);
 	}
 
 	/**
@@ -42,6 +42,6 @@ class FetchWebdataTest extends BaseTestCase
 	public function testPost(string $url, string $postData, string $responseBody)
 	{
 		$data = fetch_web_data($url, $postData);
-		$this->assertContains($responseBody, $data);
+		$this->assertStringContainsString($responseBody, $data);
 	}
 }

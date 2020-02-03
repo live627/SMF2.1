@@ -1781,6 +1781,7 @@ function safe_file_write($file, $data, $backup_file = null, $mtime = null, $appe
 		// write out the new
 		$write_settings = implode('', $settingsArray);
 		$written_bytes = file_put_contents($boarddir . '/Settings.php', $write_settings, LOCK_EX);
+	}
 
 	// Is there enough free space on the disk?
 	if (!$failed && disk_free_space(dirname($file)) < (strlen($data) + filesize($file) + (!empty($backup_file) ? filesize($backup_file) : 0)))

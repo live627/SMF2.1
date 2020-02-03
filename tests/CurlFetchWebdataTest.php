@@ -56,7 +56,7 @@ class CurlFetchWebdataTest extends BaseTestCase
 		$curl = new curl_fetch_web_data(array(CURLOPT_RETURNTRANSFER => 1), 1);
 		$curl->get_url_data($url);
 		$this->assertEquals($responseCode, $curl->result('code'));
-		$this->assertContains($responseBody, $curl->result('body'));
+		$this->assertStringContainsString($responseBody, $curl->result('body'));
 	}
 
 	/**
@@ -68,6 +68,6 @@ class CurlFetchWebdataTest extends BaseTestCase
 		$curl = new curl_fetch_web_data();
 		$curl->get_url_data($url, $postData);
 		$this->assertEquals($responseCode, $curl->result('code'));
-		$this->assertContains($responseBody, $curl->result('body'));
+		$this->assertStringContainsString($responseBody, $curl->result('body'));
 	}
 }
