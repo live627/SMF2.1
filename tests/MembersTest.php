@@ -84,7 +84,7 @@ class MembersTest extends BaseTestCase
 	}
 
 	/**
-	 * @group slowgg
+	 * @group slow
 	 */
 	public function testAddMembers()
 	{
