@@ -565,6 +565,7 @@ function CheckFilesWritable()
 		'agreement.txt',
 		'Settings.php',
 		'Settings_bak.php',
+		'cache/db_last_error.php',
 	);
 
 	foreach ($incontext['detected_languages'] as $lang => $temp)
@@ -849,9 +850,9 @@ function DatabaseSettings()
 		}
 
 		// God I hope it saved!
-		if (!updateSettingsFile($vars) && substr(__FILE__, 1, 2) == ':\\')
+		if (!installer_updateSettingsFile($vars))
 		{
-			$incontext['error'] = $txt['error_windows_chmod'];
+			$incontext['error'] = $txt['settings_error'];
 			return false;
 		}
 
@@ -1076,9 +1077,9 @@ function ForumSettings()
 		);
 
 		// Must save!
-		if (!updateSettingsFile($vars) && substr(__FILE__, 1, 2) == ':\\')
+		if (!installer_updateSettingsFile($vars))
 		{
-			$incontext['error'] = $txt['error_windows_chmod'];
+			$incontext['error'] = $txt['settings_error'];
 			return false;
 		}
 
@@ -1902,16 +1903,13 @@ function DeleteInstall()
 	return false;
 }
 
-function updateSettingsFile($vars)
+function installer_updateSettingsFile($vars, $rebuild = false)
 {
-	// Modify Settings.php.
-	$settingsArray = file(dirname(__FILE__) . '/Settings.php');
+	global $sourcedir, $context, $db_character_set, $txt;
 
-	// @todo Do we just want to read the file in clean, and split it this way always?
-	if (count($settingsArray) == 1)
-		$settingsArray = preg_split('~[\r\n]~', $settingsArray[0]);
+	$context['utf8'] = (isset($vars['db_character_set']) && $vars['db_character_set'] === 'utf8') || (!empty($db_character_set) && $db_character_set === 'utf8') || (!empty($txt) && $txt['lang_character_set'] === 'UTF-8');
 
-	for ($i = 0, $n = count($settingsArray); $i < $n; $i++)
+	if (empty($sourcedir))
 	{
 		// Remove the redirect...
 		if (trim($settingsArray[$i]) == 'if (file_exists(dirname(__FILE__) . \'/install.php\'))' && trim($settingsArray[$i + 1]) == '{' && trim($settingsArray[$i + 10]) == '}')
@@ -1941,42 +1939,18 @@ function updateSettingsFile($vars)
 			}
 	}
 
-	// Uh oh... the file wasn't empty... was it?
-	if (!empty($vars))
+	if (!is_writeable(dirname(__FILE__) . '/Settings.php'))
 	{
-		$settingsArray[$i++] = '';
-		foreach ($vars as $var => $val)
-			$settingsArray[$i++] = '$' . $var . ' = \'' . $val . '\';' . "\n";
+		@chmod(dirname(__FILE__) . '/Settings.php', 0777);
+
+		if (!is_writeable(dirname(__FILE__) . '/Settings.php'))
+			return false;
 	}
 
-	// Blank out the file - done to fix a oddity with some servers.
-	$fp = @fopen(dirname(__FILE__) . '/Settings.php', 'w');
-	if (!$fp)
-		return false;
-	fclose($fp);
+	require_once($sourcedir . '/Subs.php');
+	require_once($sourcedir . '/Subs-Admin.php');
 
-	$fp = fopen(dirname(__FILE__) . '/Settings.php', 'r+');
-
-	// Gotta have one of these ;)
-	if (trim($settingsArray[0]) != '<?php')
-		fwrite($fp, "<?php\n");
-
-	$lines = count($settingsArray);
-	for ($i = 0; $i < $lines - 1; $i++)
-	{
-		// Don't just write a bunch of blank lines.
-		if ($settingsArray[$i] != '' || @$settingsArray[$i - 1] != '')
-			fwrite($fp, strtr($settingsArray[$i], "\r", ''));
-	}
-	fwrite($fp, $settingsArray[$i] . '?' . '>');
-	fclose($fp);
-
-	// Even though on normal installations the filemtime should prevent this being used by the installer incorrectly
-	// it seems that there are times it might not. So let's MAKE it dump the cache.
-	if (function_exists('opcache_invalidate'))
-		opcache_invalidate(dirname(__FILE__) . '/Settings.php', true);
-
-	return true;
+	return updateSettingsFile($vars, false, $rebuild);
 }
 
 function updateDbLastError()
