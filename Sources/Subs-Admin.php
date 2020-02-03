@@ -279,16 +279,10 @@ function getFileVersions(&$versionOptions)
  * The most important function in this file for mod makers happens to be the
  * updateSettingsFile() function, but it shouldn't be used often anyway.
  *
- * - updates the Settings.php file with the changes supplied in config_vars.
- * - expects config_vars to be an associative array, with the keys as the
+ * - Updates the Settings.php file with the changes supplied in config_vars.
+ *
+ * - Expects config_vars to be an associative array, with the keys as the
  *   variable names in Settings.php, and the values the variable values.
- * - does not escape or quote values.
- * - preserves case, formatting, and additional options in file.
- * - writes nothing if the resulting file would be less than 10 lines
- *   in length (sanity check for read lock.)
- * - check for changes to db_last_error and passes those off to a separate handler
- * - attempts to create a backup file and will use it should the writing of the
- *   new settings file fail
  *
  * - Correctly formats the values using smf_var_export().
  *
@@ -363,7 +357,7 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 		@touch($settingsFile);
 
 	// When was Settings.php last changed?
-	$last_settings_change = filemtime($boarddir . '/Settings.php');
+	$last_settings_change = filemtime($settingsFile);
 
 	// Get the current values of everything in Settings.php.
 	$settings_vars = get_current_settings($mtime, $settingsFile);
@@ -1206,8 +1200,6 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 			}
 		}
 	}
-	else
-		$settingsArray[$end] = trim($settingsArray[$end]);
 
 	// It's important to do the numbered ones before the named ones, or messes happen.
 	uksort($substitutions, function($a, $b) {
@@ -1778,9 +1770,8 @@ function safe_file_write($file, $data, $backup_file = null, $mtime = null, $appe
 		elseif (!is_file($sf))
 			$failed = true;
 
-		// write out the new
-		$write_settings = implode('', $settingsArray);
-		$written_bytes = file_put_contents($boarddir . '/Settings.php', $write_settings, LOCK_EX);
+		if (!$failed)
+			$failed = !smf_chmod($sf);
 	}
 
 	// Is there enough free space on the disk?
