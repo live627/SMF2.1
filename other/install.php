@@ -21,6 +21,8 @@ define('JQUERY_VERSION', '3.4.1');
 define('POSTGRE_TITLE', 'PostgreSQL');
 define('MYSQL_TITLE', 'MySQL');
 define('SMF_USER_AGENT', 'Mozilla/5.0 (' . php_uname('s') . ' ' . php_uname('m') . ') AppleWebKit/605.1.15 (KHTML, like Gecko)  SMF/' . strtr(SMF_VERSION, ' ', '.'));
+if (!defined('TIME_START'))
+	define('TIME_START', microtime(true));
 
 $GLOBALS['required_php_version'] = '5.4.0';
 
@@ -829,12 +831,12 @@ function DatabaseSettings()
 
 		// Take care of these variables...
 		$vars = array(
-			'db_type' => addcslashes($db_type, '\'\\'),
-			'db_name' => addcslashes($_POST['db_name'], '\'\\'),
-			'db_user' => addcslashes($_POST['db_user'], '\'\\'),
-			'db_passwd' => isset($_POST['db_passwd']) ? addcslashes($_POST['db_passwd'], '\'\\') : '',
-			'db_server' => addcslashes($_POST['db_server'], '\'\\'),
-			'db_prefix' => addcslashes($db_prefix, '\'\\'),
+			'db_type' => $db_type,
+			'db_name' => $_POST['db_name'],
+			'db_user' => $_POST['db_user'],
+			'db_passwd' => isset($_POST['db_passwd']) ? $_POST['db_passwd'] : '',
+			'db_server' => $_POST['db_server'],
+			'db_prefix' => $db_prefix,
 			// The cookiename is special; we want it to be the same if it ever needs to be reinstalled with the same info.
 			'cookiename' => 'SMFCookie' . abs(crc32($_POST['db_name'] . preg_replace('~[^A-Za-z0-9_$]~', '', $_POST['db_prefix'])) % 1000),
 		);
@@ -901,7 +903,7 @@ function DatabaseSettings()
 			if ($db_connection != null)
 			{
 				$db_user = $_POST['db_prefix'] . $db_user;
-				updateSettingsFile(array('db_user' => addcslashes($db_user, '\'\\')));
+				installer_updateSettingsFile(array('db_user' => $db_user));
 			}
 		}
 
@@ -947,7 +949,7 @@ function DatabaseSettings()
 				if ($smcFunc['db_select_db']($_POST['db_prefix'] . $db_name, $db_connection))
 				{
 					$db_name = $_POST['db_prefix'] . $db_name;
-					updateSettingsFile(array('db_name' => addcslashes($db_name, '\'\\')));
+					installer_updateSettingsFile(array('db_name' => $db_name));
 				}
 			}
 
@@ -977,7 +979,9 @@ function ForumSettings()
 	if (isset($_POST['db_type'], $databases[$_POST['db_type']]))
 		$db_type = $_POST['db_type'];
 
-	load_database();
+	// Else we'd better be able to get the connection.
+	else
+		load_database();
 
 	$db_type = isset($_POST['db_type']) ? $_POST['db_type'] : $db_type;
 
@@ -1002,7 +1006,7 @@ function ForumSettings()
 	$incontext['continue'] = 1;
 
 	// Check Postgres setting
-	if ($db_type === 'postgresql')
+	if ( $db_type === 'postgresql')
 	{
 		load_database();
 		$result = $smcFunc['db_query']('', '
@@ -1016,7 +1020,7 @@ function ForumSettings()
 		{
 			$row = $smcFunc['db_fetch_assoc']($result);
 			if ($row['standard_conforming_strings'] !== 'on')
-			{
+				{
 					$incontext['continue'] = 0;
 					$incontext['error'] = $txt['error_pg_scs'];
 				}
@@ -1064,13 +1068,13 @@ function ForumSettings()
 
 		// Save these variables.
 		$vars = array(
-			'boardurl' => addcslashes($_POST['boardurl'], '\'\\'),
-			'boarddir' => addcslashes($path, '\'\\'),
-			'sourcedir' => addcslashes($path, '\'\\') . '/Sources',
-			'cachedir' => addcslashes($path, '\'\\') . '/cache',
-			'packagesdir' => addcslashes($path, '\'\\') . '/Packages',
-			'tasksdir' => addcslashes($path, '\'\\') . '/Sources/tasks',
-			'mbname' => strtr(addcslashes($_POST['mbname'], '\'\\'), array('\"' => '"')),
+			'boardurl' => $_POST['boardurl'],
+			'boarddir' => $path,
+			'sourcedir' => $path . '/Sources',
+			'cachedir' => $path . '/cache',
+			'packagesdir' => $path . '/Packages',
+			'tasksdir' => $path . '/Sources/tasks',
+			'mbname' => strtr($_POST['mbname'], array('\"' => '"')),
 			'language' => substr($_SESSION['installer_temp_lang'], 8, -4),
 			'image_proxy_secret' => substr(sha1(mt_rand()), 0, 20),
 			'image_proxy_enabled' => !empty($_POST['force_ssl']),
@@ -1102,7 +1106,7 @@ echo mysqli_get_server_version($db_connection); echo mysqli_get_server_info($db_
 			}
 			else
 				// Set the character set here.
-				updateSettingsFile(array('db_character_set' => 'utf8'));
+				installer_updateSettingsFile(array('db_character_set' => 'utf8'));
 		}
 
 		// Good, skip on.
@@ -1624,7 +1628,7 @@ function AdminAccount()
 
 		// Update the webmaster's email?
 		if (!empty($_POST['server_email']) && (empty($webmaster_email) || $webmaster_email == 'noreply@myserver.com'))
-			updateSettingsFile(array('webmaster_email' => addcslashes($_POST['server_email'], '\'\\')));
+			installer_updateSettingsFile(array('webmaster_email' => $_POST['server_email']));
 
 		// Work out whether we're going to have dodgy characters and remove them.
 		$invalid_characters = preg_match('~[<>&"\'=\\\]~', $_POST['username']) != 0;
@@ -1911,32 +1915,10 @@ function installer_updateSettingsFile($vars, $rebuild = false)
 
 	if (empty($sourcedir))
 	{
-		// Remove the redirect...
-		if (trim($settingsArray[$i]) == 'if (file_exists(dirname(__FILE__) . \'/install.php\'))' && trim($settingsArray[$i + 1]) == '{' && trim($settingsArray[$i + 10]) == '}')
-		{
-			// Set the ten lines to nothing.
-			for ($j = 0; $j < 11; $j++)
-				$settingsArray[$i++] = '';
-
-			continue;
-		}
-
-		if (trim($settingsArray[$i]) == '?' . '>')
-			$settingsArray[$i] = '';
-
-		// Don't trim or bother with it if it's not a variable.
-		if (substr($settingsArray[$i], 0, 1) != '$')
-			continue;
-
-		$settingsArray[$i] = rtrim($settingsArray[$i]) . "\n";
-
-		foreach ($vars as $var => $val)
-			if (strncasecmp($settingsArray[$i], '$' . $var, 1 + strlen($var)) == 0)
-			{
-				$comment = strstr($settingsArray[$i], '#');
-				$settingsArray[$i] = '$' . $var . ' = \'' . $val . '\';' . ($comment != '' ? "\t\t" . $comment : "\n");
-				unset($vars[$var]);
-			}
+		if (file_exists(dirname(__FILE__) . '/Sources') && is_dir(dirname(__FILE__) . '/Sources'))
+			$sourcedir = dirname(__FILE__) . '/Sources';
+		else
+			return false;
 	}
 
 	if (!is_writeable(dirname(__FILE__) . '/Settings.php'))
@@ -1951,19 +1933,6 @@ function installer_updateSettingsFile($vars, $rebuild = false)
 	require_once($sourcedir . '/Subs-Admin.php');
 
 	return updateSettingsFile($vars, false, $rebuild);
-}
-
-function updateDbLastError()
-{
-	global $cachedir;
-
-	// Write out the db_last_error file with the error timestamp
-	if (!empty($cachedir) && is_writable($cachedir))
-		file_put_contents($cachedir . '/db_last_error.php', '<' . '?' . "php\n" . '$db_last_error = 0;' . "\n" . '?' . '>');
-	else
-		file_put_contents(dirname(__FILE__) . '/cache/db_last_error.php', '<' . '?' . "php\n" . '$db_last_error = 0;' . "\n" . '?' . '>');
-
-	return true;
 }
 
 // Create an .htaccess file to prevent mod_security. SMF has filtering built-in.
