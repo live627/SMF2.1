@@ -1192,7 +1192,7 @@ function DatabasePopulation()
 		if (substr($key, 0, 8) == 'default_')
 			$replaces['{$' . $key . '}'] = $smcFunc['db_escape_string']($value);
 	}
-	$replaces['{$default_reserved_names}'] = strtr($replaces['{$default_reserved_names}'], array('\\\\n' => '\'||E\'\n\'||\''));
+	$replaces['{$default_reserved_names}'] = strtr($replaces['{$default_reserved_names}'], array('\\\\n' => '\\n'));
 
 	// MySQL-specific stuff - storage engine and UTF8 handling
 	if (substr($db_type, 0, 5) == 'mysql')
