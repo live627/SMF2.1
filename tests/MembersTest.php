@@ -77,6 +77,7 @@ class MembersTest extends BaseTestCase
 				'timezone' => array_rand(smf_list_timezones()),
 				'theme_vars' => array(
 					'cust_loca' => 'testville',
+					'cust_gender' => 'None',
 				),
 			),
 		);
@@ -210,9 +211,23 @@ class MembersTest extends BaseTestCase
 			$this->assertArrayHasKey($member, $memberContext);
 			$this->assertEquals($member, $memberContext[$member]['id']);
 		}
-		$this->assertCount(1, $memberContext[$membersTest[3]]['custom_fields']);
-		$this->assertEquals('cust_loca', $memberContext[$membersTest[3]]['custom_fields'][0]['col_name']);
-		$this->assertEquals('testville', $memberContext[$membersTest[3]]['custom_fields'][0]['value']);
+		$this->assertCount(2, $memberContext[$membersTest[3]]['custom_fields']);
+		$this->assertEquals(
+			'cust_loca',
+			$memberContext[$membersTest[3]]['custom_fields'][0]['col_name']
+		);
+		$this->assertEquals(
+			'testville',
+			$memberContext[$membersTest[3]]['custom_fields'][0]['value']
+		);
+		$this->assertEquals(
+			'cust_gender',
+			$memberContext[$membersTest[3]]['custom_fields'][1]['col_name']
+		);
+		$this->assertEquals(
+			'<span class=" main_icons gender_0" title="None"></span>',
+			$memberContext[$membersTest[3]]['custom_fields'][1]['value']
+		);
 	}
 
 	/**
