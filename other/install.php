@@ -979,9 +979,7 @@ function ForumSettings()
 	if (isset($_POST['db_type'], $databases[$_POST['db_type']]))
 		$db_type = $_POST['db_type'];
 
-	// Else we'd better be able to get the connection.
-	else
-		load_database();
+	load_database();
 
 	$db_type = isset($_POST['db_type']) ? $_POST['db_type'] : $db_type;
 
@@ -1090,7 +1088,6 @@ function ForumSettings()
 		// Make sure it works.
 		require(dirname(__FILE__) . '/Settings.php');
 
-echo mysqli_get_server_version($db_connection); echo mysqli_get_server_info($db_connection);
 		// UTF-8 requires a setting to override the language charset.
 		if ((!empty($databases[$db_type]['utf8_support']) && !empty($databases[$db_type]['utf8_required'])) || (empty($databases[$db_type]['utf8_required']) && !empty($databases[$db_type]['utf8_support']) && isset($_POST['utf8'])))
 		{
