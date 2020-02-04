@@ -1214,7 +1214,7 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 		// First, check for updated topics.
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}topics AS t
-			SET t.id_member_started = {int:memID}
+			SET id_member_started = {int:memID}
 			WHERE t.id_first_msg = (
 				SELECT m.id_msg
 				FROM {db_prefix}messages m
@@ -1233,7 +1233,7 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 		// Second, check for updated reports.
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}log_reported AS lr
-			SET lr.id_member = {int:memID}
+			SET id_member = {int:memID}
 			WHERE lr.id_msg = (
 				SELECT m.id_msg
 				FROM {db_prefix}messages m
