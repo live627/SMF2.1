@@ -110,7 +110,7 @@ class MembersTest extends BaseTestCase
 	{
 		global $membersTest;
 
-		$members = list_getMembers(0, 30, 'id_member', 'id_member IN({array_int:members})', ['members' => $membersTest], true);
+		$members = list_getMembers(0, 30, 'id_member', 'id_member IN ({array_int:members})', ['members' => $membersTest], true);
 		$this->assertCount(2, $members[0]['duplicate_members']);
 		$this->assertCount(2, $members[1]['duplicate_members']);
 		$this->assertCount(2, $members[2]['duplicate_members']);

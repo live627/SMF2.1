@@ -1215,13 +1215,13 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}topics t
 			SET t.id_member_started = {int:memID}
-				AND t.id_first_msg = (
-					SELECT m.id_msg
-					FROM {db_prefix}messages m
-					WHERE m.id_member = {int:memID}
-						AND m.id_msg = t.id_first_msg
-						AND ' . $query . '
-					)',
+			WHERE t.id_first_msg = (
+				SELECT m.id_msg
+				FROM {db_prefix}messages m
+				WHERE m.id_member = {int:memID}
+					AND m.id_msg = t.id_first_msg
+					AND ' . $query . '
+				)',
 			array(
 				'memID' => $memID,
 				'email_address' => $email,
