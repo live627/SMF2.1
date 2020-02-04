@@ -7,6 +7,7 @@ $cache_memcached = 'localhost';
 $pg_cache_server = 'localhost';
 $pg_cache_user = 'postgres';
 $pg_cache_passwd = '';
+$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
 add_integration_function('integrate_verify_user', 'FeignLogin', false);
 

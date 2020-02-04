@@ -141,7 +141,7 @@ if ('cli' === PHP_SAPI)
 		$_POST = array(
 			'contbutt' => '1',
 			'mbname' => $options['n'] ?? 'My Community',
-			'boardurl' => $options['boardurl'] ?? 'http://127.0.0.1',
+			'boardurl' => $options['boardurl'] ?? 'http://127.0.0.1/smf',
 			'username' => $options['u'],
 			'password1' => $options['p'],
 			'password2' => $options['p'],
@@ -161,28 +161,23 @@ if ('cli' === PHP_SAPI)
 				$step[2]();
 
 				if (!empty($incontext['error']))
+					throw new Error($incontext['error']);
+				if (!empty($incontext['warning']))
+					echo $incontext['warning'], "\n\n";
+				if (!empty($incontext['sql_results']))
 				{
-					echo $incontext['error'], "\n";
-					break;
-				}
-				elseif (!empty($incontext['warning']))
-				{
-					echo $incontext['warning'], "\n";
-					break;
-				}
-				if (!empty($incontext['sql_results']) && $num == 4)
-				{
-					echo implode("\n", $incontext['sql_results']), "\n";
+					echo implode("\n", $incontext['sql_results']), "\n\n";
 
 					if (!empty($incontext['failures']))
 					{
-						echo $txt['error_db_queries'], "\n\n";
+						$e = $txt['error_db_queries'];
 
 						foreach ($incontext['failures'] as $line => $fail)
-							echo $txt['error_db_queries_line'], $line + 1, ': ', $fail, "\n\n";
+							$e .= sprintf("%s%d\n\n: %s", $txt['error_db_queries_line'], $line + 1, $fail);
 
-						break;
+						throw new Error($e);
 					}
+					unset($incontext['sql_results']);
 				}
 			}
 		}
@@ -414,6 +409,9 @@ function load_database()
 {
 	global $db_prefix, $db_connection, $sourcedir, $smcFunc, $modSettings, $db_port;
 	global $db_server, $db_passwd, $db_type, $db_name, $db_user, $db_persist, $db_mb4;
+
+	if (!empty($db_connection))
+		return;
 
 	if (empty($sourcedir))
 		$sourcedir = dirname(__FILE__) . '/Sources';
