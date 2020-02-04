@@ -1213,24 +1213,38 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 	{
 		// First, check for updated topics.
 		$smcFunc['db_query']('', '
-			UPDATE {db_prefix}topics as t, {db_prefix}messages as m
+			UPDATE {db_prefix}topics t
 			SET t.id_member_started = {int:memID}
-			WHERE m.id_member = {int:memID}
-				AND t.id_first_msg = m.id_msg',
+				AND t.id_first_msg = (
+					SELECT m.id_msg
+					FROM {db_prefix}messages m
+					WHERE m.id_member = {int:memID}
+						AND m.id_msg = t.id_first_msg
+						AND ' . $query . '
+					)',
 			array(
 				'memID' => $memID,
+				'email_address' => $email,
+				'member_name' => $membername,
 			)
 		);
 		$updated['topics'] = $smcFunc['db_affected_rows']();
 
 		// Second, check for updated reports.
 		$smcFunc['db_query']('', '
-			UPDATE {db_prefix}log_reported AS lr, {db_prefix}messages AS m
+			UPDATE {db_prefix}log_reported lr
 			SET lr.id_member = {int:memID}
-			WHERE lr.id_msg = m.id_msg
-				AND m.id_member = {int:memID}',
+			WHERE lr.id_msg = (
+				SELECT m.id_msg
+				FROM {db_prefix}messages m
+				WHERE m.id_member = {int:memID}
+					AND m.id_msg = lr.id_msg
+					AND ' . $query . '
+				)',
 			array(
 				'memID' => $memID,
+				'email_address' => $email,
+				'member_name' => $membername,
 			)
 		);
 		$updated['reports'] = $smcFunc['db_affected_rows']();
