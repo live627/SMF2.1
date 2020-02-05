@@ -1,6 +1,7 @@
 #!/bin/bash
 
 for f in Themes/default/*.template.php; do
-    base=$(basename "$f" '.template.php') # gives '25' from '25.conf'
+    base=$(basename "$f" '.template.php') # gives '25' from '25.template.php'
     sed -i.before "s/template_main/template_main_$base/g" "$f"
+    sed -i.before "s/template_search/template_search_$base/g" "$f"
 done
