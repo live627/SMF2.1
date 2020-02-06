@@ -1202,7 +1202,8 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 	}
 
 	// It's important to do the numbered ones before the named ones, or messes happen.
-	uksort($substitutions, function($a, $b) {
+	uksort($substitutions, function($a, $b)
+	{
 		if (is_int($a) && is_int($b))
 			return $a > $b;
 		elseif (is_int($a))
@@ -1721,8 +1722,12 @@ function get_current_settings($mtime = null, $settingsFile = null)
 		unset($mtime, $settingsFile, $settingsText);
 		$defined_vars = get_defined_vars();
 	}
-	catch (Throwable $e) {}
-	catch (ErrorException $e) {}
+	catch (Throwable $e)
+	{
+}
+	catch (ErrorException $e)
+	{
+}
 	if (isset($e))
 		return false;
 
@@ -1882,7 +1887,8 @@ function smf_var_export($var)
 	// For the same reason, replace literal returns and newlines with "\r" and "\n"
 	elseif (is_string($var) && (strpos($var, "\n") !== false || strpos($var, "\r") !== false))
 	{
-		return strtr(preg_replace_callback('/[\r\n]+/', function($m) {
+		return strtr(preg_replace_callback('/[\r\n]+/', function($m)
+		{
 			return '\' . "' . strtr($m[0], array("\r" => '\r', "\n" => '\n')) . '" . \'';
 		}, $var), array("'' . " => '', " . ''" => ''));
 	}
