@@ -91,7 +91,44 @@ class PMTest extends BaseTestCase
 	}
 
 	/**
-	 * @depends testAddMembers
+	 * @depends testSendPM
+	 */
+	public function testAddRule() : void
+	{
+		global $context, $membersTest;
+
+		$_GET['add'] = 'send';
+		ManageRules();
+		$this->assertEmpty($context['rule']['id']);
+
+		unset($_GET['add']);
+		$_GET['save'] = 'send';
+		$_POST['rule_logic'] = 'and';
+		$_POST['rule_name'] = 'test';
+		$_POST['ruletype'] = ['mid'];
+		$_POST['ruledef'] = ['test'];
+		$_POST['acttype'] = ['del'];
+		$_POST[$context['session_var']] = $context['session_id'];
+		$_POST[$_SESSION['session_var']] = $_SESSION['session_value'];
+		ManageRules();
+
+		$_GET['apply'] = 'send';
+		unset($_GET['save']);
+		$_GET[$context['session_var']] = $context['session_id'];
+		$_GET[$_SESSION['session_var']] = $_SESSION['session_value'];
+		LoadRules(true);
+		ManageRules();
+
+		$_REQUEST['userspec'] = 'test';
+		$_REQUEST['search'] = 'great';
+		MessageSearch2();
+		$this->assertTrue(empty($context['search_errors']));
+	//	$this->assertIsNotArray($context['personal_messages']);
+		$this->assertEmpty($context['personal_messages']);
+	}
+
+	/**
+	 * @depends testAddMemberser
 	 */
 	public function testRemoveMembers() : void
 	{
