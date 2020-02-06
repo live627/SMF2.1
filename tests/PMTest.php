@@ -10,9 +10,8 @@ class PMTest extends BaseTestCase
 	{
 		global $modSettings, $sourcedir;
 
-		require_once($sourcedir . '/Subs-Membergroups.php');
 		require_once($sourcedir . '/Subs-Members.php');
-		require_once($sourcedir . '/Subs-Boards.php');
+		require_once($sourcedir . '/PersonalMessage.php');
 
 		// Hash password is slow with the default 10 on the hash cost, reducing this helps.
 		$modSettings['bcrypt_hash_cost'] = 4;
@@ -63,29 +62,32 @@ class PMTest extends BaseTestCase
 	 */
 	public function testSendPM() : void
 	{
-		global $membersTest;
-
-		global $context, $txt;
+		global $context, $membersTest;
 
 		$_REQUEST['sa'] = 'send';
 		MessageMain();
-		$this->assertEquals('', $context['to_value']);
-		$this->assertEquals(false, $context['quoted_message']);
-		$this->assertEquals('', $context['subject']);
+		$this->assertEmpty($context['to_value']);
+		$this->assertFalse($context['quoted_message']);
+		$this->assertEmpty($context['subject']);
 
-		// Lets try and send it now
-	//	$modSettings['pm_spam_settings'] = [100,100,0];
 		$_REQUEST['subject'] = 'Yo';
 		$_REQUEST['message'] = 'This is for you, ok, have a great day';
-		$_REQUEST['to'] = 'test';
+		$_POST['to'] = 'test';
 		$_POST['u'] = $membersTest[0];
 		$_POST[$context['session_var']] = $context['session_id'];
 		$_POST[$_SESSION['session_var']] = $_SESSION['session_value'];
 		MessagePost2();
 		$this->assertEmpty($context['post_error']);
-		$this->assertStringContainsString(';done=sent', $context['current_label_redirect'], $context['current_label_redirect']);
-		$this->assertCount(1, $context['send_log']['sent']);
+		$this->assertStringContainsString(';done=sent', $context['current_label_redirect']);
+		$this->assertCount(2, $context['send_log']['sent']);
+		$this->assertEquals("PM successfully sent to 'test'.", $context['send_log']['sent'][1]);
 		$this->assertEquals("PM successfully sent to 'user'.", $context['send_log']['sent'][$membersTest[0]]);
+
+		$_REQUEST['userspec'] = 'test';
+		$_REQUEST['search'] = 'great';
+		MessageSearch2();
+		$this->assertTrue(empty($context['search_errors']));
+		$this->assertNotEmpty($context['personal_messages']);
 	}
 
 	/**
