@@ -92,7 +92,7 @@ class PMTest extends BaseTestCase
 	 */
 	public function testAddLabel() : void
 	{
-		global $context, $membersTest;
+		global $context;
 
 		$_POST['add'] = 'send';
 		$_POST['label'] = 'test';
@@ -111,7 +111,7 @@ class PMTest extends BaseTestCase
 	 */
 	public function testAddRule() : void
 	{
-		global $context, $membersTest;
+		global $context;
 
 		$_GET['add'] = 'send';
 		ManageRules();
@@ -137,7 +137,7 @@ class PMTest extends BaseTestCase
 	 */
 	public function testApplyRules() : void
 	{
-		global $context, $membersTest;
+		global $context;
 
 		$_GET['apply'] = 'send';
 		unset($_GET['save']);
@@ -156,7 +156,7 @@ class PMTest extends BaseTestCase
 	 */
 	public function testModifyRule() : void
 	{
-		global $context, $membersTest;
+		global $context;
 
 		$_GET['add'] = 'send';
 		$_GET['rid'] = key($context['rules']);
@@ -183,7 +183,7 @@ class PMTest extends BaseTestCase
 	 */
 	public function testApplyModifiedRules() : void
 	{
-		global $context, $membersTest;
+		global $context;
 
 		$_GET['apply'] = 'send';
 		unset($_GET['save']);
@@ -203,7 +203,7 @@ class PMTest extends BaseTestCase
 	 */
 	public function testDeleteRule() : void
 	{
-		global $context, $membersTest;
+		global $context;
 
 		$_GET['add'] = 'send';
 		$_GET['rid'] = key(array_column($context['rules'], 'name', 'id'));
@@ -237,7 +237,7 @@ class PMTest extends BaseTestCase
 	 */
 	public function testSearch() : void
 	{
-		global $context, $membersTest;
+		global $context;
 
 		MessageSearch();
 		$this->assertCount(2, $context['search_labels']);
@@ -256,7 +256,7 @@ class PMTest extends BaseTestCase
 	 */
 	public function testDeleteLabel() : void
 	{
-		global $context, $membersTest;
+		global $context;
 
 		LoadRules(true);
 		$this->assertContains('test', array_column($context['rules'], 'name'));
