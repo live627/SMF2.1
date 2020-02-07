@@ -147,7 +147,6 @@ class PMTest extends BaseTestCase
 
 		MessageFolder();
 		$labels = prepareMessageContext()['labels'];
-		var_dump('test', array_column($labels, 'name'));
 		$this->assertContains('test', array_column($labels, 'name'));
 	}
 
