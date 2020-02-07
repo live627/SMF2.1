@@ -62,10 +62,10 @@ class postgres_cache extends cache_api
 				'smf_cache_delete_data',
 			),
 			array(
-				'SELECT value FROM ' . $this->db_prefix . 'cache WHERE key = $1 AND ttl >= $2 LIMIT 1'
+				'SELECT value FROM ' . $this->db_prefix . 'cache WHERE key = $1 AND ttl >= $2 LIMIT 1',
 				'INSERT INTO ' . $this->db_prefix . 'cache(key,value,ttl) VALUES($1,$2,$3)
-				ON CONFLICT(key) DO UPDATE SET value = $2, ttl = $3'
-				'DELETE FROM ' . $this->db_prefix . 'cache WHERE key = $1'
+				ON CONFLICT(key) DO UPDATE SET value = $2, ttl = $3',
+				'DELETE FROM ' . $this->db_prefix . 'cache WHERE key = $1',
 			),
 		);
 
@@ -88,7 +88,7 @@ class postgres_cache extends cache_api
 
 		$arr = pg_fetch_all($result);
 		foreach ($stmtnames as $idx => $stmtname)
-			pg_prepare($this->db_connection, $stmtname, $queies[$idx]);
+			pg_prepare($this->db_connection, $stmtname, $queries[$idx]);
 	}
 
 	/**
