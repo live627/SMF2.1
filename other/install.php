@@ -42,6 +42,7 @@ $databases = array(
 		'version' => 50100,
 		'version_check' => function($db_connection)
 		{
+			var_dump(mysqli_get_server_version($db_connection), mysqli_get_client_version());
 			return min(mysqli_get_server_version($db_connection), mysqli_get_client_version());
 		},
 		'supported' => function_exists('mysqli_connect'),
@@ -143,7 +144,7 @@ if ('cli' === PHP_SAPI)
 		);
 		foreach ($incontext['steps'] as $num => $step)
 		{
-			if (function_exists($step[2]) && $step[2] != 'DeleteInstalll')
+			if ($step[2] != 'DeleteInstalll')
 			{
 				$step[2]();
 

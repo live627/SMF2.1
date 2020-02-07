@@ -86,7 +86,7 @@ class postgres_cache extends cache_api
 			array('{' . implode(', ', $stmtnames) . '}')
 		);
 
-		$arr = array_map(
+		$arr = pg_num_rows($result) == 0 ? array() : array_map(
 			function($el)
 			{
 				return $el['name'];
