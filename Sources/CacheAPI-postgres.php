@@ -66,7 +66,7 @@ class postgres_cache extends cache_api
 				'INSERT INTO ' . $this->db_prefix . 'cache(key,value,ttl) VALUES($1,$2,$3)
 				ON CONFLICT(key) DO UPDATE SET value = $2, ttl = $3',
 				'DELETE FROM ' . $this->db_prefix . 'cache WHERE key = $1',
-			),
+			)
 		);
 
 		return true;
