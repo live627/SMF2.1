@@ -39,21 +39,16 @@ require_once('Sources/Class-Package.php');
 $databases = array(
 	'mysql' => array(
 		'name' => 'MySQL',
-		'version' => '5.0.22',
-		'version_check' => 'return min(mysqli_get_server_info($db_connection), mysqli_get_client_info());',
+		'version' => 50100,
+		'version_check' => function($db_connection)
+		{
+			return min(mysqli_get_server_version($db_connection), mysqli_get_client_version());
+		},
 		'supported' => function_exists('mysqli_connect'),
 		'default_user' => 'mysql.default_user',
 		'default_password' => 'mysql.default_password',
 		'default_host' => 'mysql.default_host',
 		'default_port' => 'mysql.default_port',
-		'utf8_support' => function()
-		{
-			return true;
-		},
-		'utf8_version' => '5.0.22',
-		'utf8_version_check' => 'return mysqli_get_server_info($db_connection);',
-		'utf8_default' => true,
-		'utf8_required' => true,
 		'alter_support' => true,
 		'validate_prefix' => function(&$value)
 		{
@@ -63,26 +58,18 @@ $databases = array(
 	),
 	'postgresql' => array(
 		'name' => 'PostgreSQL',
-		'version' => '9.4',
+		'version' => 90400,
 		'function_check' => 'pg_connect',
-		'version_check' => '$request = pg_query(\'SELECT version()\'); list ($version) = pg_fetch_row($request); list($pgl, $version) = explode(" ", $version); return $version;',
+		'version_check' => function($db_connection)
+		{
+			$request = pg_query($db_connection, 'SHOW server_version_num');
+			list ($version) = pg_fetch_row($request);
+
+			ECHO $version;
+			return $version;
+		},
 		'supported' => function_exists('pg_connect'),
 		'always_has_db' => true,
-		'utf8_default' => true,
-		'utf8_required' => true,
-		'utf8_support' => function()
-		{
-			$request = pg_query('SHOW SERVER_ENCODING');
-
-			list ($charcode) = pg_fetch_row($request);
-
-			if ($charcode == 'UTF8')
-				return true;
-			else
-				return false;
-		},
-		'utf8_version' => '8.0',
-		'utf8_version_check' => '$request = pg_query(\'SELECT version()\'); list ($version) = pg_fetch_row($request); list($pgl, $version) = explode(" ", $version); return $version;',
 		'validate_prefix' => function(&$value)
 		{
 			global $txt;
@@ -150,13 +137,13 @@ if ('cli' === PHP_SAPI)
 			'db_type' => $options['dbtype'] ?? 'mysql',
 			'db_name' => $options['dbname'],
 			'db_user' => $options['dbuser'],
-			'db_passwd' => isset($options['dbpasswd']) ? $options['dbpasswd'] : '',
+			'db_passwd' => isset($options['dbpass']) ? $options['dbpass'] : '',
 			'db_server' => $options['dbserver'] ?? '127.0.0.1',
 			'db_prefix' => $options['dbprefix'] ?? 'smf_',
 		);
 		foreach ($incontext['steps'] as $num => $step)
 		{
-			if (function_exists($step[2]))
+			if (function_exists($step[2]) && $step[2] != 'DeleteInstalll')
 			{
 				$step[2]();
 
@@ -914,9 +901,9 @@ function DatabaseSettings()
 
 		// Do they meet the install requirements?
 		// @todo Old client, new server?
-		if (version_compare($databases[$db_type]['version'], preg_replace('~^\D*|\-.+?$~', '', eval($databases[$db_type]['version_check']))) > 0)
+		if ($databases[$db_type]['version'] >  $databases[$db_type]['version_check']($db_connection))
 		{
-			$incontext['error'] = $txt['error_db_too_low'];
+			$incontext['error'] = sprintf($txt['error_db_too_low'], $databases[$db_type]['name']);
 			return false;
 		}
 
@@ -995,9 +982,7 @@ function ForumSettings()
 	$incontext['detected_url'] = 'http' . ($secure ? 's' : '') . '://' . $host . substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/'));
 
 	// Check if the database sessions will even work.
-	$incontext['test_dbsession'] = (ini_get('session.auto_start') != 1);
-	$incontext['utf8_default'] = $databases[$db_type]['utf8_default'];
-	$incontext['utf8_required'] = $databases[$db_type]['utf8_required'];
+	$incontext['test_dbsession'] = ini_get('session.auto_start') != 1;
 
 	$incontext['continue'] = 1;
 
@@ -1086,23 +1071,7 @@ function ForumSettings()
 		// Make sure it works.
 		require(dirname(__FILE__) . '/Settings.php');
 
-		// UTF-8 requires a setting to override the language charset.
-		if ((!empty($databases[$db_type]['utf8_support']) && !empty($databases[$db_type]['utf8_required'])) || (empty($databases[$db_type]['utf8_required']) && !empty($databases[$db_type]['utf8_support']) && isset($_POST['utf8'])))
-		{
-			if (!$databases[$db_type]['utf8_support']())
-			{
-				$incontext['error'] = sprintf($txt['error_utf8_support']);
-				return false;
-			}
-			if (!empty($databases[$db_type]['utf8_version_check']) && version_compare($databases[$db_type]['utf8_version'], preg_replace('~\-.+?$~', '', eval($databases[$db_type]['utf8_version_check'])), '>'))
-			{
-				$incontext['error'] = sprintf($txt['error_utf8_version'], $databases[$db_type]['utf8_version']);
-				return false;
-			}
-			else
-				// Set the character set here.
-				installer_updateSettingsFile(array('db_character_set' => 'utf8'));
-		}
+		installer_updateSettingsFile(array('db_character_set' => 'utf8'));
 
 		// Good, skip on.
 		return true;
@@ -2402,12 +2371,6 @@ function template_forum_settings()
 				<input type="checkbox" name="dbsession" id="dbsession_check" checked>
 				<label for="dbsession_check">', $txt['install_settings_dbsession_title'], '</label>
 				<div class="smalltext">', $incontext['test_dbsession'] ? $txt['install_settings_dbsession_info1'] : $txt['install_settings_dbsession_info2'], '</div>
-			</dd>
-			<dt>', $txt['install_settings_utf8'], ':</dt>
-			<dd>
-				<input type="checkbox" name="utf8" id="utf8_check"', $incontext['utf8_default'] ? ' checked' : '', '', $incontext['utf8_required'] ? ' disabled' : '', '>
-				<label for="utf8_check">', $txt['install_settings_utf8_title'], '</label>
-				<div class="smalltext">', $txt['install_settings_utf8_info'], '</div>
 			</dd>
 			<dt>', $txt['install_settings_stats'], ':</dt>
 			<dd>
