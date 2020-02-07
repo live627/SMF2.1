@@ -86,9 +86,16 @@ class postgres_cache extends cache_api
 			array('{' . implode(', ', $stmtnames) . '}')
 		);
 
-		$arr = pg_fetch_all($result);
+		$arr = array_map(
+			function($el)
+			{
+				return $el['name'];
+			},
+			pg_fetch_all($result)
+		);
 		foreach ($stmtnames as $idx => $stmtname)
-			pg_prepare($this->db_connection, $stmtname, $queries[$idx]);
+			if (!in_array($stmtname, $arr))
+				pg_prepare($this->db_connection, $stmtname, $queries[$idx]);
 	}
 
 	/**
