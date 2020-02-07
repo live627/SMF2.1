@@ -58,7 +58,7 @@ class GraphicsTest extends BaseTestCase
 	{
 		global $modSettings, $smcFunc;
 
-		if (strpos(get_headers($url)[0],'200') === false)
+		if (strpos(get_headers($url)[0], '200') === false)
 			$this->markTestSkipped('Could not fetch from ' . $url . '; skipping this test method');
 
 		$success = downloadAvatar($url, 1, 100, 100);

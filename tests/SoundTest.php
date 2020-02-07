@@ -25,11 +25,11 @@ class SoundTest extends BaseTestCase
 			$d = fread($fp, 24);
 			fclose($fp);
 			$data = unpack('vfmt/vch/Vsr/Vdr/vbs/vbis/Vext/Vds', $d);
-			$this->assertEquals(128000, $data['dr']);                    // data rate
-			$this->assertEquals(1, $data['ch']);                         // channels
-			$this->assertEquals(16000, $data['sr']);                     // samples rate
-			$this->assertEquals(8, $data['bis']);                        // bits per sample
-			$this->assertEquals(filesize('ppk.wav') - 44, $data['ds']);  // data size
+			$this->assertEquals(128000, $data['dr']); // data rate
+			$this->assertEquals(1, $data['ch']); // channels
+			$this->assertEquals(16000, $data['sr']); // samples rate
+			$this->assertEquals(8, $data['bis']); // bits per sample
+			$this->assertEquals(filesize('ppk.wav') - 44, $data['ds']); // data size
 			$this->assertTrue(file_exists('ppk.wav'));
 			unlink('ppk.wav');
 			$this->assertFalse(file_exists('ppk.wav'));

@@ -66,7 +66,7 @@ $databases = array(
 			$request = pg_query($db_connection, 'SHOW server_version_num');
 			list ($version) = pg_fetch_row($request);
 
-			ECHO $version;
+			echo $version;
 			return $version;
 		},
 		'supported' => function_exists('pg_connect'),
@@ -902,7 +902,7 @@ function DatabaseSettings()
 
 		// Do they meet the install requirements?
 		// @todo Old client, new server?
-		if ($databases[$db_type]['version'] >  $databases[$db_type]['version_check']($db_connection))
+		if ($databases[$db_type]['version'] > $databases[$db_type]['version_check']($db_connection))
 		{
 			$incontext['error'] = sprintf($txt['error_db_too_low'], $databases[$db_type]['name']);
 			return false;
@@ -988,7 +988,7 @@ function ForumSettings()
 	$incontext['continue'] = 1;
 
 	// Check Postgres setting
-	if ( $db_type === 'postgresql')
+	if ($db_type === 'postgresql')
 	{
 		load_database();
 		$result = $smcFunc['db_query']('', '
@@ -1002,7 +1002,7 @@ function ForumSettings()
 		{
 			$row = $smcFunc['db_fetch_assoc']($result);
 			if ($row['standard_conforming_strings'] !== 'on')
-				{
+			{
 					$incontext['continue'] = 0;
 					$incontext['error'] = $txt['error_pg_scs'];
 				}
