@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class ReCaptcha\RequestParameters</title>
+
+	<link rel="stylesheet" href="resources/style.css?c2f33731c1948fbed7c333554678bfa68d4817da">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li>
+					<a href="namespace-MatthiasMullie.html">
+						MatthiasMullie<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-MatthiasMullie.Minify.html">
+						Minify<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-MatthiasMullie.Minify.Exceptions.html">
+						Exceptions					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-MatthiasMullie.PathConverter.html">
+						PathConverter					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-None.html">
+						None					</a>
+
+						</li>
+				<li class="active">
+					<a href="namespace-ReCaptcha.html">
+						ReCaptcha<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-ReCaptcha.RequestMethod.html">
+						RequestMethod					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-TOTP.html">
+						TOTP					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-ReCaptcha.ReCaptcha.html">ReCaptcha</a></li>
+				<li class="active"><a href="class-ReCaptcha.RequestParameters.html">RequestParameters</a></li>
+				<li><a href="class-ReCaptcha.Response.html">Response</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-ReCaptcha.RequestMethod.html">RequestMethod</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-ReCaptcha.html" title="Summary of ReCaptcha"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class RequestParameters</h1>
+
+
+	<div class="description">
+	<p>Stores and formats the parameters for the request to the reCAPTCHA service.</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-ReCaptcha.html">ReCaptcha</a><br>
+		
+
+			<b>Located at</b> <a href="source-class-ReCaptcha.RequestParameters.html#29-103" title="Go to source code">Sources/ReCaptcha/RequestParameters.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-ReCaptcha.RequestParameters.html#58-72" title="Go to source code">__construct</a>( <span>string <var>$secret</var></span>, <span>string <var>$response</var></span>, <span>string <var>$remoteIp</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$version</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Initialise parameters.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Initialise parameters.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$secret</var></dt>
+					<dd>Site secret.</dd>
+					<dt><var>$response</var></dt>
+					<dd>Value from g-captcha-response form field.</dd>
+					<dt><var>$remoteIp</var></dt>
+					<dd>User's IP address.</dd>
+					<dt><var>$version</var></dt>
+					<dd>Version of this client library.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toArray" id="_toArray">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toArray">#</a>
+		<code><a href="source-class-ReCaptcha.RequestParameters.html#74-92" title="Go to source code">toArray</a>( )</code>
+
+		<div class="description short">
+			<p>Array representation.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Array representation.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					array<br>Array formatted parameters.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toQueryString" id="_toQueryString">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toQueryString">#</a>
+		<code><a href="source-class-ReCaptcha.RequestParameters.html#94-102" title="Go to source code">toQueryString</a>( )</code>
+
+		<div class="description short">
+			<p>Query string representation for HTTP request.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Query string representation for HTTP request.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					string<br>Query string formatted parameters.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

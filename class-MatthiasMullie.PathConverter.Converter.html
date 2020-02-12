@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class MatthiasMullie\PathConverter\Converter</title>
+
+	<link rel="stylesheet" href="resources/style.css?c2f33731c1948fbed7c333554678bfa68d4817da">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li class="active">
+					<a href="namespace-MatthiasMullie.html">
+						MatthiasMullie<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-MatthiasMullie.Minify.html">
+						Minify<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-MatthiasMullie.Minify.Exceptions.html">
+						Exceptions					</a>
+
+						</li>
+							</ul></li>
+				<li class="active">
+					<a href="namespace-MatthiasMullie.PathConverter.html">
+						PathConverter					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="namespace-ReCaptcha.html">
+						ReCaptcha<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-ReCaptcha.RequestMethod.html">
+						RequestMethod					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-TOTP.html">
+						TOTP					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-MatthiasMullie.PathConverter.Converter.html">Converter</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-MatthiasMullie.PathConverter.html" title="Summary of MatthiasMullie\PathConverter"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Converter</h1>
+
+
+	<div class="description">
+	<p>Convert paths relative from 1 file to another.</p>
+
+<p>E.g. ../../images/icon.jpg relative to /css/imports/icons.css
+becomes ../images/icon.jpg relative to /css/minified.css</p>
+
+<p>Please report bugs on https://github.com/matthiasmullie/path-converter/issues</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-MatthiasMullie.html">MatthiasMullie</a>\<a href="namespace-MatthiasMullie.PathConverter.html">PathConverter</a><br>
+		
+
+				<b>Copyright:</b>
+				Copyright (c) 2015, Matthias Mullie. All rights reserved.<br>
+				<b>License:</b>
+				<a href="MIT">License</a><br>
+				<b>Author:</b>
+				Matthias Mullie <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#112;&#97;&#116;&#104;&#99;&#111;&#110;&#118;e&#x72;&#x74;&#x65;&#x72;&#x40;&#x6d;&#x75;&#x6c;&#108;&#105;&#101;&#46;&#101;&#117;">&#112;&#97;&#116;&#104;&#99;&#111;&#110;&#118;e&#x72;&#x74;&#x65;&#x72;&#x40;&#x6d;&#x75;&#x6c;&#108;&#105;&#101;&#46;&#101;&#117;</a><br>
+			<b>Located at</b> <a href="source-class-MatthiasMullie.PathConverter.Converter.html#5-195" title="Go to source code">Sources/minify/path-converter/src/Converter.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-MatthiasMullie.PathConverter.Converter.html#31-59" title="Go to source code">__construct</a>( <span>string <var>$from</var></span>, <span>string <var>$to</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$from</var></dt>
+					<dd>The original base path (directory, not file!)</dd>
+					<dt><var>$to</var></dt>
+					<dd>The new base path (directory, not file!)</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="normalize" id="_normalize">
+
+		<td class="attributes"><code>
+			 protected 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_normalize">#</a>
+		<code><a href="source-class-MatthiasMullie.PathConverter.Converter.html#61-84" title="Go to source code">normalize</a>( <span>string <var>$path</var></span> )</code>
+
+		<div class="description short">
+			<p>Normalize path.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Normalize path.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$path</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="shared" id="_shared">
+
+		<td class="attributes"><code>
+			 protected 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_shared">#</a>
+		<code><a href="source-class-MatthiasMullie.PathConverter.Converter.html#86-121" title="Go to source code">shared</a>( <span>string <var>$path1</var></span>, <span>string <var>$path2</var></span> )</code>
+
+		<div class="description short">
+			<p>Figure out the shared path of 2 locations.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Figure out the shared path of 2 locations.</p>
+
+<p>Example: /home/forkcms/frontend/core/layout/images/img.gif
+and /home/forkcms/frontend/cache/minified_css
+share /home/forkcms/frontend</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$path1</var></dt>
+					<dd></dd>
+					<dt><var>$path2</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="convert" id="_convert">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_convert">#</a>
+		<code><a href="source-class-MatthiasMullie.PathConverter.Converter.html#123-161" title="Go to source code">convert</a>( <span>string <var>$path</var></span> )</code>
+
+		<div class="description short">
+			<p>Convert paths relative from 1 file to another.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Convert paths relative from 1 file to another.</p>
+
+<p>E.g. ../images/img.gif relative to /home/forkcms/frontend/core/layout/css
+should become: ../../core/layout/images/img.gif relative to /home/forkcms/frontend/cache/minified_css</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$path</var></dt>
+					<dd>The relative path that needs to be converted.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string<br>The new relative path.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="dirname" id="_dirname">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_dirname">#</a>
+		<code><a href="source-class-MatthiasMullie.PathConverter.Converter.html#163-194" title="Go to source code">dirname</a>( <span>string <var>$path</var></span> )</code>
+
+		<div class="description short">
+			<p>Attempt to get the directory name from a path.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Attempt to get the directory name from a path.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$path</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="from" id="$from">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-MatthiasMullie.PathConverter.Converter.html#21-24" title="Go to source code"><var>$from</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$from" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="to" id="$to">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-MatthiasMullie.PathConverter.Converter.html#26-29" title="Go to source code"><var>$to</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$to" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>
