@@ -4,7 +4,6 @@ namespace PHPTDD;
 
 class HooksTest extends BaseTestCase
 {
-
 	public function integrationProvider()
 	{
 		return array(

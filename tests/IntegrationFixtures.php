@@ -29,3 +29,19 @@ class testing_class
 		return $this->hook;
 	}
 }
+
+function get()
+{
+	return array(
+		array('a' => 1, 'b' => 'j&j', 'd' => comma_format(12345678), 'e' => timeformat(12345678)),
+		array('a' => 2, 'b' => 'j&j', 'd' => comma_format(12345678), 'e' => timeformat(12345678)),
+		array('a' => 3, 'b' => 'j&j', 'd' => comma_format(12345678), 'e' => timeformat(12345678)),
+		array('a' => 4, 'b' => 'j&j', 'd' => comma_format(12345678), 'e' => timeformat(12345678)),
+		array('a' => 5, 'b' => 'j&j', 'd' => comma_format(12345678), 'e' => timeformat(12345678)),
+	);
+}
+
+function num()
+{
+	return 5;
+}
