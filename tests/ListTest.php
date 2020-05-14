@@ -95,7 +95,7 @@ class ListTest extends BaseTestCase
 	}
 }
 
-function integrationProvider()
+function get()
 {
 	return array(
 		array('a' => 1, 'b' => 'j&j', 'd' => comma_format(12345678), 'e' => timeformat(12345678)),
