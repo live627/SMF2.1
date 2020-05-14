@@ -3227,7 +3227,7 @@ function censorText(&$text, $force = false)
 		return $text;
 
 	// If they haven't yet been loaded, load them.
-	if ($censor_vulgar == null)
+	//if ($censor_vulgar == null)
 	{
 		$censor_vulgar = explode("\n", $modSettings['censor_vulgar']);
 		$censor_proper = explode("\n", $modSettings['censor_proper']);
@@ -3545,8 +3545,7 @@ function loadCacheAccelerator($overrideCache = null, $fallbackSMF = true)
 		{
 			// Can we save ourselves?
 			if (!empty($fallbackSMF) && is_null($overrideCache) && $tryAccelerator != 'smf')
-				return loadCacheAccelerator(null, false);
-			return false;
+				return loadCacheAccelerator('smf', false);
 		}
 
 		// Connect up to the accelerator.

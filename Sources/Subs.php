@@ -5888,10 +5888,11 @@ function get_gravatar_url($email_address)
 		if (!empty($modSettings['gravatarDefault']) && in_array($modSettings['gravatarDefault'], $defaults))
 			$url_params[] = 'default=' . $modSettings['gravatarDefault'];
 		if (!empty($modSettings['avatar_max_width_external']))
+		{
 			$size_string = (int) $modSettings['avatar_max_width_external'];
-		if (!empty($modSettings['avatar_max_height_external']) && !empty($size_string))
-			if ((int) $modSettings['avatar_max_height_external'] < $size_string)
-				$size_string = $modSettings['avatar_max_height_external'];
+			if (!empty($modSettings['avatar_max_height_external']))
+				$size_string = min($size_string, $modSettings['avatar_max_height_external']);
+		}
 
 		if (!empty($size_string))
 			$url_params[] = 's=' . $size_string;

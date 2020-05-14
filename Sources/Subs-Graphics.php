@@ -1127,7 +1127,6 @@ function showCodeImage($code)
 
 	// Bail out.
 	imagedestroy($code_image);
-	die();
 }
 
 /**

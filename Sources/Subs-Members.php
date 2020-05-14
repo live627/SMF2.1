@@ -859,7 +859,7 @@ function isReservedName($name, $current_id_member = 0, $is_name = true, $fatal =
 	$checkName = $smcFunc['strtolower']($name);
 
 	// Administrators are never restricted ;).
-	if (!allowedTo('moderate_forum') && ((!empty($modSettings['reserveName']) && $is_name) || !empty($modSettings['reserveUser']) && !$is_name))
+//	if (!allowedTo('moderate_forum') && ((!empty($modSettings['reserveName']) && $is_name) || !empty($modSettings['reserveUser']) && !$is_name))
 	{
 		$reservedNames = explode("\n", $modSettings['reserveNames']);
 		// Case sensitive check?

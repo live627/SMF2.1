@@ -40,7 +40,7 @@ class memcached_cache extends cache_api
 				if (strpos($server, '/') !== false)
 					return array($server, 0);
 				else
-					return array($server, isset($server[1]) ? $server[1] : 11211);
+					return array($server, isset($server[1]) ? (int) $server[1] : 11211);
 			},
 			explode(',', $cache_memcached)
 		);

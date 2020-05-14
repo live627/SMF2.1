@@ -39,21 +39,16 @@ require_once('Sources/Class-Package.php');
 $databases = array(
 	'mysql' => array(
 		'name' => 'MySQL',
-		'version' => '5.0.22',
-		'version_check' => 'return min(mysqli_get_server_info($db_connection), mysqli_get_client_info());',
+		'version' => 50100,
+		'version_check' => function($db_connection)
+		{
+			return mysqli_get_server_version($db_connection);
+		},
 		'supported' => function_exists('mysqli_connect'),
 		'default_user' => 'mysql.default_user',
 		'default_password' => 'mysql.default_password',
 		'default_host' => 'mysql.default_host',
 		'default_port' => 'mysql.default_port',
-		'utf8_support' => function()
-		{
-			return true;
-		},
-		'utf8_version' => '5.0.22',
-		'utf8_version_check' => 'return mysqli_get_server_info($db_connection);',
-		'utf8_default' => true,
-		'utf8_required' => true,
 		'alter_support' => true,
 		'validate_prefix' => function(&$value)
 		{
@@ -63,26 +58,18 @@ $databases = array(
 	),
 	'postgresql' => array(
 		'name' => 'PostgreSQL',
-		'version' => '9.4',
+		'version' => 90400,
 		'function_check' => 'pg_connect',
-		'version_check' => '$request = pg_query(\'SELECT version()\'); list ($version) = pg_fetch_row($request); list($pgl, $version) = explode(" ", $version); return $version;',
+		'version_check' => function($db_connection)
+		{
+			$request = pg_query($db_connection, 'SHOW server_version_num');
+			list ($version) = pg_fetch_row($request);
+
+			echo $version;
+			return $version;
+		},
 		'supported' => function_exists('pg_connect'),
 		'always_has_db' => true,
-		'utf8_default' => true,
-		'utf8_required' => true,
-		'utf8_support' => function()
-		{
-			$request = pg_query('SHOW SERVER_ENCODING');
-
-			list ($charcode) = pg_fetch_row($request);
-
-			if ($charcode == 'UTF8')
-				return true;
-			else
-				return false;
-		},
-		'utf8_version' => '8.0',
-		'utf8_version_check' => '$request = pg_query(\'SELECT version()\'); list ($version) = pg_fetch_row($request); list($pgl, $version) = explode(" ", $version); return $version;',
 		'validate_prefix' => function(&$value)
 		{
 			global $txt;
@@ -132,29 +119,83 @@ $incontext['current_step'] = isset($_GET['step']) ? (int) $_GET['step'] : 0;
 // Loop through all the steps doing each one as required.
 $incontext['overall_percent'] = 0;
 
-foreach ($incontext['steps'] as $num => $step)
+if ('cli' === PHP_SAPI)
 {
-	if ($num >= $incontext['current_step'])
+	$options = getopt('n:u:p:e', ['dbtype:', 'dbserver:', 'dbuser:', 'dbpass:', 'dbname:', 'dbprefix:', 'boardurl:']);
+
+	if (isset($options['u'], $options['p'], $options['dbname'], $options['dbuser']))
 	{
-		// The current weight of this step in terms of overall progress.
-		$incontext['step_weight'] = $step[3];
-		// Make sure we reset the skip button.
-		$incontext['skip'] = false;
+		$_POST = array(
+			'contbutt' => '1',
+			'mbname' => $options['n'] ?? 'My Community',
+			'boardurl' => $options['boardurl'] ?? 'http://127.0.0.1/smf',
+			'username' => $options['u'],
+			'password1' => $options['p'],
+			'password2' => $options['p'],
+			'email' => $options['e'] ?? 'noreply@myserver.com',
+			'server_email' => $options['e'] ?? 'noreply@myserver.com',
+			'db_type' => $options['dbtype'] ?? 'mysql',
+			'db_name' => $options['dbname'],
+			'db_user' => $options['dbuser'],
+			'db_passwd' => isset($options['dbpass']) ? $options['dbpass'] : '',
+			'db_server' => $options['dbserver'] ?? '127.0.0.1',
+			'db_prefix' => $options['dbprefix'] ?? 'smf_',
+		);
+		foreach ($incontext['steps'] as $num => $step)
+		{
+			if ($step[2] != 'DeleteInstalll')
+			{
+				$step[2]();
 
-		// Call the step and if it returns false that means pause!
-		if (function_exists($step[2]) && $step[2]() === false)
-			break;
-		elseif (function_exists($step[2]))
-			$incontext['current_step']++;
+				if (!empty($incontext['error']))
+					throw new Error($incontext['error']);
+				if (!empty($incontext['warning']))
+					echo $incontext['warning'], "\n\n";
+				if (!empty($incontext['sql_results']))
+				{
+					echo implode("\n", $incontext['sql_results']), "\n\n";
 
-		// No warnings pass on.
-		$incontext['warning'] = '';
+					if (!empty($incontext['failures']))
+					{
+						$e = $txt['error_db_queries'];
+
+						foreach ($incontext['failures'] as $line => $fail)
+							$e .= sprintf("%s%d\n\n: %s", $txt['error_db_queries_line'], $line + 1, $fail);
+
+						throw new Error($e);
+					}
+					unset($incontext['sql_results']);
+				}
+			}
+		}
 	}
-	$incontext['overall_percent'] += $step[3];
 }
+else
+{
+	foreach ($incontext['steps'] as $num => $step)
+	{
+		if ($num >= $incontext['current_step'])
+		{
+			// The current weight of this step in terms of overall progress.
+			$incontext['step_weight'] = $step[3];
+			// Make sure we reset the skip button.
+			$incontext['skip'] = false;
 
-// Actually do the template stuff.
-installExit();
+			// Call the step and if it returns false that means pause!
+			if (function_exists($step[2]) && $step[2]() === false)
+				break;
+			elseif (function_exists($step[2]))
+				$incontext['current_step']++;
+
+			// No warnings pass on.
+			$incontext['warning'] = '';
+		}
+		$incontext['overall_percent'] += $step[3];
+	}
+
+	// Actually do the template stuff.
+	installExit();
+}
 
 function initialize_inputs()
 {
@@ -163,13 +204,6 @@ function initialize_inputs()
 	// Just so people using older versions of PHP aren't left in the cold.
 	if (!isset($_SERVER['PHP_SELF']))
 		$_SERVER['PHP_SELF'] = isset($GLOBALS['HTTP_SERVER_VARS']['PHP_SELF']) ? $GLOBALS['HTTP_SERVER_VARS']['PHP_SELF'] : 'install.php';
-
-	// In pre-release versions, report all errors.
-	if (strspn(SMF_VERSION, '1234567890.') !== strlen(SMF_VERSION))
-		error_reporting(E_ALL);
-	// Otherwise, report all errors except for deprecation notices.
-	else
-		error_reporting(E_ALL & ~E_DEPRECATED);
 
 	// Fun.  Low PHP version...
 	if (!isset($_GET))
@@ -180,8 +214,6 @@ function initialize_inputs()
 
 	if (!isset($_GET['obgz']))
 	{
-		ob_start();
-
 		if (ini_get('session.save_handler') == 'user')
 			@ini_set('session.save_handler', 'files');
 		if (function_exists('session_start'))
@@ -189,8 +221,6 @@ function initialize_inputs()
 	}
 	else
 	{
-		ob_start('ob_gzhandler');
-
 		if (ini_get('session.save_handler') == 'user')
 			@ini_set('session.save_handler', 'files');
 		session_start();
@@ -270,9 +300,6 @@ function initialize_inputs()
 
 		date_default_timezone_set($timezone_id);
 	}
-	header('X-Frame-Options: SAMEORIGIN');
-	header('X-XSS-Protection: 1');
-	header('X-Content-Type-Options: nosniff');
 
 	// Force an integer step, defaulting to 0.
 	$_GET['step'] = (int) @$_GET['step'];
@@ -370,6 +397,9 @@ function load_database()
 	global $db_prefix, $db_connection, $sourcedir, $smcFunc, $modSettings, $db_port;
 	global $db_server, $db_passwd, $db_type, $db_name, $db_user, $db_persist, $db_mb4;
 
+	if (!empty($db_connection))
+		return;
+
 	if (empty($sourcedir))
 		$sourcedir = dirname(__FILE__) . '/Sources';
 
@@ -414,25 +444,12 @@ function installExit($fallThrough = false)
 		// The top install bit.
 		template_install_above();
 
-		// Call the template.
-		if (isset($incontext['sub_template']))
-		{
-			$incontext['form_url'] = $installurl . '?step=' . $incontext['current_step'];
+		$incontext['form_url'] = $installurl . '?step=' . $incontext['current_step'];
 
-			call_user_func('template_' . $incontext['sub_template']);
-		}
-		// @todo REMOVE THIS!!
-		else
-		{
-			if (function_exists('doStep' . $_GET['step']))
-				call_user_func('doStep' . $_GET['step']);
-		}
-		// Show the footer.
+		call_user_func('template_' . $incontext['sub_template']);
+
 		template_install_below();
 	}
-
-	// Bang - gone!
-	die();
 }
 
 function Welcome()
@@ -883,10 +900,9 @@ function DatabaseSettings()
 		}
 
 		// Do they meet the install requirements?
-		// @todo Old client, new server?
-		if (version_compare($databases[$db_type]['version'], preg_replace('~^\D*|\-.+?$~', '', eval($databases[$db_type]['version_check']))) > 0)
+		if ($databases[$db_type]['version'] > $databases[$db_type]['version_check']($db_connection))
 		{
-			$incontext['error'] = $txt['error_db_too_low'];
+			$incontext['error'] = sprintf($txt['error_db_too_low'], $databases[$db_type]['name']);
 			return false;
 		}
 
@@ -947,9 +963,7 @@ function ForumSettings()
 	if (isset($_POST['db_type'], $databases[$_POST['db_type']]))
 		$db_type = $_POST['db_type'];
 
-	// Else we'd better be able to get the connection.
-	else
-		load_database();
+	load_database();
 
 	$db_type = isset($_POST['db_type']) ? $_POST['db_type'] : $db_type;
 
@@ -967,14 +981,12 @@ function ForumSettings()
 	$incontext['detected_url'] = 'http' . ($secure ? 's' : '') . '://' . $host . substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/'));
 
 	// Check if the database sessions will even work.
-	$incontext['test_dbsession'] = (ini_get('session.auto_start') != 1);
-	$incontext['utf8_default'] = $databases[$db_type]['utf8_default'];
-	$incontext['utf8_required'] = $databases[$db_type]['utf8_required'];
+	$incontext['test_dbsession'] = ini_get('session.auto_start') != 1;
 
 	$incontext['continue'] = 1;
 
 	// Check Postgres setting
-	if ( $db_type === 'postgresql')
+	if ($db_type === 'postgresql')
 	{
 		load_database();
 		$result = $smcFunc['db_query']('', '
@@ -988,7 +1000,7 @@ function ForumSettings()
 		{
 			$row = $smcFunc['db_fetch_assoc']($result);
 			if ($row['standard_conforming_strings'] !== 'on')
-				{
+			{
 					$incontext['continue'] = 0;
 					$incontext['error'] = $txt['error_pg_scs'];
 				}
@@ -1063,24 +1075,7 @@ function ForumSettings()
 		// Make sure it works.
 		require(dirname(__FILE__) . '/Settings.php');
 
-		// UTF-8 requires a setting to override the language charset.
-		if ((!empty($databases[$db_type]['utf8_support']) && !empty($databases[$db_type]['utf8_required'])) || (empty($databases[$db_type]['utf8_required']) && !empty($databases[$db_type]['utf8_support']) && isset($_POST['utf8'])))
-		{
-			if (!$databases[$db_type]['utf8_support']())
-			{
-				$incontext['error'] = sprintf($txt['error_utf8_support']);
-				return false;
-			}
-
-			if (!empty($databases[$db_type]['utf8_version_check']) && version_compare($databases[$db_type]['utf8_version'], preg_replace('~\-.+?$~', '', eval($databases[$db_type]['utf8_version_check'])), '>'))
-			{
-				$incontext['error'] = sprintf($txt['error_utf8_version'], $databases[$db_type]['utf8_version']);
-				return false;
-			}
-			else
-				// Set the character set here.
-				installer_updateSettingsFile(array('db_character_set' => 'utf8'));
-		}
+		installer_updateSettingsFile(array('db_character_set' => 'utf8'));
 
 		// Good, skip on.
 		return true;
@@ -1292,8 +1287,7 @@ function DatabasePopulation()
 	}
 
 	// Make sure UTF will be used globally.
-	if ((!empty($databases[$db_type]['utf8_support']) && !empty($databases[$db_type]['utf8_required'])) || (empty($databases[$db_type]['utf8_required']) && !empty($databases[$db_type]['utf8_support']) && isset($_POST['utf8'])))
-		$newSettings[] = array('global_character_set', 'UTF-8');
+	$newSettings[] = array('global_character_set', 'UTF-8');
 
 	// Auto-detect local & global cookie settings
 	$url_parts = parse_url($boardurl);
@@ -2381,12 +2375,6 @@ function template_forum_settings()
 				<input type="checkbox" name="dbsession" id="dbsession_check" checked>
 				<label for="dbsession_check">', $txt['install_settings_dbsession_title'], '</label>
 				<div class="smalltext">', $incontext['test_dbsession'] ? $txt['install_settings_dbsession_info1'] : $txt['install_settings_dbsession_info2'], '</div>
-			</dd>
-			<dt>', $txt['install_settings_utf8'], ':</dt>
-			<dd>
-				<input type="checkbox" name="utf8" id="utf8_check"', $incontext['utf8_default'] ? ' checked' : '', '', $incontext['utf8_required'] ? ' disabled' : '', '>
-				<label for="utf8_check">', $txt['install_settings_utf8_title'], '</label>
-				<div class="smalltext">', $txt['install_settings_utf8_info'], '</div>
 			</dd>
 			<dt>', $txt['install_settings_stats'], ':</dt>
 			<dd>
