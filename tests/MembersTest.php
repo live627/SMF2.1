@@ -207,7 +207,7 @@ class MembersTest extends BaseTestCase
 		{
 			$this->assertContains($member, $members);
 			$this->assertArrayHasKey($member, $user_profile);
-			$this->assertArrayHasKey('id', loadMemberContext($member, true));
+			$this->assertTrue(loadMemberContext($member, true));
 			$this->assertArrayHasKey($member, $memberContext);
 			$this->assertEquals($member, $memberContext[$member]['id']);
 		}
