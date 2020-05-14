@@ -24,13 +24,13 @@ class ListTest extends BaseTestCase
 			'base_href' => '?action=profile;area=showposts;sa=attach;u=',
 			'default_sort_col' => 'a',
 			'get_items' => array(
-				'function' => 'list_getAttachments',
+				'function' => 'get',
 				'params' => array(
 					'dummy',
 				),
 			),
 			'get_count' => array(
-				'function' => 'list_getNumAttachments',
+				'function' => 'num',
 				'params' => array(
 					'dummy',
 				),
@@ -93,4 +93,20 @@ class ListTest extends BaseTestCase
 		createList($listOptions);
 		var_dump($context['a']);
 	}
+}
+
+function integrationProvider()
+{
+	return array(
+		array('a' => 1, 'b' => 'j&j', 'd' => comma_format(12345678), 'e' => timeformat(12345678)),
+		array('a' => 2, 'b' => 'j&j', 'd' => comma_format(12345678), 'e' => timeformat(12345678)),
+		array('a' => 3, 'b' => 'j&j', 'd' => comma_format(12345678), 'e' => timeformat(12345678)),
+		array('a' => 4, 'b' => 'j&j', 'd' => comma_format(12345678), 'e' => timeformat(12345678)),
+		array('a' => 5, 'b' => 'j&j', 'd' => comma_format(12345678), 'e' => timeformat(12345678)),
+	);
+}
+
+function num()
+{
+	return 5;
 }
