@@ -24,14 +24,14 @@ class ListTest extends BaseTestCase
 			'base_href' => '?action=profile;area=showposts;sa=attach;u=',
 			'default_sort_col' => 'a',
 			'get_items' => array(
-				'file' => 'IntegrationFixtures.php',
+				'file' => __DIR__ . '/IntegrationFixtures.php',
 				'function' => 'get',
 				'params' => array(
 					'dummy',
 				),
 			),
 			'get_count' => array(
-				'file' => 'IntegrationFixtures.php',
+				'file' => __DIR__ . ''/IntegrationFixtures.php',
 				'function' => 'num',
 				'params' => array(
 					'dummy',
