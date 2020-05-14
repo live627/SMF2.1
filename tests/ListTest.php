@@ -31,7 +31,7 @@ class ListTest extends BaseTestCase
 				),
 			),
 			'get_count' => array(
-				'file' => __DIR__ . ''/IntegrationFixtures.php',
+				'file' => __DIR__ . '/IntegrationFixtures.php',
 				'function' => 'num',
 				'params' => array(
 					'dummy',
