@@ -89,7 +89,6 @@ class ListTest extends BaseTestCase
 		);
 
 		createList($listOptions);
-		var_dump($context['a']);
 		$this->assertEquals('a', $context['a']['sort']['id']);
 		$this->assertFalse($context['a']['sort']['desc']);
 		$this->assertEquals(5, $context['a']['total_num_items']);
@@ -130,9 +129,8 @@ class ListTest extends BaseTestCase
 		);
 
 		createList($listOptions);
-		var_dump($context['a']);
 		$this->assertEquals(2, $context['a']['total_num_items']);
 		$this->assertCount(1, $context['a']['rows']);
-		$this->assertEquals('<a topic=1">j&amp;j</a>', $context['a']['rows'][0]['data']['a']['value']);
+		$this->assertEquals('dummy', $context['a']['rows'][0]['data']['a']['value']);
 	}
 }
