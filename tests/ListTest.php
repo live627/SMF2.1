@@ -4,16 +4,12 @@ namespace PHPTDD;
 
 class ListTest extends BaseTestCase
 {
-	protected $test_areas;
-	protected $test_options;
-
 	public function test() : void
 	{
-		global $context, $sourcedir, $user_info;
+		global $context, $sourcedir;
 
 		require_once($sourcedir . '/Subs-List.php');
 
-		// This is all the information required to list attachments.
 		$listOptions = array(
 			'id' => 'a',
 			'width' => '100%',
@@ -54,8 +50,8 @@ class ListTest extends BaseTestCase
 						'sprintf' => array(
 							'format' => '<a topic=%1$d">%2$s</a>',
 							'params' => array(
-								'b' => true,
 								'a' => false,
+								'b' => true,
 							),
 						),
 					),
@@ -94,5 +90,49 @@ class ListTest extends BaseTestCase
 
 		createList($listOptions);
 		var_dump($context['a']);
+		$this->assertEquals('a', $context['a']['sort']['id']);
+		$this->assertFalse($context['a']['sort']['desc']);
+		$this->assertEquals(5, $context['a']['total_num_items']);
+		$this->assertEquals(4, $context['a']['items_per_page']);
+		$this->assertCount(1, $context['a']['rows']);
+		$this->assertEquals('<a topic=1">j&amp;j</a>', $context['a']['rows'][0]['data']['a']['value']);
+		$this->assertEquals('123,456.78', $context['a']['rows'][0]['data']['d']['value']);
+		$this->assertEquals('May 23, 1970, 09:21 PM', $context['a']['rows'][0]['data']['e']['value']);
+	}
+
+	public function test2() : void
+	{
+		global $context, $sourcedir;
+
+		require_once($sourcedir . '/Subs-List.php');
+
+		$listOptions = array(
+			'id' => 'a',
+			'items_per_page' => 4,
+			'base_href' => '?action=profile;area=showposts;sa=attach;u=',
+			'get_items' => array(
+				'value' => array(
+					array(
+						'a' => 'dummy',
+					),
+				),
+			),
+			'get_count' => array(
+				'value' => '2'
+			),
+			'columns' => array(
+				'a' => array(
+					'data' => array(
+						'db' => 'a',
+					),
+				),
+			),
+		);
+
+		createList($listOptions);
+		var_dump($context['a']);
+		$this->assertEquals(2, $context['a']['total_num_items']);
+		$this->assertCount(1, $context['a']['rows']);
+		$this->assertEquals('<a topic=1">j&amp;j</a>', $context['a']['rows'][0]['data']['a']['value']);
 	}
 }
