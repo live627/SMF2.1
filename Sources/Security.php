@@ -1183,7 +1183,7 @@ function spamProtection($error_type, $only_return_result = false)
 	);
 
 	// Add a new entry, deleting the old if necessary.
-	$smcFunc['db_insert']('insert',
+	$smcFunc['db_insert']('replace',
 		'{db_prefix}log_floodcontrol',
 		array('ip' => 'inet', 'log_time' => 'int', 'log_type' => 'string'),
 		array($user_info['ip'], time(), $error_type),
