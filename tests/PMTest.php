@@ -143,6 +143,7 @@ class PMTest extends BaseTestCase
 		unset($_GET['save']);
 		$_GET[$context['session_var']] = $context['session_id'];
 		$_GET[$_SESSION['session_var']] = $_SESSION['session_value'];
+		usleep(2);
 		ManageRules();
 
 		MessageFolder();
@@ -172,6 +173,7 @@ class PMTest extends BaseTestCase
 		$_POST['acttype'] = ['del'];
 		$_POST[$context['session_var']] = $context['session_id'];
 		$_POST[$_SESSION['session_var']] = $_SESSION['session_value'];
+		usleep(2);
 		ManageRules();
 		LoadRules(true);
 		$this->assertContains('test', array_column($context['rules'], 'name', 'id'));
@@ -188,6 +190,7 @@ class PMTest extends BaseTestCase
 		unset($_GET['save']);
 		$_GET[$context['session_var']] = $context['session_id'];
 		$_GET[$_SESSION['session_var']] = $_SESSION['session_value'];
+		usleep(2);
 		ManageRules();
 
 		$_REQUEST['userspec'] = 'test';
