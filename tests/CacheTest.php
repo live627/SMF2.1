@@ -52,6 +52,15 @@ class CacheTest extends BaseTestCase
 		$this->assertInstanceOf(smf_cache::class, $this->_cache_obj);
 	}
 
+	public function testNNoFallback()
+	{
+		global $cache_accelerator;
+
+		$cache_accelerator = 'zend';
+		$this->_cache_obj = loadCacheAccelerator(null, false);
+		$this->assertFalse($this->_cache_obj);
+	}
+
 	public function data()
 	{
 		return array(
@@ -91,7 +100,10 @@ class CacheTest extends BaseTestCase
 	 */
 	public function test(string $api, string $fqcn)
 	{
-		$this->_cache_obj = loadCacheAccelerator($api, false);
+		global $cache_accelerator;
+
+		$cache_accelerator = $api;
+		$this->_cache_obj = loadCacheAccelerator(null, false);
 		if (!$this->_cache_obj)
 			$this->markTestSkipped();
 
