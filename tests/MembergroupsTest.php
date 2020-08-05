@@ -8,7 +8,29 @@ class TestMembergroups extends BaseTestCase
 	{
 		global $sourcedir;
 
+		require_once($sourcedir . '/Subs-Members.php');
 		require_once($sourcedir . '/Subs-Membergroups.php');
+	}
+
+	public function testGroupsAllowedTo()
+	{
+		$member_groups = groupsAllowedTo('who_view');
+		$this->assertCount(3, $member_groups['allowed']);
+		$this->assertContains(0, $member_groups['allowed']);
+		$this->assertContains(1, $member_groups['allowed']);
+		$this->assertContains(2, $member_groups['allowed']);
+		$this->assertCount(0, $member_groups['denied']);
+	}
+
+	public function testGroupsAllowedToByBoard()
+	{
+		$member_groups = groupsAllowedTo('post_reply_any', 1);
+		$this->assertCount(4, $member_groups['allowed']);
+		$this->assertContains(0, $member_groups['allowed']);
+		$this->assertContains(1, $member_groups['allowed']);
+		$this->assertContains(2, $member_groups['allowed']);
+		$this->assertContains(3, $member_groups['allowed']);
+		$this->assertCount(0, $member_groups['denied']);
 	}
 
 	public function testGroupsWithPermissions()
