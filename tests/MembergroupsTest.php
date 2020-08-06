@@ -74,4 +74,31 @@ class TestMembergroups extends BaseTestCase
 		$this->assertContains(3, $member_groups['post_reply_any']['allowed']);
 		$this->assertCount(0, $member_groups['post_reply_any']['denied']);
 	}
+
+	public function testAddNoMembersToGroup()
+	{
+		$this->assertFalse(addMembersToGroup(array(), 2));
+	}
+
+	public function testAddMembersToGroup()
+	{
+		$this->assertTrue(addMembersToGroup(1, 2));
+		$members = array();
+		$this->assertFalse(listMembergroupMembers_Href($members, 2));
+		$this->assertCount(1, $members);
+		$this->assertArrayHasKey(1, $members);
+	}
+
+	public function testRemoveNoMembersFromGroups()
+	{
+		$this->assertFalse(addMembersToGroup(array(), array(2)));
+	}
+
+	public function testRemoveMembersFromGroups()
+	{
+		$this->assertTrue(removeMembersFromGroups(1, 2));
+		$members = array();
+		$this->assertFalse(listMembergroupMembers_Href($members, 2));
+		$this->assertCount(0, $members);
+	}
 }
