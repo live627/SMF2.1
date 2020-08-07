@@ -28,3 +28,6 @@ function SendMailToQueue(&$subject, &$message, &$headers, &$to_array)
 
 	//return true;
 }
+$request = $smcFunc['db_query']('', '
+	UPDATE {db_prefix}scheduled_tasks
+	SET disabled = 1');
