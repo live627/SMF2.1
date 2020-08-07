@@ -1007,7 +1007,7 @@ class ftp_connection
 
 		// Okay, now we connect to the data port.  If it doesn't work out, it's probably "file already exists", etc.
 		$fp = @fsockopen($this->pasv['ip'], $this->pasv['port'], $err, $err, 5);
-		if ($fp === || !$this->check_response(150))
+		if ($fp === false || !$this->check_response(150))
 		{
 			$this->error = 'bad_file';
 			@fclose($fp);

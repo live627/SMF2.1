@@ -246,7 +246,7 @@ function PackageGBrowse()
 		$server = '';
 		$url = $_GET['absolute'];
 		$name = '';
-		$_GET['package'] = $url . '/packages.xml?language=' . $context['user']['language'];
+		$package_url = $url . '/packages.xml?language=' . $context['user']['language'];
 
 		// Clear any "relative" URL.  Since "server" is not present, "relative" is garbage.
 		unset($_GET['relative']);
@@ -268,11 +268,11 @@ function PackageGBrowse()
 		fatal_lang_error('couldnt_connect', false);
 
 	// Attempt to connect.  If unsuccessful... try the URL.
-	if (!isset($_GET['package']) || file_exists($_GET['package']))
-		$_GET['package'] = $url . '/packages.xml?language=' . $context['user']['language'];
+	if (!isset($package_url) || file_exists($package_url))
+		$package_url = $url . '/packages.xml?language=' . $context['user']['language'];
 
 	// Check to be sure the packages.xml file actually exists where it is should be... or dump out.
-	if ((isset($_GET['absolute']) || isset($_GET['relative'])) && !url_exists($_GET['package']))
+	if ((isset($_GET['absolute']) || isset($_GET['relative'])) && !url_exists($package_url))
 		fatal_lang_error('packageget_unable', false, array($url . '/index.php'));
 
 	// Might take some time.
@@ -280,87 +280,114 @@ function PackageGBrowse()
 
 	// Read packages.xml and parse into xmlArray. (the true tells it to trim things ;).)
 	require_once($sourcedir . '/Class-Package.php');
-	$listing = new xmlArray(fetch_web_data($_GET['package']), true);
-
-	// Errm.... empty file?  Try the URL....
-	if (!$listing->exists('package-list'))
-		fatal_lang_error('packageget_unable', false, array($url . '/index.php'));
-
-	// List out the packages...
-	$context['package_list'] = array();
-
-	$listing = $listing->path('package-list[0]');
-
-	// Use the package list's name if it exists.
-	if ($listing->exists('list-title'))
-		$name = $smcFunc['htmlspecialchars']($listing->fetch('list-title'));
-
-	// Pick the correct template.
-	$context['sub_template'] = 'package_list';
-
-	$context['page_title'] = $txt['package_servers'] . ($name != '' ? ' - ' . $name : '');
-	$context['package_server'] = $server;
-
-	// By default we use an unordered list, unless there are no lists with more than one package.
-	$context['list_type'] = 'ul';
-
-	$instmods = loadInstalledPackages();
-
-	$installed_mods = array();
-	// Look through the list of installed mods...
-	foreach ($instmods as $installed_mod)
-		$installed_mods[$installed_mod['package_id']] = $installed_mod['version'];
-
-	// Get default author and email if they exist.
-	if ($listing->exists('default-author'))
+	if (($data = fetch_web_data($package_url)) !== false)
 	{
-		$default_author = $smcFunc['htmlspecialchars']($listing->fetch('default-author'));
-		if ($listing->exists('default-author/@email') && filter_var($listing->fetch('default-author/@email'), FILTER_VALIDATE_EMAIL))
-			$default_email = $smcFunc['htmlspecialchars']($listing->fetch('default-author/@email'));
-	}
+		$listing = new xmlArray($data, true);
 
-	// Get default web site if it exists.
-	if ($listing->exists('default-website'))
-	{
-		$default_website = $smcFunc['htmlspecialchars']($listing->fetch('default-website'));
-		if ($listing->exists('default-website/@title'))
-			$default_title = $smcFunc['htmlspecialchars']($listing->fetch('default-website/@title'));
-	}
+		// Errm.... empty file?  Try the URL....
+		if (!$listing->exists('package-list'))
+			fatal_lang_error('packageget_unable', false, array($url . '/index.php'));
 
-	$the_version = SMF_VERSION;
-	if (!empty($_SESSION['version_emulate']))
-		$the_version = $_SESSION['version_emulate'];
+		// List out the packages...
+		$context['package_list'] = array();
 
-	$packageNum = 0;
-	$packageSection = 0;
+		$listing = $listing->path('package-list[0]');
 
-	$sections = $listing->set('section');
-	foreach ($sections as $i => $section)
-	{
-		$context['package_list'][$packageSection] = array(
-			'title' => '',
-			'text' => '',
-			'items' => array(),
-		);
+		// Use the package list's name if it exists.
+		if ($listing->exists('list-title'))
+			$name = $smcFunc['htmlspecialchars']($listing->fetch('list-title'));
 
-		$packages = $section->set('title|heading|text|remote|rule|modification|language|avatar-pack|theme|smiley-set');
-		foreach ($packages as $thisPackage)
+		// Pick the correct template.
+		$context['sub_template'] = 'package_list';
+
+		$context['page_title'] = $txt['package_servers'] . ($name != '' ? ' - ' . $name : '');
+		$context['package_server'] = $server;
+
+		// By default we use an unordered list, unless there are no lists with more than one package.
+		$context['list_type'] = 'ul';
+
+		$instmods = loadInstalledPackages();
+
+		$installed_mods = array();
+		// Look through the list of installed mods...
+		foreach ($instmods as $installed_mod)
+			$installed_mods[$installed_mod['package_id']] = $installed_mod['version'];
+
+		// Get default author and email if they exist.
+		if ($listing->exists('default-author'))
 		{
-			$package = array(
-				'type' => $thisPackage->name(),
+			$default_author = $smcFunc['htmlspecialchars']($listing->fetch('default-author'));
+			if ($listing->exists('default-author/@email') && filter_var($listing->fetch('default-author/@email'), FILTER_VALIDATE_EMAIL))
+				$default_email = $smcFunc['htmlspecialchars']($listing->fetch('default-author/@email'));
+		}
+
+		// Get default web site if it exists.
+		if ($listing->exists('default-website'))
+		{
+			$default_website = $smcFunc['htmlspecialchars']($listing->fetch('default-website'));
+			if ($listing->exists('default-website/@title'))
+				$default_title = $smcFunc['htmlspecialchars']($listing->fetch('default-website/@title'));
+		}
+
+		$the_version = SMF_VERSION;
+		if (!empty($_SESSION['version_emulate']))
+			$the_version = $_SESSION['version_emulate'];
+
+		$packageNum = 0;
+		$packageSection = 0;
+
+		$sections = $listing->set('section');
+		foreach ($sections as $i => $section)
+		{
+			$context['package_list'][$packageSection] = array(
+				'title' => '',
+				'text' => '',
+				'items' => array(),
 			);
 
-			if (in_array($package['type'], array('title', 'text')))
-				$context['package_list'][$packageSection][$package['type']] = $smcFunc['htmlspecialchars']($thisPackage->fetch('.'));
-			// It's a Title, Heading, Rule or Text.
-			elseif (in_array($package['type'], array('heading', 'rule')))
-				$package['name'] = $smcFunc['htmlspecialchars']($thisPackage->fetch('.'));
-			// It's a Remote link.
-			elseif ($package['type'] == 'remote')
+			$packages = $section->set('title|heading|text|remote|rule|modification|language|avatar-pack|theme|smiley-set');
+			foreach ($packages as $thisPackage)
 			{
-				$remote_type = $thisPackage->exists('@type') ? $thisPackage->fetch('@type') : 'relative';
+				$package = array(
+					'type' => $thisPackage->name(),
+				);
 
-				if ($remote_type == 'relative' && substr($thisPackage->fetch('@href'), 0, 7) != 'http://' && substr($thisPackage->fetch('@href'), 0, 8) != 'https://')
+				if (in_array($package['type'], array('title', 'text')))
+					$context['package_list'][$packageSection][$package['type']] = $smcFunc['htmlspecialchars']($thisPackage->fetch('.'));
+				// It's a Title, Heading, Rule or Text.
+				elseif (in_array($package['type'], array('heading', 'rule')))
+					$package['name'] = $smcFunc['htmlspecialchars']($thisPackage->fetch('.'));
+				// It's a Remote link.
+				elseif ($package['type'] == 'remote')
+				{
+					$remote_type = $thisPackage->exists('@type') ? $thisPackage->fetch('@type') : 'relative';
+
+					if ($remote_type == 'relative' && substr($thisPackage->fetch('@href'), 0, 7) != 'http://' && substr($thisPackage->fetch('@href'), 0, 8) != 'https://')
+					{
+						if (isset($_GET['absolute']))
+							$current_url = $_GET['absolute'] . '/';
+						elseif (isset($_GET['relative']))
+							$current_url = $_GET['relative'] . '/';
+						else
+							$current_url = '';
+
+						$current_url .= $thisPackage->fetch('@href');
+						if (isset($_GET['absolute']))
+							$package['href'] = $scripturl . '?action=admin;area=packages;get;sa=browse;absolute=' . $current_url;
+						else
+							$package['href'] = $scripturl . '?action=admin;area=packages;get;sa=browse;server=' . $context['package_server'] . ';relative=' . $current_url;
+					}
+					else
+					{
+						$current_url = $thisPackage->fetch('@href');
+						$package['href'] = $scripturl . '?action=admin;area=packages;get;sa=browse;absolute=' . $current_url;
+					}
+
+					$package['name'] = $smcFunc['htmlspecialchars']($thisPackage->fetch('.'));
+					$package['link'] = '<a href="' . $package['href'] . '">' . $package['name'] . '</a>';
+				}
+				// It's a package...
+				else
 				{
 					if (isset($_GET['absolute']))
 						$current_url = $_GET['absolute'] . '/';
@@ -369,125 +396,101 @@ function PackageGBrowse()
 					else
 						$current_url = '';
 
-					$current_url .= $thisPackage->fetch('@href');
-					if (isset($_GET['absolute']))
-						$package['href'] = $scripturl . '?action=admin;area=packages;get;sa=browse;absolute=' . $current_url;
+					$server_att = $server != '' ? ';server=' . $server : '';
+
+					$package += $thisPackage->to_array();
+
+					if (isset($package['website']))
+						unset($package['website']);
+					$package['author'] = array();
+
+					if ($package['description'] == '')
+						$package['description'] = $txt['package_no_description'];
 					else
-						$package['href'] = $scripturl . '?action=admin;area=packages;get;sa=browse;server=' . $context['package_server'] . ';relative=' . $current_url;
-				}
-				else
-				{
-					$current_url = $thisPackage->fetch('@href');
-					$package['href'] = $scripturl . '?action=admin;area=packages;get;sa=browse;absolute=' . $current_url;
-				}
+						$package['description'] = parse_bbc(preg_replace('~\[[/]?html\]~i', '', $smcFunc['htmlspecialchars']($package['description'])));
 
-				$package['name'] = $smcFunc['htmlspecialchars']($thisPackage->fetch('.'));
-				$package['link'] = '<a href="' . $package['href'] . '">' . $package['name'] . '</a>';
-			}
-			// It's a package...
-			else
-			{
-				if (isset($_GET['absolute']))
-					$current_url = $_GET['absolute'] . '/';
-				elseif (isset($_GET['relative']))
-					$current_url = $_GET['relative'] . '/';
-				else
-					$current_url = '';
+					$package['is_installed'] = isset($installed_mods[$package['id']]);
+					$package['is_current'] = $package['is_installed'] && ($installed_mods[$package['id']] == $package['version']);
+					$package['is_newer'] = $package['is_installed'] && ($installed_mods[$package['id']] > $package['version']);
 
-				$server_att = $server != '' ? ';server=' . $server : '';
-
-				$package += $thisPackage->to_array();
-
-				if (isset($package['website']))
-					unset($package['website']);
-				$package['author'] = array();
-
-				if ($package['description'] == '')
-					$package['description'] = $txt['package_no_description'];
-				else
-					$package['description'] = parse_bbc(preg_replace('~\[[/]?html\]~i', '', $smcFunc['htmlspecialchars']($package['description'])));
-
-				$package['is_installed'] = isset($installed_mods[$package['id']]);
-				$package['is_current'] = $package['is_installed'] && ($installed_mods[$package['id']] == $package['version']);
-				$package['is_newer'] = $package['is_installed'] && ($installed_mods[$package['id']] > $package['version']);
-
-				// This package is either not installed, or installed but old.  Is it supported on this version of SMF?
-				if (!$package['is_installed'] || (!$package['is_current'] && !$package['is_newer']))
-				{
-					if ($thisPackage->exists('version/@for'))
-						$package['can_install'] = matchPackageVersion($the_version, $thisPackage->fetch('version/@for'));
-				}
-				// Okay, it's already installed AND up to date.
-				else
-					$package['can_install'] = false;
-
-				$already_exists = getPackageInfo(basename($package['filename']));
-				$package['download_conflict'] = is_array($already_exists) && $already_exists['id'] == $package['id'] && $already_exists['version'] != $package['version'];
-
-				$package['href'] = $url . '/' . $package['filename'];
-				$package['link'] = '<a href="' . $package['href'] . '">' . $package['name'] . '</a>';
-				$package['download']['href'] = $scripturl . '?action=admin;area=packages;get;sa=download' . $server_att . ';package=' . $current_url . $package['filename'] . ($package['download_conflict'] ? ';conflict' : '') . ';' . $context['session_var'] . '=' . $context['session_id'];
-				$package['download']['link'] = '<a href="' . $package['download']['href'] . '">' . $package['name'] . '</a>';
-
-				if ($thisPackage->exists('author') || isset($default_author))
-				{
-					if ($thisPackage->exists('author/@email') && filter_var($thisPackage->fetch('author/@email'), FILTER_VALIDATE_EMAIL))
-						$package['author']['email'] = $thisPackage->fetch('author/@email');
-					elseif (isset($default_email))
-						$package['author']['email'] = $default_email;
-
-					if ($thisPackage->exists('author') && $thisPackage->fetch('author') != '')
-						$package['author']['name'] = $smcFunc['htmlspecialchars']($thisPackage->fetch('author'));
+					// This package is either not installed, or installed but old.  Is it supported on this version of SMF?
+					if (!$package['is_installed'] || (!$package['is_current'] && !$package['is_newer']))
+					{
+						if ($thisPackage->exists('version/@for'))
+							$package['can_install'] = matchPackageVersion($the_version, $thisPackage->fetch('version/@for'));
+					}
+					// Okay, it's already installed AND up to date.
 					else
-						$package['author']['name'] = $default_author;
+						$package['can_install'] = false;
 
-					if (!empty($package['author']['email']))
-						$package['author']['link'] = '<a href="mailto:' . $package['author']['email'] . '">' . $package['author']['name'] . '</a>';
-				}
+					$already_exists = getPackageInfo(basename($package['filename']));
+					$package['download_conflict'] = is_array($already_exists) && $already_exists['id'] == $package['id'] && $already_exists['version'] != $package['version'];
 
-				if ($thisPackage->exists('website') || isset($default_website))
-				{
-					if ($thisPackage->exists('website') && $thisPackage->exists('website/@title'))
-						$package['author']['website']['name'] = $smcFunc['htmlspecialchars']($thisPackage->fetch('website/@title'));
-					elseif (isset($default_title))
-						$package['author']['website']['name'] = $default_title;
-					elseif ($thisPackage->exists('website'))
-						$package['author']['website']['name'] = $smcFunc['htmlspecialchars']($thisPackage->fetch('website'));
+					$package['href'] = $url . '/' . $package['filename'];
+					$package['link'] = '<a href="' . $package['href'] . '">' . $package['name'] . '</a>';
+					$package['download']['href'] = $scripturl . '?action=admin;area=packages;get;sa=download' . $server_att . ';package=' . $current_url . $package['filename'] . ($package['download_conflict'] ? ';conflict' : '') . ';' . $context['session_var'] . '=' . $context['session_id'];
+					$package['download']['link'] = '<a href="' . $package['download']['href'] . '">' . $package['name'] . '</a>';
+
+					if ($thisPackage->exists('author') || isset($default_author))
+					{
+						if ($thisPackage->exists('author/@email') && filter_var($thisPackage->fetch('author/@email'), FILTER_VALIDATE_EMAIL))
+							$package['author']['email'] = $thisPackage->fetch('author/@email');
+						elseif (isset($default_email))
+							$package['author']['email'] = $default_email;
+
+						if ($thisPackage->exists('author') && $thisPackage->fetch('author') != '')
+							$package['author']['name'] = $smcFunc['htmlspecialchars']($thisPackage->fetch('author'));
+						else
+							$package['author']['name'] = $default_author;
+
+						if (!empty($package['author']['email']))
+							$package['author']['link'] = '<a href="mailto:' . $package['author']['email'] . '">' . $package['author']['name'] . '</a>';
+					}
+
+					if ($thisPackage->exists('website') || isset($default_website))
+					{
+						if ($thisPackage->exists('website') && $thisPackage->exists('website/@title'))
+							$package['author']['website']['name'] = $smcFunc['htmlspecialchars']($thisPackage->fetch('website/@title'));
+						elseif (isset($default_title))
+							$package['author']['website']['name'] = $default_title;
+						elseif ($thisPackage->exists('website'))
+							$package['author']['website']['name'] = $smcFunc['htmlspecialchars']($thisPackage->fetch('website'));
+						else
+							$package['author']['website']['name'] = $default_website;
+
+						if ($thisPackage->exists('website') && $thisPackage->fetch('website') != '')
+							$authorhompage = $smcFunc['htmlspecialchars']($thisPackage->fetch('website'));
+						else
+							$authorhompage = $default_website;
+
+						$package['author']['website']['href'] = $authorhompage;
+						$package['author']['website']['link'] = '<a href="' . $authorhompage . '">' . $package['author']['website']['name'] . '</a>';
+					}
 					else
-						$package['author']['website']['name'] = $default_website;
-
-					if ($thisPackage->exists('website') && $thisPackage->fetch('website') != '')
-						$authorhompage = $smcFunc['htmlspecialchars']($thisPackage->fetch('website'));
-					else
-						$authorhompage = $default_website;
-
-					$package['author']['website']['href'] = $authorhompage;
-					$package['author']['website']['link'] = '<a href="' . $authorhompage . '">' . $package['author']['website']['name'] . '</a>';
+					{
+						$package['author']['website']['href'] = '';
+						$package['author']['website']['link'] = '';
+					}
 				}
-				else
-				{
-					$package['author']['website']['href'] = '';
-					$package['author']['website']['link'] = '';
-				}
+
+				$package['is_remote'] = $package['type'] == 'remote';
+				$package['is_title'] = $package['type'] == 'title';
+				$package['is_heading'] = $package['type'] == 'heading';
+				$package['is_text'] = $package['type'] == 'text';
+				$package['is_line'] = $package['type'] == 'rule';
+
+				$packageNum = in_array($package['type'], array('title', 'heading', 'text', 'remote', 'rule')) ? 0 : $packageNum + 1;
+				$package['count'] = $packageNum;
+
+				if (!in_array($package['type'], array('title', 'text')))
+					$context['package_list'][$packageSection]['items'][] = $package;
+
+				if ($package['count'] > 1)
+					$context['list_type'] = 'ol';
 			}
 
-			$package['is_remote'] = $package['type'] == 'remote';
-			$package['is_title'] = $package['type'] == 'title';
-			$package['is_heading'] = $package['type'] == 'heading';
-			$package['is_text'] = $package['type'] == 'text';
-			$package['is_line'] = $package['type'] == 'rule';
-
-			$packageNum = in_array($package['type'], array('title', 'heading', 'text', 'remote', 'rule')) ? 0 : $packageNum + 1;
-			$package['count'] = $packageNum;
-
-			if (!in_array($package['type'], array('title', 'text')))
-				$context['package_list'][$packageSection]['items'][] = $package;
-
-			if ($package['count'] > 1)
-				$context['list_type'] = 'ol';
+			$packageSection++;
 		}
-
-		$packageSection++;
 	}
 
 	// Lets make sure we get a nice new spiffy clean $package to work with.  Otherwise we get PAIN!
