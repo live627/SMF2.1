@@ -148,38 +148,43 @@ function list_getLanguagesList()
 
 	// Load the class file and stick it into an array.
 	require_once($sourcedir . '/Class-Package.php');
-	$language_list = new xmlArray(fetch_web_data($url), true);
-
-	// Check that the site responded and that the language exists.
-	if (!$language_list->exists('languages'))
-		$context['smf_error'] = 'no_response';
-	elseif (!$language_list->exists('languages/language'))
-		$context['smf_error'] = 'no_files';
-	else
+	$smf_languages = array();
+	if (($data = fetch_web_data($url)) !== false)
 	{
-		$language_list = $language_list->path('languages[0]');
-		$lang_files = $language_list->set('language');
-		$smf_languages = array();
-		foreach ($lang_files as $file)
-		{
-			// Were we searching?
-			if (!empty($context['smf_search_term']) && strpos($file->fetch('name'), $smcFunc['strtolower']($context['smf_search_term'])) === false)
-				continue;
+		$language_list = new xmlArray($data, true);
 
-			$smf_languages[] = array(
-				'id' => $file->fetch('id'),
-				'name' => $smcFunc['ucwords']($file->fetch('name')),
-				'version' => $file->fetch('version'),
-				'utf8' => $txt['yes'],
-				'description' => $file->fetch('description'),
-				'install_link' => '<a href="' . $scripturl . '?action=admin;area=languages;sa=downloadlang;did=' . $file->fetch('id') . ';' . $context['session_var'] . '=' . $context['session_id'] . '">' . $txt['add_language_smf_install'] . '</a>',
-			);
-		}
-		if (empty($smf_languages))
+		// Check that the site responded and that the language exists.
+		if (!$language_list->exists('languages'))
+			$context['smf_error'] = 'no_response';
+		elseif (!$language_list->exists('languages/language'))
 			$context['smf_error'] = 'no_files';
 		else
-			return $smf_languages;
+		{
+			$language_list = $language_list->path('languages[0]');
+			$lang_files = $language_list->set('language');
+			foreach ($lang_files as $file)
+			{
+				// Were we searching?
+				if (!empty($context['smf_search_term']) && strpos($file->fetch('name'), $smcFunc['strtolower']($context['smf_search_term'])) === false)
+					continue;
+
+				$smf_languages[] = array(
+					'id' => $file->fetch('id'),
+					'name' => $smcFunc['ucwords']($file->fetch('name')),
+					'version' => $file->fetch('version'),
+					'utf8' => $txt['yes'],
+					'description' => $file->fetch('description'),
+					'install_link' => '<a href="' . $scripturl . '?action=admin;area=languages;sa=downloadlang;did=' . $file->fetch('id') . ';' . $context['session_var'] . '=' . $context['session_id'] . '">' . $txt['add_language_smf_install'] . '</a>',
+				);
+			}
+			if (empty($smf_languages))
+				$context['smf_error'] = 'no_files';
+		}
 	}
+	else
+		$context['smf_error'] = 'no_response';
+
+	return $smf_languages;
 }
 
 /**
