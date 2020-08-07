@@ -132,10 +132,20 @@ class SMCTest extends BaseTestCase
 		db_extend('packages');
 		$tables = $smcFunc['db_list_tables']();
 		$this->assertContains($db_prefix . 'log_actions', $tables);
+		$this->assertCount(74, $tables);
+	}
+
+	public function testListOneTable()
+	{
+		global $db_prefix, $smcFunc;
+
+		db_extend('packages');
+		$tables = $smcFunc['db_list_tables'](false, '%attach%');
+		$this->assertContains($db_prefix . 'attachments', $tables);
 		$this->assertCount(1, $tables);
 	}
 
-	public function testrReplaceValues()
+	public function testReplaceValues()
 	{
 		global $db_prefix, $smcFunc;
 

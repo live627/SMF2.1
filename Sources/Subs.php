@@ -5408,7 +5408,7 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 
 		// Since passive mode worked (or we would have returned already!) open the connection.
 		$fp = @fsockopen($ftp->pasv['ip'], $ftp->pasv['port'], $err, $err, 5);
-		if (!$fp)
+		if ($fp === false)
 			return false;
 
 		// The server should now say something in acknowledgement.
@@ -5588,7 +5588,7 @@ function get_mime_type($data, $is_path = false)
 				$mime_type = mime_content_type($data);
 
 			// URL.
-			elseif ($data = fetch_web_data($data))
+			elseif (($data = fetch_web_data($data)) !== false)
 				$mime_type = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $data);
 		}
 	}
@@ -5629,7 +5629,7 @@ function get_mime_type($data, $is_path = false)
  *
  * @param string $data The data to check, or the path or URL of a file to check.
  * @param string $type_pattern A regex pattern to match the acceptable MIME types.
- * @param string $is_path If true, $data is a path or URL to a file.
+ * @param bool $is_path If true, $data is a path or URL to a file.
  * @return int 1 if the detected MIME type matches the pattern, 0 if it doesn't, or 2 if we can't check.
  */
 function check_mime_type($data, $type_pattern, $is_path = false)
@@ -6523,7 +6523,7 @@ function set_tld_regex($update = false)
 			$postapocalypticNightmare = true;
 
 		// Make sure nothing went horribly wrong along the way.
-		if (md5($tlds) != substr($tlds_md5, 0, 32))
+		elseif (md5($tlds) != substr($tlds_md5, 0, 32))
 			$tlds = array();
 	}
 	// If we aren't updating and the regex is valid, we're done

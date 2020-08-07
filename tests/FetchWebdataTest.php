@@ -31,8 +31,8 @@ class FetchWebdataTest extends BaseTestCase
 	 */
 	public function testGet(string $url, string $responseBody)
 	{
-		$data = fetch_web_data($url);
-		$this->assertStringContainsString($responseBody, $data);
+		if (($data = fetch_web_data($url)) !== false)
+			$this->assertStringContainsString($responseBody, $data);
 	}
 
 	/**
@@ -41,7 +41,7 @@ class FetchWebdataTest extends BaseTestCase
 	 */
 	public function testPost(string $url, string $postData, string $responseBody)
 	{
-		$data = fetch_web_data($url, $postData);
-		$this->assertStringContainsString($responseBody, $data);
+		if (($data = fetch_web_data($url, $postData)) !== false)
+			$this->assertStringContainsString($responseBody, $data);
 	}
 }

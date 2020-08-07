@@ -230,7 +230,7 @@ function smf_db_list_tables($db = false, $filter = false)
 {
 	global $db_name, $smcFunc;
 
-	$database = $database === false ? $db_name : $db;
+	$database = $db === false ? $db_name : $db;
 
 	$request = $smcFunc['db_query']('', '
 		SHOW TABLES
