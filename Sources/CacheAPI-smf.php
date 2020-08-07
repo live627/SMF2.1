@@ -106,7 +106,7 @@ class smf_cache extends cache_api
 			if (($value = smf_json_decode($raw, true, false)) !== array() && $value['expiration'] >= time())
 				return $value['value'];
 			else
-				@unlink($file);
+				unlink($file);
 		}
 
 		return null;

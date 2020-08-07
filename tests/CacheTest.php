@@ -28,10 +28,12 @@ class CacheTest extends BaseTestCase
 	{
 		global $cache_accelerator, $cache_enable, $cacheAPI;
 
+		if ($cache_accelerator !== '')
+			$this->assertFalse($this->_cache_obj->isSupported());
+
 		$cache_accelerator = '';
 		$cache_enable = 0;
 		$cacheAPI = false;
-		$this->assertFalse($this->_cache_obj->isSupported());
 	}
 
 	public function testDefault()
@@ -52,13 +54,14 @@ class CacheTest extends BaseTestCase
 		$this->assertInstanceOf(smf_cache::class, $this->_cache_obj);
 	}
 
-	public function testNNoFallback()
+	public function testNoFallback()
 	{
 		global $cache_accelerator;
 
 		$cache_accelerator = 'zend';
 		$this->_cache_obj = loadCacheAccelerator(null, false);
 		$this->assertFalse($this->_cache_obj);
+		$cache_accelerator = '';
 	}
 
 	public function data()
@@ -127,19 +130,23 @@ class CacheTest extends BaseTestCase
 		$this->assertEquals(120, $this->_cache_obj->getDefaultTTL());
 
 		$this->_cache_obj->putData('test', null);
-		$this->assertNull($this->_cache_obj->getData('test'));
+		$data = $this->_cache_obj->getData('test');
+		$this->assertNull($data);
 
 		$this->_cache_obj->putData('test', 'val');
-		$this->assertSame('val', $this->_cache_obj->getData('test'));
+		$data = $this->_cache_obj->getData('test');
+		$this->assertSame('val', $data);
 
 		$this->_cache_obj->putData('test', 'val1');
-		$this->assertSame('val1', $this->_cache_obj->getData('test'));
+		$data = $this->_cache_obj->getData('test');
+		$this->assertSame('val1', $data);
 
-		$this->assertTrue($this->_cache_obj->cleanCache());
-		$this->assertNull($this->_cache_obj->getData('test'));
-
-		$this->assertNull($this->_cache_obj->getData('test'));
-		$this->assertNull($this->_cache_obj->getData('test_undef'));
+		$data = $this->_cache_obj->cleanCache());
+		$this->assertTrue($data);
+		$data = $this->_cache_obj->getData('test');
+		$this->assertNull($data);
+		$data = $this->_cache_obj->getData('test_undef');
+		$this->assertNull($data);
 
 		$this->assertTrue(version_compare($this->_cache_obj->getCompatibleVersion(), '0.0.1', '>='));
 		$this->assertTrue(version_compare($this->_cache_obj->getMinimumVersion(), '0.0.1', '>='));
