@@ -91,7 +91,7 @@ class TestMembergroups extends BaseTestCase
 
 	public function testRemoveNoMembersFromGroups()
 	{
-		$this->assertFalse(addMembersToGroup(array(), array(2)));
+		$this->assertFalse(removeMembersFromGroups(array(), array(2)));
 	}
 
 	public function testRemoveMembersFromGroups()
