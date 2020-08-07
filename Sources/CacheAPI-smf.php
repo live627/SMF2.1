@@ -68,7 +68,7 @@ class smf_cache extends cache_api
 	private function writeFile($filename, $string)
 	{
 		$tempfile = $filename . uniqid(rand(), true);
-		if (($fp = fopen($tempfile 'wb')) !== false)
+		if (($fp = fopen($tempfile, 'wb')) !== false)
 		{
 			$bytes = 0;
 			$pieces = str_split($string, 8192);
