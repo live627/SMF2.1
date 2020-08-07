@@ -83,7 +83,7 @@ class smf_cache extends cache_api
 			fclose($fp);
 			if ($bytes === strlen($string))
 				rename($tempfile, $filename);
-			unlink($tempfile);
+
 			return $bytes;
 		}
 
