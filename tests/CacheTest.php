@@ -141,7 +141,7 @@ class CacheTest extends BaseTestCase
 		$data = $this->_cache_obj->getData('test');
 		$this->assertSame('val1', $data);
 
-		$data = $this->_cache_obj->cleanCache());
+		$data = $this->_cache_obj->cleanCache();
 		$this->assertTrue($data);
 		$data = $this->_cache_obj->getData('test');
 		$this->assertNull($data);

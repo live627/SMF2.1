@@ -154,7 +154,7 @@ class smf_cache extends cache_api
 		$files = new GlobIterator($this->cachedir . '/' . $type . '*.cache', FilesystemIterator::NEW_CURRENT_AND_KEY);
 
 		foreach ($files as $file => $info)
-			@unlink($this->cachedir . '/' . $file);
+			unlink($this->cachedir . '/' . $file);
 
 		// Make this invalid.
 		$this->invalidateCache();
