@@ -68,7 +68,7 @@ class smf_cache extends cache_api
 	private function writeFile($filename, $string)
 	{
 		$tempfile = $filename . uniqid(rand(), true);
-		if (($fp = fopen($filename, 'wb')) !== false)
+		if (($fp = fopen($tempfile 'wb')) !== false)
 		{
 			$bytes = 0;
 			$pieces = str_split($string, 8192);
@@ -82,7 +82,7 @@ class smf_cache extends cache_api
 			fflush($fp);
 			fclose($fp);
 			if ($bytes === strlen($string))
-				@rename($tempfile, $filename);
+				h@rename($tempfile, $filename);
 			@unlink($tempfile);
 			return $bytes;
 		}
