@@ -28,9 +28,6 @@ class CacheTest extends BaseTestCase
 	{
 		global $cache_accelerator, $cache_enable, $cacheAPI;
 
-		if ($cache_accelerator !== '')
-			$this->assertFalse($this->_cache_obj->isSupported());
-
 		$cache_accelerator = '';
 		$cache_enable = 0;
 		$cacheAPI = false;
