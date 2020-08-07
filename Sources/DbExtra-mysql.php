@@ -230,16 +230,14 @@ function smf_db_list_tables($db = false, $filter = false)
 {
 	global $db_name, $smcFunc;
 
-	$db = $db == false ? $db_name : $db;
-	$db = trim($db);
-	$filter = $filter == false ? '' : ' LIKE \'' . $filter . '\'';
+	$database = $database === false ? $db_name : $db;
 
 	$request = $smcFunc['db_query']('', '
 		SHOW TABLES
-		FROM `{raw:db}`
-		{raw:filter}',
+		FROM {identifier:database}' . ($filter === false ? '' : '
+		LIKE {string:filter}'),
 		array(
-			'db' => $db[0] == '`' ? strtr($db, array('`' => '')) : $db,
+			'database' => trim(strtr($database, array('`' => ''))),
 			'filter' => $filter,
 		)
 	);
@@ -343,7 +341,7 @@ function smf_db_table_sql($tableName)
 		// Ensure the columns are in proper order.
 		ksort($columns);
 
-		$schema_create .= ',' . $crlf . ' ' . $keyname . ' (' . implode($columns, ', ') . ')';
+		$schema_create .= ',' . $crlf . ' ' . $keyname . ' (' . implode(', ', $columns) . ')';
 	}
 
 	// Now just get the comment and engine... (MyISAM, etc.)

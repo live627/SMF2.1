@@ -124,4 +124,75 @@ class SMCTest extends BaseTestCase
 		$db_string = $smcFunc['db_quote']($test, $params);
 		$this->assertEquals($db_string, $expected[$smcFunc['db_title']]);
 	}
+
+	public function testListTables()
+	{
+		global $db_prefix, $smcFunc;
+
+		db_extend('packages');
+		$tables = $smcFunc['db_list_tables']();
+		$this->assertContains($db_prefix . 'log_actions', $tables);
+		$this->assertCount(1, $tables);
+	}
+
+	public function testrReplaceValues()
+	{
+		global $db_prefix, $smcFunc;
+
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}settings',
+			array('variable' => 'string-255', 'value' => 'string-65534'),
+			array(
+				array('variable1', 'value1'),
+				array('variable2', 'value2'),
+				array('variable3', 'value3'),
+			),
+			array('variable')
+		);
+		$this->assertEquals(3, $smcFunc['db_affected_rows']());
+		$request = $smcFunc['db_query']('', '
+			SELECT value
+			FROM {db_prefix}settings
+			WHERE variable IN ({array_string:variables})
+			ORDER BY variable',
+			array(
+				'variables' => array('variable1', 'variable2', 'variable3')
+			)
+		);
+		list ($variable1) = $smcFunc['db_fetch_row']($request);
+		list ($variable2) = $smcFunc['db_fetch_row']($request);
+		list ($variable3) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+		$this->assertEquals('value1', $variable1);
+		$this->assertEquals('value2', $variable2);
+		$this->assertEquals('value3', $variable3);
+
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}settings',
+			array('variable' => 'string-255', 'value' => 'string-65534'),
+			array(
+				array('variable1', 'value11'),
+				array('variable2', 'value22'),
+				array('variable3', 'value33'),
+			),
+			array('variable')
+		);
+		$this->assertEquals(3, $smcFunc['db_affected_rows']());
+		$request = $smcFunc['db_query']('', '
+			SELECT value
+			FROM {db_prefix}settings
+			WHERE variable IN ({array_string:variables})
+			ORDER BY variable',
+			array(
+				'variables' => array('variable1', 'variable2', 'variable3')
+			)
+		);
+		list ($variable1) = $smcFunc['db_fetch_row']($request);
+		list ($variable2) = $smcFunc['db_fetch_row']($request);
+		list ($variable3) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+		$this->assertEquals('value11', $variable1);
+		$this->assertEquals('value22', $variable2);
+		$this->assertEquals('value33', $variable3);
+	}
 }

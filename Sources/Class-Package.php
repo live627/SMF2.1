@@ -737,12 +737,12 @@ class xmlArray
 class ftp_connection
 {
 	/**
-	 * @var string Holds the connection response
+	 * @var resource Holds the connection response
 	 */
 	public $connection;
 
 	/**
-	 * @var string Holds any errors
+	 * @var string|bool Holds any errors
 	 */
 	public $error;
 
@@ -752,7 +752,7 @@ class ftp_connection
 	public $last_message;
 
 	/**
-	 * @var boolean Whether or not this is a passive connection
+	 * @var array Whether or not this is a passive connection
 	 */
 	public $pasv;
 
@@ -766,11 +766,6 @@ class ftp_connection
 	 */
 	public function __construct($ftp_server, $ftp_port = 21, $ftp_user = 'anonymous', $ftp_pass = 'ftpclient@simplemachines.org')
 	{
-		// Initialize variables.
-		$this->connection = 'no_connection';
-		$this->error = false;
-		$this->pasv = array();
-
 		if ($ftp_server !== null)
 			$this->connect($ftp_server, $ftp_port, $ftp_user, $ftp_pass);
 	}

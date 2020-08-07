@@ -69,17 +69,17 @@ class curl_fetch_web_data
 	 * @var array $default_options
 	 */
 	private $default_options = array(
-		CURLOPT_RETURNTRANSFER	=> 1, // Get returned value as a string (don't output it)
-		CURLOPT_HEADER			=> 1, // We need the headers to do our own redirect
-		CURLOPT_FOLLOWLOCATION	=> 0, // Don't follow, we will do it ourselves so safe mode and open_basedir will dig it
-		CURLOPT_USERAGENT		=> SMF_USER_AGENT, // set a normal looking useragent
-		CURLOPT_CONNECTTIMEOUT	=> 15, // Don't wait forever on a connection
-		CURLOPT_TIMEOUT			=> 90, // A page should load in this amount of time
-		CURLOPT_MAXREDIRS		=> 5, // stop after this many redirects
-		CURLOPT_ENCODING		=> 'gzip,deflate', // accept gzip and decode it
-		CURLOPT_SSL_VERIFYPEER	=> 0, // stop cURL from verifying the peer's certificate
-		CURLOPT_SSL_VERIFYHOST	=> 0, // stop cURL from verifying the peer's host
-		CURLOPT_POST			=> 0, // no post data unless its passed
+		CURLOPT_RETURNTRANSFER    => 1, // Get returned value as a string (don't output it)
+		CURLOPT_HEADER            => 1, // We need the headers to do our own redirect
+		CURLOPT_FOLLOWLOCATION    => 0, // Don't follow, we will do it ourselves so safe mode and open_basedir will dig it
+		CURLOPT_USERAGENT         => SMF_USER_AGENT, // set a normal looking useragent
+		CURLOPT_CONNECTTIMEOUT    => 15, // Don't wait forever on a connection
+		CURLOPT_TIMEOUT           => 90, // A page should load in this amount of time
+		CURLOPT_MAXREDIRS         => 5, // stop after this many redirects
+		CURLOPT_ENCODING          => 'gzip,deflate', // accept gzip and decode it
+		CURLOPT_SSL_VERIFYPEER    => 0, // stop cURL from verifying the peer's certificate
+		CURLOPT_SSL_VERIFYHOST    => 0, // stop cURL from verifying the peer's host
+		CURLOPT_POST              => 0, // no post data unless its passed
 	);
 
 	/**
@@ -182,37 +182,39 @@ class curl_fetch_web_data
 		}
 
 		// Initialize the curl object and make the call
-		$cr = curl_init();
-		curl_setopt_array($cr, $this->options);
-		curl_exec($cr);
-
-		// Get what was returned
-		$curl_info = curl_getinfo($cr);
-		$curl_content = curl_multi_getcontent($cr);
-		$url = $curl_info['url']; // Last effective URL
-		$http_code = $curl_info['http_code']; // Last HTTP code
-		$body = (!curl_error($cr)) ? substr($curl_content, $curl_info['header_size']) : false;
-		$error = (curl_error($cr)) ? curl_error($cr) : false;
-
-		// close this request
-		curl_close($cr);
-
-		// store this 'loops' data, someone may want all of these :O
-		$this->response[] = array(
-			'url' => $url,
-			'code' => $http_code,
-			'error' => $error,
-			'headers' => isset($this->headers) ? $this->headers : false,
-			'body' => $body,
-			'size' => $curl_info['download_content_length'],
-		);
-
-		// If this a redirect with a location header and we have not given up, then do it again
-		if (preg_match('~30[127]~i', $http_code) === 1 && $this->headers['location'] != '' && $this->current_redirect <= $this->max_redirect)
+		if (($cr = curl_init()) === false)
 		{
-			$this->current_redirect++;
-			$header_location = $this->get_redirect_url($url, $this->headers['location']);
-			$this->redirect($header_location, $url);
+			curl_setopt_array($cr, $this->options);
+			curl_exec($cr);
+
+			// Get what was returned
+			$curl_info = curl_getinfo($cr);
+			$curl_content = curl_multi_getcontent($cr);
+			$url = $curl_info['url']; // Last effective URL
+			$http_code = $curl_info['http_code']; // Last HTTP code
+			$body = (!curl_error($cr)) ? substr($curl_content, $curl_info['header_size']) : false;
+			$error = (curl_error($cr)) ? curl_error($cr) : false;
+
+			// close this request
+			curl_close($cr);
+
+			// store this 'loops' data, someone may want all of these :O
+			$this->response[] = array(
+				'url' => $url,
+				'code' => $http_code,
+				'error' => $error,
+				'headers' => isset($this->headers) ? $this->headers : false,
+				'body' => $body,
+				'size' => $curl_info['download_content_length'],
+			);
+
+			// If this a redirect with a location header and we have not given up, then do it again
+			if (preg_match('~30[127]~i', $http_code) === 1 && $this->headers['location'] != '' && $this->current_redirect <= $this->max_redirect)
+			{
+				$this->current_redirect++;
+				$header_location = $this->get_redirect_url($url, $this->headers['location']);
+				$this->redirect($header_location, $url);
+			}
 		}
 	}
 

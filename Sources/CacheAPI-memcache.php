@@ -68,7 +68,7 @@ class memcache_cache extends cache_api
 			{
 				$server = explode(':', $server);
 				$host = $server[0];
-				$port = isset($server[1]) ? $server[1] : 11211;
+				$port = isset($server[1]) ? (int) $server[1] : 11211;
 			}
 
 			// Don't wait too long: yes, we want the server, but we might be able to run the query faster!

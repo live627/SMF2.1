@@ -17,6 +17,11 @@ function FeignLogin()
 
 	return 1;
 }
+$smcFunc['db_query']('', '
+	UPDATE {db_prefix}scheduled_tasks
+	SET disabled = 1');
+$smcFunc['db_query']('truncate_table', '
+	TRUNCATE {db_prefix}mail_queue');
 loadUserSettings();
 loadTheme();
 
@@ -28,6 +33,3 @@ function SendMailToQueue(&$subject, &$message, &$headers, &$to_array)
 
 	//return true;
 }
-$request = $smcFunc['db_query']('', '
-	UPDATE {db_prefix}scheduled_tasks
-	SET disabled = 1');
