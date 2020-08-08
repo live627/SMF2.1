@@ -2621,7 +2621,7 @@ function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
  * @todo get rid of reading $_REQUEST directly
  *
  * @param string $sub_template_name The name of the sub-template to load
- * @param bool $fatal Whether to die with an error if the sub-template can't be loaded
+ * @param bool|string $fatal Whether to die with an error if the sub-template can't be loaded
  */
 function loadSubTemplate($sub_template_name, $fatal = false)
 {

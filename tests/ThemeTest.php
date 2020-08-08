@@ -71,7 +71,7 @@ class ThemeTest extends BaseTestCase
 		try
 		{
 			$_REQUEST['copy'] = '123';
-			$installed = InstallCopy();
+			InstallCopy();
 		}
 		catch (Exception $e)
 		{
@@ -95,7 +95,7 @@ class ThemeTest extends BaseTestCase
 
 		try
 		{
-			$installed = InstallCopy();
+			InstallCopy();
 		}
 		catch (Exception $e)
 		{

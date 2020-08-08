@@ -333,7 +333,7 @@ function theme_install($to_install = array())
 	global $settings, $explicit_images;
 
 	// External use? no problem!
-	if ($to_install)
+	if (!empty($to_install))
 		$context['to_install'] = $to_install;
 
 	// One last check.
@@ -380,7 +380,7 @@ function theme_install($to_install = array())
 					$context['to_install']['updated'] = true;
 
 					return $id_to_update;
-					break; // Just for reference.
+
 				case 0: // This is exactly the same theme.
 				case -1: // The one being installed is older than the one already installed.
 				default: // Any other possible result.
