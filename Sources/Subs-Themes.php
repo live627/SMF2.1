@@ -144,17 +144,19 @@ function get_all_themes($enable_only = false)
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$context['themes'][$row['id_theme']]['id'] = (int) $row['id_theme'];
+		if (!isset($context['themes'][$row['id_theme']]))
+			$context['themes'][$row['id_theme']] = array(
+				'id' => (int) $row['id_theme'],
+				'known' => in_array($row['id_theme'], $knownThemes),
+				'enable' => in_array($row['id_theme'], $enableThemes)
+			);
 
 		// Fix the path and tell if its a valid one.
 		if ($row['variable'] == 'theme_dir')
 		{
-			$context['themes'][$row['id_theme']][$row['variable']] = realpath($row['value']);
-			$context['themes'][$row['id_theme']]['valid_path'] = file_exists(realpath($row['value'])) && is_dir(realpath($row['value']));
+			$row['value'] = realpath($row['value']);
+			$context['themes'][$row['id_theme']]['valid_path'] = file_exists($row['value']) && is_dir($row['value']);
 		}
-
-		$context['themes'][$row['id_theme']]['known'] = in_array($row['id_theme'], $knownThemes);
-		$context['themes'][$row['id_theme']]['enable'] = in_array($row['id_theme'], $enableThemes);
 		$context['themes'][$row['id_theme']][$row['variable']] = $row['value'];
 	}
 
@@ -208,17 +210,19 @@ function get_installed_themes()
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$context['themes'][$row['id_theme']]['id'] = (int) $row['id_theme'];
+		if (!isset($context['themes'][$row['id_theme']]))
+			$context['themes'][$row['id_theme']] = array(
+				'id' => (int) $row['id_theme'],
+				'known' => in_array($row['id_theme'], $knownThemes),
+				'enable' => in_array($row['id_theme'], $enableThemes)
+			);
 
 		// Fix the path and tell if its a valid one.
 		if ($row['variable'] == 'theme_dir')
 		{
-			$context['themes'][$row['id_theme']][$row['variable']] = realpath($row['value']);
-			$context['themes'][$row['id_theme']]['valid_path'] = file_exists(realpath($row['value'])) && is_dir(realpath($row['value']));
+			$row['value'] = realpath($row['value']);
+			$context['themes'][$row['id_theme']]['valid_path'] = file_exists($row['value']) && is_dir($row['value']);
 		}
-
-		$context['themes'][$row['id_theme']]['known'] = in_array($row['id_theme'], $knownThemes);
-		$context['themes'][$row['id_theme']]['enable'] = in_array($row['id_theme'], $enableThemes);
 		$context['themes'][$row['id_theme']][$row['variable']] = $row['value'];
 	}
 
@@ -276,7 +280,7 @@ function get_theme_info($path)
 
 	// So, we have an install tag which is cool and stuff but we also need to check it and match your current SMF version...
 	$the_version = SMF_VERSION;
-	$install_versions = $theme_info_xml->path('theme-info/install/@for');
+	$install_versions = $theme_info_xml->fetch('theme-info/install/@for');
 
 	// The theme isn't compatible with the current SMF version.
 	if (!$install_versions || !matchPackageVersion($the_version, $install_versions))
@@ -285,8 +289,7 @@ function get_theme_info($path)
 		fatal_lang_error('package_get_error_theme_not_compatible', false, SMF_FULL_VERSION);
 	}
 
-	$theme_info_xml = $theme_info_xml->path('theme-info[0]');
-	$theme_info_xml = $theme_info_xml->to_array();
+	$theme_info_xml = $theme_info_xml->to_array('theme-info[0]');
 
 	$xml_elements = array(
 		'theme_layers' => 'layers',
