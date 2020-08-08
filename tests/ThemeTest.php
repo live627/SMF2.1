@@ -2,11 +2,16 @@
 
 namespace PHPTDD;
 
+use Exception;
+
 class ThemeTest extends BaseTestCase
 {
 	public function setUp() : void
 	{
-		global $sourcedir;
+		global $boarddir, $boardurl, $sourcedir, $themedir, $themeurl;
+
+		$themedir = $boarddir . '/Themes';
+		$themeurl = $boardurl . '/Themes';
 
 		require_once($sourcedir . '/Subs-Package.php');
 		require_once($sourcedir . '/Subs-Themes.php');
@@ -22,6 +27,11 @@ class ThemeTest extends BaseTestCase
 
 	public function testGetSingleTheme()
 	{
+		global $smcFunc;
+
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}themes
+			WHERE id_theme != 1');
 		$single = get_single_theme(1);
 		$this->assertIsInt($single['id']);
 		$this->assertEquals(1, $single['id']);
@@ -36,12 +46,6 @@ class ThemeTest extends BaseTestCase
 
 	public function testInstallCopy()
 	{
-	global $sourcedir, $txt, $context, $boarddir, $boardurl;
-	global $themedir, $themeurl, $smcFunc;
-
-	$themedir = $boarddir . '/Themes';
-	$themeurl = $boardurl . '/Themes';
-
 		$_REQUEST['copy'] = '123';
 		$installed = InstallCopy();
 		unset($_REQUEST['copy']);
@@ -54,13 +58,132 @@ class ThemeTest extends BaseTestCase
 		$single = get_single_theme($installed['id']);
 		$this->assertEquals($installed['id'], $single['id']);
 		$this->assertEquals('123', $single['name']);
+		$this->assertStringContainsString('Themes/123', $single['theme_url']);
 	}
 
+	/**
+	 * @depends testInstallCopy
+	 */
+	public function testInstallDuplicateCopy()
+	{
+		global $context;
+
+		try
+		{
+			$_REQUEST['copy'] = '123';
+			$installed = InstallCopy();
+		}
+		catch (Exception $e)
+		{
+			$this->assertInstanceOf(Exception::class, $e);
+			$this->assertEquals('theme_install_already_dir', $e->getMessage());
+		}
+		finally
+		{
+			unset($_REQUEST['copy']);
+			get_all_themes();
+			$this->assertCount(2, $context['themes']);
+		}
+	}
+
+	/**
+	 * @depends testInstallCopy
+	 */
+	public function testInstallCopyWithNoName()
+	{
+		global $context;
+
+		try
+		{
+			$installed = InstallCopy();
+		}
+		catch (Exception $e)
+		{
+			$this->assertInstanceOf(Exception::class, $e);
+			$this->assertEquals('theme_install_error_title', $e->getMessage());
+		}
+		finally
+		{
+			get_all_themes();
+			$this->assertCount(2, $context['themes']);
+		}
+	}
+
+	/**
+	 * @depends testThemeInfo
+	 * @depends testInstallCopy
+	 */
+	public function testInstallDependentTheme()
+	{
+		global $context, $themedir, $themeurl;
+
+		$installed_id = theme_install(
+			array(
+				'theme_dir' => $themedir . '/boxes',
+				'theme_url' => $themeurl . '/boxes',
+				'name' => 'boxes',
+			) + get_theme_info(__DIR__ . '/boxes')
+		);
+
+		$single = get_single_theme($installed_id);
+		$this->assertEquals($installed_id, $single['id']);
+		$this->assertEquals('boxes', $single['name']);
+
+		get_all_themes();
+		$this->assertCount(3, $context['themes']);
+	}
+
+	/**
+	 * @depends testInstallDependentTheme
+	 */
+	public function testUpdateDependentTheme()
+	{
+		global $context, $themedir, $themeurl;
+
+		$installed_id = theme_install(array_merge(
+			array(
+				'theme_dir' => $themedir . '/boxes',
+				'theme_url' => $themeurl . '/boxes',
+				'name' => 'boxes',
+			), get_theme_info(__DIR__ . '/boxes'), array('version' => '1.1')
+		));
+
+		$single = get_single_theme($installed_id);
+		$this->assertEquals($installed_id, $single['id']);
+		$this->assertEquals('boxes', $single['name']);
+
+		get_all_themes();
+		$this->assertCount(3, $context['themes']);
+	}
+
+	/**
+	 * @depends testInstallDependentTheme
+	 */
+	public function testRemoveDependentTheme()
+	{
+		global $context;
+
+		get_all_themes();
+		$single = current(array_filter($context['themes'], function($th)
+		{
+			return $th['name'] == 'boxes';
+		}));
+		$this->assertEquals('boxes', $single['name']);
+		remove_theme($single['id']);
+
+		get_all_themes();
+		$this->assertCount(2, $context['themes']);
+	}
+
+	/**
+	 * @depends testInstallCopy
+	 */
 	public function testRemoveTheme()
 	{
 		global $context;
 
 		get_all_themes();
+		$this->assertCount(2, $context['themes']);
 		$single = current(array_filter($context['themes'], function($th)
 		{
 			return $th['name'] == '123';
@@ -68,6 +191,9 @@ class ThemeTest extends BaseTestCase
 		$this->assertEquals('123', $single['name']);
 		remove_theme($single['id']);
 		remove_dir($single['theme_dir']);
+
+		get_all_themes();
+		$this->assertCount(1, $context['themes']);
 	}
 
 	public function testGetAllThemes()
@@ -75,6 +201,7 @@ class ThemeTest extends BaseTestCase
 		global $context;
 
 		get_all_themes();
+		$this->assertCount(1, $context['themes']);
 		$this->assertArrayHasKey(1, $context['themes']);
 		$this->assertIsInt($context['themes'][1]['id']);
 		$this->assertEquals(1, $context['themes'][1]['id']);
@@ -92,6 +219,7 @@ class ThemeTest extends BaseTestCase
 		global $context;
 
 		get_installed_themes();
+		$this->assertCount(1, $context['themes']);
 		$this->assertArrayHasKey(1, $context['themes']);
 		$this->assertIsInt($context['themes'][1]['id']);
 		$this->assertEquals(1, $context['themes'][1]['id']);
