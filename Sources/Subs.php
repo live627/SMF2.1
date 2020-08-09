@@ -3405,8 +3405,8 @@ function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 /**
  * Ends execution.  Takes care of template loading and remembering the previous URL.
  *
- * @param bool $header Whether to do the header
- * @param bool $do_footer Whether to do the footer
+ * @param bool|null $header Whether to do the header
+ * @param bool|null $do_footer Whether to do the footer
  * @param bool $from_index Whether we're coming from the board index
  * @param bool $from_fatal_error Whether we're coming from a fatal error
  */

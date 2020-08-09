@@ -138,6 +138,8 @@ foreach (array('upgrade-helper.php', 'Settings.php') as $required_file)
 	require_once($upgrade_path . '/' . $required_file);
 }
 
+require_once($upgrade_path . '/upgrade-helper.php');
+
 // We don't use "-utf8" anymore...  Tweak the entry that may have been loaded by Settings.php
 if (isset($language))
 	$language = str_ireplace('-utf8', '', basename($language, '.lng'));

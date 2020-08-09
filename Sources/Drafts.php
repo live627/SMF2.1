@@ -171,7 +171,7 @@ function SaveDraft(&$post_errors)
  * The core draft feature must be enabled, as well as the pm draft option
  * Determines if this is a new or and update to an existing pm draft
  *
- * @param string $post_errors A string of info about errors encountered trying to save this draft
+ * @param string[] $post_errors A string of info about errors encountered trying to save this draft
  * @param array $recipientList An array of data about who this PM is being sent to
  * @return boolean false if you can't save the draft, true if we're doing this via XML more than 5 seconds after the last save, nothing otherwise
  */
