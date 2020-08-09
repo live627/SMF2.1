@@ -618,7 +618,7 @@ function loadUserSettings()
 
 				//Find out if any group requires 2FA
 				$request = $smcFunc['db_query']('', '
-					SELECT COUNT(id_group) AS total
+					SELECT COUNT(id_group)
 					FROM {db_prefix}membergroups
 					WHERE tfa_required = {int:tfa_required}
 						AND id_group IN ({array_int:full_groups})',
@@ -634,7 +634,7 @@ function loadUserSettings()
 			$area = !empty($_REQUEST['area']) ? $_REQUEST['area'] : '';
 			$action = !empty($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
-			if (($total > 0 && !in_array($action, array('profile', 'logout'))9) || ($action == 'profile' && $area != 'tfasetup'))
+			if (($total > 0 && !in_array($action, array('profile', 'logout'))) || ($action == 'profile' && $area != 'tfasetup'))
 				redirectexit('action=profile;area=tfasetup;forced');
 		}
 	}
