@@ -20,9 +20,10 @@ if (!defined('SMF'))
  * Gets a single theme's info.
  *
  * @param int $id The theme ID to get the info from.
+ * @param string[] $variables
  * @return array The theme info as an array.
  */
-function get_single_theme($id)
+function get_single_theme($id, array $variables = array())
 {
 	global $smcFunc, $modSettings;
 
@@ -33,21 +34,8 @@ function get_single_theme($id)
 	// Make sure $id is an int.
 	$id = (int) $id;
 
-	// List of all possible  values.
-	$themeValues = array(
-		'theme_dir',
-		'images_url',
-		'theme_url',
-		'name',
-		'theme_layers',
-		'theme_templates',
-		'version',
-		'install_for',
-		'based_on',
-	);
-
 	// Make changes if you really want it.
-	call_integration_hook('integrate_get_single_theme', array(&$themeValues, $id));
+	call_integration_hook('integrate_get_single_theme', array(&$variables, $id));
 
 	$single = array(
 		'id' => $id,
@@ -60,11 +48,11 @@ function get_single_theme($id)
 	$request = $smcFunc['db_query']('', '
 		SELECT id_theme, variable, value
 		FROM {db_prefix}themes
-		WHERE variable IN ({array_string:theme_values})
-			AND id_theme = ({int:id_theme})
-			AND id_member = {int:no_member}',
+		WHERE id_theme = ({int:id_theme})
+			AND id_member = {int:no_member}' . (!empty($variables) ? '
+			AND variable IN ({array_string:variables})' : ''),
 		array(
-			'theme_values' => $themeValues,
+			'variables' => $variables,
 			'id_theme' => $id,
 			'no_member' => 0,
 		)
@@ -358,7 +346,7 @@ function theme_install($to_install = array())
 
 		list ($id_to_update) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
-		$to_update = get_single_theme($id_to_update);
+		$to_update = get_single_theme($id_to_update, array('version'));
 
 		// Got something, lets figure it out what to do next.
 		if (!empty($id_to_update) && !empty($to_update['version']))
@@ -418,7 +406,7 @@ function theme_install($to_install = array())
 
 			list ($id_based_on) = $smcFunc['db_fetch_row']($request);
 			$smcFunc['db_free_result']($request);
-			$temp = get_single_theme($id_based_on);
+			$temp = get_single_theme($id_based_on, array('theme_dir', 'images_url', 'theme_url'));
 
 			// Found the based on theme info, add it to the current one being installed.
 			if (!empty($temp))

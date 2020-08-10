@@ -832,7 +832,7 @@ function RemoveTheme()
 	if ($themeID == 1)
 		fatal_lang_error('no_access', false);
 
-	$theme_info = get_single_theme($themeID);
+	$theme_info = get_single_theme($themeID, array('theme_dir'));
 
 	// Remove it from the DB.
 	remove_theme($themeID);
@@ -1355,7 +1355,7 @@ function InstallCopy()
 	package_flush_cache();
 
 	// Any data from the default theme that we want?
-	foreach (get_single_theme(1) as $variable => $value)
+	foreach (get_single_theme(1, array('theme_layers', 'theme_templates')) as $variable => $value)
 		if ($variable == 'theme_templates' || $variable == 'theme_layers')
 			$context['to_install'][$variable] = $value;
 

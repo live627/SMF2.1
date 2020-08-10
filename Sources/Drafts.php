@@ -385,7 +385,7 @@ function ReadDraft($id_draft, $type = 0, $check = true, $load = false)
  * Validates the drafts are from the user
  * is supplied an array of drafts will attempt to remove all of them
  *
- * @param int $id_draft The ID of the draft to delete
+ * @param int|int[] $id_draft The ID of the draft to delete
  * @param boolean $check Whether or not to check that the draft belongs to the current user
  * @return boolean False if it couldn't be deleted (doesn't return anything otherwise)
  */

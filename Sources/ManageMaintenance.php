@@ -1504,6 +1504,8 @@ function MaintainRemoveOldDrafts()
 
 	validateToken('admin-maint');
 
+	$drafts = array();
+
 	// Find all of the old drafts
 	$request = $smcFunc['db_query']('', '
 		SELECT id_draft
@@ -1514,12 +1516,16 @@ function MaintainRemoveOldDrafts()
 		)
 	);
 
-	while (list ($draft) = $smcFunc['db_fetch_row']($request))
+	while ($row = $smcFunc['db_fetch_row']($request))
+		$drafts[] = (int) $row[0];
+	$smcFunc['db_free_result']($request);
+
+	// If we have old drafts, remove them
+	if (count($drafts) > 0)
 	{
 		require_once($sourcedir . '/Drafts.php');
-		DeleteDraft($draft, false);
+		DeleteDraft($drafts, false);
 	}
-	$smcFunc['db_free_result']($request);
 }
 
 /**

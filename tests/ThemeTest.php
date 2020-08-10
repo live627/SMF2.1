@@ -44,6 +44,14 @@ class ThemeTest extends BaseTestCase
 		$this->assertStringContainsString('Default', $single['name']);
 	}
 
+	public function testGetSingleThemeNotExists()
+	{
+		$single = get_single_theme(11);
+		$this->assertCount(3, $single);
+		$this->assertFalse($single['known']);
+		$this->assertFalse($single['enable']);
+	}
+
 	public function testInstallCopy()
 	{
 		$_REQUEST['copy'] = '123';
