@@ -62,6 +62,8 @@ class ThemeTest extends BaseTestCase
 		$this->assertStringContainsString('Themes/123/images', $installed['images_url']);
 		$this->assertStringContainsString('Themes/123', strtr($installed['theme_dir'], '\\', '/'));
 		$this->assertStringContainsString('123', $installed['name']);
+		$this->assertEquals('html,body', $installed['theme_layers']);
+		$this->assertEquals('index', $installed['theme_templates']);
 
 		$single = get_single_theme($installed['id']);
 		$this->assertEquals($installed['id'], $single['id']);
@@ -130,12 +132,16 @@ class ThemeTest extends BaseTestCase
 				'theme_dir' => $themedir . '/boxes',
 				'theme_url' => $themeurl . '/boxes',
 				'name' => 'boxes',
+				'theme_layers' => 'l',
+				'theme_templates' => 't',
 			) + get_theme_info(__DIR__ . '/boxes')
 		);
 
 		$single = get_single_theme($installed_id);
 		$this->assertEquals($installed_id, $single['id']);
 		$this->assertEquals('boxes', $single['name']);
+		$this->assertEquals('l', $single['theme_layers']);
+		$this->assertEquals('t', $single['theme_templates']);
 
 		get_all_themes();
 		$this->assertCount(3, $context['themes']);
@@ -148,12 +154,11 @@ class ThemeTest extends BaseTestCase
 	{
 		global $context, $themedir, $themeurl;
 
-		$installed_id = theme_install(array_merge(
-			array(
-				'theme_dir' => $themedir . '/boxes',
-				'theme_url' => $themeurl . '/boxes',
-				'name' => 'boxes',
-			), get_theme_info(__DIR__ . '/boxes'), array('version' => '1.1')
+		$installed_id = theme_install(array(
+			'theme_dir' => $themedir . '/boxes',
+			'theme_url' => $themeurl . '/boxes',
+			'name' => 'boxes',
+			'version' => '1.1'
 		));
 
 		$single = get_single_theme($installed_id);
