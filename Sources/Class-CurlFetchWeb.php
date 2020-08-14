@@ -182,7 +182,7 @@ class curl_fetch_web_data
 		}
 
 		// Initialize the curl object and make the call
-		if (($cr = curl_init()) === false)
+		if (($cr = curl_init()) !== false)
 		{
 			curl_setopt_array($cr, $this->options);
 			curl_exec($cr);
