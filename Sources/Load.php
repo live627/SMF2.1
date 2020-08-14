@@ -2724,8 +2724,8 @@ function loadCSSFile($fileName, $params = array(), $id = '')
 	$mtime = empty($mtime) ? 0 : $mtime;
 
 	// Add it to the array for use in the template
-	if (!empty($fileName))
-	{
+ 	if (!empty($fileName) && !empty($fileUrl))
+ 	{
 		// find a free number/position
 		while (isset($context['css_files_order'][$params['order_pos']]))
 			$params['order_pos']++;
@@ -2839,7 +2839,7 @@ function loadJavaScriptFile($fileName, $params = array(), $id = '')
 	$mtime = empty($mtime) ? 0 : $mtime;
 
 	// Add it to the array for use in the template
-	if (!empty($fileName))
+ 	if (!empty($fileName) && !empty($fileUrl))
 		$context['javascript_files'][$id] = array('fileUrl' => $fileUrl, 'filePath' => $filePath, 'fileName' => $fileName, 'options' => $params, 'mtime' => $mtime);
 
 	if ($mtime > $modSettings['browser_cache'])
