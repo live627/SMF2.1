@@ -96,7 +96,7 @@ class MiscTest extends BaseTestCase
 				'index.css', array('minimize' => true, 'order_pos' => 1), 'smf_index',
 			),
 			array(
-				'calendar.css', array('force_current' => false, 'validate' => true, 'rtl' => 'calendar.rtl.css'), 'smf_calendar',
+				'calendar.css', array('force_current' => false, 'rtl' => 'calendar.rtl.css'), 'smf_calendar',
 			),
 		);
 	}
@@ -139,7 +139,7 @@ class MiscTest extends BaseTestCase
 				'theme.js', array('minimize' => true), 'smf_responsive',
 			),
 			array(
-				'file:///external.js', array(), '',
+				'file:///external.js', array('external' => true), '',
 			),
 			array(
 				'script.js?test', array(), '',
