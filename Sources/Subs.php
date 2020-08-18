@@ -6159,8 +6159,9 @@ function entity_fix__callback($matches)
 
 /**
  * Return a Gravatar URL based on
- * - the supplied email address,
- * - the global maximum rating,
+ *
+ * - the supplied email address;
+ * - the global maximum rating;
  * - the global default fallback,
  * - maximum sizes as set in the admin panel.
  *
@@ -6184,17 +6185,15 @@ function get_gravatar_url($email_address)
 		if (!empty($modSettings['gravatarDefault']) && in_array($modSettings['gravatarDefault'], $defaults))
 			$url_params[] = 'default=' . $modSettings['gravatarDefault'];
 		if (!empty($modSettings['avatar_max_width_external']))
+		{
 			$size_string = (int) $modSettings['avatar_max_width_external'];
-		if (!empty($modSettings['avatar_max_height_external']) && !empty($size_string))
-			if ((int) $modSettings['avatar_max_height_external'] < $size_string)
-				$size_string = $modSettings['avatar_max_height_external'];
-
-		if (!empty($size_string))
+			if (!empty($modSettings['avatar_max_height_external']))
+				$size_string = min($size_string, $modSettings['avatar_max_height_external']);
 			$url_params[] = 's=' . $size_string;
+		}
 	}
-	$http_method = !empty($modSettings['force_ssl']) ? 'https://secure' : 'http://www';
 
-	return $http_method . '.gravatar.com/avatar/' . md5($smcFunc['strtolower']($email_address)) . '?' . implode('&', $url_params);
+	return 'https://www.gravatar.com/avatar/' . md5($smcFunc['strtolower']($email_address)) . '?' . implode('&', $url_params);
 }
 
 /**

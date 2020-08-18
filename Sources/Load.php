@@ -1693,6 +1693,11 @@ function loadMemberContext($user, $display_custom_fields = false)
 			'link_color' => '<a href="' . $scripturl . '?action=profile;u=' . $profile['id_member'] . '" title="' . sprintf($txt['view_profile_of_username'], $profile['real_name']) . '" ' . (!empty($profile['member_group_color']) ? 'style="color:' . $profile['member_group_color'] . ';"' : '') . '>' . $profile['real_name'] . '</a>',
 			'is_buddy' => $profile['buddy'],
 			'is_reverse_buddy' => in_array($user_info['id'], $buddy_list),
+			'avatar' => set_avatar_data(array(
+				'avatar' => $row['avatar'],
+				'email' => $row['email_address'],
+				'filename' => $row['filename'],
+			)),
 			'buddies' => $buddy_list,
 			'title' => !empty($modSettings['titlesEnable']) ? $profile['usertitle'] : '',
 			'blurb' => $profile['personal_text'],
@@ -1733,19 +1738,6 @@ function loadMemberContext($user, $display_custom_fields = false)
 			'local_time' => timeformat(time() + ($profile['time_offset'] - $user_info['time_offset']) * 3600, false),
 			'custom_fields' => array(),
 		);
-	}
-
-	// If the set isn't minimal then load their avatar as well.
-	if ($context['loadMemberContext_set'] != 'minimal')
-	{
-		$avatarData = set_avatar_data(array(
-			'filename' => $profile['filename'],
-			'avatar' => $profile['avatar'],
-			'email' => $profile['email_address'],
-		));
-
-		if (!empty($avatarData['image']))
-			$memberContext[$user]['avatar'] = $avatarData;
 	}
 
 	// Are we also loading the members custom fields into context?
@@ -3812,6 +3804,7 @@ function clean_cache($type = '')
  * Helper function to set an array of data for an user's avatar.
  *
  * Makes assumptions based on the data provided, the following keys are required:
+ *
  * - avatar The raw "avatar" column in members table
  * - email The user's email. Used to get the gravatar info
  * - filename The attachment filename
@@ -3819,7 +3812,7 @@ function clean_cache($type = '')
  * @param array $data An array of raw info
  * @return array An array of avatar data
  */
-function set_avatar_data($data = array())
+function set_avatar_data(array $data = array())
 {
 	global $modSettings, $smcFunc, $user_info;
 
@@ -3827,68 +3820,38 @@ function set_avatar_data($data = array())
 	if (empty($data))
 		return array();
 
-	// Set a nice default var.
-	$image = '';
+	$image = $modSettings['avatar_url'] . '/default.png';
 
-	// Gravatar has been set as mandatory!
+	// Check to see if the user has a gravatar field or has set an external url as avatar.
 	if (!empty($modSettings['gravatarEnabled']) && !empty($modSettings['gravatarOverride']))
 	{
-		if (!empty($modSettings['gravatarAllowExtraEmail']) && !empty($data['avatar']) && stristr($data['avatar'], 'gravatar://'))
-			$image = get_gravatar_url($smcFunc['substr']($data['avatar'], 11));
-
-		elseif (!empty($data['email']))
-			$image = get_gravatar_url($data['email']);
+		$image = get_gravatar_url(
+			!empty($modSettings['gravatarAllowExtraEmail']) && !empty($data['avatar']) && stripos($data['avatar'], 'gravatar://') !== false
+				? $smcFunc['substr']($data['avatar'], 11));
+				: $data['email']
+		);
 	}
-
-	// Look if the user has a gravatar field or has set an external url as avatar.
 	else
 	{
-		// So it's stored in the member table?
+		// So it's stored in the member table as an external resource?
 		if (!empty($data['avatar']))
-		{
-			// Gravatar.
-			if (stristr($data['avatar'], 'gravatar://'))
-			{
-				if ($data['avatar'] == 'gravatar://')
-					$image = get_gravatar_url($data['email']);
-
-				elseif (!empty($modSettings['gravatarAllowExtraEmail']))
-					$image = get_gravatar_url($smcFunc['substr']($data['avatar'], 11));
-			}
-
-			// External url.
-			else
-				$image = parse_url($data['avatar'], PHP_URL_SCHEME) !== null ? get_proxied_url($data['avatar']) : $modSettings['avatar_url'] . '/' . $data['avatar'];
-		}
+			$image = parse_url($data['avatar'], PHP_URL_SCHEME) !== null
+				? get_proxied_url($data['avatar'])
+				: $modSettings['avatar_url'] . '/' . $data['avatar'];
 
 		// Perhaps this user has an attachment as avatar...
 		elseif (!empty($data['filename']))
 			$image = $modSettings['custom_avatar_url'] . '/' . $data['filename'];
-
-		// Right... no avatar... use our default image.
-		else
-			$image = $modSettings['avatar_url'] . '/default.png';
 	}
 
 	call_integration_hook('integrate_set_avatar_data', array(&$image, &$data));
 
-	// At this point in time $image has to be filled unless you chose to force gravatar and the user doesn't have the needed data to retrieve it... thus a check for !empty() is still needed.
-	if (!empty($image))
-		return array(
-			'name' => !empty($data['avatar']) ? $data['avatar'] : '',
-			'image' => '<img class="avatar" src="' . $image . '" alt="">',
-			'href' => $image,
-			'url' => $image,
-		);
-
-	// Fallback to make life easier for everyone...
-	else
-		return array(
-			'name' => '',
-			'image' => '',
-			'href' => '',
-			'url' => '',
-		);
+	return array(
+		'name' => !empty($data['avatar']) ? $data['avatar'] : '',
+		'image' => '<img class="avatar" src="' . $image . '" alt="">',
+		'href' => $image,
+		'url' => $image,
+	);
 }
 
 /**
