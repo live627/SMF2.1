@@ -22,7 +22,9 @@ class RecentTest extends BaseTestCase
 	{
 		global $context;
 
+		$_REQUEST['start'] = '0';
 		RecentPosts();
+		unset($_REQUEST['start']);
 		$this->assertCount(10, $context['posts']);
 		foreach ($context['posts'] as $post)
 		{
@@ -50,7 +52,7 @@ class RecentTest extends BaseTestCase
 		$modSettings['preview_characters'] = 1;
 		UnreadTopics();
 		unset($_REQUEST['action'], $_REQUEST['start'], $_REQUEST['desc']);
-		$this->assertCount(10, $context['topics']);
+		$this->assertCount(11, $context['topics']);
 		var_dump(array_column($context['topics'],'subject','href') );
 		foreach ($context['topics'] as $topic)
 		{
