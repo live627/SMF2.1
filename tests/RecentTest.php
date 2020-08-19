@@ -14,7 +14,7 @@ class RecentTest extends BaseTestCase
 	public function testGetLastPost()
 	{
 		$single = getLastPost();
-		$this->assertStringContainsString('Automated Topic', $single['subject']);
+		$this->assertStringContainsString('Automated Test', $single['subject']);
 	}
 
 	public function testRecentPosts()
@@ -24,7 +24,7 @@ class RecentTest extends BaseTestCase
 		$_REQUEST['start'] = '0';
 		RecentPosts();
 		unset($_REQUEST['start']);
-		$this->assertCount(10, $context['posts']);
+		$this->assertCount(11, $context['posts']);
 		foreach ($context['posts'] as $post)
 		{
 			preg_match(
