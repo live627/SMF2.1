@@ -6,3 +6,4 @@ for f in Themes/default/*.template.php; do
     sed -i.before "s/template_search/template_search_$base/g" "$f"
 done
 sed -i.before "s|// In case we have mail to send|return;// In case we have mail to send|" Sources/Subs.php
+sed -i.before "s|template_bi_|template_mi_|" Themes/default/MessageIndex.template.php
