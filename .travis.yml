@@ -35,7 +35,6 @@ before_install:
   - phpenv config-add tests/config.ini
   - cp ./other/*.* .
   - composer install
-  - sh other/prepare-files
 
 install:
   - sh -c "if [ '$DB' = 'postgres' ]; then php -f install.php -- -u test -p test --dbtype postgresql --dbname smf --dbuser postgres; fi"
@@ -43,6 +42,7 @@ install:
 
 after_install:
   - php tests/Populate.php
+  - sh other/prepare-files
 
 script: vendor/phpunit/phpunit/phpunit
 
