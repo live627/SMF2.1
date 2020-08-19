@@ -51,26 +51,7 @@ function deleteMembers($users, $check_not_admin = false)
 	// Make sure there's no void user in here.
 	$users = array_diff($users, array(0));
 
-	// How many are they deleting?
-	if (empty($users))
-		return;
-	elseif (count($users) == 1)
-	{
-		list ($user) = $users;
-
-		if ($user == $user_info['id'])
-			isAllowedTo('profile_remove_own');
-		else
-			isAllowedTo('profile_remove_any');
-	}
-	else
-	{
-		foreach ($users as $k => $v)
-			$users[$k] = (int) $v;
-
-		// Deleting more than one?  You can't have more than one account...
-		isAllowedTo('profile_remove_any');
-	}
+	// How many are they de 
 
 	// Get their names for logging purposes.
 	$request = $smcFunc['db_query']('', '

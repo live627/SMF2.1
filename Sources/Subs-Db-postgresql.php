@@ -598,21 +598,9 @@ function smf_db_error($db_string, $connection = null)
 	if (function_exists('log_error'))
 		log_error($txt['database_error'] . ': ' . $query_error . (!empty($modSettings['enableErrorQueryLogging']) ? "\n\n" . $db_string : ''), 'database', $file, $line);
 
-	// Nothing's defined yet... just die with it.
-	if (empty($context) || empty($txt))
-		die($query_error);
+		throw new Exception($query_error);
 
-	// Show an error message, if possible.
-	$context['error_title'] = $txt['database_error'];
-	if (allowedTo('admin_forum'))
-		$context['error_message'] = nl2br($query_error) . '<br>' . $txt['file'] . ': ' . $file . '<br>' . $txt['line'] . ': ' . $line;
-	else
-		$context['error_message'] = $txt['try_again'];
-
-	if (allowedTo('admin_forum') && isset($db_show_debug) && $db_show_debug === true)
-	{
 		$context['error_message'] .= '<br><br>' . nl2br($db_string);
-	}
 
 	// It's already been logged... don't log it again.
 	fatal_error($context['error_message'], false);
