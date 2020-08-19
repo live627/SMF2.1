@@ -46,9 +46,10 @@ class RecentTest extends BaseTestCase
 		global $context, $modSettings;
 
 		$_REQUEST['action'] = 'unread';
+		$_REQUEST['start'] = '0';
 		$modSettings['preview_characters'] = 1;
 		UnreadTopics();
-		unset($_REQUEST['action'], $_REQUEST['sort'], $_REQUEST['desc']);
+		unset($_REQUEST['action'], $_REQUEST['start'], $_REQUEST['desc']);
 		$this->assertCount(10, $context['topics']);
 		var_dump(array_column($context['topics'],'subject','href') );
 		foreach ($context['topics'] as $topic)
