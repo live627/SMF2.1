@@ -240,6 +240,6 @@ class MembersTest extends BaseTestCase
 		deleteMembers($membersTest);
 		$members = list_getMembers(0, 30, 'id_member', '1');
 
-		$this->assertCount(1, $members);
+		$this->assertCount(11, $members);
 	}
 }

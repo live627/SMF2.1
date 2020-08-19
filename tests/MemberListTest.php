@@ -17,7 +17,7 @@ class TestMemberList extends BaseTestCase
 
 		Memberlist();
 		$this->assertCount(6, $context['columns']);
-		$this->assertEquals(1, $context['num_members']);
+		$this->assertEquals(11, $context['num_members']);
 		$this->assertEquals('t', $context['members'][1]['sort_letter']);
 	}
 

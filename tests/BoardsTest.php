@@ -68,7 +68,7 @@ class BoardsTest extends BaseTestCase
 			$this->assertIsArray($boards[$board]['member_groups']);
 		}
 
-		$this->assertCount(5, $boards);
+		$this->assertCount(15, $boards);
 	}
 
 	public function testBoardIndexController()
@@ -84,7 +84,7 @@ class BoardsTest extends BaseTestCase
 		$this->assertCount(1, $context['categories']);
 		foreach ($context['categories'] as $category)
 		{
-			$this->assertCount(4, $category['boards']);
+			$this->assertCount(14, $category['boards']);
 
 			foreach ($category['boards'] as $board)
 			{
@@ -137,7 +137,7 @@ class BoardsTest extends BaseTestCase
 		$this->assertCount(1, $categories);
 		foreach ($categories as $category)
 		{
-			$this->assertCount(4, $category['boards']);
+			$this->assertCount(14, $category['boards']);
 
 			foreach ($category['boards'] as $board)
 			{
@@ -208,6 +208,6 @@ class BoardsTest extends BaseTestCase
 		foreach ($boardsTest as $board)
 			$this->assertArrayNotHasKey($board, $boards);
 
-		$this->assertCount(1, $boards);
+		$this->assertCount(11, $boards);
 	}
 }
