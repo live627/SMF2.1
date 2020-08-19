@@ -104,8 +104,8 @@ class BoardsTest extends BaseTestCase
 
 		$this->assertIsArray($context['latest_posts']);
 		$this->assertCount(2, $context['latest_posts']);
-		$this->assertEquals('Welcome to SMF!', $context['latest_posts'][0]['subject']);
-		$this->assertEquals('Welcome to SMF!', $context['latest_post']['subject']);
+		$this->assertStringContainsString('Automated Test', $context['latest_posts'][0]['subject']);
+		$this->assertStringContainsString('Automated Test', $context['latest_post']['subject']);
 		$this->assertContains(array('tpl' => 'recent', 'txt' => 'recent_posts'), $context['info_center']);
 
 		$this->assertContains(array('tpl' => 'stats', 'txt' => 'forum_stats'), $context['info_center']);

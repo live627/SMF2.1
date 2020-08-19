@@ -24,7 +24,7 @@ class RecentTest extends BaseTestCase
 		$_REQUEST['start'] = '0';
 		RecentPosts();
 		unset($_REQUEST['start']);
-		$this->assertCount(11, $context['posts']);
+		$this->assertCount(10, $context['posts']);
 		foreach ($context['posts'] as $post)
 		{
 			preg_match(
@@ -52,7 +52,7 @@ class RecentTest extends BaseTestCase
 		UnreadTopics();
 		$this->assertStringContainsString('SMF', $context['topics'][1]['last_post']['subject']);
 		unset($_REQUEST['action'], $_REQUEST['start'], $context['topics'][1]);
-		$this->assertCount(11, $context['topics']);
+		$this->assertCount(10, $context['topics']);
 		foreach ($context['topics'] as $topic)
 		{
 			preg_match(
