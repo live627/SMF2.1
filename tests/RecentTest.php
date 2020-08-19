@@ -14,8 +14,7 @@ class RecentTest extends BaseTestCase
 	public function testGetLastPost()
 	{
 		$single = getLastPost();
-		$this->assertEquals(1, $single['topic']);
-		$this->assertStringContainsString('SMF', $single['subject']);
+		$this->assertStringContainsString('Automated Topic', $single['subject']);
 	}
 
 	public function testRecentPosts()
@@ -51,9 +50,9 @@ class RecentTest extends BaseTestCase
 		$_REQUEST['start'] = '0';
 		$modSettings['preview_characters'] = 1;
 		UnreadTopics();
-		unset($_REQUEST['action'], $_REQUEST['start'], $_REQUEST['desc']);
+		$this->assertStringContainsString('SMF', $context['topics'][1]['last_post']['subject']);
+		unset($_REQUEST['action'], $_REQUEST['start'], $context['topics'][1]);
 		$this->assertCount(11, $context['topics']);
-		var_dump(array_column($context['topics'],'subject','href') );
 		foreach ($context['topics'] as $topic)
 		{
 			preg_match(
@@ -61,11 +60,10 @@ class RecentTest extends BaseTestCase
 				$topic['last_post']['preview'],
 				$matches
 			);
-			print_r($topic['last_post']['preview']);
 			$this->assertEquals($matches[3], $topic['last_post']['id']);
-			$this->assertIsInt(strpos($topic['href'], '?topic=' . $matches[2]));
-			$this->assertIsInt(strpos($topic['last_post']['href'], '?topic=' . $matches[2]));
-			$this->assertIsInt(strpos($topic['board']['href'], '?board=' . $matches[1]));
+			$this->assertStringContainsString('?topic=' . $matches[2], $topic['href']);
+			$this->assertStringContainsString('?topic=' . $matches[2], $topic['last_post']['href']);
+			$this->assertStringContainsString('?board=' . $matches[1], $topic['board']['href']);
 			$this->assertEquals($matches[1], $topic['board']['id']);
 			$this->assertEquals(1, $topic['replies']);
 			$this->assertEquals(0, $topic['views']);
