@@ -45,7 +45,7 @@ before_script:
   - php tests/Populate.php
   - sh other/prepare-files
 
-script: vendor/phpunit/phpunit/phpunit
+script: vendor/phpunit/phpunit/phpunit --debug
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar

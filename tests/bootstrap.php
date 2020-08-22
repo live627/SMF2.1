@@ -8,7 +8,7 @@ $pg_cache_server = 'localhost';
 $pg_cache_user = 'postgres';
 $pg_cache_passwd = '';
 $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-
+  ob_implicit_flush();
 function FeignLoginIntegration()
 {
 	global $mem;
