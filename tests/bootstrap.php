@@ -9,21 +9,28 @@ $pg_cache_user = 'postgres';
 $pg_cache_passwd = '';
 $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-add_integration_function('integrate_verify_user', 'FeignLogin', false);
-
-function FeignLogin()
+function FeignLoginIntegration()
 {
-	remove_integration_function('integrate_verify_user', 'FeignLogin', false);
+	global $mem;
+	remove_integration_function('integrate_verify_user', 'FeignLoginIntegration', false);
 
-	return 1;
+	return $mem;
+}
+function FeignLogin(int $id = 1)
+{
+	global $mem;
+	$mem = $id;
+	add_integration_function('integrate_verify_user', 'FeignLoginIntegration', false);
+	loadUserSettings();
+	loadPermissions();
 }
 $smcFunc['db_query']('', '
 	UPDATE {db_prefix}scheduled_tasks
 	SET disabled = 1');
 $smcFunc['db_query']('truncate_table', '
 	TRUNCATE {db_prefix}mail_queue');
-loadUserSettings();
 loadTheme();
+FeignLogin();
 
 add_integration_function('integrate_outgoing_email', 'SendMailToQueue', false);
 
