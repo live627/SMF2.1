@@ -31,7 +31,11 @@ $smcFunc['db_query']('truncate_table', '
 	TRUNCATE {db_prefix}mail_queue');
 loadTheme();
 FeignLogin();
-
+echo 'l';
+FeignLogin(2);
+var_dump($user_info );
+		$mem = list_getMembers(0, 1, 'id_member', 'id_member != 1', [], true)[0]['id_member'];
+var_dump($mem );
 add_integration_function('integrate_outgoing_email', 'SendMailToQueue', false);
 
 function SendMailToQueue(&$subject, &$message, &$headers, &$to_array)
