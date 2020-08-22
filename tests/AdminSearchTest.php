@@ -2,40 +2,17 @@
 
 namespace PHPTDD;
 
-class TestAdminSearch extends BaseTestCase
+class AdminSearchTest extends BaseTestCase
 {
-	public function __destruct()
-	{
-		global $user_info;
-
-		$user_info['permissions'] = array();
-	}
-
-	/**
-	 * Hacky solution to generate coverage for the internal search methods
-	 * since calling the function within the data provider doesn't seem
-	 * to indicate any extra coverage generation.
-	 *
-	 * @group slow
-	 */
-	public function testBeforeSearchSettings()
-	{
-		global $context;
-
-		$this->settingsProvider();
-		$this->assertNotEmpty($context['search_results']);
-	}
-
-	/**
-	 * @dataProvider settingsProvider
-	 * @group slow
-	 */
-	public function testSearchSettings($url, $name)
+	public function testSearchSettings()
 	{
 		global $context, $scripturl;
 
-		$this->assertStringContainsString($scripturl, $url);
-		$this->assertStringContainsString($context['search_term'], $name);
+		foreach ($this->settingsProvider() as list ($url, $name))
+		{
+			$this->assertStringContainsString($scripturl, $url);
+			$this->assertStringContainsString($context['search_term'], $name);
+		}
 	}
 
 	public function settingsProvider()

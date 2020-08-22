@@ -767,52 +767,54 @@ function AdminSearchInternal()
 		}
 	}
 
+	$context['page_title'] = $txt['admin_search_results'];
+	$context['search_results'] = array();
+
+	$search_term = strtolower(un_htmlspecialchars($context['search_term']));
+
 	foreach ($settings_search as $setting_area)
 	{
 		// Get a list of their variables.
 		$config_vars = call_user_func($setting_area[0], true);
 
-		foreach ($config_vars as $var)
-			if (!empty($var[1]) && !in_array($var[0], array('permissions', 'switch', 'desc')))
-				$search_data['settings'][] = array($var[(isset($var[2]) && in_array($var[2], array('file', 'db'))) ? 0 : 1], $setting_area[1], 'alttxt' => (isset($var[2]) && in_array($var[2], array('file', 'db'))) || isset($var[3]) ? (in_array($var[2], array('file', 'db')) ? $var[1] : $var[3]) : '');
-	}
-
-	$context['page_title'] = $txt['admin_search_results'];
-	$context['search_results'] = array();
-
-	$search_term = strtolower(un_htmlspecialchars($context['search_term']));
-	// Go through all the search data trying to find this text!
-	foreach ($search_data as $section => $data)
-	{
-		foreach ($data as $item)
-		{
-			$found = false;
-			if (!is_array($item[0]))
-				$item[0] = array($item[0]);
-			foreach ($item[0] as $term)
+		foreach ($config_vars as $config_var)
+			if (!empty($config_var[1]) && !in_array($config_var[0], array('permissions', 'message', 'warning', 'desc')))
 			{
-				if (stripos($term, $search_term) !== false || (isset($txt[$term]) && stripos($txt[$term], $search_term) !== false) || (isset($txt['setting_' . $term]) && stripos($txt['setting_' . $term], $search_term) !== false))
-				{
-					$found = $term;
-					break;
-				}
-			}
+				$result = $config_var[1];
+				if (isset($config_var['text_label']))
+					$result = $config_var['text_label'];
+				elseif (isset($txt[$config_var[1]]))
+					$result = $txt[$config_var[1]];
+				elseif (isset($txt['setting_' . $config_var[1]]))
+					$result = $txt['setting_' . $config_var[1]];
+				elseif (isset($txt['groups_' . $config_var[1]]))
+					$result = $txt['groups_' . $config_var[1]];
 
-			if ($found)
-			{
-				// Format the name - and remove any descriptions the entry may have.
-				$name = isset($txt[$found]) ? $txt[$found] : (isset($txt['setting_' . $found]) ? $txt['setting_' . $found] : (!empty($item['alttxt']) ? $item['alttxt'] : $found));
-				$name = preg_replace('~<(?:div|span)\sclass="smalltext">.+?</(?:div|span)>~', '', $name);
-
-				$context['search_results'][] = array(
-					'url' => (substr($item[1], 0, 4) == 'area' ? $scripturl . '?action=admin;' . $item[1] : $item[1]) . ';' . $context['session_var'] . '=' . $context['session_id'] . ((substr($item[1], 0, 4) == 'area' && $section == 'settings' ? '#' . $item[0][0] : '')),
-					'name' => $name,
-					'type' => $section,
-					'help' => shorten_subject(isset($item[2]) ? strip_tags($helptxt[$item[2]]) : (isset($helptxt[$found]) ? strip_tags($helptxt[$found]) : ''), 255),
+				$search_data['settings'][] = array(
+					$result,
+					$setting_area[1],
+					isset($config_var[5]) ? $config_var[5] : $config_var[1],
+					$config_var[(isset($config_var[2]) && in_array($config_var[2], array('file', 'db'))) ? 0 : 1]
 				);
 			}
-		}
 	}
+
+	// Go through all the search data trying to find this text!
+	foreach ($search_data as $section => $data)
+		foreach ($data as $item)
+			if (stripos($item[0], $search_term) !== false)
+				$context['search_results'][] = array(
+					'url' => sprintf(
+						'%s;%s=%s%s',
+						substr($item[1], 0, 4) == 'area' ? $scripturl . '?action=admin;' . $item[1] : $item[1],
+						$context['session_var'],
+						$context['session_id'],
+						substr($item[1], 0, 4) == 'area' && $section == 'settings' ? '#' . $item[3] : ''
+					),
+					'name' => preg_replace('~<(?:div|span)\sclass="smalltext">.+?</(?:div|span)>~', '', $item[0]),
+					'type' => $section,
+					'help' => shorten_subject(isset($item[2], $helptxt[$item[2]]) ? strip_tags($helptxt[$item[2]]) : '', 255),
+				);
 }
 
 /**
