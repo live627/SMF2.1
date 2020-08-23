@@ -447,63 +447,9 @@ function loadUserSettings($id_member = 0)
 {
 	global $modSettings, $user_settings, $sourcedir, $smcFunc;
 	global $cookiename, $user_info, $language, $context, $cache_enable;
-$i=0;
-var_dump($i++);
+
 	require_once($sourcedir . '/Subs-Auth.php');
 
-	// Check first the integration, then the cookie, and last the session.
-	if (count($integration_ids = call_integration_hook('integrate_verify_user')) > 0)
-	{
-		$id_member = 0;
-		foreach ($integration_ids as $integration_id)
-		{
-			$integration_id = (int) $integration_id;
-			if ($integration_id > 0)
-			{
-				$id_member = $integration_id;
-				$already_verified = true;
-				break;
-			}
-		}
-	}
-
-var_dump($i++);
-	if (empty($id_member) && isset($_COOKIE[$cookiename]))
-	{
-		// First try 2.1 json-format cookie
-		$cookie_data = $smcFunc['json_decode']($_COOKIE[$cookiename], true, false);
-
-		// Legacy format (for recent 2.0 --> 2.1 upgrades)
-		if (empty($cookie_data))
-			$cookie_data = safe_unserialize($_COOKIE[$cookiename]);
-
-		list($id_member, $password, $login_span, $cookie_domain, $cookie_path) = array_pad((array) $cookie_data, 5, '');
-
-		$id_member = !empty($id_member) && strlen($password) > 0 ? (int) $id_member : 0;
-
-		// Make sure the cookie is set to the correct domain and path
-		if (array($cookie_domain, $cookie_path) !== url_parts(!empty($modSettings['localCookies']), !empty($modSettings['globalCookies'])))
-			setLoginCookie((int) $login_span - time(), $id_member);
-	}
-	elseif (empty($id_member) && isset($_SESSION['login_' . $cookiename]) && ($_SESSION['USER_AGENT'] == $_SERVER['HTTP_USER_AGENT'] || !empty($modSettings['disableCheckUA'])))
-	{
-		// @todo Perhaps we can do some more checking on this, such as on the first octet of the IP?
-		$cookie_data = $smcFunc['json_decode']($_SESSION['login_' . $cookiename], true);
-
-		if (empty($cookie_data))
-			$cookie_data = safe_unserialize($_SESSION['login_' . $cookiename]);
-
-		list($id_member, $password, $login_span) = array_pad((array) $cookie_data, 3, '');
-		$id_member = !empty($id_member) && strlen($password) == 40 && (int) $login_span > time() ? (int) $id_member : 0;
-	}
-
-var_dump($i++);
-	// Only load this stuff if the user isn't a guest.
-	if ($id_member != 0)
-	{
-		// Is the member data cached?
-		if (empty($cache_enable) || $cache_enable < 2 || ($user_settings = cache_get_data('user_settings-' . $id_member, 60)) === null)
-		{
 			$request = $smcFunc['db_query']('', '
 				SELECT mem.*, COALESCE(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type
 				FROM {db_prefix}members AS mem
@@ -520,11 +466,6 @@ var_dump($i++);
 			if (!empty($user_settings['avatar']))
 				$user_settings['avatar'] = get_proxied_url($user_settings['avatar']);
 
-			if (!empty($cache_enable) && $cache_enable >= 2)
-				cache_put_data('user_settings-' . $id_member, $user_settings, 60);
-		}
-
-var_dump($i++);
 		// Did we find 'im?  If not, junk it.
 		if (!empty($user_settings))
 		{
@@ -555,9 +496,7 @@ var_dump($i++);
 				$force_tfasetup = false;
 
 			call_integration_hook('integrate_force_tfasetup', array(&$force_tfasetup));
-		}
 
-var_dump($i++);
 		// If we no longer have the member maybe they're being all hackey, stop brute force!
 		if (!$id_member)
 		{
@@ -642,7 +581,6 @@ var_dump($i++);
 		}
 	}
 
-var_dump($i++);
 	// Found 'im, let's set up the variables.
 	if ($id_member != 0)
 	{
