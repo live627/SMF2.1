@@ -76,7 +76,7 @@ class AgreementTest extends BaseTestCase
 		$_POST[$context['session_var']] = $context['session_id'];
 		$_POST[$context['admin-regp_token_var']] = $context['admin-regp_token'];
 		$mem = list_getMembers(0, 1, 'id_member', 'id_member != 1', [], true)[0]['id_member'];
-		FeignLogin($mem);
+		$this->FeignLogin($mem);
 		$this->assertEquals($mem, $GLOBALS['user_info']['id']);
 		//~ AcceptAgreement();
 		//~ $this->assertStringContainsString('policy', $context['privacy_policy']);
