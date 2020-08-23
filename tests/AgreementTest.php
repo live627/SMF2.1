@@ -87,8 +87,6 @@ class AgreementTest extends BaseTestCase
 		$this->assertTrue($context['can_accept_privacy_policy']);
 		$this->assertTrue($context['accept_doc']);
 		$this->assertStringContainsString('policy', $context['privacy_policy']);
-		FeignLogin();
-		$this->assertEquals(1, $GLOBALS['user_info']['id']);
 	}
 
 	/**
@@ -106,5 +104,7 @@ class AgreementTest extends BaseTestCase
 		$this->assertStringContainsString('policy', $context['privacy_policy']);
 		loadLanguage('Modlog');
 		$this->assertContains('policy_accepted', array_column(list_getModLogEntries(0, 10, 'log_time', 'action IN ({array_string:actions})', ['actions' => array('agreement_accepted', 'policy_accepted')], 2), 'action'));
+		FeignLogin();
+		$this->assertEquals(1, $GLOBALS['user_info']['id']);
 	}
 }
