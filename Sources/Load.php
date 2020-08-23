@@ -443,7 +443,7 @@ function reloadSettings()
  * 		- if validation fails for the user, $id_member is set to 0.
  * 		- updates the last visit time when needed.
  */
-function loadUserSettings()
+function loadUserSettings($id_member = 0)
 {
 	global $modSettings, $user_settings, $sourcedir, $smcFunc;
 	global $cookiename, $user_info, $language, $context, $cache_enable;
@@ -466,8 +466,6 @@ var_dump($i++);
 			}
 		}
 	}
-	else
-		$id_member = 0;
 
 var_dump($i++);
 	if (empty($id_member) && isset($_COOKIE[$cookiename]))
