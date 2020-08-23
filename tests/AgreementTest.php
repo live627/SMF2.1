@@ -152,7 +152,7 @@ class AgreementTest extends BaseTestCase
 	{
 		global $context;
 
-		loadLanguage('Profilgfnhe');
+		loadLanguage('Profile');
 		$mem = list_getMembers(0, 1, 'id_member', 'id_member != 1', [], true)[0]['id_member'];
 		trackEdits($mem);
 		$this->assertCount(3, $context['edit_list']['rows']);

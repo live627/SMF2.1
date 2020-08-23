@@ -277,8 +277,7 @@ function RecentPosts()
 	$key = 'recent-' . $user_info['id'] . '-' . md5($smcFunc['json_encode'](array_diff_key($query_parameters, array('max_id_msg' => 0)))) . '-' . (int) $_REQUEST['start'];
 	if (!$context['is_redirect'] && (empty($cache_enable) || ($messages = cache_get_data($key, 120)) == null))
 	{
-		$done = false;
-		while (!$done)
+		for ($i = 0; $i < 4; $i++)
 		{
 			// Find the 10 most recent messages they can *view*.
 			$request = $smcFunc['db_query']('', '
@@ -303,8 +302,6 @@ function RecentPosts()
 				$cache_results = true;
 				$query_parameters['max_id_msg'] /= 2;
 			}
-			else
-				$done = true;
 		}
 		$messages = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
