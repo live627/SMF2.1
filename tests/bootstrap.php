@@ -25,6 +25,9 @@ function FeignLogin($id = 1)
 	$mem = $id;
 	loadUserSettings();
 	loadPermissions();
+	$GLOBALS['settings']['theme_id'] = 0;
+	reloadSettings();
+	loadTheme();
 }
 $smcFunc['db_query']('', '
 	UPDATE {db_prefix}scheduled_tasks
