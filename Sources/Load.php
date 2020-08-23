@@ -447,9 +447,63 @@ function loadUserSettings($id_member = 0)
 {
 	global $modSettings, $user_settings, $sourcedir, $smcFunc;
 	global $cookiename, $user_info, $language, $context, $cache_enable;
-
+$i=0;
+var_dump($i++);
 	require_once($sourcedir . '/Subs-Auth.php');
 
+	// Check first the integration, then the cookie, and last the session.
+	if (count($integration_ids = call_integration_hook('integrate_verify_user')) > 0)
+	{
+		$id_member = 0;
+		foreach ($integration_ids as $integration_id)
+		{
+			$integration_id = (int) $integration_id;
+			if ($integration_id > 0)
+			{
+				$id_member = $integration_id;
+				$already_verified = true;
+				break;
+			}
+		}
+	}
+
+var_dump($i++);
+	if (empty($id_member) && isset($_COOKIE[$cookiename]))
+	{
+		// First try 2.1 json-format cookie
+		$cookie_data = $smcFunc['json_decode']($_COOKIE[$cookiename], true, false);
+
+		// Legacy format (for recent 2.0 --> 2.1 upgrades)
+		if (empty($cookie_data))
+			$cookie_data = safe_unserialize($_COOKIE[$cookiename]);
+
+		list($id_member, $password, $login_span, $cookie_domain, $cookie_path) = array_pad((array) $cookie_data, 5, '');
+
+		$id_member = !empty($id_member) && strlen($password) > 0 ? (int) $id_member : 0;
+
+		// Make sure the cookie is set to the correct domain and path
+		if (array($cookie_domain, $cookie_path) !== url_parts(!empty($modSettings['localCookies']), !empty($modSettings['globalCookies'])))
+			setLoginCookie((int) $login_span - time(), $id_member);
+	}
+	elseif (empty($id_member) && isset($_SESSION['login_' . $cookiename]) && ($_SESSION['USER_AGENT'] == $_SERVER['HTTP_USER_AGENT'] || !empty($modSettings['disableCheckUA'])))
+	{
+		// @todo Perhaps we can do some more checking on this, such as on the first octet of the IP?
+		$cookie_data = $smcFunc['json_decode']($_SESSION['login_' . $cookiename], true);
+
+		if (empty($cookie_data))
+			$cookie_data = safe_unserialize($_SESSION['login_' . $cookiename]);
+
+		list($id_member, $password, $login_span) = array_pad((array) $cookie_data, 3, '');
+		$id_member = !empty($id_member) && strlen($password) == 40 && (int) $login_span > time() ? (int) $id_member : 0;
+	}
+
+var_dump($i++);
+	// Only load this stuff if the user isn't a guest.
+	if ($id_member != 0)
+	{
+		// Is the member data cached?
+		if (empty($cache_enable) || $cache_enable < 2 || ($user_settings = cache_get_data('user_settings-' . $id_member, 60)) === null)
+		{
 			$request = $smcFunc['db_query']('', '
 				SELECT mem.*, COALESCE(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type
 				FROM {db_prefix}members AS mem
@@ -466,6 +520,129 @@ function loadUserSettings($id_member = 0)
 			if (!empty($user_settings['avatar']))
 				$user_settings['avatar'] = get_proxied_url($user_settings['avatar']);
 
+			if (!empty($cache_enable) && $cache_enable >= 2)
+				cache_put_data('user_settings-' . $id_member, $user_settings, 60);
+		}
+
+var_dump($i++);
+		// Did we find 'im?  If not, junk it.
+		if (!empty($user_settings))
+		{
+			// As much as the password should be right, we can assume the integration set things up.
+			if (!empty($already_verified) && $already_verified === true)
+				$check = true;
+			// SHA-512 hash should be 128 characters long.
+			elseif (strlen($password) == 128)
+				$check = hash_equals(hash_salt($user_settings['passwd'], $user_settings['password_salt']), $password);
+			else
+				$check = false;
+
+			// Wrong password or not activated - either way, you're going nowhere.
+			$id_member = $check && ($user_settings['is_activated'] == 1 || $user_settings['is_activated'] == 11) ? (int) $user_settings['id_member'] : 0;
+		}
+		else
+			$id_member = 0;
+
+		// Check if we are forcing TFA
+		$force_tfasetup = !empty($modSettings['tfa_mode']) && $modSettings['tfa_mode'] >= 2 && $id_member && empty($user_settings['tfa_secret']) && SMF != 'SSI' && !isset($_REQUEST['xml']) && (!isset($_REQUEST['action']) || $_REQUEST['action'] != '.xml');
+
+		// Don't force TFA on popups
+		if ($force_tfasetup)
+		{
+			if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'profile' && isset($_REQUEST['area']) && in_array($_REQUEST['area'], array('popup', 'alerts_popup')))
+				$force_tfasetup = false;
+			elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'pm' && (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'popup'))
+				$force_tfasetup = false;
+
+			call_integration_hook('integrate_force_tfasetup', array(&$force_tfasetup));
+		}
+
+var_dump($i++);
+		// If we no longer have the member maybe they're being all hackey, stop brute force!
+		if (!$id_member)
+		{
+			require_once($sourcedir . '/LogInOut.php');
+			validatePasswordFlood(
+				!empty($user_settings['id_member']) ? $user_settings['id_member'] : $id_member,
+				!empty($user_settings['member_name']) ? $user_settings['member_name'] : '',
+				!empty($user_settings['passwd_flood']) ? $user_settings['passwd_flood'] : false,
+				$id_member != 0
+			);
+		}
+		// Validate for Two Factor Authentication
+		elseif (!empty($modSettings['tfa_mode']) && $id_member && !empty($user_settings['tfa_secret']) && (empty($_REQUEST['action']) || !in_array($_REQUEST['action'], array('login2', 'logintfa'))))
+		{
+			$tfacookie = $cookiename . '_tfa';
+			$tfasecret = null;
+
+			$verified = call_integration_hook('integrate_verify_tfa', array($id_member, $user_settings));
+
+			if (empty($verified) || !in_array(true, $verified))
+			{
+				if (!empty($_COOKIE[$tfacookie]))
+				{
+					$tfa_data = $smcFunc['json_decode']($_COOKIE[$tfacookie], true);
+
+					list ($tfamember, $tfasecret) = array_pad((array) $tfa_data, 2, '');
+
+					if (!isset($tfamember, $tfasecret) || (int) $tfamember != $id_member)
+						$tfasecret = null;
+				}
+
+				// They didn't finish logging in before coming here? Then they're no one to us.
+				if (empty($tfasecret) || !hash_equals(hash_salt($user_settings['tfa_backup'], $user_settings['password_salt']), $tfasecret))
+				{
+					setLoginCookie(-3600, $id_member);
+					$id_member = 0;
+					$user_settings = array();
+				}
+			}
+		}
+		// When authenticating their two factor code, make sure to reset their ID for security
+		elseif (!empty($modSettings['tfa_mode']) && $id_member && !empty($user_settings['tfa_secret']) && $_REQUEST['action'] == 'logintfa')
+		{
+			$id_member = 0;
+			$context['tfa_member'] = $user_settings;
+			$user_settings = array();
+		}
+		// Are we forcing 2FA? Need to check if the user groups actually require 2FA
+		elseif ($force_tfasetup)
+		{
+			$total = 1;
+			if ($modSettings['tfa_mode'] == 2) //only do this if we are just forcing SOME membergroups
+			{
+				//Build an array of ALL user membergroups.
+				$full_groups = array($user_settings['id_group']);
+				if (!empty($user_settings['additional_groups']))
+				{
+					$full_groups = array_merge($full_groups, explode(',', $user_settings['additional_groups']));
+					$full_groups = array_unique($full_groups); //duplicates, maybe?
+				}
+
+				//Find out if any group requires 2FA
+				$request = $smcFunc['db_query']('', '
+					SELECT COUNT(id_group)
+					FROM {db_prefix}membergroups
+					WHERE tfa_required = {int:tfa_required}
+						AND id_group IN ({array_int:full_groups})',
+					array(
+						'tfa_required' => 1,
+						'full_groups' => $full_groups,
+					)
+				);
+				list ($total) = $smcFunc['db_fetch_row']($request);
+				$smcFunc['db_free_result']($request);
+			}
+
+			$area = !empty($_REQUEST['area']) ? $_REQUEST['area'] : '';
+			$action = !empty($_REQUEST['action']) ? $_REQUEST['action'] : '';
+
+			if (($total > 0 && !in_array($action, array('profile', 'logout'))) || ($action == 'profile' && $area != 'tfasetup'))
+				redirectexit('action=profile;area=tfasetup;forced');
+		}
+	}
+
+var_dump($i++);
 	// Found 'im, let's set up the variables.
 	if ($id_member != 0)
 	{
