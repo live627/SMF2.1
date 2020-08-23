@@ -489,6 +489,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		$db_cache[$db_count]['s'] = ($st = microtime(true)) - TIME_START;
 	}
 
+	var_dump($db_string);
 	$db_last_result = @pg_query($connection, $db_string);
 
 	if ($db_last_result === false && empty($db_values['db_error_skip']))
