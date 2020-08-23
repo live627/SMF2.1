@@ -23,10 +23,11 @@ function FeignLogin($id = 1)
 {
 	global $mem;
 	$mem = $id;
+	reloadSettings();
 	loadUserSettings();
 	loadPermissions();
+	$GLOBALS['txt']['time_format'] = '';
 	$GLOBALS['settings']['theme_id'] = 0;
-	reloadSettings();
 	loadTheme();
 }
 $smcFunc['db_query']('', '
@@ -34,7 +35,7 @@ $smcFunc['db_query']('', '
 	SET disabled = 1');
 $smcFunc['db_query']('truncate_table', '
 	TRUNCATE {db_prefix}mail_queue');
-loadTheme();
+
 FeignLogin(1);
 
 add_integration_function('integrate_outgoing_email', 'SendMailToQueue');
