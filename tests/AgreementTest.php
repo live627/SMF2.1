@@ -12,6 +12,7 @@ class AgreementTest extends BaseTestCase
 		require_once($sourcedir . '/Modlog.php');
 		require_once($sourcedir . '/ManageRegistration.php');
 		require_once($sourcedir . '/Subs-Members.php');
+		require_once($sourcedir . '/Profile-View.php');
 	}
 
 	public function testAgreement()
@@ -30,6 +31,8 @@ class AgreementTest extends BaseTestCase
 	public function testEditPrivacyPolicy()
 	{
 		global $context;
+
+		$this->testModifyRegistrationSettings(0);
 
 		loadLanguage('Admin+Login');
 		EditPrivacyPolicy();
@@ -60,7 +63,7 @@ class AgreementTest extends BaseTestCase
 		$this->assertEquals(1, $GLOBALS['user_info']['id']);
 	}
 
-	public function testModifyRegistrationSettings()
+	public function testModifyRegistrationSettings($policy_val = 1)
 	{
 		global $context;
 
@@ -70,7 +73,7 @@ class AgreementTest extends BaseTestCase
 		);
 		$_POST = array(
 			'requireAgreement' => '1',
-			'requirePolicyAgreement' => '1',
+			'requirePolicyAgreement' => $policy_val
 		);
 		$token_check = createToken('admin-dbsc');
 		$_POST[$token_check['admin-dbsc_token_var']] = $token_check['admin-dbsc_token'];
@@ -82,7 +85,7 @@ class AgreementTest extends BaseTestCase
 		$this->assertContains('policy_accepted', array_column(list_getModLogEntries(0, 10, 'log_time', 'action IN ({array_string:actions})', ['actions' => array('agreement_accepted', 'policy_accepted')], 2), 'action'));
 		reloadSettings();
 		$this->assertArrayHasKey('requirePolicyAgreement', $GLOBALS['modSettings']);
-		$this->assertEquals('1', $GLOBALS['modSettings']['requirePolicyAgreement']);
+		$this->assertEquals($policy_val, $GLOBALS['modSettings']['requirePolicyAgreement']);
 	}
 
 	/**
@@ -125,5 +128,36 @@ class AgreementTest extends BaseTestCase
 		$this->assertContains('policy_accepted', array_column(list_getModLogEntries(0, 10, 'log_time', 'action IN ({array_string:actions})', ['actions' => array('agreement_accepted', 'policy_accepted')], 2), 'action'));
 		FeignLogin();
 		$this->assertEquals(1, $GLOBALS['user_info']['id']);
+	}
+
+	/**
+	 * @depends testAcceptAgreement
+	 */
+	public function testAgreement4()
+	{
+		global $context;
+
+		$mem = list_getMembers(0, 1, 'id_member', 'id_member != 1', [], true)[0]['id_member'];
+		FeignLogin($mem);
+		$this->assertEquals($mem, $GLOBALS['user_info']['id']);
+		$this->testAgreement();
+		$this->assertStringContainsString('policy', $context['privacy_policy']);
+		FeignLogin();
+		$this->assertEquals(1, $GLOBALS['user_info']['id']);
+	}
+
+	/**
+	 * @depends testAcceptAgreement
+	 */
+	public function testTracking()
+	{
+		global $context;
+
+		loadLanguage('Profile');
+		$mem = list_getMembers(0, 1, 'id_member', 'id_member != 1', [], true)[0]['id_member'];
+		trackEdits($mem);
+		$this->assertCount(2, $context['edit_list']['rows']);
+		trackEdits(1);
+		$this->assertCount(1, $context['edit_list']['rows']);
 	}
 }
