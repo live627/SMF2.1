@@ -34,4 +34,11 @@ abstract class BaseTestCase extends TestCase
 
 		return $reflection_method->invokeArgs($object, $arguments);
 	}
+function FeignLogin(int $id = 1)
+{
+	global $mem;
+	$mem = $id;
+	loadUserSettings();
+	loadPermissions();
+}
 }
