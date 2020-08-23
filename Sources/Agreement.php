@@ -46,7 +46,7 @@ function prepareAgreementContext()
 	$context['can_accept_privacy_policy'] = !empty($modSettings['requirePolicyAgreement']) && canRequirePrivacyPolicy();
 	$context['accept_doc'] = $context['can_accept_agreement'] || $context['can_accept_privacy_policy'];
 
-	if (!$context['accept_doc'] || !$context['can_accept_agreement'])
+	if (!$context['accept_doc'] || $context['can_accept_agreement'])
 	{
 		// Grab the agreement.
 		// Have we got a localized one?

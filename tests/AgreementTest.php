@@ -44,6 +44,22 @@ class AgreementTest extends BaseTestCase
 		$this->assertContains('policy_updated', array_column(list_getModLogEntries(0, 10, 'log_time', 'action IN ({array_string:actions})', ['actions' => array('agreement_updated', 'policy_updated')], 3), 'action'));
 	}
 
+	/**
+	 * @depends testEditPrivacyPolicy
+	 */
+	public function testAgreement2()
+	{
+		global $context;
+
+		$mem = list_getMembers(0, 1, 'id_member', 'id_member != 1', [], true)[0]['id_member'];
+		FeignLogin($mem);
+		$this->assertEquals($mem, $GLOBALS['user_info']['id']);
+		$this->testAgreement();
+		$this->assertStringContainsString('policy', $context['privacy_policy']);
+		FeignLogin();
+		$this->assertEquals(1, $GLOBALS['user_info']['id']);
+	}
+
 	public function testModifyRegistrationSettings()
 	{
 		global $context;
@@ -70,9 +86,10 @@ class AgreementTest extends BaseTestCase
 	}
 
 	/**
+	 * @depends testEditPrivacyPolicy
 	 * @depends testModifyRegistrationSettings
 	 */
-	public function testAgreement2()
+	public function testAgreement3()
 	{
 		global $context;
 
@@ -87,6 +104,8 @@ class AgreementTest extends BaseTestCase
 		$this->assertTrue($context['can_accept_privacy_policy']);
 		$this->assertTrue($context['accept_doc']);
 		$this->assertStringContainsString('policy', $context['privacy_policy']);
+		FeignLogin();
+		$this->assertEquals(1, $GLOBALS['user_info']['id']);
 	}
 
 	/**
