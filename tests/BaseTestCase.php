@@ -36,8 +36,12 @@ abstract class BaseTestCase extends TestCase
 	}
 function FeignLogin(int $id = 1)
 {
+$i=0;
+var_dump($i++);
 	global $mem;
+var_dump($i++);
 	$mem = $id;
+var_dump($i++);
 	loadUserSettings();
 	loadPermissions();
 }
