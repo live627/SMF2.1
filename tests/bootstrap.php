@@ -17,7 +17,7 @@ function FeignLoginIntegration()
 
 	return $mem;
 }
-function FeignLogin(int $id = 1)
+function FeignLogin($id = 1)
 {
 	global $mem;
 	$mem = $id;

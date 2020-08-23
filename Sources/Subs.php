@@ -3393,7 +3393,7 @@ function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 	call_integration_hook('integrate_redirect', array(&$setLocation, &$refresh, &$permanent));
 
 	// Set the header.
-	header('location: ' . str_replace(' ', '%20', $setLocation), true, $permanent ? 301 : 302);
+	//header('location: ' . str_replace(' ', '%20', $setLocation), true, $permanent ? 301 : 302);
 
 	// Debugging.
 	if (isset($db_show_debug) && $db_show_debug === true)
@@ -3412,6 +3412,7 @@ function redirectexit($setLocation = '', $refresh = false, $permanent = false)
  */
 function obExit($header = null, $do_footer = null, $from_index = false, $from_fatal_error = false)
 {
+	return;
 	global $context, $settings, $modSettings, $txt, $smcFunc, $should_log;
 	static $header_done = false, $footer_done = false, $level = 0, $has_fatal_error = false;
 
