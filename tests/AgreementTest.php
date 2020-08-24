@@ -32,7 +32,10 @@ class AgreementTest extends BaseTestCase
 	{
 		global $context;
 
-		$this->testModifyRegistrationSettings(0);
+		updateSettings(array(
+			'requireAgreement' => '1',
+			'requirePolicyAgreement' => '0',
+		));
 
 		loadLanguage('Admin+Login');
 		EditPrivacyPolicy();
@@ -63,7 +66,7 @@ class AgreementTest extends BaseTestCase
 		$this->assertEquals(1, $GLOBALS['user_info']['id']);
 	}
 
-	public function testModifyRegistrationSettings($policy_val = 1)
+	public function testModifyRegistrationSettings()
 	{
 		global $context;
 
@@ -73,7 +76,7 @@ class AgreementTest extends BaseTestCase
 		);
 		$_POST = array(
 			'requireAgreement' => '1',
-			'requirePolicyAgreement' => $policy_val
+			'requirePolicyAgreement' => '1',
 		);
 		$token_check = createToken('admin-dbsc');
 		$_POST[$token_check['admin-dbsc_token_var']] = $token_check['admin-dbsc_token'];
@@ -82,9 +85,10 @@ class AgreementTest extends BaseTestCase
 		$this->assertTrue($context['saved_successful']);
 		unset($context['saved_successful']);
 		$this->assertArrayHasKey('requirePolicyAgreement', $context['config_vars']);
+		$this->assertContains('policy_accepted', array_column(list_getModLogEntries(0, 10, 'log_time', 'action IN ({array_string:actions})', ['actions' => array('agreement_accepted', 'policy_accepted')], 2), 'action'));
 		reloadSettings();
 		$this->assertArrayHasKey('requirePolicyAgreement', $GLOBALS['modSettings']);
-		$this->assertEquals($policy_val, $GLOBALS['modSettings']['requirePolicyAgreement']);
+		$this->assertEquals('1', $GLOBALS['modSettings']['requirePolicyAgreement']);
 	}
 
 	/**
