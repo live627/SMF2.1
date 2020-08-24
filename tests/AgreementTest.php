@@ -82,7 +82,6 @@ class AgreementTest extends BaseTestCase
 		$this->assertTrue($context['saved_successful']);
 		unset($context['saved_successful']);
 		$this->assertArrayHasKey('requirePolicyAgreement', $context['config_vars']);
-		$this->assertContains('policy_accepted', array_column(list_getModLogEntries(0, 10, 'log_time', 'action IN ({array_string:actions})', ['actions' => array('agreement_accepted', 'policy_accepted')], 2), 'action'));
 		reloadSettings();
 		$this->assertArrayHasKey('requirePolicyAgreement', $GLOBALS['modSettings']);
 		$this->assertEquals($policy_val, $GLOBALS['modSettings']['requirePolicyAgreement']);
@@ -153,10 +152,10 @@ class AgreementTest extends BaseTestCase
 	{
 		global $context;
 
-		loadLanguage('Profile');
+		loadLanguage('Profilgfnhe');
 		$mem = list_getMembers(0, 1, 'id_member', 'id_member != 1', [], true)[0]['id_member'];
 		trackEdits($mem);
-		$this->assertCount(2, $context['edit_list']['rows']);
+		$this->assertCount(3, $context['edit_list']['rows']);
 		trackEdits(1);
 		$this->assertCount(1, $context['edit_list']['rows']);
 	}
