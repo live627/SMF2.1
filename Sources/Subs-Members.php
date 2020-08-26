@@ -569,7 +569,7 @@ function registerMember(&$regOptions, $return_errors = false)
 	$regOptions['register_vars'] = array(
 		'member_name' => $regOptions['username'],
 		'email_address' => $regOptions['email'],
-		'passwd' => hash_password($regOptions['username'], $regOptions['password']),
+		'passwd' => '', // hash_password($regOptions['username'], $regOptions['password']),
 		'password_salt' => bin2hex($smcFunc['random_bytes'](16)),
 		'posts' => 0,
 		'date_registered' => time(),
@@ -746,7 +746,7 @@ function registerMember(&$regOptions, $return_errors = false)
 
 			$emaildata = loadEmailTemplate($email_message, $replacements);
 
-			sendmail($regOptions['email'], $emaildata['subject'], $emaildata['body'], null, $email_message . $memberID, $emaildata['is_html'], 0);
+			// sendmail($regOptions['email'], $emaildata['subject'], $emaildata['body'], null, $email_message . $memberID, $emaildata['is_html'], 0);
 		}
 
 		// All admins are finished here.
