@@ -601,27 +601,30 @@ function loadForumTests()
 			),
 			'check_query' => '
 				SELECT
-					t.id_topic, t.id_first_msg, t.id_last_msg,
-					CASE WHEN MIN(ma.id_msg) > 0 THEN
-						CASE WHEN MIN(mu.id_msg) > 0 THEN
-							CASE WHEN MIN(mu.id_msg) < MIN(ma.id_msg) THEN MIN(mu.id_msg) ELSE MIN(ma.id_msg) END ELSE
-						MIN(ma.id_msg) END ELSE
-					MIN(mu.id_msg) END AS myid_first_msg,
-					CASE WHEN MAX(ma.id_msg) > 0 THEN MAX(ma.id_msg) ELSE MIN(mu.id_msg) END AS myid_last_msg,
-					t.approved, mf.approved, mf.approved AS firstmsg_approved
-				FROM {db_prefix}topics AS t
-					LEFT JOIN {db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
-					LEFT JOIN {db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
-					LEFT JOIN {db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
+					t.id_topic, t.id_first_msg, t.id_last_msg, t.approved,
+					myid_first_msg, myid_last_msg, firstmsg_approved
+				FROM smf_topics AS t
+					JOIN
+					(
+						SELECT
+							id_topic, MIN(id_msg) AS myid_first_msg, approved AS firstmsg_approved
+						FROM smf_messages
+						WHERE id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
+						GROUP BY id_topic, approved
+					) AS mf USING (id_topic)
+					JOIN
+					(
+						SELECT
+							id_topic, MAX(id_msg) AS myid_last_msg
+						FROM smf_messages
+						WHERE id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
+						AND approved = 1
+						GROUP BY id_topic
+					) AS ml USING (id_topic)
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
-				GROUP BY t.id_topic, t.id_first_msg, t.id_last_msg, t.approved, mf.approved
 				ORDER BY t.id_topic',
 			'fix_processing' => function($row) use ($smcFunc)
 			{
-				$row['firstmsg_approved'] = (int) $row['firstmsg_approved'];
-				$row['myid_first_msg'] = (int) $row['myid_first_msg'];
-				$row['myid_last_msg'] = (int) $row['myid_last_msg'];
-
 				// Not really a problem?
 				if ($row['id_first_msg'] == $row['myid_first_msg'] && $row['id_last_msg'] == $row['myid_last_msg'] && $row['approved'] == $row['firstmsg_approved'])
 					return false;
