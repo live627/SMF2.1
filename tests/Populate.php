@@ -65,11 +65,13 @@ for ($i = 0; $i < 10; $i++)
 	$topicOptions = array(
 		'id' => 0,
 		'board' => $board_ids[$i],
-		'mark_as_read' => '1',
+		'mark_as_read' => false,
 	);
 	$posterOptions = array(
 		'id' => $members[$i],
-		'update_post_count' => '1',
+		'name' => 'user' . $i,
+		'email' => 'user' . $i . '@mydomain.com',
+		'update_post_count' => false,
 	);
 	createPost($msgOptions, $topicOptions, $posterOptions);
 	$topics[$i] = $topicOptions['id'];
@@ -86,11 +88,13 @@ for ($i = 0; $i < 10; $i++)
 	$topicOptions = array(
 		'id' => $topics[$i],
 		'board' => $board_ids[$i],
-		'mark_as_read' => '1',
+		'mark_as_read' => false,
 	);
 	$posterOptions = array(
 		'id' => $members[$i],
-		'update_post_count' => '1',
+		'name' => 'user' . $i,
+		'email' => 'user' . $i . '@mydomain.com',
+		'update_post_count' => false,
 	);
 	createPost($msgOptions, $topicOptions, $posterOptions);
 	$msgOptions = array(
