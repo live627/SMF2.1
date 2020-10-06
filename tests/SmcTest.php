@@ -40,6 +40,14 @@ class SMCTest extends BaseTestCase
 				)
 			),
 			array(
+				'{literal:string}',
+				array(),
+				array(
+					'MySQL' => '\'string\'',
+					'PostgreSQL' => '\'string\'',
+				)
+			),
+			array(
 				'{string:string}',
 				array('string' => 'string'),
 				array(
@@ -143,6 +151,31 @@ class SMCTest extends BaseTestCase
 		$tables = $smcFunc['db_list_tables'](false, '%attach%');
 		$this->assertContains(substr(strrchr($db_prefix, '.'), 1) . 'attachments', $tables);
 		$this->assertCount(1, $tables);
+	}
+
+	public function test_strlen()
+	{
+		global $smcFunc;
+
+		$this->assertEquals(7, strlen('A&amp;B'));
+		$this->assertEquals(3, $smcFunc['strlen']('A&amp;B'));
+	}
+
+	public function test_strpos()
+	{
+		global $smcFunc;
+
+		$this->assertEquals(6, strpos('A&amp;B', 'B'));
+		$this->assertEquals(2, $smcFunc['strpos']('A&amp;B', 'B'));
+	}
+
+	public function test_substr()
+	{
+		global $smcFunc;
+
+		$this->assertEquals('A&amp;B', substr('aA&amp;B', 1));
+		$this->assertEquals('A&amp;B', $smcFunc['substr']('aA&amp;B', 1));
+		$this->assertEquals('B', $smcFunc['substr']('aA&amp;B', -1));
 	}
 
 	public function testReplaceValues()
