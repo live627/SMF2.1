@@ -153,6 +153,58 @@ class SMCTest extends BaseTestCase
 		$this->assertCount(1, $tables);
 	}
 
+	public function test_entity_fix()
+	{
+		global $smcFunc;
+
+		$this->assertEquals(
+			'A&amp;AA&#x1CF;B',
+			$smcFunc['entity_fix']('A&amp;A&#x1F;A&#x1CF;B')
+		);
+	}
+
+	public function htmlspecialcharsProvider()
+	{
+		return array(
+			array(
+				'elvIs "the kIng" presLey who\'s online  αλώπηξ βαφής ψημένη γη, δρασκελίζει υπέρ νωθρού κυνός',
+				'elvIs &quot;the kIng&quot; presLey who\'s online  αλώπηξ βαφής ψημένη γη, δρασκελίζει υπέρ νωθρού κυνός ',
+			),
+			array(
+				'A \'quote\' is <b>bold</b>',
+				'A \'quote\' is &lt;b&gt;bold&lt;/b&gt;',
+			),
+			array(
+				'A&amp;A&#x1F;A&#x1CF;B',
+				'A&amp;amp;A&amp;#x1F;A&amp;#x1CF;B ',
+			),
+			array(
+				"\x8F!!!",
+				'',
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider htmlspecialcharsProvider
+	 */
+	public function test_htmlspecialchars($test, $expected)
+	{
+		global $smcFunc;
+
+		$this->assertEquals($expected, $smcFunc['htmlspecialchars']($test));
+	}
+
+	public function test_htmlspecialchars2()
+	{
+		global $smcFunc;
+
+		$this->assertEquals(
+			'A &#039;quote&#039; is &lt;b&gt;bold&lt;/b&gt;'
+			$smcFunc['htmlspecialchars']('A \'quote\' is <b>bold</b>', ENT_QUOTES)
+		);
+	}
+
 	public function test_strlen()
 	{
 		global $smcFunc;
@@ -169,6 +221,20 @@ class SMCTest extends BaseTestCase
 		$this->assertEquals(2, $smcFunc['strpos']('A&amp;B', 'B'));
 	}
 
+	public function test_strtolower()
+	{
+		global $smcFunc;
+
+		$this->assertEquals('русские', $smcFunc['strtolower']('РУССКИЕ'));
+	}
+
+	public function test_strtoupper()
+	{
+		global $smcFunc;
+
+		$this->assertEquals('РУССКИЕ', $smcFunc['strtoupper']('русские'));
+	}
+
 	public function test_substr()
 	{
 		global $smcFunc;
@@ -176,6 +242,26 @@ class SMCTest extends BaseTestCase
 		$this->assertEquals('A&amp;B', substr('aA&amp;B', 1));
 		$this->assertEquals('A&amp;B', $smcFunc['substr']('aA&amp;B', 1));
 		$this->assertEquals('B', $smcFunc['substr']('aA&amp;B', -1));
+	}
+
+	public function test_ucwords()
+	{
+		global $smcFunc;
+
+		$this->assertEquals(
+			'ElvIs "the KIng" PresLey Who\'s Online  Αλώπηξ Βαφής Ψημένη Γη, Δρασκελίζει Υπέρ Νωθρού Κυνός ',
+			$smcFunc['ucwords']('elvIs "the kIng" presLey who\'s online  αλώπηξ βαφής ψημένη γη, δρασκελίζει υπέρ νωθρού κυνός')
+		);
+	}
+
+	public function test_ucwords2()
+	{
+		global $smcFunc;
+
+		$this->assertEquals(
+			'La Dernière Usine Française D\'Accordéons Reste À Tulle',
+			$smcFunc['ucwords']('La dernière usine française d\'accordéons reste à Tulle')
+		);
 	}
 
 	public function testReplaceValues()

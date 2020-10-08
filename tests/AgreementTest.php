@@ -159,7 +159,7 @@ class AgreementTest extends BaseTestCase
 		loadLanguage('Profile');
 		$mem = list_getMembers(0, 1, 'id_member', 'id_member != 1', [], true)[0]['id_member'];
 		trackEdits($mem);
-		$this->assertCount(3, $context['edit_list']['rows']);
+		$this->assertCount(1, $context['edit_list']['rows']);
 		trackEdits(1);
 		$this->assertCount(1, $context['edit_list']['rows']);
 	}
