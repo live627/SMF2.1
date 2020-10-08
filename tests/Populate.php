@@ -99,7 +99,7 @@ for ($i = 0; $i < 10; $i++)
 	createPost($msgOptions, $topicOptions, $posterOptions);
 	$msgOptions = array(
 		'id' => $msgOptions['id'],
-		'body' => "Board $board_ids[$i] - Topic $topics[$i] - Messsage $msgOptions[id]",
+		'body' => "board $board_ids[$i] - Topic $topics[$i] - Messsage $msgOptions[id]",
 	);
 	$topicOptions = array();
 	$posterOptions = array();

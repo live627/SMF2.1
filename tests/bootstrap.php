@@ -19,8 +19,8 @@ function FeignLoginIntegration()
 
 	return $mem;
 }
-$pi=0;
-	prof_print('s'.$pi++);
+$pi = 0;
+	prof_print('s' . $pi++);
 function FeignLogin($id = 1)
 {
 	global $mem;
@@ -38,9 +38,9 @@ $smcFunc['db_query']('', '
 $smcFunc['db_query']('truncate_table', '
 	TRUNCATE {db_prefix}mail_queue');
 
-	prof_print('s'.$pi++);
+	prof_print('s' . $pi++);
 FeignLogin(1);
-	prof_print('s'.$pi++);
+	prof_print('s' . $pi++);
 
 add_integration_function('integrate_outgoing_email', 'SendMailToQueue');
 
