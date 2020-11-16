@@ -20,7 +20,6 @@ if (!defined('SMF'))
  * Get the latest post made on the system
  *
  * - respects approved, recycled, and board permissions
- * - @todo is this even used anywhere?
  *
  * @return array An array of information about the last post that you can see
  */

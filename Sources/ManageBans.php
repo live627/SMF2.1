@@ -976,7 +976,7 @@ function saveTriggers($suggestions = array(), $ban_group, $member = 0, $ban_id =
  * This function removes a bunch of triggers based on ids
  * Doesn't clean the inputs
  *
- * @param array $items_ids The items to remove
+ * @param int[]|int $items_ids The items to remove
  * @param bool|int $group_id The ID of the group these triggers are associated with or false if deleting them from all groups
  * @return bool Always returns true
  */
@@ -1452,7 +1452,7 @@ function logTriggersUpdates($logs, $new = true, $removal = false)
 
 	// Log the addion of the ban entries into the moderation log.
 	foreach ($logs as $log)
-		logAction('ban' . ($removal == true ? 'remove' : ''), array(
+		logAction('ban' . ($removal === true ? 'remove' : ''), array(
 			$log_name_map[$log['bantype']] => $log['value'],
 			'new' => empty($new) ? 0 : 1,
 			'remove' => empty($removal) ? 0 : 1,
@@ -2205,11 +2205,8 @@ function list_getNumBanLogEntries()
  * Convert a range of given IP number into a single string.
  * It's practically the reverse function of ip2range().
  *
- * @example
- * range2ip(array(10, 10, 10, 0), array(10, 10, 20, 255)) returns '10.10.10-20.*
- *
- * @param array $low The low end of the range in IPv4 format
- * @param array $high The high end of the range in IPv4 format
+ * @param string $low The low end of the range in IPv4 format
+ * @param string $high The high end of the range in IPv4 format
  * @return string A string indicating the range
  */
 function range2ip($low, $high)

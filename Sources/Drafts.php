@@ -171,7 +171,7 @@ function SaveDraft(&$post_errors)
  * The core draft feature must be enabled, as well as the pm draft option
  * Determines if this is a new or and update to an existing pm draft
  *
- * @param string $post_errors A string of info about errors encountered trying to save this draft
+ * @param string[] $post_errors A string of info about errors encountered trying to save this draft
  * @param array $recipientList An array of data about who this PM is being sent to
  * @return boolean false if you can't save the draft, true if we're doing this via XML more than 5 seconds after the last save, nothing otherwise
  */
@@ -385,7 +385,7 @@ function ReadDraft($id_draft, $type = 0, $check = true, $load = false)
  * Validates the drafts are from the user
  * is supplied an array of drafts will attempt to remove all of them
  *
- * @param int $id_draft The ID of the draft to delete
+ * @param int|int[] $id_draft The ID of the draft to delete
  * @param boolean $check Whether or not to check that the draft belongs to the current user
  * @return boolean False if it couldn't be deleted (doesn't return anything otherwise)
  */
