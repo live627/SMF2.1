@@ -13,27 +13,25 @@ class MiscTest extends BaseTestCase
 
 	/**
 	 * @return string[][]
-	 *
-	 * @psalm-return array{0: array{0: string}, 1: array{0: string}, 2: array{0: string}, 3: array{0: string}, 4: array{0: string}, 5: array{0: string}}
 	 */
 	public function data(): array
 	{
 		return array(
-			array(
-				'imagemagick',
-			),
+			//~ array(
+				//~ 'imagemagick',
+			//~ ),
 			array(
 				'db_server',
 			),
 			array(
 				'apcu',
 			),
-			array(
-				'memcache',
-			),
-			array(
-				'memcached',
-			),
+			//~ array(
+				//~ 'memcacheimplementation',
+			//~ ),
+			//~ array(
+				//~ 'memcachedimplementation',
+			//~ ),
 			array(
 				'php',
 			),

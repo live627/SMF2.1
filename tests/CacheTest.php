@@ -4,13 +4,12 @@ namespace PHPTDD;
 
 use SMF\Cache\CacheApi;
 use SMF\Cache\CacheApiInterface;
-use SMF\Cache\FileBased;
-use SMF\Cache\Sqlite;
-use SMF\Cache\Apcu;
-use SMF\Cache\Apc;
-use SMF\Cache\Memcached;
-use SMF\Cache\Memcache;
-use SMF\Cache\Postgres;
+use SMF\Cache\APIs\FileBased;
+use SMF\Cache\APIs\Sqlite;
+use SMF\Cache\APIs\Apcu;
+use SMF\Cache\APIs\MemcachedImplementation;
+use SMF\Cache\APIs\MemcacheImplementation;
+use SMF\Cache\APIs\Postgres;
 
 class CacheTest extends BaseTestCase
 {
@@ -18,17 +17,17 @@ class CacheTest extends BaseTestCase
 
 	public function setUp() : void
 	{
-		global $cache_accelerator, $cache_enable;
+		global $cache_enable;
 
-		$cache_accelerator = '';
+		$this->setCacheAccelerator('');
 		$cache_enable = 1;
 	}
 
 	public function tearDown() : void
 	{
-		global $cache_accelerator, $cache_enable, $cacheAPI;
+		global $cache_enable, $cacheAPI;
 
-		$cache_accelerator = '';
+		$this->setCacheAccelerator('');
 		$cache_enable = 0;
 		$cacheAPI = false;
 
@@ -38,30 +37,38 @@ class CacheTest extends BaseTestCase
 			$this->assertFalse($this->cacheObj->isSupported());
 	}
 
-	public function testDefault(): void
+	public function setCacheAccelerator(string $accelerator): void
 	{
 		global $cache_accelerator;
 
-		$cache_accelerator = 'sqlite';
+		$cache_accelerator = $accelerator;
+	}
+
+	public function testDefault(): void
+	{
+		$this->setCacheAccelerator('Sqlite');
 		$this->cacheObj = loadCacheAccelerator();
 		$this->assertInstanceOf(Sqlite::class, $this->cacheObj);
 	}
 
 	public function testFallback(): void
 	{
-		global $cache_accelerator;
-
-		$cache_accelerator = 'zend';
+		$this->setCacheAccelerator('Zend');
 		$this->cacheObj = loadCacheAccelerator();
 		$this->assertInstanceOf(FileBased::class, $this->cacheObj);
 	}
 
 	public function testNoFallback(): void
 	{
-		global $cache_accelerator;
-
-		$cache_accelerator = 'zend';
+		$this->setCacheAccelerator('Zend');
 		$this->cacheObj = loadCacheAccelerator(null, false);
+		$this->assertFalse($this->cacheObj);
+	}
+
+	public function testNotFound(): void
+	{
+		$this->setCacheAccelerator('NotFound');
+		$this->cacheObj = loadCacheAccelerator();
 		$this->assertFalse($this->cacheObj);
 	}
 
@@ -69,27 +76,21 @@ class CacheTest extends BaseTestCase
 	{
 		return array(
 			array(
-				'filebased',
 				FileBased::class,
 			),
 			array(
-				'sqlite',
 				Sqlite::class,
 			),
 			array(
-				'apcu',
 				Apcu::class,
 			),
 			array(
-				'memcached',
-				Memcached::class,
+				MemcachedImplementation::class,
 			),
 			array(
-				'memcache',
-				Memcache::class,
+				MemcacheImplementation::class,
 			),
 			array(
-				'postgres',
 				Postgres::class,
 			),
 		);
@@ -98,9 +99,9 @@ class CacheTest extends BaseTestCase
 	/**
 	 * @dataProvider data
 	 */
-	public function test(string $api, string $fqcn)
+	public function test(string $fqcn)
 	{
-		$this->cacheObj = loadCacheAccelerator($api, false);
+		$this->cacheObj = loadCacheAccelerator($fqcn, false);
 		if (!$this->cacheObj)
 			$this->markTestSkipped();
 

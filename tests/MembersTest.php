@@ -2,6 +2,8 @@
 
 namespace PHPTDD;
 
+use PHPUnit\Framework\Error\Error as PHPUnitError;
+
 class MembersTest extends BaseTestCase
 {
 	private $options = array();
@@ -196,20 +198,90 @@ class MembersTest extends BaseTestCase
 		$this->assertCount(2, $members);
 	}
 
+	public function testNoMinUserInfo() : void
+	{
+		$this->assertCount(0, loadMinUserInfo([]));
+		$this->assertCount(0, loadMinUserInfo([0]));
+	}
+
+	public function testMyMinUserInfo() : void
+	{
+		$data = loadMinUserInfo(1);
+		$this->assertArrayHasKey(1, $data);
+		$this->assertEquals(1, $data[1]['id']);
+		$this->assertEquals('test', $data[1]['username']);
+		$this->assertEquals('test', $data[1]['name']);
+	}
+
+	public function testMinUserInfoUnexpectedBehavior() : void
+	{
+		$data = loadMinUserInfo(4);
+		$this->assertArrayHasKey(4, $data);
+		$this->assertEquals(4, $data[4]['id']);
+		$this->assertArrayHasKey(1, $data);
+		$this->assertEquals(1, $data[1]['id']);
+	}
+
+	public function testUnknbownDataSet() : void
+	{
+		$this->expectException(PHPUnitError::class);
+		loadMemberData('test', true, 'random');
+	}
+
+	public function testMyMemberData() : void
+	{
+		global $context, $memberContext, $membersTest, $user_profile;
+
+		$members = loadMemberData('test', true, 'minimal');
+		$this->assertCount(1, $members);
+		$this->assertEquals('minimal', $context['loadMemberContext_set']);
+		$this->assertContains(1, $members);
+		$this->assertArrayHasKey(1, $user_profile);
+		$this->assertEquals(1, $user_profile[1]['id_member']);
+		$this->assertEquals('test', $user_profile[1]['member_name']);
+		$this->assertEquals('test', $user_profile[1]['real_name']);
+		$this->assertEquals(1, $user_profile[1]['id_group']);
+		$data = loadMemberContext(1);
+		$this->assertIsArray($data);
+		$this->assertEquals(1, $data['id']);
+		$this->assertEquals('test', $data['username']);
+		$this->assertEquals('test', $data['name']);
+		$this->assertArrayHasKey(1, $memberContext);
+		$this->assertEquals(1, $memberContext[1]['id']);
+		$this->assertEquals('test', $memberContext[1]['username']);
+		$this->assertEquals('test', $memberContext[1]['name']);
+	}
+
+	public function testNoMemberData() : void
+	{
+		$this->assertFalse(loadMemberContext(0));
+		$this->assertCount(0, loadMemberData([]));
+		$this->assertCount(0, loadMemberData([0]));
+	}
+
+	public function testBakedMemberData() : void
+	{
+		$this->expectException(PHPUnitError::class);
+		loadMemberContext(420);
+	}
+
 	/**
 	 * @depends testAddMembers
 	 */
 	public function testMembersData() : void
 	{
-		global $memberContext, $membersTest, $user_profile;
+		global $context, $memberContext, $membersTest, $user_profile;
 
 		$members = loadMemberData($membersTest);
 		$this->assertCount(4, $members);
+		$this->assertEquals('normal', $context['loadMemberContext_set']);
 		foreach ($membersTest as $member)
 		{
 			$this->assertContains($member, $members);
 			$this->assertArrayHasKey($member, $user_profile);
-			$this->assertTrue(loadMemberContext($member, true));
+			$data = loadMemberContext($member, true);
+			$this->assertIsArray($data);
+			$this->assertEquals($member, $data['id']);
 			$this->assertArrayHasKey($member, $memberContext);
 			$this->assertEquals($member, $memberContext[$member]['id']);
 		}

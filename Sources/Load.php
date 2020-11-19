@@ -87,8 +87,7 @@ function reloadSettings()
 		if (file_exists($boarddir . '/upgrade.php'))
 			header('location: ' . $boardurl . '/upgrade.php');
 
-		fatal_error('SMF file version (' . SMF_VERSION . ') does not match SMF database version (' . $modSettings['smfVersion'] . ').<br>Run the SMF upgrader to fix this.<br><a href="https://wiki.simplemachines.org/smf/Upgrading">More information</a>.');
-	}
+ 	}
 
 	$modSettings['cache_enable'] = $cache_enable;
 
@@ -1606,7 +1605,7 @@ function loadMemberContext($user, $display_custom_fields = false)
 
 	// If this person's data is already loaded, skip it.
 	if (isset($dataLoaded[$user]))
-		return true;
+		return $memberContext[$user];
 
 	// We can't load guests or members not loaded by loadMemberData()!
 	if ($user == 0)
@@ -1618,6 +1617,7 @@ function loadMemberContext($user, $display_custom_fields = false)
 	}
 
 	// Well, it's loaded now anyhow.
+	$dataLoaded[$user] = true;
 	$profile = $user_profile[$user];
 
 	// Censor everything.
@@ -3554,15 +3554,13 @@ function loadDatabase()
 /**
  * Try to load up a supported caching method. This is saved in $cacheAPI if we are not overriding it.
  *
- * @param array $overrideCache Try to use a different cache method other than that defined in $cache_accelerator.
+ * @param string $overrideCache Try to use a different cache method other than that defined in $cache_accelerator.
  * @param bool $fallbackSMF Use the default SMF method if the accelerator fails.
  * @return object|false A object of $cacheAPI, or False on failure.
  */
-function loadCacheAccelerator($overrideCache = array(), $fallbackSMF = true)
+function loadCacheAccelerator($overrideCache = '', $fallbackSMF = true)
 {
-	global $sourcedir, $cacheAPI, $cache_accelerator, $cache_enable;
-
-	$cacheAPIdir = $sourcedir . '/Cache';
+	global $cacheAPI, $cache_accelerator, $cache_enable;
 
 	// Is caching enabled?
 	if (empty($cache_enable) && empty($overrideCache))
@@ -3575,25 +3573,14 @@ function loadCacheAccelerator($overrideCache = array(), $fallbackSMF = true)
 	elseif (is_null($cacheAPI))
 		$cacheAPI = false;
 
-	// Autoload hasn't been called yet :/
-	require_once($cacheAPIdir .'/CacheApi.php');
-	require_once($cacheAPIdir .'/CacheApiInterface.php');
-
-	$apis_dir = $cacheAPIdir .'/'. CacheApi::APIS_FOLDER;
-
 	// What accelerator we are going to try.
 	$cache_class_name = !empty($cache_accelerator) ? $cache_accelerator : CacheApi::APIS_DEFAULT;
-
-	$file_to_load = $apis_dir . '/' . sprintf(CacheApi::APIS_BASENAME, $cache_class_name);
+	$fully_qualified_class_name = !empty($overrideCache) ? $overrideCache :
+		CacheApi::APIS_NAMESPACE . $cache_class_name;
 
 	// Do some basic tests.
-	if (file_exists($file_to_load))
+	if (class_exists($fully_qualified_class_name))
 	{
-		require_once($file_to_load);
-
-		$fully_qualified_class_name = !empty($overrideCache) ? $overrideCache :
-			CacheApi::APIS_NAMESPACE . $cache_class_name;
-
 		/* @var CacheApiInterface $cache_api */
 		$cache_api = new $fully_qualified_class_name();
 
@@ -3605,9 +3592,9 @@ function loadCacheAccelerator($overrideCache = array(), $fallbackSMF = true)
 		if (!$cache_api->isSupported())
 		{
 			// Can we save ourselves?
-			if (!empty($fallbackSMF) && is_null($overrideCache) &&
+			if (!empty($fallbackSMF) && $overrideCache == '' &&
 				$cache_class_name !== CacheApi::APIS_DEFAULT)
-				return loadCacheAccelerator(null, false);
+				return loadCacheAccelerator(CacheApi::APIS_NAMESPACE . CacheApi::APIS_DEFAULT, false);
 
 			return false;
 		}
@@ -3617,14 +3604,9 @@ function loadCacheAccelerator($overrideCache = array(), $fallbackSMF = true)
 
 		// Don't set this if we are overriding the cache.
 		if (empty($overrideCache))
-		{
 			$cacheAPI = $cache_api;
 
-			return $cacheAPI;
-		}
-
-		else
-			return $cache_api;
+		return $cache_api;
 	}
 
 	return false;
