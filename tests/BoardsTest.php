@@ -81,6 +81,8 @@ class BoardsTest extends BaseTestCase
 		$settings['show_newsfader'] = true;
 
 		BoardIndex();
+		var_dump($context['categories'][1]['boards'][1]);
+		var_dump($context['user'],array_column($context['categories'][1]['boards'],'name','id'));
 		$this->assertCount(1, $context['categories']);
 		foreach ($context['categories'] as $category)
 		{
