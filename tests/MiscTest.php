@@ -82,9 +82,7 @@ class MiscTest extends BaseTestCase
 	}
 
 	/**
-	 * @return ((bool|int|string)[]|string)[][]
-	 *
-	 * @psalm-return array{0: array{0: string, 1: array{seed: string, order_pos: int}, 2: string}, 1: array{0: string, 1: array{seed: true}, 2: string}, 2: array{0: string, 1: array{seed: false}, 2: string}, 3: array{0: string, 1: array{external: true, order_pos: int}, 2: string}, 4: array{0: string, 1: array{minimize: true, order_pos: int}, 2: string}, 5: array{0: string, 1: array{force_current: false, rtl: string}, 2: string}}
+	 * @return array
 	 */
 	public function cssdata(): array
 	{
@@ -147,9 +145,7 @@ class MiscTest extends BaseTestCase
 	}
 
 	/**
-	 * @return (string|true[])[][]
-	 *
-	 * @psalm-return array{0: array{0: string, 1: array{minimize: true}, 2: string}, 1: array{0: string, 1: array{external: true}, 2: string}, 2: array{0: string, 1: array<empty, empty>, 2: string}}
+	 * @return array
 	 */
 	public function javascriptdata(): array
 	{

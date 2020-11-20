@@ -15,9 +15,7 @@ class TestxmlArray extends BaseTestCase
 	}
 
 	/**
-	 * @return (string|string[][])[][]
-	 *
-	 * @psalm-return array{0: array{0: string, 1: array{character: array{name: string, weapon: string}}}}
+	 * @return array
 	 */
 	public function data(): array
 	{

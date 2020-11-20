@@ -1219,11 +1219,10 @@ function getTreeOrder()
 {
 	global $smcFunc;
 
-	if (($cached = cache_get_data('board_order', 86400)) !== null)
-	{
-		$tree_order = $cached;
-		return $cached;
-	}
+	$tree_order = array(
+		'cats' => array(),
+		'boards' => array(),
+	);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT b.id_board, b.id_cat
