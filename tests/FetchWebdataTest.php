@@ -6,8 +6,6 @@ class FetchWebdataTest extends BaseTestCase
 {
 	/**
 	 * @return string[][]
-	 *
-	 * @psalm-return array{0: array{0: string, 1: string, 2: string}}
 	 */
 	public function postProvider(): array
 	{
@@ -22,8 +20,6 @@ class FetchWebdataTest extends BaseTestCase
 
 	/**
 	 * @return string[][]
-	 *
-	 * @psalm-return array{0: array{0: string, 1: string}}
 	 */
 	public function getProvider(): array
 	{

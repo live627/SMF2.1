@@ -214,8 +214,6 @@ class MenuTest extends BaseTestCase
 	}
 	/**
 	 * @return string[][]
-	 *
-	 * @psalm-return array{0: array{0: string, 1: string}, 1: array{0: string, 1: string}}
 	 */
 	public function optionsProvider(): array
 	{

@@ -15,8 +15,6 @@ class CurlFetchWebdataTest extends BaseTestCase
 
 	/**
 	 * @return (int|string|string[])[][]
-	 *
-	 * @psalm-return array{0: array{0: string, 1: array{gs_taif0: string}, 2: int, 3: string}, 1: array{0: string, 1: array{q: string, ia: string}, 2: int, 3: string}}
 	 */
 	public function postProvider(): array
 	{

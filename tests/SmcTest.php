@@ -5,9 +5,7 @@ namespace PHPTDD;
 class SMCTest extends BaseTestCase
 {
 	/**
-	 * @return (((int|string)[]|float|int|string)[]|string)[][]
-	 *
-	 * @psalm-return array{0: array{0: string, 1: array<empty, empty>, 2: array{MySQL: string, PostgreSQL: string}}, 1: array{0: string, 1: array<empty, empty>, 2: array{MySQL: string, PostgreSQL: string}}, 2: array{0: string, 1: array{int: int}, 2: array{MySQL: int, PostgreSQL: int}}, 3: array{0: string, 1: array{int: array{0: int, 1: int}}, 2: array{MySQL: string, PostgreSQL: string}}, 4: array{0: string, 1: array<empty, empty>, 2: array{MySQL: string, PostgreSQL: string}}, 5: array{0: string, 1: array{string: string}, 2: array{MySQL: string, PostgreSQL: string}}, 6: array{0: string, 1: array{string: array{0: string, 1: string}}, 2: array{MySQL: string, PostgreSQL: string}}, 7: array{0: string, 1: array{var: string}, 2: array{MySQL: string, PostgreSQL: string}}, 8: array{0: string, 1: array{var: string}, 2: array{MySQL: string, PostgreSQL: string}}, 9: array{0: string, 1: array{var: string}, 2: array{MySQL: string, PostgreSQL: string}}, 10: array{0: string, 1: array{var: float}, 2: array{MySQL: string, PostgreSQL: string}}, 11: array{0: string, 1: array{var: string}, 2: array{MySQL: string, PostgreSQL: string}}, 12: array{0: string, 1: array{var: array{0: string, 1: string}}, 2: array{MySQL: string, PostgreSQL: string}}, 13: array{0: string, 1: array{a_string: string}, 2: array{MySQL: string, PostgreSQL: string}}}
+	 * @return array
 	 */
 	public function callbackProvider(): array
 	{
@@ -171,8 +169,6 @@ class SMCTest extends BaseTestCase
 
 	/**
 	 * @return string[][]
-	 *
-	 * @psalm-return array{0: array{0: string, 1: string}, 1: array{0: string, 1: string}, 2: array{0: string, 1: string}, 3: array{0: string, 1: string}}
 	 */
 	public function htmlspecialcharsProvider(): array
 	{
@@ -220,8 +216,6 @@ class SMCTest extends BaseTestCase
 
 	/**
 	 * @return string[][]
-	 *
-	 * @psalm-return array{0: array{0: string, 1: string}, 1: array{0: string, 1: string}}
 	 */
 	public function htmltrimProvider(): array
 	{
@@ -322,7 +316,10 @@ class SMCTest extends BaseTestCase
 			),
 			array('variable')
 		);
-		$this->assertEquals(3, $smcFunc['db_affected_rows']());
+		$this->assertEquals(
+			$smcFunc['db_title'] == MYSQL_TITLE ? 6 : 3,
+			$smcFunc['db_affected_rows']()
+		);
 		$request = $smcFunc['db_query']('', '
 			SELECT value
 			FROM {db_prefix}settings

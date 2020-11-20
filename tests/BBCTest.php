@@ -621,8 +621,6 @@ class BBCTest extends BaseTestCase
 
 	/**
 	 * @return string[][]
-	 *
-	 * @psalm-return array{0: array{0: string, 1: string, 2: string, 3: string}, 1: array{0: string, 1: string, 2: string}, 2: array{0: string, 1: string, 2: string}, 3: array{0: string, 1: string, 2: string}, 4: array{0: string, 1: string, 2: string}, 5: array{0: string, 1: string, 2: string}, 6: array{0: string, 1: string, 2: string}, 7: array{0: string, 1: string, 2: string}, 8: array{0: string, 1: string, 2: string}, 9: array{0: string, 1: string, 2: string}, 10: array{0: string, 1: string, 2: string}, 11: array{0: string, 1: string, 2: string}, 12: array{0: string, 1: string, 2: string}}
 	 */
 	public function legacyBBCProvider(): array
 	{

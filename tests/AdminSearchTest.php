@@ -16,9 +16,7 @@ class AdminSearchTest extends BaseTestCase
 	}
 
 	/**
-	 * @return (mixed|string)[][]
-	 *
-	 * @psalm-return array<array-key, array{0: mixed, 1: string}>
+	 * @return string[][]
 	 */
 	public function settingsProvider(): array
 	{

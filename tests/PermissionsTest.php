@@ -13,8 +13,6 @@ class PermissionsTest extends BaseTestCase
 
 	/**
 	 * @return int[][]
-	 *
-	 * @psalm-return array{0: array{0: int}, 1: array{0: int}}
 	 */
 	public function permissionsControllerProvider(): array
 	{

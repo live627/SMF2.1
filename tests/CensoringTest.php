@@ -11,8 +11,6 @@ class CensoringTest extends BaseTestCase
 
 	/**
 	 * @return string[][]
-	 *
-	 * @psalm-return array{0: array{0: string, 1: string}, 1: array{0: string, 1: string}, 2: array{0: string, 1: string}}
 	 */
 	public function keepCaseWholeWordProvider(): array
 	{
@@ -42,8 +40,6 @@ class CensoringTest extends BaseTestCase
 
 	/**
 	 * @return string[][]
-	 *
-	 * @psalm-return array{0: array{0: string, 1: string}, 1: array{0: string, 1: string}, 2: array{0: string, 1: string}}
 	 */
 	public function wholeWordsCaseInsensitiveProvider(): array
 	{
@@ -73,8 +69,6 @@ class CensoringTest extends BaseTestCase
 
 	/**
 	 * @return string[][]
-	 *
-	 * @psalm-return array{0: array{0: string, 1: string}, 1: array{0: string, 1: string}, 2: array{0: string, 1: string}, 3: array{0: string, 1: string}}
 	 */
 	public function notWholeWordsCaseSensitiveProvider(): array
 	{
@@ -105,8 +99,6 @@ class CensoringTest extends BaseTestCase
 
 	/**
 	 * @return string[][]
-	 *
-	 * @psalm-return array{0: array{0: string, 1: string}, 1: array{0: string, 1: string}, 2: array{0: string, 1: string}, 3: array{0: string, 1: string}}
 	 */
 	public function notWholeWordsCaseInsensitiveProvider(): array
 	{
