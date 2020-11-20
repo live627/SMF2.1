@@ -316,10 +316,7 @@ class SMCTest extends BaseTestCase
 			),
 			array('variable')
 		);
-		$this->assertEquals(
-			$smcFunc['db_title'] == MYSQL_TITLE ? 6 : 3,
-			$smcFunc['db_affected_rows']()
-		);
+		$this->assertEquals(3, $smcFunc['db_affected_rows']());
 		$request = $smcFunc['db_query']('', '
 			SELECT value
 			FROM {db_prefix}settings
@@ -347,7 +344,10 @@ class SMCTest extends BaseTestCase
 			),
 			array('variable')
 		);
-		$this->assertEquals(3, $smcFunc['db_affected_rows']());
+		$this->assertEquals(
+			$smcFunc['db_title'] == MYSQL_TITLE ? 6 : 3,
+			$smcFunc['db_affected_rows']()
+		);
 		$request = $smcFunc['db_query']('', '
 			SELECT value
 			FROM {db_prefix}settings

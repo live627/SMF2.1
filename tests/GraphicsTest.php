@@ -29,28 +29,28 @@ class GraphicsTest extends BaseTestCase
 	{
 		return array(
 			array(
-				'url' => 'https://images.pexels.com/photos/753626/pexels-photo-753626.jpeg',
-				'width' => 2000,
-				'height' => 1335,
-				'format' => IMAGETYPE_JPEG
+				'https://pbs.twimg.com/profile_banners/2420838708/1605797668/1080x360',
+				1080,
+				360,
+				IMAGETYPE_JPEG
 			),
 			array(
 				'url' => 'http://weblogs.us/images/weblogs.us.png',
-				'width' => 432,
-				'height' => 78,
-				'format' => IMAGETYPE_PNG
+				432,
+				78,
+				IMAGETYPE_PNG
 			),
 			array(
 				'url' => 'http://www.google.com/intl/en_ALL/images/logo.gif',
-				'width' => 276,
-				'height' => 110,
-				'format' => IMAGETYPE_GIF
+				276,
+				110,
+				IMAGETYPE_GIF
 			),
 			array(
 				'url' => 'https://raw.githubusercontent.com/recurser/exif-orientation-examples/master/Landscape_5.jpg',
-				'width' => 1200,
-				'height' => 1800,
-				'format' => IMAGETYPE_PNG
+				1200,
+				1800,
+				IMAGETYPE_PNG
 			)
 		);
 	}
