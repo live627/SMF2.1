@@ -9,24 +9,6 @@ services:
   - memcached
   - mysql
   - postgresql
-stages:
-  - File integrity
-  - test
-jobs:
-  include:
-    - stage: File integrity
-      before_install:
-       - git submodule foreach git pull origin master
-       - if php other/buildTools/check-signed-off.php travis | grep "Error:"; then php other/buildTools/check-signed-off.php travis; exit 1; fi
-       - if php other/buildTools/check-version.php | grep "Error:"; then exit 1; fi
-       - if find . -name "./Themes/default/languages/*.english.php" -exec php other/buildTools/check-smf-langauge.php {} 2>&1 \; | grep "Error:"; then exit 1; fi
-       - php other/check-eof.php > /dev/null
-       - php other/check-smf-license.php > /dev/null
-       - sh other/lint-php > /dev/null
-      install: skip
-      before_script: skip
-      script: skip
-      after_script: skip
 
 before_install:
   - sh -c "if [ '$DB' = 'postgres' ]; then psql -c 'CREATE DATABASE smf;' -U postgres; fi"
