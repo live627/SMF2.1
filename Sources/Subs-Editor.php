@@ -1538,7 +1538,7 @@ function create_control_richedit($editorOptions)
 		loadJavaScriptFile('jquery.sceditor.smf.js', array('minimize' => true), 'smf_sceditor_smf');
 
 		$scExtraLangs = '
-		$.sceditor.locale["' . $txt['lang_dictionary'] . '"] = {
+		sceditor.locale["' . $txt['lang_dictionary'] . '"] = {
 			"Width (optional):": "' . $editortxt['width'] . '",
 			"Height (optional):": "' . $editortxt['height'] . '",
 			"Insert": "' . $editortxt['insert'] . '",
@@ -1588,15 +1588,14 @@ function create_control_richedit($editorOptions)
 		'rich_value' => $editorOptions['value'], // 2.0 editor compatibility
 		'rich_active' => empty($modSettings['disable_wysiwyg']) && (!empty($options['wysiwyg_default']) || !empty($editorOptions['force_rich']) || !empty($_REQUEST[$editorOptions['id'] . '_mode'])),
 		'disable_smiley_box' => !empty($editorOptions['disable_smiley_box']),
-		'columns' => isset($editorOptions['columns']) ? $editorOptions['columns'] : 60,
-		'rows' => isset($editorOptions['rows']) ? $editorOptions['rows'] : 18,
-		'width' => isset($editorOptions['width']) ? $editorOptions['width'] : '70%',
-		'height' => isset($editorOptions['height']) ? $editorOptions['height'] : '175px',
-		'form' => isset($editorOptions['form']) ? $editorOptions['form'] : 'postmodify',
-		'bbc_level' => !empty($editorOptions['bbc_level']) ? $editorOptions['bbc_level'] : 'full',
-		'preview_type' => isset($editorOptions['preview_type']) ? (int) $editorOptions['preview_type'] : 1,
-		'labels' => !empty($editorOptions['labels']) ? $editorOptions['labels'] : array(),
-		'locale' => !empty($txt['lang_dictionary']) && $txt['lang_dictionary'] != 'en' ? $txt['lang_dictionary'] : '',
+		'columns' => $editorOptions['columns'] ?? 60,
+		'rows' => $editorOptions['rows'] ?? 18,
+		'width' => $editorOptions['width'] ?? '70%',
+		'height' => $editorOptions['height'] ?? '175px',
+		'form' => $editorOptions['form'] ?? 'postmodify',
+		'bbc_level' => $editorOptions['bbc_level'] ?? 'full',
+		'preview_type' => $editorOptions['preview_type'] ?? 1,
+		'labels' => $editorOptions['labels'] ?? [],
 		'required' => !empty($editorOptions['required']),
 	);
 
@@ -1902,23 +1901,21 @@ function create_control_richedit($editorOptions)
 		'height' => isset($editorOptions['height']) ? $editorOptions['height'] : '175px',
 		'style' => $settings[file_exists($settings['theme_dir'] . '/css/jquery.sceditor.default.css') ? 'theme_url' : 'default_theme_url'] . '/css/jquery.sceditor.default.css' . $context['browser_cache'],
 		'emoticonsCompat' => true,
+		'emoticons' => [],
+		'emoticonsDescriptions' => [],
+		'emoticonsEnabled' => false,
 		'colors' => 'black,maroon,brown,green,navy,grey,red,orange,teal,blue,white,hotpink,yellow,limegreen,purple',
 		'format' => 'bbcode',
-		'plugins' => '',
+		'plugins' => implode(',', $editorOptions['plugins'] ?? []),
 		'bbcodeTrim' => false,
-	);
-	if (!empty($context['controls']['richedit'][$editorOptions['id']]['locale']))
-		$sce_options['locale'] = $context['controls']['richedit'][$editorOptions['id']]['locale'];
-	if (!empty($context['right_to_left']))
-		$sce_options['rtl'] = true;
-	if ($editorOptions['id'] != 'quickReply')
-		$sce_options['autofocus'] = true;
+		'locale' => $txt['lang_dictionary'] ?? 'en',
+		'autofocus' => $editorOptions['id'] != 'quickReply',
+		'rtl' => !empty($context['right_to_left']),
+	) + $editorOptions['options'] ?? [];
 
-	$sce_options['emoticons'] = array();
-	$sce_options['emoticonsDescriptions'] = array();
-	$sce_options['emoticonsEnabled'] = false;
 	if ((!empty($context['smileys']['postform']) || !empty($context['smileys']['popup'])) && !$context['controls']['richedit'][$editorOptions['id']]['disable_smiley_box'])
 	{
+		$sce_options['emoticonsRoot'] = $settings['smileys_url'];
 		$sce_options['emoticonsEnabled'] = true;
 		$sce_options['emoticons']['dropdown'] = array();
 		$sce_options['emoticons']['popup'] = array();
@@ -1942,7 +1939,7 @@ function create_control_richedit($editorOptions)
 			{
 				foreach ($smileyRow['smileys'] as $smiley)
 				{
-					$smiley_location[$smiley['code']] = $settings['smileys_url'] . '/' . $smiley['filename'];
+					$smiley_location[$smiley['code']] = $smiley['filename'];
 					$sce_options['emoticonsDescriptions'][$smiley['code']] = $smiley['description'];
 				}
 
@@ -1970,7 +1967,7 @@ function create_control_richedit($editorOptions)
 		}
 	}
 
-	// Allow mods to change $sce_options. Usful if, e.g., a mod wants to add an SCEditor plugin.
+	// Allow mods to change $sce_options. Useful if, e.g., a mod wants to add an SCEditor plugin.
 	call_integration_hook('integrate_sceditor_options', array(&$sce_options));
 
 	$context['controls']['richedit'][$editorOptions['id']]['sce_options'] = $sce_options;

@@ -10,6 +10,26 @@
  */
 
 (function ($) {
+	var setCustomTextualCommands = function (cmds)
+	{
+		for (let cmd of cmds)
+		{
+			var obj = {
+				tooltip: cmd.description || cmd.code
+			};
+
+			// Legacy support for 2.0 BBC mods
+			if (cmd.before)
+			{
+				obj.exec = function ()
+				{
+					this.insertText(cmd.before, cmd.after);
+				};
+				obj.txtExec = [cmd.before, cmd.after];
+			}
+			sceditor.command.set(cmd.code, obj);
+		}
+	};
 	var extensionMethods = {
 		insertQuoteFast: function (messageid)
 		{
@@ -39,72 +59,46 @@
 				}
 			);
 		},
-		InsertText: function (text, bClear) {
-			if (bClear)
-				this.val('');
-
-			this.insert(text);
-		},
-		getText: function (filter) {
-			var current_value = '';
-
-			if (this.inSourceMode())
-				current_value = this.getSourceEditorValue(false);
-			else
-				current_value = this.getWysiwygEditorValue(filter);
-
-			return current_value;
-		},
-		appendEmoticon: function (code, emoticon, description) {
-			if (emoticon == '')
+		appendEmoticon: function (code, emoticon)
+		{
+			var base = this;
+			if (emoticon.newrow)
 				line.append($('<br>'));
-			else
-				line.append($('<img>')
-					.attr({
-						src: emoticon,
-						alt: code,
-						title: description,
-					})
-					.click(function (e) {
-						var	start = '', end = '';
 
-						if (base.opts.emoticonsCompat)
-						{
-							start = '<span> ';
-							end = ' </span>';
-						}
+			line.append($('<img>')
+				.attr({
+					src: base.opts.emoticonsRoot + emoticon.url,
+					alt: code,
+					title: emoticon.tooltip,
+				})
+				.click(function (e)
+				{
+					var	start = '', end = '';
 
-						if (base.inSourceMode())
-							base.sourceEditorInsertText(' ' + $(this).attr('alt') + ' ');
-						else
-							base.wysiwygEditorInsertHtml(start + '<img src="' + $(this).attr("src") + '" data-sceditor-emoticon="' + $(this).attr('alt') + '">' + end);
+					if (base.opts.emoticonsCompat)
+					{
+						start = '<span> ';
+						end = ' </span>';
+					}
 
-						e.preventDefault();
-					})
-				);
+					if (base.inSourceMode())
+						base.sourceEditorInsertText(' ' + $(this).attr('alt') + ' ');
+					else
+						base.wysiwygEditorInsertHtml(start + '<img src="' + $(this).attr("src") + '" data-sceditor-emoticon="' + $(this).attr('alt') + '">' + end);
+
+					e.preventDefault();
+				})
+			);
 		},
-		storeLastState: function (){
-			this.wasSource = this.inSourceMode();
-		},
-		setTextMode: function () {
-			if (!this.inSourceMode())
-				this.toggleSourceMode();
-		},
-		createPermanentDropDown: function () {
-			var emoticons = $.extend({}, this.opts.emoticons.dropdown);
-			var popup_exists = false;
+		createPermanentDropDown: function ()
+		{
+			var base = this;
+			var emoticons = base.opts.emoticons.dropdown;
 			content = $('<div class="sceditor-insertemoticon">');
 			line = $('<div>');
-			base = this;
 
-			for (smiley_popup in this.opts.emoticons.popup)
+			if (base.opts.emoticons.more)
 			{
-				popup_exists = true;
-				break;
-			}
-			if (popup_exists)
-			{
-				base.opts.emoticons.more = base.opts.emoticons.popup;
 				moreButton = $('<div class="sceditor-more-button sceditor-more button">').text(this._('More')).click(function () {
 					if ($(".sceditor-smileyPopup").length > 0)
 					{
@@ -112,7 +106,7 @@
 					}
 					else
 					{
-						var emoticons = $.extend({}, base.opts.emoticons.popup);
+						var emoticons = base.opts.emoticons.more;
 						var popup_position;
 						var titlebar = $('<div class="catbg sceditor-popup-grip"/>');
 						popupContent = $('<div id="sceditor-popup"/>');
@@ -125,21 +119,15 @@
 							$(".sceditor-smileyPopup").fadeOut('fast');
 						});
 
-						$.each(emoticons, function( code, emoticon ) {
-							base.appendEmoticon(code, emoticon, base.opts.emoticonsDescriptions[code]);
+						$.each(emoticons, function(code, emoticon)
+						{
+							base.appendEmoticon(code, emoticon);
 						});
 
 						if (line.children().length > 0)
 							popupContent.append(line);
 						if (typeof closeButton !== "undefined")
 							popupContent.append(closeButton);
-
-						// IE needs unselectable attr to stop it from unselecting the text in the editor.
-						// The editor can cope if IE does unselect the text it's just not nice.
-						if (base.ieUnselectable !== false) {
-							content = $(content);
-							content.find(':not(input,textarea)').filter(function () { return this.nodeType===1; }).attr('unselectable', 'on');
-						}
 
 						dropdownIgnoreLastClick = true;
 						adjheight = closeButton.height() + titlebar.height();
@@ -168,7 +156,7 @@
 				});
 			}
 			$.each(emoticons, function( code, emoticon ) {
-				base.appendEmoticon(code, emoticon, base.opts.emoticonsDescriptions[code]);
+				base.appendEmoticon(code, emoticon);
 			});
 			if (line.children().length > 0)
 				content.append(line);
@@ -181,7 +169,9 @@
 	var createFn = sceditor.create;
 	var isPatched = false;
 
-	sceditor.create = function (textarea, options) {
+	sceditor.create = function (textarea, options)
+	{
+		setCustomTextualCommands(options.customTextualCommands);
 		// Call the original create function
 		createFn(textarea, options);
 
@@ -190,7 +180,6 @@
 		var instance = sceditor.instance(textarea);
 		if (!isPatched && instance) {
 			sceditor.utils.extend(instance.constructor.prototype, extensionMethods);
-			window.addEventListener('beforeunload', instance.updateOriginal, false);
 
 			/*
 			 * Stop SCEditor from resizing the entire container. Long
