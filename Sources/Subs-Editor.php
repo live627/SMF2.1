@@ -1599,21 +1599,99 @@ function create_control_richedit($editorOptions)
 		'required' => !empty($editorOptions['required']),
 	);
 
-	if (empty($context['bbc_tags']))
+	$smileys = load_smilies(empty($editorOptions['disable_smiley_box']));
+
+	if ($editorOptions['id'] != 'quickReply')
+		$editorOptions['plugins'][] = 'quickReply';
+
+	if ($context['controls']['richedit'][$editorOptions['id']]['preview_type'] == 2)
+		$editorOptions['plugins'][] = 'xmlPreview';
+
+	// Set up the SCEditor options
+	$sce_options = array(
+		'width' => $editorOptions['width'] ?? '70%',
+		'height' => $editorOptions['height'] ?? '150px',
+		'style' => $settings[file_exists($settings['theme_dir'] . '/css/sceditorframe.css') ? 'theme_url' : 'default_theme_url'] . '/css/sceditorframe.css',
+		'autoUpdate' => true,
+		'emoticonsCompat' => true,
+		'emoticons' => [
+			'dropdown' => [],
+			'more' => [],
+		],
+		'emoticonsRoot' => $settings['smileys_url'] . '/',
+		'emoticonsEnabled' => !empty($smileys['postform']) || !empty($smileys['popup']),
+		'colors' => 'black,maroon,brown,green,navy,grey,red,orange,teal,blue,white,hotpink,yellow,limegreen,purple',
+		'format' => 'bbcode',
+		'plugins' => implode(',', $editorOptions['plugins'] ?? []),
+		'toolbar' => implode_recursive(['||', '|', ','], load_toolbar()),
+		'customTextualCommands' => $commands,
+		'startInSourceMode' => !$context['controls']['richedit'][$editorOptions['id']]['rich_active'],
+		'bbcodeTrim' => false,
+		'resizeWidth' => false,
+		'locale' => $txt['lang_dictionary'] ?? 'en',
+		'autofocus' => $editorOptions['id'] != 'quickReply',
+		'rtl' => !empty($context['right_to_left']),
+	) + $editorOptions['options'] ?? [];
+
+	if ($sce_options['emoticonsEnabled'])
 	{
-		// The below array makes it dead easy to add images to this control. Add it to the array and everything else is done for you!
-		// Note: 'before' and 'after' are deprecated as of SMF 2.1. Instead, use a separate JS file to configure the functionality of your toolbar buttons.
-		/*
-			array(
-				'code' => 'b', // Required
-				'description' => $editortxt['bold'], // Required
-				'image' => 'bold', // Optional
-				'before' => '[b]', // Deprecated
-				'after' => '[/b]', // Deprecated
-			),
-		*/
-		$context['bbc_tags'] = array();
-		$context['bbc_tags'][] = array(
+		$location_translations = array(
+			0 => 'dropdown',
+			2 => 'more',
+		);
+		$prevRowIndex = 0;
+		foreach ($smileys as $smiley)
+		{
+			$sce_options['emoticons'][$location_translations[$smiley['hidden']]][$smiley['code']] = [
+				'newRow' => $smiley['smiley_row'] != $prevRowIndex,
+				'url' => $smiley['filename'],
+				'tooltip' => $smcFunc['htmlspecialchars']($txt['icon_' . strtolower($smiley['description'])] ?? $smiley['description']),
+			];
+			$prevRowIndex = $smiley['smiley_row'];
+		}
+	}
+
+	// Allow mods to change $sce_options. Useful if, e.g., a mod wants to add an SCEditor plugin.
+	call_integration_hook('integrate_sceditor_options', array(&$sce_options));
+
+	$context['controls']['richedit'][$editorOptions['id']]['sce_options'] = $sce_options;
+}
+
+/**
+ * Recursively implodes an array
+ *
+ * @access  public
+ * @param   string[] $glue          list of values that glue elements together
+ * @param   string[] $pieces        multi-dimensional array to recursively implode
+ * @return  string   imploded array
+ */
+function implode_recursive(array $glue, array $pieces, int $counter = 0): string
+{
+	return implode(
+		$glue[$counter++],
+		array_map(function ($v) use ($glue, $counter) {
+			return is_array($v) ? implode_recursive($glue, $v, $counter) : $v;
+		}, $pieces)
+	);
+}
+
+function load_tags(): array
+{
+	global $modSettings, $editortxt;
+
+	// The below array makes it dead easy to add images to this control. Add it to the array and everything else is done for you!
+	// Note: 'before' and 'after' are deprecated as of SMF 2.1. Instead, use a separate JS file to configure the functionality of your toolbar buttons.
+	/*
+		array(
+			'code' => 'b', // Required
+			'description' => $editortxt['bold'], // Required
+			'image' => 'bold', // Optional
+			'before' => '[b]', // Deprecated
+			'after' => '[/b]', // Deprecated
+		),
+	*/
+	$bbc_tags = array(
+		array(
 			array(
 				'code' => 'bold',
 				'description' => $editortxt['bold'],
@@ -1672,15 +1750,12 @@ function create_control_richedit($editorOptions)
 				'code' => 'color',
 				'description' => $editortxt['font_color']
 			),
-		);
-		if (empty($modSettings['disable_wysiwyg']))
-		{
-			$context['bbc_tags'][count($context['bbc_tags']) - 1][] = array(
+			array(
 				'code' => 'removeformat',
 				'description' => $editortxt['remove_formatting'],
-			);
-		}
-		$context['bbc_tags'][] = array(
+			),
+		),
+		array(
 			array(
 				'code' => 'floatleft',
 				'description' => $editortxt['float_left']
@@ -1737,240 +1812,120 @@ function create_control_richedit($editorOptions)
 				'code' => 'maximize',
 				'description' => $editortxt['maximize']
 			),
-		);
-		if (empty($modSettings['disable_wysiwyg']))
-		{
-			$context['bbc_tags'][count($context['bbc_tags']) - 1][] = array(
+			array(
 				'code' => 'source',
 				'description' => $editortxt['view_source'],
-			);
-		}
+			),
+		),
+	);
 
-		$editor_tag_map = array(
-			'b' => 'bold',
-			'i' => 'italic',
-			'u' => 'underline',
-			's' => 'strike',
-			'img' => 'image',
-			'url' => 'link',
-			'sup' => 'superscript',
-			'sub' => 'subscript',
-			'hr' => 'horizontalrule',
-		);
+	return $bbc_tags;
+}
 
-		// Allow mods to modify BBC buttons.
-		// Note: passing the array here is not necessary and is deprecated, but it is kept for backward compatibility with 2.0
-		call_integration_hook('integrate_bbc_buttons', array(&$context['bbc_tags'], &$editor_tag_map));
+function load_toolbar(): array
+{
+	global $modSettings;
 
-		// Generate a list of buttons that shouldn't be shown - this should be the fastest way to do this.
-		$disabled_tags = array();
-		if (!empty($modSettings['disabledBBC']))
-			$disabled_tags = explode(',', $modSettings['disabledBBC']);
+	$editor_tag_map = array(
+		'b' => 'bold',
+		'i' => 'italic',
+		'u' => 'underline',
+		's' => 'strike',
+		'img' => 'image',
+		'url' => 'link',
+		'sup' => 'superscript',
+		'sub' => 'subscript',
+		'hr' => 'horizontalrule',
+	);
+	$bbc_tags = load_tags();
 
-		foreach ($disabled_tags as $tag)
-		{
-			$tag = trim($tag);
+	// Allow mods to modify BBC buttons.
+	call_integration_hook('integrate_bbc_buttons', array(&$bbc_tags, &$editor_tag_map));
 
-			if ($tag === 'list')
-			{
-				$context['disabled_tags']['bulletlist'] = true;
-				$context['disabled_tags']['orderedlist'] = true;
-			}
+	// Generate a list of buttons that shouldn't be shown - this should be the fastest way to do this.
+	$disabled_tags = empty($modSettings['disabledBBC']) ? [] : array_flip(explode(',', $modSettings['disabledBBC']));
 
-			foreach ($editor_tag_map as $thisTag => $tagNameBBC)
-				if ($tag === $thisTag)
-					$context['disabled_tags'][$tagNameBBC] = true;
-
-			$context['disabled_tags'][$tag] = true;
-		}
-
-		$bbcodes_styles = '';
-		$context['bbcodes_handlers'] = '';
-		$context['bbc_toolbar'] = array();
-
-		foreach ($context['bbc_tags'] as $row => $tagRow)
-		{
-			if (!isset($context['bbc_toolbar'][$row]))
-				$context['bbc_toolbar'][$row] = array();
-
-			$tagsRow = array();
-
-			foreach ($tagRow as $tag)
-			{
-				if ((!empty($tag['code'])) && empty($context['disabled_tags'][$tag['code']]))
-				{
-					$tagsRow[] = $tag['code'];
-
-					// If we have a custom button image, set it now.
-					if (isset($tag['image']))
-					{
-						$bbcodes_styles .= '
-						.sceditor-button-' . $tag['code'] . ' div {
-							background: url(\'' . $settings['default_theme_url'] . '/images/bbc/' . $tag['image'] . '.png\');
-						}';
-					}
-
-					// Set the tooltip and possibly the command info
-					$context['bbcodes_handlers'] .= '
-						sceditor.command.set(' . JavaScriptEscape($tag['code']) . ', {
-							tooltip: ' . JavaScriptEscape(isset($tag['description']) ? $tag['description'] : $tag['code']);
-
-					// Legacy support for 2.0 BBC mods
-					if (isset($tag['before']))
-					{
-						$context['bbcodes_handlers'] .= ',
-							exec: function () {
-								this.insertText(' . JavaScriptEscape($tag['before']) . (isset($tag['after']) ? ', ' . JavaScriptEscape($tag['after']) : '') . ');
-							},
-							txtExec: [' . JavaScriptEscape($tag['before']) . (isset($tag['after']) ? ', ' . JavaScriptEscape($tag['after']) : '') . ']';
-					}
-
-					$context['bbcodes_handlers'] .= '
-						});';
-				}
-				else
-				{
-					$context['bbc_toolbar'][$row][] = implode(',', $tagsRow);
-					$tagsRow = array();
-				}
-			}
-
-			if (!empty($tagsRow))
-				$context['bbc_toolbar'][$row][] = implode(',', $tagsRow);
-		}
-
-		if (!empty($bbcodes_styles))
-			addInlineCss($bbcodes_styles);
+	if (isset($disabled_tags['list']))
+	{
+		$disabled_tags['bulletlist'] = true;
+		$disabled_tags['orderedlist'] = true;
+	}
+	if (empty($modSettings['disable_wysiwyg']))
+	{
+		$disabled_tags['removeformat'] = true;
+		$disabled_tags['orderedlist'] = true;
 	}
 
-	// Initialize smiley array... if not loaded before.
-	if (empty($context['smileys']) && empty($editorOptions['disable_smiley_box']))
+	$styles = [];
+	$group = 0;
+	$commands = array();
+	$toolbar = array();
+	foreach ($bbc_tags as $row => $tagRow)
 	{
-		$context['smileys'] = array(
-			'postform' => array(),
-			'popup' => array(),
-		);
+		if (!isset($toolbar[$row]))
+			$toolbar[$row] = array();
 
-		if ($user_info['smiley_set'] != 'none')
+		foreach ($tagRow as $tag)
 		{
-			// Cache for longer when customized smiley codes aren't enabled
-			$cache_time = empty($modSettings['smiley_enable']) ? 7200 : 480;
-
-			if (($temp = cache_get_data('posting_smileys_' . $user_info['smiley_set'], $cache_time)) == null)
+			if (!empty($tag['code']) && !isset($disabled_tags[$tag['code']]))
 			{
-				$request = $smcFunc['db_query']('', '
-					SELECT s.code, f.filename, s.description, s.smiley_row, s.hidden
-					FROM {db_prefix}smileys AS s
-						JOIN {db_prefix}smiley_files AS f ON (s.id_smiley = f.id_smiley)
-					WHERE s.hidden IN (0, 2)
-						AND f.smiley_set = {string:smiley_set}' . (empty($modSettings['smiley_enable']) ? '
-						AND s.code IN ({array_string:default_codes})' : '') . '
-					ORDER BY s.smiley_row, s.smiley_order',
-					array(
-						'default_codes' => array('>:D', ':D', '::)', '>:(', ':))', ':)', ';)', ';D', ':(', ':o', '8)', ':P', '???', ':-[', ':-X', ':-*', ':\'(', ':-\\', '^-^', 'O0', 'C:-)', 'O:-)'),
-						'smiley_set' => $user_info['smiley_set'],
-					)
-				);
-				while ($row = $smcFunc['db_fetch_assoc']($request))
-				{
-					$row['description'] = !empty($txt['icon_' . strtolower($row['description'])]) ? $smcFunc['htmlspecialchars']($txt['icon_' . strtolower($row['description'])]) : $smcFunc['htmlspecialchars']($row['description']);
-
-					$context['smileys'][empty($row['hidden']) ? 'postform' : 'popup'][$row['smiley_row']]['smileys'][] = $row;
-				}
-				$smcFunc['db_free_result']($request);
-
-				foreach ($context['smileys'] as $section => $smileyRows)
-				{
-					foreach ($smileyRows as $rowIndex => $smileys)
-						$context['smileys'][$section][$rowIndex]['smileys'][count($smileys['smileys']) - 1]['isLast'] = true;
-
-					if (!empty($smileyRows))
-						$context['smileys'][$section][count($smileyRows) - 1]['isLast'] = true;
-				}
-
-				cache_put_data('posting_smileys_' . $user_info['smiley_set'], $context['smileys'], $cache_time);
+				$thisTag = $editor_tag_map[$tag['code']] ?? $tag['code'];
+				$toolbar[$row][$group][] = $thisTag;
+				$commands[] = [$thisTag, $tag['description'], $tag['before'], $tag['after'] ?? $tag['before']];
+				if (isset($tag['image']))
+					$styles .= '
+		.sceditor-button-' . $thisTag . ' div {
+			background: url(\'' . $settings['default_theme_url'] . '/images/bbc/' . $tag['image'] . '.gif\');
+		}';
 			}
 			else
-				$context['smileys'] = $temp;
+				$group++;
 		}
 	}
 
-	// Set up the SCEditor options
-	$sce_options = array(
-		'width' => isset($editorOptions['width']) ? $editorOptions['width'] : '100%',
-		'height' => isset($editorOptions['height']) ? $editorOptions['height'] : '175px',
-		'style' => $settings[file_exists($settings['theme_dir'] . '/css/jquery.sceditor.default.css') ? 'theme_url' : 'default_theme_url'] . '/css/jquery.sceditor.default.css' . $context['browser_cache'],
-		'emoticonsCompat' => true,
-		'emoticons' => [],
-		'emoticonsDescriptions' => [],
-		'emoticonsEnabled' => false,
-		'colors' => 'black,maroon,brown,green,navy,grey,red,orange,teal,blue,white,hotpink,yellow,limegreen,purple',
-		'format' => 'bbcode',
-		'plugins' => implode(',', $editorOptions['plugins'] ?? []),
-		'bbcodeTrim' => false,
-		'locale' => $txt['lang_dictionary'] ?? 'en',
-		'autofocus' => $editorOptions['id'] != 'quickReply',
-		'rtl' => !empty($context['right_to_left']),
-	) + $editorOptions['options'] ?? [];
+	if (!empty($styles))
+		addInlineCss($styles);
 
-	if ((!empty($context['smileys']['postform']) || !empty($context['smileys']['popup'])) && !$context['controls']['richedit'][$editorOptions['id']]['disable_smiley_box'])
+	return $toolbar;
+}
+
+function load_smilies(bool $disable_smiley_box): array
+{
+	global $modSettings, $smcFunc, $user_info;
+	static $smileys = [];
+
+	// Initialize smiley array... if not loaded before.
+	if (empty($smileys) && !$disable_smiley_box && $user_info['smiley_set'] != 'none')
 	{
-		$sce_options['emoticonsRoot'] = $settings['smileys_url'];
-		$sce_options['emoticonsEnabled'] = true;
-		$sce_options['emoticons']['dropdown'] = array();
-		$sce_options['emoticons']['popup'] = array();
+		// Cache for longer when customized smiley codes aren't enabled
+		$cache_time = empty($modSettings['smiley_enable']) ? 7200 : 480;
 
-		$countLocations = count($context['smileys']);
-		foreach ($context['smileys'] as $location => $smileyRows)
+		if (($temp = cache_get_data('posting_smileys_' . $user_info['smiley_set'], $cache_time)) == null)
 		{
-			$countLocations--;
+			$request = $smcFunc['db_query']('', '
+				SELECT s.code, f.filename, s.description, s.smiley_row, s.hidden
+				FROM {db_prefix}smileys AS s
+					JOIN {db_prefix}smiley_files AS f ON (s.id_smiley = f.id_smiley)
+				WHERE s.hidden IN (0, 2)
+					AND f.smiley_set = {string:smiley_set}' . (empty($modSettings['smiley_enable']) ? '
+					AND s.code IN ({array_string:default_codes})' : '') . '
+				ORDER BY s.smiley_row, s.smiley_order',
+				array(
+					'default_codes' => array('>:D', ':D', '::)', '>:(', ':))', ':)', ';)', ';D', ':(', ':o', '8)', ':P', '???', ':-[', ':-X', ':-*', ':\'(', ':-\\', '^-^', 'O0', 'C:-)', 'O:-)'),
+					'smiley_set' => $user_info['smiley_set'],
+				)
+			);
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+				$smileys[] = $row;
+			$smcFunc['db_free_result']($request);
 
-			unset($smiley_location);
-			if ($location == 'postform')
-				$smiley_location = &$sce_options['emoticons']['dropdown'];
-			elseif ($location == 'popup')
-				$smiley_location = &$sce_options['emoticons']['popup'];
-
-			$numRows = count($smileyRows);
-
-			// This is needed because otherwise the editor will remove all the duplicate (empty) keys and leave only 1 additional line
-			$emptyPlaceholder = 0;
-			foreach ($smileyRows as $smileyRow)
-			{
-				foreach ($smileyRow['smileys'] as $smiley)
-				{
-					$smiley_location[$smiley['code']] = $smiley['filename'];
-					$sce_options['emoticonsDescriptions'][$smiley['code']] = $smiley['description'];
-				}
-
-				if (empty($smileyRow['isLast']) && $numRows != 1)
-					$smiley_location['-' . $emptyPlaceholder++] = '';
-			}
+			cache_put_data('posting_smileys_' . $user_info['smiley_set'], $smileys, $cache_time);
 		}
+		else
+			$smileys = $temp;
 	}
 
-	$sce_options['toolbar'] = '';
-	$sce_options['parserOptions']['txtVars'] = [
-		'code' => $txt['code']
-	];
-	if (!empty($modSettings['enableBBC']))
-	{
-		$count_tags = count($context['bbc_tags']);
-		foreach ($context['bbc_toolbar'] as $i => $buttonRow)
-		{
-			$sce_options['toolbar'] .= implode('|', $buttonRow);
-
-			$count_tags--;
-
-			if (!empty($count_tags))
-				$sce_options['toolbar'] .= '||';
-		}
-	}
-
-	// Allow mods to change $sce_options. Useful if, e.g., a mod wants to add an SCEditor plugin.
-	call_integration_hook('integrate_sceditor_options', array(&$sce_options));
-
-	$context['controls']['richedit'][$editorOptions['id']]['sce_options'] = $sce_options;
+	return $smileys;
 }
 
 /**
