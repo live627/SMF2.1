@@ -754,12 +754,12 @@ class xmlArray
 class ftp_connection
 {
 	/**
-	 * @var string Holds the connection response
+	 * @var resource Holds the connection response
 	 */
 	public $connection;
 
 	/**
-	 * @var string Holds any errors
+	 * @var string|bool Holds any errors
 	 */
 	public $error;
 
@@ -769,7 +769,7 @@ class ftp_connection
 	public $last_message;
 
 	/**
-	 * @var boolean Whether or not this is a passive connection
+	 * @var array Whether or not this is a passive connection
 	 */
 	public $pasv;
 
@@ -783,11 +783,6 @@ class ftp_connection
 	 */
 	public function __construct($ftp_server, $ftp_port = 21, $ftp_user = 'anonymous', $ftp_pass = 'ftpclient@simplemachines.org')
 	{
-		// Initialize variables.
-		$this->connection = 'no_connection';
-		$this->error = false;
-		$this->pasv = array();
-
 		if ($ftp_server !== null)
 			$this->connect($ftp_server, $ftp_port, $ftp_user, $ftp_pass);
 	}
@@ -876,7 +871,7 @@ class ftp_connection
 	}
 
 	/**
-	 * Changes a files atrributes (chmod)
+	 * Changes a files attributes (chmod)
 	 *
 	 * @param string $ftp_file The file to CHMOD
 	 * @param int|string $chmod The value for the CHMOD operation
@@ -952,11 +947,14 @@ class ftp_connection
 	/**
 	 * Reads the response to the command from the server
 	 *
-	 * @param string $desired The desired response
+	 * @param int|int[] $desired The desired response
 	 * @return boolean Whether or not we got the desired response
 	 */
 	public function check_response($desired)
 	{
+		if (!is_array($desired))
+			$desired = array($desired);
+
 		// Wait for a response that isn't continued with -, but don't wait too long.
 		$time = time();
 		do
@@ -964,7 +962,7 @@ class ftp_connection
 		while ((strlen($this->last_message) < 4 || strpos($this->last_message, ' ') === 0 || strpos($this->last_message, ' ', 3) !== 3) && time() - $time < 5);
 
 		// Was the desired response returned?
-		return is_array($desired) ? in_array(substr($this->last_message, 0, 3), $desired) : substr($this->last_message, 0, 3) == $desired;
+		return in_array(substr($this->last_message, 0, 3), $desired);
 	}
 
 	/**
@@ -1026,7 +1024,7 @@ class ftp_connection
 
 		// Okay, now we connect to the data port.  If it doesn't work out, it's probably "file already exists", etc.
 		$fp = @fsockopen($this->pasv['ip'], $this->pasv['port'], $err, $err, 5);
-		if (!$fp || !$this->check_response(150))
+		if ($fp === false || !$this->check_response(150))
 		{
 			$this->error = 'bad_file';
 			@fclose($fp);
@@ -1048,8 +1046,8 @@ class ftp_connection
 	 * Generates a directory listing for the current directory
 	 *
 	 * @param string $ftp_path The path to the directory
-	 * @param bool $search Whether or not to get a recursive directory listing
-	 * @return string|boolean The results of the command or false if unsuccessful
+	 * @param string|boolean $search Whether or not to get a recursive directory listing
+	 * @return false|string The results of the command or false if unsuccessful
 	 */
 	public function list_dir($ftp_path = '', $search = false)
 	{
@@ -1057,7 +1055,7 @@ class ftp_connection
 		if (!is_resource($this->connection))
 			return false;
 
-		// Passive... non-agressive...
+		// Passive... non-aggressive...
 		if (!$this->passive())
 			return false;
 
@@ -1066,7 +1064,7 @@ class ftp_connection
 
 		// Connect, assuming we've got a connection.
 		$fp = @fsockopen($this->pasv['ip'], $this->pasv['port'], $err, $err, 5);
-		if (!$fp || !$this->check_response(array(150, 125)))
+		if ($fp === false || !$this->check_response(array(150, 125)))
 		{
 			$this->error = 'bad_response';
 			@fclose($fp);
@@ -1093,8 +1091,8 @@ class ftp_connection
 	 * Determines the current directory we are in
 	 *
 	 * @param string $file The name of a file
-	 * @param string $listing A directory listing or null to generate one
-	 * @return string|boolean The name of the file or false if it wasn't found
+	 * @param string|null $listing  A directory listing or null to generate one
+	 * @return string|false The name of the file or false if it wasn't found
 	 */
 	public function locate($file, $listing = null)
 	{
@@ -1163,7 +1161,7 @@ class ftp_connection
 	 * Detects the current path
 	 *
 	 * @param string $filesystem_path The full path from the filesystem
-	 * @param string $lookup_file The name of a file in the specified path
+	 * @param string|null $lookup_file The name of a file in the specified path
 	 * @return array An array of detected info - username, path from FTP root and whether or not the current path was found
 	 */
 	public function detect_path($filesystem_path, $lookup_file = null)
@@ -1200,9 +1198,9 @@ class ftp_connection
 				$lookup_file = $_SERVER['PHP_SELF'];
 
 			$found_path = dirname($this->locate('*' . basename(dirname($lookup_file)) . '/' . basename($lookup_file), $data));
-			if ($found_path == false)
+			if ($found_path === false)
 				$found_path = dirname($this->locate(basename($lookup_file)));
-			if ($found_path != false)
+			if ($found_path !== false)
 				$path = $found_path;
 		}
 		elseif (is_resource($this->connection))

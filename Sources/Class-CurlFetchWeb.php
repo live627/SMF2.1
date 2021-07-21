@@ -216,9 +216,10 @@ class curl_fetch_web_data
 		}
 
 		// Initialize the curl object and make the call
-		$cr = curl_init();
-		curl_setopt_array($cr, $this->options);
-		curl_exec($cr);
+		if (($cr = curl_init()) !== false)
+		{
+			curl_setopt_array($cr, $this->options);
+			curl_exec($cr);
 
 		// Get what was returned
 		$curl_info = curl_getinfo($cr);
@@ -244,22 +245,23 @@ class curl_fetch_web_data
 			curl_close($cr);
 		}
 
-		// store this 'loops' data, someone may want all of these :O
-		$this->response[] = array(
-			'url' => $url,
-			'code' => $http_code,
-			'error' => $error,
-			'headers' => isset($this->headers) ? $this->headers : false,
-			'body' => $body,
-			'size' => $curl_info['download_content_length'],
-		);
+			// store this 'loops' data, someone may want all of these :O
+			$this->response[] = array(
+				'url' => $url,
+				'code' => $http_code,
+				'error' => $error,
+				'headers' => isset($this->headers) ? $this->headers : false,
+				'body' => $body,
+				'size' => $curl_info['download_content_length'],
+			);
 
-		// If this a redirect with a location header and we have not given up, then do it again
-		if (preg_match('~30[127]~i', $http_code) === 1 && $this->headers['location'] != '' && $this->current_redirect <= $this->max_redirect)
-		{
-			$this->current_redirect++;
-			$header_location = $this->get_redirect_url($url, $this->headers['location']);
-			$this->redirect($header_location, $url);
+			// If this a redirect with a location header and we have not given up, then do it again
+			if (preg_match('~30[127]~i', $http_code) === 1 && $this->headers['location'] != '' && $this->current_redirect <= $this->max_redirect)
+			{
+				$this->current_redirect++;
+				$header_location = $this->get_redirect_url($url, $this->headers['location']);
+				$this->redirect($header_location, $url);
+			}
 		}
 	}
 

@@ -87,12 +87,8 @@ $databases = array(
 			global $db_connection;
 			$request = pg_query($db_connection, 'SHOW SERVER_ENCODING');
 
-			list ($charcode) = pg_fetch_row($request);
-
-			if ($charcode == 'UTF8')
-				return true;
-			else
-				return false;
+			echo $version;
+			return $version;
 		},
 		'utf8_version' => '8.0',
 		'utf8_version_check' => function (){
@@ -151,29 +147,83 @@ $incontext['current_step'] = isset($_GET['step']) ? (int) $_GET['step'] : 0;
 // Loop through all the steps doing each one as required.
 $incontext['overall_percent'] = 0;
 
-foreach ($incontext['steps'] as $num => $step)
+if ('cli' === PHP_SAPI)
 {
-	if ($num >= $incontext['current_step'])
+	$options = getopt('n:u:p:e', ['dbtype:', 'dbserver:', 'dbuser:', 'dbpass:', 'dbname:', 'dbprefix:', 'boardurl:']);
+
+	if (isset($options['u'], $options['p'], $options['dbname'], $options['dbuser']))
 	{
-		// The current weight of this step in terms of overall progress.
-		$incontext['step_weight'] = $step[3];
-		// Make sure we reset the skip button.
-		$incontext['skip'] = false;
+		$_POST = array(
+			'contbutt' => '1',
+			'mbname' => $options['n'] ?? 'My Community',
+			'boardurl' => $options['boardurl'] ?? 'http://127.0.0.1/smf',
+			'username' => $options['u'],
+			'password1' => $options['p'],
+			'password2' => $options['p'],
+			'email' => $options['e'] ?? 'noreply@myserver.com',
+			'server_email' => $options['e'] ?? 'noreply@myserver.com',
+			'db_type' => $options['dbtype'] ?? 'mysql',
+			'db_name' => $options['dbname'],
+			'db_user' => $options['dbuser'],
+			'db_passwd' => isset($options['dbpass']) ? $options['dbpass'] : '',
+			'db_server' => $options['dbserver'] ?? '127.0.0.1',
+			'db_prefix' => $options['dbprefix'] ?? 'smf_',
+		);
+		foreach ($incontext['steps'] as $num => $step)
+		{
+			if ($step[2] != 'DeleteInstalll')
+			{
+				$step[2]();
 
-		// Call the step and if it returns false that means pause!
-		if (function_exists($step[2]) && $step[2]() === false)
-			break;
-		elseif (function_exists($step[2]))
-			$incontext['current_step']++;
+				if (!empty($incontext['error']))
+					throw new Error($incontext['error']);
+				if (!empty($incontext['warning']))
+					echo $incontext['warning'], "\n\n";
+				if (!empty($incontext['sql_results']))
+				{
+					echo implode("\n", $incontext['sql_results']), "\n\n";
 
-		// No warnings pass on.
-		$incontext['warning'] = '';
+					if (!empty($incontext['failures']))
+					{
+						$e = $txt['error_db_queries'];
+
+						foreach ($incontext['failures'] as $line => $fail)
+							$e .= sprintf("%s%d\n\n: %s", $txt['error_db_queries_line'], $line + 1, $fail);
+
+						throw new Error($e);
+					}
+					unset($incontext['sql_results']);
+				}
+			}
+		}
 	}
-	$incontext['overall_percent'] += $step[3];
 }
+else
+{
+	foreach ($incontext['steps'] as $num => $step)
+	{
+		if ($num >= $incontext['current_step'])
+		{
+			// The current weight of this step in terms of overall progress.
+			$incontext['step_weight'] = $step[3];
+			// Make sure we reset the skip button.
+			$incontext['skip'] = false;
 
-// Actually do the template stuff.
-installExit();
+			// Call the step and if it returns false that means pause!
+			if (function_exists($step[2]) && $step[2]() === false)
+				break;
+			elseif (function_exists($step[2]))
+				$incontext['current_step']++;
+
+			// No warnings pass on.
+			$incontext['warning'] = '';
+		}
+		$incontext['overall_percent'] += $step[3];
+	}
+
+	// Actually do the template stuff.
+	installExit();
+}
 
 function initialize_inputs()
 {
@@ -199,8 +249,6 @@ function initialize_inputs()
 
 	if (!isset($_GET['obgz']))
 	{
-		ob_start();
-
 		if (ini_get('session.save_handler') == 'user')
 			@ini_set('session.save_handler', 'files');
 		if (function_exists('session_start'))
@@ -208,8 +256,6 @@ function initialize_inputs()
 	}
 	else
 	{
-		ob_start('ob_gzhandler');
-
 		if (ini_get('session.save_handler') == 'user')
 			@ini_set('session.save_handler', 'files');
 		session_start();
@@ -436,25 +482,12 @@ function installExit($fallThrough = false)
 		// The top install bit.
 		template_install_above();
 
-		// Call the template.
-		if (isset($incontext['sub_template']))
-		{
-			$incontext['form_url'] = $installurl . '?step=' . $incontext['current_step'];
+		$incontext['form_url'] = $installurl . '?step=' . $incontext['current_step'];
 
-			call_user_func('template_' . $incontext['sub_template']);
-		}
-		// @todo REMOVE THIS!!
-		else
-		{
-			if (function_exists('doStep' . $_GET['step']))
-				call_user_func('doStep' . $_GET['step']);
-		}
-		// Show the footer.
+		call_user_func('template_' . $incontext['sub_template']);
+
 		template_install_below();
 	}
-
-	// Bang - gone!
-	die();
 }
 
 function Welcome()
@@ -969,9 +1002,7 @@ function ForumSettings()
 	if (isset($_POST['db_type'], $databases[$_POST['db_type']]))
 		$db_type = $_POST['db_type'];
 
-	// Else we'd better be able to get the connection.
-	else
-		load_database();
+	load_database();
 
 	$db_type = isset($_POST['db_type']) ? $_POST['db_type'] : $db_type;
 
@@ -994,7 +1025,7 @@ function ForumSettings()
 	$incontext['continue'] = 1;
 
 	// Check Postgres setting
-	if ( $db_type === 'postgresql')
+	if ($db_type === 'postgresql')
 	{
 		load_database();
 		$result = $smcFunc['db_query']('', '
@@ -1008,7 +1039,7 @@ function ForumSettings()
 		{
 			$row = $smcFunc['db_fetch_assoc']($result);
 			if ($row['standard_conforming_strings'] !== 'on')
-				{
+			{
 					$incontext['continue'] = 0;
 					$incontext['error'] = $txt['error_pg_scs'];
 				}
