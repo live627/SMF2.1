@@ -9,7 +9,12 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require-dev": {
-        "simplemachines/build-tools": "dev-master"
+        "simplemachines/build-tools": "dev-master",
+        "phpunit/phpunit": "^8.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "PHPTDD\\": "tests"
     },
     "config": {
         "platform": {

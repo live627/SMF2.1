@@ -1230,25 +1230,16 @@ function getTreeOrder()
 {
 	global $smcFunc;
 
-	static $tree_order = array(
+	$tree_order = array(
 		'cats' => array(),
 		'boards' => array(),
 	);
 
-	if (!empty($tree_order['boards']))
-		return $tree_order;
-
-	if (($cached = cache_get_data('board_order', 86400)) !== null)
-	{
-		$tree_order = $cached;
-		return $cached;
-	}
-
 	$request = $smcFunc['db_query']('', '
 		SELECT b.id_board, b.id_cat
-		FROM {db_prefix}categories AS c
-			JOIN {db_prefix}boards AS b ON (b.id_cat = c.id_cat)
-		ORDER BY c.cat_order, b.board_order'
+		FROM {db_prefix}boards AS b
+		ORDER BY b.board_order',
+		array()
 	);
 
 	foreach ($smcFunc['db_fetch_all']($request) as $row)

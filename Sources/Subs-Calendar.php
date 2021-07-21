@@ -1702,7 +1702,7 @@ function setEventStartEnd($eventOptions = array())
 function buildEventDatetimes($row)
 {
 	global $sourcedir, $user_info, $txt;
-	static $date_format = '', $time_format = '';
+	$date_format = ''; $time_format = '';
 
 	require_once($sourcedir . '/Subs.php');
 	static $timezone_array = array();

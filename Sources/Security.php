@@ -1164,7 +1164,7 @@ function boardsAllowedTo($permissions, $check_access = true, $simple = true)
  * @param boolean $only_return_result Whether you want the function to die with a fatal_lang_error.
  * @return bool Whether they've posted within the limit
  */
-function spamProtection($error_type, $only_return_result = false)
+function spamProtection($error_type, $only_return_result = true)
 {
 	global $modSettings, $user_info, $smcFunc;
 

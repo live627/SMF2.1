@@ -51,26 +51,7 @@ function deleteMembers($users, $check_not_admin = false)
 	// Make sure there's no void user in here.
 	$users = array_diff($users, array(0));
 
-	// How many are they deleting?
-	if (empty($users))
-		return;
-	elseif (count($users) == 1)
-	{
-		list ($user) = $users;
-
-		if ($user == $user_info['id'])
-			isAllowedTo('profile_remove_own');
-		else
-			isAllowedTo('profile_remove_any');
-	}
-	else
-	{
-		foreach ($users as $k => $v)
-			$users[$k] = (int) $v;
-
-		// Deleting more than one?  You can't have more than one account...
-		isAllowedTo('profile_remove_any');
-	}
+	// How many are they de 
 
 	// Get their names for logging purposes.
 	$request = $smcFunc['db_query']('', '
@@ -593,7 +574,7 @@ function registerMember(&$regOptions, $return_errors = false)
 	$regOptions['register_vars'] = array(
 		'member_name' => $regOptions['username'],
 		'email_address' => $regOptions['email'],
-		'passwd' => hash_password($regOptions['username'], $regOptions['password']),
+		'passwd' => '', // hash_password($regOptions['username'], $regOptions['password']),
 		'password_salt' => bin2hex($smcFunc['random_bytes'](16)),
 		'posts' => 0,
 		'date_registered' => time(),
@@ -775,7 +756,7 @@ function registerMember(&$regOptions, $return_errors = false)
 
 			$emaildata = loadEmailTemplate($email_message, $replacements);
 
-			sendmail($regOptions['email'], $emaildata['subject'], $emaildata['body'], null, $email_message . $memberID, $emaildata['is_html'], 0);
+			// sendmail($regOptions['email'], $emaildata['subject'], $emaildata['body'], null, $email_message . $memberID, $emaildata['is_html'], 0);
 		}
 
 		// All admins are finished here.
@@ -875,7 +856,7 @@ function isReservedName($name, $current_id_member = 0, $is_name = true, $fatal =
 	$checkName = $smcFunc['strtolower']($name);
 
 	// Administrators are never restricted ;).
-	if (!allowedTo('moderate_forum') && ((!empty($modSettings['reserveName']) && $is_name) || !empty($modSettings['reserveUser']) && !$is_name))
+//	if (!allowedTo('moderate_forum') && ((!empty($modSettings['reserveName']) && $is_name) || !empty($modSettings['reserveUser']) && !$is_name))
 	{
 		$reservedNames = explode("\n", $modSettings['reserveNames']);
 		// Case sensitive check?

@@ -42,7 +42,7 @@ function reloadSettings()
 	loadCacheAccelerator();
 
 	// Try to load it from the cache first; it'll never get cached if the setting is off.
-	if (($modSettings = cache_get_data('modSettings', 90)) == null)
+	if (($modSettings = cache_get_data('modSettings', 90)) === null)
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT variable, value
@@ -88,8 +88,7 @@ function reloadSettings()
 		if (file_exists($boarddir . '/upgrade.php'))
 			header('location: ' . $boardurl . '/upgrade.php');
 
-		die('SMF file version (' . SMF_VERSION . ') does not match SMF database version (' . $modSettings['smfVersion'] . ').<br>Run the SMF upgrader to fix this.<br><a href="https://wiki.simplemachines.org/smf/Upgrading">More information</a>.');
-	}
+ 	}
 
 	$modSettings['cache_enable'] = $cache_enable;
 
@@ -179,7 +178,7 @@ function reloadSettings()
 		{
 			return strlen(preg_replace('~' . $ent_list . ($utf8 ? '|.~u' : '~'), '_', $ent_check($string)));
 		},
-		'strpos' => function($haystack, $needle, $offset = 0) use ($utf8, $ent_check, $ent_list, $modSettings)
+		'strpos' => function($haystack, $needle, $offset = 0) use ($utf8, $ent_check, $ent_list)
 		{
 			$haystack_arr = preg_split('~(' . $ent_list . '|.)~' . ($utf8 ? 'u' : ''), $ent_check($haystack), -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
@@ -204,7 +203,7 @@ function reloadSettings()
 				return false;
 			}
 		},
-		'substr' => function($string, $start, $length = null) use ($utf8, $ent_check, $ent_list, $modSettings)
+		'substr' => function($string, $start, $length = null) use ($utf8, $ent_check, $ent_list)
 		{
 			$ent_arr = preg_split('~(' . $ent_list . '|.)~' . ($utf8 ? 'u' : '') . '', $ent_check($string), -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 			return $length === null ? implode('', array_slice($ent_arr, $start)) : implode('', array_slice($ent_arr, $start, $length));
@@ -369,7 +368,7 @@ function reloadSettings()
 	// Check the load averages?
 	if (!empty($modSettings['loadavg_enable']))
 	{
-		if (($modSettings['load_average'] = cache_get_data('loadavg', 90)) == null)
+		if (($modSettings['load_average'] = cache_get_data('loadavg', 90)) === null)
 		{
 			$modSettings['load_average'] = @file_get_contents('/proc/loadavg');
 			if (!empty($modSettings['load_average']) && preg_match('~^([^ ]+?) ([^ ]+?) ([^ ]+)~', $modSettings['load_average'], $matches) != 0)
@@ -595,7 +594,7 @@ function loadUserSettings()
 	if ($id_member != 0)
 	{
 		// Is the member data cached?
-		if (empty($cache_enable) || $cache_enable < 2 || ($user_settings = cache_get_data('user_settings-' . $id_member, 60)) == null)
+		if (empty($cache_enable) || $cache_enable < 2 || ($user_settings = cache_get_data('user_settings-' . $id_member, 60)) === null)
 		{
 			$request = $smcFunc['db_query']('', '
 				SELECT mem.*, COALESCE(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, a.width AS "attachment_width", a.height AS "attachment_height"
@@ -699,6 +698,7 @@ function loadUserSettings()
 		// Are we forcing 2FA? Need to check if the user groups actually require 2FA
 		elseif ($force_tfasetup)
 		{
+			$total = 1;
 			if ($modSettings['tfa_mode'] == 2) //only do this if we are just forcing SOME membergroups
 			{
 				//Build an array of ALL user membergroups.
@@ -711,7 +711,7 @@ function loadUserSettings()
 
 				//Find out if any group requires 2FA
 				$request = $smcFunc['db_query']('', '
-					SELECT COUNT(id_group) AS total
+					SELECT COUNT(id_group)
 					FROM {db_prefix}membergroups
 					WHERE tfa_required = {int:tfa_required}
 						AND id_group IN ({array_int:full_groups})',
@@ -720,16 +720,14 @@ function loadUserSettings()
 						'full_groups' => $full_groups,
 					)
 				);
-				$row = $smcFunc['db_fetch_assoc']($request);
+				list ($total) = $smcFunc['db_fetch_row']($request);
 				$smcFunc['db_free_result']($request);
 			}
-			else
-				$row['total'] = 1; //simplifies logics in the next "if"
 
 			$area = !empty($_REQUEST['area']) ? $_REQUEST['area'] : '';
 			$action = !empty($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
-			if ($row['total'] > 0 && !in_array($action, array('profile', 'logout')) || ($action == 'profile' && $area != 'tfasetup'))
+			if (($total > 0 && !in_array($action, array('profile', 'logout'))) || ($action == 'profile' && $area != 'tfasetup'))
 				redirectexit('action=profile;area=tfasetup;forced');
 		}
 	}
@@ -1397,20 +1395,21 @@ function loadPermissions()
 		if ($user_info['possibly_robot'])
 			$cache_groups .= '-spider';
 
-		if ($cache_enable >= 2 && !empty($board) && ($temp = cache_get_data('permissions:' . $cache_groups . ':' . $board, 240)) != null && time() - 240 > $modSettings['settings_updated'])
+		if ($cache_enable >= 2 && !empty($board) && ($temp = cache_get_data('permissions:' . $cache_groups . ':' . $board, 240)) !== null && time() - 240 > $modSettings['settings_updated'])
 		{
 			list ($user_info['permissions']) = $temp;
 			banPermissions();
 
 			return;
 		}
-		elseif (($temp = cache_get_data('permissions:' . $cache_groups, 240)) != null && time() - 240 > $modSettings['settings_updated'])
+		elseif (($temp = cache_get_data('permissions:' . $cache_groups, 240)) !== null && time() - 240 > $modSettings['settings_updated'])
 			list ($user_info['permissions'], $removals) = $temp;
 	}
 
 	// If it is detected as a robot, and we are restricting permissions as a special group - then implement this.
 	$spider_restrict = $user_info['possibly_robot'] && !empty($modSettings['spider_group']) ? ' OR (id_group = {int:spider_group} AND add_deny = 0)' : '';
 
+	$removals = array();
 	if (empty($user_info['permissions']))
 	{
 		// Get the general permissions.
@@ -1499,17 +1498,19 @@ function loadPermissions()
 }
 
 /**
- * Loads an array of users' data by ID or member_name.
+ * Loads user data, either by id or member_name, and can load one or many users' data together.
  *
- * @param array|string $users An array of users by id or name or a single username/id
- * @param bool $is_name Whether $users contains names
- * @param string $set What kind of data to load (normal, profile, minimal)
+ * User data is loaded with minimal processing into the global `$user_profiles` array, keyed by user id.
+ *
+ * @param mixed $users This can be either a single value or an array, representing a single user or multiple users.
+ * @param bool $is_name If this parameter is true, treat the value(s) in `$users` as user names, otherwise they are numeric user ids.
+ * @param string $set Complexity of data to load, from `minimal`, `normal`, `profile`, each successively increasing in complexity.
  * @return array The ids of the members loaded
  */
 function loadMemberData($users, $is_name = false, $set = 'normal')
 {
 	global $user_profile, $modSettings, $board_info, $smcFunc, $context;
-	global $user_info, $cache_enable, $txt;
+	global $user_info, $cache_enable;
 
 	// Can't just look for no users :P.
 	if (empty($users))
@@ -1528,7 +1529,7 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 		for ($i = 0, $n = count($users); $i < $n; $i++)
 		{
 			$data = cache_get_data('member_data-' . $set . '-' . $users[$i], 240);
-			if ($data == null)
+			if ($data === null)
 				continue;
 
 			$loaded_ids[] = $data['id_member'];
@@ -1663,7 +1664,7 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 	// Are we loading any moderators?  If so, fix their group data...
 	if (!empty($loaded_ids) && (!empty($board_info['moderators']) || !empty($board_info['moderator_groups'])) && $set === 'normal' && count($temp_mods = array_merge(array_intersect($loaded_ids, array_keys($board_info['moderators'])), $additional_mods)) !== 0)
 	{
-		if (($row = cache_get_data('moderator_group_info', 480)) == null)
+		if (($row = cache_get_data('moderator_group_info', 480)) === null)
 		{
 			$request = $smcFunc['db_query']('', '
 				SELECT group_name AS member_group, online_color AS member_group_color, icons
@@ -1698,22 +1699,23 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 }
 
 /**
- * Loads the user's basic values... meant for template/theme usage.
+ * Processes all the data previously loaded by {@link loadMemberData()} into a form more readily usable for SMF.
+ *
+ * The results are stored in the global `$memberContext` array, keyed by user id.
  *
  * @param int $user The ID of a user previously loaded by {@link loadMemberData()}
  * @param bool $display_custom_fields Whether or not to display custom profile fields
- * @return boolean|array  False if the data wasn't loaded or the loaded data.
- * @throws Exception
+ * @return bool Whether or not the data was loaded successfully
  */
 function loadMemberContext($user, $display_custom_fields = false)
 {
 	global $memberContext, $user_profile, $txt, $scripturl, $user_info;
 	global $context, $modSettings, $settings, $smcFunc;
-	static $already_loaded_custom_fields = array();
+	static $dataLoaded = array();
 	static $loadedLanguages = array();
 
 	// If this person's data is already loaded, skip it.
-	if (!empty($memberContext[$user]) && !empty($already_loaded_custom_fields[$user]) >= $display_custom_fields)
+	if (isset($dataLoaded[$user]))
 		return $memberContext[$user];
 
 	// We can't load guests or members not loaded by loadMemberData()!
@@ -2101,12 +2103,12 @@ function loadTheme($id_theme = 0, $initialize = true)
 	{
 		$member = empty($user_info['id']) ? -1 : $user_info['id'];
 
-		if (!empty($cache_enable) && $cache_enable >= 2 && ($temp = cache_get_data('theme_settings-' . $id_theme . ':' . $member, 60)) != null && time() - 60 > $modSettings['settings_updated'])
+		if (!empty($cache_enable) && $cache_enable >= 2 && ($temp = cache_get_data('theme_settings-' . $id_theme . ':' . $member, 60)) !== null && time() - 60 > $modSettings['settings_updated'])
 		{
 			$themeData = $temp;
 			$flag = true;
 		}
-		elseif (($temp = cache_get_data('theme_settings-' . $id_theme, 90)) != null && time() - 60 > $modSettings['settings_updated'])
+		elseif (($temp = cache_get_data('theme_settings-' . $id_theme, 90)) !== null && time() - 60 > $modSettings['settings_updated'])
 			$themeData = $temp + array($member => array());
 		else
 			$themeData = array(-1 => array(), 0 => array(), $member => array());
@@ -2698,7 +2700,7 @@ function loadTheme($id_theme = 0, $initialize = true)
  *  - detects a wrong default theme directory and tries to work around it.
  *
  * @uses template_include() to include the file.
- * @param string $template_name The name of the template to load
+ * @param string|false $template_name The name of the template to load
  * @param array|string $style_sheets The name of a single stylesheet or an array of names of stylesheets to load
  * @param bool $fatal If true, dies with an error message if the template cannot be found
  * @return boolean Whether or not the template was loaded
@@ -2727,7 +2729,7 @@ function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
 		if (file_exists($template_dir . '/' . $template_name . '.template.php'))
 		{
 			$loaded = true;
-			template_include($template_dir . '/' . $template_name . '.template.php', true);
+			//template_include($template_dir . '/' . $template_name . '.template.php', true);
 			break;
 		}
 	}
@@ -2777,7 +2779,7 @@ function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
  * @todo get rid of reading $_REQUEST directly
  *
  * @param string $sub_template_name The name of the sub-template to load
- * @param bool $fatal Whether to die with an error if the sub-template can't be loaded
+ * @param bool|string $fatal Whether to die with an error if the sub-template can't be loaded
  */
 function loadSubTemplate($sub_template_name, $fatal = false)
 {
@@ -2793,7 +2795,7 @@ function loadSubTemplate($sub_template_name, $fatal = false)
 	elseif ($fatal === false)
 		fatal_lang_error('theme_template_error', 'template', array((string) $sub_template_name));
 	elseif ($fatal !== 'ignore')
-		die(log_error(sprintf(isset($txt['theme_template_error']) ? $txt['theme_template_error'] : 'Unable to load the %s sub template!', (string) $sub_template_name), 'template'));
+		fatal_error(sprintf(isset($txt['theme_template_error']) ? $txt['theme_template_error'] : 'Unable to load the %s sub template!', (string) $sub_template_name), 'template');
 
 	// Are we showing debugging for templates?  Just make sure not to do it before the doctype...
 	if (allowedTo('admin_forum') && isset($_REQUEST['debug']) && !in_array($sub_template_name, array('init', 'main_below')) && ob_get_length() > 0 && !isset($_REQUEST['xml']))
@@ -3326,7 +3328,7 @@ function getLanguages($use_cache = true)
 	global $context, $smcFunc, $settings, $modSettings, $cache_enable;
 
 	// Either we don't use the cache, or its expired.
-	if (!$use_cache || ($context['languages'] = cache_get_data('known_languages', !empty($cache_enable) && $cache_enable < 1 ? 86400 : 3600)) == null)
+	if (!$use_cache || ($context['languages'] = cache_get_data('known_languages', !empty($cache_enable) && $cache_enable < 1 ? 86400 : 3600)) === null)
 	{
 		// If we don't have our ucwords function defined yet, let's load the settings data.
 		if (empty($smcFunc['ucwords']))
@@ -3443,7 +3445,7 @@ function censorText(&$text, $force = false)
 	call_integration_hook('integrate_word_censor', array(&$text));
 
 	// If they haven't yet been loaded, load them.
-	if ($censor_vulgar == null)
+	//if ($censor_vulgar == null)
 	{
 		$censor_vulgar = explode("\n", $modSettings['censor_vulgar']);
 		$censor_proper = explode("\n", $modSettings['censor_proper']);

@@ -1163,20 +1163,10 @@ function showCodeImage($code)
 	}
 
 	// Show the image.
-	if (function_exists('imagegif'))
-	{
-		header('content-type: image/gif');
-		imagegif($code_image);
-	}
-	else
-	{
-		header('content-type: image/png');
-		imagepng($code_image);
-	}
+	imagegif($code_image);
 
 	// Bail out.
 	imagedestroy($code_image);
-	die();
 }
 
 /**

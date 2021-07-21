@@ -1,0 +1,31 @@
+language: php
+
+php:
+  - 7.2
+env:
+  - DB=mysql
+services:
+  - memcached
+  - mysql
+  - postgresql
+
+before_install:
+  - sh -c "if [ '$DB' = 'postgres' ]; then psql -c 'CREATE DATABASE smf;' -U postgres; fi"
+  - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE smf;'; fi"
+  - phpenv config-add tests/config.ini
+  - cp ./other/*.* .
+  - composer install
+
+install:
+  - sh -c "if [ '$DB' = 'postgres' ]; then php -f install.php -- -u test -p test --dbtype postgresql --dbname smf --dbuser postgres; fi"
+  - sh -c "if [ '$DB' = 'mysql' ]; then php -f install.php -- -u test -p test --dbname smf --dbuser travis; fi"
+
+before_script:
+  - php tests/Populate.php
+  - sh other/prepare-files
+
+script: vendor/phpunit/phpunit/phpunit
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover.xml

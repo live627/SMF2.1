@@ -774,10 +774,6 @@ function get_date_or_time_format($type = '', $format = '')
 
 	$orig_format = $format;
 
-	// Have we already done this?
-	if (isset($formats[$orig_format][$type]))
-		return $formats[$orig_format][$type];
-
 	if ($type === 'date')
 	{
 		$specifications = array(

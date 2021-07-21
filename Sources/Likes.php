@@ -32,6 +32,11 @@ class Likes
 	protected $_error = false;
 
 	/**
+	 * @var string subaction
+	 */
+	protected $_sa = '';
+
+	/**
 	 * @var string The unique type to like, needs to be unique and it needs to be no longer than 6 characters, only numbers and letters are allowed.
 	 */
 	protected $_type = '';
