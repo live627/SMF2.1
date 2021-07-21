@@ -178,7 +178,7 @@ function ModifyGeneralSettings($return_config = false)
 		return $config_vars;
 
 	// If no cert, force_ssl must remain 0 (The admin search doesn't require this)
-	$config_vars['force_ssl']['disabled'] = empty($modSettings['force_ssl']) && !ssl_cert_found($boardurl);
+	$config_vars['force_ssl']['disabled'] = !ssl_cert_found($boardurl) && empty($modSettings['force_ssl']);
 
 	// Setup the template stuff.
 	$context['post_url'] = $scripturl . '?action=admin;area=serversettings;sa=general;save';
