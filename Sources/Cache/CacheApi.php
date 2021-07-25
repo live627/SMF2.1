@@ -19,7 +19,9 @@ if (!defined('SMF'))
 abstract class CacheApi
 {
 	const APIS_FOLDER = 'APIs';
+
 	const APIS_NAMESPACE = 'SMF\Cache\APIs\\';
+
 	const APIS_DEFAULT = 'FileBased';
 
 	/**
@@ -231,7 +233,6 @@ abstract class CacheApi
 		if ($position = strrpos($class_name, '\\'))
 			return substr($class_name, $position + 1);
 
-		else
 			return get_class($this);
 	}
 }

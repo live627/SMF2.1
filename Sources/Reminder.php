@@ -154,7 +154,7 @@ function RemindPick()
 		return;
 	}
 	// Otherwise are ready to answer the question?
-	elseif (isset($_POST['reminder_type']) && $_POST['reminder_type'] == 'secret')
+	if (isset($_POST['reminder_type']) && $_POST['reminder_type'] == 'secret')
 	{
 		return SecretAnswerInput();
 	}

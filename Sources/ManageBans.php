@@ -206,11 +206,11 @@ function BanList()
 							return $txt['never'];
 
 						// This ban has already expired.
-						elseif ($rowData['expire_time'] < time())
+						if ($rowData['expire_time'] < time())
 							return sprintf('<span class="red">%1$s</span>', $txt['ban_expired']);
 
 						// Still need to wait a few days for this ban to expire.
-						else
+						
 							return sprintf('%1$d&nbsp;%2$s', ceil(($rowData['expire_time'] - time()) / (60 * 60 * 24)), $txt['ban_days']);
 					},
 				),
@@ -420,9 +420,9 @@ function BanEdit()
 							{
 								if (in_array($ban_item['type'], array('ip', 'hostname', 'email')))
 									return '<strong>' . $txt[$ban_item['type']] . ':</strong>&nbsp;' . $ban_item[$ban_item['type']];
-								elseif ($ban_item['type'] == 'user')
+								if ($ban_item['type'] == 'user')
 									return '<strong>' . $txt['username'] . ':</strong>&nbsp;' . $ban_item['user']['link'];
-								else
+								
 									return '<strong>' . $txt['unknown'] . ':</strong>&nbsp;' . $ban_item['no_bantype_selected'];
 							},
 							'style' => 'text-align: left;',
@@ -611,13 +611,11 @@ function BanEdit()
 			}
 
 			call_integration_hook('integrate_ban_edit_new', array());
-
 		}
 	}
 
 	loadJavaScriptFile('suggest.js', array('minimize' => true), 'smf_suggest');
 	$context['sub_template'] = 'ban_edit';
-
 }
 
 /**
@@ -900,6 +898,7 @@ function banEdit2()
 		// Not strictly necessary, but it's nice
 		if (!empty($context['ban_suggestions']['member']['id']))
 			$context['ban_suggestions']['other_ips'] = banLoadAdditionalIPs($context['ban_suggestions']['member']['id']);
+
 		return BanEdit();
 	}
 	$context['ban_suggestions']['saved_triggers'] = !empty($saved_triggers) ? $saved_triggers : array();
@@ -968,7 +967,7 @@ function saveTriggers(array $suggestions, $ban_group, $member = 0, $ban_id = 0)
 	}
 	if (!empty($context['ban_errors']))
 		return $triggers;
-	else
+	
 		return false;
 }
 
@@ -1191,7 +1190,6 @@ function validateTriggers(&$triggers)
 		{
 			if ($key == 'member')
 				continue;
-
 			if ($key == 'main_ip')
 			{
 				$value = trim($value);
@@ -1308,6 +1306,7 @@ function validateTriggers(&$triggers)
 				);
 		}
 	}
+
 	return array('ban_triggers' => $ban_triggers, 'log_info' => $log_info);
 }
 
@@ -2220,7 +2219,7 @@ function range2ip($low, $high)
 	if ($low == '255.255.255.255') return 'unknown';
 	if ($low == $high)
 		return $low;
-	else
+	
 		return $low . '-' . $high;
 }
 

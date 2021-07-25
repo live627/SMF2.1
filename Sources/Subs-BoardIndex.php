@@ -197,7 +197,6 @@ function getBoardIndex($board_index_options)
 				$categories[$row_board['id_cat']]['link'] = '<a id="c' . $row_board['id_cat'] . '"></a>' . (!$context['user']['is_guest'] ?
 						'<a href="' . $scripturl . '?action=unread;c=' . $row_board['id_cat'] . '" title="' . sprintf($txt['new_posts_in_category'], $row_board['cat_name']) . '">' . $row_board['cat_name'] . '</a>' :
 						$row_board['cat_name']);
-
 			}
 
 			// If this board has new posts in it (and isn't the recycle bin!) then the category is new.
@@ -468,7 +467,6 @@ function getBoardIndex($board_index_options)
 		{
 			if (empty($board_unparsed_description))
 			continue;
-
 			$boards_parsed_data_by_cat_id[$unparsed_category_id] = setBoardParsedDescription(
 				$unparsed_category_id,
 				$board_unparsed_description

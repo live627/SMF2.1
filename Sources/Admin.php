@@ -93,7 +93,6 @@ function AdminMain()
 					'enabled' => empty($modSettings['securityDisable']),
 					'icon' => 'exit',
 				),
-
 			),
 		),
 		'config' => array(

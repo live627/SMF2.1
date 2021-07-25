@@ -13,8 +13,8 @@
 
 namespace SMF\Cache\APIs;
 
-use GlobIterator;
 use FilesystemIterator;
+use GlobIterator;
 use SMF\Cache\CacheApi;
 use SMF\Cache\CacheApiInterface;
 
@@ -64,6 +64,7 @@ class FileBased extends CacheApi implements CacheApiInterface
 			if (!flock($fp, LOCK_SH))
 			{
 				fclose($fp);
+
 				return false;
 			}
 			$string = '';
@@ -86,6 +87,7 @@ class FileBased extends CacheApi implements CacheApiInterface
 			if (!flock($fp, LOCK_EX))
 			{
 				fclose($fp);
+
 				return false;
 			}
 			ftruncate($fp, 0);
@@ -131,7 +133,7 @@ class FileBased extends CacheApi implements CacheApiInterface
 		{
 			if (($value = smf_json_decode($raw, true, false)) !== array() && $value['expiration'] >= time())
 				return $value['value'];
-			else
+			
 				@unlink($file);
 		}
 
@@ -166,9 +168,10 @@ class FileBased extends CacheApi implements CacheApiInterface
 			if ($this->writeFile($file, $cache_data) !== strlen($cache_data))
 			{
 				@unlink($file);
+
 				return false;
 			}
-			else
+			
 				return true;
 		}
 	}
@@ -218,7 +221,7 @@ class FileBased extends CacheApi implements CacheApiInterface
 		$class_name = $this->getImplementationClassKeyName();
 		$class_name_txt_key = strtolower($class_name);
 
-		$config_vars[] = $txt['cache_'. $class_name_txt_key .'_settings'];
+		$config_vars[] = $txt['cache_' . $class_name_txt_key . '_settings'];
 		$config_vars[] = array('cachedir', $txt['cachedir'], 'file', 'text', 36, 'cache_cachedir');
 
 		if (!isset($context['settings_post_javascript']))
@@ -227,7 +230,7 @@ class FileBased extends CacheApi implements CacheApiInterface
 		$context['settings_post_javascript'] .= '
 			$("#cache_accelerator").change(function (e) {
 				var cache_type = e.currentTarget.value;
-				$("#cachedir").prop("disabled", cache_type != "'. $class_name .'");
+				$("#cachedir").prop("disabled", cache_type != "' . $class_name . '");
 			});';
 	}
 

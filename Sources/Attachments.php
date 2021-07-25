@@ -298,7 +298,6 @@ class Attachments
 		{
 			if ($_FILES['attachment']['name'][$n] == '')
 				continue;
-
 			// First, let's first check for PHP upload errors.
 			$errors = array();
 			if (!empty($_FILES['attachment']['error'][$n]))

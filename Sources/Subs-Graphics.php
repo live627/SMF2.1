@@ -106,13 +106,13 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 					'mime_type' => $mime_type,
 				)
 			);
+
 			return true;
 		}
-		else
+		
 			return false;
 	}
-	else
-	{
+	
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}attachments
 			WHERE id_attach = {int:current_attachment}',
@@ -122,8 +122,8 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 		);
 
 		@unlink($destName . '.tmp');
+
 		return false;
-	}
 }
 
 /**
@@ -153,12 +153,11 @@ function createThumbnail($source, $max_width, $max_height)
 
 	if ($success && @rename($destName . '.tmp', $destName))
 		return true;
-	else
-	{
+	
 		@unlink($destName . '.tmp');
 		@touch($destName);
+
 		return false;
-	}
 }
 
 /**
@@ -215,6 +214,7 @@ function checkImageContents($fileName, $extensiveCheck = false)
 			if (preg_match('~(iframe|\\<\\?|\\<%|html|eval|body|script\W|(?-i)[CFZ]WS[\x01-\x0E])~i', $prev_chunk . $cur_chunk) === 1)
 			{
 				fclose($fp);
+
 				return false;
 			}
 		}
@@ -225,6 +225,7 @@ function checkImageContents($fileName, $extensiveCheck = false)
 			if (preg_match('~(\\<\\?php\s|(?-i)[CFZ]WS[\x01-\x0E])~i', $prev_chunk . $cur_chunk) === 1)
 			{
 				fclose($fp);
+
 				return false;
 			}
 		}
@@ -289,6 +290,7 @@ function imageMemoryCheck($sizes)
 	if (empty($modSettings['attachment_thumb_memory']))
 	{
 		setMemoryLimit('128M');
+
 		return true;
 	}
 
@@ -380,7 +382,7 @@ function resizeImageFile($source, $destination, $max_width, $max_height, $prefer
 	{
 		return resizeImage(null, $destination, null, null, $max_width, $max_height, true, $preferred_format);
 	}
-	elseif (checkGD() && isset($default_formats[$sizes[2]]) && function_exists('imagecreatefrom' . $default_formats[$sizes[2]]))
+	if (checkGD() && isset($default_formats[$sizes[2]]) && function_exists('imagecreatefrom' . $default_formats[$sizes[2]]))
 	{
 		$imagecreatefrom = 'imagecreatefrom' . $default_formats[$sizes[2]];
 		if ($src_img = @$imagecreatefrom($destination))
@@ -490,7 +492,7 @@ function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $
 
 		return !empty($success);
 	}
-	elseif (checkGD())
+	if (checkGD())
 	{
 		$success = false;
 
@@ -567,7 +569,7 @@ function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $
 
 		return $success;
 	}
-	else
+	
 		// Without GD, no image resizing at all.
 		return false;
 }
@@ -689,7 +691,6 @@ if (!function_exists('imagecreatefrombmp'))
 
 			if (strlen($scan_line) < $scan_line_size)
 				continue;
-
 			if ($info['bits'] == 32)
 			{
 				$x = 0;

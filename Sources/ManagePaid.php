@@ -321,11 +321,12 @@ function ViewSubscriptions()
 				{
 					if (++$counter < $start)
 						continue;
-					elseif ($counter == $start + $items_per_page)
+					if ($counter == $start + $items_per_page)
 						break;
 
 					$subscriptions[] = $data;
 				}
+
 				return $subscriptions;
 			},
 		),
@@ -1129,7 +1130,7 @@ function ModifyUserSubscription()
 		return ViewSubscribedUsers();
 	}
 	// Saving?
-	elseif (isset($_REQUEST['save_sub']))
+	if (isset($_REQUEST['save_sub']))
 	{
 		checkSession();
 
@@ -1191,7 +1192,6 @@ function ModifyUserSubscription()
 					),
 					array('id_sublog')
 				);
-
 			}
 		}
 		// Updating.
@@ -1535,15 +1535,19 @@ function addSubscription($id_subscribe, $id_member, $renewal = 0, $forceStartTim
 		{
 			case 'D':
 				$duration = 86400;
+
 				break;
 			case 'W':
 				$duration = 604800;
+
 				break;
 			case 'M':
 				$duration = 2629743;
+
 				break;
 			case 'Y':
 				$duration = 31556926;
+
 				break;
 			default:
 				break;
@@ -1758,6 +1762,7 @@ function removeSubscription($id_subscribe, $id_member, $delete = false)
 				'current_member' => $id_member,
 			)
 		);
+
 		return;
 	}
 	list ($id_group, $additional_groups) = $smcFunc['db_fetch_row']($request);
@@ -1784,7 +1789,6 @@ function removeSubscription($id_subscribe, $id_member, $delete = false)
 	{
 		if (!isset($context['subscriptions'][$row['id_subscribe']]))
 			continue;
-
 		// The one we're removing?
 		if ($row['id_subscribe'] == $id_subscribe)
 		{
@@ -1917,18 +1921,22 @@ function loadSubscriptions()
 				case 'D':
 					$length .= $txt['paid_mod_span_days'];
 					$num_length *= 86400;
+
 					break;
 				case 'W':
 					$length .= $txt['paid_mod_span_weeks'];
 					$num_length *= 604800;
+
 					break;
 				case 'M':
 					$length .= $txt['paid_mod_span_months'];
 					$num_length *= 2629743;
+
 					break;
 				case 'Y':
 					$length .= $txt['paid_mod_span_years'];
 					$num_length *= 31556926;
+
 					break;
 			}
 		}

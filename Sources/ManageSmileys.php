@@ -678,6 +678,7 @@ function AddSmiley()
 					$smileyLocation = $context['smileys_dir'] . '/' . $context['smiley_sets'][$i]['raw_path'] . '/' . $destName;
 					move_uploaded_file($_FILES['uploadSmiley']['tmp_name'], $smileyLocation);
 					smf_chmod($smileyLocation, 0644);
+
 					break;
 				}
 			}
@@ -723,7 +724,6 @@ function AddSmiley()
 
 				if (!isset($_FILES['individual_' . $set['raw_path']]['name']) || $_FILES['individual_' . $set['raw_path']]['name'] == '')
 					continue;
-
 				// Got one...
 				if (!is_uploaded_file($_FILES['individual_' . $set['raw_path']]['tmp_name']) || (ini_get('open_basedir') == '' && !file_exists($_FILES['individual_' . $set['raw_path']]['tmp_name'])))
 					fatal_lang_error('smileys_upload_error', false);
@@ -886,7 +886,6 @@ function AddSmiley()
 		{
 			if (!file_exists($context['smileys_dir'] . '/' . $smiley_set['raw_path']))
 				continue;
-
 			$dir = dir($context['smileys_dir'] . '/' . $smiley_set['raw_path']);
 			while ($entry = $dir->read())
 			{
@@ -1028,7 +1027,6 @@ function EditSmileys()
 				{
 					if (!isset($_FILES['smiley_upload']['name'][$set]) || empty($_FILES['smiley_upload']['name'][$set]))
 						continue;
-
 					// Got a new image for this set
 					if (!is_uploaded_file($_FILES['smiley_upload']['tmp_name'][$set]) || (ini_get('open_basedir') == '' && !file_exists($_FILES['smiley_upload']['tmp_name'][$set])))
 						fatal_lang_error('smileys_upload_error', false);
@@ -1074,7 +1072,6 @@ function EditSmileys()
 					// Make sure the set already exists.
 					if (!in_array($posted_set, $known_sets))
 						continue;
-
 					$filenames[$posted_set] = pathinfo($posted_filename, PATHINFO_BASENAME);
 				}
 				// Fill in any missing sets.
@@ -1253,9 +1250,9 @@ function EditSmileys()
 						{
 							if (empty($rowData['hidden']))
 								return $txt['smileys_location_form'];
-							elseif ($rowData['hidden'] == 1)
+							if ($rowData['hidden'] == 1)
 								return $txt['smileys_location_hidden'];
-							else
+							
 								return $txt['smileys_location_popup'];
 						},
 					),
@@ -1424,7 +1421,6 @@ function EditSmileys()
 			{
 				if (!file_exists($context['smileys_dir'] . '/' . $smiley_set['raw_path']))
 					continue;
-
 				// No file currently defined for this smiley in this set? That's no good.
 				if (!isset($filenames[$smiley_set['raw_path']]))
 				{
@@ -1763,6 +1759,7 @@ function InstallSmileySet()
 			if (basename($file['filename']) == 'package-info.xml')
 			{
 				$base_path = dirname($file['filename']) . '/';
+
 				break;
 			}
 
@@ -1822,7 +1819,7 @@ function InstallSmileySet()
 
 			continue;
 		}
-		elseif ($action['type'] == 'require-dir')
+		if ($action['type'] == 'require-dir')
 		{
 			// Do this one...
 			$thisAction = array(
@@ -1967,7 +1964,6 @@ function ImportSmileys($smileyPath, $create = false)
 		// A brand new one
 		if (empty($existing_smileys[$smiley_name]))
 			continue;
-
 		// A file with this name is already being used for at least one smiley, so we have more work to do...
 		foreach ($existing_smileys[$smiley_name] as $existing_id => $existing_sets)
 		{
@@ -2021,6 +2017,7 @@ function ImportSmileys($smileyPath, $create = false)
 					if (file_exists($modSettings['smileys_dir'] . '/' . $set . '/' . $smiley_files[$key]))
 					{
 						$p = $set;
+
 						break;
 					}
 				}
@@ -2038,7 +2035,6 @@ function ImportSmileys($smileyPath, $create = false)
 				// Double-check that everything went as expected
 				if (!file_exists($modSettings['smileys_dir'] . '/' . $set . '/' . $smiley_files[$key]))
 					continue;
-
 				// Update the database
 				$inserts[] = array($id_smiley, $set, $smiley_files[$key]);
 
@@ -2318,6 +2314,7 @@ function EditMessageIcons()
 					'function' => function($rowData) use ($settings, $smcFunc)
 					{
 						$images_url = $settings[file_exists(sprintf('%1$s/images/post/%2$s.png', $settings['theme_dir'], $rowData['filename'])) ? 'actual_images_url' : 'default_images_url'];
+
 						return sprintf('<img src="%1$s/post/%2$s.png" alt="%3$s">', $images_url, $rowData['filename'], $smcFunc['htmlspecialchars']($rowData['title']));
 					},
 					'class' => 'centercol',

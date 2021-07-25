@@ -106,6 +106,7 @@ class Auth
 			throw new \InvalidArgumentException('Invalid window range');
 		}
 		$this->range = $range;
+
 		return $this;
 	}
 
@@ -123,6 +124,7 @@ class Auth
 			throw new \InvalidArgumentException('Invalid base32 hash!');
 		}
 		$this->initKey = $key;
+
 		return $this;
 	}
 
@@ -150,6 +152,7 @@ class Auth
 			throw new \InvalidArgumentException('Lookup value must be an array');
 		}
 		$this->lookup = $lookup;
+
 		return $this;
 	}
 
@@ -187,6 +190,7 @@ class Auth
 			throw new \InvalidArgumentException('Seconds must be numeric');
 		}
 		$this->refreshSeconds = $seconds;
+
 		return $this;
 	}
 
@@ -209,6 +213,7 @@ class Auth
 	public function setCodeLength($length)
 	{
 		$this->codeLength = $length;
+
 		return $this;
 	}
 
@@ -242,6 +247,7 @@ class Auth
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -363,8 +369,7 @@ class Auth
 	 */
 	public function getQrCodeUrl($name, $code)
 	{
-		$url = 'otpauth://totp/' . urlencode($name) . '?secret=' . $code;
-		return $url;
+		return 'otpauth://totp/' . urlencode($name) . '?secret=' . $code;
 	}
 }
 

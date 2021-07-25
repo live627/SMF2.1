@@ -33,13 +33,21 @@ class Punycode
 	 *
 	 */
 	const BASE = 36;
+
 	const TMIN = 1;
+
 	const TMAX = 26;
+
 	const SKEW = 38;
+
 	const DAMP = 700;
+
 	const INITIAL_BIAS = 72;
+
 	const INITIAL_N = 128;
+
 	const PREFIX = 'xn--';
+
 	const DELIMITER = '-';
 
 	/**
@@ -265,10 +273,11 @@ class Punycode
 		{
 			return static::TMIN;
 		}
-		elseif ($k >= $bias + static::TMAX)
+		if ($k >= $bias + static::TMAX)
 		{
 			return static::TMAX;
 		}
+
 		return $k - $bias;
 	}
 
@@ -345,18 +354,16 @@ class Punycode
 		{
 			return $code;
 		}
-		elseif ($code < 224)
+		if ($code < 224)
 		{
 			return (($code - 192) * 64) + (ord($char[1]) - 128);
 		}
-		elseif ($code < 240)
+		if ($code < 240)
 		{
 			return (($code - 224) * 4096) + ((ord($char[1]) - 128) * 64) + (ord($char[2]) - 128);
 		}
-		else
-		{
+		
 			return (($code - 240) * 262144) + ((ord($char[1]) - 128) * 4096) + ((ord($char[2]) - 128) * 64) + (ord($char[3]) - 128);
-		}
 	}
 
 	/**
@@ -371,18 +378,16 @@ class Punycode
 		{
 			return chr($code);
 		}
-		elseif ($code <= 0x7FF)
+		if ($code <= 0x7FF)
 		{
 			return chr(($code >> 6) + 192) . chr(($code & 63) + 128);
 		}
-		elseif ($code <= 0xFFFF)
+		if ($code <= 0xFFFF)
 		{
 			return chr(($code >> 12) + 224) . chr((($code >> 6) & 63) + 128) . chr(($code & 63) + 128);
 		}
-		else
-		{
+		
 			return chr(($code >> 18) + 240) . chr((($code >> 12) & 63) + 128) . chr((($code >> 6) & 63) + 128) . chr(($code & 63) + 128);
-		}
 	}
 }
 

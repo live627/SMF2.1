@@ -357,7 +357,7 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 			// If we're going to overwrite then use change column.
 			if ($if_exists == 'update')
 				return $smcFunc['db_change_column']($table_name, $column_info['name'], $column_info);
-			else
+			
 				return false;
 		}
 
@@ -382,7 +382,7 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 
 	if (count($column_info) != 1)
 		return $smcFunc['db_change_column']($table_name, $column_info['name'], $column_info);
-	else
+	
 		return true;
 }
 
@@ -645,7 +645,7 @@ function smf_db_add_index($table_name, $index_info, $parameters = array(), $if_e
 			// If we want to overwrite simply remove the current one then continue.
 			if ($if_exists != 'update' || $index['type'] == 'primary')
 				return false;
-			else
+			
 				$smcFunc['db_remove_index']($table_name, $index_info['name']);
 		}
 	}
@@ -900,12 +900,10 @@ function smf_db_list_indexes($table_name, $detail = false, $parameters = array()
 		// Try get the columns that make it up.
 		if (preg_match('~\(([^\)]+?)\)~i', $row['inddef'], $matches) == 0)
 			continue;
-
 		$columns = explode(',', $matches[1]);
 
 		if (empty($columns))
 			continue;
-
 		foreach ($columns as $k => $v)
 			$columns[$k] = trim($v);
 

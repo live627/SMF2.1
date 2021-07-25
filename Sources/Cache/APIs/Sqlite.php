@@ -98,9 +98,8 @@ class Sqlite extends CacheApi implements CacheApiInterface
 			$query = 'DELETE FROM cache WHERE key = \'' . $this->cacheDB->escapeString($key) . '\';';
 		else
 			$query = 'REPLACE INTO cache VALUES (\'' . $this->cacheDB->escapeString($key) . '\', \'' . $this->cacheDB->escapeString($value) . '\', ' . $ttl . ');';
-		$result = $this->cacheDB->exec($query);
 
-		return $result;
+		return $this->cacheDB->exec($query);
 	}
 
 	/**
@@ -131,14 +130,14 @@ class Sqlite extends CacheApi implements CacheApiInterface
 		$class_name = $this->getImplementationClassKeyName();
 		$class_name_txt_key = strtolower($class_name);
 
-		$config_vars[] = $txt['cache_'. $class_name_txt_key .'_settings'];
+		$config_vars[] = $txt['cache_' . $class_name_txt_key . '_settings'];
 		$config_vars[] = array(
-			'cachedir_'. $class_name_txt_key,
-			$txt['cachedir_'. $class_name_txt_key],
+			'cachedir_' . $class_name_txt_key,
+			$txt['cachedir_' . $class_name_txt_key],
 			'file',
 			'text',
 			36,
-			'cache_'. $class_name_txt_key .'_cachedir');
+			'cache_' . $class_name_txt_key . '_cachedir');
 
 		if (!isset($context['settings_post_javascript']))
 			$context['settings_post_javascript'] = '';
@@ -146,7 +145,7 @@ class Sqlite extends CacheApi implements CacheApiInterface
 		$context['settings_post_javascript'] .= '
 			$("#cache_accelerator").change(function (e) {
 				var cache_type = e.currentTarget.value;
-				$("#cachedir_'. $class_name_txt_key .'").prop("disabled", cache_type != "'. $class_name .'");
+				$("#cachedir_' . $class_name_txt_key . '").prop("disabled", cache_type != "' . $class_name . '");
 			});';
 	}
 
@@ -178,7 +177,7 @@ class Sqlite extends CacheApi implements CacheApiInterface
 	 */
 	public function getVersion()
 	{
-		if (null == $this->cacheDB)
+		if ($this->cacheDB == null)
 			$this->connect();
 
 		return $this->cacheDB->version()['versionString'];

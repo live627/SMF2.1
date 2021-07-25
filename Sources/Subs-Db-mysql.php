@@ -94,7 +94,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 	{
 		if (!empty($db_options['non_fatal']))
 			return null;
-		else
+		
 			display_db_error();
 	}
 
@@ -147,6 +147,7 @@ function db_fix_prefix(&$db_prefix, $db_name)
 function smf_db_select($database, $connection = null)
 {
 	global $db_connection;
+
 	return mysqli_select_db($connection === null ? $db_connection : $connection, $database);
 }
 
@@ -159,6 +160,7 @@ function smf_db_select($database, $connection = null)
 function smf_db_get_server_info($connection = null)
 {
 	global $db_connection;
+
 	return mysqli_get_server_info($connection === null ? $db_connection : $connection);
 }
 
@@ -204,12 +206,15 @@ function smf_db_replacement__callback($matches)
 		case 'int':
 			if (!is_numeric($replacement) || (string) $replacement !== (string) (int) $replacement)
 				smf_db_error_backtrace('Wrong value type sent to the database. Integer expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+
 			return (string) (int) $replacement;
+
 			break;
 
 		case 'string':
 		case 'text':
 			return sprintf('\'%1$s\'', mysqli_real_escape_string($connection, $replacement));
+
 			break;
 
 		case 'array_int':
@@ -228,7 +233,7 @@ function smf_db_replacement__callback($matches)
 
 				return implode(', ', $replacement);
 			}
-			else
+			
 				smf_db_error_backtrace('Wrong value type sent to the database. Array of integers expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
 
 			break;
@@ -244,22 +249,25 @@ function smf_db_replacement__callback($matches)
 
 				return implode(', ', $replacement);
 			}
-			else
+			
 				smf_db_error_backtrace('Wrong value type sent to the database. Array of strings expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+
 			break;
 
 		case 'date':
 			if (preg_match('~^(\d{4})-([0-1]?\d)-([0-3]?\d)$~', $replacement, $date_matches) === 1)
 				return sprintf('\'%04d-%02d-%02d\'', $date_matches[1], $date_matches[2], $date_matches[3]);
-			else
+			
 				smf_db_error_backtrace('Wrong value type sent to the database. Date expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+
 			break;
 
 		case 'time':
 			if (preg_match('~^([0-1]?\d|2[0-3]):([0-5]\d):([0-5]\d)$~', $replacement, $time_matches) === 1)
 				return sprintf('\'%02d:%02d:%02d\'', $time_matches[1], $time_matches[2], $time_matches[3]);
-			else
+			
 				smf_db_error_backtrace('Wrong value type sent to the database. Time expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+
 			break;
 
 		case 'datetime':
@@ -267,23 +275,28 @@ function smf_db_replacement__callback($matches)
 				return 'str_to_date(' .
 					sprintf('\'%04d-%02d-%02d %02d:%02d:%02d\'', $datetime_matches[1], $datetime_matches[2], $datetime_matches[3], $datetime_matches[4], $datetime_matches[5], $datetime_matches[6]) .
 					',\'%Y-%m-%d %h:%i:%s\')';
-			else
+			
 				smf_db_error_backtrace('Wrong value type sent to the database. Datetime expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+
 			break;
 
 		case 'float':
 			if (!is_numeric($replacement))
 				smf_db_error_backtrace('Wrong value type sent to the database. Floating point number expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+
 			return (string) (float) $replacement;
+
 			break;
 
 		case 'identifier':
 			// Backticks inside identifiers are supported as of MySQL 4.1. We don't need them for SMF.
 			return '`' . strtr($replacement, array('`' => '', '.' => '`.`')) . '`';
+
 			break;
 
 		case 'raw':
 			return $replacement;
+
 			break;
 
 		case 'inet':
@@ -311,12 +324,14 @@ function smf_db_replacement__callback($matches)
 
 				return implode(', ', $replacement);
 			}
-			else
+			
 				smf_db_error_backtrace('Wrong value type sent to the database. Array of IPv4 or IPv6 expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+
 			break;
 
 		default:
 			smf_db_error_backtrace('Undefined type used in the database query. (' . $matches[1] . ':' . $matches[2] . ')', '', false, __FILE__, __LINE__);
+
 			break;
 	}
 }
@@ -430,9 +445,10 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 				$pos2 = strpos($db_string_1, '\\', $pos + 1);
 				if ($pos1 === false)
 					break;
-				elseif ($pos2 === false || $pos2 > $pos1)
+				if ($pos2 === false || $pos2 > $pos1)
 				{
 					$pos = $pos1;
+
 					break;
 				}
 
@@ -542,9 +558,9 @@ function smf_db_transaction($type = 'commit', $connection = null)
 
 	if ($type == 'begin')
 		return @mysqli_query($connection, 'BEGIN');
-	elseif ($type == 'rollback')
+	if ($type == 'rollback')
 		return @mysqli_query($connection, 'ROLLBACK');
-	elseif ($type == 'commit')
+	if ($type == 'commit')
 		return @mysqli_query($connection, 'COMMIT');
 
 	return false;
@@ -876,6 +892,7 @@ function smf_db_insert($method, $table, $columns, $data, $keys, $returnmode = 0,
 			for ($i = 0; $i < $count; $i++)
 				$return_var[] = $start + $i;
 		}
+
 		return $return_var;
 	}
 }
@@ -901,6 +918,7 @@ function smf_db_error_backtrace($error_message, $log_message = '', $error_type =
 		if (strpos($step['function'], 'query') === false && !in_array(substr($step['function'], 0, 7), array('smf_db_', 'preg_re', 'db_erro', 'call_us')) && strpos($step['function'], '__') !== 0)
 		{
 			$log_message .= '<br>Function: ' . $step['function'];
+
 			break;
 		}
 
@@ -926,7 +944,7 @@ function smf_db_error_backtrace($error_message, $log_message = '', $error_type =
 		// Cannot continue...
 		exit;
 	}
-	elseif ($error_type)
+	if ($error_type)
 		trigger_error($error_message . ($line !== null ? '<em>(' . basename($file) . '-' . $line . ')</em>' : ''), $error_type);
 	else
 		trigger_error($error_message . ($line !== null ? '<em>(' . basename($file) . '-' . $line . ')</em>' : ''));
@@ -987,6 +1005,7 @@ function smf_db_fetch_all($request)
 		while($row = mysqli_fetch_assoc($request))
 			$return[] = $row;
 	}
+
 	return !empty($return) ? $return : array();
 }
 
@@ -1041,6 +1060,7 @@ function smf_db_custom_order($field, $array_values, $desc = false)
 		$return .= 'WHEN ' . (int) $array_values[$i] . $then . $i . ' ';
 
 	$return .= 'END';
+
 	return $return;
 }
 

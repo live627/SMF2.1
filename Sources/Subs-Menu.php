@@ -97,7 +97,6 @@ function createMenu($menuData, $menuOptions = array())
 		// Is this enabled - or has as permission check - which fails?
 		if ((isset($section['enabled']) && $section['enabled'] == false) || (isset($section['permission']) && !allowedTo($section['permission'])))
 			continue;
-
 		// Now we cycle through the sections to pick the right area.
 		foreach ($section['areas'] as $area_id => $area)
 		{
@@ -308,6 +307,7 @@ function createMenu($menuData, $menuOptions = array())
 				if (!isset($menu_context['sections'][$section_id]['url']))
 				{
 					$menu_context['sections'][$section_id]['url'] = isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $area_id;
+
 					break;
 				}
 			}

@@ -886,7 +886,6 @@ function isReservedName($name, $current_id_member = 0, $is_name = true, $fatal =
 		{
 			if ($reserved == '')
 				continue;
-
 			// The admin might've used entities too, level the playing field.
 			$reservedCheck = preg_replace('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~', 'replaceEntities__callback', $reserved);
 
@@ -935,6 +934,7 @@ function isReservedName($name, $current_id_member = 0, $is_name = true, $fatal =
 	if ($smcFunc['db_num_rows']($request) > 0)
 	{
 		$smcFunc['db_free_result']($request);
+
 		return true;
 	}
 
@@ -952,6 +952,7 @@ function isReservedName($name, $current_id_member = 0, $is_name = true, $fatal =
 	if ($smcFunc['db_num_rows']($request) > 0)
 	{
 		$smcFunc['db_free_result']($request);
+
 		return true;
 	}
 
@@ -1522,6 +1523,7 @@ function populateDuplicateMembers(&$members)
 				if (in_array($duplicate_member['id'], $member_track))
 				{
 					unset($members[$key]['duplicate_members'][$duplicate_id_member]);
+
 					continue;
 				}
 

@@ -593,7 +593,6 @@ function get_file_listing($path, $relative)
 		// Skip all dot files, including .htaccess.
 		if (substr($entry, 0, 1) == '.' || $entry == 'CVS')
 			continue;
-
 		if (is_dir($path . '/' . $entry))
 			$listing1[] = array(
 				'filename' => $entry,

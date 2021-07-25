@@ -70,6 +70,7 @@ function DisplayStats()
 			'month' => sprintf('%02d', $month),
 			'year' => $year,
 		);
+
 		return;
 	}
 
@@ -476,7 +477,6 @@ function DisplayStats()
 		// skip all not top 10
 		if ($i > 10)
 			continue;
-
 		$context['stats_blocks']['starters'][$i] = array(
 			'name' => $row_members['real_name'],
 			'id' => $row_members['id_member'],
@@ -519,7 +519,6 @@ function DisplayStats()
 		$temp2[] = (int) $row_members['id_member'];
 		if (count($context['stats_blocks']['time_online']) >= 10)
 			continue;
-
 		// Figure out the days, hours and minutes.
 		$timeDays = floor($row_members['total_time_logged_in'] / 86400);
 		$timeHours = floor(($row_members['total_time_logged_in'] % 86400) / 3600);
@@ -842,7 +841,7 @@ function SMStats()
 
 			$out = 'POST /smf/stats/collect_stats.php HTTP/1.1' . "\r\n";
 			$out .= 'Host: www.simplemachines.org' . "\r\n";
-			$out .= 'user-agent: '. SMF_USER_AGENT . "\r\n";
+			$out .= 'user-agent: ' . SMF_USER_AGENT . "\r\n";
 			$out .= 'content-type: application/x-www-form-urlencoded' . "\r\n";
 			$out .= 'connection: Close' . "\r\n";
 			$out .= 'content-length: ' . $length . "\r\n\r\n";

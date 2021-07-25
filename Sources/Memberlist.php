@@ -119,6 +119,7 @@ function Memberlist()
 		if (isset($context['disabled_fields'][$key]) || (isset($column['link_with']) && isset($context['disabled_fields'][$column['link_with']])))
 		{
 			unset($context['columns'][$key]);
+
 			continue;
 		}
 
@@ -632,7 +633,6 @@ function printMemberListRows($request)
 	{
 		if (!loadMemberContext($member))
 			continue;
-
 		$context['members'][$member] = $memberContext[$member];
 		$context['members'][$member]['post_percent'] = round(($context['members'][$member]['real_posts'] * 100) / $most_posts);
 		$context['members'][$member]['registered_date'] = strftime('%Y-%m-%d', $context['members'][$member]['registered_timestamp']);
@@ -645,6 +645,7 @@ function printMemberListRows($request)
 				if (!isset($context['members'][$member]['options'][$key]))
 				{
 					$context['members'][$member]['options'][$key] = isset($column['default_value']) ? $column['default_value'] : '';
+
 					continue;
 				}
 

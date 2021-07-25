@@ -153,6 +153,7 @@ function ViewModlog()
 			if (substr($key, 0, 10) == 'modlog_ac_' && strpos($text, $search_params['string']) !== false)
 			{
 				$search_params['string'] = substr($key, 10);
+
 				break;
 			}
 		}

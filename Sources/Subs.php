@@ -103,6 +103,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 				$smcFunc['db_free_result']($result);
 			}
 			updateSettings($changes);
+
 			break;
 
 		case 'message':
@@ -129,6 +130,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 					'maxMsgID' => $row['max_msg_id'] === null ? 0 : $row['max_msg_id']
 				));
 			}
+
 			break;
 
 		case 'subject':
@@ -159,6 +161,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 						array('word', 'id_topic')
 					);
 			}
+
 			break;
 
 		case 'topic':
@@ -182,6 +185,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 
 				updateSettings(array('totalTopics' => $row['total_topics'] === null ? 0 : $row['total_topics']));
 			}
+
 			break;
 
 		case 'postgroups':
@@ -239,6 +243,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 					'members' => $parameter1,
 				)
 			);
+
 			break;
 
 		default:
@@ -353,11 +358,13 @@ function updateMemberData($members, $data)
 		{
 			case  'birthdate':
 				$type = 'date';
+
 				break;
 
 			case 'member_ip':
 			case 'member_ip2':
 				$type = 'inet';
+
 				break;
 
 			default:
@@ -378,7 +385,7 @@ function updateMemberData($members, $data)
 			{
 				$val = 'CASE ';
 				foreach ($members as $k => $v)
-					$val .= 'WHEN id_member = ' . $v . ' THEN '. alert_count($v, true) . ' ';
+					$val .= 'WHEN id_member = ' . $v . ' THEN ' . alert_count($v, true) . ' ';
 
 				$val = $val . ' END';
 				$type = 'raw';
@@ -510,9 +517,8 @@ function updateSettings($changeArray, $update = false)
 		if (isset($modSettings[$variable]) && $modSettings[$variable] == $value)
 			continue;
 		// If the variable isn't set, but would only be set to nothing'ness, then don't bother setting it.
-		elseif (!isset($modSettings[$variable]) && empty($value))
+		if (!isset($modSettings[$variable]) && empty($value))
 			continue;
-
 		$replaceArray[] = array($variable, $value);
 
 		$modSettings[$variable] = $value;
@@ -820,6 +826,7 @@ function timeformat($log_time, $show_today = true, $offset_type = false, $proces
 				if ($context['server']['is_windows'] && in_array($format, $unsupportedFormatsWindows))
 				{
 					$unsupportedFormats[] = $format;
+
 					continue;
 				}
 
@@ -1045,11 +1052,11 @@ function get_date_or_time_format($type = '', $format = '')
 			// Anything that isn't a specification, punctuation mark, or whitespace.
 			'~(?<!%)\p{L}|[^\p{L}\p{P}\s]~u',
 			// A series of punctuation marks (except %), possibly separated by whitespace.
-			'~([^%\P{P}])(\s*)(?'.'>(\1|[^%\P{Po}])\s*(?!$))*~u',
+			'~([^%\P{P}])(\s*)(?' . '>(\1|[^%\P{Po}])\s*(?!$))*~u',
 			// Unwanted trailing punctuation and whitespace.
-			'~(?'.'>([\p{Pd}\p{Ps}\p{Pi}\p{Pc}]|[^%\P{Po}])\s*)*$~u',
+			'~(?' . '>([\p{Pd}\p{Ps}\p{Pi}\p{Pc}]|[^%\P{Po}])\s*)*$~u',
 			// Unwanted opening punctuation and whitespace.
-			'~^\s*(?'.'>([\p{Pd}\p{Pe}\p{Pf}\p{Pc}]|[^%\P{Po}])\s*)*~u',
+			'~^\s*(?' . '>([\p{Pd}\p{Pe}\p{Pf}\p{Pc}]|[^%\P{Po}])\s*)*~u',
 		),
 		array(
 			'',
@@ -1116,7 +1123,7 @@ function shorten_subject($subject, $len)
 	global $smcFunc;
 
 	// It was already short enough!
-	if ($smcFunc['strlen']($subject) <= $len)
+	if ($len >= $smcFunc['strlen']($subject))
 		return $subject;
 
 	// Shorten it by the length it was too long, and strip off junk from the end.
@@ -1222,6 +1229,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 	if (!empty($context['load_average']) && !empty($modSettings['bbc']) && $context['load_average'] >= $modSettings['bbc'])
 	{
 		$context['disabled_parse_bbc'] = true;
+
 		return $message;
 	}
 
@@ -1272,7 +1280,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					'red' => true,
 					'green' => true,
 					'blue' => true,
-					)
+				)
 				);
 		}
 
@@ -1458,7 +1466,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 							$width = !empty($params['{width}']) ? ' width="' . $params['{width}'] . '"' : '';
 							$height = !empty($params['{height}']) ? ' height="' . $params['{height}'] . '"' : '';
 
-							$returnContext .= '<div class="videocontainer"><video controls preload="metadata" src="'. $currentAttachment['href'] . '" playsinline' . $width . $height . '><a href="' . $currentAttachment['href'] . '" class="bbc_link">' . $smcFunc['htmlspecialchars'](!empty($data) ? $data : $currentAttachment['name']) . '</a></video></div>' . (!empty($data) && $data != $currentAttachment['name'] ? '<div class="smalltext">' . $data . '</div>' : '');
+							$returnContext .= '<div class="videocontainer"><video controls preload="metadata" src="' . $currentAttachment['href'] . '" playsinline' . $width . $height . '><a href="' . $currentAttachment['href'] . '" class="bbc_link">' . $smcFunc['htmlspecialchars'](!empty($data) ? $data : $currentAttachment['name']) . '</a></video></div>' . (!empty($data) && $data != $currentAttachment['name'] ? '<div class="smalltext">' . $data . '</div>' : '');
 						}
 						// Audio.
 						elseif (strpos($currentAttachment['mime_type'], 'audio/') === 0)
@@ -1466,7 +1474,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 							$width = 'max-width:100%; width: ' . (!empty($params['{width}']) ? $params['{width}'] : '400') . 'px;';
 							$height = !empty($params['{height}']) ? 'height: ' . $params['{height}'] . 'px;' : '';
 
-							$returnContext .= (!empty($data) && $data != $currentAttachment['name'] ? $data . ' ' : '') . '<audio controls preload="none" src="'. $currentAttachment['href'] . '" class="bbc_audio" style="vertical-align:middle;' . $width . $height . '"><a href="' . $currentAttachment['href'] . '" class="bbc_link">' . $smcFunc['htmlspecialchars'](!empty($data) ? $data : $currentAttachment['name']) . '</a></audio>';
+							$returnContext .= (!empty($data) && $data != $currentAttachment['name'] ? $data . ' ' : '') . '<audio controls preload="none" src="' . $currentAttachment['href'] . '" class="bbc_audio" style="vertical-align:middle;' . $width . $height . '"><a href="' . $currentAttachment['href'] . '" class="bbc_link">' . $smcFunc['htmlspecialchars'](!empty($data) ? $data : $currentAttachment['name']) . '</a></audio>';
 						}
 						// Anything else.
 						else
@@ -1545,7 +1553,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 							// Do PHP code coloring?
 							if ($php_parts[$php_i] != '&lt;?php')
 								continue;
-
 							$php_string = '';
 							while ($php_i + 1 < count($php_parts) && $php_parts[$php_i] != '?&gt;')
 							{
@@ -1582,7 +1589,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 							// Do PHP code coloring?
 							if ($php_parts[$php_i] != '&lt;?php')
 								continue;
-
 							$php_string = '';
 							while ($php_i + 1 < count($php_parts) && $php_parts[$php_i] != '?&gt;')
 							{
@@ -1748,8 +1754,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					else
 						$url = get_proxied_url($url);
 
-					$alt = !empty($params['{alt}']) ? ' alt="' . $params['{alt}']. '"' : ' alt=""';
-					$title = !empty($params['{title}']) ? ' title="' . $params['{title}']. '"' : '';
+					$alt = !empty($params['{alt}']) ? ' alt="' . $params['{alt}'] . '"' : ' alt=""';
+					$title = !empty($params['{title}']) ? ' title="' . $params['{title}'] . '"' : '';
 
 					$data = isset($disabled[$tag['tag']]) ? $url : '<img src="' . $url . '"' . $alt . $title . $params['{width}'] . $params['{height}'] . ' class="bbc_img' . (!empty($params['{width}']) || !empty($params['{height}']) ? ' resized' : '') . '" loading="lazy">';
 				},
@@ -1967,7 +1973,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'after' => '</span>',
 				'validate' => function(&$tag, &$data, $disabled)
 				{
-
 					if ($data[1] == 'top' || (is_numeric($data[1]) && $data[1] < 50))
 						$data[1] = '0 -2px 1px';
 
@@ -2129,6 +2134,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					return strcmp($a['tag'], $b['tag']);
 				}
 			);
+
 			return $codes;
 		}
 
@@ -2505,16 +2511,19 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 									case 'path':
 										$part_disallowed_chars = '<>' . $bracket_quote_chars . $space_chars . $excluded_trailing_chars . '/#&';
 										$part_excluded_trailing_chars = str_replace('?', '', $excluded_trailing_chars);
+
 										break;
 
 									case 'query':
 										$part_disallowed_chars = '<>' . $bracket_quote_chars . $space_chars . $excluded_trailing_chars . '#&';
 										$part_excluded_trailing_chars = $excluded_trailing_chars;
+
 										break;
 
 									default:
 										$part_disallowed_chars = '<>' . $bracket_quote_chars . $space_chars . $excluded_trailing_chars . '&';
 										$part_excluded_trailing_chars = $excluded_trailing_chars;
+
 										break;
 								}
 								$pcre_subroutines[$part . '_allowed'] = '[^' . $part_disallowed_chars . ']|(?P>allowed_entities)|[' . $part_excluded_trailing_chars . '](?P>excluded_lookahead)';
@@ -2737,7 +2746,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 									if (!$can_validate || filter_var($parsedurl['path'], FILTER_VALIDATE_EMAIL, $flags) !== false)
 										return '[email=' . str_replace('mailto:', '', $url) . ']' . $url . '[/email]';
-									else
+									
 										return $url;
 								}
 
@@ -2814,13 +2823,11 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			$pos2 = strpos($message, ']', $pos + 1);
 			if ($pos2 == $pos + 2)
 				continue;
-
 			$look_for = strtolower(substr($message, $pos + 2, $pos2 - $pos - 2));
 
 			// A closing tag that doesn't match any open tags? Skip it.
 			if (!in_array($look_for, array_map(function($code) { return $code['tag']; }, $open_tags)))
 				continue;
-
 			$to_close = array();
 			$block_level = null;
 
@@ -2836,6 +2843,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					if ($block_level === false)
 					{
 						array_push($open_tags, $tag);
+
 						break;
 					}
 
@@ -2846,6 +2854,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 							if ($temp['tag'] == $look_for)
 							{
 								$block_level = !empty($temp['block_level']);
+
 								break;
 							}
 					}
@@ -2854,6 +2863,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					{
 						$block_level = false;
 						array_push($open_tags, $tag);
+
 						break;
 					}
 				}
@@ -2866,9 +2876,10 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			if ((empty($open_tags) && (empty($tag) || $tag['tag'] != $look_for)))
 			{
 				$open_tags = $to_close;
+
 				continue;
 			}
-			elseif (!empty($to_close) && $tag['tag'] != $look_for)
+			if (!empty($to_close) && $tag['tag'] != $look_for)
 			{
 				if ($block_level === null && isset($look_for[0], $bbc_codes[$look_for[0]]))
 				{
@@ -2876,6 +2887,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 						if ($temp['tag'] == $look_for)
 						{
 							$block_level = !empty($temp['block_level']);
+
 							break;
 						}
 				}
@@ -2885,6 +2897,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				{
 					foreach ($to_close as $tag)
 						array_push($open_tags, $tag);
+
 					continue;
 				}
 			}
@@ -2919,7 +2932,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 		// No tags for this character, so just keep going (fastest possible course.)
 		if (!isset($bbc_codes[$tag_character]))
 			continue;
-
 		$inside = empty($open_tags) ? null : $open_tags[count($open_tags) - 1];
 		$tag = null;
 		foreach ($bbc_codes[$tag_character] as $possible)
@@ -2929,7 +2941,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			// Not a match?
 			if (strtolower(substr($message, $pos + 1, $pt_strlen)) != $possible['tag'])
 				continue;
-
 			$next_c = isset($message[$pos + 1 + $pt_strlen]) ? $message[$pos + 1 + $pt_strlen] : '';
 
 			// A tag is the last char maybe
@@ -2940,7 +2951,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			if (isset($possible['test']) && preg_match('~^' . $possible['test'] . '~', substr($message, $pos + 1 + $pt_strlen + 1)) === 0)
 				continue;
 			// Do we want parameters?
-			elseif (!empty($possible['parameters']))
+			if (!empty($possible['parameters']))
 			{
 				// Are all the parameters optional?
 				$param_required = false;
@@ -2949,6 +2960,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					if (empty($param['optional']))
 					{
 						$param_required = true;
+
 						break;
 					}
 				}
@@ -2971,16 +2983,14 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			// No type means 'parsed_content', which demands an immediate ] without parameters!
 			elseif ($next_c != ']')
 				continue;
-
 			// Check allowed tree?
 			if (isset($possible['require_parents']) && ($inside === null || !in_array($inside['tag'], $possible['require_parents'])))
 				continue;
-			elseif (isset($inside['require_children']) && !in_array($possible['tag'], $inside['require_children']))
+			if (isset($inside['require_children']) && !in_array($possible['tag'], $inside['require_children']))
 				continue;
 			// If this is in the list of disallowed child tags, don't parse it.
-			elseif (isset($inside['disallow_children']) && in_array($possible['tag'], $inside['disallow_children']))
+			if (isset($inside['disallow_children']) && in_array($possible['tag'], $inside['disallow_children']))
 				continue;
-
 			$pos1 = $pos + 1 + $pt_strlen + 1;
 
 			// Quotes can have alternate styling, we do this php-side due to all the permutations of quotes.
@@ -3035,14 +3045,13 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				// Didn't match our parameter list, try the next possible.
 				if (!$match)
 					continue;
-
 				$params = array();
 				for ($i = 1, $n = count($matches); $i < $n; $i += 2)
 				{
 					$key = strtok(ltrim($matches[$i]), '=');
 					if ($key === false)
 						continue;
-					elseif (isset($possible['parameters'][$key]['value']))
+					if (isset($possible['parameters'][$key]['value']))
 						$params['{' . $key . '}'] = strtr($possible['parameters'][$key]['value'], array('$1' => $matches[$i + 1]));
 					elseif (isset($possible['parameters'][$key]['validate']))
 						$params['{' . $key . '}'] = $possible['parameters'][$key]['validate']($matches[$i + 1]);
@@ -3085,6 +3094,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				$tag = $possible;
 				$params = array();
 			}
+
 			break;
 		}
 
@@ -3093,7 +3103,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 		{
 			if ($message[$pos + 1] == '0' && !in_array($message[$pos - 1], array(';', ' ', "\t", "\n", '>')))
 				continue;
-
 			$tag = $itemcodes[$message[$pos + 1]];
 
 			// First let's set up the tree: it needs to be in a list, or after an li.
@@ -3164,7 +3173,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 		// No tag?  Keep looking, then.  Silly people using brackets without actual tags.
 		if ($tag === null)
 			continue;
-
 		// Propagate the list to the child (so wrapping the disallowed tag won't work either.)
 		if (isset($inside['disallow_children']))
 			$tag['disallow_children'] = isset($tag['disallow_children']) ? array_unique(array_merge($tag['disallow_children'], $inside['disallow_children'])) : $inside['disallow_children'];
@@ -3240,7 +3248,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			$pos2 = stripos($message, '[/' . substr($message, $pos + 1, $tag_strlen) . ']', $pos1);
 			if ($pos2 === false)
 				continue;
-
 			$data = substr($message, $pos1, $pos2 - $pos1);
 
 			if (!empty($tag['block_level']) && substr($data, 0, 4) == '<br>')
@@ -3264,7 +3271,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				$quoted = substr($message, $pos1, 6) == '&quot;';
 				if ($tag['quoted'] != 'optional' && !$quoted)
 					continue;
-
 				if ($quoted)
 					$pos1 += 6;
 			}
@@ -3274,11 +3280,9 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			$pos2 = strpos($message, $quoted == false ? ']' : '&quot;]', $pos1);
 			if ($pos2 === false)
 				continue;
-
 			$pos3 = stripos($message, '[/' . substr($message, $pos + 1, $tag_strlen) . ']', $pos2);
 			if ($pos3 === false)
 				continue;
-
 			$data = array(
 				substr($message, $pos2 + ($quoted == false ? 1 : 7), $pos3 - ($pos2 + ($quoted == false ? 1 : 7))),
 				substr($message, $pos1, $pos2 - $pos1)
@@ -3314,11 +3318,9 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			$pos2 = strpos($message, ']', $pos1);
 			if ($pos2 === false)
 				continue;
-
 			$pos3 = stripos($message, '[/' . substr($message, $pos + 1, $tag_strlen) . ']', $pos2);
 			if ($pos3 === false)
 				continue;
-
 			// We want $1 to be the content, and the rest to be csv.
 			$data = explode(',', ',' . substr($message, $pos1, $pos2 - $pos1));
 			$data[0] = substr($message, $pos2 + 1, $pos3 - $pos2 - 1);
@@ -3338,7 +3340,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			$pos2 = strpos($message, ']', $pos1);
 			if ($pos2 === false)
 				continue;
-
 			$data = explode(',', substr($message, $pos1, $pos2 - $pos1));
 
 			if (isset($tag['validate']))
@@ -3366,7 +3367,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				$quoted = substr($message, $pos1, 6) == '&quot;';
 				if ($tag['quoted'] != 'optional' && !$quoted)
 					continue;
-
 				if ($quoted)
 					$pos1 += 6;
 			}
@@ -3388,7 +3388,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			$pos2 = strpos($message, $quoted == false ? ']' : '&quot;]', isset($nested_tag_pos) ? $nested_tag_pos : $pos1);
 			if ($pos2 === false)
 				continue;
-
 			$data = substr($message, $pos1, $pos2 - $pos1);
 
 			// Validation for my parking, please!
@@ -3711,7 +3710,7 @@ function obExit($header = null, $do_footer = null, $from_index = false, $from_fa
 	static $header_done = false, $footer_done = false, $level = 0, $has_fatal_error = false;
 
 	// Attempt to prevent a recursive loop.
-	++$level;
+	$level++;
 	if ($level > 1 && !$from_fatal_error && !$has_fatal_error)
 		exit;
 	if ($from_fatal_error)
@@ -3829,7 +3828,7 @@ function url_image_size($url)
 	{
 		return false;
 	}
-	elseif (!isset($match[1]))
+	if (!isset($match[1]))
 	{
 		$size = @getimagesize($url);
 	}
@@ -3843,7 +3842,7 @@ function url_image_size($url)
 		if ($fp != false)
 		{
 			// Send the HEAD request (since we don't have to worry about chunked, HTTP/1.1 is fine here.)
-			fwrite($fp, 'HEAD /' . $match[2] . ' HTTP/1.1' . "\r\n" . 'Host: ' . $match[1] . "\r\n" . 'user-agent: '. SMF_USER_AGENT . "\r\n" . 'Connection: close' . "\r\n\r\n");
+			fwrite($fp, 'HEAD /' . $match[2] . ' HTTP/1.1' . "\r\n" . 'Host: ' . $match[1] . "\r\n" . 'user-agent: ' . SMF_USER_AGENT . "\r\n" . 'Connection: close' . "\r\n\r\n");
 
 			// Read in the HTTP/1.1 or whatever.
 			$test = substr(fgets($fp, 11), -1);
@@ -3910,7 +3909,6 @@ function setupThemeContext($forceload = false)
 	{
 		if (trim($context['news_lines'][$i]) == '')
 			continue;
-
 		// Clean it up for presentation ;).
 		$context['news_lines'][$i] = parse_bbc(stripslashes(trim($context['news_lines'][$i])), true, 'news' . $i);
 	}
@@ -4115,7 +4113,7 @@ function memoryReturnBytes($val)
 
 	// Separate the number from the designator
 	$val = trim($val);
-	$num = intval(substr($val, 0, strlen($val) - 1));
+	$num = (int) (substr($val, 0, strlen($val) - 1));
 	$last = strtolower(substr($val, -1));
 
 	// convert to bytes
@@ -4128,6 +4126,7 @@ function memoryReturnBytes($val)
 		case 'k':
 			$num *= 1024;
 	}
+
 	return $num;
 }
 
@@ -4361,7 +4360,6 @@ function template_javascript($do_deferred = false)
 			// Last minute call! allow theme authors to disable single files.
 			if (!empty($settings['disable_files']) && in_array($id, $settings['disable_files']))
 				continue;
-
 			// By default files don't get minimized unless the file explicitly says so!
 			if (!empty($js_file['options']['minimize']) && !empty($modSettings['minimize_files']))
 			{
@@ -4470,7 +4468,6 @@ function template_css()
 		// Last minute call! allow theme authors to disable single files.
 		if (!empty($settings['disable_files']) && in_array($id, $settings['disable_files']))
 			continue;
-
 		// Files are minimized unless they explicitly opt out.
 		if (!isset($file['options']['minimize']))
 			$file['options']['minimize'] = true;
@@ -4602,7 +4599,7 @@ function custMinify($data, $type)
 		));
 	}
 	// File has to exist. If it doesn't, try to create it.
-	elseif (@fopen($minified_file, 'w') === false || !smf_chmod($minified_file))
+	if (@fopen($minified_file, 'w') === false || !smf_chmod($minified_file))
 	{
 		loadLanguage('Errors');
 		log_error(sprintf($txt['file_not_created'], $minified_file), 'general');
@@ -4625,6 +4622,7 @@ function custMinify($data, $type)
 		{
 			loadLanguage('Errors');
 			log_error(sprintf($txt['file_minimize_fail'], !empty($file['fileName']) ? $file['fileName'] : $id), 'general');
+
 			continue;
 		}
 
@@ -4785,9 +4783,10 @@ function ip2range($fullip)
 	{
 		$ip_array['low'] = $fullip;
 		$ip_array['high'] = $fullip;
+
 		return $ip_array;
 	} // if ip 22.12.* -> 22.12.* - 22.12.*
-	elseif (count($ip_parts) == 1)
+	if (count($ip_parts) == 1)
 	{
 		$ip_parts[0] = $fullip;
 		$ip_parts[1] = $fullip;
@@ -4798,9 +4797,10 @@ function ip2range($fullip)
 	{
 		$ip_array['low'] = $ip_parts[0];
 		$ip_array['high'] = $ip_parts[1];
+
 		return $ip_array;
 	}
-	elseif (count($ip_parts) == 2) // if ip 22.22.*-22.22.*
+	if (count($ip_parts) == 2) // if ip 22.22.*-22.22.*
 	{
 		$valid_low = isValidIP($ip_parts[0]);
 		$valid_high = isValidIP($ip_parts[1]);
@@ -4939,10 +4939,10 @@ function text2words($text, $max_chars = 20, $encrypt = false)
 				$returned_ints[] = $max_chars == 4 ? min($total, 16777215) : $total;
 			}
 		}
+
 		return array_unique($returned_ints);
 	}
-	else
-	{
+	
 		// Trim characters before and after and add slashes for database insertion.
 		$returned_words = array();
 		foreach ($words as $word)
@@ -4951,7 +4951,6 @@ function text2words($text, $max_chars = 20, $encrypt = false)
 
 		// Filter out all words that occur more than once.
 		return array_unique($returned_words);
-	}
 }
 
 /**
@@ -4975,9 +4974,9 @@ function create_button($name, $alt, $label = '', $custom = '', $force_use = fals
 
 	if (!$settings['use_image_buttons'])
 		return $txt[$alt];
-	elseif (!empty($settings['use_buttons']))
+	if (!empty($settings['use_buttons']))
 		return '<span class="main_icons ' . $name . '" alt="' . $txt[$alt] . '"></span>' . ($label != '' ? '&nbsp;<strong>' . $txt[$label] . '</strong>' : '');
-	else
+	
 		return '<img src="' . $settings['lang_images_url'] . '/' . $name . '" alt="' . $txt[$alt] . '" ' . $custom . '>';
 }
 
@@ -5367,7 +5366,6 @@ function call_integration_hook($hook, $parameters = array())
 		// Hook has been marked as "disabled". Skip it!
 		if (strpos($function, '!') !== false)
 			continue;
-
 		$call = call_helper($function, true);
 
 		// Is it valid?
@@ -5599,7 +5597,7 @@ function call_helper($string, $return = false)
 		return false;
 
 	// Right, we got what we need, time to do some checks.
-	elseif (!is_callable($func, false, $callable_name))
+	if (!is_callable($func, false, $callable_name))
 	{
 		loadLanguage('Errors');
 		log_error(sprintf($txt['sub_action_fail'], $callable_name), 'general');
@@ -5609,23 +5607,19 @@ function call_helper($string, $return = false)
 	}
 
 	// Everything went better than expected.
-	else
-	{
+	
 		// What are we gonna do about it?
 		if ($return)
 			return $func;
 
 		// If this is a plain function, avoid the heat of calling call_user_func().
-		else
-		{
+		
 			if (is_array($func))
 				call_user_func($func);
 
 			else
 				$func();
-		}
 	}
-}
 
 /**
  * Receives a string and tries to figure it out if it contains info to load a file.
@@ -5706,7 +5700,7 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 		return false;
 
 	// An FTP url. We should try connecting and RETRieving it...
-	elseif ($match[1] == 'ftp')
+	if ($match[1] == 'ftp')
 	{
 		// Include the file containing the ftp_connection class.
 		require_once($sourcedir . '/Class-Package.php');
@@ -5761,7 +5755,7 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 			{
 				fwrite($fp, 'GET ' . ($match[6] !== '/' ? str_replace(' ', '%20', $match[6]) : '') . ' HTTP/1.0' . "\r\n");
 				fwrite($fp, 'Host: ' . $match[3] . (empty($match[5]) ? ($match[2] ? ':443' : '') : ':' . $match[5]) . "\r\n");
-				fwrite($fp, 'user-agent: '. SMF_USER_AGENT . "\r\n");
+				fwrite($fp, 'user-agent: ' . SMF_USER_AGENT . "\r\n");
 				if ($keep_alive)
 					fwrite($fp, 'connection: Keep-Alive' . "\r\n\r\n");
 				else
@@ -5771,7 +5765,7 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 			{
 				fwrite($fp, 'POST ' . ($match[6] !== '/' ? $match[6] : '') . ' HTTP/1.0' . "\r\n");
 				fwrite($fp, 'Host: ' . $match[3] . (empty($match[5]) ? ($match[2] ? ':443' : '') : ':' . $match[5]) . "\r\n");
-				fwrite($fp, 'user-agent: '. SMF_USER_AGENT . "\r\n");
+				fwrite($fp, 'user-agent: ' . SMF_USER_AGENT . "\r\n");
 				if ($keep_alive)
 					fwrite($fp, 'connection: Keep-Alive' . "\r\n");
 				else
@@ -5794,12 +5788,11 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 
 				if (empty($location))
 					return false;
-				else
-				{
+				
 					if (!$keep_alive)
 						fclose($fp);
+
 					return fetch_web_data($location, $post_data, $keep_alive, $redirection_level + 1);
-				}
 			}
 
 			// Make sure we get a 200 OK.
@@ -6092,31 +6085,29 @@ function replaceEntities__callback($matches)
 		if ($num < 0x20)
 			return '';
 		// text is text
-		elseif ($num < 0x80)
+		if ($num < 0x80)
 			return chr($num);
 		// all others get html-ised
-		else
+		
 			return '&#' . $matches[2] . ';';
 	}
-	else
-	{
+	
 		// <0x20 are control characters, 0x20 is a space, > 0x10FFFF is past the end of the utf8 character set
 		// 0xD800 >= $num <= 0xDFFF are surrogate markers (not valid for utf8 text)
 		if ($num < 0x20 || $num > 0x10FFFF || ($num >= 0xD800 && $num <= 0xDFFF))
 			return '';
 		// <0x80 (or less than 128) are standard ascii characters a-z A-Z 0-9 and punctuation
-		elseif ($num < 0x80)
+		if ($num < 0x80)
 			return chr($num);
 		// <0x800 (2048)
-		elseif ($num < 0x800)
+		if ($num < 0x800)
 			return chr(($num >> 6) + 192) . chr(($num & 63) + 128);
 		// < 0x10000 (65536)
-		elseif ($num < 0x10000)
+		if ($num < 0x10000)
 			return chr(($num >> 12) + 224) . chr((($num >> 6) & 63) + 128) . chr(($num & 63) + 128);
 		// <= 0x10FFFF (1114111)
-		else
+		
 			return chr(($num >> 18) + 240) . chr((($num >> 12) & 63) + 128) . chr((($num >> 6) & 63) + 128) . chr(($num & 63) + 128);
-	}
 }
 
 /**
@@ -6141,16 +6132,16 @@ function fixchar__callback($matches)
 	if ($num < 0x20 || $num > 0x10FFFF || ($num >= 0xD800 && $num <= 0xDFFF) || $num === 0x202D || $num === 0x202E)
 		return '';
 	// <0x80 (or less than 128) are standard ascii characters a-z A-Z 0-9 and punctuation
-	elseif ($num < 0x80)
+	if ($num < 0x80)
 		return chr($num);
 	// <0x800 (2048)
-	elseif ($num < 0x800)
+	if ($num < 0x800)
 		return chr(($num >> 6) + 192) . chr(($num & 63) + 128);
 	// < 0x10000 (65536)
-	elseif ($num < 0x10000)
+	if ($num < 0x10000)
 		return chr(($num >> 12) + 224) . chr((($num >> 6) & 63) + 128) . chr(($num & 63) + 128);
 	// <= 0x10FFFF (1114111)
-	else
+	
 		return chr(($num >> 18) + 240) . chr((($num >> 12) & 63) + 128) . chr((($num >> 6) & 63) + 128) . chr(($num & 63) + 128);
 }
 
@@ -6173,7 +6164,7 @@ function entity_fix__callback($matches)
 	// we don't allow control characters, characters out of range, byte markers, etc
 	if ($num < 0x20 || $num > 0x10FFFF || ($num >= 0xD800 && $num <= 0xDFFF) || $num == 0x202D || $num == 0x202E)
 		return '';
-	else
+	
 		return '&#' . $num . ';';
 }
 
@@ -6238,7 +6229,7 @@ function smf_list_timezones($when = 'now')
 
 	// A Unix timestamp?
 	elseif (is_numeric($when))
-		$when = intval($when);
+		$when = (int) $when;
 
 	// Invalid value? Just get current Unix timestamp.
 	else
@@ -6286,12 +6277,10 @@ function smf_list_timezones($when = 'now')
 		// We don't want UTC right now
 		if ($tzid == 'UTC')
 			continue;
-
 		$tz = @timezone_open($tzid);
 
 		if ($tz == null)
 			continue;
-
 		// First, get the set of transition rules for this tzid
 		$tzinfo = timezone_transitions_get($tz, $when, $later);
 
@@ -6391,14 +6380,17 @@ function smf_list_timezones($when = 'now')
 			{
 				case 0:
 					$desc = sprintf($metazone, $tztxt['daylight_saving_time_false']);
+
 					break;
 
 				case 1:
 					$desc = sprintf($metazone, '');
+
 					break;
 
 				case 2:
 					$desc = sprintf($metazone, $tztxt['daylight_saving_time_true']);
+
 					break;
 			}
 		}
@@ -6469,6 +6461,7 @@ function getUserTimezone($id_member = null)
 	if (isset($user_settings['id_member']) && $user_settings['id_member'] == $id_member && !empty($user_settings['timezone']))
 	{
 		$member_cache[$id_member] = $user_settings['timezone'];
+
 		return $user_settings['timezone'];
 	}
 
@@ -6509,8 +6502,7 @@ function inet_ptod($ip_address)
 	if (!isValidIP($ip_address))
 		return $ip_address;
 
-	$bin = inet_pton($ip_address);
-	return $bin;
+	return inet_pton($ip_address);
 }
 
 /**
@@ -6525,11 +6517,12 @@ function inet_dtop($bin)
 
 	if (empty($bin))
 		return '';
-	elseif ($db_type == 'postgresql')
+	if ($db_type == 'postgresql')
 		return $bin;
 	// Already a String?
-	elseif (isValidIP($bin))
+	if (isValidIP($bin))
 		return $bin;
+
 	return inet_ntop($bin);
 }
 
@@ -6546,7 +6539,6 @@ function inet_dtop($bin)
  * - output a strict subset of PHP's native serialized representation
  * - does not serialize objects
  *
- * @param mixed $value
  * @return string
  */
 function _safe_serialize($value)
@@ -6582,7 +6574,6 @@ function _safe_serialize($value)
 /**
  * Wrapper for _safe_serialize() that handles exceptions and multibyte encoding issues.
  *
- * @param mixed $value
  * @return string
  */
 function safe_serialize($value)
@@ -6609,7 +6600,6 @@ function safe_serialize($value)
  * - does not unserialize objects
  *
  * @param string $str
- * @return mixed
  * @throw Exception if $str is malformed or contains unsupported types (e.g., resources, objects)
  */
 function _safe_unserialize($str)
@@ -6680,12 +6670,14 @@ function _safe_unserialize($str)
 					$list = &$list[$key];
 					$expected[] = $expectedLength;
 					$state = 2;
+
 					break;
 				}
 				if ($type != '}')
 				{
 					$list[$key] = $value;
 					$state = 2;
+
 					break;
 				}
 
@@ -6720,6 +6712,7 @@ function _safe_unserialize($str)
 
 					$key = $value;
 					$state = 3;
+
 					break;
 				}
 
@@ -6734,6 +6727,7 @@ function _safe_unserialize($str)
 					$list = &$data;
 					$expected[] = $expectedLength;
 					$state = 2;
+
 					break;
 				}
 
@@ -6741,6 +6735,7 @@ function _safe_unserialize($str)
 				{
 					$data = $value;
 					$state = 1;
+
 					break;
 				}
 
@@ -6760,7 +6755,6 @@ function _safe_unserialize($str)
  * Wrapper for _safe_unserialize() that handles exceptions and multibyte encoding issue
  *
  * @param string $str
- * @return mixed
  */
 function safe_unserialize($str)
 {
@@ -6810,10 +6804,10 @@ function smf_chmod($file, $value = 0)
 		if (is_writable($file))
 		{
 			$isWritable = true;
+
 			break;
 		}
 
-		else
 			@chmod($file, $val);
 	}
 
@@ -6843,24 +6837,31 @@ function smf_json_decode($json, $returnAsArray = false, $logIt = true)
 	{
 		case JSON_ERROR_NONE:
 			$jsonError = false;
+
 			break;
 		case JSON_ERROR_DEPTH:
 			$jsonError = 'JSON_ERROR_DEPTH';
+
 			break;
 		case JSON_ERROR_STATE_MISMATCH:
 			$jsonError = 'JSON_ERROR_STATE_MISMATCH';
+
 			break;
 		case JSON_ERROR_CTRL_CHAR:
 			$jsonError = 'JSON_ERROR_CTRL_CHAR';
+
 			break;
 		case JSON_ERROR_SYNTAX:
 			$jsonError = 'JSON_ERROR_SYNTAX';
+
 			break;
 		case JSON_ERROR_UTF8:
 			$jsonError = 'JSON_ERROR_UTF8';
+
 			break;
 		default:
 			$jsonError = 'unknown';
+
 			break;
 	}
 
@@ -6985,6 +6986,7 @@ function set_tld_regex($update = false)
 	elseif (!empty($modSettings['tld_regex']) && @preg_match('~' . $modSettings['tld_regex'] . '~', null) !== false)
 	{
 		$done = true;
+
 		return;
 	}
 
@@ -6999,7 +7001,7 @@ function set_tld_regex($update = false)
 				$line = trim($line);
 				if (empty($line) || strlen($line) != strspn($line, 'abcdefghijklmnopqrstuvwxyz0123456789-'))
 					return false;
-				else
+				
 					return true;
 			}
 		);
@@ -7098,7 +7100,7 @@ function build_regex($strings, $delim = null, $returnArray = false)
 
 	// If it's not an array, there's not much to do. ;)
 	if (!is_array($strings))
-		return preg_quote(@strval($strings), $delim);
+		return preg_quote(@(string) $strings, $delim);
 
 	$regex_key = md5(json_encode(array($strings, $delim, $returnArray)));
 
@@ -7142,6 +7144,7 @@ function build_regex($strings, $delim = null, $returnArray = false)
 			}
 
 			$depth--;
+
 			return $index;
 		}
 
@@ -7161,6 +7164,7 @@ function build_regex($strings, $delim = null, $returnArray = false)
 			$index[$first][''] = '';
 
 		$depth--;
+
 		return $index;
 	};
 
@@ -7220,12 +7224,13 @@ function build_regex($strings, $delim = null, $returnArray = false)
 
 				if ($l1 == $l2)
 					return strcmp($k1, $k2) > 0 ? 1 : -1;
-				else
+				
 					return $l1 > $l2 ? -1 : 1;
 			}
 		);
 
 		$depth--;
+
 		return implode('|', $regex);
 	};
 
@@ -7250,6 +7255,7 @@ function build_regex($strings, $delim = null, $returnArray = false)
 		mb_internal_encoding($current_encoding);
 
 	$regexes[$regex_key] = $regex;
+
 	return $regex;
 }
 
@@ -7284,6 +7290,7 @@ function ssl_cert_found($url)
 		$params = stream_context_get_params($stream);
 		$result = isset($params["options"]["ssl"]["peer_certificate"]) ? true : false;
 	}
+
 	return $result;
 }
 
@@ -7317,9 +7324,11 @@ function https_redirect_active($url)
 		if (stristr($header, 'Location: https://') !== false)
 		{
 			$result = true;
+
 			break;
 		}
 	}
+
 	return $result;
 }
 
@@ -7384,7 +7393,7 @@ function build_query_board($userid)
 			EXISTS (
 				SELECT bpv.id_board
 				FROM ' . $db_prefix . 'board_permissions_view AS bpv
-				WHERE bpv.id_group IN ('. implode(',', $groups) .')
+				WHERE bpv.id_group IN (' . implode(',', $groups) . ')
 					AND bpv.deny = 0
 					AND bpv.id_board = b.id_board
 			)';
@@ -7394,7 +7403,7 @@ function build_query_board($userid)
 			AND NOT EXISTS (
 				SELECT bpv.id_board
 				FROM ' . $db_prefix . 'board_permissions_view AS bpv
-				WHERE bpv.id_group IN ( '. implode(',', $groups) .')
+				WHERE bpv.id_group IN ( ' . implode(',', $groups) . ')
 					AND bpv.deny = 1
 					AND bpv.id_board = b.id_board
 			)';
@@ -7464,7 +7473,7 @@ function validate_iri($iri, $flags = null)
 
 	if (filter_var($url, FILTER_VALIDATE_URL, $flags) !== false)
 		return $iri;
-	else
+	
 		return false;
 }
 
@@ -7495,9 +7504,7 @@ function sanitize_iri($iri)
 	$iri = filter_var($iri, FILTER_SANITIZE_URL);
 
 	// Decode the non-ASCII characters
-	$iri = rawurldecode($iri);
-
-	return $iri;
+	return rawurldecode($iri);
 }
 
 /**
@@ -7599,7 +7606,7 @@ function check_cron()
 {
 	global $modSettings, $smcFunc, $txt;
 
-	if (!empty($modSettings['cron_is_real_cron']) && time() - @intval($modSettings['cron_last_checked']) > 84600)
+	if (!empty($modSettings['cron_is_real_cron']) && time() - @(int) ($modSettings['cron_last_checked']) > 84600)
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT COUNT(*)
@@ -7693,6 +7700,7 @@ function sentence_list($list)
 		{
 			$separator = $txt['sentence_list_separator_alt'];
 			$format = strtr($format, trim($txt['sentence_list_separator']), trim($separator));
+
 			break;
 		}
 	}
@@ -7703,8 +7711,8 @@ function sentence_list($list)
 	$i = 0;
 	while (empty($done))
 	{
-		if (strpos($format, '{'. --$i . '}') !== false)
-			$replacements['{'. $i . '}'] = array_pop($list);
+		if (strpos($format, '{' . --$i . '}') !== false)
+			$replacements['{' . $i . '}'] = array_pop($list);
 		else
 			$done = true;
 	}
@@ -7714,8 +7722,8 @@ function sentence_list($list)
 	$i = 0;
 	while (empty($done))
 	{
-		if (strpos($format, '{'. ++$i . '}') !== false)
-			$replacements['{'. $i . '}'] = array_shift($list);
+		if (strpos($format, '{' . ++$i . '}') !== false)
+			$replacements['{' . $i . '}'] = array_shift($list);
 		else
 			$done = true;
 	}
@@ -7745,8 +7753,6 @@ function truncate_array($array, $max_length = 1900, $deep = 3)
 	if ($curr_length <= $max_length)
 		return $array;
 
-	else
-	{
 		// Truncate each element's value to a reasonable length
 		$param_max = floor($max_length / count($array));
 
@@ -7763,7 +7769,6 @@ function truncate_array($array, $max_length = 1900, $deep = 3)
 		}
 
 		return $array;
-	}
 }
 
 /**
@@ -7788,7 +7793,6 @@ function array_length($array, $deep = 3)
 			// No can't do
 			if ($deep_count <= 0)
 				continue;
-
 			$length += array_length($value, $deep_count);
 		}
 		else
@@ -7808,7 +7812,6 @@ function array_length($array, $deep = 3)
  *   in the request and their values are accepted request values.
  * - A scalar value, in which case no furthur checks are done.
  *
- * @param array $array
  * @param string $req_var request variable
  *
  * @return bool whether any of the criteria was satisfied

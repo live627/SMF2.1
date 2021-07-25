@@ -17,7 +17,6 @@
 if (!defined('SMF'))
 	die('No direct access...');
 
-
 /**
  * Initiates exports a member's profile, posts, and personal messages to a file.
  *
@@ -266,7 +265,6 @@ function export_profile_data($uid)
 			{
 				if (!isset($progress[$datatype]))
 					continue;
-
 				if (!isset($latest[$datatype]))
 					$latest[$datatype] = is_callable($datatype_settings['latest']) ? $datatype_settings['latest']($uid) : $datatype_settings['latest'];
 
@@ -517,8 +515,8 @@ function download_export_file($uid)
 		list($a, $range) = explode("=", $_SERVER['HTTP_RANGE'], 2);
 		list($range) = explode(",", $range, 2);
 		list($range, $range_end) = explode("-", $range);
-		$range = intval($range);
-		$range_end = !$range_end ? $size - 1 : intval($range_end);
+		$range = (int) $range;
+		$range_end = !$range_end ? $size - 1 : (int) $range_end;
 		$new_length = $range_end - $range + 1;
 	}
 
@@ -763,6 +761,7 @@ function create_export_dir($fallback = '')
 		else
 		{
 			log_error($txt['export_dir_not_writable']);
+
 			return false;
 		}
 	}
@@ -789,9 +788,9 @@ function get_xslt_stylesheet($format, $uid)
 	$xslt_variables = array();
 
 	// Do not change any of these to HTTPS URLs. For explanation, see comments in the buildXmlFeed() function.
-	$smf_ns = 'htt'.'p:/'.'/ww'.'w.simple'.'machines.o'.'rg/xml/profile';
-	$xslt_ns = 'htt'.'p:/'.'/ww'.'w.w3.o'.'rg/1999/XSL/Transform';
-	$html_ns = 'htt'.'p:/'.'/ww'.'w.w3.o'.'rg/1999/xhtml';
+	$smf_ns = 'htt' . 'p:/' . '/ww' . 'w.simple' . 'machines.o' . 'rg/xml/profile';
+	$xslt_ns = 'htt' . 'p:/' . '/ww' . 'w.w3.o' . 'rg/1999/XSL/Transform';
+	$html_ns = 'htt' . 'p:/' . '/ww' . 'w.w3.o' . 'rg/1999/xhtml';
 
 	require_once($sourcedir . DIRECTORY_SEPARATOR . 'News.php');
 
@@ -1751,7 +1750,7 @@ function get_xslt_stylesheet($format, $uid)
 
 			$stylesheet['css_js'] .= "\n\t" . str_replace("\n", "\n\t", implode("\n", $context['export_javascript_inline']['defer']));
 
-			$stylesheet['css_js'] .= "\n" . '});'. "\n" . ']]>
+			$stylesheet['css_js'] .= "\n" . '});' . "\n" . ']]>
 			</script>';
 		}
 
@@ -1927,7 +1926,6 @@ function export_load_css_js()
 
 		if (!isset($smiley_mimetypes[$pathinfo['extension']]))
 			continue;
-
 		$var = implode('_', array('smf', 'smiley', $pathinfo['filename'], $pathinfo['extension']));
 
 		if (!isset($context['javascript_vars'][$var]))

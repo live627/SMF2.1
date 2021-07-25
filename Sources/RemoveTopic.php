@@ -639,7 +639,7 @@ function removeMessage($message, $decreasePostCount = true)
 					else
 						fatal_lang_error('cannot_delete_own', 'permission');
 				}
-				elseif (($row['id_member_poster'] != $user_info['id'] || !$delete_replies) && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + $modSettings['edit_disable_time'] * 60 < time())
+				elseif (($row['id_member_poster'] != $user_info['id'] || !$delete_replies) && !empty($modSettings['edit_disable_time']) && time() > $row['poster_time'] + $modSettings['edit_disable_time'] * 60)
 					fatal_lang_error('modify_post_time_passed', false);
 			}
 			elseif ($row['id_member_poster'] == $user_info['id'])
@@ -671,7 +671,7 @@ function removeMessage($message, $decreasePostCount = true)
 				elseif (!allowedTo('delete_any'))
 					isAllowedTo('delete_own');
 			}
-			elseif (!allowedTo('delete_any') && ($row['id_member_poster'] != $user_info['id'] || !allowedTo('delete_replies')) && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + $modSettings['edit_disable_time'] * 60 < time())
+			elseif (!allowedTo('delete_any') && ($row['id_member_poster'] != $user_info['id'] || !allowedTo('delete_replies')) && !empty($modSettings['edit_disable_time']) && time() > $row['poster_time'] + $modSettings['edit_disable_time'] * 60)
 				fatal_lang_error('modify_post_time_passed', false);
 		}
 		elseif ($row['id_member_poster'] == $user_info['id'] && !allowedTo('delete_any'))
@@ -715,6 +715,7 @@ function removeMessage($message, $decreasePostCount = true)
 			fatal_lang_error('delFirstPost', false);
 
 		removeTopics($row['id_topic']);
+
 		return true;
 	}
 
@@ -1078,12 +1079,14 @@ function RestoreTopic()
 			if ($row['id_msg'] == $row['id_first_msg'] && $row['id_previous_topic'] == $row['id_topic'])
 			{
 				$topics_to_restore[] = $row['id_topic'];
+
 				continue;
 			}
 			// Don't know where it's going?
 			if (empty($row['id_previous_topic']))
 			{
 				$unfound_messages[$row['id_msg']] = $row['subject'];
+
 				continue;
 			}
 
@@ -1140,6 +1143,7 @@ function RestoreTopic()
 			if (in_array($topic, $topics_to_restore))
 			{
 				unset($actioned_messages[$topic]);
+
 				continue;
 			}
 
@@ -1185,6 +1189,7 @@ function RestoreTopic()
 			if (empty($row['id_previous_board']))
 			{
 				$unfound_messages[$row['id_first_msg']] = $row['subject'];
+
 				continue;
 			}
 
@@ -1516,7 +1521,7 @@ function removeDeleteConcurrence()
 
 	if ($modSettings['recycle_board'] != $board)
 		return true;
-	elseif (isset($_REQUEST['msg']))
+	if (isset($_REQUEST['msg']))
 		$confirm_url = $scripturl . '?action=deletemsg;confirm_delete;topic=' . $context['current_topic'] . '.0;msg=' . $_REQUEST['msg'] . ';' . $context['session_var'] . '=' . $context['session_id'];
 	else
 		$confirm_url = $scripturl . '?action=removetopic2;confirm_delete;topic=' . $context['current_topic'] . '.0;' . $context['session_var'] . '=' . $context['session_id'];

@@ -114,6 +114,7 @@ function ViewQuery()
 				if (strpos($select, $tmp) !== false)
 				{
 					$is_select_query = false;
+
 					break;
 				}
 		}
@@ -149,6 +150,7 @@ function ViewQuery()
 		<table>
 			<tr><td>', $smcFunc['db_error']($db_connection), '</td></tr>
 		</table>';
+
 				continue;
 			}
 

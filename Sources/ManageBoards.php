@@ -345,6 +345,7 @@ function EditCategory2()
 	elseif (isset($_POST['delete']) && !isset($_POST['confirmation']) && !isset($_POST['empty']))
 	{
 		EditCategory();
+
 		return;
 	}
 	// Delete the category!
@@ -402,7 +403,7 @@ function EditBoard()
 		$_REQUEST['sa'] = 'newboard';
 	}
 
-	if ('newboard' === $_REQUEST['sa'])
+	if ($_REQUEST['sa'] === 'newboard')
 	{
 		// Category doesn't exist, man... sorry.
 		if (empty($_REQUEST['cat']))
@@ -748,6 +749,7 @@ function EditBoard2()
 	elseif (isset($_POST['delete']) && !isset($_POST['confirmation']) && !isset($_POST['no_children']))
 	{
 		EditBoard();
+
 		return;
 	}
 	elseif (isset($_POST['delete']))

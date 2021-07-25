@@ -265,10 +265,10 @@ function smf_error_handler($error_level, $error_string, $file, $line)
 		{
 			if ($array[$i]['function'] != 'loadSubTemplate')
 				continue;
-
 			// This is a bug in PHP, with eval, it seems!
 			if (empty($array[$i]['args']))
 				$i++;
+
 			break;
 		}
 
@@ -334,7 +334,7 @@ function setup_fatal_error_context($error_message, $error_code = null)
 	static $level = 0;
 
 	// Attempt to prevent a recursive loop.
-	++$level;
+	$level++;
 	if ($level > 1)
 		return false;
 

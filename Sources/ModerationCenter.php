@@ -1118,7 +1118,7 @@ function ViewWatchedUsers()
 					{
 						if ($member['last_post_id'])
 							return '<a href="' . $scripturl . '?msg=' . $member['last_post_id'] . '">' . $member['last_post'] . '</a>';
-						else
+						
 							return $member['last_post'];
 					},
 				),
@@ -1537,6 +1537,7 @@ function ViewWarningLog()
 						if (!empty($rowData['id_notice']))
 							$output .= '
 								&nbsp;<a href="' . $scripturl . '?action=moderate;area=notice;nid=' . $rowData['id_notice'] . '" onclick="window.open(this.href, \'\', \'scrollbars=yes,resizable=yes,width=400,height=250\');return false;" target="_blank" rel="noopener" title="' . $txt['profile_warning_previous_notice'] . '"><span class="main_icons filter centericon"></span></a>';
+
 						return $output;
 					},
 				),
@@ -1657,7 +1658,7 @@ function ViewWarningTemplates()
 	// Submitting a new one?
 	if (isset($_POST['add']))
 		return ModifyWarningTemplate();
-	elseif (isset($_POST['delete']) && !empty($_POST['deltpl']))
+	if (isset($_POST['delete']) && !empty($_POST['deltpl']))
 	{
 		checkSession();
 		validateToken('mod-wt');
@@ -1955,7 +1956,7 @@ function ModifyWarningTemplate()
 					SET id_recipient = {int:personal}, recipient_name = {string:title}, body = {string:body}
 					WHERE id_comment = {int:id}
 						AND comment_type = {string:warntpl}
-						AND (id_recipient = {int:generic} OR id_recipient = {int:current_member})'.
+						AND (id_recipient = {int:generic} OR id_recipient = {int:current_member})' .
 						($recipient_id ? ' AND id_member = {int:current_member}' : ''),
 					array(
 						'personal' => $recipient_id,

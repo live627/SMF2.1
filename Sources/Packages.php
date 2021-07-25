@@ -27,6 +27,7 @@ function Packages()
 	if (isset($_GET['get']) || isset($_GET['pgdownload']))
 	{
 		require_once($sourcedir . '/PackageGet.php');
+
 		return PackageGet();
 	}
 
@@ -156,6 +157,7 @@ function PackageInstallTest()
 				if (basename($file['filename']) == 'package-info.xml')
 				{
 					$context['base_path'] = dirname($file['filename']) . '/';
+
 					break;
 				}
 
@@ -323,9 +325,10 @@ function PackageInstallTest()
 		if ($action['type'] == 'chmod')
 		{
 			$chmod_files[] = $action['filename'];
+
 			continue;
 		}
-		elseif ($action['type'] == 'readme' || $action['type'] == 'license')
+		if ($action['type'] == 'readme' || $action['type'] == 'license')
 		{
 			$type = 'package_' . $action['type'];
 			if (file_exists($packagesdir . '/temp/' . $context['base_path'] . $action['filename']))
@@ -346,9 +349,9 @@ function PackageInstallTest()
 			continue;
 		}
 		// Don't show redirects.
-		elseif ($action['type'] == 'redirect')
+		if ($action['type'] == 'redirect')
 			continue;
-		elseif ($action['type'] == 'error')
+		if ($action['type'] == 'error')
 		{
 			$context['has_failure'] = true;
 			if (isset($action['error_msg']) && isset($action['error_var']))
@@ -653,7 +656,6 @@ function PackageInstallTest()
 
 		if (empty($thisAction))
 			continue;
-
 		if (!in_array($action['type'], array('hook', 'credits')))
 		{
 			if ($context['uninstalling'])
@@ -824,6 +826,7 @@ function PackageInstall()
 				if (basename($file['filename']) == 'package-info.xml')
 				{
 					$context['base_path'] = dirname($file['filename']) . '/';
+
 					break;
 				}
 
@@ -883,7 +886,6 @@ function PackageInstall()
 			$theme_data = $smcFunc['json_decode'](base64_decode($change), true);
 			if (empty($theme_data['type']))
 				continue;
-
 			$themes_installed[] = $theme_data['id'];
 			$context['theme_copies'][$theme_data['type']][$theme_data['orig']][] = $theme_data['future'];
 		}
@@ -1175,6 +1177,7 @@ function PackageInstall()
 				{
 					if ($a[0] == $b[0])
 						return 0;
+
 					return $a[0] == 'remove_table' ? -1 : 1;
 				});
 
@@ -1623,7 +1626,6 @@ function list_getPackages($start, $items_per_page, $sort, $params)
 		{
 			if ($package == '.' || $package == '..' || $package == 'temp' || (!(is_dir($packagesdir . '/' . $package) && file_exists($packagesdir . '/' . $package . '/package-info.xml')) && substr(strtolower($package), -7) != '.tar.gz' && substr(strtolower($package), -4) != '.tgz' && substr(strtolower($package), -4) != '.zip'))
 				continue;
-
 			// Skip directories or files that are named the same.
 			if (is_dir($packagesdir . '/' . $package))
 			{
@@ -1647,7 +1649,6 @@ function list_getPackages($start, $items_per_page, $sort, $params)
 			$packageInfo = getPackageInfo($package);
 			if (!is_array($packageInfo))
 				continue;
-
 			if (!empty($packageInfo))
 			{
 				if (!isset($sort_id[$packageInfo['type']]))
@@ -1683,6 +1684,7 @@ function list_getPackages($start, $items_per_page, $sort, $params)
 						{
 							// Okay, this one is good to go.
 							$packageInfo['can_install'] = true;
+
 							break;
 						}
 					}
@@ -1713,6 +1715,7 @@ function list_getPackages($start, $items_per_page, $sort, $params)
 							if (!$upgrade->exists('@from') || matchPackageVersion($installed_mods[$packageInfo['id']]['version'], $upgrade->fetch('@from')))
 							{
 								$packageInfo['can_upgrade'] = true;
+
 								break;
 							}
 					}
@@ -1728,6 +1731,7 @@ function list_getPackages($start, $items_per_page, $sort, $params)
 						if (!$uninstall->exists('@for') || matchPackageVersion($the_version, $uninstall->fetch('@for')))
 						{
 							$packageInfo['can_uninstall'] = true;
+
 							break;
 						}
 					}
@@ -1853,6 +1857,7 @@ function ViewOperations()
 				if (basename($file['filename']) == 'package-info.xml')
 				{
 					$context['base_path'] = dirname($file['filename']) . '/';
+
 					break;
 				}
 
@@ -2282,7 +2287,7 @@ function fetchPerms__recursive($path, &$data, $level)
 	// Is this where we stop?
 	if (isset($_GET['xml']) && !empty($context['look_for']) && !$isLikelyPath)
 		return;
-	elseif ($level > $context['default_level'] && !$isLikelyPath)
+	if ($level > $context['default_level'] && !$isLikelyPath)
 		return;
 
 	// Are we actually interested in saving this data?
@@ -2397,7 +2402,6 @@ function fetchPerms__recursive($path, &$data, $level)
 		// Gone too far?
 		if ($counter > ($context['file_offset'] + $context['file_limit']))
 			continue;
-
 		$additional_data = array(
 			'perms' => array(
 				'chmod' => @is_writable($path . '/' . $file),
@@ -2480,11 +2484,9 @@ function PackagePermissionsAction()
 
 				if (!$legal)
 					continue;
-
 				// Check it exists.
 				if (!file_exists($path))
 					continue;
-
 				if ($status == 'custom')
 					$validate_custom = true;
 
@@ -2660,6 +2662,7 @@ function PackagePermissionsAction()
 				$context['total_files'] = $file_count;
 				$context['directory_list_encode'] = base64_encode($smcFunc['json_encode']($context['directory_list']));
 				$context['special_files_encode'] = base64_encode($smcFunc['json_encode']($context['special_files']));
+
 				return false;
 			}
 

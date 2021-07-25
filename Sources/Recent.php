@@ -321,6 +321,7 @@ function RecentPosts()
 	if (empty($messages))
 	{
 		$context['posts'] = array();
+
 		return;
 	}
 
@@ -397,7 +398,7 @@ function RecentPosts()
 			'message' => $row['body'],
 			'can_reply' => false,
 			'can_delete' => false,
-			'delete_possible' => ($row['id_first_msg'] != $row['id_msg'] || $row['id_last_msg'] == $row['id_msg']) && (empty($modSettings['edit_disable_time']) || $row['poster_time'] + $modSettings['edit_disable_time'] * 60 >= time()),
+			'delete_possible' => ($row['id_first_msg'] != $row['id_msg'] || $row['id_last_msg'] == $row['id_msg']) && (empty($modSettings['edit_disable_time']) || time() <= $row['poster_time'] + $modSettings['edit_disable_time'] * 60),
 			'css_class' => 'windowbg',
 		);
 
@@ -442,7 +443,6 @@ function RecentPosts()
 				// Hmm, they have permission, but there are no topics from that board on this page.
 				if (!isset($board_ids[$type][$board_id]))
 					continue;
-
 				// Okay, looks like they can do it for these posts.
 				foreach ($board_ids[$type][$board_id] as $counter)
 					if ($type == 'any' || $context['posts'][$counter]['poster']['id'] == $user_info['id'])
@@ -467,20 +467,20 @@ function RecentPosts()
 		$context['posts'][$key]['quickbuttons'] = array(
 			'reply' => array(
 				'label' => $txt['reply'],
-				'href' => $scripturl.'?action=post;topic='.$post['topic'].'.'.$post['start'],
+				'href' => $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'],
 				'icon' => 'reply_button',
 				'show' => $post['can_reply']
 			),
 			'quote' => array(
 				'label' => $txt['quote_action'],
-				'href' => $scripturl.'?action=post;topic='.$post['topic'].'.'.$post['start'].';quote='.$post['id'],
+				'href' => $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'] . ';quote=' . $post['id'],
 				'icon' => 'quote',
 				'show' => $post['can_quote']
 			),
 			'delete' => array(
 				'label' => $txt['remove'],
-				'href' => $scripturl.'?action=deletemsg;msg='.$post['id'].';topic='.$post['topic'].';recent;'.$context['session_var'].'='.$context['session_id'],
-				'javascript' => 'data-confirm="'.$txt['remove_message'].'"',
+				'href' => $scripturl . '?action=deletemsg;msg=' . $post['id'] . ';topic=' . $post['topic'] . ';recent;' . $context['session_var'] . '=' . $context['session_id'],
+				'javascript' => 'data-confirm="' . $txt['remove_message'] . '"',
 				'class' => 'you_sure',
 				'icon' => 'remove_button',
 				'show' => $post['can_delete']
@@ -870,8 +870,8 @@ function UnreadTopics()
 		$context['links'] = array(
 			'first' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], 0) . $context['querystring_sort_limits'] : '',
 			'prev' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] - $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
-			'next' => $_REQUEST['start'] + $context['topics_per_page'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] + $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
-			'last' => $_REQUEST['start'] + $context['topics_per_page'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], floor(($num_topics - 1) / $context['topics_per_page']) * $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
+			'next' => $num_topics > $_REQUEST['start'] + $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] + $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
+			'last' => $num_topics > $_REQUEST['start'] + $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], floor(($num_topics - 1) / $context['topics_per_page']) * $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
 			'up' => $scripturl,
 		);
 		$context['page_info'] = array(
@@ -891,9 +891,10 @@ function UnreadTopics()
 				$context['querystring_board_limits'] = '';
 			else
 				$context['querystring_board_limits'] = sprintf($context['querystring_board_limits'], $_REQUEST['start']);
+
 			return;
 		}
-		else
+		
 			$min_message = (int) $min_message;
 
 		$request = $smcFunc['db_query']('substring', '
@@ -954,8 +955,8 @@ function UnreadTopics()
 		$context['links'] = array(
 			'first' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], 0) . $context['querystring_sort_limits'] : '',
 			'prev' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] - $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
-			'next' => $_REQUEST['start'] + $context['topics_per_page'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] + $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
-			'last' => $_REQUEST['start'] + $context['topics_per_page'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], floor(($num_topics - 1) / $context['topics_per_page']) * $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
+			'next' => $num_topics > $_REQUEST['start'] + $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] + $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
+			'last' => $num_topics > $_REQUEST['start'] + $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], floor(($num_topics - 1) / $context['topics_per_page']) * $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
 			'up' => $scripturl,
 		);
 		$context['page_info'] = array(
@@ -979,9 +980,10 @@ function UnreadTopics()
 				$context['querystring_board_limits'] = '';
 			else
 				$context['querystring_board_limits'] = sprintf($context['querystring_board_limits'], $_REQUEST['start']);
+
 			return;
 		}
-		else
+		
 			$min_message = (int) $min_message;
 
 		$request = $smcFunc['db_query']('substring', '
@@ -1123,8 +1125,8 @@ function UnreadTopics()
 		$context['links'] = array(
 			'first' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], 0) . $context['querystring_sort_limits'] : '',
 			'prev' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] - $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
-			'next' => $_REQUEST['start'] + $context['topics_per_page'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] + $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
-			'last' => $_REQUEST['start'] + $context['topics_per_page'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], floor(($num_topics - 1) / $context['topics_per_page']) * $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
+			'next' => $num_topics > $_REQUEST['start'] + $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] + $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
+			'last' => $num_topics > $_REQUEST['start'] + $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], floor(($num_topics - 1) / $context['topics_per_page']) * $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
 			'up' => $scripturl,
 		);
 		$context['page_info'] = array(
@@ -1140,6 +1142,7 @@ function UnreadTopics()
 				$context['querystring_board_limits'] = '';
 			else
 				$context['querystring_board_limits'] = sprintf($context['querystring_board_limits'], $_REQUEST['start']);
+
 			return;
 		}
 
@@ -1198,6 +1201,7 @@ function UnreadTopics()
 				$context['querystring_board_limits'] = '';
 			else
 				$context['querystring_board_limits'] = sprintf($context['querystring_board_limits'], $_REQUEST['start']);
+
 			return;
 		}
 
@@ -1233,7 +1237,6 @@ function UnreadTopics()
 	{
 		if ($row['id_poll'] > 0 && $modSettings['pollMode'] == '0')
 			continue;
-
 		$topic_ids[] = $row['id_topic'];
 
 		if (!empty($modSettings['preview_characters']))

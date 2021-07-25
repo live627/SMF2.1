@@ -82,6 +82,7 @@ function ReportsMain()
 	if (empty($_REQUEST['rt']) || !isset($context['report_types'][$_REQUEST['rt']]))
 	{
 		$context['sub_template'] = 'report_type';
+
 		return;
 	}
 	$context['report_type'] = $_REQUEST['rt'];
@@ -413,7 +414,6 @@ function BoardPermissionsReport()
 	{
 		if (in_array($row['permission'], $disabled_permissions))
 			continue;
-
 		foreach ($boards as $id => $board)
 			if ($board['profile'] == $row['id_profile'])
 				$board_permissions[$id][$row['id_group']][$row['permission']] = $row['add_deny'];
@@ -453,7 +453,6 @@ function BoardPermissionsReport()
 				// Don't overwrite the key column!
 				if ($id_group === 'col')
 					continue;
-
 				$group_permissions = isset($groups[$id_group]) ? $groups[$id_group] : array();
 
 				// Do we have any data for this group?
@@ -709,7 +708,6 @@ function GroupPermissionsReport()
 	{
 		if (in_array($row['permission'], $disabled_permissions))
 			continue;
-
 		if (strpos($row['permission'], 'bbc_') === 0)
 			$txt['group_perms_name_' . $row['permission']] = sprintf($txt['group_perms_name_bbc'], substr($row['permission'], 4));
 
@@ -961,7 +959,7 @@ function addData($inc_data, $custom_table = null)
 	// Specific table?
 	if ($custom_table !== null && !isset($context['tables'][$custom_table]))
 		return false;
-	elseif ($custom_table !== null)
+	if ($custom_table !== null)
 		$table = $custom_table;
 	else
 		$table = $context['current_table'];
@@ -1026,7 +1024,7 @@ function addSeparator($title = '', $custom_table = null)
 	// Specific table?
 	if ($custom_table !== null && !isset($context['tables'][$table]))
 		return false;
-	elseif ($custom_table !== null)
+	if ($custom_table !== null)
 		$table = $custom_table;
 	else
 		$table = $context['current_table'];

@@ -170,7 +170,6 @@ function ScheduledTasks()
 			// The functions got to exist for us to use it.
 			if (empty($task_string))
 				continue;
-
 			// Try to stop a timeout, this would be bad...
 			@set_time_limit(300);
 			if (function_exists('apache_reset_timeout'))

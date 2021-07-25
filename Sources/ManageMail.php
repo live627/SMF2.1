@@ -504,22 +504,25 @@ function time_since($time_diff)
 	if ($time_diff > 86400)
 	{
 		$days = round($time_diff / 86400, 1);
+
 		return sprintf($days == 1 ? $txt['mq_day'] : $txt['mq_days'], $time_diff / 86400);
 	}
 	// Hours?
-	elseif ($time_diff > 3600)
+	if ($time_diff > 3600)
 	{
 		$hours = round($time_diff / 3600, 1);
+
 		return sprintf($hours == 1 ? $txt['mq_hour'] : $txt['mq_hours'], $hours);
 	}
 	// Minutes?
-	elseif ($time_diff > 60)
+	if ($time_diff > 60)
 	{
 		$minutes = (int) ($time_diff / 60);
+
 		return sprintf($minutes == 1 ? $txt['mq_minute'] : $txt['mq_minutes'], $minutes);
 	}
 	// Otherwise must be second
-	else
+	
 		return sprintf($time_diff == 1 ? $txt['mq_second'] : $txt['mq_seconds'], $time_diff);
 }
 

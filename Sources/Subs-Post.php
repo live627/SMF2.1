@@ -437,7 +437,6 @@ function fixTags(&$message)
 		},
 		$message
 	);
-
 }
 
 /**
@@ -695,7 +694,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 		return AddMailQueue(false, $to_array, $subject, $message, $headers, $send_html, $priority, $is_private);
 
 	// If it's a priority mail, send it now - note though that this should NOT be used for sending many at once.
-	elseif (!empty($modSettings['mail_limit']))
+	if (!empty($modSettings['mail_limit']))
 	{
 		list ($last_mail_time, $mails_this_minute) = @explode('|', $modSettings['mail_recent']);
 		if (empty($mails_this_minute) || time() > $last_mail_time + 60)
@@ -722,12 +721,13 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 				function($errno, $errstr, $errfile, $errline)
 				{
 					// error was suppressed with the @-operator
-					if (0 === error_reporting())
+					if (error_reporting() === 0)
 						return false;
 
 					throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 				}
 			);
+
 			try
 			{
 				if (!mail(strtr($to, array("\r" => '', "\n" => '')), $subject, $message, $headers))
@@ -940,7 +940,6 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			{
 				if (is_numeric($recipients[$rec_type][$id]))
 					continue;
-
 				if (!empty($usernames[$member]))
 					$recipients[$rec_type][$id] = $usernames[$member];
 				else
@@ -987,6 +986,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			elseif (!$row['is_or'])
 			{
 				$delete = false;
+
 				break;
 			}
 		}
@@ -1050,7 +1050,6 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		// Don't do anything for members to be deleted!
 		if (isset($deletes[$row['id_member']]))
 			continue;
-
 		// Load the preferences for this member (if any)
 		$prefs = !empty($notifyPrefs[$row['id_member']]) ? $notifyPrefs[$row['id_member']] : array();
 		$prefs = array_merge(array(
@@ -1078,6 +1077,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			{
 				$log['failed'][$row['id_member']] = sprintf($txt['pm_error_data_limit_reached'], $row['real_name']);
 				unset($all_to[array_search($row['id_member'], $all_to)]);
+
 				continue;
 			}
 
@@ -1086,6 +1086,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			{
 				$log['failed'][$row['id_member']] = sprintf($txt['pm_error_user_cannot_read'], $row['real_name']);
 				unset($all_to[array_search($row['id_member'], $all_to)]);
+
 				continue;
 			}
 		}
@@ -1095,6 +1096,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		{
 			$log['failed'][$row['id_member']] = sprintf($txt['pm_error_ignored_by_user'], $row['real_name']);
 			unset($all_to[array_search($row['id_member'], $all_to)]);
+
 			continue;
 		}
 
@@ -1103,6 +1105,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		{
 			$log['failed'][$row['id_member']] = sprintf($txt['pm_error_user_cannot_read'], $row['real_name']);
 			unset($all_to[array_search($row['id_member'], $all_to)]);
+
 			continue;
 		}
 
@@ -1230,7 +1233,6 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			else
 				$notification_texts[$lang]['body'] = '';
 
-
 			if ($lang != $user_info['language'])
 				loadLanguage('index+Modifications', $user_info['language'], false);
 		}
@@ -1331,13 +1333,13 @@ function mimespecialchars($string, $with_charset = true, $hotmail_fix = false, $
 			$c = $m[1];
 			if (strlen($c) === 1 && ord($c[0]) <= 0x7F)
 				return $c;
-			elseif (strlen($c) === 2 && ord($c[0]) >= 0xC0 && ord($c[0]) <= 0xDF)
+			if (strlen($c) === 2 && ord($c[0]) >= 0xC0 && ord($c[0]) <= 0xDF)
 				return "&#" . (((ord($c[0]) ^ 0xC0) << 6) + (ord($c[1]) ^ 0x80)) . ";";
-			elseif (strlen($c) === 3 && ord($c[0]) >= 0xE0 && ord($c[0]) <= 0xEF)
+			if (strlen($c) === 3 && ord($c[0]) >= 0xE0 && ord($c[0]) <= 0xEF)
 				return "&#" . (((ord($c[0]) ^ 0xE0) << 12) + ((ord($c[1]) ^ 0x80) << 6) + (ord($c[2]) ^ 0x80)) . ";";
-			elseif (strlen($c) === 4 && ord($c[0]) >= 0xF0 && ord($c[0]) <= 0xF7)
+			if (strlen($c) === 4 && ord($c[0]) >= 0xF0 && ord($c[0]) <= 0xF7)
 				return "&#" . (((ord($c[0]) ^ 0xF0) << 18) + ((ord($c[1]) ^ 0x80) << 12) + ((ord($c[2]) ^ 0x80) << 6) + (ord($c[3]) ^ 0x80)) . ";";
-			else
+			
 				return "";
 		};
 
@@ -1346,7 +1348,7 @@ function mimespecialchars($string, $with_charset = true, $hotmail_fix = false, $
 	}
 
 	// We don't need to mess with the subject line if no special characters were in it..
-	elseif (!$hotmail_fix && preg_match('~([^\x09\x0A\x0D\x20-\x7F])~', $string) === 1)
+	if (!$hotmail_fix && preg_match('~([^\x09\x0A\x0D\x20-\x7F])~', $string) === 1)
 	{
 		// Base64 encode.
 		$string = base64_encode($string);
@@ -1362,7 +1364,6 @@ function mimespecialchars($string, $with_charset = true, $hotmail_fix = false, $
 		return array($charset, $string, 'base64');
 	}
 
-	else
 		return array($charset, $string, '7bit');
 }
 
@@ -1425,6 +1426,7 @@ function smtp_mail($mail_to_array, $subject, $message, $headers)
 		if (!$socket)
 		{
 			log_error($txt['smtp_no_connect'] . ': ' . $errno . ' : ' . $errstr);
+
 			return false;
 		}
 	}
@@ -1571,6 +1573,7 @@ function server_parse($message, $socket, $code, &$response = null)
 		{
 			// @todo Change this message to reflect that it may mean bad user/password/server issues/etc.
 			log_error($txt['smtp_bad_response']);
+
 			return false;
 		}
 		$response .= $server_response;
@@ -1582,6 +1585,7 @@ function server_parse($message, $socket, $code, &$response = null)
 	if (substr($server_response, 0, 3) != $code)
 	{
 		log_error($txt['smtp_error'] . $server_response);
+
 		return false;
 	}
 
@@ -1628,7 +1632,6 @@ function SpellCheck()
 		// If the word is a known word, or spelled right...
 		if (in_array($smcFunc['strtolower']($check_word[0]), $known_words) || spell_check($dict, $check_word[0]) || !isset($check_word[2]))
 			continue;
-
 		// Find the word, and move up the "last occurrence" to here.
 		$found_words = true;
 
@@ -2933,6 +2936,7 @@ function user_info_callback($matches)
 		else
 		{
 			$use_ref = false;
+
 			break;
 		}
 	}
@@ -2976,13 +2980,12 @@ function spell_init()
 		if (!empty($enchant_link))
 		{
 			$context['provider'] = 'enchant';
+
 			return $enchant_link;
 		}
-		else
-		{
+		
 			// Free up any resources used...
 			@enchant_broker_free($context['enchant_broker']);
-		}
 	}
 
 	// Fall through to pspell if enchant didn't work
@@ -3009,6 +3012,7 @@ function spell_init()
 		if ($pspell_link)
 		{
 			$context['provider'] = 'pspell';
+
 			return $pspell_link;
 		}
 	}
@@ -3039,9 +3043,10 @@ function spell_check($dict, $word)
 			// Convert the word to UTF-8 with iconv
 			$word = iconv($txt['lang_character_set'], 'UTF-8', $word);
 		}
+
 		return enchant_dict_check($dict, $word);
 	}
-	elseif ($context['provider'] == 'pspell')
+	if ($context['provider'] == 'pspell')
 	{
 		return pspell_check($dict, $word);
 	}
@@ -3078,10 +3083,8 @@ function spell_suggest($dict, $word)
 
 			return $suggestions;
 		}
-		else
-		{
+		
 			return enchant_dict_suggest($dict, $word);
-		}
 	}
 	elseif ($context['provider'] == 'pspell')
 	{

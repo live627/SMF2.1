@@ -68,14 +68,13 @@ class MemcacheImplementation extends CacheApi implements CacheApiInterface
 		// We should keep trying if a server times out, but only for the amount of servers we have.
 		while (!$connected && $level < count($servers))
 		{
-			++$level;
+			$level++;
 
 			$server = trim($servers[array_rand($servers)]);
 
 			// No server, can't connect to this.
 			if (empty($server))
 				continue;
-
 			// Normal host names do not contain slashes, while e.g. unix sockets do. Assume alternative transport pipe with port 0.
 			if (strpos($server, '/') !== false)
 				$host = $server;
@@ -149,16 +148,16 @@ class MemcacheImplementation extends CacheApi implements CacheApiInterface
 	{
 		global $context, $txt;
 
-		if (!in_array($txt[self::CLASS_KEY .'_settings'], $config_vars))
+		if (!in_array($txt[self::CLASS_KEY . '_settings'], $config_vars))
 		{
-			$config_vars[] = $txt[self::CLASS_KEY .'_settings'];
+			$config_vars[] = $txt[self::CLASS_KEY . '_settings'];
 			$config_vars[] = array(
 				self::CLASS_KEY,
-				$txt[self::CLASS_KEY .'_servers'],
+				$txt[self::CLASS_KEY . '_servers'],
 				'file',
 				'text',
 				0,
-				'subtext' => $txt[self::CLASS_KEY .'_servers_subtext']);
+				'subtext' => $txt[self::CLASS_KEY . '_servers_subtext']);
 		}
 
 		if (!isset($context['settings_post_javascript']))
@@ -167,7 +166,7 @@ class MemcacheImplementation extends CacheApi implements CacheApiInterface
 		$context['settings_post_javascript'] .= '
 			$("#cache_accelerator").change(function (e) {
 				var cache_type = e.currentTarget.value;
-				$("#'. self::CLASS_KEY .'").prop("disabled", cache_type != "MemcacheImplementation" && cache_type != "MemcachedImplementation");
+				$("#' . self::CLASS_KEY . '").prop("disabled", cache_type != "MemcacheImplementation" && cache_type != "MemcachedImplementation");
 			});';
 	}
 

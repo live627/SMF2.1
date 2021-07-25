@@ -381,7 +381,7 @@ function ConvertMsgBody()
 
 		return;
 	}
-	elseif ($body_type != 'text' && (!isset($_POST['do_conversion']) || isset($_POST['cont'])))
+	if ($body_type != 'text' && (!isset($_POST['do_conversion']) || isset($_POST['cont'])))
 	{
 		checkSession();
 		if (empty($_REQUEST['start']))
@@ -506,6 +506,7 @@ function ConvertEntities()
 		createToken('admin-maint');
 
 		$context['sub_template'] = 'convert_entities';
+
 		return;
 	}
 	// Otherwise use the generic "not done" template.
@@ -615,7 +616,6 @@ function ConvertEntities()
 		// Same for columns. Just to be sure we've work to do!
 		if (empty($primary_key) || empty($columns))
 			continue;
-
 		// Get the maximum value for the primary key.
 		$request = $smcFunc['db_query']('', '
 			SELECT MAX({identifier:key})
@@ -630,7 +630,6 @@ function ConvertEntities()
 
 		if (empty($max_value))
 			continue;
-
 		while ($context['start'] <= $max_value)
 		{
 			// Retrieve a list of rows that has at least one entity to convert.
@@ -687,6 +686,7 @@ function ConvertEntities()
 				// Calculate an approximation of the percentage done.
 				$context['continue_percent'] = round(100 * ($context['table'] + ($context['start'] / $max_value)) / $context['num_tables'], 1);
 				$context['continue_get_data'] = '?action=admin;area=maintain;sa=database;activity=convertentities;table=' . $context['table'] . ';start=' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'];
+
 				return;
 			}
 		}
@@ -1783,6 +1783,7 @@ function MaintainRecountPosts()
 
 		if (function_exists('apache_reset_timeout'))
 			apache_reset_timeout();
+
 		return;
 	}
 
@@ -1924,7 +1925,6 @@ function list_integration_hooks()
 						if (!empty($data['included_file']))
 							return $instance . $txt['hooks_field_function'] . ': ' . $data['real_function'] . '<br>' . $txt['hooks_field_included_file'] . ': ' . $data['included_file'];
 
-						else
 							return $instance . $data['real_function'];
 					},
 				),
@@ -2168,7 +2168,7 @@ function get_integration_hooks_data($start, $per_page, $sort)
 	{
 		if (++$counter < $start)
 			continue;
-		elseif ($counter == $start + $per_page)
+		if ($counter == $start + $per_page)
 			break;
 
 		$hooks_data[] = $data;
@@ -2321,7 +2321,7 @@ function fixchardb__callback($matches)
 	// it's to big for mb3?
 	if ($num > 0xFFFF && !$smcFunc['db_mb4'])
 		return $matches[0];
-	else
+	
 		return fixchar__callback($matches);
 }
 

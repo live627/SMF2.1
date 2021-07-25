@@ -65,7 +65,6 @@ interface search_api_interface
 	 * @access public
 	 * @param array $words An array of words
 	 * @param array $search_data An array of search data
-	 * @return mixed
 	 */
 	public function indexedWordQuery(array $words, array $search_data);
 
@@ -130,9 +129,6 @@ interface search_api_interface
 	 * @param array $query_params An array of parameters for the query
 	 * @param array $searchWords The words that were searched for
 	 * @param array $excludedIndexWords Indexed words that should be excluded
-	 * @param array $participants
-	 * @param array $searchArray
-	 * @return mixed
 	 */
 	public function searchQuery(array $query_params, array $searchWords, array $excludedIndexWords, array &$participants, array &$searchArray);
 }
@@ -166,11 +162,13 @@ abstract class search_api implements search_api_interface
 		{
 			case 'postRemoved':
 				return true;
+
 				break;
 
 			// All other methods, too bad dunno you.
 			default:
 				return false;
+
 				break;
 		}
 	}
@@ -222,7 +220,6 @@ abstract class search_api implements search_api_interface
 	 */
 	public function postRemoved($id_msg)
 	{
-
 		global $smcFunc;
 
 		$result = $smcFunc['db_query']('', '

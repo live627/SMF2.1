@@ -333,6 +333,7 @@ function SetThemeOptions()
 		$context['sub_template'] = 'reset_list';
 
 		createToken('admin-stor', 'request');
+
 		return;
 	}
 
@@ -406,7 +407,7 @@ function SetThemeOptions()
 		{
 			if ($_POST['default_options_master'][$opt] == 0)
 				continue;
-			elseif ($_POST['default_options_master'][$opt] == 1)
+			if ($_POST['default_options_master'][$opt] == 1)
 			{
 				// Delete then insert for ease of database compatibility!
 				$smcFunc['db_query']('substring', '
@@ -465,7 +466,7 @@ function SetThemeOptions()
 		{
 			if ($_POST['options_master'][$opt] == 0)
 				continue;
-			elseif ($_POST['options_master'][$opt] == 1)
+			if ($_POST['options_master'][$opt] == 1)
 			{
 				// Delete then insert for ease of database compatibility - again!
 				$smcFunc['db_query']('substring', '
@@ -597,11 +598,11 @@ function SetThemeOptions()
 		// Just skip separators
 		if (!is_array($setting))
 			continue;
-
 		// Is this disabled?
 		if (isset($setting['enabled']) && $setting['enabled'] === false)
 		{
 			unset($context['options'][$i]);
+
 			continue;
 		}
 
@@ -709,13 +710,12 @@ function SetThemeSettings()
 			// Disregard this item if this is just a separator.
 			if (!is_array($item))
 				continue;
-
 			foreach (array('options', 'default_options') as $option)
 			{
 				if (!isset($_POST[$option][$item['id']]))
 					continue;
 				// Checkbox.
-				elseif (empty($item['type']))
+				if (empty($item['type']))
 					$_POST[$option][$item['id']] = $_POST[$option][$item['id']] ? 1 : 0;
 				// Number
 				elseif ($item['type'] == 'number')
@@ -766,7 +766,6 @@ function SetThemeSettings()
 		// Separators are dummies, so leave them alone.
 		if (!is_array($setting))
 			continue;
-
 		if (!isset($setting['type']) || $setting['type'] == 'bool')
 			$context['settings'][$i]['type'] = 'checkbox';
 		elseif ($setting['type'] == 'int' || $setting['type'] == 'integer')
@@ -1074,7 +1073,6 @@ function PickTheme()
 		// Don't try to load the forum or board default theme's data... it doesn't have any!
 		if ($id_theme == 0)
 			continue;
-
 		// The thumbnail needs the correct path.
 		$settings['images_url'] = &$theme_data['images_url'];
 
@@ -1290,7 +1288,6 @@ function InstallFile()
 		return $context['to_install'];
 	}
 
-	else
 		fatal_lang_error('theme_install_error_title', false);
 }
 
@@ -1655,8 +1652,7 @@ function EditTheme()
 
 		return;
 	}
-	else
-	{
+	
 		if (substr($_REQUEST['filename'], 0, 1) == '.')
 			$_REQUEST['filename'] = '';
 		else
@@ -1670,8 +1666,7 @@ function EditTheme()
 
 		if (empty($_REQUEST['filename']))
 			fatal_lang_error('theme_edit_missing', false);
-	}
-
+	
 	if (isset($_POST['save']))
 	{
 		if (checkSession('post', '', false) == '' && validateToken('admin-te-' . md5($_GET['th'] . '-' . $_REQUEST['filename']), 'post', false) == true)

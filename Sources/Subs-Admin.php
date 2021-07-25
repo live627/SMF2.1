@@ -283,6 +283,7 @@ function getFileVersions(&$versionOptions)
 		foreach ($version_info['default_language_versions'] as $language => $dummy)
 			ksort($version_info['default_language_versions'][$language]);
 	}
+
 	return $version_info;
 }
 
@@ -859,7 +860,7 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 				'if (!is_dir(realpath($cachedir)) && is_dir($boarddir . \'/cache\'))',
 				'	$cachedir = $boarddir . \'/cache\';',
 			)),
-			'search_pattern' => '~\n?(#[^\n]+)?(?:\n\h*if\s*\((?:\!file_exists\(\$(?'.'>boarddir|sourcedir|tasksdir|packagesdir|cachedir)\)|\!is_dir\(realpath\(\$(?'.'>boarddir|sourcedir|tasksdir|packagesdir|cachedir)\)\))[^;]+\n\h*\$(?'.'>boarddir|sourcedir|tasksdir|packagesdir|cachedir)[^\n]+;)+~sm',
+			'search_pattern' => '~\n?(#[^\n]+)?(?:\n\h*if\s*\((?:\!file_exists\(\$(?' . '>boarddir|sourcedir|tasksdir|packagesdir|cachedir)\)|\!is_dir\(realpath\(\$(?' . '>boarddir|sourcedir|tasksdir|packagesdir|cachedir)\)\))[^;]+\n\h*\$(?' . '>boarddir|sourcedir|tasksdir|packagesdir|cachedir)[^\n]+;)+~sm',
 		),
 		'db_character_set' => array(
 			'text' => implode("\n", array(
@@ -958,8 +959,8 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 		'boolean' =>  '(?i:TRUE|FALSE|(["\']?)[01]\b\\1)',
 		'NULL' =>  '(?i:NULL)',
 		// These use a PCRE subroutine to match nested arrays.
-		'array' =>  'array\s*(\((?'.'>[^()]|(?1))*\))',
-		'object' =>  '\w+::__set_state\(array\s*(\((?'.'>[^()]|(?1))*\))\)',
+		'array' =>  'array\s*(\((?' . '>[^()]|(?1))*\))',
+		'object' =>  '\w+::__set_state\(array\s*(\((?' . '>[^()]|(?1))*\))\)',
 	);
 
 	/*
@@ -992,7 +993,7 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 		),
 		// Remove the code that redirects to the installer.
 		$neg_index-- => array(
-			'search_pattern' => '~^if\s*\(file_exists\(dirname\(__FILE__\)\s*\.\s*\'/install\.php\'\)\)\s*(?:({(?'.'>[^{}]|(?1))*})\h*|header(\((?' . '>[^()]|(?2))*\));\n)~m',
+			'search_pattern' => '~^if\s*\(file_exists\(dirname\(__FILE__\)\s*\.\s*\'/install\.php\'\)\)\s*(?:({(?' . '>[^{}]|(?1))*})\h*|header(\((?' . '>[^()]|(?2))*\));\n)~m',
 			'placeholder' => '',
 		),
 	);
@@ -1094,6 +1095,7 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 							if (in_array($to_type, $expected_types))
 							{
 								settype($new_settings_vars[$var], $to_type);
+
 								break;
 							}
 						}
@@ -1237,11 +1239,11 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 		function($a, $b) {
 			if (is_int($a) && is_int($b))
 				return $a > $b ? 1 : ($a < $b ? -1 : 0);
-			elseif (is_int($a))
+			if (is_int($a))
 				return -1;
-			elseif (is_int($b))
+			if (is_int($b))
 				return 1;
-			else
+			
 				return strcasecmp($b, $a);
 		}
 	);
@@ -1397,7 +1399,6 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 					{
 						if (strpos($settingsText, '__set_state') === false)
 							continue;
-
 						$sp = $type_regex['object'];
 					}
 
@@ -1409,6 +1410,7 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 					{
 						$settingsText = preg_replace('~(^|\s)\$' . preg_quote($var, '~') . '\s*=\s*' . $sp . '~', $substitution['placeholder'], $settingsText);
 						$found = true;
+
 						break;
 					}
 				}
@@ -1418,6 +1420,7 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 				{
 					// $var? What $var? Never heard of it.
 					unset($substitutions[$var], $new_settings_vars[$var], $settings_defs[$var], $simple_replacements[$substitution['placeholder']], $replace_patterns[$var], $replace_strings[$var]);
+
 					continue;
 				}
 			}
@@ -1479,7 +1482,6 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 
 			if (empty($part))
 				continue;
-
 			// Build a list of placeholders for this section.
 			if (in_array($part, $trimmed_placeholders) && !in_array($part, $newsection_placeholders))
 			{
@@ -1489,11 +1491,11 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 			else
 			{
 				if (!empty($sections[$section_num]))
-					++$section_num;
+					$section_num++;
 
 				$sections[$section_num][] = $part;
 
-				++$section_num;
+				$section_num++;
 
 				if (!in_array($part, $trimmed_placeholders))
 					$all_custom_content .= "\n" . $part;
@@ -1527,7 +1529,6 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 					// Already did this setting, so move on to the next.
 					if (in_array($var, $done_defs))
 						continue;
-
 					// Stop when we hit a setting definition that will start a later section.
 					if (isset($newsection_placeholders[$var]) && count($section) !== 1)
 						break;
@@ -1542,7 +1543,6 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 					// Can't do anything with an empty placeholder.
 					if ($p === '')
 						continue;
-
 					// Does this need to be inserted before the path correction code?
 					if (strpos($new_settingsText, trim($substitutions[$pathcode_var]['placeholder'])) !== false && in_array($var, $force_before_pathcode))
 					{
@@ -1653,11 +1653,9 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 
 			if (is_int($var))
 				continue;
-
 			// Do nothing if it is already in there.
 			if (preg_match($substitutions[$var]['search_pattern'], $bare_settingsText))
 				continue;
-
 			// Insert it either before or after the path correction code, whichever is appropriate.
 			if (!$pathcode_reached || in_array($var, $force_before_pathcode))
 			{
@@ -1815,7 +1813,6 @@ function safe_file_write($file, $data, $backup_file = null, $mtime = null, $appe
 	{
 		if (empty($sf))
 			continue;
-
 		if (!file_exists($sf))
 			touch($sf);
 		elseif (!is_file($sf))
@@ -1927,7 +1924,7 @@ function smf_var_export($var)
 	}
 
 	// For the same reason, replace literal returns and newlines with "\r" and "\n"
-	elseif (is_string($var) && (strpos($var, "\n") !== false || strpos($var, "\r") !== false))
+	if (is_string($var) && (strpos($var, "\n") !== false || strpos($var, "\r") !== false))
 	{
 		return strtr(
 			preg_replace_callback(
@@ -2227,7 +2224,6 @@ function emailAdmins($template, $replacements = array(), $additional_recipients 
 	{
 		if (empty($prefs[$row['id_member']]['announcements']))
 			continue;
-
 		// Stick their particulars in the replacement data.
 		$replacements['IDMEMBER'] = $row['id_member'];
 		$replacements['REALNAME'] = $row['member_name'];
@@ -2250,7 +2246,6 @@ function emailAdmins($template, $replacements = array(), $additional_recipients 
 		{
 			if (in_array($recipient['email'], $emails_sent))
 				continue;
-
 			$replacements['IDMEMBER'] = $recipient['id'];
 			$replacements['REALNAME'] = $recipient['name'];
 			$replacements['USERNAME'] = $recipient['name'];
@@ -2336,6 +2331,7 @@ function sm_temp_dir()
 				if (strpos($possible_temp, $dir) !== false && is_writable($possible_temp))
 				{
 					$temp_dir = $possible_temp;
+
 					break;
 				}
 			}
@@ -2344,6 +2340,7 @@ function sm_temp_dir()
 		elseif (is_writable($possible_temp))
 		{
 			$temp_dir = $possible_temp;
+
 			break;
 		}
 	}

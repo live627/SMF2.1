@@ -145,7 +145,6 @@ class Mentions
 		{
 			if (stripos($body, static::$char . $row['real_name']) === false)
 				continue;
-
 			$members[$row['id_member']] = array(
 				'id' => $row['id_member'],
 				'real_name' => $row['real_name'],
@@ -209,6 +208,7 @@ class Mentions
 				if (count($matches[count($matches) - $i]) > 60)
 				{
 					$depth--;
+
 					continue;
 				}
 				$matches[count($matches) - $i][] = $char;

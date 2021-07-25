@@ -26,23 +26,28 @@ class CreatePost_Notify_Background extends SMF_BackgroundTask
 	const NOTIFY_TYPE_REPLY_AND_MODIFY = 1;
 	const NOTIFY_TYPE_REPLY_AND_TOPIC_START_FOLLOWING = 2;
 	const NOTIFY_TYPE_ONLY_REPLIES = 3;
+
 	const NOTIFY_TYPE_NOTHING = 4;
 
 	/**
 	 * Constants for frequencies.
 	*/
 	const FREQUENCY_NOTHING = 0;
+
 	const FREQUENCY_EVERYTHING = 1;
+
 	const FREQUENCY_FIRST_UNREAD_MSG = 2;
+
 	const FREQUENCY_DAILY_DIGEST = 3;
+
 	const FREQUENCY_WEEKLY_DIGEST = 4;
 
 	/**
 	 * This executes the task: loads up the info, puts the email in the queue
 	 * and inserts any alerts as needed.
 	 *
-	 * @return bool Always returns true
 	 * @throws Exception
+	 * @return bool Always returns true
 	 */
 	public function execute()
 	{
@@ -107,8 +112,6 @@ class CreatePost_Notify_Background extends SMF_BackgroundTask
 
 			if (!in_array(1, $groups) && count(array_intersect($groups, explode(',', $row['member_groups']))) == 0)
 				continue;
-			else
-			{
 				$row['groups'] = $groups;
 				unset($row['id_group'], $row['id_post_group'], $row['additional_groups']);
 			}
@@ -204,7 +207,6 @@ class CreatePost_Notify_Background extends SMF_BackgroundTask
 			// ... or if they aren't on the bouncer's list.
 			elseif (!empty($this->_details['members_only']) && !in_array($member_id, $this->_details['members_only']))
 				continue;
-
 			// Watched topic?
 			if (!empty($member_data['id_topic']) && $type != 'topic' && !empty($prefs[$member_id]))
 			{
@@ -243,7 +245,6 @@ class CreatePost_Notify_Background extends SMF_BackgroundTask
 			// If neither of the above, this might be a redundant row due to the OR clause in our SQL query, skip
 			else
 				continue;
-
 			// We need to fake some of $user_info to make BBC parsing work correctly.
 			if (isset($user_info))
 				$real_user_info = $user_info;

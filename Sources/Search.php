@@ -110,7 +110,6 @@ function PlushSearch1()
 		{
 			if ($search_error === 'messages')
 				continue;
-
 			if ($search_error == 'string_too_long')
 				$txt['error_string_too_long'] = sprintf($txt['error_string_too_long'], $context['search_string_limit']);
 
@@ -454,7 +453,7 @@ function PlushSearch2()
 			);
 
 			// Simply do nothing if there're too many members matching the criteria.
-			if ($smcFunc['db_num_rows']($request) > $maxMembersToSearch)
+			if ($maxMembersToSearch < $smcFunc['db_num_rows']($request))
 			{
 				$userQuery = '';
 			}
@@ -669,7 +668,7 @@ function PlushSearch2()
 		$context['search_errors']['invalid_search_string'] = true;
 	}
 	// Too long?
-	elseif ($smcFunc['strlen']($search_params['search']) > $context['search_string_limit'])
+	elseif ($context['search_string_limit'] < $smcFunc['strlen']($search_params['search']))
 	{
 		$context['search_errors']['string_too_long'] = true;
 	}
@@ -828,21 +827,21 @@ function PlushSearch2()
 		if (!empty($modSettings['search_force_index']) && empty($searchWords[$orIndex]['indexed_words']))
 		{
 			$context['search_errors']['query_not_specific_enough'] = true;
+
 			break;
 		}
-		elseif ($search_params['subject_only'] && empty($searchWords[$orIndex]['subject_words']) && empty($excludedSubjectWords))
+		if ($search_params['subject_only'] && empty($searchWords[$orIndex]['subject_words']) && empty($excludedSubjectWords))
 		{
 			$context['search_errors']['query_not_specific_enough'] = true;
+
 			break;
 		}
 
 		// Make sure we aren't searching for too many indexed words.
-		else
-		{
+		
 			$searchWords[$orIndex]['indexed_words'] = array_slice($searchWords[$orIndex]['indexed_words'], 0, 7);
 			$searchWords[$orIndex]['subject_words'] = array_slice($searchWords[$orIndex]['subject_words'], 0, 7);
 			$searchWords[$orIndex]['words'] = array_slice($searchWords[$orIndex]['words'], 0, 4);
-		}
 	}
 
 	// *** Spell checking
@@ -859,25 +858,27 @@ function PlushSearch2()
 		{
 			if (empty($link))
 				continue;
-
 			// Don't check phrases.
 			if (preg_match('~^\w+$~', $word) === 0)
 			{
 				$did_you_mean['search'][] = '"' . $word . '"';
 				$did_you_mean['display'][] = '&quot;' . $smcFunc['htmlspecialchars']($word) . '&quot;';
+
 				continue;
 			}
 			// For some strange reason spell check can crash PHP on decimals.
-			elseif (preg_match('~\d~', $word) === 1)
+			if (preg_match('~\d~', $word) === 1)
 			{
 				$did_you_mean['search'][] = $word;
 				$did_you_mean['display'][] = $smcFunc['htmlspecialchars']($word);
+
 				continue;
 			}
-			elseif (spell_check($link, $word))
+			if (spell_check($link, $word))
 			{
 				$did_you_mean['search'][] = $word;
 				$did_you_mean['display'][] = $smcFunc['htmlspecialchars']($word);
+
 				continue;
 			}
 
@@ -1018,6 +1019,7 @@ function PlushSearch2()
 	if (!empty($context['search_errors']))
 	{
 		$_REQUEST['params'] = $context['params'];
+
 		return PlushSearch1();
 	}
 
@@ -1225,7 +1227,6 @@ function PlushSearch2()
 							// No duplicates!
 							if (isset($inserts[$row[1]]))
 								continue;
-
 							foreach ($row as $key => $value)
 								$inserts[$row[1]][] = (int) $row[$key];
 						}
@@ -1429,7 +1430,6 @@ function PlushSearch2()
 						// Nothing to search for?
 						if (empty($subject_query['where']))
 							continue;
-
 						$ignoreRequest = $smcFunc['db_search_query']('insert_log_search_topics', ($smcFunc['db_support_ignore'] ? ('
 							INSERT IGNORE INTO {db_prefix}' . ($createTemporary ? 'tmp_' : '') . 'log_search_topics
 								(' . ($createTemporary ? '' : 'id_search, ') . 'id_topic)') : '') . '
@@ -1453,7 +1453,6 @@ function PlushSearch2()
 								// No duplicates!
 								if (isset($inserts[$row[$ind]]))
 									continue;
-
 								$inserts[$row[$ind]] = $row;
 							}
 							$smcFunc['db_free_result']($ignoreRequest);
@@ -1551,7 +1550,6 @@ function PlushSearch2()
 									// No duplicates!
 									if (isset($inserts[$row[0]]))
 										continue;
-
 									$inserts[$row[0]] = $row;
 								}
 								$smcFunc['db_free_result']($ignoreRequest);
@@ -1580,9 +1578,10 @@ function PlushSearch2()
 					{
 						$context['search_errors']['query_not_specific_enough'] = true;
 						$_REQUEST['params'] = $context['params'];
+
 						return PlushSearch1();
 					}
-					elseif (!empty($indexedResults))
+					if (!empty($indexedResults))
 					{
 						$main_query['inner_join'][] = '{db_prefix}' . ($createTemporary ? 'tmp_' : '') . 'log_search_messages AS lsm ON (lsm.id_msg = m.id_msg)';
 						if (!$createTemporary)
@@ -1684,7 +1683,6 @@ function PlushSearch2()
 							// No duplicates!
 							if (isset($inserts[$row[2]]))
 								continue;
-
 							foreach ($row as $key => $value)
 								$inserts[$row[2]][] = (int) $row[$key];
 						}
@@ -1755,7 +1753,6 @@ function PlushSearch2()
 							// No duplicates!
 							if (isset($usedIDs[$row[1]]))
 								continue;
-
 							$usedIDs[$row[1]] = true;
 							$inserts[] = $row;
 						}
@@ -2047,7 +2044,7 @@ function prepareSearchContext($reset = false)
 		$message['body'] = parse_bbc($message['body'], $message['smileys_enabled'], $message['id_msg']);
 		$message['body'] = strip_tags(strtr($message['body'], array('</div>' => '<br>', '</li>' => '<br>')), '<br>');
 
-		if ($smcFunc['strlen']($message['body']) > $charLimit)
+		if ($charLimit < $smcFunc['strlen']($message['body']))
 		{
 			if (empty($context['key_words']))
 				$message['body'] = $smcFunc['substr']($message['body'], 0, $charLimit) . '<strong>...</strong>';

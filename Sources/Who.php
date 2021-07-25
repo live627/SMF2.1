@@ -158,7 +158,6 @@ function Who()
 		$actions = $smcFunc['json_decode']($row['url'], true);
 		if ($actions === false)
 			continue;
-
 		// Send the information to the template.
 		$context['members'][$row['session']] = array(
 			'id' => $row['id_member'],
@@ -237,7 +236,6 @@ function Who()
 
 	// any profile fields disabled?
 	$context['disabled_fields'] = isset($modSettings['disabled_profile_fields']) ? array_flip(explode(',', $modSettings['disabled_profile_fields'])) : array();
-
 }
 
 /**
@@ -331,7 +329,6 @@ function determineActions($urls, $preferred_prefix = false)
 		$actions = $smcFunc['json_decode']($url[0], true);
 		if ($actions === false)
 			continue;
-
 		// If it's the admin or moderation center, and there is an area set, use that instead.
 		if (isset($actions['action']) && ($actions['action'] == 'admin' || $actions['action'] == 'moderate') && isset($actions['area']))
 			$actions['action'] = $actions['area'];
@@ -475,6 +472,7 @@ function determineActions($urls, $preferred_prefix = false)
 						$board_ids[(int) $actions['board']][$k] = $integrate_action;
 					if (isset($actions['u']) && isset($profile_ids[(int) $actions['u']][$k]))
 						$profile_ids[(int) $actions['u']][$k] = $integrate_action;
+
 					break;
 				}
 			}
@@ -549,7 +547,6 @@ function determineActions($urls, $preferred_prefix = false)
 			// If they aren't allowed to view this person's profile, skip it.
 			if (!$allow_view_any && ($user_info['id'] != $row['id_member']))
 				continue;
-
 			// Set their action on each - session/text to sprintf.
 			foreach ($profile_ids[$row['id_member']] as $k => $session_text)
 				$data[$k] = sprintf($session_text, $row['id_member'], $row['real_name'], $scripturl);
@@ -561,7 +558,7 @@ function determineActions($urls, $preferred_prefix = false)
 
 	if (!is_array($urls))
 		return isset($data[0]) ? $data[0] : false;
-	else
+	
 		return $data;
 }
 

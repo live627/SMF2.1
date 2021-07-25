@@ -256,8 +256,8 @@ function showAttachment()
 		list($a, $range) = explode("=", $_SERVER['HTTP_RANGE'], 2);
 		list($range) = explode(",", $range, 2);
 		list($range, $range_end) = explode("-", $range);
-		$range = intval($range);
-		$range_end = !$range_end ? $size - 1 : intval($range_end);
+		$range = (int) $range;
+		$range_end = !$range_end ? $size - 1 : (int) $range_end;
 		$new_length = $range_end - $range + 1;
 	}
 

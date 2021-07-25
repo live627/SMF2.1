@@ -499,7 +499,6 @@ function PackageGBrowse()
 		{
 			if ($package['count'] == 0 || isset($package['can_install']))
 				continue;
-
 			$context['package_list'][$ps_id]['items'][$i]['can_install'] = false;
 
 			$packageInfo = getPackageInfo($url . '/' . $package['filename']);
@@ -512,6 +511,7 @@ function PackageGBrowse()
 					{
 						// Okay, this one is good to go.
 						$context['package_list'][$ps_id]['items'][$i]['can_install'] = true;
+
 						break;
 					}
 
@@ -705,11 +705,9 @@ function PackageUpload()
 		{
 			if ($package == '.' || $package == '..' || $package == 'temp' || $package == $packageName || (!(is_dir($packagesdir . '/' . $package) && file_exists($packagesdir . '/' . $package . '/package-info.xml')) && substr(strtolower($package), -7) != '.tar.gz' && substr(strtolower($package), -4) != '.tgz' && substr(strtolower($package), -4) != '.zip'))
 				continue;
-
 			$packageInfo = getPackageInfo($package);
 			if (!is_array($packageInfo))
 				continue;
-
 			if ($packageInfo['id'] == $context['package']['id'] && $packageInfo['version'] == $context['package']['version'])
 			{
 				@unlink($destination);

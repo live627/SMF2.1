@@ -9,6 +9,17 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require-dev": {
-        "simplemachines/build-tools": "dev-master"
+        "simplemachines/build-tools": "dev-master",
+        "phpunit/phpunit": "^8.5",
+        "friendsofphp/php-cs-fixer": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PHPTDD\\": "tests"
+        }
+    },
+    "scripts": {
+        "lint": "php-cs-fixer fix --verbose --show-progress=dots",
+        "phpstan": "phpstan analyze"
     }
 }

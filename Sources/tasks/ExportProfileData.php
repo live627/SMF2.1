@@ -217,7 +217,7 @@ class ExportProfileData_Background extends SMF_BackgroundTask
 		);
 
 		// Some paranoid hosts disable or hamstring the disk space functions in an attempt at security via obscurity.
-		$check_diskspace = !empty($modSettings['export_min_diskspace_pct']) && function_exists('disk_free_space') && function_exists('disk_total_space') && intval(@disk_total_space($modSettings['export_dir']) >= 1440);
+		$check_diskspace = !empty($modSettings['export_min_diskspace_pct']) && function_exists('disk_free_space') && function_exists('disk_total_space') && (int) (@disk_total_space($modSettings['export_dir']) >= 1440);
 		$minspace = $check_diskspace ? ceil(disk_total_space($modSettings['export_dir']) * $modSettings['export_min_diskspace_pct'] / 100) : 0;
 
 		// If a necessary file is missing, we need to start over.
@@ -360,12 +360,12 @@ class ExportProfileData_Background extends SMF_BackgroundTask
 					if (empty($bytes_written))
 					{
 						$delay = MAX_CLAIM_THRESHOLD;
+
 						break;
 					}
 
 					// All went well.
-					else
-					{
+					
 						// Track progress by ID where appropriate, and by time otherwise.
 						$progress[$datatype] = !isset($last_id) ? time() : $last_id;
 						file_put_contents($progressfile, $smcFunc['json_encode']($progress));
@@ -387,7 +387,6 @@ class ExportProfileData_Background extends SMF_BackgroundTask
 							// Should we append more items to this file next time?
 							$new_item_count = isset($last_id) ? $prev_item_count + count($items) : 0;
 						}
-					}
 				}
 			}
 		}
@@ -411,6 +410,7 @@ class ExportProfileData_Background extends SMF_BackgroundTask
 		elseif (!file_exists($progressfile))
 		{
 			@unlink($tempfile);
+
 			return;
 		}
 

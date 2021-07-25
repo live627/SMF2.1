@@ -153,11 +153,9 @@ function SetCensor()
 	{
 		if (empty($censor_vulgar[$i]))
 			continue;
-
 		// Skip it, it's either spaces or stars only.
 		if (trim(strtr($censor_vulgar[$i], '*', ' ')) == '')
 			continue;
-
 		$context['censored_words'][$smcFunc['htmlspecialchars'](trim($censor_vulgar[$i]))] = isset($censor_proper[$i]) ? $smcFunc['htmlspecialchars']($censor_proper[$i]) : '';
 	}
 

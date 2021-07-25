@@ -368,6 +368,7 @@ function ModifyBBCSettings($return_config = false)
 				if ($child_tag == $parent_tag)
 				{
 					unset($bbcTagsChildren[$parent_tag][$index]);
+
 					continue;
 				}
 				// Combine chains of tags
@@ -878,12 +879,12 @@ function ModifyAntispamSettings($return_config = false)
 					$q_id = (int) $q_id;
 					if ($q_id <= 0)
 						continue;
-
 					// Check the question isn't empty (because they want to delete it?)
 					if (empty($question) || trim($question) == '')
 					{
 						if (isset($context['question_answers'][$q_id]))
 							$changes['delete'][] = $q_id;
+
 						continue;
 					}
 					$question = $smcFunc['htmlspecialchars'](trim($question));
@@ -893,6 +894,7 @@ function ModifyAntispamSettings($return_config = false)
 					{
 						if (isset($context['question_answers'][$q_id]))
 							$changes['delete'][] = $q_id;
+
 						continue;
 					}
 					// Now get them and check that they might be viable.
@@ -904,6 +906,7 @@ function ModifyAntispamSettings($return_config = false)
 					{
 						if (isset($context['question_answers'][$q_id]))
 							$changes['delete'][] = $q_id;
+
 						continue;
 					}
 					$answers = $smcFunc['json_encode']($answers);
@@ -1355,7 +1358,7 @@ function ModifySignatureSettings($return_config = false)
 		{
 			if ($key == 'allow_smileys')
 				continue;
-			elseif ($key == 'max_smileys' && empty($_POST['signature_allow_smileys']))
+			if ($key == 'max_smileys' && empty($_POST['signature_allow_smileys']))
 				$sig_limits[] = -1;
 			else
 				$sig_limits[] = !empty($_POST['signature_' . $key]) ? max(1, (int) $_POST['signature_' . $key]) : 0;
@@ -1513,6 +1516,7 @@ function ShowCustomProfiles()
 					{
 						$isChecked = $rowData['disabled'] ? '' : ' checked';
 						$onClickHandler = $rowData['can_show_register'] ? sprintf(' onclick="document.getElementById(\'reg_%1$s\').disabled = !this.checked;"', $rowData['id']) : '';
+
 						return sprintf('<input type="checkbox" name="active[]" id="active_%1$s" value="%1$s" %2$s%3$s>', $rowData['id'], $isChecked, $onClickHandler);
 					},
 					'style' => 'width: 20%;',
@@ -1529,6 +1533,7 @@ function ShowCustomProfiles()
 					{
 						$isChecked = $rowData['on_register'] && !$rowData['disabled'] ? ' checked' : '';
 						$isDisabled = $rowData['can_show_register'] ? '' : ' disabled';
+
 						return sprintf('<input type="checkbox" name="reg[]" id="reg_%1$s" value="%1$s" %2$s%3$s>', $rowData['id'], $isChecked, $isDisabled);
 					},
 					'style' => 'width: 20%;',
@@ -1617,6 +1622,7 @@ function ShowCustomProfiles()
 					'function' => function($rowData) use ($txt)
 					{
 						$textKey = sprintf('custom_profile_type_%1$s', $rowData['field_type']);
+
 						return isset($txt[$textKey]) ? $txt[$textKey] : $textKey;
 					},
 					'style' => 'width: 15%;',
@@ -1975,7 +1981,6 @@ function EditCustomProfiles()
 				// Nada, zip, etc...
 				if (trim($v) == '')
 					continue;
-
 				// Otherwise, save it boy.
 				$field_options .= $v . ',';
 				// This is just for working out what happened with old options...
@@ -2056,11 +2061,11 @@ function EditCustomProfiles()
 				{
 					if (trim($option) == '')
 						continue;
-
 					// Still exists?
 					if (in_array($option, $newOptions))
 					{
 						$takenKeys[] = $k;
+
 						continue;
 					}
 				}
@@ -2367,7 +2372,6 @@ function ModifyLogSettings($return_config = false)
 			{
 				if (!is_array($dummy) || $index == 'pruningOptions' || !in_array($dummy[1], $prune_toggle))
 					continue;
-
 				$vals[] = empty($_POST[$dummy[1]]) || $_POST[$dummy[1]] < 0 ? 0 : (int) $_POST[$dummy[1]];
 			}
 			$_POST['pruningOptions'] = implode(',', $vals);

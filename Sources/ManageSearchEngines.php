@@ -169,7 +169,7 @@ function ViewSpiders()
 	if (!empty($_POST['addSpider']))
 		return EditSpider();
 	// User pressed the 'remove selection button'.
-	elseif (!empty($_POST['removeSpiders']) && !empty($_POST['remove']) && is_array($_POST['remove']))
+	if (!empty($_POST['removeSpiders']) && !empty($_POST['remove']) && is_array($_POST['remove']))
 	{
 		checkSession();
 		validateToken('admin-ser');
@@ -519,7 +519,6 @@ function SpiderCheck()
 			{
 				if ($ip === '')
 					continue;
-
 				$ip = ip2range($ip);
 				if (!empty($ip))
 				{

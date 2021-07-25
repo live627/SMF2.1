@@ -404,7 +404,6 @@ function Display()
 		{
 			if (empty($row['id_member']))
 				continue;
-
 			if (!empty($row['online_color']))
 				$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '" style="color: ' . $row['online_color'] . ';">' . $row['real_name'] . '</a>';
 			else
@@ -465,8 +464,8 @@ function Display()
 		$context['links'] = array(
 			'first' => $_REQUEST['start'] >= $context['messages_per_page'] ? $scripturl . '?topic=' . $topic . '.0' : '',
 			'prev' => $_REQUEST['start'] >= $context['messages_per_page'] ? $scripturl . '?topic=' . $topic . '.' . ($_REQUEST['start'] - $context['messages_per_page']) : '',
-			'next' => $_REQUEST['start'] + $context['messages_per_page'] < $context['total_visible_posts'] ? $scripturl . '?topic=' . $topic . '.' . ($_REQUEST['start'] + $context['messages_per_page']) : '',
-			'last' => $_REQUEST['start'] + $context['messages_per_page'] < $context['total_visible_posts'] ? $scripturl . '?topic=' . $topic . '.' . (floor($context['total_visible_posts'] / $context['messages_per_page']) * $context['messages_per_page']) : '',
+			'next' => $context['total_visible_posts'] > $_REQUEST['start'] + $context['messages_per_page'] ? $scripturl . '?topic=' . $topic . '.' . ($_REQUEST['start'] + $context['messages_per_page']) : '',
+			'last' => $context['total_visible_posts'] > $_REQUEST['start'] + $context['messages_per_page'] ? $scripturl . '?topic=' . $topic . '.' . (floor($context['total_visible_posts'] / $context['messages_per_page']) * $context['messages_per_page']) : '',
 			'up' => $scripturl . '?board=' . $board . '.0'
 		);
 	}
@@ -575,7 +574,6 @@ function Display()
 			// Sanity check
 			if (!empty($start['error_count']) || !empty($start['warning_count']) || !empty($end['error_count']) || !empty($end['warning_count']))
 				continue;
-
 			$linked_calendar_event = array(
 				'id' => $row['id_event'],
 				'title' => $row['title'],
@@ -1398,6 +1396,7 @@ function prepareDisplayContext($reset = false)
 	if (!$message)
 	{
 		$smcFunc['db_free_result']($messages_request);
+
 		return false;
 	}
 
@@ -1423,7 +1422,7 @@ function prepareDisplayContext($reset = false)
 	$message['subject'] = $message['subject'] != '' ? $message['subject'] : $txt['no_subject'];
 
 	// Are you allowed to remove at least a single reply?
-	$context['can_remove_post'] |= allowedTo('delete_own') && (empty($modSettings['edit_disable_time']) || $message['poster_time'] + $modSettings['edit_disable_time'] * 60 >= time()) && $message['id_member'] == $user_info['id'];
+	$context['can_remove_post'] |= allowedTo('delete_own') && (empty($modSettings['edit_disable_time']) || time() <= $message['poster_time'] + $modSettings['edit_disable_time'] * 60) && $message['id_member'] == $user_info['id'];
 
 	// If the topic is locked, you might not be able to delete the post...
 	if ($context['is_locked'])
@@ -1497,8 +1496,8 @@ function prepareDisplayContext($reset = false)
 		'is_ignored' => !empty($modSettings['enable_buddylist']) && !empty($options['posts_apply_ignore_list']) && in_array($message['id_member'], $context['user']['ignoreusers']),
 		'can_approve' => !$message['approved'] && $context['can_approve'],
 		'can_unapprove' => !empty($modSettings['postmod_active']) && $context['can_approve'] && $message['approved'],
-		'can_modify' => (!$context['is_locked'] || allowedTo('moderate_board')) && (allowedTo('modify_any') || (allowedTo('modify_replies') && $context['user']['started']) || (allowedTo('modify_own') && $message['id_member'] == $user_info['id'] && (empty($modSettings['edit_disable_time']) || !$message['approved'] || $message['poster_time'] + $modSettings['edit_disable_time'] * 60 > time()))),
-		'can_remove' => allowedTo('delete_any') || (allowedTo('delete_replies') && $context['user']['started']) || (allowedTo('delete_own') && $message['id_member'] == $user_info['id'] && (empty($modSettings['edit_disable_time']) || $message['poster_time'] + $modSettings['edit_disable_time'] * 60 > time())),
+		'can_modify' => (!$context['is_locked'] || allowedTo('moderate_board')) && (allowedTo('modify_any') || (allowedTo('modify_replies') && $context['user']['started']) || (allowedTo('modify_own') && $message['id_member'] == $user_info['id'] && (empty($modSettings['edit_disable_time']) || !$message['approved'] || time() < $message['poster_time'] + $modSettings['edit_disable_time'] * 60))),
+		'can_remove' => allowedTo('delete_any') || (allowedTo('delete_replies') && $context['user']['started']) || (allowedTo('delete_own') && $message['id_member'] == $user_info['id'] && (empty($modSettings['edit_disable_time']) || time() < $message['poster_time'] + $modSettings['edit_disable_time'] * 60)),
 		'can_see_ip' => allowedTo('moderate_forum') || ($message['id_member'] == $user_info['id'] && !empty($user_info['id'])),
 		'css_class' => $message['approved'] ? 'windowbg' : 'approvebg',
 	);
@@ -1535,14 +1534,14 @@ function prepareDisplayContext($reset = false)
 	$output['quickbuttons'] = array(
 		'quote' => array(
 			'label' => $txt['quote_action'],
-			'href' => $scripturl.'?action=post;quote='.$output['id'].';topic='.$context['current_topic'], '.'.$context['start'].';last_msg='.$context['topic_last_message'],
-			'javascript' => 'onclick="return oQuickReply.quote('.$output['id'].');"',
+			'href' => $scripturl . '?action=post;quote=' . $output['id'] . ';topic=' . $context['current_topic'], '.' . $context['start'] . ';last_msg=' . $context['topic_last_message'],
+			'javascript' => 'onclick="return oQuickReply.quote(' . $output['id'] . ');"',
 			'icon' => 'quote',
 			'show' => $context['can_quote']
 		),
 		'quote_selected' => array(
 			'label' => $txt['quote_selected_action'],
-			'id' => 'quoteSelected_'. $output['id'],
+			'id' => 'quoteSelected_' . $output['id'],
 			'href' => 'javascript:void(0)',
 			'custom' => 'style="display:none"',
 			'icon' => 'quote_selected',
@@ -1551,74 +1550,74 @@ function prepareDisplayContext($reset = false)
 		'quick_edit' => array(
 			'label' => $txt['quick_edit'],
 			'class' => 'quick_edit',
-			'id' => 'modify_button_'. $output['id'],
-			'custom' => 'onclick="oQuickModify.modifyMsg(\''.$output['id'].'\', \''.!empty($modSettings['toggle_subject']).'\')"',
+			'id' => 'modify_button_' . $output['id'],
+			'custom' => 'onclick="oQuickModify.modifyMsg(\'' . $output['id'] . '\', \'' . !empty($modSettings['toggle_subject']) . '\')"',
 			'icon' => 'quick_edit_button',
 			'show' => $output['can_modify']
 		),
 		'more' => array(
 			'modify' => array(
 				'label' => $txt['modify'],
-				'href' => $scripturl.'?action=post;msg='.$output['id'].';topic='.$context['current_topic'].'.'.$context['start'],
+				'href' => $scripturl . '?action=post;msg=' . $output['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'],
 				'icon' => 'modify_button',
 				'show' => $output['can_modify']
 			),
 			'remove_topic' => array(
 				'label' => $txt['remove_topic'],
-				'href' => $scripturl.'?action=removetopic2;topic='.$context['current_topic'].'.'.$context['start'].';'.$context['session_var'].'='.$context['session_id'],
-				'javascript' => 'data-confirm="'.$txt['are_sure_remove_topic'].'"',
+				'href' => $scripturl . '?action=removetopic2;topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'],
+				'javascript' => 'data-confirm="' . $txt['are_sure_remove_topic'] . '"',
 				'class' => 'you_sure',
 				'icon' => 'remove_button',
 				'show' => $context['can_delete'] && ($context['topic_first_message'] == $output['id'])
 			),
 			'remove' => array(
 				'label' => $txt['remove'],
-				'href' => $scripturl.'?action=deletemsg;topic='.$context['current_topic'].'.'.$context['start'].';msg='.$output['id'].';'.$context['session_var'].'='.$context['session_id'],
-				'javascript' => 'data-confirm="'.$txt['remove_message_question'].'"',
+				'href' => $scripturl . '?action=deletemsg;topic=' . $context['current_topic'] . '.' . $context['start'] . ';msg=' . $output['id'] . ';' . $context['session_var'] . '=' . $context['session_id'],
+				'javascript' => 'data-confirm="' . $txt['remove_message_question'] . '"',
 				'class' => 'you_sure',
 				'icon' => 'remove_button',
 				'show' => $output['can_remove'] && ($context['topic_first_message'] != $output['id'])
 			),
 			'split' => array(
 				'label' => $txt['split'],
-				'href' => $scripturl.'?action=splittopics;topic='.$context['current_topic'].'.0;at='.$output['id'],
+				'href' => $scripturl . '?action=splittopics;topic=' . $context['current_topic'] . '.0;at=' . $output['id'],
 				'icon' => 'split_button',
 				'show' => $context['can_split'] && !empty($context['real_num_replies'])
 			),
 			'report' => array(
 				'label' => $txt['report_to_mod'],
-				'href' => $scripturl.'?action=reporttm;topic='.$context['current_topic'].'.'.$output['counter'].';msg='.$output['id'],
+				'href' => $scripturl . '?action=reporttm;topic=' . $context['current_topic'] . '.' . $output['counter'] . ';msg=' . $output['id'],
 				'icon' => 'error',
 				'show' => $context['can_report_moderator']
 			),
 			'warn' => array(
 				'label' => $txt['issue_warning'],
-				'href' => $scripturl.'?action=profile;area=issuewarning;u='.$output['member']['id'].';msg='.$output['id'],
+				'href' => $scripturl . '?action=profile;area=issuewarning;u=' . $output['member']['id'] . ';msg=' . $output['id'],
 				'icon' => 'warn_button',
 				'show' => $context['can_issue_warning'] && !$output['is_message_author'] && !$output['member']['is_guest']
 			),
 			'restore' => array(
 				'label' => $txt['restore_message'],
-				'href' => $scripturl.'?action=restoretopic;msgs='.$output['id'].';'.$context['session_var'].'='.$context['session_id'],
+				'href' => $scripturl . '?action=restoretopic;msgs=' . $output['id'] . ';' . $context['session_var'] . '=' . $context['session_id'],
 				'icon' => 'restore_button',
 				'show' => $context['can_restore_msg']
 			),
 			'approve' => array(
 				'label' => $txt['approve'],
-				'href' => $scripturl.'?action=moderate;area=postmod;sa=approve;topic='.$context['current_topic'].'.'.$context['start'].';msg='.$output['id'].';'.$context['session_var'].'='.$context['session_id'],
+				'href' => $scripturl . '?action=moderate;area=postmod;sa=approve;topic=' . $context['current_topic'] . '.' . $context['start'] . ';msg=' . $output['id'] . ';' . $context['session_var'] . '=' . $context['session_id'],
 				'icon' => 'approve_button',
 				'show' => $output['can_approve']
 			),
 			'unapprove' => array(
 				'label' => $txt['unapprove'],
-				'href' => $scripturl.'?action=moderate;area=postmod;sa=approve;topic='.$context['current_topic'].'.'.$context['start'].';msg='.$output['id'].';'.$context['session_var'].'='.$context['session_id'],
+				'href' => $scripturl . '?action=moderate;area=postmod;sa=approve;topic=' . $context['current_topic'] . '.' . $context['start'] . ';msg=' . $output['id'] . ';' . $context['session_var'] . '=' . $context['session_id'],
 				'icon' => 'unapprove_button',
 				'show' => $output['can_unapprove']
 			),
 		),
 		'quickmod' => array(
 			'class' => 'inline_mod_check',
-			'id' => 'in_topic_mod_check_'. $output['id'],
+			'id' => 'in_topic_mod_check_' . $output['id'],
 			'custom' => 'style="display: none;"',
 			'content' => '',
 			'show' => !empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $output['can_remove']
@@ -1731,9 +1730,8 @@ function QuickInTopicModeration()
 	$messages = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		if (!$allowed_all && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + $modSettings['edit_disable_time'] * 60 < time())
+		if (!$allowed_all && !empty($modSettings['edit_disable_time']) && time() > $row['poster_time'] + $modSettings['edit_disable_time'] * 60)
 			continue;
-
 		$messages[$row['id_msg']] = array($row['subject'], $row['id_member']);
 	}
 	$smcFunc['db_free_result']($request);
@@ -1758,7 +1756,7 @@ function QuickInTopicModeration()
 		if ($message == $first_message && $message != $last_message)
 			continue;
 		// If the first message is going then don't bother going back to the topic as we're effectively deleting it.
-		elseif ($message == $first_message)
+		if ($message == $first_message)
 			$topicGone = true;
 
 		removeMessage($message);

@@ -167,6 +167,7 @@ class Likes
 	{
 		// All properties inside Likes are protected, thus, an underscore is used.
 		$property = '_' . $property;
+
 		return property_exists($this, $property) ? $this->$property : false;
 	}
 
@@ -248,6 +249,7 @@ class Likes
 						$this->_type = $result['type'];
 						$this->_validLikes = array_merge($this->_validLikes, $result);
 						$found = true;
+
 						break;
 					}
 				}
@@ -503,6 +505,7 @@ class Likes
 			if (!$loaded)
 			{
 				unset ($context['likers'][$liker]);
+
 				continue;
 			}
 
@@ -569,8 +572,7 @@ class Likes
 		}
 
 		// A like operation.
-		else
-		{
+		
 			// Not an ajax request so send the user back to the previous location or the main page.
 			if (!$this->_js)
 				redirectexit(!empty($this->_validLikes['redirect']) ? $this->_validLikes['redirect'] : '');
@@ -589,7 +591,6 @@ class Likes
 				$context['sub_template'] = $this->_sa;
 				$context['data'] = $this->_data;
 			}
-		}
 	}
 
 	/**

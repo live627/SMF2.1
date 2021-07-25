@@ -112,6 +112,7 @@ class browser_detector
 	{
 		if (!isset($this->_browsers['is_opera']))
 			$this->_browsers['is_opera'] = strpos($_SERVER['HTTP_USER_AGENT'], 'Opera') !== false;
+
 		return $this->_browsers['is_opera'];
 	}
 
@@ -125,6 +126,7 @@ class browser_detector
 		// I'm IE, Yes I'm the real IE; All you other IEs are just imitating.
 		if (!isset($this->_browsers['is_ie']))
 			$this->_browsers['is_ie'] = !$this->isOpera() && !$this->isGecko() && !$this->isWebTv() && preg_match('~MSIE \d+~', $_SERVER['HTTP_USER_AGENT']) === 1;
+
 		return $this->_browsers['is_ie'];
 	}
 
@@ -139,6 +141,7 @@ class browser_detector
 		// The isGecko() part is to ensure we get this right...
 		if (!isset($this->_browsers['is_ie11']))
 			$this->_browsers['is_ie11'] = strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false && $this->isGecko();
+
 		return $this->_browsers['is_ie11'];
 	}
 
@@ -151,6 +154,7 @@ class browser_detector
 	{
 		if (!isset($this->_browsers['is_edge']))
 			$this->_browsers['is_edge'] = strpos($_SERVER['HTTP_USER_AGENT'], 'Edge') !== false;
+
 		return $this->_browsers['is_edge'];
 	}
 
@@ -163,6 +167,7 @@ class browser_detector
 	{
 		if (!isset($this->_browsers['is_webkit']))
 			$this->_browsers['is_webkit'] = strpos($_SERVER['HTTP_USER_AGENT'], 'AppleWebKit') !== false;
+
 		return $this->_browsers['is_webkit'];
 	}
 
@@ -175,6 +180,7 @@ class browser_detector
 	{
 		if (!isset($this->_browsers['is_firefox']))
 			$this->_browsers['is_firefox'] = preg_match('~(?:Firefox|Ice[wW]easel|IceCat|Shiretoko|Minefield)/~', $_SERVER['HTTP_USER_AGENT']) === 1 && $this->isGecko();
+
 		return $this->_browsers['is_firefox'];
 	}
 
@@ -187,6 +193,7 @@ class browser_detector
 	{
 		if (!isset($this->_browsers['is_web_tv']))
 			$this->_browsers['is_web_tv'] = strpos($_SERVER['HTTP_USER_AGENT'], 'WebTV') !== false;
+
 		return $this->_browsers['is_web_tv'];
 	}
 
@@ -199,6 +206,7 @@ class browser_detector
 	{
 		if (!isset($this->_browsers['is_konqueror']))
 			$this->_browsers['is_konqueror'] = strpos($_SERVER['HTTP_USER_AGENT'], 'Konqueror') !== false;
+
 		return $this->_browsers['is_konqueror'];
 	}
 
@@ -211,6 +219,7 @@ class browser_detector
 	{
 		if (!isset($this->_browsers['is_gecko']))
 			$this->_browsers['is_gecko'] = strpos($_SERVER['HTTP_USER_AGENT'], 'Gecko') !== false && !$this->isWebkit() && !$this->isKonqueror();
+
 		return $this->_browsers['is_gecko'];
 	}
 
@@ -225,6 +234,7 @@ class browser_detector
 			$this->_browsers['is_opera_mini'] = (isset($_SERVER['HTTP_X_OPERAMINI_PHONE_UA']) || stripos($_SERVER['HTTP_USER_AGENT'], 'opera mini') !== false);
 		if ($this->_browsers['is_opera_mini'])
 			$this->_is_mobile = true;
+
 		return $this->_browsers['is_opera_mini'];
 	}
 
@@ -239,6 +249,7 @@ class browser_detector
 			$this->_browsers['is_opera_mobi'] = stripos($_SERVER['HTTP_USER_AGENT'], 'opera mobi') !== false;
 		if ($this->_browsers['is_opera_mobi'])
 			$this->_is_mobile = true;
+
 		return $this->_browsers['is_opera_mini'];
 	}
 
@@ -412,6 +423,7 @@ class browser_detector
 				if (array_key_exists($browser, $browser_priority))
 				{
 					$context['browser_body_id'] = $browser_priority[$browser];
+
 					break;
 				}
 			}

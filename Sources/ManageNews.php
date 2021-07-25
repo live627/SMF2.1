@@ -159,7 +159,7 @@ function EditNews()
 							return '
 								<textarea id="data_' . $news['id'] . '" rows="3" cols="50" name="news[]" class="padding block">' . $news['unparsed'] . '</textarea>
 								<div class="floatleft" id="preview_' . $news['id'] . '"></div>';
-						else
+						
 							return $news['unparsed'];
 					},
 					'class' => 'half_table',
@@ -188,7 +188,7 @@ function EditNews()
 					{
 						if (is_numeric($news['id']))
 							return '<input type="checkbox" name="remove[]" value="' . $news['id'] . '">';
-						else
+						
 							return '';
 					},
 					'class' => 'centercol icon',
@@ -465,7 +465,6 @@ function prepareMailingForPreview()
 			$context['post_error']['messages'][] = $txt['error_no_' . $post];
 		elseif (!empty($_REQUEST['xml']))
 			continue;
-
 		preparsecode($context[$key]);
 		if ($html)
 		{
@@ -703,6 +702,7 @@ function SendMailing($clean_only = false)
 	if (isset($_POST['preview']))
 	{
 		$context['preview'] = true;
+
 		return ComposeMailing();
 	}
 
@@ -851,6 +851,7 @@ function SendMailing($clean_only = false)
 	if (empty($_POST['message']) || empty($_POST['subject']))
 	{
 		$context['preview'] = true;
+
 		return ComposeMailing();
 	}
 
@@ -908,7 +909,6 @@ function SendMailing($clean_only = false)
 		// Dammit - can't PM emails!
 		if ($context['send_pm'])
 			continue;
-
 		// Non-members can't unsubscribe via the automated system.
 		$unsubscribe_link = sprintf($txt['unsubscribe_announcements_manual'], empty($modSettings['mail_from']) ? $webmaster_email : $modSettings['mail_from']);
 
@@ -1004,7 +1004,6 @@ function SendMailing($clean_only = false)
 			// Force them to have it?
 			if (empty($context['email_force']) && empty($prefs[$row['id_member']]['announcements']))
 				continue;
-
 			// What groups are we looking at here?
 			if (empty($row['additional_groups']))
 				$groups = array($row['id_group'], $row['id_post_group']);
@@ -1017,7 +1016,6 @@ function SendMailing($clean_only = false)
 			// Excluded groups?
 			if (array_intersect($groups, $context['recipients']['exclude_groups']))
 				continue;
-
 			// We might need this
 			$cleanMemberName = empty($_POST['send_html']) || $context['send_pm'] ? un_htmlspecialchars($row['real_name']) : $row['real_name'];
 

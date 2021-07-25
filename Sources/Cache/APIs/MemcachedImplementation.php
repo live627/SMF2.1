@@ -48,11 +48,9 @@ class MemcachedImplementation extends CacheApi implements CacheApiInterface
 				if (strpos($server, '/') !== false)
 					return array($server, 0);
 
-				else
-				{
 					$server = explode(':', $server);
+
 					return array($server[0], isset($server[1]) ? (int) $server[1] : 11211);
-				}
 			},
 			explode(',', $cache_memcached)
 		);
@@ -105,6 +103,7 @@ class MemcachedImplementation extends CacheApi implements CacheApiInterface
 				if ($server[0] == $currentServer['host'] && $server[1] == $currentServer['port'])
 				{
 					$foundServer = true;
+
 					break;
 				}
 			}
@@ -169,16 +168,16 @@ class MemcachedImplementation extends CacheApi implements CacheApiInterface
 	{
 		global $context, $txt;
 
-		if (!in_array($txt[self::CLASS_KEY .'_settings'], $config_vars))
+		if (!in_array($txt[self::CLASS_KEY . '_settings'], $config_vars))
 		{
-			$config_vars[] = $txt[self::CLASS_KEY .'_settings'];
+			$config_vars[] = $txt[self::CLASS_KEY . '_settings'];
 			$config_vars[] = array(
 				self::CLASS_KEY,
-				$txt[self::CLASS_KEY .'_servers'],
+				$txt[self::CLASS_KEY . '_servers'],
 				'file',
 				'text',
 				0,
-				'subtext' => $txt[self::CLASS_KEY .'_servers_subtext']);
+				'subtext' => $txt[self::CLASS_KEY . '_servers_subtext']);
 		}
 
 		if (!isset($context['settings_post_javascript']))
@@ -187,7 +186,7 @@ class MemcachedImplementation extends CacheApi implements CacheApiInterface
 		$context['settings_post_javascript'] .= '
 			$("#cache_accelerator").change(function (e) {
 				var cache_type = e.currentTarget.value;
-				$("#'. self::CLASS_KEY .'").prop("disabled", cache_type != "MemcacheImplementation" && cache_type != "MemcachedImplementation");
+				$("#' . self::CLASS_KEY . '").prop("disabled", cache_type != "MemcacheImplementation" && cache_type != "MemcachedImplementation");
 			});';
 	}
 

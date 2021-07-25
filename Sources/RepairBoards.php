@@ -1309,6 +1309,7 @@ function loadForumTests()
 				if (count(text2words($row['subject'])) != 0)
 				{
 					$context['repair_errors'][] = sprintf($txt['repair_missing_cached_subject'], $row['id_topic']);
+
 					return true;
 				}
 
@@ -1561,11 +1562,11 @@ function findForumErrors($do_fix = false)
 		// Already done this?
 		if ($_GET['step'] > $current_step)
 			continue;
-
 		// If we're fixing it but it ain't broke why try?
 		if ($do_fix && !in_array($error_type, $to_fix))
 		{
 			$_GET['step']++;
+
 			continue;
 		}
 
@@ -1761,7 +1762,7 @@ function createSalvageArea()
 	// Have we already created it?
 	if ($createOnce)
 		return;
-	else
+	
 		$createOnce = true;
 
 	// Back to the forum's default language.

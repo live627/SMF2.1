@@ -476,7 +476,6 @@ function scheduled_daily_digest()
 		// Did they not elect to choose this?
 		if ($frequency < 3 || $frequency == 4 && !$is_weekly || $frequency == 3 && $is_weekly || $notify_types == 4)
 			continue;
-
 		// Right character set!
 		$context['character_set'] = empty($modSettings['global_character_set']) ? $langtxt[$lang]['char_set'] : $modSettings['global_character_set'];
 
@@ -534,7 +533,6 @@ function scheduled_daily_digest()
 			{
 				if ($note_type == 'topic' || $note_type == 'reply')
 					continue;
-
 				foreach ($type as $id => $board)
 					foreach ($board['lines'] as $topic)
 						if (in_array($mid, $topic['members']))
@@ -631,6 +629,7 @@ function scheduled_weekly_digest()
 
 	// We just pass through to the daily function - avoid duplication!
 	$is_weekly = true;
+
 	return scheduled_daily_digest();
 }
 
@@ -834,7 +833,7 @@ function ReduceMailQueue($number = false, $override_limit = false, $force_send =
 		return false;
 	}
 	// We where unable to send the email, clear our failed attempts.
-	elseif (!empty($modSettings['mail_failed_attempts']))
+	if (!empty($modSettings['mail_failed_attempts']))
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}settings
 			SET value = {string:zero}
@@ -1096,6 +1095,7 @@ function scheduled_fetchSMfiles()
 		{
 			$context['scheduled_errors']['fetchSMfiles'][] = sprintf($txt['st_cannot_retrieve_file'], $url);
 			log_error(sprintf($txt['st_cannot_retrieve_file'], $url));
+
 			return false;
 		}
 
@@ -1110,6 +1110,7 @@ function scheduled_fetchSMfiles()
 			)
 		);
 	}
+
 	return true;
 }
 
@@ -1489,6 +1490,7 @@ function scheduled_remove_temp_attachments()
 			loadLanguage('Post');
 			$context['scheduled_errors']['remove_temp_attachments'][] = $txt['cant_access_upload_path'] . ' (' . $attach_dir . ')';
 			log_error($txt['cant_access_upload_path'] . ' (' . $attach_dir . ')', 'critical');
+
 			return false;
 		}
 
@@ -1496,7 +1498,6 @@ function scheduled_remove_temp_attachments()
 		{
 			if ($file == '.' || $file == '..')
 				continue;
-
 			if (strpos($file, 'post_tmp_') !== false)
 			{
 				// Temp file is more than 5 hours old!

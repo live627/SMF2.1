@@ -99,7 +99,7 @@ function read_tgz_data($gzfilename, $destination, $single_file = false, $overwri
 		// Okay, this ain't no tar.gz, but maybe it's a zip file.
 		if (substr($data, 0, 2) == 'PK')
 			return read_zip_file($gzfilename, $destination, $single_file, $overwrite, $files_to_extract);
-		else
+		
 			return false;
 	}
 
@@ -144,6 +144,7 @@ function read_tgz_data($gzfilename, $destination, $single_file = false, $overwri
 		if (empty($current['filename']))
 		{
 			$offset += 512;
+
 			continue;
 		}
 
@@ -199,12 +200,11 @@ function read_tgz_data($gzfilename, $destination, $single_file = false, $overwri
 			if ($single_file && ($destination == $current['filename'] || $destination == '*/' . basename($current['filename'])))
 				return $current['data'];
 			// If we're looking for another file, keep going.
-			elseif ($single_file)
+			if ($single_file)
 				continue;
 			// Looking for restricted files?
-			elseif ($files_to_extract !== null && !in_array($current['filename'], $files_to_extract))
+			if ($files_to_extract !== null && !in_array($current['filename'], $files_to_extract))
 				continue;
-
 			package_put_contents($destination . '/' . $current['filename'], $current['data']);
 		}
 
@@ -223,7 +223,7 @@ function read_tgz_data($gzfilename, $destination, $single_file = false, $overwri
 
 	if ($single_file)
 		return false;
-	else
+	
 		return $return;
 }
 
@@ -260,7 +260,7 @@ function read_zip_file($file, $destination, $single_file = false, $overwrite = f
 			function($errno, $errstr, $errfile, $errline)
 			{
 				// error was suppressed with the @-operator
-				if (0 === error_reporting())
+				if (error_reporting() === 0)
 					return false;
 
 				if (strpos($errstr, 'PharData::__construct(): open_basedir') === false)
@@ -310,12 +310,11 @@ function read_zip_file($file, $destination, $single_file = false, $overwrite = f
 				if ($single_file && ($destination == $i || $destination == '*/' . basename($i)))
 					return $file_data;
 				// Oh?  Another file.  Fine.  You don't like this file, do you?  I know how it is.  Yeah... just go away.  No, don't apologize.  I know this file's just not *good enough* for you.
-				elseif ($single_file)
+				if ($single_file)
 					continue;
 				// Don't really want this?
-				elseif ($files_to_extract !== null && !in_array($i, $files_to_extract))
+				if ($files_to_extract !== null && !in_array($i, $files_to_extract))
 					continue;
-
 				package_put_contents($destination . '/' . $i, $file_data);
 			}
 
@@ -334,12 +333,13 @@ function read_zip_file($file, $destination, $single_file = false, $overwrite = f
 
 		if ($single_file)
 			return false;
-		else
+		
 			return $return;
 	}
 	catch (Exception $e)
 	{
 		log_error($e->getMessage(), 'general', $e->getFile(), $e->getLine());
+
 		return false;
 	}
 }
@@ -439,12 +439,11 @@ function read_zip_data($data, $destination, $single_file = false, $overwrite = f
 			if ($single_file && ($destination == $file_info['filename'] || $destination == '*/' . basename($file_info['filename'])))
 				return $file_info['data'];
 			// Oh?  Another file.  Fine.  You don't like this file, do you?  I know how it is.  Yeah... just go away.  No, don't apologize.  I know this file's just not *good enough* for you.
-			elseif ($single_file)
+			if ($single_file)
 				continue;
 			// Don't really want this?
-			elseif ($files_to_extract !== null && !in_array($file_info['filename'], $files_to_extract))
+			if ($files_to_extract !== null && !in_array($file_info['filename'], $files_to_extract))
 				continue;
-
 			package_put_contents($destination . '/' . $file_info['filename'], $file_info['data']);
 		}
 
@@ -463,7 +462,7 @@ function read_zip_data($data, $destination, $single_file = false, $overwrite = f
 
 	if ($single_file)
 		return false;
-	else
+	
 		return $return;
 }
 
@@ -522,7 +521,6 @@ function loadInstalledPackages()
 		// Already found this? If so don't add it twice!
 		if (in_array($row['package_id'], $found))
 			continue;
-
 		$found[] = $row['package_id'];
 
 		$row = htmlspecialchars__recursive($row);
@@ -578,7 +576,7 @@ function getPackageInfo($gzfilename)
 		$packageInfo = read_tgz_file($packagesdir . '/' . $gzfilename, '*/theme_info.xml', true);
 		if (!empty($packageInfo))
 			return 'package_get_error_is_theme';
-		else
+		
 			return 'package_get_error_is_zero';
 	}
 
@@ -649,6 +647,7 @@ function create_chmod_control($chmodFiles = array(), $chmodOptions = array(), $r
 				if (!file_exists($file) || $file_permissions == $perms)
 				{
 					unset($_SESSION['pack_ftp']['original_perms'][$file]);
+
 					continue;
 				}
 
@@ -727,6 +726,7 @@ function create_chmod_control($chmodFiles = array(), $chmodOptions = array(), $r
 						'function' => function($rowData) use ($txt)
 						{
 							$formatTxt = $rowData['result'] == '' || $rowData['result'] == 'skipped' ? $txt['package_restore_permissions_pre_change'] : $txt['package_restore_permissions_post_change'];
+
 							return sprintf($formatTxt, $rowData['cur_perms'], $rowData['new_perms'], $rowData['writable_message']);
 						},
 						'class' => 'smalltext',
@@ -1006,7 +1006,7 @@ function packageRequireFTP($destination_url, $files = null, $return = false)
 
 		return $files;
 	}
-	elseif (isset($_SESSION['pack_ftp']))
+	if (isset($_SESSION['pack_ftp']))
 	{
 		// Load the file containing the ftp_connection class.
 		require_once($sourcedir . '/Class-Package.php');
@@ -1045,9 +1045,10 @@ function packageRequireFTP($destination_url, $files = null, $return = false)
 		$_SESSION['pack_ftp'] = false;
 
 		$files = packageRequireFTP($destination_url, $files, $return);
+
 		return $files;
 	}
-	elseif (isset($_POST['ftp_username']))
+	if (isset($_POST['ftp_username']))
 	{
 		require_once($sourcedir . '/Class-Package.php');
 		$ftp = new ftp_connection($_POST['ftp_server'], $_POST['ftp_port'], $_POST['ftp_username'], $_POST['ftp_password']);
@@ -1191,6 +1192,7 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 
 		// We've found it!
 		$script = $this_method;
+
 		break;
 	}
 
@@ -1234,6 +1236,7 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 					{
 						// We don't want this now, but we'll allow the user to select to read it.
 						$context[$type][] = $smcFunc['htmlspecialchars']($action->fetch('@lang'));
+
 						continue;
 					}
 				}
@@ -1244,9 +1247,10 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 					if (isset($context[$type]['selected']))
 					{
 						$context[$type][] = 'default';
+
 						continue;
 					}
-					else
+					
 						$context[$type]['selected'] = 'default';
 				}
 			}
@@ -1275,7 +1279,7 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 
 			continue;
 		}
-		elseif ($actionType == 'hook')
+		if ($actionType == 'hook')
 		{
 			$return[] = array(
 				'type' => $actionType,
@@ -1286,9 +1290,10 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 				'object' => $action->exists('@object') && $action->fetch('@object') == 'true' ? true : false,
 				'description' => '',
 			);
+
 			continue;
 		}
-		elseif ($actionType == 'credits')
+		if ($actionType == 'credits')
 		{
 			// quick check of any supplied url
 			$url = $action->exists('@url') ? $action->fetch('@url') : '';
@@ -1307,9 +1312,10 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 				'copyright' => $action->exists('@copyright') ? $action->fetch('@copyright') : '',
 				'title' => $action->fetch('.'),
 			);
+
 			continue;
 		}
-		elseif ($actionType == 'requires')
+		if ($actionType == 'requires')
 		{
 			$return[] = array(
 				'type' => $actionType,
@@ -1317,9 +1323,10 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 				'version' => $action->exists('@version') ? $action->fetch('@version') : $action->fetch('.'),
 				'description' => '',
 			);
+
 			continue;
 		}
-		elseif ($actionType == 'error')
+		if ($actionType == 'error')
 		{
 			$return[] = array(
 				'type' => 'error',
@@ -1716,10 +1723,10 @@ function compareVersions($version1, $version2)
 			// (stable) dev < (stable) but (unstable) dev = (unstable)
 			if ($category == 'type')
 				return $versions[1][$category] > $versions[2][$category] ? ($versions[1]['dev'] ? -1 : 1) : ($versions[2]['dev'] ? 1 : -1);
-			elseif ($category == 'dev')
+			if ($category == 'dev')
 				return $versions[1]['dev'] ? ($versions[2]['type'] == 'stable' ? -1 : 0) : ($versions[1]['type'] == 'stable' ? 1 : 0);
 			// Otherwise a simple comparison.
-			else
+			
 				return $versions[1][$category] > $versions[2][$category] ? 1 : -1;
 		}
 	}
@@ -1799,7 +1806,6 @@ function deltree($dir, $delete_dir = true)
 	{
 		if (in_array($entryname, array('.', '..')))
 			continue;
-
 		if (is_dir($dir . '/' . $entryname))
 			deltree($dir . '/' . $entryname);
 		else
@@ -1869,9 +1875,10 @@ function mktree($strPath, $mode)
 		if ($test)
 		{
 			closedir($test);
+
 			return is_writable($strPath);
 		}
-		else
+		
 			return false;
 	}
 	// Is this an invalid path and/or we can't make the directory?
@@ -1888,29 +1895,29 @@ function mktree($strPath, $mode)
 
 	if ($mode !== false && isset($package_ftp))
 		return $package_ftp->create_dir(strtr($strPath, array($_SESSION['pack_ftp']['root'] => '')));
-	elseif ($mode === false)
+	if ($mode === false)
 	{
 		$test = @opendir(dirname($strPath));
 		if ($test)
 		{
 			closedir($test);
+
 			return true;
 		}
-		else
+		
 			return false;
 	}
-	else
-	{
+	
 		@mkdir($strPath, $mode);
 		$test = @opendir($strPath);
 		if ($test)
 		{
 			closedir($test);
+
 			return true;
 		}
-		else
+		
 			return false;
-	}
 }
 
 /**
@@ -1938,7 +1945,6 @@ function copytree($source, $destination)
 	{
 		if (in_array($entryname, array('.', '..')))
 			continue;
-
 		if (isset($package_ftp))
 			$ftp_file = strtr($destination . '/' . $entryname, array($_SESSION['pack_ftp']['root'] => ''));
 
@@ -1981,7 +1987,6 @@ function listtree($path, $sub_path = '')
 	{
 		if ($entry == '.' || $entry == '..')
 			continue;
-
 		if (is_dir($path . $sub_path . '/' . $entry))
 			$data = array_merge($data, listtree($path, $sub_path . '/' . $entry));
 		else
@@ -2022,6 +2027,7 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 			'filename' => '-',
 			'debug' => $txt['package_modification_malformed']
 		);
+
 		return $actions;
 	}
 
@@ -2066,7 +2072,6 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 			// Default is getting done anyway, so no need for involvement here.
 			if ($id == 1)
 				continue;
-
 			// For every template, do we want it? Yea, no, maybe?
 			foreach ($template_changes[1] as $index => $template_file)
 			{
@@ -2112,19 +2117,21 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 				);
 
 				$everything_found = false;
+
 				continue;
 			}
 			// Skip the file if it doesn't exist.
-			elseif (!file_exists($working_file) && $file->exists('@error') && trim($file->fetch('@error')) == 'skip')
+			if (!file_exists($working_file) && $file->exists('@error') && trim($file->fetch('@error')) == 'skip')
 			{
 				$actions[] = array(
 					'type' => 'skipping',
 					'filename' => $working_file,
 				);
+
 				continue;
 			}
 			// Okay, we're creating this file then...?
-			elseif (!file_exists($working_file))
+			if (!file_exists($working_file))
 				$working_data = '';
 			// Phew, it exists!  Load 'er up!
 			else
@@ -2294,11 +2301,12 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 						);
 
 						$everything_found = false;
+
 						continue;
 					}
 
 					// Found, but in this case, that means failure!
-					elseif (!$failed && $actual_operation['error'] === 'required')
+					if (!$failed && $actual_operation['error'] === 'required')
 					{
 						$actions[] = array(
 							'type' => 'failure',
@@ -2312,13 +2320,13 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 						);
 
 						$everything_found = false;
+
 						continue;
 					}
 
 					// Replace it into nothing? That's not an option...unless it's an undoing end.
 					if ($search['add'] === '' && ($search['position'] !== 'end' || !$undo))
 						continue;
-
 					// Finally, we're doing some replacements.
 					$working_data = preg_replace('~' . $actual_operation['searches'][$i]['preg_search'] . '~s', $actual_operation['searches'][$i]['preg_replace'], $working_data, 1);
 
@@ -2350,7 +2358,6 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 
 			if (basename($working_file) == 'Settings_bak.php')
 				continue;
-
 			if (!$testing && !empty($modSettings['package_make_backups']) && file_exists($working_file))
 			{
 				// No, no, not Settings.php!
@@ -2426,6 +2433,7 @@ function parseBoardMod($file, $testing = true, $undo = false, $theme_paths = arr
 			// It's a step, let's add that to the current steps.
 			if (isset($temp_changes[$step_counter]))
 				$temp_changes[$step_counter]['changes'][] = $code_match[0];
+
 			continue;
 		}
 
@@ -2461,7 +2469,6 @@ function parseBoardMod($file, $testing = true, $undo = false, $theme_paths = arr
 			// Don't do default, it means nothing to me.
 			if ($id == 1)
 				continue;
-
 			// Now, for each file do we need to edit it?
 			foreach ($template_changes[1] as $pos => $template_file)
 			{
@@ -2498,7 +2505,6 @@ function parseBoardMod($file, $testing = true, $undo = false, $theme_paths = arr
 				// Don't even dare.
 				if (basename($working_file) == 'Settings_bak.php')
 					continue;
-
 				if (!is_writable($working_file))
 					$actions[] = array(
 						'type' => 'chmod',
@@ -2545,6 +2551,7 @@ function parseBoardMod($file, $testing = true, $undo = false, $theme_paths = arr
 					if (file_exists($place . '/' . $working_file))
 					{
 						$working_file = $place . '/' . $working_file;
+
 						break;
 					}
 			}
@@ -2717,7 +2724,7 @@ function package_get_contents($filename)
 
 	if (strpos($filename, 'Packages/') !== false || $package_cache === false || !isset($package_cache[$filename]))
 		return file_get_contents($filename);
-	else
+	
 		return $package_cache[$filename];
 }
 
@@ -2824,6 +2831,7 @@ function package_flush_cache($trash = false)
 				// We should have package_chmod()'d them before, no?!
 				loadLanguage('Errors');
 				trigger_error($txt['package_flush_cache_not_writable'], E_USER_WARNING);
+
 				return;
 			}
 			fclose($fp);
@@ -2833,6 +2841,7 @@ function package_flush_cache($trash = false)
 	if ($trash)
 	{
 		$package_cache = array();
+
 		return;
 	}
 
@@ -2944,7 +2953,7 @@ function package_chmod($filename, $perm_state = 'writable', $track_change = fals
 		return false;
 	}
 	// Otherwise we do have FTP?
-	elseif ($package_ftp !== false && !empty($_SESSION['pack_ftp']))
+	if ($package_ftp !== false && !empty($_SESSION['pack_ftp']))
 	{
 		$ftp_file = strtr($filename, array($_SESSION['pack_ftp']['root'] => ''));
 
@@ -2979,7 +2988,7 @@ function package_chmod($filename, $perm_state = 'writable', $track_change = fals
 
 			return true;
 		}
-		elseif ($perm_state != 'writable' && isset($_SESSION['pack_ftp']['original_perms'][$filename]))
+		if ($perm_state != 'writable' && isset($_SESSION['pack_ftp']['original_perms'][$filename]))
 			unset($_SESSION['pack_ftp']['original_perms'][$filename]);
 	}
 
@@ -3058,10 +3067,8 @@ function package_create_backup($id = 'backup')
 			{
 				if ($dir->isDir())
 					continue;
-
 				if (preg_match('~^(\.{1,2}|CVS|backup.*|help|images|.*\~)$~', $entry) != 0)
 					continue;
-
 				$files[empty($_REQUEST['use_full_paths']) ? str_replace(realpath($boarddir), '', $entry) : $entry] = $entry;
 			}
 		}
@@ -3095,7 +3102,7 @@ function package_create_backup($id = 'backup')
 			function($errno, $errstr, $errfile, $errline)
 			{
 				// error was suppressed with the @-operator
-				if (0 === error_reporting())
+				if (error_reporting() === 0)
 					return false;
 
 				if (strpos($errstr, 'PharData::__construct(): open_basedir') === false && strpos($errstr, 'PharData::compress(): open_basedir') === false)
@@ -3228,7 +3235,7 @@ function package_validate_send($sendData)
 			WHERE validation_url != {string:empty}',
 			array(
 				'empty' => '',
-		));
+			));
 		$context['package_servers'] = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$context['package_servers'][$row['id_server']] = $row;

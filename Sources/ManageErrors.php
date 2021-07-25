@@ -437,7 +437,6 @@ function ViewFile()
 	loadTemplate('Errors');
 	$context['template_layers'] = array();
 	$context['sub_template'] = 'show_file';
-
 }
 
 /**
@@ -475,7 +474,6 @@ function ViewBacktrace()
 	loadLanguage('ManageMaintenance');
 	$context['template_layers'] = array();
 	$context['sub_template'] = 'show_backtrace';
-
 }
 
 ?>

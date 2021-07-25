@@ -282,7 +282,6 @@ function ViewMemberlist()
 			// Not filled in?
 			if (!isset($search_params[$param_name]) || $search_params[$param_name] === '')
 				continue;
-
 			// Make sure numeric values are really numeric.
 			if (in_array($param_info['type'], array('int', 'age')))
 				$search_params[$param_name] = (int) $search_params[$param_name];
@@ -358,7 +357,6 @@ function ViewMemberlist()
 				// Each checkbox or no checkbox at all is checked -> ignore.
 				if (!is_array($search_params[$param_name]) || count($search_params[$param_name]) == 0 || count($search_params[$param_name]) == count($param_info['values']))
 					continue;
-
 				$query_parts[] = ($param_info['db_fields'][0]) . ' IN ({array_string:' . $param_name . '_check})';
 				$where_params[$param_name . '_check'] = $search_params[$param_name];
 			}
@@ -376,7 +374,6 @@ function ViewMemberlist()
 					$where_params[$param_name . '_low'] = $search_params[$param_name]['low'];
 					$where_params[$param_name . '_high'] = $search_params[$param_name]['high'];
 				}
-
 			}
 			elseif ($param_info['type'] != 'groups')
 			{
@@ -751,7 +748,7 @@ function MembersAwaitingActivation()
 			);
 		else
 			$context['allowed_actions'] = array(
-				'ok' => $txt['admin_browse_w_approve'] .' '. $txt['admin_browse_no_email'],
+				'ok' => $txt['admin_browse_w_approve'] . ' ' . $txt['admin_browse_no_email'],
 				'okemail' => $txt['admin_browse_w_approve'] . ' ' . $txt['admin_browse_w_email'],
 				'require_activation' => $txt['admin_browse_w_approve_require_activate'],
 				'reject' => $txt['admin_browse_w_reject'],
@@ -940,6 +937,7 @@ function MembersAwaitingActivation()
 							else
 								$member_links[] = $member['name'] . ' (' . $txt['guest'] . ')';
 						}
+
 						return implode(', ', $member_links);
 					},
 					'class' => 'smalltext',
@@ -1302,7 +1300,7 @@ function jeffsdatediff($old)
 	// Before midnight?
 	if ($dis < $sinceMidnight)
 		return 0;
-	else
+	
 		$dis -= $sinceMidnight;
 
 	// Divide out the seconds in a day to get the number of days.
@@ -1341,7 +1339,6 @@ function GetMemberActivationCounts()
 		elseif (in_array($activation_type, array(3, 4, 5)))
 			$context['awaiting_approval'] += $total_members;
 	}
-
 }
 
 ?>

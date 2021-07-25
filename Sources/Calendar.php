@@ -313,10 +313,11 @@ function CalendarPost()
 		{
 			$_REQUEST['calendar'] = 1;
 			require_once($sourcedir . '/Post.php');
+
 			return Post();
 		}
 		// New...
-		elseif ($_REQUEST['eventid'] == -1)
+		if ($_REQUEST['eventid'] == -1)
 		{
 			$eventOptions = array(
 				'board' => 0,
@@ -376,6 +377,7 @@ function CalendarPost()
 	{
 		$_REQUEST['calendar'] = 1;
 		require_once($sourcedir . '/Post.php');
+
 		return Post();
 	}
 
@@ -447,13 +449,13 @@ function CalendarPost()
 			// Ignore the "-----" option
 			if (empty($possible_tzid))
 				continue;
-
 			$possible_tzinfo = timezone_transitions_get(timezone_open($possible_tzid), $context['event']['start_timestamp'], $later);
 
 			if ($tzinfo === $possible_tzinfo)
 			{
 				$context['event']['tz'] = $possible_tzid;
 				$found = true;
+
 				break;
 			}
 		}

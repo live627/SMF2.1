@@ -271,7 +271,6 @@ function DownloadLanguage()
 		// Don't do anything with files we don't understand.
 		if (!in_array($extension, array('php', 'jpg', 'gif', 'jpeg', 'png', 'txt')))
 			continue;
-
 		// Basic data.
 		$context_data = array(
 			'name' => $basename,
@@ -509,6 +508,7 @@ function ModifyLanguages()
 			if ($_POST['def_language'] == $lang['filename'])
 			{
 				$lang_exists = true;
+
 				break;
 			}
 		}
@@ -893,7 +893,6 @@ function ModifyLanguage()
 			// We're only after the files for this language.
 			if (preg_match('~^([A-Za-z]+)\.' . $context['lang_id'] . '\.php$~', $entry, $matches) == 0)
 				continue;
-
 			if (!isset($context['possible_files'][$theme]))
 				$context['possible_files'][$theme] = array(
 					'id' => $theme,
@@ -1077,7 +1076,6 @@ function ModifyLanguage()
 								'string' => cleanLangString($_POST['entry'][$k][$subk], false),
 							);
 						}
-
 					}
 				}
 			}
@@ -1149,14 +1147,12 @@ function ModifyLanguage()
 			// Ignore some things we set separately.
 			if (in_array($entryKey, array_keys($primary_settings)))
 				continue;
-
 			// These are arrays that need breaking out.
 			if (strpos($entryValue['entry'], 'array(') === 0 && substr($entryValue['entry'], -1) === ')')
 			{
 				// No, you may not use multidimensional arrays of $txt strings. Madness stalks that path.
 				if (isset($entryValue['subkey']))
 					continue;
-
 				// Trim off the array construct bits.
 				$entryValue['entry'] = substr($entryValue['entry'], strpos($entryValue['entry'], 'array(') + 6, -1);
 
@@ -1200,7 +1196,6 @@ function ModifyLanguage()
 
 				if (empty($m))
 					continue;
-
 				$entryValue['entry'] = $matches[0];
 
 				// Now create an entry for each item.
@@ -1386,7 +1381,6 @@ function ModifyLanguage()
 
 					if (empty($context['can_add_lang_entry'][$type]))
 						continue;
-
 					$final_saves[$string_key] = array(
 						'find' => "\s*\?" . '>$',
 						'replace' => "\n\$" . $type . '[\'' . $string_key . '\'] = ' . $string_val['string'] . ';' . "\n\n?" . '>',
@@ -1402,7 +1396,6 @@ function ModifyLanguage()
 
 						if (empty($context['can_add_lang_entry'][$type]))
 							continue;
-
 						$subKey = ctype_digit(trim($substring_key, '\'')) ? trim($substring_key, '\'') : '\'' . $substring_key . '\'';
 
 						$final_saves[$string_key . '[' . $substring_key . ']'] = array(
@@ -1584,6 +1577,7 @@ function cleanLangString($string, $to_display = true)
 				// Put the escape back...
 				$new_string .= $string[$i] == 'n' ? "\n" : "\t";
 				$is_escape = false;
+
 				continue;
 			}
 			// Have we got a single quote?
@@ -1699,7 +1693,7 @@ function cleanLangString($string, $to_display = true)
 				continue;
 			}
 			// Is this a lt sign?
-			elseif ($string[$i] == '<')
+			if ($string[$i] == '<')
 			{
 				// Probably HTML?
 				if ($string[$i + 1] != ' ')
@@ -1708,6 +1702,7 @@ function cleanLangString($string, $to_display = true)
 				else
 				{
 					$new_string .= '&lt;';
+
 					continue;
 				}
 			}
@@ -1721,6 +1716,7 @@ function cleanLangString($string, $to_display = true)
 				else
 				{
 					$new_string .= '&gt;';
+
 					continue;
 				}
 			}
@@ -1734,6 +1730,7 @@ function cleanLangString($string, $to_display = true)
 				if (!$in_html)
 				{
 					$new_string .= '&quot;';
+
 					continue;
 				}
 			}

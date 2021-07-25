@@ -127,15 +127,19 @@ function ShowAdminHelp()
 	switch ($_GET['help']) {
 		case 'cal_short_months':
 			$context['help_text'] = sprintf($context['help_text'], $txt['months_short'][1], $txt['months_titles'][1]);
+
 			break;
 		case 'cal_short_days':
 			$context['help_text'] = sprintf($context['help_text'], $txt['days_short'][1], $txt['days'][1]);
+
 			break;
 		case 'cron_is_real_cron':
 			$context['help_text'] = sprintf($context['help_text'], $boarddir, $boardurl);
+
 			break;
 		case 'queryless_urls':
 			$context['help_text'] = sprintf($context['help_text'], (isset($_SERVER['SERVER_SOFTWARE']) && (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== false || strpos($_SERVER['SERVER_SOFTWARE'], 'lighttpd') !== false) ? $helptxt['queryless_urls_supported'] : $helptxt['queryless_urls_unsupported']));
+
 			break;
 	}
 

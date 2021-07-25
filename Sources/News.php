@@ -303,17 +303,17 @@ function buildXmlFeed($xml_format, $xml_data, $feed_meta, $subaction)
 	 * namespaces, which could cause it to mangle the XML horrifically
 	 * during processing.
 	 */
-	$smf_ns = 'htt'.'p:/'.'/ww'.'w.simple'.'machines.o'.'rg/xml/' . $subaction;
+	$smf_ns = 'htt' . 'p:/' . '/ww' . 'w.simple' . 'machines.o' . 'rg/xml/' . $subaction;
 
 	// Allow mods to add extra namespaces and tags to the feed/channel
 	$namespaces = array(
 		'rss' => array(),
-		'rss2' => array('atom' => 'htt'.'p:/'.'/ww'.'w.w3.o'.'rg/2005/Atom'),
-		'atom' => array('' => 'htt'.'p:/'.'/ww'.'w.w3.o'.'rg/2005/Atom'),
+		'rss2' => array('atom' => 'htt' . 'p:/' . '/ww' . 'w.w3.o' . 'rg/2005/Atom'),
+		'atom' => array('' => 'htt' . 'p:/' . '/ww' . 'w.w3.o' . 'rg/2005/Atom'),
 		'rdf' => array(
-			'' => 'htt'.'p:/'.'/purl.o'.'rg/rss/1.0/',
-			'rdf' => 'htt'.'p:/'.'/ww'.'w.w3.o'.'rg/1999/02/22-rdf-syntax-ns#',
-			'dc' => 'htt'.'p:/'.'/purl.o'.'rg/dc/elements/1.1/',
+			'' => 'htt' . 'p:/' . '/purl.o' . 'rg/rss/1.0/',
+			'rdf' => 'htt' . 'p:/' . '/ww' . 'w.w3.o' . 'rg/1999/02/22-rdf-syntax-ns#',
+			'dc' => 'htt' . 'p:/' . '/purl.o' . 'rg/dc/elements/1.1/',
 		),
 		'smf' => array(
 			'smf' => $smf_ns,
@@ -537,6 +537,7 @@ function fix_possible_url($val)
 		},
 		$val
 	);
+
 	return $val;
 }
 
@@ -633,7 +634,6 @@ function dumpTags($data, $i, $xml_format = '', $forceCdataKeys = array(), $nsKey
 		// Skip it, it's been set to null.
 		if ($key === null || ($val === null && $attrs === null))
 			continue;
-
 		$forceCdata = in_array($key, $forceCdataKeys);
 		$ns = !empty($nsKeys[$key]) ? $nsKeys[$key] : '';
 
@@ -884,7 +884,7 @@ function getXmlNews($xml_format, $ascending = false)
 			)
 		);
 		// If we don't have $context['xmlnews_limit'] results, try again with an unoptimized version covering all rows.
-		if ($loops < 2 && $smcFunc['db_num_rows']($request) < $context['xmlnews_limit'])
+		if ($loops < 2 && $context['xmlnews_limit'] > $smcFunc['db_num_rows']($request))
 		{
 			$smcFunc['db_free_result']($request);
 			if (empty($_GET['boards']) && empty($board))
@@ -904,7 +904,7 @@ function getXmlNews($xml_format, $ascending = false)
 		$row = filter_var($row, FILTER_CALLBACK, array('options' => 'cleanXml'));
 
 		// Limit the length of the message, if the option is set.
-		if (!empty($modSettings['xmlnews_maxlen']) && $smcFunc['strlen'](str_replace('<br>', "\n", $row['body'])) > $modSettings['xmlnews_maxlen'])
+		if (!empty($modSettings['xmlnews_maxlen']) && $modSettings['xmlnews_maxlen'] < $smcFunc['strlen'](str_replace('<br>', "\n", $row['body'])))
 			$row['body'] = strtr($smcFunc['substr'](str_replace('<br>', "\n", $row['body']), 0, $modSettings['xmlnews_maxlen'] - 3), array("\n" => '<br>')) . '...';
 
 		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
@@ -1313,7 +1313,7 @@ function getXmlRecent($xml_format)
 			)
 		);
 		// If we don't have $context['xmlnews_limit'] results, try again with an unoptimized version covering all rows.
-		if ($loops < 2 && $smcFunc['db_num_rows']($request) < $context['xmlnews_limit'])
+		if ($loops < 2 && $context['xmlnews_limit'] > $smcFunc['db_num_rows']($request))
 		{
 			$smcFunc['db_free_result']($request);
 			if (empty($_GET['boards']) && empty($board))
@@ -1364,7 +1364,7 @@ function getXmlRecent($xml_format)
 		$row = filter_var($row, FILTER_CALLBACK, array('options' => 'cleanXml'));
 
 		// Limit the length of the message, if the option is set.
-		if (!empty($modSettings['xmlnews_maxlen']) && $smcFunc['strlen'](str_replace('<br>', "\n", $row['body'])) > $modSettings['xmlnews_maxlen'])
+		if (!empty($modSettings['xmlnews_maxlen']) && $modSettings['xmlnews_maxlen'] < $smcFunc['strlen'](str_replace('<br>', "\n", $row['body'])))
 			$row['body'] = strtr($smcFunc['substr'](str_replace('<br>', "\n", $row['body']), 0, $modSettings['xmlnews_maxlen'] - 3), array("\n" => '<br>')) . '...';
 
 		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
@@ -2205,7 +2205,7 @@ function getXmlPosts($xml_format, $ascending = false)
 					function($a, $b)
 					{
 						if ($a['filesize'] == $b['filesize'])
-					        return 0;
+							return 0;
 
 						return ($a['filesize'] < $b['filesize']) ? -1 : 1;
 					}

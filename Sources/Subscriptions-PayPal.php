@@ -175,8 +175,9 @@ class paypal_payment
 		// Are we testing?
 		if (!empty($modSettings['paidsubs_test']) && strtolower($modSettings['paypal_sandbox_email']) != strtolower($_POST['business']) && (empty($modSettings['paypal_additional_emails']) || !in_array(strtolower($_POST['business']), explode(',', strtolower($modSettings['paypal_additional_emails'])))))
 			return false;
-		elseif (strtolower($modSettings['paypal_email']) != strtolower($_POST['business']) && (empty($modSettings['paypal_additional_emails']) || !in_array(strtolower($_POST['business']), explode(',', $modSettings['paypal_additional_emails']))))
+		if (strtolower($modSettings['paypal_email']) != strtolower($_POST['business']) && (empty($modSettings['paypal_additional_emails']) || !in_array(strtolower($_POST['business']), explode(',', $modSettings['paypal_additional_emails']))))
 			return false;
+
 		return true;
 	}
 
@@ -304,7 +305,7 @@ class paypal_payment
 	{
 		if ($_POST['payment_status'] === 'Refunded' || $_POST['payment_status'] === 'Reversed' || $_POST['txn_type'] === 'Refunded' || ($_POST['txn_type'] === 'reversal' && $_POST['payment_status'] === 'Completed'))
 			return true;
-		else
+		
 			return false;
 	}
 
@@ -317,7 +318,7 @@ class paypal_payment
 	{
 		if (substr($_POST['txn_type'], 0, 14) === 'subscr_payment' && $_POST['payment_status'] === 'Completed')
 			return true;
-		else
+		
 			return false;
 	}
 
@@ -330,7 +331,7 @@ class paypal_payment
 	{
 		if ($_POST['payment_status'] === 'Completed' && $_POST['txn_type'] === 'web_accept')
 			return true;
-		else
+		
 			return false;
 	}
 
@@ -346,7 +347,7 @@ class paypal_payment
 		// subscr_eot, if sent, indicates an end of payments term.
 		if (substr($_POST['txn_type'], 0, 13) === 'subscr_cancel' || substr($_POST['txn_type'], 0, 10) === 'subscr_eot')
 			return true;
-		else
+		
 			return false;
 	}
 

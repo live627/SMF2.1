@@ -39,6 +39,7 @@ function automanage_attachments_check_directory()
 			if (!empty($dummy))
 			{
 				$doit = true;
+
 				break;
 			}
 
@@ -80,18 +81,23 @@ function automanage_attachments_check_directory()
 	{
 		case 1:
 			$updir = $basedirectory . DIRECTORY_SEPARATOR . 'attachments_' . (isset($modSettings['last_attachments_directory'][$base_dir]) ? $modSettings['last_attachments_directory'][$base_dir] : 0);
+
 			break;
 		case 2:
 			$updir = $basedirectory . DIRECTORY_SEPARATOR . $year;
+
 			break;
 		case 3:
 			$updir = $basedirectory . DIRECTORY_SEPARATOR . $year . DIRECTORY_SEPARATOR . $month;
+
 			break;
 		case 4:
 			$updir = $basedirectory . DIRECTORY_SEPARATOR . (empty($modSettings['use_subdirectories_for_attachments']) ? 'attachments-' : 'random_') . $rand;
+
 			break;
 		case 5:
 			$updir = $basedirectory . DIRECTORY_SEPARATOR . (empty($modSettings['use_subdirectories_for_attachments']) ? 'attachments-' : 'random_') . $rand . DIRECTORY_SEPARATOR . $rand1;
+
 			break;
 		default :
 			$updir = '';
@@ -152,6 +158,7 @@ function automanage_attachments_create_directory($updir)
 			if (!@mkdir($directory, 0755))
 			{
 				$context['dir_creation_error'] = 'attachments_no_create';
+
 				return false;
 			}
 		}
@@ -164,6 +171,7 @@ function automanage_attachments_create_directory($updir)
 	if (!smf_chmod($directory))
 	{
 		$context['dir_creation_error'] = 'attachments_no_write';
+
 		return false;
 	}
 
@@ -188,6 +196,7 @@ function automanage_attachments_create_directory($updir)
 	}
 
 	$context['attach_dir'] = $modSettings['attachmentUploadDir'][$modSettings['currentAttachmentUploadDir']];
+
 	return true;
 }
 
@@ -262,7 +271,7 @@ function automanage_attachments_by_space()
 
 		return true;
 	}
-	else
+	
 		return false;
 }
 
@@ -291,6 +300,7 @@ function get_directory_tree_elements($directory)
 
 		$tree = explode(DIRECTORY_SEPARATOR, trim($directory, DIRECTORY_SEPARATOR));
 	}
+
 	return $tree;
 }
 
@@ -318,6 +328,7 @@ function attachments_init_dir(&$tree, &$count)
 
 		$count--;
 	}
+
 	return $directory;
 }
 
@@ -382,6 +393,7 @@ function processAttachments()
 			if (!empty($dummy))
 			{
 				$ignore_temp = false;
+
 				break;
 			}
 
@@ -430,7 +442,6 @@ function processAttachments()
 	{
 		if ($_FILES['attachment']['name'][$n] == '')
 			continue;
-
 		// First, let's first check for PHP upload errors.
 		$errors = array();
 		if (!empty($_FILES['attachment']['error'][$n]))
@@ -534,6 +545,7 @@ function attachmentChecks($attachID)
 	if ($_SESSION['temp_attachments'][$attachID]['size'] == 0)
 	{
 		$_SESSION['temp_attachments'][$attachID]['errors'][] = 'attach_0_byte_file';
+
 		return false;
 	}
 
@@ -549,6 +561,7 @@ function attachmentChecks($attachID)
 			{
 				// Nothing to do: not allowed or not successful re-encoding it.
 				$_SESSION['temp_attachments'][$attachID]['errors'][] = 'bad_attachment';
+
 				return false;
 			}
 			// Success! However, successes usually come for a price:
@@ -584,7 +597,7 @@ function attachmentChecks($attachID)
 
 		// Are we about to run out of room? Let's notify the admin then.
 		if (empty($modSettings['attachment_full_notified']) && !empty($modSettings['attachmentDirSizeLimit']) && $modSettings['attachmentDirSizeLimit'] > 4000 && $context['dir_size'] > ($modSettings['attachmentDirSizeLimit'] - 2000) * 1024
-			|| (!empty($modSettings['attachmentDirFileLimit']) && $modSettings['attachmentDirFileLimit'] * .95 < $context['dir_files'] && $modSettings['attachmentDirFileLimit'] > 500))
+			|| (!empty($modSettings['attachmentDirFileLimit']) && $context['dir_files'] > $modSettings['attachmentDirFileLimit'] * .95 && $modSettings['attachmentDirFileLimit'] > 500))
 		{
 			require_once($sourcedir . '/Subs-Admin.php');
 			emailAdmins('admin_attachments_full');
@@ -662,6 +675,7 @@ function attachmentChecks($attachID)
 			$context['dir_files']--;
 		$context['attachments']['total_size'] -= $_SESSION['temp_attachments'][$attachID]['size'];
 		$context['attachments']['quantity']--;
+
 		return false;
 	}
 
@@ -786,6 +800,7 @@ function createAttachment(&$attachmentOptions)
 	{
 		loadLanguage('Errors');
 		log_error($txt['attachment_not_created'], 'general');
+
 		return false;
 	}
 
@@ -818,13 +833,13 @@ function createAttachment(&$attachmentOptions)
 				'claimed_time' => 'int'
 			),
 			array(
-					'$sourcedir/tasks/CreateAttachment-Notify.php',
-					'CreateAttachment_Notify_Background',
-					$smcFunc['json_encode'](
-						array(
-							'id' => $attachmentOptions['id'],
-						)
-					),
+				'$sourcedir/tasks/CreateAttachment-Notify.php',
+				'CreateAttachment_Notify_Background',
+				$smcFunc['json_encode'](
+					array(
+						'id' => $attachmentOptions['id'],
+					)
+				),
 				0
 			),
 			array(
@@ -865,7 +880,7 @@ function createAttachment(&$attachmentOptions)
 				$context['dir_files'] = isset($context['dir_files']) ? $context['dir_files']++ : $context['dir_files'] = 0;
 
 				// If the folder is full, try to create a new one and move the thumb to it.
-				if ($context['dir_size'] > $modSettings['attachmentDirSizeLimit'] * 1024 || $context['dir_files'] + 2 > $modSettings['attachmentDirFileLimit'])
+				if ($context['dir_size'] > $modSettings['attachmentDirSizeLimit'] * 1024 || $modSettings['attachmentDirFileLimit'] < $context['dir_files'] + 2)
 				{
 					if (automanage_attachments_by_space())
 					{
@@ -1026,6 +1041,7 @@ function parseAttachBBC($attachID = 0)
 			{
 				$attachContext = $context['loaded_attachments'][$attachInfo['msg']][$foundAttachID];
 				$attachID = $foundAttachID;
+
 				break;
 			}
 		}
@@ -1040,6 +1056,7 @@ function parseAttachBBC($attachID = 0)
 			$context['loaded_attachments'][$attachInfo['msg']][$attachID]['id_member'] != $user_info['id'])
 		{
 			unset($context['loaded_attachments'][$attachInfo['msg']][$attachID]);
+
 			return 'attachments_unapproved';
 		}
 		$attachLoaded = loadAttachmentContext($attachContext['id_msg'], $context['loaded_attachments']);
@@ -1050,7 +1067,6 @@ function parseAttachBBC($attachID = 0)
 	if (empty($attachLoaded))
 		return 'attachments_no_data_loaded';
 
-	else
 		$attachContext = $attachLoaded[$attachID];
 
 	// It's theoretically possible that prepareAttachsByMsg() changed the board id, so check again.
@@ -1147,7 +1163,6 @@ function getAttachMsgInfo($attachID)
 	{
 		if (empty($msgRows[$attachID]))
 			continue;
-
 		$row = array(
 			'msg' => $msgRows[$attachID]['id_msg'],
 			'topic' => $msgRows[$attachID]['topic'],
@@ -1222,7 +1237,6 @@ function loadAttachmentContext($id_msg, $attachments)
 
 			if (!$attachmentData[$i]['is_image'])
 				continue;
-
 			$attachmentData[$i]['real_width'] = $attachment['width'];
 			$attachmentData[$i]['width'] = $attachment['width'];
 			$attachmentData[$i]['real_height'] = $attachment['height'];
@@ -1321,7 +1335,7 @@ function loadAttachmentContext($id_msg, $attachments)
 			// If thumbnails are disabled, check the maximum size of the image.
 			if (!$attachmentData[$i]['thumbnail']['has_thumb'] && ((!empty($modSettings['max_image_width']) && $attachment['width'] > $modSettings['max_image_width']) || (!empty($modSettings['max_image_height']) && $attachment['height'] > $modSettings['max_image_height'])))
 			{
-				if (!empty($modSettings['max_image_width']) && (empty($modSettings['max_image_height']) || $attachment['height'] * $modSettings['max_image_width'] / $attachment['width'] <= $modSettings['max_image_height']))
+				if (!empty($modSettings['max_image_width']) && (empty($modSettings['max_image_height']) || $modSettings['max_image_height'] >= $attachment['height'] * $modSettings['max_image_width'] / $attachment['width']))
 				{
 					$attachmentData[$i]['width'] = $modSettings['max_image_width'];
 					$attachmentData[$i]['height'] = floor($attachment['height'] * $modSettings['max_image_width'] / $attachment['width']);

@@ -374,7 +374,7 @@ function BoardurlMatch($url = '')
 	$result = strpos($urlpath, $boardurlpath);
 	if ($result === false || $result != 0)
 		return false;
-	else
+	
 		return true;
 }
 
@@ -419,9 +419,9 @@ function ModifyDatabaseSettings($return_config = false)
 			$fts_language[$row['cfgname']] = $row['cfgname'];
 
 		$config_vars = array_merge($config_vars, array(
-				'',
-				array('search_language', $txt['search_language'], 'db', 'select', $fts_language, 'pgFulltextSearch')
-			)
+			'',
+			array('search_language', $txt['search_language'], 'db', 'select', $fts_language, 'pgFulltextSearch')
+		)
 		);
 	}
 
@@ -805,7 +805,7 @@ function ModifyExportSettings($return_config = false)
 		they report obviously insane values, it's not possible to track disk
 		usage correctly.
 	 */
-	$diskspace_disabled = (!function_exists('disk_free_space') || !function_exists('disk_total_space') || intval(@disk_total_space(file_exists($modSettings['export_dir']) ? $modSettings['export_dir'] : $boarddir)) < 1440);
+	$diskspace_disabled = (!function_exists('disk_free_space') || !function_exists('disk_total_space') || (int) (@disk_total_space(file_exists($modSettings['export_dir']) ? $modSettings['export_dir'] : $boarddir)) < 1440);
 
 	$context['settings_message'] = $txt['export_settings_description'];
 
@@ -949,7 +949,6 @@ function ModifyLoadBalancingSettings($return_config = false)
 		{
 			if (strpos($key, 'loadavg') === 0 || $key === 'loadavg_enable' || !in_array($key, array_keys($default_values)))
 				continue;
-			else
 				$_POST[$key] = (float) $value;
 
 			if ($key == 'loadavg_auto_opt' && $value <= 1)
@@ -1118,14 +1117,12 @@ function prepareDBSettingContext(&$config_vars)
 			// If it has no name it doesn't have any purpose!
 			if (empty($config_var[1]))
 				continue;
-
 			// Special case for inline permissions
 			if ($config_var[0] == 'permissions' && allowedTo('manage_permissions'))
 				$inlinePermissions[] = $config_var[1];
 
 			elseif ($config_var[0] == 'permissions')
 				continue;
-
 			if ($config_var[0] == 'boards')
 				$board_list = true;
 
@@ -1140,12 +1137,15 @@ function prepareDBSettingContext(&$config_vars)
 				{
 					case 'select':
 						$value = $modSettings[$config_var[1]];
+
 						break;
 					case 'json':
 						$value = $smcFunc['htmlspecialchars']($smcFunc['json_encode']($modSettings[$config_var[1]]));
+
 						break;
 					case 'boards':
 						$value = explode(',', $modSettings[$config_var[1]]);
+
 						break;
 					default:
 						$value = $smcFunc['htmlspecialchars']($modSettings[$config_var[1]]);
@@ -1159,12 +1159,15 @@ function prepareDBSettingContext(&$config_vars)
 					case 'int':
 					case 'float':
 						$value = 0;
+
 						break;
 					case 'select':
 						$value = !empty($config_var['multiple']) ? $smcFunc['json_encode'](array()) : '';
+
 						break;
 					case 'boards':
 						$value = array();
+
 						break;
 					default:
 						$value = '';
@@ -1391,7 +1394,6 @@ function saveSettings(&$config_vars)
 	{
 		if (!is_array($var) || $var[2] != 'file' || (!in_array($var[0], $config_bools) && !isset($_POST[$var[0]])))
 			continue;
-
 		$config_var = $var[0];
 
 		if (in_array($config_var, $config_passwords))
@@ -1440,7 +1442,6 @@ function saveSettings(&$config_vars)
 		// We just saved the file-based settings, so skip their definitions.
 		if (!is_array($config_var) || $config_var[2] == 'file')
 			continue;
-
 		$new_setting = array($config_var[3], $config_var[0]);
 
 		// Select options need carried over, too.
@@ -1482,9 +1483,8 @@ function saveDBSettings(&$config_vars)
 	{
 		if (!isset($var[1]) || (!isset($_POST[$var[1]]) && $var[0] != 'check' && $var[0] != 'permissions' && $var[0] != 'boards' && ($var[0] != 'bbc' || !isset($_POST[$var[1] . '_enabledTags']))))
 			continue;
-
 		// Checkboxes!
-		elseif ($var[0] == 'check')
+		if ($var[0] == 'check')
 			$setArray[$var[1]] = !empty($_POST[$var[1]]) ? '1' : '0';
 		// Select boxes!
 		elseif ($var[0] == 'select' && in_array($_POST[$var[1]], array_keys($var[2])))
@@ -1619,7 +1619,6 @@ function ShowPHPinfoSettings()
 	{
 		if (preg_match('~(' . $remove . ')~', $line))
 			continue;
-
 		// new category?
 		if (strpos($line, '<h2>') !== false)
 			$category = preg_match('~<h2>(.*)</h2>~', $line, $title) ? $category = $title[1] : $category;
@@ -1635,7 +1634,6 @@ function ShowPHPinfoSettings()
 	$context['pinfo'] = $pinfo;
 	$context['page_title'] = $txt['admin_server_settings'];
 	$context['sub_template'] = 'php_info';
-	return;
 }
 
 /**
@@ -1649,7 +1647,7 @@ function loadCacheAPIs()
 	$cacheAPIdir = $sourcedir . '/Cache';
 
 	$loadedApis = array();
-	$apis_dir = $cacheAPIdir .'/'. CacheApi::APIS_FOLDER;
+	$apis_dir = $cacheAPIdir . '/' . CacheApi::APIS_FOLDER;
 
 	$api_classes = new GlobIterator($apis_dir . '/*.php', FilesystemIterator::NEW_CURRENT_AND_KEY);
 
@@ -1666,11 +1664,9 @@ function loadCacheAPIs()
 		// Deal with it!
 		if (!($cache_api instanceof CacheApiInterface) || !($cache_api instanceof CacheApi))
 			continue;
-
 		// No Support?  NEXT!
 		if (!$cache_api->isSupported(true))
 			continue;
-
 		$loadedApis[$class_name] = $cache_api;
 	}
 
@@ -1723,6 +1719,7 @@ function registerSMStats()
 				array('sm_stats_key', $ID[1]),
 				array('variable')
 			);
+
 			return true;
 		}
 	}

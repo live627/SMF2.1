@@ -713,8 +713,7 @@ function moveTopicConcurrence()
 
 	if ($move_from == $board)
 		return true;
-	else
-	{
+	
 		$request = $smcFunc['db_query']('', '
 			SELECT m.subject, b.name
 			FROM {db_prefix}topics as t
@@ -731,7 +730,6 @@ function moveTopicConcurrence()
 		$board_link = '<a href="' . $scripturl . '?board=' . $board . '.0">' . $board_name . '</a>';
 		$topic_link = '<a href="' . $scripturl . '?topic=' . $topic . '.0">' . $topic_subject . '</a>';
 		fatal_lang_error('topic_already_moved', false, array($topic_link, $board_link));
-	}
 }
 
 ?>

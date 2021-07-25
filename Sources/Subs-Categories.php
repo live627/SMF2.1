@@ -135,7 +135,6 @@ function modifyCategory($category_id, $catOptions)
  * returns the ID of the newly created category.
  *
  * @param array $catOptions An array of data and settings related to the new category. Should have at least 'cat_name' and can also have 'cat_desc', 'move_after' and 'is_collapsable'
- * @return mixed
  */
 function createCategory($catOptions)
 {

@@ -146,8 +146,8 @@ function MessageIndex()
 		$context['links'] = array(
 			'first' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?board=' . $board . '.0' : '',
 			'prev' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?board=' . $board . '.' . ($_REQUEST['start'] - $context['topics_per_page']) : '',
-			'next' => $_REQUEST['start'] + $context['topics_per_page'] < $board_info['total_topics'] ? $scripturl . '?board=' . $board . '.' . ($_REQUEST['start'] + $context['topics_per_page']) : '',
-			'last' => $_REQUEST['start'] + $context['topics_per_page'] < $board_info['total_topics'] ? $scripturl . '?board=' . $board . '.' . (floor(($board_info['total_topics'] - 1) / $context['topics_per_page']) * $context['topics_per_page']) : '',
+			'next' => $board_info['total_topics'] > $_REQUEST['start'] + $context['topics_per_page'] ? $scripturl . '?board=' . $board . '.' . ($_REQUEST['start'] + $context['topics_per_page']) : '',
+			'last' => $board_info['total_topics'] > $_REQUEST['start'] + $context['topics_per_page'] ? $scripturl . '?board=' . $board . '.' . (floor(($board_info['total_topics'] - 1) / $context['topics_per_page']) * $context['topics_per_page']) : '',
 			'up' => $board_info['parent'] == 0 ? $scripturl . '?' : $scripturl . '?board=' . $board_info['parent'] . '.0'
 		);
 	}
@@ -230,7 +230,6 @@ function MessageIndex()
 		{
 			if (empty($row['id_member']))
 				continue;
-
 			if (!empty($row['online_color']))
 				$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '" style="color: ' . $row['online_color'] . ';">' . $row['real_name'] . '</a>';
 			else
@@ -340,7 +339,7 @@ function MessageIndex()
 		WHERE t.id_board = {int:current_board} '
 			. (!$modSettings['postmod_active'] || $context['can_approve_posts'] ? '' : '
 			AND (t.approved = {int:is_approved}' . ($user_info['is_guest'] ? '' : ' OR t.id_member_started = {int:current_member}') . ')') . (!empty($message_index_topic_wheres) ? '
-			AND ' . implode("\n\t\t\t\tAND ", $message_index_topic_wheres) : ''). '
+			AND ' . implode("\n\t\t\t\tAND ", $message_index_topic_wheres) : '') . '
 		ORDER BY is_sticky' . ($fake_ascending ? '' : ' DESC') . ', ' . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . '
 		LIMIT {int:maxindex}
 			OFFSET {int:start} ';
@@ -382,7 +381,6 @@ function MessageIndex()
 	{
 		if ($row['id_poll'] > 0 && $modSettings['pollMode'] == '0')
 			continue;
-
 		$topic_ids[] = $row['id_topic'];
 
 		// Reference the main color class.
@@ -393,7 +391,7 @@ function MessageIndex()
 		{
 			// Limit them to $modSettings['preview_characters'] characters
 			$row['first_body'] = strip_tags(strtr(parse_bbc($row['first_body'], $row['first_smileys'], $row['id_first_msg']), array('<br>' => '&#10;')));
-			if ($smcFunc['strlen']($row['first_body']) > $modSettings['preview_characters'])
+			if ($modSettings['preview_characters'] < $smcFunc['strlen']($row['first_body']))
 				$row['first_body'] = $smcFunc['substr']($row['first_body'], 0, $modSettings['preview_characters']) . '...';
 
 			// Censor the subject and message preview.
@@ -409,7 +407,7 @@ function MessageIndex()
 			else
 			{
 				$row['last_body'] = strip_tags(strtr(parse_bbc($row['last_body'], $row['last_smileys'], $row['id_last_msg']), array('<br>' => '&#10;')));
-				if ($smcFunc['strlen']($row['last_body']) > $modSettings['preview_characters'])
+				if ($modSettings['preview_characters'] < $smcFunc['strlen']($row['last_body']))
 					$row['last_body'] = $smcFunc['substr']($row['last_body'], 0, $modSettings['preview_characters']) . '...';
 
 				censorText($row['last_subject']);
@@ -429,14 +427,14 @@ function MessageIndex()
 		}
 
 		// Decide how many pages the topic should have.
-		if ($row['num_replies'] + 1 > $context['messages_per_page'])
+		if ($context['messages_per_page'] < $row['num_replies'] + 1)
 		{
 			// We can't pass start by reference.
 			$start = -1;
 			$pages = constructPageIndex($scripturl . '?topic=' . $row['id_topic'] . '.%1$d', $start, $row['num_replies'] + 1, $context['messages_per_page'], true, false);
 
 			// If we can use all, show all.
-			if (!empty($modSettings['enableAllMessages']) && $row['num_replies'] + 1 < $modSettings['enableAllMessages'])
+			if (!empty($modSettings['enableAllMessages']) && $modSettings['enableAllMessages'] > $row['num_replies'] + 1)
 				$pages .= ' &nbsp;<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0;all">' . $txt['all'] . '</a>';
 		}
 		else
@@ -856,6 +854,7 @@ function QuickModeration()
 				redirectexit($redirect_url);
 
 			require_once($sourcedir . '/SplitTopics.php');
+
 			return MergeExecute($_REQUEST['topics']);
 		}
 
@@ -946,7 +945,6 @@ function QuickModeration()
 
 			if (empty($moveCache[1][$topic]))
 				continue;
-
 			$moveCache[0][] = $topic;
 		}
 		elseif ($action == 'remove')
@@ -1022,7 +1020,6 @@ function QuickModeration()
 
 			if (empty($to))
 				continue;
-
 			// Does this topic's board count the posts or not?
 			$countPosts[$row['id_topic']] = empty($row['count_posts']);
 

@@ -30,8 +30,42 @@ if (!defined('SMF'))
 class gif_lzw_compression
 {
 	public $MAX_LZW_BITS;
-	public $Fresh, $CodeSize, $SetCodeSize, $MaxCode, $MaxCodeSize, $FirstCode, $OldCode;
-	public $ClearCode, $EndCode, $Next, $Vals, $Stack, $sp, $Buf, $CurBit, $LastBit, $Done, $LastByte;
+
+	public $Fresh,
+
+ $CodeSize,
+
+ $SetCodeSize,
+
+ $MaxCode,
+
+ $MaxCodeSize,
+
+ $FirstCode,
+
+ $OldCode;
+
+	public $ClearCode,
+
+ $EndCode,
+
+ $Next,
+
+ $Vals,
+
+ $Stack,
+
+ $sp,
+
+ $Buf,
+
+ $CurBit,
+
+ $LastBit,
+
+ $Done,
+
+ $LastByte;
 
 	public function __construct()
 	{
@@ -92,6 +126,7 @@ class gif_lzw_compression
 			}
 
 			$this->sp = 0;
+
 			return 1;
 		}
 
@@ -111,6 +146,7 @@ class gif_lzw_compression
 		if ($this->sp > 0)
 		{
 			$this->sp--;
+
 			return $this->Stack[$this->sp];
 		}
 
@@ -183,6 +219,7 @@ class gif_lzw_compression
 			if ($this->sp > 0)
 			{
 				$this->sp--;
+
 				return $this->Stack[$this->sp];
 			}
 		}
@@ -236,9 +273,10 @@ class gif_lzw_compression
 
 		$iRet = 0;
 		for ($i = $this->CurBit, $j = 0; $j < $this->CodeSize; $i++, $j++)
-			$iRet |= (($this->Buf[intval($i / 8)] & (1 << ($i % 8))) != 0) << $j;
+			$iRet |= (($this->Buf[(int) ($i / 8)] & (1 << ($i % 8))) != 0) << $j;
 
 		$this->CurBit += $this->CodeSize;
+
 		return $iRet;
 	}
 }
@@ -246,6 +284,7 @@ class gif_lzw_compression
 class gif_color_table
 {
 	public $m_nColors;
+
 	public $m_arColors;
 
 	public function __construct()
@@ -289,7 +328,7 @@ class gif_color_table
 	public function colorIndex($rgb)
 	{
 		$dif = 0;
-		$rgb = intval($rgb) & 0xFFFFFF;
+		$rgb = (int) $rgb & 0xFFFFFF;
 		$r1 = ($rgb & 0x0000FF);
 		$g1 = ($rgb & 0x00FF00) >> 8;
 		$b1 = ($rgb & 0xFF0000) >> 16;
@@ -315,8 +354,24 @@ class gif_color_table
 
 class gif_file_header
 {
-	public $m_lpVer, $m_nWidth, $m_nHeight, $m_bGlobalClr, $m_nColorRes;
-	public $m_bSorted, $m_nTableSize, $m_nBgColor, $m_nPixelRatio;
+	public $m_lpVer,
+
+ $m_nWidth,
+
+ $m_nHeight,
+
+ $m_bGlobalClr,
+
+ $m_nColorRes;
+
+	public $m_bSorted,
+
+ $m_nTableSize,
+
+ $m_nBgColor,
+
+ $m_nPixelRatio;
+
 	public $m_colorTable;
 
 	public function __construct()
@@ -362,8 +417,23 @@ class gif_file_header
 
 class gif_image_header
 {
-	public $m_nLeft, $m_nTop, $m_nWidth, $m_nHeight, $m_bLocalClr;
-	public $m_bInterlace, $m_bSorted, $m_nTableSize, $m_colorTable;
+	public $m_nLeft,
+
+ $m_nTop,
+
+ $m_nWidth,
+
+ $m_nHeight,
+
+ $m_bLocalClr;
+
+	public $m_bInterlace,
+
+ $m_bSorted,
+
+ $m_nTableSize,
+
+ $m_colorTable;
 
 	public function __construct()
 	{
@@ -403,8 +473,23 @@ class gif_image_header
 
 class gif_image
 {
-	public $m_disp, $m_bUser, $m_bTrans, $m_nDelay, $m_nTrans, $m_lpComm;
-	public $m_gih, $m_data, $m_lzw;
+	public $m_disp,
+
+ $m_bUser,
+
+ $m_bTrans,
+
+ $m_nDelay,
+
+ $m_nTrans,
+
+ $m_lpComm;
+
+	public $m_gih,
+
+ $m_data,
+
+ $m_lzw;
 
 	public function __construct()
 	{
@@ -432,6 +517,7 @@ class gif_image
 						return false;
 
 					$datLen += $len;
+
 					break;
 
 				// Image...
@@ -461,6 +547,7 @@ class gif_image
 					return false;
 			}
 		}
+
 		return false;
 	}
 
@@ -482,11 +569,13 @@ class gif_image
 				$this->m_bTrans = ($b & 0x01) ? true : false;
 				list ($this->m_nDelay) = array_values(unpack('v', substr($data, 2, 2)));
 				$this->m_nTrans = ord($data[4]);
+
 				break;
 
 			// Comment...
 			case 0xFE:
 				$this->m_lpComm = substr($data, 1, ord($data[0]));
+
 				break;
 
 			// Plain text...
@@ -510,6 +599,7 @@ class gif_image
 			$data = substr($data, 1);
 			$extLen++;
 		}
+
 		return true;
 	}
 
@@ -524,21 +614,25 @@ class gif_image
 				case 0:
 					$s = 8;
 					$y = 0;
+
 					break;
 
 				case 1:
 					$s = 8;
 					$y = 4;
+
 					break;
 
 				case 2:
 					$s = 4;
 					$y = 2;
+
 					break;
 
 				case 3:
 					$s = 2;
 					$y = 1;
+
 					break;
 			}
 
@@ -560,7 +654,13 @@ class gif_image
 
 class gif_file
 {
-	public $header, $image, $data, $loaded;
+	public $header,
+
+ $image,
+
+ $data,
+
+ $loaded;
 
 	public function __construct()
 	{
@@ -597,6 +697,7 @@ class gif_file
 		}
 
 		$this->loaded = true;
+
 		return true;
 	}
 

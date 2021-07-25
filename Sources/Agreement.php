@@ -139,7 +139,6 @@ function Agreement()
 
 	if (isset($_SESSION['old_url']))
 		$_SESSION['redirect_url'] = $_SESSION['old_url'];
-
 }
 
 // I solemly swear to no longer chase squirrels.

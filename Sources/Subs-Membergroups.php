@@ -90,6 +90,7 @@ function deleteMembergroups($groups)
 		// Uh oh. But before we return, we need to update a language string because we want the names of the groups.
 		loadLanguage('ManageMembers');
 		$txt['membergroups_cannot_delete_paid'] = sprintf($txt['membergroups_cannot_delete_paid'], implode(', ', $subscriptions));
+
 		return 'group_cannot_delete_sub';
 	}
 
@@ -286,7 +287,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 	// Just in case.
 	if (empty($members))
 		return false;
-	elseif ($groups === null)
+	if ($groups === null)
 	{
 		// Wanna remove all groups from these members? That's easy.
 		$smcFunc['db_query']('', '
@@ -313,7 +314,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 
 		return true;
 	}
-	elseif (!is_array($groups))
+	if (!is_array($groups))
 		$groups = array((int) $groups);
 	else
 	{
@@ -525,7 +526,7 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 	if (!allowedTo('admin_forum') && $group == 1)
 		return false;
 	// ... and assign protected groups!
-	elseif (!allowedTo('admin_forum') && !$ignoreProtected)
+	if (!allowedTo('admin_forum') && !$ignoreProtected)
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT group_type
@@ -645,9 +646,10 @@ function listMembergroupMembers_Href(&$members, $membergroup, $limit = null)
 	if ($limit !== null && count($members) > $limit)
 	{
 		array_pop($members);
+
 		return true;
 	}
-	else
+	
 		return false;
 }
 
@@ -729,7 +731,6 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 		// We only list the groups they can see.
 		if ($row['hidden'] && !$row['can_moderate'] && !allowedTo('manage_membergroups'))
 			continue;
-
 		$row['icons'] = explode('#', $row['icons']);
 
 		$groups[$row['id_group']] = array(
@@ -836,8 +837,6 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 /**
  * Retrieves a list of membergroups with the given permissions.
  *
- * @param array $group_permissions
- * @param array $board_permissions
  * @param int   $profile_id
  *
  * @return array An array containing two arrays - 'allowed', which has which groups are allowed to do it and 'denied' which has the groups that are denied

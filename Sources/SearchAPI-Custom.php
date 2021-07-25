@@ -51,6 +51,7 @@ class custom_search extends search_api
 		if (!in_array($db_type, $this->supported_databases))
 		{
 			$this->is_supported = false;
+
 			return;
 		}
 
@@ -78,6 +79,7 @@ class custom_search extends search_api
 			case 'postCreated':
 			case 'postModified':
 				$return = true;
+
 				break;
 
 			// All other methods, too bad dunno you.
@@ -130,18 +132,16 @@ class custom_search extends search_api
 		// Excluded phrases don't benefit from being split into subwords.
 		if (count($subwords) > 1 && $isExcluded)
 			return;
-		else
-		{
+		
 			foreach ($subwords as $subword)
 			{
-				if ($smcFunc['strlen']($subword) >= $this->min_word_length && !in_array($subword, $this->bannedWords))
+				if ($this->min_word_length <= $smcFunc['strlen']($subword) && !in_array($subword, $this->bannedWords))
 				{
 					$wordsSearch['indexed_words'][] = $subword;
 					if ($isExcluded)
 						$wordsExclude[] = $subword;
 				}
 			}
-		}
 	}
 
 	/**

@@ -46,6 +46,7 @@ class fulltext_search extends search_api
 		if (!in_array($db_type, $this->supported_databases))
 		{
 			$this->is_supported = false;
+
 			return;
 		}
 
@@ -65,11 +66,13 @@ class fulltext_search extends search_api
 			case 'prepareIndexes':
 			case 'indexedWordQuery':
 				$return = true;
+
 				break;
 
 			// All other methods, too bad dunno you.
 			default:
 				$return = false;
+
 				break;
 		}
 
@@ -142,13 +145,13 @@ class fulltext_search extends search_api
 			if (count($subwords) > 1 && preg_match('~[.:@$]~', $word))
 			{
 				// using special characters that a full index would ignore and the remaining words are short which would also be ignored
-				if (($smcFunc['strlen'](current($subwords)) < $this->min_word_length) && ($smcFunc['strlen'](next($subwords)) < $this->min_word_length))
+				if (($this->min_word_length > $smcFunc['strlen'](current($subwords))) && ($this->min_word_length > $smcFunc['strlen'](next($subwords))))
 				{
 					$wordsSearch['words'][] = trim($word, "/*- ");
 					$wordsSearch['complex_words'][] = count($subwords) === 1 ? $word : '"' . $word . '"';
 				}
 			}
-			elseif ($smcFunc['strlen'](trim($word, "/*- ")) < $this->min_word_length)
+			elseif ($this->min_word_length > $smcFunc['strlen'](trim($word, "/*- ")))
 			{
 				// short words have feelings too
 				$wordsSearch['words'][] = trim($word, "/*- ");

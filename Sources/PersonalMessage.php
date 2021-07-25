@@ -307,7 +307,6 @@ function messageIndexBar($area)
 		{
 			if ($label['id'] == -1)
 				continue;
-
 			// Count the amount of unread items in labels.
 			$pm_areas['labels']['amt'] += $label['unread_messages'];
 
@@ -666,8 +665,8 @@ function MessageFolder()
 	$context['links'] = array(
 		'first' => $_GET['start'] >= $maxPerPage ? $scripturl . '?action=pm;start=0' : '',
 		'prev' => $_GET['start'] >= $maxPerPage ? $scripturl . '?action=pm;start=' . ($_GET['start'] - $maxPerPage) : '',
-		'next' => $_GET['start'] + $maxPerPage < $max_messages ? $scripturl . '?action=pm;start=' . ($_GET['start'] + $maxPerPage) : '',
-		'last' => $_GET['start'] + $maxPerPage < $max_messages ? $scripturl . '?action=pm;start=' . (floor(($max_messages - 1) / $maxPerPage) * $maxPerPage) : '',
+		'next' => $max_messages > $_GET['start'] + $maxPerPage ? $scripturl . '?action=pm;start=' . ($_GET['start'] + $maxPerPage) : '',
+		'last' => $max_messages > $_GET['start'] + $maxPerPage ? $scripturl . '?action=pm;start=' . (floor(($max_messages - 1) / $maxPerPage) * $maxPerPage) : '',
 		'up' => $scripturl,
 	);
 	$context['page_info'] = array(
@@ -805,9 +804,8 @@ function MessageFolder()
 				// This is, frankly, a joke. We will put in a workaround for people sending to themselves - yawn!
 				if ($context['folder'] == 'sent' && $row['id_member_from'] == $user_info['id'] && $row['deleted_by_sender'] == 1)
 					continue;
-				elseif ($row['id_member'] == $user_info['id'] & $row['deleted'] == 1)
+				if ($row['id_member'] == $user_info['id'] & $row['deleted'] == 1)
 					continue;
-
 				if (!isset($recipients[$row['id_pm']]))
 					$recipients[$row['id_pm']] = array(
 						'to' => array(),
@@ -993,6 +991,7 @@ function prepareMessageContext($type = 'subject', $reset = false)
 		if (!$subject)
 		{
 			$smcFunc['db_free_result']($subjects_request);
+
 			return false;
 		}
 
@@ -1207,7 +1206,6 @@ function MessageSearch()
 		{
 			if ($search_error == 'messages')
 				continue;
-
 			$context['search_errors']['messages'][] = $txt['error_' . $search_error];
 		}
 	}
@@ -1325,7 +1323,7 @@ function MessageSearch2()
 			);
 
 			// Simply do nothing if there're too many members matching the criteria.
-			if ($smcFunc['db_num_rows']($request) > $maxMembersToSearch)
+			if ($maxMembersToSearch < $smcFunc['db_num_rows']($request))
 				$userQuery = '';
 			elseif ($smcFunc['db_num_rows']($request) == 0)
 			{
@@ -1513,7 +1511,6 @@ function MessageSearch2()
 	{
 		if ($word == '')
 			continue;
-
 		if ($search_params['subject_only'])
 			$andQueryParts[] = 'pm.subject' . (in_array($word, $excludedWords) ? ' NOT' : '') . ' LIKE {string:search_' . $index . '}';
 		else
@@ -1536,6 +1533,7 @@ function MessageSearch2()
 	if (!empty($context['search_errors']))
 	{
 		$_REQUEST['params'] = $context['params'];
+
 		return MessageSearch();
 	}
 
@@ -2457,7 +2455,7 @@ function MessagePost2()
 		$post_errors[] = 'no_subject';
 	if (!isset($_REQUEST['message']) || $_REQUEST['message'] == '')
 		$post_errors[] = 'no_message';
-	elseif (!empty($modSettings['max_messageLength']) && $smcFunc['strlen']($_REQUEST['message']) > $modSettings['max_messageLength'])
+	elseif (!empty($modSettings['max_messageLength']) && $modSettings['max_messageLength'] < $smcFunc['strlen']($_REQUEST['message']))
 		$post_errors[] = 'long_message';
 	else
 	{
@@ -2510,7 +2508,7 @@ function MessagePost2()
 	}
 
 	// Adding a recipient cause javascript ain't working?
-	elseif ($is_recipient_change)
+	if ($is_recipient_change)
 	{
 		// Maybe we couldn't find one?
 		foreach ($namesNotFound as $recipientType => $names)
@@ -2527,16 +2525,18 @@ function MessagePost2()
 	if ($context['drafts_pm_save'] && isset($_POST['save_draft']))
 	{
 		SavePMDraft($post_errors, $recipientList);
+
 		return messagePostError($post_errors, $namedRecipientList, $recipientList);
 	}
 
 	// Before we send the PM, let's make sure we don't have an abuse of numbers.
-	elseif (!empty($modSettings['max_pm_recipients']) && count($recipientList['to']) + count($recipientList['bcc']) > $modSettings['max_pm_recipients'] && !allowedTo(array('moderate_forum', 'send_mail', 'admin_forum')))
+	if (!empty($modSettings['max_pm_recipients']) && count($recipientList['to']) + count($recipientList['bcc']) > $modSettings['max_pm_recipients'] && !allowedTo(array('moderate_forum', 'send_mail', 'admin_forum')))
 	{
 		$context['send_log'] = array(
 			'sent' => array(),
 			'failed' => array(sprintf($txt['pm_too_many_recipients'], $modSettings['max_pm_recipients'])),
 		);
+
 		return messagePostError($post_errors, $namedRecipientList, $recipientList);
 	}
 
@@ -3204,7 +3204,6 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 
 			if ($owner != $user_info['id'] || empty($row['id_pm']))
 				continue;
-
 			$this_labels = array();
 
 			// Get all the labels
@@ -3313,7 +3312,7 @@ function ManageLabels()
 			{
 				if ($id == -1)
 					continue;
-				elseif (isset($_POST['label_name'][$id]))
+				if (isset($_POST['label_name'][$id]))
 				{
 					$_POST['label_name'][$id] = trim(strtr($smcFunc['htmlspecialchars']($_POST['label_name'][$id]), array(',' => '&#044;')));
 
@@ -3434,7 +3433,6 @@ function ManageLabels()
 				{
 					if ($action['t'] != 'lab' || !in_array($action['v'], $labels_to_remove))
 						continue;
-
 					$rule_changes[] = $rule['id'];
 
 					// Can't apply this label anymore if it doesn't exist
@@ -3778,7 +3776,6 @@ function ManageRules()
 		// Hide hidden groups!
 		if ($row['hidden'] && !$row['can_moderate'] && !allowedTo('manage_membergroups'))
 			continue;
-
 		$context['groups'][$row['id_group']] = $row['group_name'];
 	}
 	$smcFunc['db_free_result']($request);
@@ -3855,9 +3852,8 @@ function ManageRules()
 			// Check everything is here...
 			if ($type == 'gid' && (!isset($_POST['ruledefgroup'][$ind]) || !isset($context['groups'][$_POST['ruledefgroup'][$ind]])))
 				continue;
-			elseif ($type != 'bud' && !isset($_POST['ruledef'][$ind]))
+			if ($type != 'bud' && !isset($_POST['ruledef'][$ind]))
 				continue;
-
 			// Too many rules in this rule.
 			if ($criteriaCount++ >= $context['rule_limiters']['criteria'])
 				break;
@@ -3903,7 +3899,6 @@ function ManageRules()
 			// Picking a valid label?
 			if ($type == 'lab' && (!ctype_digit((string) $ind) || !isset($_POST['labdef'][$ind]) || $_POST['labdef'][$ind] == '' || !isset($context['labels'][$_POST['labdef'][$ind]])))
 				continue;
-
 			// Too many actions in this rule.
 			if ($actionCount++ >= $context['rule_limiters']['actions'])
 				break;
@@ -4028,6 +4023,7 @@ function ApplyRules($all_messages = false)
 				elseif ($rule['logic'] == 'and')
 				{
 					$match = false;
+
 					break;
 				}
 			}
@@ -4177,6 +4173,7 @@ function isAccessiblePM($pmID, $validFor = 'in_or_outbox')
 	if ($smcFunc['db_num_rows']($request) === 0)
 	{
 		$smcFunc['db_free_result']($request);
+
 		return false;
 	}
 
@@ -4187,19 +4184,23 @@ function isAccessiblePM($pmID, $validFor = 'in_or_outbox')
 	{
 		case 'inbox':
 			return !empty($validationResult['valid_for_inbox']);
+
 			break;
 
 		case 'outbox':
 			return !empty($validationResult['valid_for_outbox']);
+
 			break;
 
 		case 'in_or_outbox':
 			return !empty($validationResult['valid_for_inbox']) || !empty($validationResult['valid_for_outbox']);
+
 			break;
 
 		default:
 			loadLanguage('Errors');
 			trigger_error($txt['pm_invalid_validation_type'], E_USER_ERROR);
+
 			break;
 	}
 }

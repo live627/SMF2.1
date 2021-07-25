@@ -367,7 +367,7 @@ function issueWarning($memID)
 	createList($listOptions);
 
 	// Are they warning because of a message?
-	if (isset($_REQUEST['msg']) && 0 < (int) $_REQUEST['msg'])
+	if (isset($_REQUEST['msg']) && (int) $_REQUEST['msg'] > 0)
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT m.subject
@@ -412,7 +412,6 @@ function issueWarning($memID)
 		// If we're not warning for a message skip any that are.
 		if (!$context['warning_for_message'] && strpos($row['body'], '{MESSAGE}') !== false)
 			continue;
-
 		$context['notification_templates'][] = array(
 			'title' => $row['template_title'],
 			'body' => $row['body'],
@@ -785,7 +784,6 @@ function subscriptions($memID)
 		// The subscription must exist!
 		if (!isset($context['subscriptions'][$row['id_subscribe']]))
 			continue;
-
 		$context['current'][$row['id_subscribe']] = array(
 			'id' => $row['id_sublog'],
 			'sub_id' => $row['id_subscribe'],
@@ -822,6 +820,7 @@ function subscriptions($memID)
 					if ($sub[0] == $_GET['sub_id'] && $sub[3] == 'prepay')
 					{
 						$current_pending[$id][3] = 'payback';
+
 						break;
 					}
 				}
@@ -844,6 +843,7 @@ function subscriptions($memID)
 		}
 
 		$context['sub_template'] = 'paid_done';
+
 		return;
 	}
 	// If this is confirmation then it's simpler...
@@ -963,7 +963,7 @@ function subscriptions($memID)
 		// Quit.
 		return;
 	}
-	else
+	
 		$context['sub_template'] = 'user_subscription';
 }
 

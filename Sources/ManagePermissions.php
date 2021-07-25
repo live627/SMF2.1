@@ -178,6 +178,7 @@ function PermissionIndex()
 		{
 			if (isset($context['groups'][$row['id_parent']]))
 				$context['groups'][$row['id_parent']]['children'][$row['id_group']] = $row['group_name'];
+
 			continue;
 		}
 
@@ -518,7 +519,6 @@ function SetQuickGroups()
 						continue;
 					if (isset($context['permissions_excluded'][$perm]) && in_array($group_id, $context['permissions_excluded'][$perm]))
 						continue;
-
 					if ($group_id != 1 && $group_id != 3)
 						$inserts[] = array($perm, $group_id, $add_deny);
 				}
@@ -571,7 +571,6 @@ function SetQuickGroups()
 				// Are these for guests?
 				if ($group_id == -1 && in_array($perm, $context['non_guest_permissions']))
 					continue;
-
 				$inserts[] = array($perm, $group_id, $bid, $add_deny);
 			}
 
@@ -654,7 +653,6 @@ function SetQuickGroups()
 			{
 				if (isset($context['permissions_excluded'][$permission]) && in_array($groupID, $context['permissions_excluded'][$permission]))
 					continue;
-
 				if ($permissionType == 'membergroup' && $groupID != 1 && $groupID != 3 && (empty($context['illegal_permissions']) || !in_array($permission, $context['illegal_permissions'])))
 					$permChange[] = array($permission, $groupID, $add_deny);
 				elseif ($permissionType != 'membergroup')
@@ -912,7 +910,6 @@ function ModifyMembergroup2()
 						// Don't allow people to escalate themselves!
 						if (!empty($context['illegal_permissions']) && in_array($permission, $context['illegal_permissions']))
 							continue;
-
 						$givePerms[$perm_type][] = array($_GET['group'], $permission, $value == 'deny' ? 0 : 1);
 					}
 			}
@@ -1649,7 +1646,6 @@ function loadAllPermissions()
 			// If this permission shouldn't be given to certain groups (e.g. guests), don't.
 			if (isset($context['group']['id']) && isset($context['permissions_excluded'][$permission]) && in_array($context['group']['id'], $context['permissions_excluded'][$permission]))
 				continue;
-
 			// What groups will this permission be in?
 			$own_group = $permissionArray[1];
 
@@ -1842,7 +1838,7 @@ function init_inline_permissions($permissions, $excluded_groups = array())
 			(array) $excluded_groups,
 			function ($v)
 			{
-				return is_int($v) || is_string($v) && (string) intval($v) === $v;
+				return is_int($v) || is_string($v) && (string) (int) $v === $v;
 			}
 		);
 
@@ -1855,7 +1851,6 @@ function init_inline_permissions($permissions, $excluded_groups = array())
 	{
 		if (!isset($context['permissions_excluded'][$permission]))
 			continue;
-
 		foreach ($context['permissions_excluded'][$permission] as $group)
 		{
 			if (isset($context[$permission][$group]))
@@ -1917,12 +1912,10 @@ function save_inline_permissions($permissions)
 	{
 		if (!isset($_POST[$permission]))
 			continue;
-
 		foreach ($_POST[$permission] as $id_group => $value)
 		{
 			if ($value == 'on' && !empty($context['excluded_permissions'][$permission]) && in_array($id_group, $context['excluded_permissions'][$permission]))
 				continue;
-
 			if (in_array($value, array('on', 'deny')) && (empty($context['illegal_permissions']) || !in_array($permission, $context['illegal_permissions'])))
 				$insertRows[] = array((int) $id_group, $permission, $value == 'on' ? 1 : 0);
 		}

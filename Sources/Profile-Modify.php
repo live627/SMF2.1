@@ -113,6 +113,7 @@ function loadProfileFields($force_reload = false)
 
 				$profile_vars['birthdate'] = $value;
 				$cur_profile['birthdate'] = $value;
+
 				return false;
 			},
 		),
@@ -126,13 +127,13 @@ function loadProfileFields($force_reload = false)
 				if (preg_match('/(\d{4})[\-\., ](\d{2})[\-\., ](\d{2})/', $value, $dates) === 1)
 				{
 					$value = checkdate($dates[2], $dates[3], $dates[1] < 4 ? 4 : $dates[1]) ? sprintf('%04d-%02d-%02d', $dates[1] < 4 ? 4 : $dates[1], $dates[2], $dates[3]) : '1004-01-01';
+
 					return true;
 				}
-				else
-				{
+				
 					$value = empty($cur_profile['birthdate']) ? '1004-01-01' : $cur_profile['birthdate'];
+
 					return false;
-				}
 			},
 		),
 		'date_registered' => array(
@@ -147,11 +148,12 @@ function loadProfileFields($force_reload = false)
 				if (($value = strtotime($value)) === false)
 				{
 					$value = $cur_profile['date_registered'];
+
 					return $txt['invalid_registration'] . ' ' . strftime('%d %b %Y ' . (strpos($user_info['time_format'], '%H') !== false ? '%I:%M:%S %p' : '%H:%M:%S'), forum_time(false));
 				}
 
 				// As long as it doesn't equal "N/A"...
-				elseif ($value != $txt['not_applicable'] && $value != strtotime(strftime('%Y-%m-%d', $cur_profile['date_registered'] + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600)))
+				if ($value != $txt['not_applicable'] && $value != strtotime(strftime('%Y-%m-%d', $cur_profile['date_registered'] + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600)))
 					$value = $value - ($user_info['time_offset'] + $modSettings['time_offset']) * 3600;
 
 				else
@@ -219,9 +221,9 @@ function loadProfileFields($force_reload = false)
 					WHERE id_theme = {int:id_theme}
 						AND variable = {string:variable}
 					LIMIT 1', array(
-						'id_theme' => $cur_profile['id_theme'],
-						'variable' => 'name',
-					)
+					'id_theme' => $cur_profile['id_theme'],
+					'variable' => 'name',
+				)
 				);
 				list ($name) = $smcFunc['db_fetch_row']($request);
 				$smcFunc['db_free_result']($request);
@@ -230,11 +232,13 @@ function loadProfileFields($force_reload = false)
 					'id' => $cur_profile['id_theme'],
 					'name' => empty($cur_profile['id_theme']) ? $txt['theme_forum_default'] : $name
 				);
+
 				return true;
 			},
 			'input_validate' => function(&$value)
 			{
 				$value = (int) $value;
+
 				return true;
 			},
 		),
@@ -258,13 +262,13 @@ function loadProfileFields($force_reload = false)
 				{
 					if ($context['user']['is_owner'] && empty($context['password_auth_failed']))
 						$_SESSION['language'] = $value;
+
 					return true;
 				}
-				else
-				{
+				
 					$value = $cur_profile['lngfile'];
+
 					return false;
-				}
 			},
 		),
 		// The username is not always editable - so adjust it as such.
@@ -299,6 +303,7 @@ function loadProfileFields($force_reload = false)
 						call_integration_hook('integrate_reset_pass', array($cur_profile['member_name'], $value, $_POST['passwrd1']));
 					}
 				}
+
 				return false;
 			},
 		),
@@ -392,10 +397,11 @@ function loadProfileFields($force_reload = false)
 			{
 				if (!is_numeric($value))
 					return 'digits_only';
-				elseif ($value < 0 || $value > 2 ** 24 - 1)
+				if ($value < 0 || $value > 2 ** 24 - 1)
 					return 'posts_out_of_range';
-				else
+				
 					$value = $value != '' ? strtr($value, array(',' => '', '.' => '', ' ' => '')) : 0;
+
 				return true;
 			},
 		),
@@ -413,14 +419,15 @@ function loadProfileFields($force_reload = false)
 
 				if (trim($value) == '')
 					return 'no_name';
-				elseif ($smcFunc['strlen']($value) > 60)
+				if ($smcFunc['strlen']($value) > 60)
 					return 'name_too_long';
-				elseif ($cur_profile['real_name'] != $value)
+				if ($cur_profile['real_name'] != $value)
 				{
 					require_once($sourcedir . '/Subs-Members.php');
 					if (isReservedName($value, $context['id_member']))
 						return 'name_taken';
 				}
+
 				return true;
 			},
 		),
@@ -442,6 +449,7 @@ function loadProfileFields($force_reload = false)
 			'input_validate' => function(&$value) use ($cur_profile)
 			{
 				$value = $value != '' ? hash_password($cur_profile['member_name'], $value) : '';
+
 				return true;
 			},
 		),
@@ -546,6 +554,7 @@ function loadProfileFields($force_reload = false)
 				$smiley_sets = explode(',', $modSettings['smiley_sets_known']);
 				if (!in_array($value, $smiley_sets) && $value != 'none')
 					$value = '';
+
 				return true;
 			},
 		),
@@ -597,6 +606,7 @@ function loadProfileFields($force_reload = false)
 				$context['current_forum_time'] = timeformat(time() - $user_info['time_offset'] * 3600, false);
 				$context['current_forum_time_js'] = strftime('%Y,' . ((int) strftime('%m', time() + $modSettings['time_offset'] * 3600) - 1) . ',%d,%H,%M,%S', time() + $modSettings['time_offset'] * 3600);
 				$context['current_forum_time_hour'] = (int) strftime('%H', forum_time(false));
+
 				return true;
 			},
 		),
@@ -654,6 +664,7 @@ function loadProfileFields($force_reload = false)
 				if (strlen($value) < 8 || (substr($value, 0, 7) !== 'http://' && substr($value, 0, 8) !== 'https://'))
 					$value = '';
 				$value = (string) validate_iri(sanitize_iri($value));
+
 				return true;
 			},
 			'link_with' => 'website',
@@ -717,7 +728,6 @@ function setupProfileContext($fields)
 			// Does it have a preload and does that preload succeed?
 			if (isset($cur_field['preload']) && !$cur_field['preload']())
 				continue;
-
 			// If this is anything but complex we need to do more cleaning!
 			if ($cur_field['type'] != 'callback' && $cur_field['type'] != 'hidden')
 			{
@@ -816,7 +826,6 @@ function saveProfileFields()
 	{
 		if (!isset($_POST[$key]) || !empty($field['is_dummy']) || (isset($_POST['preview_signature']) && $key == 'signature'))
 			continue;
-
 		// What gets updated?
 		$db_key = isset($field['save_key']) ? $field['save_key'] : $key;
 
@@ -835,6 +844,7 @@ function saveProfileFields()
 				}
 				// Retain the old value.
 				$cur_profile[$key] = $_POST[$key];
+
 				continue;
 			}
 		}
@@ -1061,14 +1071,12 @@ function makeThemeChanges($memID, $id_theme)
 		{
 			if (in_array($opt, $custom_fields))
 				continue;
-
 			// These need to be controlled.
 			if ($opt == 'topics_per_page' || $opt == 'messages_per_page')
 				$val = max(0, min($val, 50));
 			// We don't set this per theme anymore.
 			elseif ($opt == 'allow_no_censored')
 				continue;
-
 			$themeSetArray[] = array($memID, $id_theme, $opt, is_array($val) ? implode(',', $val) : $val);
 		}
 	}
@@ -1079,14 +1087,12 @@ function makeThemeChanges($memID, $id_theme)
 		{
 			if (in_array($opt, $custom_fields))
 				continue;
-
 			// These need to be controlled.
 			if ($opt == 'topics_per_page' || $opt == 'messages_per_page')
 				$val = max(0, min($val, 50));
 			// Only let admins and owners change the censor.
 			elseif ($opt == 'allow_no_censored' && !$user_info['is_admin'] && !$context['user']['is_owner'])
 				continue;
-
 			$themeSetArray[] = array($memID, 1, $opt, is_array($val) ? implode(',', $val) : $val);
 			$erase_options[] = $opt;
 		}
@@ -1244,7 +1250,6 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true, $returnErrors =
 		*/
 		if ($row['private'] != 0 && !allowedTo('admin_forum') && ($memID != $user_info['id'] || $row['private'] != 2) && ($area != 'register' || $row['show_reg'] == 0))
 			continue;
-
 		// Validate the user data.
 		if ($row['field_type'] == 'check')
 			$value = isset($_POST['customfield'][$row['col_name']]) ? 1 : 0;
@@ -1504,7 +1509,6 @@ function editBuddies($memID)
 			{
 				if (in_array($row['id_member'], $buddiesArray))
 					continue;
-				else
 					$buddiesArray[] = (int) $row['id_member'];
 			}
 			$smcFunc['db_free_result']($request);
@@ -1589,6 +1593,7 @@ function editBuddies($memID)
 				if (!isset($context['buddies'][$buddy]['options'][$key]))
 				{
 					$context['buddies'][$buddy]['options'][$key] = '';
+
 					continue;
 				}
 
@@ -1700,7 +1705,6 @@ function editIgnoreList($memID)
 			{
 				if (in_array($row['id_member'], $ignoreArray))
 					continue;
-				else
 					$ignoreArray[] = (int) $row['id_member'];
 			}
 			$smcFunc['db_free_result']($request);
@@ -1838,7 +1842,6 @@ function getAvatars($directory, $level)
 	{
 		if (in_array($line, array('.', '..', 'blank.png', 'index.php')))
 			continue;
-
 		if (is_dir($modSettings['avatar_directory'] . '/' . $directory . (!empty($directory) ? '/' : '') . $line))
 			$dirs[] = $line;
 		else
@@ -1882,7 +1885,6 @@ function getAvatars($directory, $level)
 		// Make sure it is an image.
 		if (strcasecmp($extension, 'gif') != 0 && strcasecmp($extension, 'jpg') != 0 && strcasecmp($extension, 'jpeg') != 0 && strcasecmp($extension, 'png') != 0 && strcasecmp($extension, 'bmp') != 0)
 			continue;
-
 		$result[] = array(
 			'filename' => $smcFunc['htmlspecialchars']($line),
 			'checked' => $line == $context['member']['avatar']['server_pic'],
@@ -2174,6 +2176,7 @@ function alert_configuration($memID, $defaultSettings = false)
 				{
 					case 'check':
 						$update_prefs[$this_option[1]] = !empty($_POST['opt_' . $this_option[1]]) ? 1 : 0;
+
 						break;
 					case 'select':
 						if (isset($_POST['opt_' . $this_option[1]], $this_option['opts'][$_POST['opt_' . $this_option[1]]]))
@@ -2185,6 +2188,7 @@ function alert_configuration($memID, $defaultSettings = false)
 							$first = array_shift($keys);
 							$update_prefs[$this_option[1]] = $first;
 						}
+
 						break;
 				}
 			}
@@ -2604,6 +2608,7 @@ function alert_notifications_topics($memID)
 					{
 						$pref = $topic['notify_pref'];
 						$mode = !empty($topic['unwatched']) ? 0 : ($pref & 0x02 ? 3 : ($pref & 0x01 ? 2 : 1));
+
 						return $txt['notify_topic_' . $mode];
 					},
 				),
@@ -2722,6 +2727,7 @@ function alert_notifications_boards($memID)
 					{
 						$pref = $board['notify_pref'];
 						$mode = $pref & 0x02 ? 3 : ($pref & 0x01 ? 2 : 1);
+
 						return $txt['notify_board_' . $mode];
 					},
 				),
@@ -2953,6 +2959,7 @@ function loadThemeOptions($memID, $defaultSettings = false)
 			if ($row['id_member'] == -1)
 			{
 				$temp[$row['variable']] = $row['value'];
+
 				continue;
 			}
 
@@ -3119,7 +3126,6 @@ function profileLoadGroups()
 		// We should skip the administrator group if they don't have the admin_forum permission!
 		if ($row['id_group'] == 1 && !allowedTo('admin_forum'))
 			continue;
-
 		$context['member_groups'][$row['id_group']] = array(
 			'id' => $row['id_group'],
 			'name' => $row['group_name'],
@@ -3268,6 +3274,7 @@ function profileLoadAvatarData()
 
 	// Second level selected avatar...
 	$context['avatar_selected'] = substr(strrchr($context['member']['avatar']['server_pic'], '/'), 1);
+
 	return !empty($context['member']['avatar']['allow_server_stored']) || !empty($context['member']['avatar']['allow_external']) || !empty($context['member']['avatar']['allow_upload']) || !empty($context['member']['avatar']['allow_gravatar']);
 }
 
@@ -3496,7 +3503,7 @@ function profileSaveAvatarData(&$value)
 				// Houston, we have a problem. The avatar is too large!!
 				if ($modSettings['avatar_action_too_large'] == 'option_refuse')
 					return 'bad_avatar_too_large';
-				elseif ($modSettings['avatar_action_too_large'] == 'option_download_and_resize')
+				if ($modSettings['avatar_action_too_large'] == 'option_download_and_resize')
 				{
 					// @todo remove this if appropriate
 					require_once($sourcedir . '/Subs-Graphics.php');
@@ -3538,10 +3545,11 @@ function profileSaveAvatarData(&$value)
 			if ($sizes === false)
 			{
 				@unlink($_FILES['attachment']['tmp_name']);
+
 				return 'bad_avatar';
 			}
 			// Check whether the image is too large.
-			elseif ((!empty($modSettings['avatar_max_width_upload']) && $sizes[0] > $modSettings['avatar_max_width_upload'])
+			if ((!empty($modSettings['avatar_max_width_upload']) && $sizes[0] > $modSettings['avatar_max_width_upload'])
 				|| (!empty($modSettings['avatar_max_height_upload']) && $sizes[1] > $modSettings['avatar_max_height_upload']))
 			{
 				if (!empty($modSettings['avatar_resize_upload']))
@@ -3554,6 +3562,7 @@ function profileSaveAvatarData(&$value)
 					if (!downloadAvatar($_FILES['attachment']['tmp_name'], $memID, $modSettings['avatar_max_width_upload'], $modSettings['avatar_max_height_upload']))
 					{
 						@unlink($_FILES['attachment']['tmp_name']);
+
 						return 'bad_avatar';
 					}
 
@@ -3567,6 +3576,7 @@ function profileSaveAvatarData(&$value)
 				else
 				{
 					@unlink($_FILES['attachment']['tmp_name']);
+
 					return 'bad_avatar_too_large';
 				}
 			}
@@ -3582,6 +3592,7 @@ function profileSaveAvatarData(&$value)
 					if (empty($modSettings['avatar_reencode']) || (!reencodeImage($_FILES['attachment']['tmp_name'], $sizes[2])))
 					{
 						@unlink($_FILES['attachment']['tmp_name']);
+
 						return 'bad_avatar_fail_reencode';
 					}
 					// We were successful. However, at what price?
@@ -3590,6 +3601,7 @@ function profileSaveAvatarData(&$value)
 					if ($sizes === false)
 					{
 						@unlink($_FILES['attachment']['tmp_name']);
+
 						return 'bad_avatar';
 					}
 				}
@@ -3688,6 +3700,7 @@ function profileValidateSignature(&$value)
 		if (!empty($sig_limits[2]) && substr_count($unparsed_signature, "\n") >= $sig_limits[2])
 		{
 			$txt['profile_error_signature_max_lines'] = sprintf($txt['profile_error_signature_max_lines'], $sig_limits[2]);
+
 			return 'signature_max_lines';
 		}
 
@@ -3695,6 +3708,7 @@ function profileValidateSignature(&$value)
 		if (!empty($sig_limits[3]) && (substr_count(strtolower($unparsed_signature), '[img') + substr_count(strtolower($unparsed_signature), '<img')) > $sig_limits[3])
 		{
 			$txt['profile_error_signature_max_image_count'] = sprintf($txt['profile_error_signature_max_image_count'], $sig_limits[3]);
+
 			return 'signature_max_image_count';
 		}
 
@@ -3704,9 +3718,10 @@ function profileValidateSignature(&$value)
 		$smiley_count = substr_count(strtolower($smiley_parsed), '<img') - substr_count(strtolower($unparsed_signature), '<img');
 		if (!empty($sig_limits[4]) && $sig_limits[4] == -1 && $smiley_count > 0)
 			return 'signature_allow_smileys';
-		elseif (!empty($sig_limits[4]) && $sig_limits[4] > 0 && $smiley_count > $sig_limits[4])
+		if (!empty($sig_limits[4]) && $sig_limits[4] > 0 && $smiley_count > $sig_limits[4])
 		{
 			$txt['profile_error_signature_max_smileys'] = sprintf($txt['profile_error_signature_max_smileys'], $sig_limits[4]);
+
 			return 'signature_max_smileys';
 		}
 
@@ -3729,6 +3744,7 @@ function profileValidateSignature(&$value)
 				if ($limit_broke)
 				{
 					$txt['profile_error_signature_max_font_size'] = sprintf($txt['profile_error_signature_max_font_size'], $limit_broke);
+
 					return 'signature_max_font_size';
 				}
 			}
@@ -3828,6 +3844,7 @@ function profileValidateSignature(&$value)
 			{
 				$disabledTags = array_unique($disabledTags);
 				$txt['profile_error_signature_disabled_bbc'] = sprintf($txt['profile_error_signature_disabled_bbc'], implode(', ', $disabledTags));
+
 				return 'signature_disabled_bbc';
 			}
 		}
@@ -3836,10 +3853,11 @@ function profileValidateSignature(&$value)
 	preparsecode($value);
 
 	// Too long?
-	if (!allowedTo('admin_forum') && !empty($sig_limits[1]) && $smcFunc['strlen'](str_replace('<br>', "\n", $value)) > $sig_limits[1])
+	if (!allowedTo('admin_forum') && !empty($sig_limits[1]) && $sig_limits[1] < $smcFunc['strlen'](str_replace('<br>', "\n", $value)))
 	{
 		$_POST['signature'] = trim($smcFunc['htmlspecialchars'](str_replace('<br>', "\n", $value), ENT_QUOTES));
 		$txt['profile_error_signature_max_length'] = sprintf($txt['profile_error_signature_max_length'], $sig_limits[1]);
+
 		return 'signature_max_length';
 	}
 
@@ -4007,7 +4025,6 @@ function groupMembership($memID)
 		// If they can't manage (protected) groups, and it's not publically joinable or already assigned, they can't see it.
 		if (((!$context['can_manage_protected'] && $row['group_type'] == 1) || (!$context['can_manage_membergroups'] && $row['group_type'] == 0)) && $row['id_group'] != $context['primary_group'])
 			continue;
-
 		$context['groups'][in_array($row['id_group'], $groups) ? 'member' : 'available'][$row['id_group']] = array(
 			'id' => $row['id_group'],
 			'name' => $row['group_name'],
@@ -4217,7 +4234,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 		return $changeType;
 	}
 	// Otherwise we are leaving/joining a group.
-	elseif ($changeType == 'free')
+	if ($changeType == 'free')
 	{
 		// Are we leaving?
 		if ($old_profile['id_group'] == $group_id || isset($addGroups[$group_id]))
@@ -4326,13 +4343,11 @@ function tfasetup($memID)
 
 				return;
 			}
-			else
-			{
+			
 				$context['tfa_secret'] = $_SESSION['tfa_secret'];
 				$context['tfa_error'] = !$valid_code;
 				$context['tfa_pass_value'] = $_POST['oldpasswrd'];
 				$context['tfa_value'] = $_POST['tfa_code'];
-			}
 		}
 		else
 		{

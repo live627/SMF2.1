@@ -188,7 +188,6 @@ function summary($memID)
 			// No actual ban in place?
 			if (empty($ban_restrictions))
 				continue;
-
 			// Prepare the link for context.
 			$ban_explanation = sprintf($txt['user_cannot_due_to'], implode(', ', $ban_restrictions), '<a href="' . $scripturl . '?action=admin;area=ban;sa=edit;bg=' . $row['id_ban_group'] . '">' . $row['name'] . '</a>');
 
@@ -212,7 +211,6 @@ function summary($memID)
 	if (!empty($context['custom_fields']))
 		foreach ($context['custom_fields'] as $custom)
 			$context['print_custom_fields'][$context['cust_profile_fields_placement'][$custom['placement']]][] = $custom;
-
 }
 
 /**
@@ -450,15 +448,15 @@ function fetch_alerts($memID, $to_fetch = false, $limit = 0, $offset = 0, $with_
 		if (!$alerts[$id_alert]['visible'])
 		{
 			unset($alerts[$id_alert]);
+
 			continue;
 		}
-		else
+		
 			unset($alerts[$id_alert]['visible']);
 
 		// Did a mod already take care of this one?
 		if (!empty($alerts[$id_alert]['text']))
 			continue;
-
 		// For developer convenience.
 		$alert = &$alerts[$id_alert];
 
@@ -571,15 +569,18 @@ function fetch_alerts($memID, $to_fetch = false, $limit = 0, $offset = 0, $with_
 			{
 				case 'register_approval':
 					$alert['target_href'] = $scripturl . '?action=admin;area=viewmembers;sa=browse;type=approve';
+
 					break;
 
 				case 'group_request':
 					$alert['target_href'] = $scripturl . '?action=moderate;area=groups;sa=requests';
+
 					break;
 
 				case 'buddy_request':
 					if (!empty($alert['id_member_started']))
 						$alert['target_href'] = $scripturl . '?action=profile;u=' . $alert['id_member_started'];
+
 					break;
 
 				default:
@@ -595,22 +596,24 @@ function fetch_alerts($memID, $to_fetch = false, $limit = 0, $offset = 0, $with_
 				case 'msg':
 					if (!empty($alert['content_id']))
 						$alert['target_href'] = $scripturl . '?msg=' . $alert['content_id'];
+
 					break;
 
 				case 'member':
 					if (!empty($alert['id_member_started']))
 						$alert['target_href'] = $scripturl . '?action=profile;u=' . $alert['id_member_started'];
+
 					break;
 
 				case 'event':
 					if (!empty($alert['extra']['event_id']))
 						$alert['target_href'] = $scripturl . '?action=calendar;event=' . $alert['extra']['event_id'];
+
 					break;
 
 				default:
 					break;
 			}
-
 		}
 
 		// Finally, set this alert's text string.
@@ -747,7 +750,7 @@ function showAlerts($memID)
 				'icon' => 'move',
 			),
 			'quickmod' => array(
-    			'class' => 'inline_mod_check',
+				'class' => 'inline_mod_check',
 				'content' => '<input type="checkbox" name="mark[' . $id . ']" value="' . $id . '">',
 				'show' => $context['showCheckboxes']
 			)
@@ -865,7 +868,7 @@ function showPosts($memID)
 	if (isset($_GET['sa']) && $_GET['sa'] == 'attach')
 		return showAttachments($memID);
 	// Instead, if we're dealing with unwatched topics (and the feature is enabled) use that other function.
-	elseif (isset($_GET['sa']) && $_GET['sa'] == 'unwatchedtopics' && $context['user']['is_owner'])
+	if (isset($_GET['sa']) && $_GET['sa'] == 'unwatchedtopics' && $context['user']['is_owner'])
 		return showUnwatched($memID);
 
 	// Are we just viewing topics?
@@ -1052,7 +1055,7 @@ function showPosts($memID)
 		}
 
 		// Make sure we quit this loop.
-		if ($smcFunc['db_num_rows']($request) === $maxIndex || $looped || $range_limit == '')
+		if ($maxIndex === $smcFunc['db_num_rows']($request) || $looped || $range_limit == '')
 			break;
 		$looped = true;
 		$range_limit = '';
@@ -1092,7 +1095,7 @@ function showPosts($memID)
 			'can_reply' => false,
 			'can_mark_notify' => !$context['user']['is_guest'],
 			'can_delete' => false,
-			'delete_possible' => ($row['id_first_msg'] != $row['id_msg'] || $row['id_last_msg'] == $row['id_msg']) && (empty($modSettings['edit_disable_time']) || $row['poster_time'] + $modSettings['edit_disable_time'] * 60 >= time()),
+			'delete_possible' => ($row['id_first_msg'] != $row['id_msg'] || $row['id_last_msg'] == $row['id_msg']) && (empty($modSettings['edit_disable_time']) || time() <= $row['poster_time'] + $modSettings['edit_disable_time'] * 60),
 			'approved' => $row['approved'],
 			'css_class' => $row['approved'] ? 'windowbg' : 'approvebg',
 		);
@@ -1152,7 +1155,6 @@ function showPosts($memID)
 				// There aren't any posts displayed from this board.
 				if (!isset($board_ids[$type][$board_id]))
 					continue;
-
 				// Set the permission to true ;).
 				foreach ($board_ids[$type][$board_id] as $counter)
 					$context['posts'][$counter][$allowed] = true;
@@ -1176,20 +1178,20 @@ function showPosts($memID)
 		$context['posts'][$key]['quickbuttons'] = array(
 			'reply' => array(
 				'label' => $txt['reply'],
-				'href' => $scripturl.'?action=post;topic='.$post['topic'].'.'.$post['start'],
+				'href' => $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'],
 				'icon' => 'reply_button',
 				'show' => $post['can_reply']
 			),
 			'quote' => array(
 				'label' => $txt['quote_action'],
-				'href' => $scripturl.'?action=post;topic='.$post['topic'].'.'.$post['start'].';quote='.$post['id'],
+				'href' => $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'] . ';quote=' . $post['id'],
 				'icon' => 'quote',
 				'show' => $post['can_quote']
 			),
 			'remove' => array(
 				'label' => $txt['remove'],
-				'href' => $scripturl.'?action=deletemsg;msg='.$post['id'].';topic='.$post['topic'].';profile;u='.$context['member']['id'].';start='.$context['start'].';'.$context['session_var'].'='.$context['session_id'],
-				'javascript' => 'data-confirm="'.$txt['remove_message'].'"',
+				'href' => $scripturl . '?action=deletemsg;msg=' . $post['id'] . ';topic=' . $post['topic'] . ';profile;u=' . $context['member']['id'] . ';start=' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'],
+				'javascript' => 'data-confirm="' . $txt['remove_message'] . '"',
 				'class' => 'you_sure',
 				'icon' => 'remove_button',
 				'show' => $post['can_delete']
@@ -3053,14 +3055,17 @@ function list_getGroupRequests($start, $items_per_page, $sort, $memID)
 		{
 			case 0:
 				$this_req['outcome'] = $txt['outcome_pending'];
+
 				break;
 			case 1:
 				$member_link = empty($row['id_member_acted']) ? $row['act_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member_acted'] . '">' . $row['act_name'] . '</a>';
 				$this_req['outcome'] = sprintf($txt['outcome_approved'], $member_link, timeformat($row['time_acted']));
+
 				break;
 			case 2:
 				$member_link = empty($row['id_member_acted']) ? $row['act_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member_acted'] . '">' . $row['act_name'] . '</a>';
 				$this_req['outcome'] = sprintf(!empty($row['act_reason']) ? $txt['outcome_refused_reason'] : $txt['outcome_refused'], $member_link, timeformat($row['time_acted']), $row['act_reason']);
+
 				break;
 		}
 
@@ -3176,7 +3181,6 @@ function showPermissions($memID)
 		// We don't know about this permission, it doesn't exist :P.
 		if (!isset($txt['permissionname_' . $row['permission']]))
 			continue;
-
 		if (empty($row['add_deny']))
 			$denied[] = $row['permission'];
 
@@ -3233,7 +3237,6 @@ function showPermissions($memID)
 		// We don't know about this permission, it doesn't exist :P.
 		if (!isset($txt['permissionname_' . $row['permission']]))
 			continue;
-
 		// The name of the permission using the format 'permission name' - 'own/any topic/event/etc.'.
 		if (in_array(substr($row['permission'], -4), array('_own', '_any')) && isset($txt['permissionname_' . substr($row['permission'], 0, -4)]))
 			$name = $txt['permissionname_' . substr($row['permission'], 0, -4)] . ' - ' . $txt['permissionname_' . $row['permission']];
@@ -3382,44 +3385,54 @@ function set_alert_icon($alert)
 					case 'reply':
 					case 'topic':
 						$class = 'main_icons posts';
+
 						break;
 
 					case 'move':
 						$src = $settings['images_url'] . '/post/moved.png';
+
 						break;
 
 					case 'remove':
 						$class = 'main_icons delete';
+
 						break;
 
 					case 'lock':
 					case 'unlock':
 						$class = 'main_icons lock';
+
 						break;
 
 					case 'sticky':
 					case 'unsticky':
 						$class = 'main_icons sticky';
+
 						break;
 
 					case 'split':
 						$class = 'main_icons split_button';
+
 						break;
 
 					case 'merge':
 						$class = 'main_icons merge';
+
 						break;
 
 					case 'unapproved_topic':
 					case 'unapproved_post':
 						$class = 'main_icons post_moderation_moderate';
+
 						break;
 
 					default:
 						$class = 'main_icons posts';
+
 						break;
 				}
 			}
+
 			break;
 
 		case 'msg':
@@ -3428,30 +3441,37 @@ function set_alert_icon($alert)
 				{
 					case 'like':
 						$class = 'main_icons like';
+
 						break;
 
 					case 'mention':
 						$class = 'main_icons im_on';
+
 						break;
 
 					case 'quote':
 						$class = 'main_icons quote';
+
 						break;
 
 					case 'unapproved_attachment':
 						$class = 'main_icons post_moderation_attach';
+
 						break;
 
 					case 'report':
 					case 'report_reply':
 						$class = 'main_icons post_moderation_moderate';
+
 						break;
 
 					default:
 						$class = 'main_icons posts';
+
 						break;
 				}
 			}
+
 			break;
 
 		case 'member':
@@ -3462,54 +3482,65 @@ function set_alert_icon($alert)
 					case 'register_approval':
 					case 'register_activation':
 						$class = 'main_icons members';
+
 						break;
 
 					case 'report':
 					case 'report_reply':
 						$class = 'main_icons members_watched';
+
 						break;
 
 					case 'buddy_request':
 						$class = 'main_icons people';
+
 						break;
 
 					case 'group_request':
 						$class = 'main_icons members_request';
+
 						break;
 
 					default:
 						$class = 'main_icons members';
+
 						break;
 				}
 			}
+
 			break;
 
 		case 'groupr':
 			$class = 'main_icons members_request';
+
 			break;
 
 		case 'event':
 			$class = 'main_icons calendar';
+
 			break;
 
 		case 'paidsubs':
 			$class = 'main_icons paid';
+
 			break;
 
 		case 'birthday':
 			$src = $settings['images_url'] . '/cake.png';
+
 			break;
 
 		default:
 			$class = 'main_icons alerts';
+
 			break;
 	}
 
 	if (isset($class))
 		return '<span class="alert_icon ' . $class . '"></span>';
-	elseif (isset($src))
+	if (isset($src))
 		return '<img class="alert_icon" src="' . $src . '">';
-	else
+	
 		return '';
 }
 

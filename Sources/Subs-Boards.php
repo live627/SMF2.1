@@ -854,7 +854,7 @@ function modifyBoard($board_id, &$boardOptions)
 
 	clean_cache('data');
 
-	cache_put_data('parsed_boards_descriptions_'. $parsed_boards_cat_id, $already_parsed_boards, 864000);
+	cache_put_data('parsed_boards_descriptions_' . $parsed_boards_cat_id, $already_parsed_boards, 864000);
 
 	if (empty($boardOptions['dont_log']))
 		logAction('edit_board', array('board' => $board_id), 'admin');
@@ -1588,7 +1588,7 @@ function setBoardParsedDescription($category_id = 0, $boards_info = array())
 			$context['description_allowed_tags']
 		);
 
-	cache_put_data('parsed_boards_descriptions_'. $category_id, $already_parsed_boards, 864000);
+	cache_put_data('parsed_boards_descriptions_' . $category_id, $already_parsed_boards, 864000);
 
 	return $already_parsed_boards;
 }

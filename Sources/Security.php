@@ -49,7 +49,7 @@ function validateSession($type = 'admin', $force = false)
 			return;
 
 		// Or are they already logged in?, Moderator or admin session is need for this area
-		if ((!empty($_SESSION[$type . '_time']) && $_SESSION[$type . '_time'] + $refreshTime >= time()) || (!empty($_SESSION['admin_time']) && $_SESSION['admin_time'] + $refreshTime >= time()))
+		if ((!empty($_SESSION[$type . '_time']) && time() <= $_SESSION[$type . '_time'] + $refreshTime) || (!empty($_SESSION['admin_time']) && time() <= $_SESSION['admin_time'] + $refreshTime))
 			return;
 	}
 
@@ -71,6 +71,7 @@ function validateSession($type = 'admin', $force = false)
 		{
 			$_SESSION[$type . '_time'] = time();
 			unset($_SESSION['request_referer']);
+
 			return;
 		}
 	}
@@ -695,7 +696,7 @@ function checkSession($type = 'post', $from_action = '', $is_fatal = true)
 	if (!isset($error))
 		return '';
 	// A session error occurred, show the error.
-	elseif ($is_fatal)
+	if ($is_fatal)
 	{
 		if (isset($_GET['xml']))
 		{
@@ -703,7 +704,7 @@ function checkSession($type = 'post', $from_action = '', $is_fatal = true)
 			send_http_status(403, 'Forbidden - Session timeout');
 			die;
 		}
-		else
+		
 			fatal_lang_error($error, isset($log_error) ? 'user' : false);
 	}
 	// A session error occurred, return the error to the calling function.
@@ -727,13 +728,10 @@ function checkConfirm($action)
 	if (isset($_GET['confirm']) && isset($_SESSION['confirm_' . $action]) && md5($_GET['confirm'] . $_SERVER['HTTP_USER_AGENT']) == $_SESSION['confirm_' . $action])
 		return true;
 
-	else
-	{
 		$token = md5($smcFunc['random_int']() . session_id() . (string) microtime() . $modSettings['rand_seed']);
 		$_SESSION['confirm_' . $action] = md5($token . $_SERVER['HTTP_USER_AGENT']);
 
 		return $token;
-	}
 }
 
 /**
@@ -823,7 +821,7 @@ function cleanTokens($complete = false)
 
 	// Clean up tokens, trying to give enough time still.
 	foreach ($_SESSION['token'] as $key => $data)
-		if ($data[2] + 10800 < time() || $complete)
+		if (time() > $data[2] + 10800 || $complete)
 			unset($_SESSION['token'][$key]);
 }
 
@@ -858,12 +856,13 @@ function checkSubmitOnce($action, $is_fatal = true)
 	{
 		if (!isset($_REQUEST['seqnum']))
 			return true;
-		elseif (!in_array($_REQUEST['seqnum'], $_SESSION['forms']))
+		if (!in_array($_REQUEST['seqnum'], $_SESSION['forms']))
 		{
 			$_SESSION['forms'][] = (int) $_REQUEST['seqnum'];
+
 			return true;
 		}
-		elseif ($is_fatal)
+		if ($is_fatal)
 			fatal_lang_error('error_form_already_submitted', false);
 		else
 			return false;
@@ -916,7 +915,7 @@ function allowedTo($permission, $boards = null, $any = false)
 		if (count(array_intersect($permission, $user_info['permissions'])) != 0)
 			return true;
 		// You aren't allowed, by default.
-		else
+		
 			return false;
 	}
 	elseif (!is_array($boards))
@@ -961,7 +960,7 @@ function allowedTo($permission, $boards = null, $any = false)
 	}
 
 	// Make sure they can do it on all of the boards.
-	elseif ($smcFunc['db_num_rows']($request) != count($boards))
+	elseif (count($boards) != $smcFunc['db_num_rows']($request))
 		$return = false;
 
 	else
@@ -1074,14 +1073,12 @@ function boardsAllowedTo($permissions, $check_access = true, $simple = true)
 	{
 		if ($simple)
 			return array(0);
-		else
-		{
+		
 			$boards = array();
 			foreach ($permissions as $permission)
 				$boards[$permission] = array(0);
 
 			return $boards;
-		}
 	}
 
 	// All groups the user is in except 'moderator'.
@@ -1254,8 +1251,6 @@ RemoveHandler .php .php3 .phtml .cgi .fcgi .pl .fpl .shtml';
 			continue;
 		}
 
-		else
-		{
 			$fh = @fopen($path . '/.htaccess', 'w');
 
 			if ($fh)
@@ -1268,8 +1263,7 @@ RemoveHandler .php .php3 .phtml .cgi .fcgi .pl .fpl .shtml';
 
 			else
 				$errors[] = 'htaccess_cannot_create_file';
-		}
-
+		
 		if (file_exists($path . '/index.php'))
 		{
 			$errors[] = 'index-php_exists';
@@ -1277,8 +1271,6 @@ RemoveHandler .php .php3 .phtml .cgi .fcgi .pl .fpl .shtml';
 			continue;
 		}
 
-		else
-		{
 			$fh = @fopen($path . '/index.php', 'w');
 
 			if ($fh)
@@ -1306,13 +1298,11 @@ else
 
 			else
 				$errors[] = 'index-php_cannot_create_file';
-		}
 	}
 
 	if (!empty($errors))
 		return $errors;
 
-	else
 		return true;
 }
 
@@ -1381,6 +1371,7 @@ function corsPolicyHeader($set_header = true)
 			{
 				$context['cors_domain'] = $_SERVER['HTTP_ORIGIN'];
 				$context['valid_cors_found'] = 'alias';
+
 				break;
 			}
 		}
@@ -1398,14 +1389,16 @@ function corsPolicyHeader($set_header = true)
 			{
 				$context['cors_domain'] = $_SERVER['HTTP_ORIGIN'];
 				$context['valid_cors_found'] = 'additional';
+
 				break;
 			}
 
 			// If we find a * in the host, then its a wildcard and lets allow it.  This will have issues if the forum is at forum.domain.tld and the origin we are at is more.sub.domain.tld.
-			if ('*' === implode('.', array_slice(explode('.', parse_url($domain, PHP_URL_HOST)), 0, 1)) && FindCorsBaseUrl($domain, true) === $origin_base)
+			if (implode('.', array_slice(explode('.', parse_url($domain, PHP_URL_HOST)), 0, 1)) === '*' && FindCorsBaseUrl($domain, true) === $origin_base)
 			{
 				$context['cors_domain'] = $_SERVER['HTTP_ORIGIN'];
 				$context['valid_cors_found'] = 'additional_wildcard';
+
 				break;
 			}
 		}
@@ -1470,7 +1463,7 @@ function FindCorsBaseUrl($url, $sub_domain = false)
 		$base_domain = implode('.', array_slice(explode('.', parse_url($base_domain, PHP_URL_HOST)), 1));
 
 	// If we find www, pop it out.
-	else if ('www' === array_slice(explode('.', $base_domain), 0, 1))
+	elseif (array_slice(explode('.', $base_domain), 0, 1) === 'www')
 		$base_domain = implode('.', array_slice(explode('.', $base_domain, 1)), 1);
 
 	/*	Note, we do have a TLD regex for the autolinker, however it can not reliably be used here due to

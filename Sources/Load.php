@@ -86,6 +86,7 @@ function reloadSettings()
 		// Redirect to the upgrader if we can
 		if (file_exists($boarddir . '/upgrade.php'))
 			header('location: ' . $boardurl . '/upgrade.php');
+	}
 
 		die('SMF file version (' . SMF_VERSION . ') does not match SMF database version (' . $modSettings['smfVersion'] . ').<br>Run the SMF upgrader to fix this.<br><a href="https://wiki.simplemachines.org/smf/Upgrading">More information</a>.');
 	}
@@ -108,8 +109,7 @@ function reloadSettings()
 	$ent_list = '&(?:#' . (empty($modSettings['disableEntityCheck']) ? '\d{1,7}' : '021') . '|quot|amp|lt|gt|nbsp);';
 	$ent_check = empty($modSettings['disableEntityCheck']) ? function($string)
 		{
-			$string = preg_replace_callback('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~', 'entity_fix__callback', $string);
-			return $string;
+			return preg_replace_callback('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~', 'entity_fix__callback', $string);
 		} : function($string)
 		{
 			return $string;
@@ -151,6 +151,7 @@ function reloadSettings()
 				$i += 4;
 			}
 		}
+
 		return $new_string;
 	};
 
@@ -159,6 +160,7 @@ function reloadSettings()
 		'entity_fix' => function($string)
 		{
 			$num = $string[0] === 'x' ? hexdec(substr($string, 1)) : (int) $string;
+
 			return $num < 0x20 || $num > 0x10FFFF || ($num >= 0xD800 && $num <= 0xDFFF) || $num === 0x202E || $num === 0x202D ? '' : '&#' . $num . ';';
 		},
 		'htmlspecialchars' => function($string, $quote_style = ENT_COMPAT, $charset = 'ISO-8859-1') use ($ent_check, $utf8, $fix_utf8mb4)
@@ -183,10 +185,10 @@ function reloadSettings()
 			if (strlen($needle) === 1)
 			{
 				$result = array_search($needle, array_slice($haystack_arr, $offset));
+
 				return is_int($result) ? $result + $offset : false;
 			}
-			else
-			{
+			
 				$needle_arr = preg_split('~(' . $ent_list . '|.)~' . ($utf8 ? 'u' : '') . '', $ent_check($needle), -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 				$needle_size = count($needle_arr);
 
@@ -198,12 +200,13 @@ function reloadSettings()
 						return $offset;
 					$result = array_search($needle_arr[0], array_slice($haystack_arr, ++$offset));
 				}
+
 				return false;
-			}
 		},
 		'substr' => function($string, $start, $length = null) use ($utf8, $ent_check, $ent_list, $modSettings)
 		{
 			$ent_arr = preg_split('~(' . $ent_list . '|.)~' . ($utf8 ? 'u' : '') . '', $ent_check($string), -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
 			return $length === null ? implode('', array_slice($ent_arr, $start)) : implode('', array_slice($ent_arr, $start, $length));
 		},
 		'strtolower' => $utf8 ? function($string) use ($sourcedir)
@@ -211,6 +214,7 @@ function reloadSettings()
 			if (!function_exists('mb_strtolower'))
 			{
 				require_once($sourcedir . '/Subs-Charset.php');
+
 				return utf8_strtolower($string);
 			}
 
@@ -223,6 +227,7 @@ function reloadSettings()
 			if (!function_exists('mb_strtolower'))
 			{
 				require_once($sourcedir . '/Subs-Charset.php');
+
 				return utf8_strtoupper($string);
 			}
 
@@ -235,6 +240,7 @@ function reloadSettings()
 			$string = $matches[0];
 			while (strlen($string) > $length)
 				$string = preg_replace('~(?:' . $ent_list . '|.)$~' . ($utf8 ? 'u' : ''), '', $string);
+
 			return $string;
 		},
 		'ucfirst' => $utf8 ? function($string) use (&$smcFunc)
@@ -246,6 +252,7 @@ function reloadSettings()
 			$words = preg_split('~([\s\r\n\t]+)~', $string, -1, PREG_SPLIT_DELIM_CAPTURE);
 			for ($i = 0, $n = count($words); $i < $n; $i += 2)
 				$words[$i] = $smcFunc['ucfirst']($words[$i]);
+
 			return implode('', $words);
 		} : 'ucwords',
 		'json_decode' => 'smf_json_decode',
@@ -484,6 +491,7 @@ function loadUserSettings()
 			{
 				$id_member = $integration_id;
 				$already_verified = true;
+
 				break;
 			}
 		}
@@ -874,8 +882,8 @@ function loadUserSettings()
  * Intended for use by background tasks that need to populate $user_info.
  *
  * @param int|array $user_ids The users IDs to get the data for.
- * @return array
  * @throws Exception
+ * @return array
  */
 function loadMinUserInfo($user_ids = array())
 {
@@ -1027,6 +1035,7 @@ function loadBoard()
 	if (empty($board) && empty($topic))
 	{
 		$board_info = array('moderators' => array(), 'moderator_groups' => array());
+
 		return;
 	}
 
@@ -1256,7 +1265,7 @@ function loadBoard()
 			send_http_status(403);
 			die;
 		}
-		elseif ($board_info['error'] == 'post_in_redirect')
+		if ($board_info['error'] == 'post_in_redirect')
 		{
 			// Slightly different error message here...
 			fatal_lang_error('cannot_post_redirect', false);
@@ -1284,6 +1293,7 @@ function loadPermissions()
 	if ($user_info['is_admin'])
 	{
 		banPermissions();
+
 		return;
 	}
 
@@ -1429,7 +1439,6 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 			$data = cache_get_data('member_data-' . $set . '-' . $users[$i], 240);
 			if ($data == null)
 				continue;
-
 			$loaded_ids[] = $data['id_member'];
 			$user_profile[$data['id_member']] = $data;
 			unset($users[$i]);
@@ -1457,17 +1466,20 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 	{
 		case 'normal':
 			$select_columns .= ', mem.buddy_list,  mem.additional_groups';
+
 			break;
 		case 'profile':
 			$select_columns .= ', mem.additional_groups, mem.id_theme, mem.pm_ignore_list, mem.pm_receive_from,
 			mem.time_format, mem.timezone, mem.secret_question, mem.smiley_set, mem.tfa_secret,
 			mem.total_time_logged_in, lo.url, mem.ignore_boards, mem.password_salt, mem.pm_prefs, mem.buddy_list, mem.alerts';
+
 			break;
 		case 'minimal':
 			$select_columns = '
 			mem.id_member, mem.member_name, mem.real_name, mem.email_address, mem.date_registered,
 			mem.posts, mem.last_login, mem.member_ip, mem.member_ip2, mem.lngfile, mem.id_group';
 			$select_tables = '';
+
 			break;
 		default:
 		{
@@ -1622,6 +1634,7 @@ function loadMemberContext($user, $display_custom_fields = false)
 	{
 		loadLanguage('Errors');
 		trigger_error(sprintf($txt['user_not_loaded'], $user), E_USER_WARNING);
+
 		return false;
 	}
 
@@ -1760,7 +1773,6 @@ function loadMemberContext($user, $display_custom_fields = false)
 		{
 			if (!isset($custom['col_name']) || trim($custom['col_name']) == '' || empty($profile['options'][$custom['col_name']]))
 				continue;
-
 			$value = $profile['options'][$custom['col_name']];
 
 			$fieldOptions = array();
@@ -2015,7 +2027,6 @@ function loadTheme($id_theme = 0, $initialize = true)
 				// There are just things we shouldn't be able to change as members.
 				if ($row['id_member'] != 0 && in_array($row['variable'], array('actual_theme_url', 'actual_images_url', 'base_theme_dir', 'base_theme_url', 'default_images_url', 'default_theme_dir', 'default_theme_url', 'default_template', 'images_url', 'number_recent_posts', 'smiley_sets_default', 'theme_dir', 'theme_id', 'theme_layers', 'theme_templates', 'theme_url')))
 					continue;
-
 				// If this is the theme_dir of the default theme, store it.
 				if (in_array($row['variable'], array('theme_dir', 'theme_url', 'images_url')) && $row['id_theme'] == '1' && empty($row['id_member']))
 					$themeData[0]['default_' . $row['variable']] = $row['value'];
@@ -3049,6 +3060,7 @@ function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload =
 		if (!$found && $fatal)
 		{
 			log_error(sprintf($txt['theme_language_error'], $template_name . '.' . $lang, 'template'));
+
 			break;
 		}
 
@@ -3217,14 +3229,12 @@ function getLanguages($use_cache = true)
 			// Can't look in here... doesn't exist!
 			if (!file_exists($language_dir))
 				continue;
-
 			$dir = dir($language_dir);
 			while ($entry = $dir->read())
 			{
 				// Look for the index language file... For good measure skip any "index.language-utf8.php" files
 				if (!preg_match('~^index\.((?:.(?!-utf8))+)\.php$~', $entry, $matches))
 					continue;
-
 				$langName = $smcFunc['ucwords'](strtr($matches[1], array('_' => ' ')));
 
 				if (($spos = strpos($langName, ' ')) !== false)
@@ -3240,7 +3250,6 @@ function getLanguages($use_cache = true)
 					{
 						if (strpos($line, '$txt[\'native_name\']') === false)
 							continue;
-
 						preg_match('~\$txt\[\'native_name\'\]\s*=\s*\'([^\']+)\';~', $line, $matchNative);
 
 						// Set the language's name.
@@ -3251,6 +3260,7 @@ function getLanguages($use_cache = true)
 								break;
 
 							$langName = un_htmlspecialchars($matchNative[1]);
+
 							break;
 						}
 					}
@@ -3362,7 +3372,7 @@ function template_include($filename, $once = false)
 	if ($once && in_array($filename, $templates))
 		return;
 	// Add this file to the include list, whether $once is true or not.
-	else
+	
 		$templates[] = $filename;
 
 	$file_found = file_exists($filename);
@@ -3467,7 +3477,6 @@ function template_include($filename, $once = false)
 
 					if (substr_count($line, '<br>') == 0)
 						continue;
-
 					$n = substr_count($line, '<br>');
 					for ($i = 0; $i < $n; $i++)
 					{
@@ -3490,6 +3499,7 @@ function template_include($filename, $once = false)
 					{
 						if (preg_match('~(<[^/>]+>)[^<]*$~', $data2[$line2], $color_match) != 0)
 							$last_line = $color_match[1];
+
 						break;
 					}
 
@@ -3600,7 +3610,7 @@ function loadCacheAccelerator($overrideCache = '', $fallbackSMF = true)
 	if (empty($overrideCache) && is_object($cacheAPI))
 		return $cacheAPI;
 
-	elseif (is_null($cacheAPI))
+	if (is_null($cacheAPI))
 		$cacheAPI = false;
 
 	require_once($sourcedir . '/Cache/CacheApi.php');
@@ -3879,7 +3889,7 @@ function set_avatar_data($data = array())
 		);
 
 	// Fallback to make life easier for everyone...
-	else
+	
 		return array(
 			'name' => '',
 			'image' => '',
@@ -3921,7 +3931,6 @@ function get_auth_secret()
 			}
 		}
 	}
-
 
 	return $auth_secret;
 }

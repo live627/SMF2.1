@@ -62,6 +62,7 @@ class xmlArray
 		if ($is_clone)
 		{
 			$this->array = $data;
+
 			return;
 		}
 
@@ -164,8 +165,7 @@ class xmlArray
 				// It simplifies things if the attribute is already there ;).
 				if (isset($array[$el]))
 					return $array[$el];
-				else
-				{
+				
 					$trace = debug_backtrace();
 					$i = 0;
 					while ($i < count($trace) && isset($trace[$i]['class']) && $trace[$i]['class'] == get_class($this))
@@ -178,8 +178,8 @@ class xmlArray
 						loadLanguage('Errors');
 						trigger_error(sprintf($txt['undefined_xml_attribute'], substr($el, 1) . $debug), E_USER_NOTICE);
 					}
+
 					return false;
-				}
 			}
 			else
 				$lvl = null;
@@ -282,7 +282,6 @@ class xmlArray
 			// Skip these, they aren't elements.
 			if (!is_array($val) || $val['name'] == '!')
 				continue;
-
 			// Create the right type of class...
 			$newClass = get_class($this);
 
@@ -439,7 +438,6 @@ class xmlArray
 				$last_tag_end = strpos($data, '</' . $match[1] . '>');
 				if ($last_tag_end === false)
 					continue;
-
 				$offset = 0;
 				while (1 == 1)
 				{
@@ -455,11 +453,9 @@ class xmlArray
 					// Didn't find one? Then just use the last and sod it.
 					if ($next_tag_end === false)
 						break;
-					else
-					{
+					
 						$last_tag_end = $next_tag_end;
 						$offset = $next_tag_start + 1;
-					}
 				}
 				// Parse the insides.
 				$inner_match = substr($data, 0, $last_tag_end);
@@ -517,13 +513,14 @@ class xmlArray
 			$temp = '';
 			foreach ($array as $val)
 				$temp .= $this->_xml($val, $indent);
+
 			return $temp;
 		}
 
 		// This is just text!
 		if ($array['name'] == '!')
 			return $indentation . '<![CDATA[' . $array['value'] . ']]>';
-		elseif (substr($array['name'], -2) == '[]')
+		if (substr($array['name'], -2) == '[]')
 			$array['name'] = substr($array['name'], 0, -2);
 
 		// Start the element.
@@ -567,7 +564,6 @@ class xmlArray
 		{
 			if (!is_array($value) || !isset($value['name']))
 				continue;
-
 			if ($value['name'] == '!')
 				$text .= $value['value'];
 			else
@@ -576,7 +572,7 @@ class xmlArray
 
 		if (empty($return))
 			return $text;
-		else
+		
 			return $return;
 	}
 
@@ -601,7 +597,6 @@ class xmlArray
 				$inComment = false;
 			elseif ($inComment)
 				continue;
-
 			// Handle Cdata blocks.
 			elseif (!$inComment && $part === '<![CDATA[')
 				$inCdata = true;
@@ -663,7 +658,6 @@ class xmlArray
 			// This means it's most likely an attribute or the name itself.
 			if (!isset($text['name']))
 				continue;
-
 			// This is text!
 			if ($text['name'] == '!')
 				$temp .= $text['value'];
@@ -708,7 +702,6 @@ class xmlArray
 		{
 			if (!is_array($value) || $value['name'] === '!')
 				continue;
-
 			if ($show_all || in_array($value['name'], $paths))
 			{
 				// Skip elements before "the one".
@@ -734,13 +727,14 @@ class xmlArray
 				loadLanguage('Errors');
 				trigger_error(sprintf($txt['undefined_xml_element'], $path . $debug), E_USER_NOTICE);
 			}
+
 			return false;
 		}
 		// Only one result.
-		elseif (count($results) == 1 || $level !== null)
+		if (count($results) == 1 || $level !== null)
 			return $results[0];
 		// Return the result set.
-		else
+		
 			return $results + array('name' => $path . '[]');
 	}
 }
@@ -818,6 +812,7 @@ class ftp_connection
 		{
 			$this->error = 'bad_server';
 			$this->last_message = 'Invalid Server';
+
 			return;
 		}
 
@@ -826,6 +821,7 @@ class ftp_connection
 		{
 			$this->error = 'bad_response';
 			$this->last_message = 'Bad Response';
+
 			return;
 		}
 
@@ -836,6 +832,7 @@ class ftp_connection
 		{
 			$this->error = 'bad_username';
 			$this->last_message = 'Invalid Username';
+
 			return;
 		}
 
@@ -846,6 +843,7 @@ class ftp_connection
 		{
 			$this->error = 'bad_password';
 			$this->last_message = 'Invalid Password';
+
 			return;
 		}
 	}
@@ -869,6 +867,7 @@ class ftp_connection
 		if (!$this->check_response(250))
 		{
 			$this->error = 'bad_path';
+
 			return false;
 		}
 
@@ -903,20 +902,20 @@ class ftp_connection
 			if (is_writable($ftp_file))
 			{
 				$is_writable = true;
+
 				break;
 			}
 
-			else
-			{
 				// Convert the chmod value from octal (0777) to text ("777").
 				fwrite($this->connection, 'SITE CHMOD ' . decoct($val) . ' ' . $ftp_file . "\r\n");
 				if (!$this->check_response(200))
 				{
 					$this->error = 'bad_file';
+
 					break;
 				}
-			}
 		}
+
 		return $is_writable;
 	}
 
@@ -942,6 +941,7 @@ class ftp_connection
 			if (!$this->check_response(250))
 			{
 				$this->error = 'bad_file';
+
 				return false;
 			}
 		}
@@ -989,6 +989,7 @@ class ftp_connection
 		if (strpos($response, '227 ') !== 0)
 		{
 			$this->error = 'bad_response';
+
 			return false;
 		}
 
@@ -996,6 +997,7 @@ class ftp_connection
 		if (preg_match('~\((\d+),\s*(\d+),\s*(\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))\)~', $response, $match) == 0)
 		{
 			$this->error = 'bad_response';
+
 			return false;
 		}
 
@@ -1030,6 +1032,7 @@ class ftp_connection
 		{
 			$this->error = 'bad_file';
 			@fclose($fp);
+
 			return false;
 		}
 
@@ -1038,6 +1041,7 @@ class ftp_connection
 		if (!$this->check_response(226))
 		{
 			$this->error = 'bad_response';
+
 			return false;
 		}
 
@@ -1070,6 +1074,7 @@ class ftp_connection
 		{
 			$this->error = 'bad_response';
 			@fclose($fp);
+
 			return false;
 		}
 
@@ -1083,6 +1088,7 @@ class ftp_connection
 		if (!$this->check_response(226))
 		{
 			$this->error = 'bad_response';
+
 			return false;
 		}
 
@@ -1153,6 +1159,7 @@ class ftp_connection
 		if (!$this->check_response(257))
 		{
 			$this->error = 'bad_file';
+
 			return false;
 		}
 

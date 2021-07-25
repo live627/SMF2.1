@@ -137,7 +137,6 @@ function UnapprovedPosts()
 			// If it's not within what our view is ignore it...
 			if (($row['id_msg'] == $row['id_first_msg'] && $context['current_view'] != 'topics') || ($row['id_msg'] != $row['id_first_msg'] && $context['current_view'] != 'replies'))
 				continue;
-
 			$can_add = false;
 			// If we're approving this is simple.
 			if ($curAction == 'approve' && ($any_array == array(0) || in_array($row['id_board'], $any_array)))

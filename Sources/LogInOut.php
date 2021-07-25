@@ -32,8 +32,8 @@ function Login()
 	// You are already logged in, go take a tour of the boards
 	if (!empty($user_info['id']))
 	{
- 		// This came from a valid hashed return url.  Or something that knows our secrets...
- 		if (!empty($_REQUEST['return_hash']) && !empty($_REQUEST['return_to']) && hash_hmac('sha1', un_htmlspecialchars($_REQUEST['return_to']), get_auth_secret()) == $_REQUEST['return_hash'])
+		// This came from a valid hashed return url.  Or something that knows our secrets...
+		if (!empty($_REQUEST['return_hash']) && !empty($_REQUEST['return_to']) && hash_hmac('sha1', un_htmlspecialchars($_REQUEST['return_to']), get_auth_secret()) == $_REQUEST['return_hash'])
 			redirectexit(un_htmlspecialchars($_REQUEST['return_to']));
 		else
 			redirectexit();
@@ -260,6 +260,7 @@ function Login2()
 	if (!isset($_POST['user']) || $_POST['user'] == '')
 	{
 		$context['login_errors'] = array($txt['need_username']);
+
 		return;
 	}
 
@@ -267,6 +268,7 @@ function Login2()
 	if (!isset($_POST['passwrd']) || $_POST['passwrd'] == '')
 	{
 		$context['login_errors'] = array($txt['no_password']);
+
 		return;
 	}
 
@@ -274,6 +276,7 @@ function Login2()
 	if (preg_match('~[<>&"\'=\\\]~', preg_replace('~(&#(\\d{1,7}|x[0-9a-fA-F]{1,6});)~', '', $_POST['user'])) != 0)
 	{
 		$context['login_errors'] = array($txt['error_invalid_characters_username']);
+
 		return;
 	}
 
@@ -288,6 +291,7 @@ function Login2()
 	if (in_array('retry', call_integration_hook('integrate_validate_login', array($_POST['user'], isset($_POST['passwrd']) ? $_POST['passwrd'] : null, $modSettings['cookieTime'])), true))
 	{
 		$context['login_errors'] = array($txt['incorrect_password']);
+
 		return;
 	}
 
@@ -323,6 +327,7 @@ function Login2()
 	if ($smcFunc['db_num_rows']($request) == 0)
 	{
 		$context['login_errors'] = array($txt['username_no_exist']);
+
 		return;
 	}
 
@@ -449,6 +454,7 @@ function Login2()
 				log_error($txt['incorrect_password'] . ' - <span class="remove">' . $user_settings['member_name'] . '</span>', 'user');
 
 				$context['login_errors'] = array($txt['incorrect_password']);
+
 				return;
 			}
 		}
@@ -598,10 +604,11 @@ function checkActivation()
 	if ($activation_status == 5)
 	{
 		$context['login_errors'][] = $txt['coppa_no_consent'] . ' <a href="' . $scripturl . '?action=coppa;member=' . $user_settings['id_member'] . '">' . $txt['coppa_need_more_details'] . '</a>';
+
 		return false;
 	}
 	// Awaiting approval still?
-	elseif ($activation_status == 3)
+	if ($activation_status == 3)
 		fatal_lang_error('still_awaiting_approval', 'user');
 	// Awaiting deletion, changed their mind?
 	elseif ($activation_status == 4)
@@ -616,6 +623,7 @@ function checkActivation()
 			$context['disable_login_hashing'] = true;
 			$context['login_errors'][] = $txt['awaiting_delete_account'];
 			$context['login_show_undelete'] = true;
+
 			return false;
 		}
 	}
@@ -625,8 +633,10 @@ function checkActivation()
 		log_error($txt['activate_not_completed1'] . ' - <span class="remove">' . $user_settings['member_name'] . '</span>', false);
 
 		$context['login_errors'][] = $txt['activate_not_completed1'] . ' <a href="' . $scripturl . '?action=activate;sa=resend;u=' . $user_settings['id_member'] . '">' . $txt['activate_not_completed2'] . '</a>';
+
 		return false;
 	}
+
 	return true;
 }
 
@@ -830,6 +840,7 @@ function Logout($internal = false, $redirect = true)
 function md5_hmac($data, $key)
 {
 	$key = str_pad(strlen($key) <= 64 ? $key : pack('H*', md5($key)), 64, chr(0x00));
+
 	return md5(($key ^ str_repeat(chr(0x5c), 64)) . pack('H*', md5(($key ^ str_repeat(chr(0x36), 64)) . $data)));
 }
 
@@ -855,7 +866,7 @@ function phpBB3_password_check($passwd, $passwd_hash)
 	$salt = substr($passwd_hash, 4, 8);
 
 	$hash = md5($salt . $passwd, true);
-	for (; $count != 0; --$count)
+	for (; $count != 0; $count--)
 		$hash = md5($hash . $passwd, true);
 
 	$output = substr($passwd_hash, 0, 12);
@@ -955,7 +966,6 @@ function validatePasswordFlood($id_member, $member_name, $password_flood_value =
 
 	// Otherwise set the members data. If they correct on their first attempt then we actually clear it, otherwise we set it!
 	updateMemberData($id_member, array('passwd_flood' => $was_correct && $number_tries == 1 ? '' : $time_stamp . '|' . $number_tries));
-
 }
 
 ?>

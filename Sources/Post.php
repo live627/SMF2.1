@@ -305,6 +305,7 @@ function Post($post_errors = array())
 			if ((empty($id_member_poster) || $id_member_poster != $user_info['id'] || !allowedTo('modify_own')) && !allowedTo('modify_any'))
 			{
 				require_once($sourcedir . '/Calendar.php');
+
 				return CalendarPost();
 			}
 
@@ -362,6 +363,7 @@ function Post($post_errors = array())
 				{
 					$context['event']['tz'] = $possible_tzid;
 					$found = true;
+
 					break;
 				}
 			}
@@ -490,7 +492,6 @@ function Post($post_errors = array())
 			{
 				if (trim($option) == '')
 					continue;
-
 				$context['choices'][] = array(
 					'id' => $choice_id++,
 					'number' => $choice_id,
@@ -610,7 +611,7 @@ function Post($post_errors = array())
 			if ($row['id_member'] == $user_info['id'] && !allowedTo('modify_any'))
 			{
 				// Give an extra five minutes over the disable time threshold, so they can type - assuming the post is public.
-				if ($row['approved'] && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
+				if ($row['approved'] && !empty($modSettings['edit_disable_time']) && time() > $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60)
 					fatal_lang_error('modify_post_time_passed', false);
 				elseif ($row['id_member_poster'] == $user_info['id'] && !allowedTo('modify_own'))
 					isAllowedTo('modify_replies');
@@ -727,7 +728,7 @@ function Post($post_errors = array())
 		if ($row['id_member'] == $user_info['id'] && !allowedTo('modify_any'))
 		{
 			// Give an extra five minutes over the disable time threshold, so they can type - assuming the post is public.
-			if ($row['approved'] && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
+			if ($row['approved'] && !empty($modSettings['edit_disable_time']) && time() > $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60)
 				fatal_lang_error('modify_post_time_passed', false);
 			elseif ($row['id_member_poster'] == $user_info['id'] && !allowedTo('modify_own'))
 				isAllowedTo('modify_replies');
@@ -944,12 +945,12 @@ function Post($post_errors = array())
 					{
 						if (strpos($attachID, 'post_tmp_' . $user_info['id']) === false)
 							continue;
-
 						if (file_exists($attachment['tmp_name']))
 						{
 							$post_errors[] = 'temp_attachments_new';
 							$context['files_in_session_warning'] = $txt['attached_files_in_session'];
 							unset($_SESSION['temp_attachments']['post']['files']);
+
 							break;
 						}
 					}
@@ -997,12 +998,12 @@ function Post($post_errors = array())
 
 				if ($attachID != 'initial_error' && strpos($attachID, 'post_tmp_' . $user_info['id']) === false)
 					continue;
-
 				if ($attachID == 'initial_error')
 				{
 					$txt['error_attach_initial_error'] = $txt['attach_no_upload'] . '<div style="padding: 0 1em;">' . (is_array($attachment) ? vsprintf($txt[$attachment[0]], $attachment[1]) : $txt[$attachment]) . '</div>';
 					$post_errors[] = 'attach_initial_error';
 					unset($_SESSION['temp_attachments']);
+
 					break;
 				}
 
@@ -1020,6 +1021,7 @@ function Post($post_errors = array())
 					unset($_SESSION['temp_attachments'][$attachID]);
 					if (file_exists($attachment['tmp_name']))
 						unlink($attachment['tmp_name']);
+
 					continue;
 				}
 
@@ -1027,6 +1029,7 @@ function Post($post_errors = array())
 				if (!file_exists($attachment['tmp_name']))
 				{
 					unset($_SESSION['temp_attachments'][$attachID]);
+
 					continue;
 				}
 
@@ -1195,6 +1198,7 @@ function Post($post_errors = array())
 			{
 				// if found we are done
 				$context['icon'] = 'poll';
+
 				break;
 			}
 		}
@@ -1632,7 +1636,6 @@ function Post2()
 			{
 				if ((isset($_SESSION['temp_attachments']['post']['files'], $attachment['name']) && in_array($attachment['name'], $_SESSION['temp_attachments']['post']['files'])) || in_array($attachID, $keep_temp) || strpos($attachID, 'post_tmp_' . $user_info['id']) === false)
 					continue;
-
 				unset($_SESSION['temp_attachments'][$attachID]);
 				unlink($attachment['tmp_name']);
 			}
@@ -1782,6 +1785,7 @@ function Post2()
 		if (!empty($modSettings['drafts_post_enabled']) && isset($_POST['save_draft']))
 		{
 			SaveDraft($post_errors);
+
 			return Post();
 		}
 
@@ -1789,6 +1793,7 @@ function Post2()
 		if (empty($options['no_new_reply_warning']) && isset($_POST['last_msg']) && $topic_info['id_last_msg'] > $_POST['last_msg'])
 		{
 			$_REQUEST['preview'] = true;
+
 			return Post();
 		}
 
@@ -1829,6 +1834,7 @@ function Post2()
 		if (!empty($modSettings['drafts_post_enabled']) && isset($_POST['save_draft']))
 		{
 			SaveDraft($post_errors);
+
 			return Post();
 		}
 
@@ -1899,7 +1905,7 @@ function Post2()
 
 		if ($row['id_member'] == $user_info['id'] && !allowedTo('modify_any'))
 		{
-			if ((!$modSettings['postmod_active'] || $row['approved']) && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
+			if ((!$modSettings['postmod_active'] || $row['approved']) && !empty($modSettings['edit_disable_time']) && time() > $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60)
 				fatal_lang_error('modify_post_time_passed', false);
 			elseif ($topic_info['id_member_started'] == $user_info['id'] && !allowedTo('modify_own'))
 				isAllowedTo('modify_replies');
@@ -1926,6 +1932,7 @@ function Post2()
 		if (!empty($modSettings['drafts_post_enabled']) && isset($_POST['save_draft']))
 		{
 			SaveDraft($post_errors);
+
 			return Post();
 		}
 
@@ -2001,7 +2008,7 @@ function Post2()
 		$post_errors[] = 'no_subject';
 	if (!isset($_POST['message']) || $smcFunc['htmltrim']($smcFunc['htmlspecialchars']($_POST['message']), ENT_QUOTES) === '')
 		$post_errors[] = 'no_message';
-	elseif (!empty($modSettings['max_messageLength']) && $smcFunc['strlen']($_POST['message']) > $modSettings['max_messageLength'])
+	elseif (!empty($modSettings['max_messageLength']) && $modSettings['max_messageLength'] < $smcFunc['strlen']($_POST['message']))
 		$post_errors[] = array('long_message', array($modSettings['max_messageLength']));
 	else
 	{
@@ -2016,7 +2023,6 @@ function Post2()
 		// Let's see if there's still some content left without the tags.
 		if ($smcFunc['htmltrim'](strip_tags(parse_bbc($_POST['message'], false), implode('', $context['allowed_html_tags']))) === '' && (!allowedTo('bbc_html') || strpos($_POST['message'], '[html]') === false))
 			$post_errors[] = 'no_message';
-
 	}
 	if (isset($_POST['calendar']) && !isset($_REQUEST['deleteevent']) && $smcFunc['htmltrim']($_POST['evtitle']) === '')
 		$post_errors[] = 'no_event';
@@ -2071,7 +2077,7 @@ function Post2()
 		$_POST['email'] = $user_info['email'];
 	}
 
- 	call_integration_hook('integrate_post2_pre', array(&$post_errors));
+	call_integration_hook('integrate_post2_pre', array(&$post_errors));
 
 	// Any mistakes?
 	if (!empty($post_errors))
@@ -2091,6 +2097,7 @@ function Post2()
 			$post_errors[] = 'session_timeout';
 			unset ($_POST['preview'], $_REQUEST['xml']); // just in case
 		}
+
 		return Post($post_errors);
 	}
 
@@ -2173,7 +2180,6 @@ function Post2()
 		{
 			if ($attachID != 'initial_error' && strpos($attachID, 'post_tmp_' . $user_info['id']) === false)
 				continue;
-
 			// If there was an initial error just show that message.
 			if ($attachID == 'initial_error')
 			{
@@ -2181,6 +2187,7 @@ function Post2()
 				$attach_errors[] = '<dd>' . (is_array($attachment) ? vsprintf($txt[$attachment[0]], $attachment[1]) : $txt[$attachment]) . '</dd>';
 
 				unset($_SESSION['temp_attachments']);
+
 				break;
 			}
 
@@ -2718,7 +2725,6 @@ function AnnouncementSend()
 		// Force them to have it?
 		if (empty($prefs[$row['id_member']]['announcements']))
 			continue;
-
 		$cur_language = empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'];
 
 		// If the language wasn't defined yet, load it and compose a notification message.
@@ -2755,7 +2761,6 @@ function AnnouncementSend()
 
 			sendmail($member_email, $mail['subject'], $body, null, null, false, 5);
 		}
-
 	}
 
 	$context['percentage_done'] = round(100 * $context['start'] / $modSettings['latestMember'], 1);
@@ -2812,7 +2817,7 @@ function getTopic()
 		censorText($row['body']);
 		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
 
-	 	call_integration_hook('integrate_getTopic_previous_post', array(&$row));
+		call_integration_hook('integrate_getTopic_previous_post', array(&$row));
 
 		// ...and store.
 		$context['previous_posts'][] = array(
@@ -2991,7 +2996,7 @@ function JavaScriptModify()
 
 		if ($row['id_member'] == $user_info['id'] && !allowedTo('modify_any'))
 		{
-			if ((!$modSettings['postmod_active'] || $row['approved']) && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
+			if ((!$modSettings['postmod_active'] || $row['approved']) && !empty($modSettings['edit_disable_time']) && time() > $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60)
 				fatal_lang_error('modify_post_time_passed', false);
 			elseif ($row['id_member_started'] == $user_info['id'] && !allowedTo('modify_own'))
 				isAllowedTo('modify_replies');
@@ -3030,7 +3035,7 @@ function JavaScriptModify()
 			$post_errors[] = 'no_message';
 			unset($_POST['message']);
 		}
-		elseif (!empty($modSettings['max_messageLength']) && $smcFunc['strlen']($_POST['message']) > $modSettings['max_messageLength'])
+		elseif (!empty($modSettings['max_messageLength']) && $modSettings['max_messageLength'] < $smcFunc['strlen']($_POST['message']))
 		{
 			$post_errors[] = 'long_message';
 			unset($_POST['message']);
@@ -3049,7 +3054,7 @@ function JavaScriptModify()
 		}
 	}
 
- 	call_integration_hook('integrate_post_JavascriptModify', array(&$post_errors, $row));
+	call_integration_hook('integrate_post_JavascriptModify', array(&$post_errors, $row));
 
 	if (isset($_POST['lock']))
 	{

@@ -441,7 +441,6 @@ function SplitSelectTopics()
 			{
 				if (empty($msg_array))
 					continue;
-
 				foreach ($msg_array as $id_msg)
 				{
 					$context['changes'][$change_type . $id_msg] = array(
@@ -1086,9 +1085,10 @@ function MergeExecute($topics = array())
 		if ($modSettings['postmod_active'] && !$row['approved'] && $can_approve_boards != array(0) && in_array($row['id_board'], $can_approve_boards))
 		{
 			unset($topics[$row['id_topic']]); // If we can't see it, we should not merge it and not adjust counts! Instead skip it.
+
 			continue;
 		}
-		elseif (!$row['approved'])
+		if (!$row['approved'])
 			$boardTotals[$row['id_board']]['unapproved_topics']++;
 		else
 			$boardTotals[$row['id_board']]['topics']++;
@@ -1180,7 +1180,7 @@ function MergeExecute($topics = array())
 		)
 	);
 	// If the number of boards that's in the output isn't exactly the same as we've put in there, you're in trouble.
-	if ($smcFunc['db_num_rows']($request) != count($boards))
+	if (count($boards) != $smcFunc['db_num_rows']($request))
 		fatal_lang_error('no_board');
 	$smcFunc['db_free_result']($request);
 
@@ -1240,6 +1240,7 @@ function MergeExecute($topics = array())
 
 		$context['page_title'] = $txt['merge'];
 		$context['sub_template'] = 'merge_extra_options';
+
 		return;
 	}
 

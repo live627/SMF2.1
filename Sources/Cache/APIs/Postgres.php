@@ -80,8 +80,6 @@ class Postgres extends CacheApi implements CacheApiInterface
 	/**
 	 * Stores a prepared SQL statement, ensuring that it's not done twice.
 	 *
-	 * @param array $stmtnames
-	 * @param array $queries
 	 */
 	private function prepareQueries(array $stmtnames, array $queries)
 	{

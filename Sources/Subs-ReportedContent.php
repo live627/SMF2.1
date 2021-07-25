@@ -648,6 +648,7 @@ function editModComment($comment_id, $edited_comment)
 			'id_comment' => $comment_id,
 		)
 	);
+
 	return true;
 }
 
@@ -671,7 +672,6 @@ function deleteModComment($comment_id)
 			'comment_id' => $comment_id,
 		)
 	);
-
 }
 
 ?>

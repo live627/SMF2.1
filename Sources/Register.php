@@ -486,7 +486,6 @@ function Register2()
 		// Not actually showing it then?
 		if (!$row['show_reg'])
 			continue;
-
 		// Prepare the value!
 		$value = isset($_POST['customfield'][$row['col_name']]) ? trim($_POST['customfield'][$row['col_name']]) : '';
 
@@ -528,6 +527,7 @@ function Register2()
 	{
 		$_REQUEST['step'] = 2;
 		$_SESSION['register']['limit'] = 5; // If they've filled in some details, they won't need the full 10 seconds of the limit.
+
 		return Register($reg_errors);
 	}
 
@@ -538,6 +538,7 @@ function Register2()
 	{
 		$reg_errors = array_merge($reg_errors, $memberID);
 		$_REQUEST['step'] = 2;
+
 		return Register($reg_errors);
 	}
 
@@ -847,7 +848,7 @@ function VerificationCode()
 	}
 
 	// Show a window that will play the verification code.
-	elseif (isset($_REQUEST['sound']))
+	if (isset($_REQUEST['sound']))
 	{
 		loadLanguage('Login');
 		loadTemplate('Register');

@@ -66,6 +66,7 @@ class Likes_Notify_Background extends SMF_BackgroundTask
 				if (!empty($result))
 				{
 					$author = $result;
+
 					break;
 				}
 		}

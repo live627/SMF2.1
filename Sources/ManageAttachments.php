@@ -507,7 +507,7 @@ function BrowseFiles()
 							return $smcFunc['htmlspecialchars']($rowData['poster_name']);
 
 						// Otherwise it must be an avatar, return the link to the owner of it.
-						else
+						
 							return sprintf('<a href="%1$s?action=profile;u=%2$d">%3$s</a>', $scripturl, $rowData['id_member'], $rowData['poster_name']);
 					},
 				),
@@ -1607,7 +1607,6 @@ function RepairAttachments()
 				{
 					if (in_array($file, array('.', '..', '.htaccess', 'index.php')))
 						continue;
-
 					if ($files_checked <= $current_check)
 					{
 						// Temporary file, get rid of it!
@@ -1682,7 +1681,6 @@ function RepairAttachments()
 	// What stage are we at?
 	$context['completed'] = $fix_errors ? true : false;
 	$context['errors_found'] = !empty($to_fix) ? true : false;
-
 }
 
 /**
@@ -1933,12 +1931,12 @@ function ManageAttachmentPaths()
 			$id = (int) $id;
 			if ($id < 1)
 				continue;
-
 			// Sorry, these dirs are NOT valid
 			$invalid_dirs = array($boarddir, $settings['default_theme_dir'], $sourcedir);
 			if (in_array($path, $invalid_dirs))
 			{
 				$errors[] = $path . ': ' . $txt['attach_dir_invalid'];
+
 				continue;
 			}
 
@@ -1950,9 +1948,10 @@ function ManageAttachmentPaths()
 				if (in_array($path, $modSettings['attachmentUploadDir']) || in_array($boarddir . DIRECTORY_SEPARATOR . $path, $modSettings['attachmentUploadDir']))
 				{
 					$errors[] = $path . ': ' . $txt['attach_dir_duplicate_msg'];
+
 					continue;
 				}
-				elseif (empty($path))
+				if (empty($path))
 				{
 					// Ignore this and set $id to one less
 					continue;
@@ -2063,7 +2062,6 @@ function ManageAttachmentPaths()
 
 					if (empty($error))
 						continue;
-					else
 						$errors[] = $error;
 				}
 			}
@@ -2101,6 +2099,7 @@ function ManageAttachmentPaths()
 						if (strpos($modSettings['attachmentUploadDir'][$_POST['current_dir']], $base . DIRECTORY_SEPARATOR) !== false)
 						{
 							$use_subdirectories_for_attachments = 1;
+
 							break;
 						}
 
@@ -2197,6 +2196,7 @@ function ManageAttachmentPaths()
 					if ($id == $_POST['current_base_dir'])
 					{
 						$errors[] = $modSettings['attachmentUploadDir'][$id] . ': ' . $txt['attach_dir_is_current'];
+
 						continue;
 					}
 
@@ -2578,7 +2578,7 @@ function attachDirStatus($dir, $expected_files)
 {
 	if (!is_dir($dir))
 		return array('does_not_exist', true, '');
-	elseif (!is_writable($dir))
+	if (!is_writable($dir))
 		return array('not_writable', true, '');
 
 	// Everything is okay so far, start to scan through the directory.
@@ -2589,7 +2589,6 @@ function attachDirStatus($dir, $expected_files)
 		// Now do we have a real file here?
 		if (in_array($file, array('.', '..', '.htaccess', 'index.php')))
 			continue;
-
 		$num_files++;
 	}
 	$dir_handle->close();
@@ -2597,10 +2596,10 @@ function attachDirStatus($dir, $expected_files)
 	if ($num_files < $expected_files)
 		return array('files_missing', true, $num_files);
 	// Empty?
-	elseif ($expected_files == 0)
+	if ($expected_files == 0)
 		return array('unused', false, $num_files);
 	// All good!
-	else
+	
 		return array('ok', false, $num_files);
 }
 
@@ -2719,10 +2718,11 @@ function TransferAttachments()
 			{
 				if (empty($current_progress))
 					$results[] = $txt['attachment_transfer_no_find'];
+
 				break;
 			}
 
-			if ($smcFunc['db_num_rows']($request) < $limit)
+			if ($limit > $smcFunc['db_num_rows']($request))
 				$break = true;
 
 			// Move them
@@ -2755,15 +2755,15 @@ function TransferAttachments()
 							$total_not_moved = 0;
 
 							$break = false;
+
 							break;
 						}
-						else
-						{
+						
 							// Hmm, not in auto. Time to bail out then...
 							$results[] = $txt['attachment_transfer_no_room'];
 							$break = true;
+
 							break;
-						}
 					}
 				}
 

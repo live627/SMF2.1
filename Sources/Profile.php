@@ -80,8 +80,8 @@ function ModifyProfile($post_errors = array())
 			SELECT COUNT(*)
 			FROM {db_prefix}subscriptions
 			WHERE active = {int:active}', array(
-				'active' => 1,
-			)
+			'active' => 1,
+		)
 		);
 
 		list ($num_subs) = $smcFunc['db_fetch_row']($get_active_subs);
@@ -1003,7 +1003,6 @@ function loadCustomFields($memID, $area = 'summary')
 		// Don't show the "disabled" option for the "gender" field if we are on the "summary" area.
 		if ($area == 'summary' && $row['col_name'] == 'cust_gender' && $value == 'None')
 			continue;
-
 		// HTML for the input form.
 		$output_html = $value;
 		if ($row['field_type'] == 'check')

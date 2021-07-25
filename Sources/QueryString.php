@@ -283,7 +283,6 @@ function cleanRequest()
 		// Ignore if this is not set.
 		if (!isset($_SERVER[$proxyIPheader]))
 			continue;
-
 		if (!empty($modSettings['proxy_ip_servers']))
 		{
 			foreach (explode(',', $modSettings['proxy_ip_servers']) as $proxy)
@@ -317,6 +316,7 @@ function cleanRequest()
 
 				// Otherwise, we've got an IP!
 				$_SERVER['BAN_CHECK_IP'] = trim($ip);
+
 				break;
 			}
 		}
@@ -415,7 +415,7 @@ function expandIPv6($addr, $strict_check = true)
 	// Quick check to make sure the length is as expected.
 	if (!$strict_check || strlen($result) == 39)
 		return $result;
-	else
+	
 		return false;
 }
 
@@ -446,12 +446,15 @@ function matchIPtoCIDR($ip_address, $cidr_address)
 				break;
 			case 1:
 				$binMask .= "8";
+
 				break;
 			case 2:
 				$binMask .= "c";
+
 				break;
 			case 3:
 				$binMask .= "e";
+
 				break;
 		}
 		$binMask = str_pad($binMask, 32, '0');
@@ -459,7 +462,7 @@ function matchIPtoCIDR($ip_address, $cidr_address)
 
 		return ($ip_address & $binMask) == $cidr_network;
 	}
-	else
+	
 		return (ip2long($ip_address) & (~((1 << (32 - $cidr_subnetmask)) - 1))) == ip2long($cidr_network);
 }
 

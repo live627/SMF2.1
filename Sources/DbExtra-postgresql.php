@@ -140,7 +140,7 @@ function smf_db_optimize_table($table)
 
 	if (isset($row['size']))
 		return ($old_size - $row['size']) / 1024;
-	else
+	
 		return 0;
 }
 
@@ -334,7 +334,7 @@ function smf_db_allow_persistent()
 	$value = ini_get('pgsql.allow_persistent');
 	if (strtolower($value) == 'on' || strtolower($value) == 'true' || $value == '1')
 		return true;
-	else
+	
 		return false;
 }
 

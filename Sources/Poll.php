@@ -394,7 +394,6 @@ function EditPoll()
 				// They cleared this by either omitting it or emptying it.
 				if (!isset($_POST['options'][$row['id_choice']]) || $_POST['options'][$row['id_choice']] == '')
 					continue;
-
 				censorText($row['label']);
 
 				// Add the choice!

@@ -127,7 +127,7 @@ class curl_fetch_web_data
 	public function __construct($options = array(), $max_redirect = 3)
 	{
 		// Initialize class variables
-		$this->max_redirect = intval($max_redirect);
+		$this->max_redirect = (int) $max_redirect;
 		$this->user_options = $options;
 	}
 
@@ -171,7 +171,7 @@ class curl_fetch_web_data
 		// we do have a url I hope
 		if ($url == '')
 			return false;
-		else
+		
 			$this->options[CURLOPT_URL] = $url;
 
 		// if we have not already been redirected, set it up so we can if needed
@@ -254,7 +254,7 @@ class curl_fetch_web_data
 		// just return a specifed area or the entire result?
 		if ($area == '')
 			return $this->response[$max_result];
-		else
+		
 			return isset($this->response[$max_result][$area]) ? $this->response[$max_result][$area] : $this->response[$max_result];
 	}
 
@@ -270,11 +270,10 @@ class curl_fetch_web_data
 	{
 		if (!is_numeric($response_number))
 			return $this->response;
-		else
-		{
+		
 			$response_number = min($response_number, count($this->response) - 1);
+
 			return $this->response[$response_number];
-		}
 	}
 
 	/**
@@ -297,7 +296,7 @@ class curl_fetch_web_data
 
 			return implode('&', $postvars);
 		}
-		else
+		
 			return $post_data;
 	}
 

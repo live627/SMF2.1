@@ -323,14 +323,12 @@ function adminLogin_outputPostVars($k, $v)
 	if (!is_array($v))
 		return '
 <input type="hidden" name="' . $smcFunc['htmlspecialchars']($k) . '" value="' . strtr($v, array('"' => '&quot;', '<' => '&lt;', '>' => '&gt;')) . '">';
-	else
-	{
+	
 		$ret = '';
 		foreach ($v as $k2 => $v2)
 			$ret .= adminLogin_outputPostVars($k . '[' . $k2 . ']', $v2);
 
 		return $ret;
-	}
 }
 
 /**
@@ -369,6 +367,7 @@ function construct_query_string($get)
 	}
 
 	$query_string = substr($query_string, 0, -1);
+
 	return $query_string;
 }
 
@@ -514,8 +513,8 @@ function JSMembers()
 		$context['links'] = array(
 			'first' => $_REQUEST['start'] >= 7 ? $base_url . ';start=0' : '',
 			'prev' => $_REQUEST['start'] >= 7 ? $base_url . ';start=' . ($_REQUEST['start'] - 7) : '',
-			'next' => $_REQUEST['start'] + 7 < $total_results ? $base_url . ';start=' . ($_REQUEST['start'] + 7) : '',
-			'last' => $_REQUEST['start'] + 7 < $total_results ? $base_url . ';start=' . (floor(($total_results - 1) / 7) * 7) : '',
+			'next' => $total_results > $_REQUEST['start'] + 7 ? $base_url . ';start=' . ($_REQUEST['start'] + 7) : '',
+			'last' => $total_results > $_REQUEST['start'] + 7 ? $base_url . ';start=' . (floor(($total_results - 1) / 7) * 7) : '',
 			'up' => $scripturl . '?action=pm;sa=send' . (empty($_REQUEST['u']) ? '' : ';u=' . $_REQUEST['u']),
 		);
 		$context['page_info'] = array(
@@ -684,7 +683,7 @@ function validateUsername($memID, $username, $return_error = false, $check_reser
 
 	if ($return_error)
 		return $errors;
-	elseif (empty($errors))
+	if (empty($errors))
 		return null;
 
 	loadLanguage('Errors');
@@ -721,7 +720,7 @@ function validatePassword($password, $username, $restrict_in = array())
 	// Otherwise, perform the medium strength test - checking if password appears in the restricted string.
 	if (preg_match('~\b' . preg_quote($password, '~') . '\b~', implode(' ', $restrict_in)) != 0)
 		return 'restricted_words';
-	elseif ($smcFunc['strpos']($password, $username) !== false)
+	if ($smcFunc['strpos']($password, $username) !== false)
 		return 'restricted_words';
 
 	// If just medium, we're done.
@@ -730,7 +729,7 @@ function validatePassword($password, $username, $restrict_in = array())
 
 	// Otherwise, hard test next, check for numbers and letters, uppercase too.
 	$good = preg_match('~(\D\d|\d\D)~', $password) != 0;
-	$good &= $smcFunc['strtolower']($password) != $password;
+	$good &= $password != $smcFunc['strtolower']($password);
 
 	return $good ? null : 'chars';
 }

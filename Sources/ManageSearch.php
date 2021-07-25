@@ -532,7 +532,7 @@ function CreateMessageIndex()
 		$context['step'] = isset($_REQUEST['step']) ? (int) $_REQUEST['step'] : 0;
 
 		// admin timeouts are painful when building these long indexes - but only if we actually have such things enabled
-		if (empty($modSettings['securityDisable']) && $_SESSION['admin_time'] + 3300 < time() && $context['step'] >= 1)
+		if (empty($modSettings['securityDisable']) && time() > $_SESSION['admin_time'] + 3300 && $context['step'] >= 1)
 			$_SESSION['admin_time'] = time();
 	}
 
@@ -622,6 +622,7 @@ function CreateMessageIndex()
 					if ($stop < time())
 					{
 						$forced_break = true;
+
 						break;
 					}
 
@@ -648,9 +649,10 @@ function CreateMessageIndex()
 				{
 					$context['step'] = 2;
 					$context['start'] = 0;
+
 					break;
 				}
-				else
+				
 					updateSettings(array('search_custom_index_resume' => $smcFunc['json_encode'](array_merge($context['index_settings'], array('resume_at' => $context['start'])))));
 			}
 
@@ -704,6 +706,7 @@ function CreateMessageIndex()
 				if ($context['start'] > $index_properties[$context['index_settings']['bytes_per_word']]['max_size'])
 				{
 					$context['step'] = 3;
+
 					break;
 				}
 			}
@@ -764,7 +767,6 @@ function loadSearchAPIs()
 					// No Support?  NEXT!
 					if (!$searchAPI->is_supported)
 						continue;
-
 					$apis[$index_name] = array(
 						'filename' => $file,
 						'setting_index' => $index_name,

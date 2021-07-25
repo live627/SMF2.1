@@ -161,7 +161,6 @@ function getEventRange($low_date, $high_date, $use_permissions = true)
 		// If the attached topic is not approved then for the moment pretend it doesn't exist
 		if (!empty($row['id_first_msg']) && $modSettings['postmod_active'] && !$row['approved'])
 			continue;
-
 		// Force a censor of the title - as often these are used by others.
 		censorText($row['title'], $use_permissions ? false : true);
 
@@ -174,7 +173,6 @@ function getEventRange($low_date, $high_date, $use_permissions = true)
 		// Sanity check
 		if (!empty($start['error_count']) || !empty($start['warning_count']) || !empty($end['error_count']) || !empty($end['warning_count']))
 			continue;
-
 		// Get set up for the loop
 		$start_object = date_create($row['start_date'] . (!$allday ? ' ' . $row['start_time'] : ''), $timezone_array[$tz]);
 		$end_object = date_create($row['end_date'] . (!$allday ? ' ' . $row['end_time'] : ''), $timezone_array[$tz]);
@@ -888,7 +886,6 @@ function loadDatePair($container, $date_class = '', $time_class = '')
 
 	addInlineJavaScript('
 	$("' . $container . '").datepair({' . $datepair_options . "\n\t});", true);
-
 }
 
 /**
@@ -982,7 +979,6 @@ function cache_getRecentEvents($eventOptions)
 			// No events today? Check the next day.
 			if (empty($cached_data['events'][$loop_date]))
 				continue;
-
 			// Loop through all events to add a few last-minute values.
 			foreach ($cached_data['events'][$loop_date] as $ev => $event)
 			{
@@ -993,9 +989,10 @@ function cache_getRecentEvents($eventOptions)
 				if (isset($duplicates[$this_event['topic'] . $this_event['title']]))
 				{
 					unset($cached_data['events'][$loop_date][$ev]);
+
 					continue;
 				}
-				else
+				
 					$duplicates[$this_event['topic'] . $this_event['title']] = true;
 
 				// Might be set to true afterwards, depending on the permissions.
@@ -1162,6 +1159,7 @@ function getEventPoster($event_id)
 	// Grab the results and return.
 	list ($poster) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
+
 	return (int) $poster;
 }
 

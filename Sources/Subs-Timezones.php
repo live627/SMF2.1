@@ -577,7 +577,6 @@ function get_tzid_metazones($when = 'now')
 		// Skip any that are unchanged.
 		if ($orig_tzid == $alt_tzid)
 			continue;
-
 		// Use fallback where possible.
 		if (!empty($alt_tzid))
 		{
@@ -1599,7 +1598,7 @@ function get_tzid_fallbacks($tzids, $when = 'now')
 {
 	$tzids = (array) $tzids;
 
-	$when = is_numeric($when) ? intval($when) : (is_int(@strtotime($when)) ? strtotime($when) : time());
+	$when = is_numeric($when) ? (int) $when : (is_int(@strtotime($when)) ? strtotime($when) : time());
 
 	// 'ts' is the timestamp when the substitution first becomes valid.
 	// 'tzid' is the alternative time zone identifier to use.

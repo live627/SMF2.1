@@ -313,7 +313,7 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 			// If we're going to overwrite then use change column.
 			if ($if_exists == 'update')
 				return $smcFunc['db_change_column']($table_name, $column_info['name'], $column_info);
-			else
+			
 				return false;
 		}
 
@@ -478,7 +478,7 @@ function smf_db_add_index($table_name, $index_info, $parameters = array(), $if_e
 			// If we want to overwrite simply remove the current one then continue.
 			if ($if_exists != 'update' || $index['type'] == 'primary')
 				return false;
-			else
+			
 				$smcFunc['db_remove_index']($table_name, $index_info['name']);
 		}
 	}

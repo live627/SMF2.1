@@ -188,6 +188,7 @@ function logLastDatabaseError()
 		else
 		{
 			@touch($boarddir . '/' . 'Settings.php');
+
 			return true;
 		}
 	}
@@ -295,6 +296,7 @@ function displayDebug()
 					if (strpos(trim($query_data['q']), $tmp) !== false)
 					{
 						$is_select = false;
+
 						break;
 					}
 			}
@@ -344,7 +346,7 @@ function trackStats($stats = array())
 		return false;
 	if (!empty($stats))
 		return $cache_stats = array_merge($cache_stats, $stats);
-	elseif (empty($cache_stats))
+	if (empty($cache_stats))
 		return false;
 
 	$setStringUpdate = '';
@@ -444,7 +446,6 @@ function logActions(array $logs)
 	{
 		if (!isset($log_types[$log['log_type']]) && (empty($modSettings[$log['log_type'] . 'log_enabled']) || !in_array($log['action'], $always_log)))
 			continue;
-
 		if (!is_array($log['extra']))
 		{
 			loadLanguage('Errors');
