@@ -644,7 +644,7 @@ function showProfileDrafts($memID, $draft_type = 0)
 			'quickbuttons' => array(
 				'edit' => array(
 					'label' => $txt['draft_edit'],
-					'href' => $scripturl.'?action=post;'.(empty($row['id_topic']) ? 'board='.$row['id_board'] : 'topic='.$row['id_topic']).'.0;id_draft='.$row['id_draft'],
+					'href' => $scripturl . '?action=post;' . (empty($row['id_topic']) ? 'board=' . $row['id_board'] : 'topic=' . $row['id_topic']) . '.0;id_draft=' . $row['id_draft'],
 					'icon' => 'modify_button'
 				),
 				'delete' => array(
@@ -837,7 +837,7 @@ function showPMDrafts($memID = -1)
 			'quickbuttons' => array(
 				'edit' => array(
 					'label' => $txt['draft_edit'],
-					'href' => $scripturl.'?action=pm;sa=showpmdrafts;id_draft='.$row['id_draft'].';'.$context['session_var'].'='.$context['session_id'],
+					'href' => $scripturl . '?action=pm;sa=showpmdrafts;id_draft=' . $row['id_draft'] . ';' . $context['session_var'] . '=' . $context['session_id'],
 					'icon' => 'modify_button'
 				),
 				'delete' => array(

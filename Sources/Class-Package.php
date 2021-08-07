@@ -905,7 +905,6 @@ class ftp_connection
 				$is_writable = true;
 				break;
 			}
-
 			else
 			{
 				// Convert the chmod value from octal (0777) to text ("777").

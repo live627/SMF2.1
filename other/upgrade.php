@@ -539,7 +539,7 @@ function load_lang_file()
 		$to = explode('/', $lang_dir);
 		$relPath = $to;
 
-		foreach($from as $depth => $dir)
+		foreach ($from as $depth => $dir)
 		{
 			if ($dir === $to[$depth])
 				array_shift($relPath);

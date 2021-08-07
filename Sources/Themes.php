@@ -1289,7 +1289,6 @@ function InstallFile()
 		// return all the info.
 		return $context['to_install'];
 	}
-
 	else
 		fatal_lang_error('theme_install_error_title', false);
 }

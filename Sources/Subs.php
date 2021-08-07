@@ -280,7 +280,6 @@ function updateMemberData($members, $data)
 		$condition = 'id_member IN ({array_int:members})';
 		$parameters['members'] = $members;
 	}
-
 	elseif ($members === null)
 		$condition = '1=1';
 
@@ -378,16 +377,14 @@ function updateMemberData($members, $data)
 			{
 				$val = 'CASE ';
 				foreach ($members as $k => $v)
-					$val .= 'WHEN id_member = ' . $v . ' THEN '. alert_count($v, true) . ' ';
+					$val .= 'WHEN id_member = ' . $v . ' THEN ' . alert_count($v, true) . ' ';
 
 				$val = $val . ' END';
 				$type = 'raw';
 			}
-
 			else
 				$val = alert_count($members, true);
 		}
-
 		elseif ($type == 'int' && ($val === '+' || $val === '-'))
 		{
 			$val = $var . ' ' . $val . ' 1';
@@ -1045,11 +1042,11 @@ function get_date_or_time_format($type = '', $format = '')
 			// Anything that isn't a specification, punctuation mark, or whitespace.
 			'~(?<!%)\p{L}|[^\p{L}\p{P}\s]~u',
 			// A series of punctuation marks (except %), possibly separated by whitespace.
-			'~([^%\P{P}])(\s*)(?'.'>(\1|[^%\P{Po}])\s*(?!$))*~u',
+			'~([^%\P{P}])(\s*)(?' . '>(\1|[^%\P{Po}])\s*(?!$))*~u',
 			// Unwanted trailing punctuation and whitespace.
-			'~(?'.'>([\p{Pd}\p{Ps}\p{Pi}\p{Pc}]|[^%\P{Po}])\s*)*$~u',
+			'~(?' . '>([\p{Pd}\p{Ps}\p{Pi}\p{Pc}]|[^%\P{Po}])\s*)*$~u',
 			// Unwanted opening punctuation and whitespace.
-			'~^\s*(?'.'>([\p{Pd}\p{Pe}\p{Pf}\p{Pc}]|[^%\P{Po}])\s*)*~u',
+			'~^\s*(?' . '>([\p{Pd}\p{Pe}\p{Pf}\p{Pc}]|[^%\P{Po}])\s*)*~u',
 		),
 		array(
 			'',
@@ -1466,7 +1463,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 							$width = 'max-width:100%; width: ' . (!empty($params['{width}']) ? $params['{width}'] : '400') . 'px;';
 							$height = !empty($params['{height}']) ? 'height: ' . $params['{height}'] . 'px;' : '';
 
-							$returnContext .= (!empty($data) && $data != $currentAttachment['name'] ? $data . ' ' : '') . '<audio controls preload="none" src="'. $currentAttachment['href'] . '" class="bbc_audio" style="vertical-align:middle;' . $width . $height . '"><a href="' . $currentAttachment['href'] . '" class="bbc_link">' . $smcFunc['htmlspecialchars'](!empty($data) ? $data : $currentAttachment['name']) . '</a></audio>';
+							$returnContext .= (!empty($data) && $data != $currentAttachment['name'] ? $data . ' ' : '') . '<audio controls preload="none" src="' . $currentAttachment['href'] . '" class="bbc_audio" style="vertical-align:middle;' . $width . $height . '"><a href="' . $currentAttachment['href'] . '" class="bbc_link">' . $smcFunc['htmlspecialchars'](!empty($data) ? $data : $currentAttachment['name']) . '</a></audio>';
 						}
 						// Anything else.
 						else
@@ -1635,7 +1632,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'type' => 'unparsed_commas_content',
 				'test' => '\d+,\d+\]',
 				'content' => '<a href="$1" target="_blank" rel="noopener">$1</a>',
-				'validate' => function (&$tag, &$data, $disabled)
+				'validate' => function(&$tag, &$data, $disabled)
 				{
 					$scheme = parse_url($data[0], PHP_URL_SCHEME);
 					if (empty($scheme))
@@ -2166,12 +2163,22 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 		$codes[] = array(
 			'tag' => 'cowsay',
 			'parameters' => array(
-				'e' => array('optional' => true, 'quoted' => true, 'match' => '(.*?)', 'default' => 'oo', 'validate' => function ($eyes) use ($smcFunc)
+				'e' => array(
+					'optional' => true,
+					'quoted' => true,
+					'match' => '(.*?)',
+					'default' => 'oo',
+					'validate' => function($eyes) use ($smcFunc)
 					{
 						return $smcFunc['substr']($eyes . 'oo', 0, 2);
 					},
 				),
-				't' => array('optional' => true, 'quoted' => true, 'match' => '(.*?)', 'default' => '  ', 'validate' => function ($tongue) use ($smcFunc)
+				't' => array(
+					'optional' => true,
+					'quoted' => true,
+					'match' => '(.*?)',
+					'default' => '  ',
+					'validate' => function($tongue) use ($smcFunc)
 					{
 						return $smcFunc['substr']($tongue . '  ', 0, 2);
 					},
@@ -3843,7 +3850,7 @@ function url_image_size($url)
 		if ($fp != false)
 		{
 			// Send the HEAD request (since we don't have to worry about chunked, HTTP/1.1 is fine here.)
-			fwrite($fp, 'HEAD /' . $match[2] . ' HTTP/1.1' . "\r\n" . 'Host: ' . $match[1] . "\r\n" . 'user-agent: '. SMF_USER_AGENT . "\r\n" . 'Connection: close' . "\r\n\r\n");
+			fwrite($fp, 'HEAD /' . $match[2] . ' HTTP/1.1' . "\r\n" . 'Host: ' . $match[1] . "\r\n" . 'user-agent: ' . SMF_USER_AGENT . "\r\n" . 'Connection: close' . "\r\n\r\n");
 
 			// Read in the HTTP/1.1 or whatever.
 			$test = substr(fgets($fp, 11), -1);
@@ -4358,7 +4365,6 @@ function template_javascript($do_deferred = false)
 				if (!isset($minSeed) && isset($js_file['options']['seed']))
 					$minSeed = $js_file['options']['seed'];
 			}
-
 			else
 			{
 				echo '
@@ -5741,7 +5747,7 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 			{
 				fwrite($fp, 'GET ' . ($match[6] !== '/' ? str_replace(' ', '%20', $match[6]) : '') . ' HTTP/1.0' . "\r\n");
 				fwrite($fp, 'Host: ' . $match[3] . (empty($match[5]) ? ($match[2] ? ':443' : '') : ':' . $match[5]) . "\r\n");
-				fwrite($fp, 'user-agent: '. SMF_USER_AGENT . "\r\n");
+				fwrite($fp, 'user-agent: ' . SMF_USER_AGENT . "\r\n");
 				if ($keep_alive)
 					fwrite($fp, 'connection: Keep-Alive' . "\r\n\r\n");
 				else
@@ -5751,7 +5757,7 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 			{
 				fwrite($fp, 'POST ' . ($match[6] !== '/' ? $match[6] : '') . ' HTTP/1.0' . "\r\n");
 				fwrite($fp, 'Host: ' . $match[3] . (empty($match[5]) ? ($match[2] ? ':443' : '') : ':' . $match[5]) . "\r\n");
-				fwrite($fp, 'user-agent: '. SMF_USER_AGENT . "\r\n");
+				fwrite($fp, 'user-agent: ' . SMF_USER_AGENT . "\r\n");
 				if ($keep_alive)
 					fwrite($fp, 'connection: Keep-Alive' . "\r\n");
 				else
@@ -6184,10 +6190,11 @@ function get_gravatar_url($email_address)
 		if (!empty($modSettings['gravatarDefault']) && in_array($modSettings['gravatarDefault'], $defaults))
 			$url_params[] = 'default=' . $modSettings['gravatarDefault'];
 		if (!empty($modSettings['avatar_max_width_external']))
+		{
 			$size_string = (int) $modSettings['avatar_max_width_external'];
-		if (!empty($modSettings['avatar_max_height_external']) && !empty($size_string))
-			if ((int) $modSettings['avatar_max_height_external'] < $size_string)
-				$size_string = $modSettings['avatar_max_height_external'];
+			if (!empty($modSettings['avatar_max_height_external']))
+				$size_string = min($size_string, $modSettings['avatar_max_height_external']);
+		}
 
 		if (!empty($size_string))
 			$url_params[] = 's=' . $size_string;
@@ -6792,7 +6799,6 @@ function smf_chmod($file, $value = 0)
 			$isWritable = true;
 			break;
 		}
-
 		else
 			@chmod($file, $val);
 	}
@@ -7364,7 +7370,7 @@ function build_query_board($userid)
 			EXISTS (
 				SELECT bpv.id_board
 				FROM ' . $db_prefix . 'board_permissions_view AS bpv
-				WHERE bpv.id_group IN ('. implode(',', $groups) .')
+				WHERE bpv.id_group IN ('. implode(',', $groups) . ')
 					AND bpv.deny = 0
 					AND bpv.id_board = b.id_board
 			)';
@@ -7374,7 +7380,7 @@ function build_query_board($userid)
 			AND NOT EXISTS (
 				SELECT bpv.id_board
 				FROM ' . $db_prefix . 'board_permissions_view AS bpv
-				WHERE bpv.id_group IN ( '. implode(',', $groups) .')
+				WHERE bpv.id_group IN ( '. implode(',', $groups) . ')
 					AND bpv.deny = 1
 					AND bpv.id_board = b.id_board
 			)';
@@ -7683,8 +7689,8 @@ function sentence_list($list)
 	$i = 0;
 	while (empty($done))
 	{
-		if (strpos($format, '{'. --$i . '}') !== false)
-			$replacements['{'. $i . '}'] = array_pop($list);
+		if (strpos($format, '{' . --$i . '}') !== false)
+			$replacements['{' . $i . '}'] = array_pop($list);
 		else
 			$done = true;
 	}
@@ -7694,8 +7700,8 @@ function sentence_list($list)
 	$i = 0;
 	while (empty($done))
 	{
-		if (strpos($format, '{'. ++$i . '}') !== false)
-			$replacements['{'. $i . '}'] = array_shift($list);
+		if (strpos($format, '{' . ++$i . '}') !== false)
+			$replacements['{' . $i . '}'] = array_shift($list);
 		else
 			$done = true;
 	}
@@ -7771,6 +7777,7 @@ function array_length($array, $deep = 3)
 
 			$length += array_length($value, $deep_count);
 		}
+
 		else
 			$length += strlen($value);
 	}

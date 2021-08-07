@@ -1253,7 +1253,6 @@ RemoveHandler .php .php3 .phtml .cgi .fcgi .pl .fpl .shtml';
 
 			continue;
 		}
-
 		else
 		{
 			$fh = @fopen($path . '/.htaccess', 'w');
@@ -1265,7 +1264,6 @@ RemoveHandler .php .php3 .phtml .cgi .fcgi .pl .fpl .shtml';
 	Deny from all' . $close);
 				fclose($fh);
 			}
-
 			else
 				$errors[] = 'htaccess_cannot_create_file';
 		}
@@ -1276,7 +1274,6 @@ RemoveHandler .php .php3 .phtml .cgi .fcgi .pl .fpl .shtml';
 
 			continue;
 		}
-
 		else
 		{
 			$fh = @fopen($path . '/index.php', 'w');
@@ -1303,7 +1300,6 @@ else
 ?' . '>');
 				fclose($fh);
 			}
-
 			else
 				$errors[] = 'index-php_cannot_create_file';
 		}

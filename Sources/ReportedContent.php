@@ -100,7 +100,7 @@ function ReportedContent()
 				),
 				'close' => array(
 					'label' => $context['view_closed'] ? $txt['mc_reportedp_open'] : $txt['mc_reportedp_close'],
-					'href' => $scripturl.'?action=moderate;area=reported'.$context['report_type'].';sa=handle;closed='.(int)!$report['closed'].';rid='.$report['id'].';start='.$context['start'].';'.$context['session_var'].'='.$context['session_id'].';'.$context['mod-report-closed_token_var'].'='.$context['mod-report-closed_token'],
+					'href' => $scripturl . '?action=moderate;area=reported' . $context['report_type'] . ';sa=handle;closed=' . (int) !$report['closed'] . ';rid=' . $report['id'] . ';start=' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';' . $context['mod-report-closed_token_var'] . '=' . $context['mod-report-closed_token'],
 					'icon' => $context['view_closed'] ? 'folder' : 'close',
 				),
 			);
@@ -118,9 +118,9 @@ function ReportedContent()
 
 			// Ban reported member/post author link
 			if ($context['report_type'] == 'members')
-				$ban_link = $scripturl.'?action=admin;area=ban;sa=add;u='.$report['user']['id'].';'.$context['session_var'].'='.$context['session_id'];
+				$ban_link = $scripturl . '?action=admin;area=ban;sa=add;u=' . $report['user']['id'] . ';' . $context['session_var'] . '=' . $context['session_id'];
 			else
-				$ban_link = $scripturl.'?action=admin;area=ban;sa=add'.(!empty($report['author']['id']) ? ';u='.$report['author']['id'] : ';msg='.$report['topic']['id_msg']).';'.$context['session_var'].'='.$context['session_id'];
+				$ban_link = $scripturl . '?action=admin;area=ban;sa=add' . (!empty($report['author']['id']) ? ';u=' . $report['author']['id'] : ';msg=' . $report['topic']['id_msg']) . ';' . $context['session_var'] . '=' . $context['session_id'];
 
 			$context['reports'][$key]['quickbuttons'] += array(
 				'ban' => array(
@@ -131,7 +131,7 @@ function ReportedContent()
 				),
 				'quickmod' => array(
 					'class' => 'inline_mod_check',
-					'content' => '<input type="checkbox" name="close[]" value="'.$report['id'].'">',
+					'content' => '<input type="checkbox" name="close[]" value="' . $report['id'] . '">',
 					'show' => !$context['view_closed']
 				)
 			);

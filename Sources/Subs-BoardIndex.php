@@ -164,10 +164,6 @@ function getBoardIndex($board_index_options)
 		$ignoreThisBoard = in_array($row_board['id_board'], $user_info['ignoreboards']);
 		$row_board['is_read'] = !empty($row_board['is_read']) || $ignoreThisBoard ? '1' : '0';
 
-		// Add parent boards to the $boards list later used to fetch moderators
-		if ($row_board['id_parent'] == $board_index_options['parent_id'])
-			$boards[] = $row_board['id_board'];
-
 		if ($board_index_options['include_categories'])
 		{
 			// Haven't set this category yet.
@@ -223,6 +219,8 @@ function getBoardIndex($board_index_options)
 		// This is a parent board.
 		if ($row_board['id_parent'] == $board_index_options['parent_id'])
 		{
+			$boards[] = $row_board['id_board'];
+
 			// Is this a new board, or just another moderator?
 			if (!isset($this_category[$row_board['id_board']]['type']))
 			{
@@ -511,7 +509,6 @@ function getBoardIndex($board_index_options)
 					$board['last_post']['last_post_message'] = sprintf($txt['last_post_message'], $board['last_post']['member']['link'], $board['last_post']['link'], $board['last_post']['time'] > 0 ? timeformat($board['last_post']['time']) : $txt['not_applicable']);
 			}
 		}
-
 	else
 		foreach ($this_category as &$board)
 		{

@@ -467,13 +467,13 @@ function RecentPosts()
 		$context['posts'][$key]['quickbuttons'] = array(
 			'reply' => array(
 				'label' => $txt['reply'],
-				'href' => $scripturl.'?action=post;topic='.$post['topic'].'.'.$post['start'],
+				'href' => $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'],
 				'icon' => 'reply_button',
 				'show' => $post['can_reply']
 			),
 			'quote' => array(
 				'label' => $txt['quote_action'],
-				'href' => $scripturl.'?action=post;topic='.$post['topic'].'.'.$post['start'].';quote='.$post['id'],
+				'href' => $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'] . ';quote=' . $post['id'],
 				'icon' => 'quote',
 				'show' => $post['can_quote']
 			),
@@ -1286,7 +1286,6 @@ function UnreadTopics()
 			if (!empty($modSettings['enableAllMessages']) && $topic_length < $modSettings['enableAllMessages'])
 				$pages .= ' &nbsp;<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0;all">' . $txt['all'] . '</a>';
 		}
-
 		else
 			$pages = '';
 

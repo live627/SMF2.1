@@ -310,7 +310,6 @@ function html_to_bbc($text)
 					$replacement .= $precedingStyle . $extra_attr . $afterStyle;
 			}
 		}
-
 		elseif (preg_match('~</([A-Za-z]+)>~', $part, $matches) === 1)
 		{
 			// Is this the element that we've been waiting for to be closed?
@@ -570,7 +569,6 @@ function html_to_bbc($text)
 							$parts[$i + 2] = str_repeat("\t", $listDepth) . '[/list]';
 							$parts[$i + 3] = '';
 						}
-
 						else
 						{
 							// We're in a list item.
@@ -609,7 +607,6 @@ function html_to_bbc($text)
 							$parts[$i + 2] = '';
 							$parts[$i + 3] = '';
 						}
-
 						else
 						{
 							// Remove the trailing breaks from the list item.

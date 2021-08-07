@@ -393,18 +393,18 @@ function template_unapproved_posts()
 		$quickbuttons = array(
 			'approve' => array(
 				'label' => $txt['approve'],
-				'href' => $scripturl.'?action=moderate;area=postmod;sa='.$context['current_view'].';start='.$context['start'].';'.$context['session_var'].'='.$context['session_id'].';approve='.$item['id'],
+				'href' => $scripturl . '?action=moderate;area=postmod;sa=' . $context['current_view'] . ';start=' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';approve=' . $item['id'],
 				'icon' => 'approve',
 			),
 			'delete' => array(
 				'label' => $txt['remove'],
-				'href' => $scripturl.'?action=moderate;area=postmod;sa='.$context['current_view'].';start='.$context['start'].';'.$context['session_var'].'='.$context['session_id'].';delete='.$item['id'],
+				'href' => $scripturl . '?action=moderate;area=postmod;sa=' . $context['current_view'] . ';start=' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';delete=' . $item['id'],
 				'icon' => 'remove_button',
 				'show' => $item['can_delete']
 			),
 			'quickmod' => array(
 				'class' => 'inline_mod_check',
-				'content' => '<input type="checkbox" name="item[]" value="'.$item['id'].'" checked>',
+				'content' => '<input type="checkbox" name="item[]" value="' . $item['id'] . '" checked>',
 				'show' => !empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1
 			),
 		);

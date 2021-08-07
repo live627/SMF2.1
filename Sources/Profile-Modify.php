@@ -503,10 +503,12 @@ function loadProfileFields($force_reload = false)
 						loadLanguage('Errors', $language);
 						log_error(sprintf($txt['smiley_set_dir_not_found'], $set_names[array_search($set, $context['smiley_sets'])]));
 
-						$context['smiley_sets'] = array_filter($context['smiley_sets'], function($v) use ($set)
+						$context['smiley_sets'] = array_filter(
+							$context['smiley_sets'], function($v) use ($set)
 							{
 								return $v != $set;
-							});
+							}
+						);
 					}
 				}
 
@@ -2198,7 +2200,7 @@ function alert_configuration($memID, $defaultSettings = false)
 				$this_value = 0;
 				foreach ($context['alert_bits'] as $type => $bitvalue)
 				{
-					if ($this_options[$type] == 'yes' && !empty($_POST[$type . '_' . $item_key]) || $this_options[$type] == 'always')
+					if (($this_options[$type] == 'yes' && !empty($_POST[$type . '_' . $item_key])) || $this_options[$type] == 'always')
 						$this_value |= $bitvalue;
 				}
 
@@ -3513,7 +3515,6 @@ function profileSaveAvatarData(&$value)
 			}
 		}
 	}
-
 	elseif (($value == 'upload' && allowedTo('profile_upload_avatar')) || $downloadedExternalAvatar)
 	{
 		if ((isset($_FILES['attachment']['name']) && $_FILES['attachment']['name'] != '') || $downloadedExternalAvatar)
