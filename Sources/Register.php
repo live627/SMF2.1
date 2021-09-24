@@ -318,7 +318,7 @@ function Register2()
 		function (&$value, $key) use ($context, $smcFunc)
 		{
 			// Replace any kind of space with a normal space, and remove any kind of control character, then trim.
-			$value = $smcFunc['htmltrim'](preg_replace(array('~[\h\v]+~' . ($context['utf8'] ? 'u' : ''), '~\p{Cc}+~'), array(' ', ''), $value));
+			$value = $smcFunc['htmltrim'](preg_replace(array('~[\h\v]+~u', '~\p{Cc}+~'), array(' ', ''), $value));
 		}
 	);
 
