@@ -3663,7 +3663,7 @@ $request = upgrade_query("
 		WHERE id_member = 0
 		AND action IN ('policy_accepted', 'agreement_accepted')");
 
-// Fortunately they're in the extra field
+// Fortunately they are in the extra field
 while ($row = $smcFunc['db_fetch_assoc']($request))
 {
 	$extra = @unserialize($row['extra']);
@@ -3684,32 +3684,42 @@ while ($row = $smcFunc['db_fetch_assoc']($request))
 /******************************************************************************/
 --- Prepare indexes for mb4
 /******************************************************************************/
----# real_name column drop
+---# Real_name column drop
 ALTER TABLE {$db_prefix}members
 DROP INDEX idx_real_name;
 ---#
 
----# real_name column recreate
+---# Real_name column drop - old alt name
+ALTER TABLE {$db_prefix}members
+DROP INDEX real_name;
+---#
+
+---# Real_name column recreate
 ALTER TABLE {$db_prefix}members
 ADD INDEX idx_real_name (real_name(191));
 ---#
 
----# email column drop
+---# Email column drop
 ALTER TABLE {$db_prefix}members
 DROP INDEX idx_email_address;
 ---#
 
----# email column recreate
+---# Email column drop - old alt name
+ALTER TABLE {$db_prefix}members
+DROP INDEX email_address;
+---#
+
+---# Email column recreate
 ALTER TABLE {$db_prefix}members
 ADD INDEX idx_email_address (email_address(191));
 ---#
 
----# lngfile column drop
+---# Lngfile column drop
 ALTER TABLE {$db_prefix}qanda
 DROP INDEX idx_lngfile;
 ---#
 
----# lngfile column recreate
+---# Lngfile column recreate
 ALTER TABLE {$db_prefix}qanda
 ADD INDEX idx_lngfile (lngfile(191));
 ---#
