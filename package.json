@@ -1,0 +1,24 @@
+{
+  "type": "module",
+  "scripts": {
+    "lint": "eslint tests --color --fix",
+    "test": "c8 --reporter=html --reporter=text ava --color"
+  },
+  "ava": {
+    "files": [
+      "tests/*"
+    ],
+    "require": [
+      "./tests/_setup.cjs"
+    ]
+  },
+  "devDependencies": {
+    "ava": "^3.15.0",
+    "c8": "^7.9.0",
+    "eslint": "^7.32.0",
+    "jsdom": "^17.0.0"
+  },
+  "dependencies": {
+    "jquery": "^3.6.0"
+  }
+}
