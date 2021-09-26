@@ -1,0 +1,30 @@
+name: Node.js CI
+on:
+  push:
+    branches:
+      - jstest
+  pull_request:
+    branches:
+      - jstest
+env:
+  FORCE_COLOR: 1
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get npm cache directory
+      id: npm-cache-dir
+      run: |
+        echo "::set-output name=dir::$(npm root)"
+    - uses: actions/cache@v2
+      id: npm-cache
+      with:
+        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - if: steps.npm-cache.outputs.cache-hit != 'true'
+      run: npm ci
+    - run: npm run lint
+    - run: npm test
