@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 use browser_detector;
@@ -18,9 +20,6 @@ class BrowserDetectorTest extends BaseTestCase
 		$_SERVER['HTTP_USER_AGENT'] = '';
 	}
 
-	/**
-	 * @return string[][]
-	 */
 	public function data(): array
 	{
 		return [
@@ -134,8 +133,6 @@ class BrowserDetectorTest extends BaseTestCase
 
 	/**
 	 * @dataProvider data
-	 *
-	 * @return void
 	 */
 	public function test(string $userAgent, string $browser, string $browserVar): void
 	{

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 class PMTest extends BaseTestCase
@@ -23,8 +25,8 @@ class PMTest extends BaseTestCase
 				'email' => 'user@email.tld',
 				'password' => '',
 				'extra_register_vars' => [
-					'member_ip' => long2ip(rand(0, 2147483647)),
-					'member_ip2' => long2ip(rand(0, 2147483647)),
+					'member_ip' => long2ip(random_int(0, 2147483647)),
+					'member_ip2' => long2ip(random_int(0, 2147483647)),
 				],
 				'check_reserved_name' => true,
 				'check_password_strength' => true,
@@ -46,6 +48,7 @@ class PMTest extends BaseTestCase
 		global $membersTest;
 
 		$membersTest = [];
+
 		foreach ($this->options as $options)
 		{
 			$memID = registerMember($options, true);
@@ -83,7 +86,8 @@ class PMTest extends BaseTestCase
 		$_REQUEST['userspec'] = 'test';
 		$_REQUEST['search'] = 'great';
 		MessageSearch2();
-		$this->assertTrue(empty($context['search_errors']));
+		unset($_REQUEST['search'], $_REQUEST['userspec']);
+		$this->assertFalse(isset($context['search_errors']));
 		$this->assertNotEmpty($context['personal_messages']);
 	}
 
@@ -193,7 +197,8 @@ class PMTest extends BaseTestCase
 		$_REQUEST['userspec'] = 'test';
 		$_REQUEST['search'] = 'great';
 		MessageSearch2();
-		$this->assertTrue(empty($context['search_errors']));
+		unset($_REQUEST['search'], $_REQUEST['userspec']);
+		$this->assertFalse(isset($context['search_errors']));
 		$this->assertEmpty($context['personal_messages']);
 	}
 
@@ -245,7 +250,8 @@ class PMTest extends BaseTestCase
 		$_REQUEST['userspec'] = 'test';
 		$_REQUEST['search'] = 'great';
 		MessageSearch2();
-		$this->assertTrue(empty($context['search_errors']));
+		unset($_REQUEST['search'], $_REQUEST['userspec']);
+		$this->assertFalse(isset($context['search_errors']));
 		$this->assertCount(1, $context['personal_messages']);
 		$this->assertStringContainsString('great', $context['personal_messages'][0]['body']);
 	}

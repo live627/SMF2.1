@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 use Punycode as Punycode;
 
 class PunycodeTest extends BaseTestCase
 {
-
 	public function setUp() : void
 	{
 		global $sourcedir, $user_info;
@@ -23,7 +24,6 @@ class PunycodeTest extends BaseTestCase
 	 *
 	 * @dataProvider domainNamesProvider
 	 *
-	 * @return void
 	 */
 	public function testEncode($decoded, $encoded): void
 	{
@@ -41,7 +41,6 @@ class PunycodeTest extends BaseTestCase
 	 *
 	 * @dataProvider domainNamesProvider
 	 *
-	 * @return void
 	 */
 	public function testDecode($decoded, $encoded): void
 	{
@@ -59,7 +58,6 @@ class PunycodeTest extends BaseTestCase
 	 *
 	 * @dataProvider domainNamesProvider
 	 *
-	 * @return void
 	 */
 	public function testEncodeUppercase($decoded, $encoded): void
 	{
@@ -77,7 +75,6 @@ class PunycodeTest extends BaseTestCase
 	 *
 	 * @dataProvider domainNamesProvider
 	 *
-	 * @return void
 	 */
 	public function testDecodeUppercase($decoded, $encoded): void
 	{
@@ -173,7 +170,7 @@ class PunycodeTest extends BaseTestCase
 			],
 			[
 				'άέήίΰαβγδεζηθικλμνξοπρσστυφχ.com',
-				'xn--hxacdefghijklmnopqrstuvw0caz0a1a2a.com',
+				'xn--lsan50ceafgqijklmnopqrstuvwx2ca0afw3a4a.com',
 			],
 		];
 	}
