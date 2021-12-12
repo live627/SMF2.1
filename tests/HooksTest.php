@@ -1,12 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 class HooksTest extends BaseTestCase
 {
-	/**
-	 * @return array
-	 */
+	public function setUp(): void
+	{
+		global $sourcedir;
+
+		require_once($sourcedir . '/ManageMaintenance.php');
+	}
+
 	public function integrationProvider(): array
 	{
 		return [
@@ -33,8 +39,6 @@ class HooksTest extends BaseTestCase
 
 	/**
 	 * @dataProvider integrationProvider
-	 *
-	 * @return void
 	 */
 	public function testAddHooks($hook, $function, $permanent, $file, $object, $expected): void
 	{
@@ -53,17 +57,46 @@ class HooksTest extends BaseTestCase
 				'variable' => $hook,
 			]
 		);
-		list ($actual) = $smcFunc['db_fetch_row']($request);
+		[$actual] = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 		$this->assertEquals($expected, $actual);
 	}
 
 	/**
+	 * @depends testAddHooks
+	 */
+	public function testManageHooks(): void
+	{
+		global $context;
+
+		loadLanguage('Admin');
+		list_integration_hooks();
+		$this->assertEquals(
+			'integrate_test2',
+			$context['list_integration_hooks']['rows'][4]['data']['hook_name']['value']
+		);
+		$this->assertEquals(
+			'<span class="main_icons news" title="Function is a method and its class is instantiated"></span> Function: testing_class::instantiatedHook<br>Included file: $boarddir/tests/IntegrationFixtures.php',
+			$context['list_integration_hooks']['rows'][4]['data']['function_name']['value']
+		);
+		$this->assertEquals(
+			'./tests/IntegrationFixtures.php',
+			$context['list_integration_hooks']['rows'][4]['data']['file_name']['value']
+		);
+		$this->assertStringContainsString(
+			'Exists',
+			$context['list_integration_hooks']['rows'][4]['data']['status']['value']
+		);
+		$this->assertStringContainsString(
+			'Not found',
+			$context['list_integration_hooks']['rows'][5]['data']['status']['value']
+		);
+	}
+
+	/**
 	 * @dataProvider integrationProvider
 	 *
-	 * @depends      testAddHooks
-	 *
-	 * @return void
+	 * @depends testAddHooks
 	 */
 	public function testCallHooks($hook): void
 	{
@@ -79,9 +112,7 @@ class HooksTest extends BaseTestCase
 	/**
 	 * @dataProvider integrationProvider
 	 *
-	 * @depends      testAddHooks
-	 *
-	 * @return void
+	 * @depends testAddHooks
 	 */
 	public function testRemoveHooks($hook, $function, $permanent, $file, $object): void
 	{
@@ -104,8 +135,9 @@ class HooksTest extends BaseTestCase
 				'variable' => $hook,
 			]
 		);
-		list ($actual) = $smcFunc['db_fetch_row']($request);
+		[$actual] = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
+
 		if ($function == 'testing_hook')
 			$this->assertEquals('testing_hook2', $actual);
 		else

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace PHPTDD;
 
 class CensoringTest extends BaseTestCase
@@ -24,7 +26,6 @@ class CensoringTest extends BaseTestCase
 	/**
 	 * @dataProvider keepCaseWholeWordProvider
 	 *
-	 * @return void
 	 */
 	public function testWholeWordsCaseSensitive($inputText, $expected): void
 	{
@@ -53,7 +54,6 @@ class CensoringTest extends BaseTestCase
 	/**
 	 * @dataProvider wholeWordsCaseInsensitiveProvider
 	 *
-	 * @return void
 	 */
 	public function testWholeWordsCaseInsensitive($inputText, $expected): void
 	{
@@ -86,7 +86,6 @@ class CensoringTest extends BaseTestCase
 	/**
 	 * @dataProvider notWholeWordsCaseSensitiveProvider
 	 *
-	 * @return void
 	 */
 	public function testNotWholeWordsCaseSensitive($inputText, $expected): void
 	{
@@ -119,7 +118,6 @@ class CensoringTest extends BaseTestCase
 	/**
 	 * @dataProvider notWholeWordsCaseInsensitiveProvider
 	 *
-	 * @return void
 	 */
 	public function testNotWholeWordsCaseInsensitive($inputText, $expected): void
 	{
@@ -148,6 +146,14 @@ class CensoringTest extends BaseTestCase
 
 		$modSettings['censor_vulgar'] = implode("\n", $vulgar);
 		$modSettings['censor_proper'] = implode("\n", $proper);
+	}
+
+	public function tearDown() : void
+	{
+		global $modSettings;
+
+		$modSettings['censor_vulgar'] = '';
+		$modSettings['censor_proper'] = '';
 	}
 
 	protected function setCensors($pairs): void

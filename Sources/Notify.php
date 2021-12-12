@@ -167,14 +167,8 @@ function TopicNotify()
 
 	require_once($sourcedir . '/Subs-Notify.php');
 
-	if (isset($_REQUEST['u']) && isset($_REQUEST['token']))
 	{
-		$member_info = getMemberWithToken('topic');
 		$skipCheckSession = true;
-	}
-	else
-	{
-		is_not_guest();
 		$member_info = $user_info;
 	}
 
