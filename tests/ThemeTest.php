@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 use Exception;
@@ -77,7 +79,6 @@ class ThemeTest extends BaseTestCase
 	/**
 	 * @depends testInstallCopy
 	 *
-	 * @return void
 	 */
 	public function testInstallDuplicateCopy(): void
 	{
@@ -104,7 +105,6 @@ class ThemeTest extends BaseTestCase
 	/**
 	 * @depends testInstallCopy
 	 *
-	 * @return void
 	 */
 	public function testInstallCopyWithNoName(): void
 	{
@@ -130,7 +130,6 @@ class ThemeTest extends BaseTestCase
 	 * @depends testThemeInfo
 	 * @depends testInstallCopy
 	 *
-	 * @return void
 	 */
 	public function testInstallDependentTheme(): void
 	{
@@ -159,7 +158,6 @@ class ThemeTest extends BaseTestCase
 	/**
 	 * @depends testInstallDependentTheme
 	 *
-	 * @return void
 	 */
 	public function testUpdateDependentTheme(): void
 	{
@@ -185,7 +183,6 @@ class ThemeTest extends BaseTestCase
 	/**
 	 * @depends testInstallDependentTheme
 	 *
-	 * @return void
 	 */
 	public function testRemoveDependentTheme(): void
 	{
@@ -211,7 +208,6 @@ class ThemeTest extends BaseTestCase
 	/**
 	 * @depends testInstallCopy
 	 *
-	 * @return void
 	 */
 	public function testRemoveTheme(): void
 	{

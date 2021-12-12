@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 class FetchWebdataTest extends BaseTestCase
@@ -36,7 +38,6 @@ class FetchWebdataTest extends BaseTestCase
 	 *
 	 * @group        slow
 	 *
-	 * @return void
 	 */
 	public function testGet(string $url, string $responseBody): void
 	{
@@ -49,7 +50,6 @@ class FetchWebdataTest extends BaseTestCase
 	 *
 	 * @group        slow
 	 *
-	 * @return void
 	 */
 	public function testPost(string $url, string $postData, string $responseBody): void
 	{

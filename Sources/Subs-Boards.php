@@ -144,7 +144,6 @@ function MarkRead()
 	// No Guests allowed!
 	is_not_guest();
 
-	checkSession('get');
 
 	if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'all')
 	{
@@ -207,7 +206,6 @@ function MarkRead()
 		if (isset($_SESSION['topicseen_cache']))
 			$_SESSION['topicseen_cache'] = array();
 
-		redirectexit('action=unreadreplies');
 	}
 
 	// Special case: mark a topic unread!
@@ -284,7 +282,6 @@ function MarkRead()
 			array('id_member', 'id_topic')
 		);
 
-		redirectexit('board=' . $board . '.0');
 	}
 	else
 	{

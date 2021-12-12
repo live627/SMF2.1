@@ -83,8 +83,6 @@ function createWaveFile($word)
 				$shift = 0;
 				for ($j = 0, $n = strlen($sound_letter); $j < $n; $j++)
 				{
-					if (mt_rand(0, 10) === 0)
-						$shift += mt_rand(-3, 3);
 					for ($k = 0, $m = round(mt_rand(15, 25) / 10); $k < $m; $k++)
 						$sound_word .= chr(min(max(ord($sound_letter[$j]) + $shift, 0x00), 0xFF));
 				}
@@ -99,7 +97,7 @@ function createWaveFile($word)
 	$content_length = $file_size + 0x08;
 	$sample_rate = 16000;
 
-	echo pack('nnVnnnnnnnnVVnnnnV', 0x5249, 0x4646, $file_size, 0x5741, 0x5645, 0x666D, 0x7420, 0x1000, 0x0000, 0x0100, 0x0100, $sample_rate, $sample_rate * 0x08, 0x0100, 0x0800, 0x6461, 0x7461, $data_size), $sound_word;
+	echo pack('nnVnnnnnnnnVVnnnnV', 0x5249, 0x4646, $file_size, 0x5741, 0x5645, 0x666D, 0x7420, 0x1000, 0x0000, 0x0100, 0x0100, $sample_rate, $sample_rate, 0x0100, 0x0800, 0x6461, 0x7461, $data_size), $sound_word;
 }
 
 ?>

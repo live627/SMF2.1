@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 use SMF\Cache\APIs\Apcu;
@@ -33,6 +35,7 @@ class CacheTest extends BaseTestCase
 
 		if ($this->cacheObj instanceof Postgres)
 			smf_db_query('', 'DROP TABLE IF EXISTS {db_prefix}cache');
+
 		if ($this->cacheObj instanceof CacheApiInterface)
 			$this->assertFalse($this->cacheObj->isSupported());
 	}
@@ -99,9 +102,10 @@ class CacheTest extends BaseTestCase
 	/**
 	 * @dataProvider data
 	 */
-	public function test(string $fqcn)
+	public function test(string $fqcn): void
 	{
 		$this->cacheObj = loadCacheAccelerator($fqcn, false);
+
 		if (!$this->cacheObj)
 			$this->markTestSkipped();
 

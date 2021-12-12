@@ -10,7 +10,9 @@
     "prefer-stable": true,
     "require-dev": {
         "simplemachines/build-tools": "dev-master",
-        "phpunit/phpunit": "^8.5"
+        "phpunit/phpunit": "^8.5",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "squizlabs/php_codesniffer": "^3.6"
     },
     "autoload": {
         "psr-4": {
@@ -20,5 +22,12 @@
         "platform": {
             "php": "7.0.2"
         }
+    },
+    "scripts": {
+        "lint": "php-cs-fixer fix --dry-run --verbose --show-progress=dots",
+        "lint-fix": "php-cs-fixer fix --verbose --show-progress=dots",
+        "phpcs": "phpcs --standard=coding-standards/SMF ./Sources/tasks",
+        "phpcbf": "phpcbf --standard=coding-standards/SMF ./Sources/tasks",
+        "phpstan": "phpstan analyze"
     }
 }

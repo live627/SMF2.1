@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 class CalendarTest extends BaseTestCase
@@ -30,7 +32,7 @@ class CalendarTest extends BaseTestCase
 		$user_info['time_format'] = $timeformat;
 		CalendarPost();
 
-		$this->assertRegExp('/[0-9]{2}:[0-9]{2} [A-Z]{2}/', $context['event']['start_time']);
+		$this->assertRegExp('/[0-9]{1,2}:[0-9]{2} [AP]M/', $context['event']['start_time']);
 	}
 
 	public function dateToEnglishProvider(): array
@@ -73,11 +75,12 @@ class CalendarTest extends BaseTestCase
 			'Noviembre',
 			'Diciembre',
 		];
-		$txt['months_short'] =
-			[1 => 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+		$txt['months_short'] = [1 => 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 		$this->assertEquals($expected, convertDateToEnglish($test));
 		$this->assertEquals($expected_short, convertDateToEnglish($test_short));
 		$context['user']['language'] = 'english';
+		$txt['months_titles'] = array(1 => 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+		$txt['months_short'] = array(1 => 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
 	}
 
 	public function testNewEventProperties(): void
@@ -95,8 +98,8 @@ class CalendarTest extends BaseTestCase
 		$this->assertEquals('Apr 02, 2021', $eventProperties['start_date_local']);
 		$this->assertEquals('Apr 02, 2021', $eventProperties['start_date_orig']);
 		$this->assertEquals('03:47:18', $eventProperties['start_time']);
-		$this->assertEquals('03:47 AM', $eventProperties['start_time_local']);
-		$this->assertEquals('03:47 AM', $eventProperties['start_time_orig']);
+		$this->assertRegExp('/0?3:47 AM/', $eventProperties['start_time_local']);
+		$this->assertRegExp('/0?3:47 AM/', $eventProperties['start_time_orig']);
 		$this->assertEquals('1617335238', $eventProperties['start_timestamp']);
 		$this->assertEquals('2021-04-02 03:47:18', $eventProperties['start_datetime']);
 		$this->assertEquals('2021-04-02T03:47:18+00:00', $eventProperties['start_iso_gmdate']);
@@ -110,8 +113,8 @@ class CalendarTest extends BaseTestCase
 		$this->assertEquals('Apr 02, 2021', $eventProperties['end_date_local']);
 		$this->assertEquals('Apr 02, 2021', $eventProperties['end_date_orig']);
 		$this->assertEquals('04:47:18', $eventProperties['end_time']);
-		$this->assertEquals('04:47 AM', $eventProperties['end_time_local']);
-		$this->assertEquals('04:47 AM', $eventProperties['end_time_orig']);
+		$this->assertRegExp('/0?4:47 AM/', $eventProperties['end_time_local']);
+		$this->assertRegExp('/0?4:47 AM/', $eventProperties['end_time_orig']);
 		$this->assertEquals('1617338838', $eventProperties['end_timestamp']);
 		$this->assertEquals('2021-04-02 03:47:18', $eventProperties['end_datetime']);
 		$this->assertEquals('2021-04-02T04:47:18+00:00', $eventProperties['end_iso_gmdate']);
@@ -136,7 +139,7 @@ class CalendarTest extends BaseTestCase
 					'short_day_titles' => !empty($modSettings['cal_short_days']),
 					'short_month_titles' => !empty($modSettings['cal_short_months']),
 					'show_next_prev' => !empty($modSettings['cal_prev_next_links']),
-					'show_week_links' => isset($modSettings['cal_week_links']) ? $modSettings['cal_week_links'] : 0,
+					'show_week_links' => $modSettings['cal_week_links'] ?? 0,
 				],
 			],
 		];
@@ -152,12 +155,12 @@ class CalendarTest extends BaseTestCase
 		$this->assertCount(7, $calendarGrid['weeks'][0]['days']);
 		$this->assertEquals('2021', $calendarGrid['previous_calendar']['year']);
 		$this->assertEquals('3', $calendarGrid['previous_calendar']['month']);
-		$this->assertEquals('02', $calendarGrid['previous_calendar']['day']);
-		$this->assertEquals('2021-03-02', $calendarGrid['previous_calendar']['start_date']);
+		$this->assertEquals('01', $calendarGrid['previous_calendar']['day']);
+		$this->assertEquals('2021-03-01', $calendarGrid['previous_calendar']['start_date']);
 		$this->assertEquals('2021', $calendarGrid['next_calendar']['year']);
 		$this->assertEquals('5', $calendarGrid['next_calendar']['month']);
-		$this->assertEquals('02', $calendarGrid['next_calendar']['day']);
-		$this->assertEquals('2021-05-02', $calendarGrid['next_calendar']['start_date']);
+		$this->assertEquals('01', $calendarGrid['next_calendar']['day']);
+		$this->assertEquals('2021-05-01', $calendarGrid['next_calendar']['start_date']);
 		$this->assertEquals('Apr 02, 2021', $calendarGrid['start_date']);
 	}
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 use curl_fetch_web_data;
@@ -60,7 +62,6 @@ class CurlFetchWebdataTest extends BaseTestCase
 	 *
 	 * @group        slow
 	 *
-	 * @return void
 	 */
 	public function testGet(string $url, int $responseCode, string $responseBody): void
 	{
@@ -75,7 +76,6 @@ class CurlFetchWebdataTest extends BaseTestCase
 	 *
 	 * @group        slow
 	 *
-	 * @return void
 	 */
 	public function testPost(string $url, array $postData, int $responseCode, string $responseBody): void
 	{

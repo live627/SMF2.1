@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 class AgreementTest extends BaseTestCase
@@ -68,7 +70,6 @@ class AgreementTest extends BaseTestCase
 	/**
 	 * @depends testEditPrivacyPolicy
 	 *
-	 * @return void
 	 */
 	public function testAgreement2(): void
 	{
@@ -125,7 +126,6 @@ class AgreementTest extends BaseTestCase
 	 * @depends testEditPrivacyPolicy
 	 * @depends testModifyRegistrationSettings
 	 *
-	 * @return void
 	 */
 	public function testAgreement3(): void
 	{
@@ -149,7 +149,6 @@ class AgreementTest extends BaseTestCase
 	/**
 	 * @depends testModifyRegistrationSettings
 	 *
-	 * @return void
 	 */
 	public function testAcceptAgreement(): void
 	{
@@ -183,7 +182,6 @@ class AgreementTest extends BaseTestCase
 	/**
 	 * @depends testAcceptAgreement
 	 *
-	 * @return void
 	 */
 	public function testAgreement4(): void
 	{
@@ -201,7 +199,6 @@ class AgreementTest extends BaseTestCase
 	/**
 	 * @depends testAcceptAgreement
 	 *
-	 * @return void
 	 */
 	public function testTracking(): void
 	{

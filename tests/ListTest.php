@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 class ListTest extends BaseTestCase
@@ -8,7 +10,7 @@ class ListTest extends BaseTestCase
 	{
 		global $context, $sourcedir;
 
-		require_once($sourcedir . '/Subs-List.php');
+		require_once $sourcedir . '/Subs-List.php';
 
 		$listOptions = [
 			'id' => 'a',
@@ -99,11 +101,19 @@ class ListTest extends BaseTestCase
 		$this->assertEquals('May 23, 1970, 09:21 PM', $context['a']['rows'][0]['data']['e']['value']);
 	}
 
-	public function test2() : void
+	public function data(): array
+	{
+		return [[0], [2], [32], [65], ['2'], ['65']];
+	}
+
+	/**
+	 * @dataProvider data
+	 */
+	public function test2(/*mixed */$count): void
 	{
 		global $context, $sourcedir;
 
-		require_once($sourcedir . '/Subs-List.php');
+		require_once $sourcedir . '/Subs-List.php';
 
 		$listOptions = [
 			'id' => 'a',
@@ -117,7 +127,7 @@ class ListTest extends BaseTestCase
 				],
 			],
 			'get_count' => [
-				'value' => '2',
+				'value' => $count,
 			],
 			'columns' => [
 				'a' => [
@@ -129,7 +139,7 @@ class ListTest extends BaseTestCase
 		];
 
 		createList($listOptions);
-		$this->assertEquals(2, $context['a']['total_num_items']);
+		$this->assertEquals($count, $context['a']['total_num_items']);
 		$this->assertCount(1, $context['a']['rows']);
 		$this->assertEquals('dummy', $context['a']['rows'][0]['data']['a']['value']);
 	}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 use gif_file;
@@ -20,13 +22,6 @@ class GraphicsTest extends BaseTestCase
 		removeAttachments(['id_member' => 1]);
 	}
 
-	/**
-	 * @return       (int|string)[][]
-	 *
-	 * @psalm-return array{0: array{url: string, width: int, height: int, format: int}, 1: array{url: string, width:
-	 *               int, height: int, format: int}, 2: array{url: string, width: int, height: int, format: int}, 3:
-	 *               array{url: string, width: int, height: int, format: int}}
-	 */
 	public function data(): array
 	{
 		return [
@@ -62,7 +57,6 @@ class GraphicsTest extends BaseTestCase
 	 *
 	 * @group        slow
 	 *
-	 * @return void
 	 */
 	public function test(string $url): void
 	{
@@ -82,10 +76,10 @@ class GraphicsTest extends BaseTestCase
 			WHERE id_member = 1
 				AND attachment_type = 1'
 		);
-		list ($filename, $size) = $smcFunc['db_fetch_row']($request);
+		[$filename, $size] = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 
-		$this->assertTrue(file_exists($modSettings['custom_avatar_dir'] . '/' . $filename));
+		$this->assertFileExists($modSettings['custom_avatar_dir'] . '/' . $filename);
 		$this->assertEquals($size, filesize($modSettings['custom_avatar_dir'] . '/' . $filename));
 		$this->assertSame(['ok', false, 2], attachDirStatus($modSettings['custom_avatar_dir'], 1));
 		$this->assertTrue(checkImageContents($modSettings['custom_avatar_dir'] . '/' . $filename));
@@ -94,14 +88,14 @@ class GraphicsTest extends BaseTestCase
 	public function testGif(): void
 	{
 		touch('vv.gif');
-		$this->assertTrue(file_exists('vv.gif'));
+		$this->assertFileExists('vv.gif');
 		$gif = new gif_file;
 		$gif->loadFile('vv.gif', 0);
 		$this->assertFalse($gif->loaded);
 		$this->assertFalse(gif_outputAsPng($gif, 'vv.png'));
-		$this->assertFalse(file_exists('vv.png'));
+		$this->assertFileNotExists('vv.png');
 		unlink('vv.gif');
-		$this->assertFalse(file_exists('vv.gif'));
+		$this->assertFileNotExists('vv.gif');
 	}
 
 	public function testText(): void
@@ -112,14 +106,14 @@ class GraphicsTest extends BaseTestCase
 		ob_end_clean();
 		$this->assertTrue($success !== false);
 		file_put_contents('vv.gif', $image);
-		$this->assertTrue(file_exists('vv.gif'));
+		$this->assertFileExists('vv.gif');
 		$gif = new gif_file;
 		$gif->loadFile('vv.gif', 0);
 		$this->assertTrue(gif_outputAsPng($gif, 'vv.png'));
-		$this->assertTrue(file_exists('vv.png'));
+		$this->assertFileExists('vv.png');
 		unlink('vv.png');
-		$this->assertFalse(file_exists('vv.png'));
+		$this->assertFileNotExists('vv.png');
 		unlink('vv.gif');
-		$this->assertFalse(file_exists('vv.gif'));
+		$this->assertFileNotExists('vv.gif');
 	}
 }

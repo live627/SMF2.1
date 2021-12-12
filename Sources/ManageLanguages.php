@@ -913,7 +913,8 @@ function ModifyLanguage()
 			);
 		}
 		$dir->close();
-		usort($context['possible_files'][$theme]['files'], function($val1, $val2)
+
+		if (!empty($context['possible_files'][$theme]['files']))
 		{
 			usort(
 				$context['possible_files'][$theme]['files'],

@@ -185,10 +185,6 @@ function TopicNotify()
 	{
 		$member_info = getMemberWithToken('topic', $id_topic);
 		$skipCheckSession = true;
-	}
-	else
-	{
-		is_not_guest();
 		$member_info = $user_info;
 	}
 
