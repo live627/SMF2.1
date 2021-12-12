@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 class MiscTest extends BaseTestCase
@@ -41,11 +43,11 @@ class MiscTest extends BaseTestCase
 	/**
 	 * @dataProvider data
 	 *
-	 * @return void
 	 */
 	public function testServerVersions(string $checkFor): void
 	{
 		$versions = getServerVersions([$checkFor]);
+
 		if (empty($versions))
 			$this->markTestSkipped();
 		$this->assertTrue(version_compare($versions[$checkFor]['version'], '0.0.1', '>='));
@@ -65,6 +67,11 @@ class MiscTest extends BaseTestCase
 		$_REQUEST['l'] = 'm';
 		$_REQUEST['s'] = 'p';
 		$this->assertTrue(is_filtered_request(['m' => ['s' => ['p']]], 'l'));
+		$this->assertFalse(is_filtered_request(['n' => ['s' => ['p']]], 'l'));
+		$this->assertFalse(is_filtered_request(['m' => ['s' => ['r']]], 'l'));
+		$this->assertTrue(is_filtered_request(['m' => ['s' => ['p', 'q']]], 'l'));
+		$this->assertFalse(is_filtered_request(['n' => ['s' => ['p', 'q']]], 'l'));
+		$this->assertFalse(is_filtered_request(['m' => ['s' => ['r', 'q']]], 'l'));
 
 		unset($_REQUEST);
 	}
@@ -82,7 +89,6 @@ class MiscTest extends BaseTestCase
 	}
 
 	/**
-	 * @return array
 	 */
 	public function cssdata(): array
 	{
@@ -90,6 +96,11 @@ class MiscTest extends BaseTestCase
 			[
 				'responsive.css',
 				['seed' => 'lol', 'order_pos' => 77],
+				'smf_responsive',
+			],
+			[
+				'responsive.css',
+				['seed' => '?lol', 'order_pos' => 77],
 				'smf_responsive',
 			],
 			[
@@ -123,7 +134,6 @@ class MiscTest extends BaseTestCase
 	/**
 	 * @dataProvider cssdata
 	 *
-	 * @return void
 	 */
 	public function testLoadCSSFile($name, $params, $id): void
 	{
@@ -138,8 +148,11 @@ class MiscTest extends BaseTestCase
 		$this->assertStringContainsString($name, $context['css_files'][$id]['filePath']);
 		$this->assertStringContainsString($name, $context['css_files'][$id]['fileName']);
 		$this->assertStringContainsString($name, $context['css_files'][$id]['fileUrl']);
-		$this->assertStringContainsString(
-			!isset($params['seed']) || $params['seed'] === true ? $context['browser_cache'] : $params['seed'],
+		$this->assertEquals(
+			empty($params['external']) && (!isset($params['seed']) || $params['seed'] === true)
+				? $context['browser_cache']
+				: (empty($params['seed'])
+					? false : '?' . ltrim($params['seed'], '?')),
 			$context['css_files'][$id]['options']['seed']
 		);
 		$this->assertContains($id, $context['css_files_order']);
@@ -147,7 +160,7 @@ class MiscTest extends BaseTestCase
 		$this->assertEquals($id, $context['css_files_order'][$context['css_files'][$id]['options']['order_pos']]);
 	}
 
-	public function testLoadMissingjavascriptFile(): void
+	public function testLoadMissing_javascriptFile(): void
 	{
 		global $context;
 
@@ -157,7 +170,6 @@ class MiscTest extends BaseTestCase
 	}
 
 	/**
-	 * @return array
 	 */
 	public function javascriptdata(): array
 	{
@@ -183,9 +195,8 @@ class MiscTest extends BaseTestCase
 	/**
 	 * @dataProvider javascriptdata
 	 *
-	 * @return void
 	 */
-	public function testLoadjavascriptFile($name, $params, $id): void
+	public function testLoad_javascriptFile($name, $params, $id): void
 	{
 		global $context;
 

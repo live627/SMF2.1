@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 class TestSettingsForm extends BaseTestCase
 {
 	protected $configVars = [];
+
 	protected $permissionResults = [];
 
 	public function setUp() : void
@@ -95,12 +98,14 @@ class TestSettingsForm extends BaseTestCase
 			['tag' => 'b', 'show_help' => false],
 			$context['bbc_sections'][$this->configVars[9][1]]['columns'][0]
 		);
+
 		foreach ($this->configVars as $configVar)
 		{
 			if (is_array($configVar))
 			{
 				$this->assertTrue(isset($context['config_vars'][$configVar[1]]));
 				$this->assertSame($configVar[0], $context['config_vars'][$configVar[1]]['type']);
+
 				if ($configVar[0] == 'select' && !empty($configVar['multiple']))
 					$this->assertSame($configVar[1] . '[]', $context['config_vars'][$configVar[1]]['name']);
 				else
@@ -182,6 +187,7 @@ class TestSettingsForm extends BaseTestCase
 			['enableCompressedOutput', 'enableCompressedOutput', 'db', 'check', null, 'enableCompressedOutput'],
 		];
 		prepareServerSettingsContext($this->configVars);
+
 		foreach ($this->configVars as $configVar)
 		{
 			$this->assertTrue(isset($context['config_vars'][$configVar[0]]));

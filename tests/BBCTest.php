@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace PHPTDD;
 
 class BBCTest extends BaseTestCase
@@ -75,7 +77,6 @@ class BBCTest extends BaseTestCase
 	/**
 	 * @dataProvider preparseProvider
 	 *
-	 * @return void
 	 */
 	public function testPreparseBBcode(string $test, string $expected): void
 	{
@@ -186,48 +187,48 @@ class BBCTest extends BaseTestCase
 			],
 			[
 				'img',
-				'[img]http://adomain.tld/an_image.png[/img]',
-				'<img src="http://adomain.tld/an_image.png"class="bbc_img" loading="lazy">',
+				'[img]http://example.com/image.png[/img]',
+				'<img src="http://example.com/image.png" alt="" class="bbc_img" loading="lazy">',
 			],
 			[
 				'img',
-				'[img]adomain.tld/an_image.png[/img]',
-				'<img src="//adomain.tld/an_image.png"class="bbc_img" loading="lazy">',
+				'[img]example.com/image.png[/img]',
+				'<img src="//example.com/image.png" alt="" class="bbc_img" loading="lazy">',
 			],
 			[
 				'img',
-				'[img width=100]http://adomain.tld/an_image.png[/img]',
-				'<img src="http://adomain.tld/an_image.png" width="100"class="bbc_img resized" loading="lazy">',
+				'[img width=100]http://example.com/image.png[/img]',
+				'<img src="http://example.com/image.png" alt="" width="100" class="bbc_img resized" loading="lazy">',
 			],
 			[
 				'img',
-				'[img height=100]http://adomain.tld/an_image.png[/img]',
-				'<img src="http://adomain.tld/an_image.png" height="100"class="bbc_img resized" loading="lazy">',
+				'[img height=100]http://example.com/image.png[/img]',
+				'<img src="http://example.com/image.png" alt="" height="100" class="bbc_img resized" loading="lazy">',
 			],
 			[
 				'img',
-				'[img height=100 width=150]http://adomain.tld/an_image.png[/img]',
-				'<img src="http://adomain.tld/an_image.png" width="150" height="100"class="bbc_img resized" loading="lazy">',
+				'[img height=100 width=150]http://example.com/image.png[/img]',
+				'<img src="http://example.com/image.png" alt="" width="150" height="100" class="bbc_img resized" loading="lazy">',
 			],
 			[
 				'img',
-				'[img alt=some text width=150 height=100]http://adomain.tld/an_image.png[/img]',
-				'<img src="http://adomain.tld/an_image.png" alt="some text" width="150" height="100"class="bbc_img resized" loading="lazy">',
+				'[img alt=some text width=150 height=100]http://example.com/image.png[/img]',
+				'<img src="http://example.com/image.png" alt="some text" width="150" height="100" class="bbc_img resized" loading="lazy">',
 			],
 			[
 				'img',
-				'[img width=150 height=100 alt=some text]http://adomain.tld/an_image.png[/img]',
-				'<img src="http://adomain.tld/an_image.png" alt="some text" width="150" height="100"class="bbc_img resized" loading="lazy">',
+				'[img width=150 height=100 alt=some text]http://example.com/image.png[/img]',
+				'<img src="http://example.com/image.png" alt="some text" width="150" height="100" class="bbc_img resized" loading="lazy">',
 			],
 			[
 				'img',
-				'[img title=some text alt=some text width=150 height=100]http://adomain.tld/an_image.png[/img]',
-				'<img src="http://adomain.tld/an_image.png" alt="some text" title="some text" width="150" height="100"class="bbc_img resized" loading="lazy">',
+				'[img title=some text alt=some text width=150 height=100]http://example.com/image.png[/img]',
+				'<img src="http://example.com/image.png" alt="some text" title="some text" width="150" height="100" class="bbc_img resized" loading="lazy">',
 			],
 			[
 				'img',
-				'[img width=150 height=100 title=some text alt=some text]http://adomain.tld/an_image.png[/img]',
-				'<img src="http://adomain.tld/an_image.png" alt="some text" title="some text" width="150" height="100"class="bbc_img resized" loading="lazy">',
+				'[img width=150 height=100 title=some text alt=some text]http://example.com/image.png[/img]',
+				'<img src="http://example.com/image.png" alt="some text" title="some text" width="150" height="100" class="bbc_img resized" loading="lazy">',
 			],
 			[
 				'iurl',
@@ -483,7 +484,6 @@ class BBCTest extends BaseTestCase
 	/**
 	 * @dataProvider bbcProvider
 	 *
-	 * @return void
 	 */
 	public function testBBC(string $tag, string $test, string $expected): void
 	{
@@ -541,7 +541,7 @@ class BBCTest extends BaseTestCase
 			],
 			[
 				'http://høns.dk',
-				'<a href="http://høns.dk" class="bbc_link" target="_blank" rel="noopener">http://høns.dk</a>',
+				'<a href="http://xn--hns-0na.dk" class="bbc_link" target="_blank" rel="noopener">http://høns.dk</a>',
 			],
 			[
 				'http://ar.wikipedia.org/wiki/النطاقات_العربية',
@@ -683,13 +683,15 @@ class BBCTest extends BaseTestCase
 				'http://www.google.co.uk/search?hl=en&q=BA6596F&btnG=Google+Search&meta=',
 				'<a href="http://www.google.co.uk/search?hl=en&q=BA6596F&btnG=Google+Search&meta=" class="bbc_link" target="_blank" rel="noopener">http://www.google.co.uk/search?hl=en&q=BA6596F&btnG=Google+Search&meta=</a>',
 			],
+			[
+				'täst.de',
+				'<a href="//xn--tst-qla.de=" class="bbc_link" target="_blank" rel="noopener">täst.de</a>',
+			],
 		];
 	}
 
 	/**
 	 * @dataProvider autolinkProvider
-	 *
-	 * @return void
 	 */
 	public function testAutolink(string $test, string $expected): void
 	{
@@ -697,9 +699,6 @@ class BBCTest extends BaseTestCase
 		$this->assertEquals($expected, $result);
 	}
 
-	/**
-	 * @return string[][]
-	 */
 	public function html_to_bbcProvider(): array
 	{
 		global $context, $boardurl, $sourcedir;
@@ -789,9 +788,8 @@ class BBCTest extends BaseTestCase
 	/**
 	 * @dataProvider html_to_bbcProvider
 	 *
-	 * @return void
 	 */
-	public function test_html_to_bbc(string $test, string $expected): void
+	public function testHtmlToBbc(string $test, string $expected): void
 	{
 		$this->assertEquals($expected, html_to_bbc($test));
 	}
@@ -830,7 +828,6 @@ class BBCTest extends BaseTestCase
 	/**
 	 * @dataProvider smileyProvider
 	 *
-	 * @return void
 	 */
 	public function testSmiley(string $test, string $expected): void
 	{
@@ -921,7 +918,6 @@ class BBCTest extends BaseTestCase
 	/**
 	 * @dataProvider legacyBBCProvider
 	 *
-	 * @return void
 	 */
 	public function testLegacyBBC($tag, string $test, string $expected): void
 	{

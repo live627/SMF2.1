@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 class PermissionsTest extends BaseTestCase
@@ -25,7 +27,6 @@ class PermissionsTest extends BaseTestCase
 	/**
 	 * @dataProvider permissionsControllerProvider
 	 *
-	 * @return void
 	 */
 	public function testPermissionsController(int $group): void
 	{
@@ -36,6 +37,7 @@ class PermissionsTest extends BaseTestCase
 		$this->assertEquals($group, $context['group']['id']);
 		$this->assertEquals('membergroup', $context['permission_type']);
 		$this->permissionsAssertions();
+
 		foreach (['view_stats', 'who_view'] as $check)
 			$this->assertEquals(
 				'on',
@@ -52,11 +54,13 @@ class PermissionsTest extends BaseTestCase
 		$this->assertEquals(-1, $context['group']['id']);
 		$this->assertEquals('membergroup', $context['permission_type']);
 		$this->permissionsAssertions();
+
 		foreach (['view_stats'] as $check)
 			$this->assertEquals(
 				'on',
 				$context['permissions']['membergroup']['columns'][0]['general']['permissions'][$check]['select']
 			);
+
 		foreach (['who_view'] as $check)
 			$this->assertEquals(
 				'off',
@@ -72,6 +76,7 @@ class PermissionsTest extends BaseTestCase
 		$this->assertCount(2, $context['permissions']['membergroup']['columns']);
 		$this->assertArrayHasKey('membergroup', $context['permissions']);
 		$this->assertArrayHasKey('board', $context['permissions']);
+
 		foreach (['view_stats', 'who_view'] as $check)
 			$this->assertArrayHasKey(
 				$check,
@@ -100,6 +105,7 @@ class PermissionsTest extends BaseTestCase
 
 		loadIllegalGuestPermissions();
 		$this->assertIsArray($context['non_guest_permissions']);
+
 		foreach (['admin_forum', 'edit_news'] as $check)
 			$this->assertContains($check, $context['non_guest_permissions']);
 	}
@@ -110,8 +116,10 @@ class PermissionsTest extends BaseTestCase
 
 		loadIllegalBBCHtmlGroups();
 		$this->assertIsArray($context['permissions_excluded']['bbc_html']);
+
 		foreach ([-1, 0, 2, 3, 4, 5, 6, 7, 8] as $check)
 			$this->assertContains($check, $context['permissions_excluded']['bbc_html']);
+
 		foreach ([-2, 1, 9] as $check)
 			$this->assertNotContains($check, $context['permissions_excluded']['bbc_html']);
 	}

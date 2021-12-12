@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 use ErrorException;
@@ -15,7 +17,6 @@ class TestxmlArray extends BaseTestCase
 	}
 
 	/**
-	 * @return array
 	 */
 	public function data(): array
 	{
@@ -49,7 +50,6 @@ class TestxmlArray extends BaseTestCase
 	/**
 	 * @dataProvider data
 	 *
-	 * @return void
 	 */
 	public function test(string $xml, array $array): void
 	{
@@ -79,12 +79,11 @@ class TestxmlArray extends BaseTestCase
 	/**
 	 * @dataProvider data
 	 *
-	 * @return void
 	 */
 	public function testNoisyFailure(string $xml): void
 	{
 		set_error_handler(
-			function ($errno, $errstr, $errfile, $errline, $errcontext)
+			function ($errno, $errstr, $errfile, $errline, $errcontext): void
 			{
 				throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 			}
@@ -100,7 +99,6 @@ class TestxmlArray extends BaseTestCase
 	/**
 	 * @dataProvider data
 	 *
-	 * @return void
 	 */
 	public function testSilentFailure(string $xml): void
 	{

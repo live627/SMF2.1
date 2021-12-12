@@ -1330,6 +1330,7 @@ else
  * This sets the X-Frame-Options header.
  *
  * @param string $override An option to override (either 'SAMEORIGIN' or 'DENY')
+ *
  * @since 2.1
  */
 function frameOptionsHeader($override = null)
@@ -1353,16 +1354,14 @@ function frameOptionsHeader($override = null)
 	header('x-xss-protection: 1');
 	header('x-content-type-options: nosniff');
 }
-
-/**
- * This sets the Access-Control-Allow-Origin header.
- * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+/*
+ * Determines if the HTTP origin is an authorized one.
  *
- * @param bool $set_header (Default: true): When false, we will do the logic, but not send the headers.  The relevant logic is still saved in the $context and can be sent manually.
+ * @param string $origin
  *
  * @since 2.1
  */
-function corsPolicyHeader($set_header = true)
+function get_allowed_http_origin($origin)
 {
 	global $boardurl, $modSettings, $context;
 
@@ -1488,8 +1487,25 @@ function corsPolicyHeader($set_header = true)
 
 		$context['valid_cors_found'] = 'same';
 	}
+}
+
+/**
+ * This sets the Access-Control-Allow-Origin header.
+ * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+ *
+ * @param bool $set_header (Default: true): When false, we will do the logic, but not send the headers.  The relevant logic is still saved in the $context and can be sent manually.
+ *
+ * @since 2.1
+ */
+function corsPolicyHeader($set_header = true)
+{
+	global $modSettings, $context;
+
+	if (empty($modSettings['allow_cors']))
+		return;
 
 	$context['cors_headers'] = 'X-SMF-AJAX';
+	get_allowed_http_origin(isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '');
 
 	// Any additional headers?
 	if (!empty($modSettings['cors_headers']))

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 class TestMemberList extends BaseTestCase
@@ -29,6 +31,7 @@ class TestMemberList extends BaseTestCase
 		$_GET['search'] = 'admin';
 		$_GET['fields'] = 'name, email';
 		Memberlist();
+		unset($_GET['search']);
 		$this->assertStringContainsString('test', $context['members'][1]['name']);
 	}
 }

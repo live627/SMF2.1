@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 class MenuTest extends BaseTestCase
 {
 	protected $test_areas;
+
 	protected $test_options;
 
 	public function setUp() : void
@@ -203,7 +206,6 @@ class MenuTest extends BaseTestCase
 	/**
 	 * @dataProvider optionsProvider
 	 *
-	 * @return void
 	 */
 	public function testOptions($expectedKey, $expectedVal): void
 	{

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 use PHPUnit\Framework\Error\Error as PHPUnitError;
@@ -56,10 +58,12 @@ class BoardsTest extends BaseTestCase
 		global $boards, $boardsTest;
 
 		$boardsTest = [];
+
 		foreach ($this->options as $options)
 			$boardsTest[] = createBoard($options);
 
 		getBoardTree();
+
 		foreach ($boardsTest as $board)
 		{
 			$this->assertArrayHasKey($board, $boards);
@@ -82,6 +86,7 @@ class BoardsTest extends BaseTestCase
 
 		BoardIndex();
 		$this->assertCount(1, $context['categories']);
+
 		foreach ($context['categories'] as $category)
 		{
 			$this->assertCount(14, $category['boards']);
@@ -135,6 +140,7 @@ class BoardsTest extends BaseTestCase
 		];
 		$categories = getBoardIndex($boardIndexOptions);
 		$this->assertCount(1, $categories);
+
 		foreach ($categories as $category)
 		{
 			$this->assertCount(14, $category['boards']);
@@ -181,7 +187,7 @@ class BoardsTest extends BaseTestCase
 				'board_list' => $boardsTest,
 			]
 		);
-		list ($actual) = $smcFunc['db_fetch_row']($result);
+		[$actual] = $smcFunc['db_fetch_row']($result);
 		$smcFunc['db_free_result']($result);
 		$this->assertEquals(4, $actual);
 
@@ -197,7 +203,7 @@ class BoardsTest extends BaseTestCase
 				'board_list' => $boardsTest,
 			]
 		);
-		list ($actual) = $smcFunc['db_fetch_row']($result);
+		[$actual] = $smcFunc['db_fetch_row']($result);
 		$smcFunc['db_free_result']($result);
 		$this->assertEquals(0, $actual);
 	}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 use PHPUnit\Framework\Error\Error as PHPUnitError;
@@ -67,8 +69,8 @@ class MembersTest extends BaseTestCase
 				'password' => 'password',
 				'password_check' => 'password',
 				'extra_register_vars' => [
-					'member_ip' => long2ip(rand(0, 2147483647)),
-					'member_ip2' => long2ip(rand(0, 2147483647)),
+					'member_ip' => long2ip(random_int(0, 2147483647)),
+					'member_ip2' => long2ip(random_int(0, 2147483647)),
 				],
 				'check_reserved_name' => true,
 				'check_password_strength' => true,
@@ -88,13 +90,13 @@ class MembersTest extends BaseTestCase
 	/**
 	 * @group slow
 	 *
-	 * @return void
 	 */
 	public function testAddMembers(): void
 	{
 		global $membersTest;
 
 		$membersTest = [];
+
 		foreach ($this->options as $options)
 		{
 			$memID = registerMember($options, true);
@@ -104,6 +106,7 @@ class MembersTest extends BaseTestCase
 		$members =
 			list_getMembers(0, 30, 'id_member', 'id_member IN({array_int:members})', ['members' => $membersTest]);
 		$this->assertCount(4, $members);
+
 		foreach ($members as $member)
 			$this->assertContains($member['id_member'], $membersTest);
 	}
@@ -283,6 +286,7 @@ class MembersTest extends BaseTestCase
 		$members = loadMemberData($membersTest);
 		$this->assertCount(4, $members);
 		$this->assertEquals('normal', $context['loadMemberContext_set']);
+
 		foreach ($membersTest as $member)
 		{
 			$this->assertContains($member, $members);

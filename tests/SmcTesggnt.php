@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 class SMCTest extends BaseTestCase
@@ -22,7 +24,7 @@ class SMCTest extends BaseTestCase
 	/**
 	 * @dataProvider keepCaseWholeWordProvider
 	 */
-	function testWholeWordsCaseSensitive($inputText, $expected)
+	function testWholeWordsCaseSensitive($inputText, $expected): void
 	{
 		global $modSettings;
 
@@ -46,7 +48,7 @@ class SMCTest extends BaseTestCase
 	/**
 	 * @dataProvider wholeWordsCaseInsensitiveProvider
 	 */
-	function testWholeWordsCaseInsensitive($inputText, $expected)
+	function testWholeWordsCaseInsensitive($inputText, $expected): void
 	{
 		global $modSettings;
 
@@ -74,7 +76,7 @@ class SMCTest extends BaseTestCase
 	/**
 	 * @dataProvider notWholeWordsCaseSensitiveProvider
 	 */
-	function testNotWholeWordsCaseSensitive($inputText, $expected)
+	function testNotWholeWordsCaseSensitive($inputText, $expected): void
 	{
 		global $modSettings;
 
@@ -102,7 +104,7 @@ class SMCTest extends BaseTestCase
 	/**
 	 * @dataProvider notWholeWordsCaseInsensitiveProvider
 	 */
-	function testNotWholeWordsCaseInsensitive($inputText, $expected)
+	function testNotWholeWordsCaseInsensitive($inputText, $expected): void
 	{
 		global $modSettings;
 
@@ -114,7 +116,7 @@ class SMCTest extends BaseTestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-	function setUp()
+	function setUp(): void
 	{
 		global $modSettings;
 
@@ -131,7 +133,7 @@ class SMCTest extends BaseTestCase
 		$modSettings['censor_proper'] = implode("\n", $proper);
 	}
 
-	protected function setCensors($pairs)
+	protected function setCensors($pairs): void
 	{
 		global $modSettings;
 

@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 class SMCTest extends BaseTestCase
 {
 	/**
-	 * @return array
 	 */
 	public function callbackProvider(): array
 	{
@@ -128,7 +129,6 @@ class SMCTest extends BaseTestCase
 	/**
 	 * @dataProvider callbackProvider
 	 *
-	 * @return void
 	 */
 	public function testCallback($test, $params, $expected): void
 	{
@@ -157,7 +157,7 @@ class SMCTest extends BaseTestCase
 		$this->assertCount(1, $tables);
 	}
 
-	public function test_entity_fix(): void
+	public function testEntityFix(): void
 	{
 		global $smcFunc;
 
@@ -195,16 +195,15 @@ class SMCTest extends BaseTestCase
 	/**
 	 * @dataProvider htmlspecialcharsProvider
 	 *
-	 * @return void
 	 */
-	public function test_htmlspecialchars($test, $expected): void
+	public function testHtmlspecialchars($test, $expected): void
 	{
 		global $smcFunc;
 
 		$this->assertEquals($expected, $smcFunc['htmlspecialchars']($test));
 	}
 
-	public function test_htmlspecialchars2(): void
+	public function testHtmlspecialchars2(): void
 	{
 		global $smcFunc;
 
@@ -234,16 +233,15 @@ class SMCTest extends BaseTestCase
 	/**
 	 * @dataProvider htmltrimProvider
 	 *
-	 * @return void
 	 */
-	public function test_htmltrim($test, $expected): void
+	public function testHtmltrim($test, $expected): void
 	{
 		global $smcFunc;
 
 		$this->assertEquals($expected, $smcFunc['htmltrim']($test));
 	}
 
-	public function test_strlen(): void
+	public function testStrlen(): void
 	{
 		global $smcFunc;
 
@@ -251,7 +249,7 @@ class SMCTest extends BaseTestCase
 		$this->assertEquals(3, $smcFunc['strlen']('A&amp;B'));
 	}
 
-	public function test_strpos(): void
+	public function testStrpos(): void
 	{
 		global $smcFunc;
 
@@ -259,21 +257,21 @@ class SMCTest extends BaseTestCase
 		$this->assertEquals(2, $smcFunc['strpos']('A&amp;B', 'B'));
 	}
 
-	public function test_strtolower(): void
+	public function testStrtolower(): void
 	{
 		global $smcFunc;
 
 		$this->assertEquals('русские', $smcFunc['strtolower']('РУССКИЕ'));
 	}
 
-	public function test_strtoupper(): void
+	public function testStrtoupper(): void
 	{
 		global $smcFunc;
 
 		$this->assertEquals('РУССКИЕ', $smcFunc['strtoupper']('русские'));
 	}
 
-	public function test_substr(): void
+	public function testSubstr(): void
 	{
 		global $smcFunc;
 
@@ -282,7 +280,7 @@ class SMCTest extends BaseTestCase
 		$this->assertEquals('B', $smcFunc['substr']('aA&amp;B', -1));
 	}
 
-	public function test_ucwords(): void
+	public function testUcwords(): void
 	{
 		global $smcFunc;
 
@@ -294,7 +292,7 @@ class SMCTest extends BaseTestCase
 		);
 	}
 
-	public function test_ucwords2(): void
+	public function testUcwords2(): void
 	{
 		global $smcFunc;
 
@@ -331,9 +329,9 @@ class SMCTest extends BaseTestCase
 				'variables' => ['variable1', 'variable2', 'variable3'],
 			]
 		);
-		list ($variable1) = $smcFunc['db_fetch_row']($request);
-		list ($variable2) = $smcFunc['db_fetch_row']($request);
-		list ($variable3) = $smcFunc['db_fetch_row']($request);
+		[$variable1] = $smcFunc['db_fetch_row']($request);
+		[$variable2] = $smcFunc['db_fetch_row']($request);
+		[$variable3] = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 		$this->assertEquals('value1', $variable1);
 		$this->assertEquals('value2', $variable2);
@@ -365,9 +363,9 @@ class SMCTest extends BaseTestCase
 				'variables' => ['variable1', 'variable2', 'variable3'],
 			]
 		);
-		list ($variable1) = $smcFunc['db_fetch_row']($request);
-		list ($variable2) = $smcFunc['db_fetch_row']($request);
-		list ($variable3) = $smcFunc['db_fetch_row']($request);
+		[$variable1] = $smcFunc['db_fetch_row']($request);
+		[$variable2] = $smcFunc['db_fetch_row']($request);
+		[$variable3] = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 		$this->assertEquals('value11', $variable1);
 		$this->assertEquals('value22', $variable2);

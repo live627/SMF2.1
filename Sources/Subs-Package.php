@@ -90,88 +90,112 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 	if (!$single_file && $destination !== null && !file_exists($destination))
 		mktree($destination, 0777);
 
-	$flags = unpack('Ct/Cf', substr($data, 2, 2));
-
 	// Not deflate!
-	if ($flags['t'] != 8)
+	if (ord($data[2]) != 8)
 		return false;
-	$flags = $flags['f'];
 
+	// RFC 1952
+	$flags = ord($data[3]);
+
+	// Gzip file header is always 10 bytes.
 	$offset = 10;
-	$octdec = array('mode', 'uid', 'gid', 'size', 'mtime', 'checksum');
 
-	// "Read" the filename and comment.
-	// @todo Might be mussed.
-	if ($flags & 12)
-	{
-		while ($flags & 8 && $data[$offset++] != "\0")
-			continue;
-		while ($flags & 4 && $data[$offset++] != "\0")
-			continue;
-	}
+	// fHCRC
+	if ($flags & 0x2)
+		$offset += 2;
+	// fEXTRA
+	if ($flags & 0x4)
+		$offset += ord($data[$offset]);
+	// fNAME
+	while ($flags & 0x8 && $data[$offset++] != "\0")
+		continue;
+	// fCOMMENT
+	while ($flags & 0x10 && $data[$offset++] != "\0")
+		continue;
 
-	$crc = unpack('Vcrc32/Visize', substr($data, strlen($data) - 8, 8));
-	$data = @gzinflate(substr($data, $offset, strlen($data) - 8 - $offset));
+	$crc = unpack('V', $data, strlen($data) - 8);
+	$data = gzinflate(substr($data, $offset, -8));
 
-	// smf_crc32 and crc32 may not return the same results, so we accept either.
-	if ($crc['crc32'] != smf_crc32($data) && $crc['crc32'] != crc32($data))
+	// PKZip/ITU-T V.42 CRC-32
+	if (hash('crc32b', $data) !== sprintf('%08x', $crc[1]))
 		return false;
 
 	$blocks = strlen($data) / 512 - 1;
-	$offset = 0;
-
+	$block = 0;
 	$return = array();
 
-	while ($offset < $blocks)
+	// All data is block-aligned by 512 bytes.
+	while ($block < $blocks)
 	{
-		$header = substr($data, $offset << 9, 512);
-		$current = unpack('a100filename/a8mode/a8uid/a8gid/a12size/a12mtime/a8checksum/a1type/a100linkname/a6magic/a2version/a32uname/a32gname/a8devmajor/a8devminor/a155path', $header);
+		$offset = $block++ << 9;
+		$file_info = unpack('Z100filename/@124/A12size/A12mtime/A8checksum/Atype/@345/Z155prefix', $data, $offset);
 
-		// Blank record?  This is probably at the end of the file.
-		if (empty($current['filename']))
-		{
-			$offset += 512;
+		// Blank record? This is probably at the end of the file.
+		if (empty($file_info['filename']))
 			continue;
-		}
-
-		foreach ($current as $k => $v)
-		{
-			if (in_array($k, $octdec))
-				$current[$k] = octdec(trim($v));
-			else
-				$current[$k] = trim($v);
-		}
-
-		if ($current['type'] == '5' && substr($current['filename'], -1) != '/')
-			$current['filename'] .= '/';
 
 		$checksum = 256;
 		for ($i = 0; $i < 148; $i++)
-			$checksum += ord($header[$i]);
+			$checksum += ord($data[$offset + $i]);
 		for ($i = 156; $i < 512; $i++)
-			$checksum += ord($header[$i]);
+			$checksum += ord($data[$offset + $i]);
 
-		if ($current['checksum'] != $checksum)
+		if (octdec($file_info['checksum']) != $checksum)
 			break;
 
-		$size = ceil($current['size'] / 512);
-		$current['data'] = substr($data, ++$offset << 9, $current['size']);
-		$offset += $size;
+		// Handle ustar Posix compliant path prefixes
+		if (!empty($file_info['prefix']))
+			$file_info['filename'] = $file_info['prefix'] . '/' . $file_info['filename'];
+
+		switch ($file_info['type'])
+		{
+			case '5':
+				if (substr($file_info['filename'], -1) != '/')
+					$file_info['filename'] .= '/';
+				break;
+			case 'L':
+				// Handle Long-Link entries from GNU Tar
+				$filename = unpack('Z' . octdec($file_info['size']) . 'filename', $data, $offset + 512);
+				$block += ceil(octdec($file_info['size']) / 512);
+				$file_info = $filename + unpack('A12size/A12mtime/A8checksum/Atype', $data, ($block << 9) + 124);
+				$offset = $block++ << 9;
+			break;
+			case 'x':
+				$block += ceil(octdec($file_info['size']) / 512);
+				$file_info = array_merge(
+					unpack('A12size/A12mtime/A8checksum/Atype', $data, ($block << 9) + 124),
+					...array_map(
+						fn($h) => [substr(strtok($h, '='), strpos($h, ' ') + 1) => strtok('=')],
+						explode("\n", substr($data, $offset + 512, octdec($file_info['size'])))
+					)
+				);
+				$offset = $block++ << 9;
+				if (!empty($file_info['path']))
+					$file_info['filename'] = $file_info['path'];
+			break;
+		}
+		$file_info['dir'] = $destination . '/' . dirname($file_info['filename']);
+		$is_file = substr($file_info['filename'], -1) != '/';
+
+		// Calculate the number of blocks taken up by the data.
+		$size = ceil(octdec($file_info['size']) / 512);
+		$file_info['data'] = substr($data, $offset + 512, octdec($file_info['size']));
+		$block += $size;
 
 		// Not a directory and doesn't exist already...
-		if (substr($current['filename'], -1, 1) != '/' && $destination !== null && !file_exists($destination . '/' . $current['filename']))
+		if ($is_file && !file_exists($destination . '/' . $file_info['filename']))
 			$write_this = true;
 		// File exists... check if it is newer.
-		elseif (substr($current['filename'], -1, 1) != '/')
-			$write_this = $overwrite || ($destination !== null && filemtime($destination . '/' . $current['filename']) < $current['mtime']);
+		elseif ($is_file)
+			$write_this = $overwrite || filemtime($destination . '/' . $file_info['filename']) < $file_info['mtime'];
 		// Folder... create.
 		elseif ($destination !== null && !$single_file)
 		{
 			// Protect from accidental parent directory writing...
-			$current['filename'] = strtr($current['filename'], array('../' => '', '/..' => ''));
+			$file_info['filename'] = strtr($file_info['filename'], array('../' => '', '/..' => ''));
 
-			if (!file_exists($destination . '/' . $current['filename']))
-				mktree($destination . '/' . $current['filename'], 0777);
+			if (!file_exists($destination . '/' . $file_info['filename']))
+				mktree($destination . '/' . $file_info['filename'], 0777);
 			$write_this = false;
 		}
 		else
@@ -179,28 +203,28 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 
 		if ($write_this && $destination !== null)
 		{
-			if (strpos($current['filename'], '/') !== false && !$single_file)
-				mktree($destination . '/' . dirname($current['filename']), 0777);
+			if (strpos($file_info['filename'], '/') !== false && !$single_file)
+				mktree($destination . '/' . dirname($file_info['filename']), 0777);
 
 			// Is this the file we're looking for?
-			if ($single_file && ($destination == $current['filename'] || $destination == '*/' . basename($current['filename'])))
-				return $current['data'];
+			if ($single_file && ($destination == $file_info['filename'] || $destination == '*/' . basename($file_info['filename'])))
+				return $file_info['data'];
 			// If we're looking for another file, keep going.
 			elseif ($single_file)
 				continue;
 			// Looking for restricted files?
-			elseif ($files_to_extract !== null && !in_array($current['filename'], $files_to_extract))
+			elseif ($files_to_extract !== null && !in_array($file_info['filename'], $files_to_extract))
 				continue;
 
-			package_put_contents($destination . '/' . $current['filename'], $current['data']);
+			package_put_contents($destination . '/' . $file_info['filename'], $file_info['data']);
 		}
 
-		if (substr($current['filename'], -1, 1) != '/')
+		if ($is_file)
 			$return[] = array(
-				'filename' => $current['filename'],
-				'md5' => md5($current['data']),
-				'preview' => substr($current['data'], 0, 100),
-				'size' => $current['size'],
+				'filename' => $file_info['filename'],
+				'md5' => md5($file_info['data']),
+				'preview' => substr($file_info['data'], 0, 100),
+				'size' => octdec($file_info['size']),
 				'skipped' => false
 			);
 	}
@@ -208,10 +232,7 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 	if ($destination !== null && !$single_file)
 		package_flush_cache();
 
-	if ($single_file)
-		return false;
-	else
-		return $return;
+	return $single_file ? false : $return;
 }
 
 /**
@@ -1562,7 +1583,7 @@ function matchPackageVersion($version, $versions)
  * @param string $version2 The second version
  * @return int -1 if version2 is greater than version1, 0 if they're equal, 1 if version1 is greater than version2
  */
-function compareVersions($version1, $version2)
+function compareVersions(string $version1, string $version2): int
 {
 	static $categories;
 
@@ -1571,17 +1592,17 @@ function compareVersions($version1, $version2)
 	{
 		// Clean the version and extract the version parts.
 		$clean = str_replace(array(' ', '2.0rc1-1'), array('', '2.0rc1.1'), strtolower($version));
-		preg_match('~(\d+)(?:\.(\d+|))?(?:\.)?(\d+|)(?:(alpha|beta|rc)(\d+|)(?:\.)?(\d+|))?(?:(dev))?(\d+|)~', $clean, $parts);
+		preg_match('/(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:-?(?:(alpha|beta|rc)(?:\.?(\d+)(?:\.(\d+))?)?|(dev)))?/', $clean, $parts);
 
 		// Build an array of parts.
 		$versions[$id] = array(
-			'major' => !empty($parts[1]) ? (int) $parts[1] : 0,
-			'minor' => !empty($parts[2]) ? (int) $parts[2] : 0,
-			'patch' => !empty($parts[3]) ? (int) $parts[3] : 0,
-			'type' => empty($parts[4]) ? 'stable' : $parts[4],
-			'type_major' => !empty($parts[5]) ? (int) $parts[5] : 0,
-			'type_minor' => !empty($parts[6]) ? (int) $parts[6] : 0,
-			'dev' => !empty($parts[7]),
+			'major' => (int) ($parts[1] ?? 0),
+			'minor' => (int) ($parts[2] ?? 0),
+			'patch' => (int) ($parts[3] ?? 0),
+			'type' => $parts[4] ?? 'stable',
+			'type_major' => (int) ($parts[5] ?? 0),
+			'type_minor' => (int) ($parts[6] ?? 0),
+			'dev' => isset($parts[7]),
 		);
 	}
 
@@ -2925,17 +2946,12 @@ function package_create_backup($id = 'backup')
 	global $sourcedir, $boarddir, $packagesdir, $smcFunc;
 
 	$files = array();
-
+	$dirs = array(strtr($sourcedir . '/', '\\', '/'));
 	$base_files = array('index.php', 'SSI.php', 'agreement.txt', 'cron.php', 'proxy.php', 'ssi_examples.php', 'ssi_examples.shtml', 'subscriptions.php');
+	$root = strtr($boarddir, '\\', '/') . '/';
 	foreach ($base_files as $file)
-	{
 		if (file_exists($boarddir . '/' . $file))
-			$files[empty($_REQUEST['use_full_paths']) ? $file : $boarddir . '/' . $file] = $boarddir . '/' . $file;
-	}
-
-	$dirs = array(
-		$sourcedir => empty($_REQUEST['use_full_paths']) ? 'Sources/' : strtr($sourcedir . '/', '\\', '/')
-	);
+			$files[] = new SplFileInfo($root . $file);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT value
@@ -2948,80 +2964,25 @@ function package_create_backup($id = 'backup')
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$dirs[$row['value']] = empty($_REQUEST['use_full_paths']) ? 'Themes/' . basename($row['value']) . '/' : strtr($row['value'] . '/', '\\', '/');
+		$dirs[] = strtr($row['value'], '\\', '/');
 	$smcFunc['db_free_result']($request);
 
 	try
 	{
-		foreach ($dirs as $dir => $dest)
+		foreach ($dirs as $dir)
 		{
 			$iter = new RecursiveIteratorIterator(
-				new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS),
+				new RecursiveCallbackFilterIterator(
+					new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS),
+					fn($fileInfo) => ($fileInfo->isDir() && preg_match('/help|images/', $fileInfo->getFilename()) == 0) || $fileInfo->getExtension() !== 'php~'
+				),
 				RecursiveIteratorIterator::CHILD_FIRST,
 				RecursiveIteratorIterator::CATCH_GET_CHILD // Ignore "Permission denied"
 			);
 
-			foreach ($iter as $entry => $dir)
-			{
-				if ($dir->isDir())
-					continue;
-
-				if (preg_match('~^(\.{1,2}|CVS|backup.*|help|images|.*\~|.*minified_[a-z0-9]{32}\.(js|css))$~', $entry) != 0)
-					continue;
-
-				$files[empty($_REQUEST['use_full_paths']) ? str_replace(realpath($boarddir), '', $entry) : $entry] = $entry;
-			}
+			foreach ($iter as $fileInfo)
+				$files[] = $fileInfo;
 		}
-		$obj = new ArrayObject($files);
-		$iterator = $obj->getIterator();
-
-		if (!file_exists($packagesdir . '/backups'))
-			mktree($packagesdir . '/backups', 0777);
-		if (!is_writable($packagesdir . '/backups'))
-			package_chmod($packagesdir . '/backups');
-		$output_file = $packagesdir . '/backups/' . smf_strftime('%Y-%m-%d_') . preg_replace('~[$\\\\/:<>|?*"\']~', '', $id);
-		$output_ext = '.tar';
-		$output_ext_target = '.tar.gz';
-
-		if (file_exists($output_file . $output_ext_target))
-		{
-			$i = 2;
-			while (file_exists($output_file . '_' . $i . $output_ext_target))
-				$i++;
-			$output_file = $output_file . '_' . $i . $output_ext;
-		}
-		else
-			$output_file .= $output_ext;
-
-		@set_time_limit(300);
-		if (function_exists('apache_reset_timeout'))
-			@apache_reset_timeout();
-
-		// Phar doesn't handle open_basedir restrictions very well and throws a PHP Warning. Ignore that.
-		set_error_handler(
-			function($errno, $errstr, $errfile, $errline)
-			{
-				// error was suppressed with the @-operator
-				if (0 === error_reporting())
-					return false;
-
-				if (strpos($errstr, 'PharData::__construct(): open_basedir') === false && strpos($errstr, 'PharData::compress(): open_basedir') === false)
-					log_error($errstr, 'general', $errfile, $errline);
-
-				return true;
-			}
-		);
-		$a = new PharData($output_file);
-		$a->buildFromIterator($iterator);
-		$a->compress(Phar::GZ);
-		restore_error_handler();
-
-		/*
-		 * Destroying the local var tells PharData to close its internal
-		 * file pointer, enabling us to delete the uncompressed tarball.
-		 */
-		unset($a);
-		unlink($output_file);
 	}
 	catch (Exception $e)
 	{
@@ -3029,6 +2990,79 @@ function package_create_backup($id = 'backup')
 
 		return false;
 	}
+
+	$fopen = 'fopen';
+	$fwrite = 'fwrite';
+	$fclose = 'fclose';
+	$output_ext = '.tar';
+	if (function_exists('gzopen'))
+	{
+		$fopen = 'gzopen';
+		$fwrite = 'gzwrite';
+		$fclose = 'gzclose';
+		$output_ext = '.tar.gz';
+	}
+	if (!file_exists($packagesdir . '/backups'))
+		mktree($packagesdir . '/backups', 0777);
+	if (!is_writable($packagesdir . '/backups'))
+		package_chmod($packagesdir . '/backups');
+	$output_file = strftime('%Y-%m-%d_') . preg_replace('~[$\\\\/:<>|?*"\']~', '', $id);
+	package_unique_filename($packagesdir . '/backups', $output_file, $output_ext);
+
+	@set_time_limit(300);
+	if (function_exists('apache_reset_timeout'))
+		@apache_reset_timeout();
+
+	$output = $fopen($packagesdir . '/backups/' . $output_file . $output_ext, 'wb');
+	foreach ($files as $fileInfo)
+	{
+		$stat = stat($fileInfo->getPathname());
+		$data_first = pack(
+			'a100a8a8a8a12a12',
+			str_replace($root, '', $fileInfo->getPathname()),
+			sprintf('%6o ', $stat['mode']),
+			sprintf('%6o ', $stat['uid']),
+			sprintf('%6o ', $stat['gid']),
+			sprintf('%11o ', $fileInfo->isDir() ? 0 : $stat['size']),
+			sprintf('%11o ', $stat['mtime']),
+		);
+		$data_last = pack(
+			'a1a100a6a2a32a32a8a8a155a12',
+			$fileInfo->isDir() ? '5' : '0',
+			'',
+			'ustar',
+			'',
+			function_exists('posix_getpwuid') ? posix_getpwuid($stat['uid'])['name'] : '',
+			function_exists('posix_getgrgid') ? posix_getgrgid($stat['gid'])['name'] : '',
+			'',
+			'',
+			empty($_REQUEST['use_full_paths']) ? '' : trim($root, '/'),
+			''
+		);
+
+		$checksum = 256;
+		for ($i = 0; $i < 148; $i++)
+			if ($data_first[$i] != "\0")
+				$checksum += ord($data_first[$i]);
+		for ($i = 0; $i < 356; $i++)
+			if ($data_last[$i] != "\0")
+				$checksum += ord($data_last[$i]);
+
+		$fwrite($output, $data_first);
+		$fwrite($output, pack('a8', decoct($checksum)));
+		$fwrite($output, $data_last);
+
+		if ($fileInfo->isDir())
+			continue;
+
+		$fwrite($output, file_get_contents($fileInfo->getPathname()));
+		// Zerofill the rest of this block so that the archive stays block aligned.
+		$fwrite($output, str_repeat("\0", 512 - $stat['size'] % 512));
+	}
+
+	// End of file marker: Two blocks of zeros (NUL bytes)
+	$fwrite($output, str_repeat("\0", 1024));
+	$fclose($output);
 
 	return true;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 use InvalidArgumentException;
@@ -14,26 +16,26 @@ class TOTPTest extends BaseTestCase
 		require_once($sourcedir . '/Class-TOTP.php');
 	}
 
-	public function test_instantiate(): void
+	public function testInstantiate(): void
 	{
 		$auth = new Auth();
 		$this->assertInstanceOf(Auth::class, $auth);
 	}
 
-	public function test_invalid_init_key_fails(): void
+	public function testInvalidInitKeyFails(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		new Auth('~');
 	}
 
-	public function test_valid_init_key_gets_set(): void
+	public function testValidInitKeyGetsSet(): void
 	{
 		$key = 'ABC';
 		$auth = new Auth($key);
 		$this->assertEquals($key, $auth->getInitKey(), 'Valid key can be got');
 	}
 
-	public function test_base64_lookup_is_correct(): void
+	public function testBase64LookupIsCorrect(): void
 	{
 		$expected = $this->base64values;
 
@@ -41,7 +43,7 @@ class TOTPTest extends BaseTestCase
 		$this->assertEquals($expected, $auth->getLookup());
 	}
 
-	public function test_get_and_set_range(): void
+	public function testGetAndSetRange(): void
 	{
 		$range = 54;
 		$auth = new Auth();
@@ -49,14 +51,14 @@ class TOTPTest extends BaseTestCase
 		$this->assertEquals($range, $auth->getRange(), 'Range is set correctly');
 	}
 
-	public function test_invalid_range_fails(): void
+	public function testInvalidRangeFails(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$auth = new Auth();
 		$auth->setRange('cat');
 	}
 
-	public function test_set_and_get_refresh(): void
+	public function testSetAndGetRefresh(): void
 	{
 		$refresh = 43;
 		$auth = new Auth();
@@ -64,14 +66,14 @@ class TOTPTest extends BaseTestCase
 		$this->assertEquals($refresh, $auth->getRefresh(), 'Refresh is set and got OK');
 	}
 
-	public function test_invalid_refresh_fails(): void
+	public function testInvalidRefreshFails(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$auth = new Auth();
 		$auth->setRefresh('litter');
 	}
 
-	public function test_set_and_get_code_length(): void
+	public function testSetAndGetCodeLength(): void
 	{
 		$length = 123;
 		$auth = new Auth();
@@ -79,7 +81,7 @@ class TOTPTest extends BaseTestCase
 		$this->assertEquals($length, $auth->getCodeLength());
 	}
 
-	public function test_generate_a_init_code(): void
+	public function testGenerateAInitCode(): void
 	{
 		$auth = new Auth();
 		$code = $auth->generateCode();
@@ -94,14 +96,14 @@ class TOTPTest extends BaseTestCase
 		}
 	}
 
-	public function test_generate_a_code_of_length(): void
+	public function testGenerateACodeOfLength(): void
 	{
 		$auth = new Auth();
 		$code = $auth->generateCode(4);
 		$this->assertEquals(4, strlen($code), 'Default code is 16 chars');
 	}
 
-	public function test_validate_a_valid_code(): void
+	public function testValidateAValidCode(): void
 	{
 		$key = 'ABC';
 		$auth = new Auth($key);
@@ -112,7 +114,7 @@ class TOTPTest extends BaseTestCase
 		$this->assertTrue($result, 'This is a known good code');
 	}
 
-	public function test_validate_a_valid_code_false_when_out_of_range(): void
+	public function testValidateAValidCodeFalseWhenOutOfRange(): void
 	{
 		$key = 'ABC';
 		$code = '424535';
@@ -125,8 +127,7 @@ class TOTPTest extends BaseTestCase
 		$this->assertFalse($result, 'This was a known good code 2 seconds ago');
 	}
 
-
-	public function test_validate_a_code_of_wrong_length_fails(): void
+	public function testValidateACodeOfWrongLengthFails(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 
@@ -135,7 +136,7 @@ class TOTPTest extends BaseTestCase
 		$auth->validateCode('lt10');
 	}
 
-	public function test_validate_with_different_init_key_is_false(): void
+	public function testValidateWithDifferentInitKeyIsFalse(): void
 	{
 		$key = 'DEF';
 		$auth = new Auth($key);
@@ -146,7 +147,7 @@ class TOTPTest extends BaseTestCase
 		$this->assertFalse($result, 'This is a known good code for key ABC');
 	}
 
-	public function test_validate_after_time_has_passed_is_false(): void
+	public function testValidateAfterTimeHasPassedIsFalse(): void
 	{
 		$key = 'ABC';
 		$auth = new Auth($key);

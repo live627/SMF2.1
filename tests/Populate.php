@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once('./SSI.php');
 require_once($sourcedir . '/Subs-Boards.php');
 require_once($sourcedir . '/Subs-Members.php');
@@ -9,20 +11,24 @@ $modSettings['disableRegisterCheck'] = 4;
 
 $request = $smcFunc['db_query']('', 'SELECT id_board FROM {db_prefix}boards WHERE id_board != 1');
 $board_ids = [];
-while (list ($id_board) = $smcFunc['db_fetch_row']($request))
+
+while ([$id_board] = $smcFunc['db_fetch_row']($request))
 	$board_ids[] = $id_board;
 $smcFunc['db_free_result']($request);
 deleteBoards($board_ids);
 $request = $smcFunc['db_query']('', 'SELECT id_member FROM {db_prefix}members WHERE id_member != 1');
 $members = [];
-while (list ($id_member) = $smcFunc['db_fetch_row']($request))
+
+while ([$id_member] = $smcFunc['db_fetch_row']($request))
 	$members[] = $id_member;
 $smcFunc['db_free_result']($request);
+
 if (!empty($members))
 	deleteMembers($members);
 $board_ids = [];
 $members = [];
 $topics = [];
+
 for ($i = 0; $i < 10; $i++)
 {
 	$regOptions = [
@@ -37,11 +43,12 @@ for ($i = 0; $i < 10; $i++)
 		'check_email_ban' => false,
 	];
 
-	$memberID = registerMember($regOptions, true);
+	$id_member = registerMember($regOptions, true);
 
 	echo "Regstered user $i\n";
 	$members[$i] = $id_member;
 }
+
 for ($i = 0; $i < 10; $i++)
 {
 	$boardOptions = [
@@ -55,12 +62,13 @@ for ($i = 0; $i < 10; $i++)
 
 	echo "Created board $i\n";
 }
+
 for ($i = 0; $i < 10; $i++)
 {
 	$msgOptions = [
 		'body' => 'Automated Topic #' . $i,
 		'id' => 0,
-		'subject' => 'Automated Topic #' . $i,
+		'subject' => 'Automated Subject #' . $i,
 	];
 	$topicOptions = [
 		'id' => 0,
@@ -69,15 +77,13 @@ for ($i = 0; $i < 10; $i++)
 	];
 	$posterOptions = [
 		'id' => $members[$i],
-		'name' => 'user' . $i,
-		'email' => 'user' . $i . '@mydomain.com',
-		'update_post_count' => false,
 	];
 	createPost($msgOptions, $topicOptions, $posterOptions);
 	$topics[$i] = $topicOptions['id'];
 
 	echo "Created topic $i\n";
 }
+
 for ($i = 0; $i < 10; $i++)
 {
 	$msgOptions = [
@@ -92,17 +98,14 @@ for ($i = 0; $i < 10; $i++)
 	];
 	$posterOptions = [
 		'id' => $members[$i],
-		'name' => 'user' . $i,
-		'email' => 'user' . $i . '@mydomain.com',
-		'update_post_count' => false,
 	];
 	createPost($msgOptions, $topicOptions, $posterOptions);
 	$msgOptions = [
 		'id' => $msgOptions['id'],
 		'body' => "Board $board_ids[$i] - Topic $topics[$i] - Messsage $msgOptions[id]",
+		'approved' => true,
 	];
 	$topicOptions = [];
-	$posterOptions = [];
 	modifyPost($msgOptions, $topicOptions, $posterOptions);
 
 	echo "Created message $i\n";

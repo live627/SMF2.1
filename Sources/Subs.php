@@ -4033,7 +4033,7 @@ function get_proxied_url($url)
 function redirectexit($setLocation = '', $refresh = false, $permanent = false)
 {
 	global $scripturl, $context, $modSettings, $db_show_debug, $db_cache;
-
+return;
 	// In case we have mail to send, better do that - as obExit doesn't always quite make it...
 	if (!empty($context['flush_mail']))
 		// @todo this relies on 'flush_mail' being only set in AddMailQueue itself... :\

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPTDD;
 
 class AdminSearchTest extends BaseTestCase
@@ -8,7 +10,7 @@ class AdminSearchTest extends BaseTestCase
 	{
 		global $context, $scripturl;
 
-		foreach ($this->settingsProvider() as list ($url, $name))
+		foreach ($this->settingsProvider() as  [$url, $name])
 		{
 			$this->assertStringContainsString($scripturl, $url);
 			$this->assertStringContainsString($context['search_term'], $name);
