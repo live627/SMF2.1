@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class PermissionsTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class PermissionsTest extends TestCase
 {
 	public function setUp() : void
 	{

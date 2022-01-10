@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use gif_file;
 
-class GraphicsTest extends BaseTestCase
+class GraphicsTest extends TestCase
 {
 	public function setUp() : void
 	{

@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use ErrorException;
 use xmlArray;
 
-class TestxmlArray extends BaseTestCase
+class TestxmlArray extends TestCase
 {
 	public function setUp() : void
 	{
@@ -89,7 +91,7 @@ class TestxmlArray extends BaseTestCase
 			}
 		);
 
-		$this->expectException(ErrorException::class);
+		$this->expectException(\Throwable::class);
 		$result = new xmlArray($xml);
 		$result->to_array('error');
 

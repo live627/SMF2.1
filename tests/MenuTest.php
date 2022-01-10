@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class MenuTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class MenuTest extends TestCase
 {
 	protected $test_areas;
 

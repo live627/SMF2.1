@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class TestSettingsForm extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class TestSettingsForm extends TestCase
 {
 	protected $configVars = [];
 

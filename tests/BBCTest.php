@@ -1,9 +1,11 @@
 <?php
 
 declare(strict_types=1);
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class BBCTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class BBCTest extends TestCase
 {
 	/**
 	 * @return string[][]

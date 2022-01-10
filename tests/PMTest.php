@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class PMTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class PMTest extends TestCase
 {
 	private $options = [];
 

@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class RecentTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class RecentTest extends TestCase
 {
 	public function setUp() : void
 	{
@@ -134,7 +136,7 @@ class RecentTest extends BaseTestCase
 		$unread_topics = $context['topics'];
 		unset($_REQUEST['boards'], $context['topics']);
 
-		$this->assertEqual($modSettings['maxMsgID'], $actual);
+		$this->assertEquals($modSettings['maxMsgID'], $actual);
 		$this->assertNull($actual2);
 		$this->assertIsArray($topics);
 		$this->assertEmpty($topics);

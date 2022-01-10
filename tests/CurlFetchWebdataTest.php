@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use curl_fetch_web_data;
 
-class CurlFetchWebdataTest extends BaseTestCase
+class CurlFetchWebdataTest extends TestCase
 {
 	public function setUp() : void
 	{

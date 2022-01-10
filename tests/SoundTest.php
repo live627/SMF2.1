@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class SoundTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class SoundTest extends TestCase
 {
 	public function setUp() : void
 	{

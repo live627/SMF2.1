@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class ListTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class ListTest extends TestCase
 {
 	public function test() : void
 	{

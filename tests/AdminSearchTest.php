@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class AdminSearchTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class AdminSearchTest extends TestCase
 {
 	public function testSearchSettings(): void
 	{
@@ -17,9 +19,6 @@ class AdminSearchTest extends BaseTestCase
 		}
 	}
 
-	/**
-	 * @return string[][]
-	 */
 	public function settingsProvider(): array
 	{
 		global $context, $sourcedir, $user_info;

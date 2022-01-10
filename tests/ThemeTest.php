@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use Exception;
 
-class ThemeTest extends BaseTestCase
+class ThemeTest extends TestCase
 {
 	public function setUp() : void
 	{
