@@ -89,7 +89,7 @@ class TestxmlArray extends BaseTestCase
 			}
 		);
 
-		$this->expectException(ErrorException::class);
+		$this->expectException(\Throwable::class);
 		$result = new xmlArray($xml);
 		$result->to_array('error');
 

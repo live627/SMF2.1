@@ -29,7 +29,7 @@ if (!defined('SMF'))
  * @param null|array $files_to_extract Specific files to extract
  * @return array|false An array of information about extracted files or false on failure
  */
-function read_tgz_file($gzfilename, $destination, $single_file = false, $overwrite = false, $files_to_extract = null)
+function read_tgz_file(string $gzfilename, ?string $destination, bool $single_file = false, bool $overwrite = false, ?array $files_to_extract = null)/* PHP 8: array|false */
 {
 	$data = substr($gzfilename, 0, 7) == 'http://' || substr($gzfilename, 0, 8) == 'https://'
 		? fetch_web_data($gzfilename)
@@ -77,7 +77,7 @@ function read_tgz_file($gzfilename, $destination, $single_file = false, $overwri
  * @param null|array $files_to_extract If set, only extracts the specified files
  * @return array|false An array of information about the extracted files or false on failure
  */
-function read_tgz_data($data, $destination, $single_file = false, $overwrite = false, $files_to_extract = null)
+function read_tgz_data(string $data, ?string $destination, bool $single_file = false, bool $overwrite = false, ?array $files_to_extract = null)/* PHP 8: array|false */
 {
 	// Make sure we have this loaded.
 	loadLanguage('Packages');
@@ -135,10 +135,9 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 			continue;
 
 		$checksum = 256;
-		for ($i = 0; $i < 148; $i++)
-			$checksum += ord($data[$offset + $i]);
-		for ($i = 156; $i < 512; $i++)
-			$checksum += ord($data[$offset + $i]);
+		for ($i = 0; $i < 512; $i++)
+			if (($i < 148 || $i > 155) && $data[$offset + $i] != "\0")
+				$checksum += ord($data[$offset + $i]);
 
 		if (octdec($file_info['checksum']) != $checksum)
 			break;
@@ -163,18 +162,27 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 			case 'x':
 				$block += ceil(octdec($file_info['size']) / 512);
 				$file_info = array_merge(
-					unpack('A12size/A12mtime/A8checksum/Atype', $data, ($block << 9) + 124),
+					unpack('Z100filename/@124/A12size/A12mtime/A8checksum/Atype', $data, $block << 9),
 					...array_map(
 						fn($h) => [substr(strtok($h, '='), strpos($h, ' ') + 1) => strtok('=')],
 						explode("\n", substr($data, $offset + 512, octdec($file_info['size'])))
 					)
 				);
+
+				$checksum = 256;
+				for ($i = 0; $i < 512; $i++)
+					if (($i < 148 || $i > 155) && $data[($block << 9) + $i] != "\0")
+						$checksum += ord($data[($block << 9) + $i]);
+
+				if (octdec($file_info['checksum']) != $checksum)
+					break;
+
 				$offset = $block++ << 9;
 				if (!empty($file_info['path']))
 					$file_info['filename'] = $file_info['path'];
+
 			break;
 		}
-		$file_info['dir'] = $destination . '/' . dirname($file_info['filename']);
 		$is_file = substr($file_info['filename'], -1) != '/';
 
 		// Calculate the number of blocks taken up by the data.
@@ -182,26 +190,24 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 		$file_info['data'] = substr($data, $offset + 512, octdec($file_info['size']));
 		$block += $size;
 
-		// Not a directory and doesn't exist already...
-		if ($is_file && !file_exists($destination . '/' . $file_info['filename']))
-			$write_this = true;
-		// File exists... check if it is newer.
-		elseif ($is_file)
-			$write_this = $overwrite || filemtime($destination . '/' . $file_info['filename']) < $file_info['mtime'];
-		// Folder... create.
-		elseif ($destination !== null && !$single_file)
+		$write_this = false;
+		if ($destination !== null)
 		{
-			// Protect from accidental parent directory writing...
-			$file_info['filename'] = strtr($file_info['filename'], array('../' => '', '/..' => ''));
+			// Not a directory and doesn't exist already... check if it is newer.
+			if ($is_file)
+				$write_this = !file_exists($destination . '/' . $file_info['filename']) || $overwrite || filemtime($destination . '/' . $file_info['filename']) < octdec($file_info['mtime']);
+			// Folder... create.
+			elseif (!$single_file)
+			{
+				// Protect from accidental parent directory writing...
+				$file_info['filename'] = strtr($file_info['filename'], array('../' => '', '/..' => ''));
 
-			if (!file_exists($destination . '/' . $file_info['filename']))
-				mktree($destination . '/' . $file_info['filename'], 0777);
-			$write_this = false;
+				if (!file_exists($destination . '/' . $file_info['filename']))
+					mktree($destination . '/' . $file_info['filename'], 0777);
+			}
 		}
-		else
-			$write_this = false;
 
-		if ($write_this && $destination !== null)
+		if ($write_this)
 		{
 			if (strpos($file_info['filename'], '/') !== false && !$single_file)
 				mktree($destination . '/' . dirname($file_info['filename']), 0777);
@@ -210,10 +216,7 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 			if ($single_file && ($destination == $file_info['filename'] || $destination == '*/' . basename($file_info['filename'])))
 				return $file_info['data'];
 			// If we're looking for another file, keep going.
-			elseif ($single_file)
-				continue;
-			// Looking for restricted files?
-			elseif ($files_to_extract !== null && !in_array($file_info['filename'], $files_to_extract))
+			elseif ($single_file || ($files_to_extract !== null && !in_array($file_info['filename'], $files_to_extract)))
 				continue;
 
 			package_put_contents($destination . '/' . $file_info['filename'], $file_info['data']);
@@ -248,7 +251,7 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
  * @param array $files_to_extract
  * @return mixed If destination is null, return a short array of a few file details optionally delimited by $files_to_extract. If $single_file is true, return contents of a file as a string; false otherwise
  */
-function read_zip_data($data, $destination, $single_file = false, $overwrite = false, $files_to_extract = null)
+function read_zip_data(string $data, ?string $destination, bool $single_file = false, bool $overwrite = false, ?array $files_to_extract = null)/* PHP 8: array|false */ 
 {
 	umask(0);
 	if ($destination !== null && !file_exists($destination) && !$single_file)
@@ -349,7 +352,7 @@ function read_zip_data($data, $destination, $single_file = false, $overwrite = f
 			// If we're looking for a specific file, and this is it... ka-bam, baby.
 			if ($single_file && ($destination == $file_info['filename'] || $destination == '*/' . basename($file_info['filename'])))
 				return $file_info['data'];
-			// Oh, another file? Fine. You don't like this file, do you?  I know how it is.  Yeah... just go away.  No, don't apologize. I know this file's just not *good enough* for you.
+			// Oh, another file? Fine. You don't like this file, do you?  I know how it is. Yeah... just go away. No, don't apologize. I know this file's just not *good enough* for you.
 			elseif ($single_file || ($files_to_extract !== null && !in_array($file_info['filename'], $files_to_extract)))
 				continue;
 

@@ -116,4 +116,46 @@ class SubsTest extends BaseTestCase
 		$this->assertEquals($expected, iri_to_url($test));
 		$this->assertEquals($test, url_to_iri($expected));
 	}
+
+	public function data(): array
+	{
+		return array_merge(
+			array_map(fn($x) => [$x, 15, 5, 0, 0], range(-2, 4)),
+			array_map(fn($x) => [$x, 15, 5, 1, 5], range(5, 9)),
+			array_map(fn($x) => [$x, 15, 5, 2, 10], range(10, 14)),
+			array_map(fn($x) => [$x, 15, 5, 3, 15], range(15, 21))
+		);
+	}
+
+	/**
+	 * @dataProvider data
+	 */
+	public function test(int $start, int $max_value, int $num_per_page, int $this_page, int $this_value): void
+	{
+		global $context;
+
+		$page_index = constructPageIndex('querystring', $start, $max_value, $num_per_page);
+		$this->assertIsInt($start);
+		$this->assertIsInt($context['current_page']);
+		$this->assertEquals($this_value, $start);
+		$this->assertEquals($this_page, $context['current_page']);
+		if ($start > 0)
+			$this->assertStringContainsString(
+				sprintf(
+					'<span class="current_page">%d</span>',
+					$this_page + 1
+				),
+				$page_index
+			);
+		if ($this_page > 0)
+			$this->assertStringContainsString(
+				sprintf(
+					'<a class="nav_page" href="querystring;start=%d"><span class="main_icons previous_page"></span></a>',
+					$this_value - $num_per_page
+				),
+				$page_index
+			);
+		else
+			$this->assertStringNotContainsString('previous_page', $page_index);
+	}
 }
