@@ -2,19 +2,21 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class MenuTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class MenuTest extends TestCase
 {
 	protected $test_areas;
 
 	protected $test_options;
 
-	public function setUp() : void
+	public function setUp(): void
 	{
 		global $context, $sourcedir, $user_info;
 
-		require_once($sourcedir . '/Subs-Menu.php');
+		require_once __DIR__ . '/../Sources/Subs-Menu.php';
 
 		$this->test_areas = [
 			/*	'section1' => array(
@@ -172,7 +174,7 @@ class MenuTest extends BaseTestCase
 		$context['current_action'] = 'bubbh';
 	}
 
-	public function tearDown() : void
+	public function tearDown(): void
 	{
 		global $context;
 
@@ -205,7 +207,6 @@ class MenuTest extends BaseTestCase
 
 	/**
 	 * @dataProvider optionsProvider
-	 *
 	 */
 	public function testOptions($expectedKey, $expectedVal): void
 	{
@@ -217,9 +218,6 @@ class MenuTest extends BaseTestCase
 		$this->assertContains($expectedVal, $result);
 	}
 
-	/**
-	 * @return string[][]
-	 */
 	public function optionsProvider(): array
 	{
 		return [

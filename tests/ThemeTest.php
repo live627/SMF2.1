@@ -2,22 +2,24 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use Exception;
 
-class ThemeTest extends BaseTestCase
+class ThemeTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $boarddir, $boardurl, $sourcedir, $themedir, $themeurl;
+		global $boarddir, $boardurl, $themedir, $themeurl;
 
 		$themedir = $boarddir . '/Themes';
 		$themeurl = $boardurl . '/Themes';
 
-		require_once($sourcedir . '/Subs-Package.php');
-		require_once($sourcedir . '/Subs-Themes.php');
-		require_once($sourcedir . '/Themes.php');
+		require_once __DIR__ . '/../Sources/Subs-Package.php';
+		require_once __DIR__ . '/../Sources/Subs-Themes.php';
+		require_once __DIR__ . '/../Sources/Themes.php';
 	}
 
 	public function testThemeInfo(): void

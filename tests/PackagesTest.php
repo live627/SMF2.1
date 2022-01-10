@@ -2,16 +2,137 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class PackagesTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+/**
+ * testPackageDownload also serves SimpleDesk_2.1.0.tgz from tests/packages.
+ * Needs the fixture server (node server.js) reachable at http://11.0.0.1 on port 80.
+ * SMF's is_fetch_safe() refuses loopback and private addresses, and fetch_web_data()
+ * only talks to ports 80/443, so 127.0.0.1:8125 can never work. Instead:
+ *
+ *     sudo ip addr add 11.0.0.1/32 dev lo      (macOS: sudo ifconfig lo0 alias 11.0.0.1)
+ *     sudo node server.js 80
+ *
+ * Override the address with the TEST_SERVER_URL environment variable.
+ */
+class PackagesTest extends TestCase
 {
-	public function setUp(): void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
+		require_once __DIR__ . '/../Sources/PackageGet.php';
+		require_once __DIR__ . '/../Sources/Packages.php';
+		require_once __DIR__ . '/../Sources/Subs-Package.php';
+	}
 
-		require_once($sourcedir . '/Packages.php');
-		require_once($sourcedir . '/Subs-Package.php');
+	public function tearDown(): void
+	{
+		unset($_REQUEST, $_GET);
+	}
+
+	private static function baseUrl(): string
+	{
+		return rtrim(getenv('TEST_SERVER_URL') ?: 'http://11.0.0.1', '/');
+	}
+
+	public function testPackageBrowse(): void
+	{
+		global $context;
+
+		loadLanguage('Admin');
+		$context['admin_menu_name'] = 'admin';
+		Packages();
+		$this->assertEquals('browse', $context['sub_action']);
+		$this->assertEquals('browse', $context['sub_template']);
+		$this->assertEquals('packages_lists', $context['default_list']);
+	}
+
+	public function testPackageDownload(): void
+	{
+		global $context;
+
+		$_GET[$context['session_var']] = $context['session_id'];
+		$_GET[$_SESSION['session_var']] = $_SESSION['session_value'];
+		$url = self::baseUrl() . '/SimpleDesk_2.1.0.tgz';
+		$headers = @get_headers($url);
+		if ($headers === false || strpos($headers[0], '200') === false)
+			$this->markTestSkipped('Could not fetch ' . $url . '; is 11.0.0.1 set up and "node server.js 80" running? (see the class comment)');
+
+		$_REQUEST['package'] = $url;
+		loadLanguage('Packages');
+		PackageDownload();
+		$this->assertEquals('Package downloaded successfully', $context['page_title']);
+		$this->assertEquals('SimpleDesk - Integrated Helpdesk for Simple Machines Forum', $context['package']['name']);
+	}
+
+	/**
+	 * @depends testPackageDownload
+	 */
+	public function testPackageDownloaded(): void
+	{
+		global $context;
+
+		PackageBrowse();
+		$this->assertEquals('idmodification', $context['packages_lists_modification']['sort']['id']);
+		$this->assertCount(1, $context['packages_lists_modification']['rows']);
+		$this->assertEquals(
+			'SimpleDesk - Integrated Helpdesk for Simple Machines Forum',
+			$context['packages_lists_modification']['rows'][0]['data']['mod_namemodification']['value']
+		);
+	}
+
+	/**
+	 * @depends testPackageDownload
+	 */
+	public function testActionInstall(): void
+	{
+		global $context, $txt;
+
+		$_REQUEST['package'] = 'SimpleDesk_2.1.0.tgz';
+		$_REQUEST['sa'] = 'install';
+		Packages();
+		$this->assertFalse($context['is_installed']);
+		$this->assertFalse($context['uninstalling']);
+		$this->assertCount(49, $context['actions']);
+
+		// Some actions are keyed by number and some by file name, and which
+		// number an action gets depends on how the package's code changes apply
+		// to this install, so look for a passing action instead of a fixed index.
+		$summary = [];
+		$successful = 0;
+		foreach ($context['actions'] as $key => $action)
+		{
+			$summary[] = $key . ': ' . ($action['type'] ?? '') . ' | ' . ($action['action'] ?? '') . ' | ' . ($action['description'] ?? '');
+
+			if (($action['description'] ?? '') === $txt['package_action_success'])
+				$successful++;
+		}
+
+		$this->assertGreaterThan(
+			0,
+			$successful,
+			"No action reported success. The actions were:\n" . implode("\n", $summary)
+		);
+	}
+
+	/**
+	 * @depends testPackageDownload
+	 */
+	public function testPackageRemove(): void
+	{
+		global $context, $packagesdir;
+
+		// SMF keeps packages in "Packages". A hard-coded "../packages" only
+		// exists on case-insensitive file systems, so ask SMF where it is.
+		$package_file = $packagesdir . '/SimpleDesk_2.1.0.tgz';
+
+		$_GET[$context['session_var']] = $context['session_id'];
+		$_GET[$_SESSION['session_var']] = $_SESSION['session_value'];
+		$this->assertFileExists($package_file);
+		$_GET['package'] = 'SimpleDesk_2.1.0.tgz';
+		PackageRemove();
+		$this->assertFileNotExists($package_file);
 	}
 
 	public function zipProvider(): array

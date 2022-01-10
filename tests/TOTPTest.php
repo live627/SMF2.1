@@ -2,18 +2,75 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use InvalidArgumentException;
 use TOTP\Auth;
 
-class TOTPTest extends BaseTestCase
+class TOTPTest extends TestCase
 {
-	public function setUp() : void
-	{
-		global $context, $sourcedir, $user_info;
+	/**
+	 * Known good vector: key "ABC" produced code 424535 at this moment.
+	 */
+	private const KEY = 'ABC';
+	private const CODE = '424535';
+	private const TIMESTAMP = 1421707340;
 
-		require_once($sourcedir . '/Class-TOTP.php');
+	/**
+	 * The base32 alphabet the class is expected to expose, mapped to values.
+	 */
+	private const BASE32_VALUES = [
+		'A' => 0,
+		'B' => 1,
+		'C' => 2,
+		'D' => 3,
+		'E' => 4,
+		'F' => 5,
+		'G' => 6,
+		'H' => 7,
+		'I' => 8,
+		'J' => 9,
+		'K' => 10,
+		'L' => 11,
+		'M' => 12,
+		'N' => 13,
+		'O' => 14,
+		'P' => 15,
+		'Q' => 16,
+		'R' => 17,
+		'S' => 18,
+		'T' => 19,
+		'U' => 20,
+		'V' => 21,
+		'W' => 22,
+		'X' => 23,
+		'Y' => 24,
+		'Z' => 25,
+		2 => 26,
+		3 => 27,
+		4 => 28,
+		5 => 29,
+		6 => 30,
+		7 => 31,
+	];
+
+	public static function setUpBeforeClass(): void
+	{
+		require_once __DIR__ . '/../Sources/Class-TOTP.php';
+	}
+
+	/**
+	 * The alphabet's digit keys are ints in PHP arrays ('2' becomes 2), but
+	 * generated codes are strings. assertContains() compares strictly, so
+	 * normalise everything to strings before comparing.
+	 *
+	 * @return string[]
+	 */
+	private static function alphabet(): array
+	{
+		return array_map('strval', array_keys(self::BASE32_VALUES));
 	}
 
 	public function testInstantiate(): void
@@ -30,17 +87,14 @@ class TOTPTest extends BaseTestCase
 
 	public function testValidInitKeyGetsSet(): void
 	{
-		$key = 'ABC';
-		$auth = new Auth($key);
-		$this->assertEquals($key, $auth->getInitKey(), 'Valid key can be got');
+		$auth = new Auth(self::KEY);
+		$this->assertEquals(self::KEY, $auth->getInitKey(), 'Valid key can be got');
 	}
 
-	public function testBase64LookupIsCorrect(): void
+	public function testBase32LookupIsCorrect(): void
 	{
-		$expected = $this->base64values;
-
 		$auth = new Auth();
-		$this->assertEquals($expected, $auth->getLookup());
+		$this->assertEquals(self::BASE32_VALUES, $auth->getLookup());
 	}
 
 	public function testGetAndSetRange(): void
@@ -85,45 +139,36 @@ class TOTPTest extends BaseTestCase
 	{
 		$auth = new Auth();
 		$code = $auth->generateCode();
-		$this->assertEquals(16, strlen($code), 'Default code is 16 chars');
+		$this->assertSame(16, strlen($code), 'Default code is 16 chars');
 
-		$base64values = array_keys($this->base64values);
-		$code_letters = str_split($code);
-
-		foreach ($code_letters as $letter)
-		{
-			$this->assertContains($letter, $base64values, 'Key consists of base 64 values');
-		}
+		foreach (str_split($code) as $letter)
+			$this->assertContains($letter, self::alphabet(), 'Key consists of base 32 values');
 	}
 
 	public function testGenerateACodeOfLength(): void
 	{
 		$auth = new Auth();
 		$code = $auth->generateCode(4);
-		$this->assertEquals(4, strlen($code), 'Default code is 16 chars');
+		$this->assertSame(4, strlen($code), 'Requested length is honoured');
+
+		foreach (str_split($code) as $letter)
+			$this->assertContains($letter, self::alphabet(), 'Key consists of base 32 values');
 	}
 
 	public function testValidateAValidCode(): void
 	{
-		$key = 'ABC';
-		$auth = new Auth($key);
-		$code = '424535';
-		$timestamp = 1421707340;
+		$auth = new Auth(self::KEY);
 
-		$result = $auth->validateCode($code, null, $timestamp);
+		$result = $auth->validateCode(self::CODE, null, self::TIMESTAMP);
 		$this->assertTrue($result, 'This is a known good code');
 	}
 
 	public function testValidateAValidCodeFalseWhenOutOfRange(): void
 	{
-		$key = 'ABC';
-		$code = '424535';
-		$timestamp = 1421707340;
-
-		$auth = new Auth($key);
+		$auth = new Auth(self::KEY);
 		$auth->setRange(1);
 
-		$result = $auth->validateCode($code, null, $timestamp);
+		$result = $auth->validateCode(self::CODE, null, self::TIMESTAMP);
 		$this->assertFalse($result, 'This was a known good code 2 seconds ago');
 	}
 
@@ -138,57 +183,18 @@ class TOTPTest extends BaseTestCase
 
 	public function testValidateWithDifferentInitKeyIsFalse(): void
 	{
-		$key = 'DEF';
-		$auth = new Auth($key);
-		$code = '424535';
-		$timestamp = 1421707340;
+		$auth = new Auth('DEF');
 
-		$result = $auth->validateCode($code, null, $timestamp);
-		$this->assertFalse($result, 'This is a known good code for key ABC');
+		$result = $auth->validateCode(self::CODE, null, self::TIMESTAMP);
+		$this->assertFalse($result, 'This is a known good code for key ABC, not DEF');
 	}
 
 	public function testValidateAfterTimeHasPassedIsFalse(): void
 	{
-		$key = 'ABC';
-		$auth = new Auth($key);
-		$code = '424535';
+		$auth = new Auth(self::KEY);
 
-		$result = $auth->validateCode($code);
+		// No timestamp given, so "now" is used: the 2015 code has long expired.
+		$result = $auth->validateCode(self::CODE);
 		$this->assertFalse($result, 'This was a known good code, but that was then');
 	}
-
-	private $base64values = [
-		'A' => 0,
-		'B' => 1,
-		'C' => 2,
-		'D' => 3,
-		'E' => 4,
-		'F' => 5,
-		'G' => 6,
-		'H' => 7,
-		'I' => 8,
-		'J' => 9,
-		'K' => 10,
-		'L' => 11,
-		'M' => 12,
-		'N' => 13,
-		'O' => 14,
-		'P' => 15,
-		'Q' => 16,
-		'R' => 17,
-		'S' => 18,
-		'T' => 19,
-		'U' => 20,
-		'V' => 21,
-		'W' => 22,
-		'X' => 23,
-		'Y' => 24,
-		'Z' => 25,
-		2 => 26,
-		3 => 27,
-		4 => 28,
-		5 => 29,
-		6 => 30,
-		7 => 31,
-	];
 }

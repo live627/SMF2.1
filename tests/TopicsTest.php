@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class TopicsTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class TopicsTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Subs-Post.php');
+		require_once __DIR__ . '/../Sources/Subs-Post.php';
 	}
 
 	public function testApprove(): void

@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use browser_detector;
 
-class BrowserDetectorTest extends BaseTestCase
+class BrowserDetectorTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Class-BrowserDetect.php');
+		require_once __DIR__ . '/../Sources/Class-BrowserDetect.php';
 	}
 
-	public function tearDown() : void
+	public function tearDown(): void
 	{
 		$_SERVER['HTTP_USER_AGENT'] = '';
 	}

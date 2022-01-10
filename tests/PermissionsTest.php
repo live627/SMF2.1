@@ -2,15 +2,24 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class PermissionsTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+/**
+ * Tests for the permission screens and helpers in Sources/ManagePermissions.php:
+ * the permission list a membergroup (or the guests) gets, and the permissions
+ * that must never be given to certain groups.
+ *
+ * Needs the populated test install with SMF's default membergroups (guests -1,
+ * regular members 0, administrators 1, global moderators 2, moderators 3, and
+ * the post-count groups 4 to 8).
+ */
+class PermissionsTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Subs-Sound.php');
+		require_once __DIR__ . '/../Sources/Subs-Sound.php';
 	}
 
 	/**
@@ -26,7 +35,6 @@ class PermissionsTest extends BaseTestCase
 
 	/**
 	 * @dataProvider permissionsControllerProvider
-	 *
 	 */
 	public function testPermissionsController(int $group): void
 	{
@@ -90,7 +98,7 @@ class PermissionsTest extends BaseTestCase
 		$this->permissionsAssertions();
 	}
 
-	public function testllegalPermissions(): void
+	public function testIllegalPermissions(): void
 	{
 		global $context;
 

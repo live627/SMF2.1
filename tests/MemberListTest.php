@@ -2,28 +2,29 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class TestMemberList extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class TestMemberList extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Memberlist.php');
+		require_once __DIR__ . '/../Sources/Memberlist.php';
 	}
 
-	public function testActionIndexMembers(): void
+	public function test(): void
 	{
 		global $context;
 
+		$_REQUEST['start'] = '0';
 		Memberlist();
 		$this->assertCount(6, $context['columns']);
 		$this->assertEquals(11, $context['num_members']);
 		$this->assertEquals('t', $context['members'][1]['sort_letter']);
 	}
 
-	public function testActionMlSearch(): void
+	public function testSearch(): void
 	{
 		global $context;
 

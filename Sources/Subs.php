@@ -566,11 +566,13 @@ function constructPageIndex($base_url, &$start, $max_value, $num_per_page, $flex
 	$start_invalid = $start < 0;
 
 	// $start must be within bounds and be a multiple of $num_per_page.
-	$start = min(max(0, $start), $max_value);
+	$max_page_value = (int) (($max_value - 1) / $num_per_page) * $num_per_page;
+	$start = min(max(0, $start), $max_page_value);
 	$start = $start - ($start % $num_per_page);
 
+	$current_page = $start / $num_per_page;
 	if (!isset($context['current_page']))
-		$context['current_page'] = $start / $num_per_page;
+		$context['current_page'] = $current_page;
 
 	// Define some default page index settings for compatibility with old themes.
 	// !!! Should this be moved to loadTheme()?
@@ -585,7 +587,6 @@ function constructPageIndex($base_url, &$start, $max_value, $num_per_page, $flex
 			'extra_after' => '',
 		);
 
-	$last_page_value = (int) (($max_value - 1) / $num_per_page) * $num_per_page;
 	$base_link = strtr($settings['page_index']['page'], array('{URL}' => $flexible_start ? $base_url : strtr($base_url, array('%' => '%%')) . ';start=%1$d'));
 	$pageindex = $settings['page_index']['extra_before'];
 
@@ -599,7 +600,9 @@ function constructPageIndex($base_url, &$start, $max_value, $num_per_page, $flex
 		// Show all the pages.
 		$display_page = 1;
 		for ($counter = 0; $counter < $max_value; $counter += $num_per_page)
-			$pageindex .= $start == $counter && !$start_invalid ? sprintf($settings['page_index']['current_page'], $display_page++) : sprintf($base_link, $counter, $display_page++);
+			$pageindex .= $start == $counter && !$start_invalid
+				? sprintf($settings['page_index']['current_page'], $display_page++)
+				: sprintf($base_link, $counter, $display_page++);
 	}
 	else
 	{
@@ -622,37 +625,36 @@ function constructPageIndex($base_url, &$start, $max_value, $num_per_page, $flex
 		for ($nCont = -$page_contiguous; $nCont <= $page_contiguous; $nCont++)
 		{
 			$tmpStart = $start + $num_per_page * $nCont;
+
+			// Show the current page. (prev page 1 ... 6 7 >[8]< 9 10 ... 15 next page)
 			if ($nCont == 0)
-			{
-				// Show the current page. (prev page 1 ... 6 7 >[8]< 9 10 ... 15 next page)
-				if (!$start_invalid)
-					$pageindex .= sprintf($settings['page_index']['current_page'], $start / $num_per_page + 1);
-				else
-					$pageindex .= sprintf($base_link, $start, $start / $num_per_page + 1);
-			}
+				$pageindex .= !$start_invalid
+					? sprintf($settings['page_index']['current_page'], $current_page + 1)
+					: sprintf($base_link, $start, $current_page + 1);
+
 			// Show the pages before the current one. (prev page 1 ... >6 7< [8] 9 10 ... 15 next page)
 			// ... or ...
 			// Show the pages after the current one... (prev page 1 ... 6 7 [8] >9 10< ... 15 next page)
-			elseif (($nCont < 0 && $start >= $num_per_page * -$nCont) || ($nCont > 0 && $tmpStart <= $last_page_value))
+			elseif (($nCont < 0 && $start >= $num_per_page * -$nCont) || ($nCont > 0 && $tmpStart <= $max_page_value))
 				$pageindex .= sprintf($base_link, $tmpStart, $tmpStart / $num_per_page + 1);
 		}
 
 		// Show the '...' part near the end. (prev page 1 ... 6 7 [8] 9 10 >...< 15 next page)
-		if ($start + $num_per_page * ($page_contiguous + 1) < $last_page_value)
+		if ($start + $num_per_page * ($page_contiguous + 1) < $max_page_value)
 			$pageindex .= strtr($settings['page_index']['expand_pages'], array(
 				'{LINK}' => JavaScriptEscape($smcFunc['htmlspecialchars']($base_link)),
 				'{FIRST_PAGE}' => $start + $num_per_page * ($page_contiguous + 1),
-				'{LAST_PAGE}' => $last_page_value,
+				'{LAST_PAGE}' => $max_page_value,
 				'{PER_PAGE}' => $num_per_page,
 			));
 
 		// Show the last number in the list. (prev page 1 ... 6 7 [8] 9 10 ... >15<  next page)
-		if ($start + $num_per_page * $page_contiguous < $last_page_value)
-			$pageindex .= sprintf($base_link, $last_page_value, $last_page_value / $num_per_page + 1);
+		if ($start + $num_per_page * $page_contiguous < $max_page_value)
+			$pageindex .= sprintf($base_link, $max_page_value, $max_page_value / $num_per_page + 1);
 	}
 
 	// Show the "next page" link. (prev page 1 ... 6 7 [8] 9 10 ... 15 >next page<)
-	if ($start != $last_page_value && !$start_invalid && $show_prevnext)
+	if ($start != $max_page_value && !$start_invalid && $show_prevnext)
 		$pageindex .= sprintf($base_link, $start + $num_per_page, $settings['page_index']['next_page']);
 
 	$pageindex .= $settings['page_index']['extra_after'];
@@ -2485,6 +2487,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 		// Let mods add new BBC without hassle.
 		call_integration_hook('integrate_bbc_codes', array(&$codes, &$no_autolink_tags));
+		$no_autolink_tags = array_flip($no_autolink_tags);
 
 		// This is mainly for the bbc manager, so it's easy to add tags above.  Custom BBC should be added above this line.
 		if ($message === false)
@@ -2738,7 +2741,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				if (!empty($open_tags))
 				{
 					foreach ($open_tags as $open_tag)
-						if (in_array($open_tag['tag'], $no_autolink_tags))
+						if (isset($no_autolink_tags[$open_tag['tag']]))
 							$no_autolink_area = true;
 				}
 
@@ -3130,12 +3133,19 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 									if (isset($disabled['email']))
 										return $url;
 
+									// Quoted local parts are valid per RFC 5322 but nobody needs them
+									// here, and they are how markup sneaks into an address.
+									if (preg_match('~["<>\\\\]|&(?:quot|lt|gt|#0*39);~i', $parsedurl['path']))
+										return $url;
+
 									// Is this version of PHP capable of validating this email address?
 									$can_validate = defined('FILTER_FLAG_EMAIL_UNICODE') || strlen($parsedurl['path']) == strspn(strtolower($parsedurl['path']), 'abcdefghijklmnopqrstuvwxyz0123456789!#$%&\'*+-/=?^_`{|}~.@');
-
+ 
 									$flags = defined('FILTER_FLAG_EMAIL_UNICODE') ? FILTER_FLAG_EMAIL_UNICODE : null;
-
-									if (!$can_validate || (filter_var($parsedurl['path'], FILTER_VALIDATE_EMAIL, $flags) !== false && filter_var($parsedurl['path'], FILTER_SANITIZE_EMAIL) === $parsedurl['path']))
+ 
+									// FILTER_SANITIZE_EMAIL strips non-ASCII characters, so it can only be
+									// used as an extra check when unicode validation isn't available.
+									if (!$can_validate || (filter_var($parsedurl['path'], FILTER_VALIDATE_EMAIL, $flags) !== false && (defined('FILTER_FLAG_EMAIL_UNICODE') || filter_var($parsedurl['path'], FILTER_SANITIZE_EMAIL) === $parsedurl['path'])))
 										return '[email=' . str_replace('mailto:', '', $url) . ']' . $url . '[/email]';
 									else
 										return $url;
@@ -6638,15 +6648,17 @@ function sanitizeMSCutPaste($string)
 		chr(148),
 	);
 
-	// safe replacements
-	$replacechars = array(
-		',',	// &sbquo;
-		',,',	// &bdquo;
-		'...',	// &hellip;
-		"'",	// &lsquo;
-		"'",	// &rsquo;
-		'"',	// &ldquo;
-		'"',	// &rdquo;
+	// Safe replacements. Quotes are replaced with the same entities that
+	// htmlspecialchars(..., ENT_QUOTES) produces. Returning raw quotes here
+	// lets a smart quote become a real attribute delimiter later in parse_bbc().
+ 	$replacechars = array(
+		',',         // &sbquo;
+		',,',        // &bdquo;
+		'...',       // &hellip;
+		'&#039;',    // &lsquo;
+		'&#039;',    // &rsquo;
+		'&quot;',    // &ldquo;
+		'&quot;',    // &rdquo;
 	);
 
 	if ($context['utf8'])

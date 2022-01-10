@@ -1,13 +1,12 @@
 <?php
 
 declare(strict_types=1);
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class BBCTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class BBCTest extends TestCase
 {
-	/**
-	 * @return string[][]
-	 */
 	public function preparseProvider(): array
 	{
 		return [
@@ -86,7 +85,7 @@ class BBCTest extends BaseTestCase
 		if ($test == '[time]now[/time]')
 			$expected = '[time]' . forum_time() . '[/time]';
 
-		require_once($sourcedir . '/Subs-Post.php');
+		require_once __DIR__ . '/../Sources/Subs-Post.php';
 		preparsecode($test);
 
 		$this->assertEquals($expected, $test);
@@ -98,6 +97,10 @@ class BBCTest extends BaseTestCase
 	public function bbcProvider(): array
 	{
 		global $txt, $scripturl;
+
+		// The YouTube BBC uses the forum's origin in its embed URL.
+		$scripturl_parts = parse_iri($scripturl);
+		$hosturl = $scripturl_parts['scheme'] . '://' . $scripturl_parts['host'];
 
 		return [
 			[
@@ -241,6 +244,56 @@ class BBCTest extends BaseTestCase
 				'<a href="http://www.simplemachines.net/" class="bbc_link">blah</a>',
 			],
 			[
+				'iurl',
+				'[iurl=#blah]text[/iurl]',
+				'<a href="#post_blah" class="bbc_link">text</a>',
+			],
+			[
+				'justify',
+				'[justify]text[/justify]',
+				'<div class="justifytext">text</div>',
+			],
+			[
+				'ltr',
+				'[ltr]text[/ltr]',
+				'<bdo dir="ltr">text</bdo>',
+			],
+			[
+				'rtl',
+				'[rtl]text[/rtl]',
+				'<bdo dir="rtl">text</bdo>',
+			],
+			[
+				'float',
+				'[float=left]text[/float]',
+				'<div class="bbc_float floatleft">text</div>',
+			],
+			[
+				'float',
+				'[float=right max=50%]text[/float]',
+				'<div class="bbc_float floatright" style="max-width:50%">text</div>',
+			],
+			[
+				'html',
+				'[html]text[/html]',
+				'<div>text</div>',
+			],
+			[
+				'member',
+				'[member=1]name[/member]',
+				'<a href="' . $scripturl . '?action=profile;u=1" class="mention" data-mention="1">@name</a>',
+			],
+			[
+				'youtube',
+				'[youtube]abc123[/youtube]',
+				'<div class="videocontainer"><div><iframe frameborder="0" src="https://www.youtube.com/embed/abc123?origin=' . $hosturl . '&wmode=opaque" data-youtube-id="abc123" allowfullscreen loading="lazy"></iframe></div></div>',
+			],
+			[
+				'quote',
+				'[quote]a[quote]b[quote]c[/quote][/quote][/quote]',
+				'<blockquote class="bbc_standard_quote"><cite>Quote</cite>a<blockquote class="bbc_alternate_quote"><cite>Quote</cite>b<blockquote class="bbc_standard_quote"><cite>Quote</cite>c</blockquote></blockquote></blockquote>',
+			],
+			[
 				'left',
 				'[left]blah[/left]',
 				'<div class="lefttext">blah</div>',
@@ -336,17 +389,17 @@ class BBCTest extends BaseTestCase
 			[
 				'quote',
 				'[quote=[url=https://www.example.com/]Example.com[/url]]The quote[/quote]',
-				'<blockquote class="bbc_standard_quote"><cite>Quote from: [url=https://www.example.com/</cite>Example.com[/url]]The quote</blockquote>',
+				'<blockquote class="bbc_standard_quote"><cite>Quote from: [url=https://www.example.com/</cite><a href="//example.com" class="bbc_link" target="_blank" rel="noopener">Example.com</a>[/url]]The quote</blockquote>',
 			],
 			[
 				'quote',
 				'[quote="[url="https://www.example.com/"]Example.com[/url]"]The quote[/quote]',
-				'<blockquote class="bbc_standard_quote"><cite>Quote from: "[url="https://www.example.com/"</cite>Example.com[/url]"]The quote</blockquote>',
+				'<blockquote class="bbc_standard_quote"><cite>Quote from: [url="https://www.example.com/</cite><a href="//example.com" class="bbc_link" target="_blank" rel="noopener">Example.com</a>[/url]"]The quote</blockquote>',
 			],
 			[
 				'quote',
 				'[quote="[url=https://www.example.com/]Example.com[/url]"]The quote[/quote]',
-				'<blockquote class="bbc_standard_quote"><cite>Quote from: "[url=https://www.example.com/</cite>Example.com[/url]"]The quote</blockquote>',
+				'<blockquote class="bbc_standard_quote"><cite>Quote from: <a href="https://www.example.com/" class="bbc_link" target="_blank" rel="noopener">Example.com</a></cite>The quote</blockquote>',
 			],
 			[
 				'right',
@@ -545,7 +598,7 @@ class BBCTest extends BaseTestCase
 			],
 			[
 				'http://ar.wikipedia.org/wiki/النطاقات_العربية',
-				'<a href="http://ar.wikipedia.org/wiki/النطاقات_العربية" class="bbc_link" target="_blank" rel="noopener">http://ar.wikipedia.org/wiki/النطاقات_العربية</a>',
+				'<a href="http://ar.wikipedia.org/wiki/%D8%A7%D9%84%D9%86%D8%B7%D8%A7%D9%82%D8%A7%D8%AA_%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9" class="bbc_link" target="_blank" rel="noopener">http://ar.wikipedia.org/wiki/النطاقات_العربية</a>',
 			],
 			[
 				'http://example.com/foo_(bar_baz)',
@@ -565,11 +618,11 @@ class BBCTest extends BaseTestCase
 			],
 			[
 				'example.com/?test=[(foo)]{bar}',
-				'<a href="//example.com/?test=&#91;(foo)&#93;{bar}" class="bbc_link" target="_blank" rel="noopener">example.com/?test=[(foo)]{bar}</a>',
+				'<a href="//example.com/?test=%5B(foo)%5D%7Bbar%7D" class="bbc_link" target="_blank" rel="noopener">example.com/?test=[(foo)]{bar}</a>',
 			],
 			[
 				'http://www.example.com/a/test?one=for#{all”',
-				'<a href="http://www.example.com/a/test?one=for#{all" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/a/test?one=for#{all</a>"',
+				'<a href="http://www.example.com/a/test?one=for#%7Ball" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/a/test?one=for#{all</a>&quot;',
 			],
 			[
 				'http://www.example.com/a/test?one=for<all>#derp',
@@ -616,8 +669,20 @@ class BBCTest extends BaseTestCase
 				'Have you been to <a href="//example.com" class="bbc_link" target="_blank" rel="noopener">//example.com</a>?It is exemplary!',
 			],
 			[
+				'Have you been to http://example?It is exemplary!',
+				'Have you been to http://example?It is exemplary!',
+			],
+			[
 				'Have you been to http://example.com?It is exemplary!',
 				'Have you been to <a href="http://example.com" class="bbc_link" target="_blank" rel="noopener">http://example.com</a>?It is exemplary!',
+			],
+			[
+				'artial domain name matches. Now http://www.com.urboiuwr/derp.txt in its entirety will fail to match',
+				'artial domain name matches. Now http://www.com.urboiuwr/derp.txt in its entirety will fail to match',
+			],
+			[
+				'artial domain name matches. Now http://www.com ',
+				'artial domain name matches. Now <a href="http://www.com" class="bbc_link" target="_blank" rel="noopener">http://www.com</a> ',
 			],
 			[
 				'http://123.4.56.78/',
@@ -665,19 +730,19 @@ class BBCTest extends BaseTestCase
 			],
 			[
 				'For an example of a valuably variable foo, go to http://www.example.com/index.php?var[foo]=value!',
-				'For an example of a valuably variable foo, go to <a href="http://www.example.com/index.php?var&#91;foo&#93;=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>!',
+				'For an example of a valuably variable foo, go to <a href="http://www.example.com/index.php?var%5Bfoo%5D=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>!',
 			],
 			[
 				'Have you been to http://www.example.com/index.php?var[foo]=value?',
-				'Have you been to <a href="http://www.example.com/index.php?var&#91;foo&#93;=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>?',
+				'Have you been to <a href="http://www.example.com/index.php?var%5Bfoo%5D=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>?',
 			],
 			[
 				'In parentheses (http://www.example.com/index.php?var[foo]=value), will this still be autolinked correctly? ',
-				'In parentheses (<a href="http://www.example.com/index.php?var&#91;foo&#93;=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>), will this still be autolinked correctly? ',
+				'In parentheses (<a href="http://www.example.com/index.php?var%5Bfoo%5D=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>), will this still be autolinked correctly? ',
 			],
 			[
 				'What about in brackets [http://www.example.com/index.php?var[foo]=value]?',
-				'What about in brackets [<a href="http://www.example.com/index.php?var&#91;foo&#93;=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>]?',
+				'What about in brackets [<a href="http://www.example.com/index.php?var%5Bfoo%5D=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>]?',
 			],
 			[
 				'http://www.google.co.uk/search?hl=en&q=BA6596F&btnG=Google+Search&meta=',
@@ -685,7 +750,7 @@ class BBCTest extends BaseTestCase
 			],
 			[
 				'täst.de',
-				'<a href="//xn--tst-qla.de=" class="bbc_link" target="_blank" rel="noopener">täst.de</a>',
+				'<a href="//xn--tst-qla.de" class="bbc_link" target="_blank" rel="noopener">täst.de</a>',
 			],
 		];
 	}
@@ -703,7 +768,7 @@ class BBCTest extends BaseTestCase
 	{
 		global $context, $boardurl, $sourcedir;
 
-		require_once($sourcedir . '/Subs-Editor.php');
+		require_once __DIR__ . '/../Sources/Subs-Editor.php';
 
 		return [
 			[
@@ -818,10 +883,6 @@ class BBCTest extends BaseTestCase
 				'abc:)def',
 				'abc:)def',
 			],
-			[
-				'[url=mailto:David@bla.com]',
-				'[url=mailto:David@bla.com]',
-			],
 		];
 	}
 
@@ -831,11 +892,14 @@ class BBCTest extends BaseTestCase
 	 */
 	public function testSmiley(string $test, string $expected): void
 	{
+		$result = parse_bbc($test, false);
+		$this->assertEquals($test, $result);
+
+		$result = parse_bbc($test);
+		$this->assertEquals($expected, $result);
+
 		parsesmileys($test);
 		$this->assertEquals($expected, $test);
-
-		//~ $result = parse_bbc($test, false);
-		//~ $this->assertEquals($expected, $result);
 	}
 
 	/**
@@ -925,9 +989,131 @@ class BBCTest extends BaseTestCase
 		$this->assertEquals($expected, $test);
 
 		$this->assertContains($tag, array_column(parse_bbc(false), 'tag'));
+	}
 
-		//~ $result = parse_bbc($test, false);
-		//~ $this->assertEquals($expected, $result);
+	/**
+	 * A URL inside an explicit [url] tag must not be linked a second time.
+	 */
+	public function testAutolinkInsideUrlTagIsNotDoubleLinked(): void
+	{
+		$this->assertEquals(
+			'<a href="http://example.com" class="bbc_link" target="_blank" rel="noopener">http://example.com</a>',
+			parse_bbc('[url=http://example.com]http://example.com[/url]', false)
+		);
+	}
+
+	/**
+	 * The address is placed inside href="mailto:..." so a raw quote reaching
+	 * the parser must not be able to start a new attribute.
+	 *
+	 * @return string[][]
+	 */
+	public function emailBreakoutProvider(): array
+	{
+		return [
+			'email content' => ['[email]x" onmouseover="alert(1)[/email]', '" onmouseover='],
+			'email equals' => ['[email=x" onmouseover="alert(1)]text[/email]', '" onmouseover='],
+		];
+	}
+
+	/**
+	 * @dataProvider emailBreakoutProvider
+	 */
+	public function testEmailNoAttributeBreakout(string $test, string $forbidden): void
+	{
+		$result = parse_bbc($test, false);
+
+		$this->assertFalse(
+			strpos($result, $forbidden),
+			'Attribute breakout found in: ' . $result
+		);
+	}
+
+	/**
+	 * Smart quotes must become entities, never raw quote characters, because
+	 * they are introduced after the message was already HTML-escaped.
+	 */
+	public function testSmartQuotesAreEntities(): void
+	{
+		$this->assertEquals(
+			'a &quot;b&quot; c',
+			parse_bbc("a \xE2\x80\x9Cb\xE2\x80\x9D c", false)
+		);
+
+		$this->assertEquals(
+			'it&#039;s',
+			parse_bbc("it\xE2\x80\x99s", false)
+		);
+	}
+
+	/**
+	 * Regression test for GHSA-xf45-gc85-24wh: smart quotes in BBC parameters
+	 * must not be able to break out of an HTML attribute.
+	 *
+	 * @return string[][]
+	 */
+	public function attributeBreakoutProvider(): array
+	{
+		$l = "\xE2\x80\x9C";
+		$r = "\xE2\x80\x9D";
+
+		return [
+			'img alt' => ["[img alt={$l} onerror={$l}alert(1)]http://x[/img]"],
+			'img title' => ["[img title={$l} onerror={$l}alert(1)]http://x[/img]"],
+			// These tags take a closing smart quote so the parser actually matches them.
+			'abbr' => ["[abbr={$l}x{$r} onmouseover={$l}alert(1){$r}]x[/abbr]"],
+			'acronym' => ["[acronym={$l}x{$r} onmouseover={$l}alert(1){$r}]x[/acronym]"],
+			'member' => ["[member={$l}x{$r} onmouseover={$l}alert(1){$r}]x[/member]"],
+			'url' => ["[url={$l}http://example.com/{$r} onmouseover={$l}alert(1){$r}]x[/url]"],
+			'iurl' => ["[iurl={$l}http://example.com/{$r} onmouseover={$l}alert(1){$r}]x[/iurl]"],
+		];
+	}
+
+	/**
+	 * Fails if any generated HTML tag contains an injected event handler
+	 * attribute. Quote characters left behind as plain text are harmless
+	 * and are deliberately not flagged.
+	 *
+	 * @dataProvider attributeBreakoutProvider
+	 */
+	public function testNoAttributeBreakout(string $test): void
+	{
+		$result = parse_bbc($test, false);
+
+		$this->assertSame(
+			0,
+			preg_match('~<[^<>]*\son\w+\s*=\s*["\']~i', $result),
+			'Attribute breakout found in: ' . $result
+		);
+	}
+
+	/**
+	 * Text that was already escaped when the post was saved must not be
+	 * escaped a second time when it goes into an attribute.
+	 */
+	public function testImgAttributesAreNotDoubleEncoded(): void
+	{
+		$this->assertEquals(
+			'<img src="http://example.com/image.png" alt="Tom &amp; Jerry" class="bbc_img" loading="lazy">',
+			parse_bbc('[img alt=Tom &amp; Jerry]http://example.com/image.png[/img]', false)
+		);
+
+		$this->assertEquals(
+			'<img src="http://example.com/image.png" alt="say &quot;hi&quot;" class="bbc_img" loading="lazy">',
+			parse_bbc('[img alt=say &quot;hi&quot;]http://example.com/image.png[/img]', false)
+		);
+	}
+
+	/**
+	 * Only the tags listed in $parse_tags should be parsed.
+	 */
+	public function testParseTagsRestriction(): void
+	{
+		$result = parse_bbc('[b]x[/b] [i]y[/i]', false, '', ['b']);
+		$this->assertEquals('<b>x</b> [i]y[/i]', $result);
+
+		// A normal parse afterwards must not be affected by the restriction.
+		$this->assertEquals('<b>x</b> <i>y</i>', parse_bbc('[b]x[/b] [i]y[/i]', false));
 	}
 
 	public function te6stMessageCache(): void

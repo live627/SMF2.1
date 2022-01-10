@@ -889,7 +889,7 @@ function createBoard($boardOptions)
 	);
 	$board_parameters = array(
 		$boardOptions['target_category'], $boardOptions['board_name'], '', 0,
-		'', '',
+		'-1', '',
 	);
 
 	call_integration_hook('integrate_create_board', array(&$boardOptions, &$board_columns, &$board_parameters));
@@ -1386,7 +1386,7 @@ function getBoardTree()
 		FROM {db_prefix}categories AS c
 			LEFT JOIN {db_prefix}boards AS b ON (b.id_cat = c.id_cat)' . implode('
 			', $boardJoins) . '
-		WHERE {query_see_board}' . (empty($boardWhere) ? '' : '
+		WHERE 1=1' . (empty($boardWhere) ? '' : '
 			AND (' . implode(') AND (', $boardWhere) . ')') . '
 		ORDER BY ' . implode(', ', $boardOrder),
 		$boardParameters

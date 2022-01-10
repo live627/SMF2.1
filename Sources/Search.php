@@ -1066,7 +1066,7 @@ function PlushSearch2()
 	// Update the cache if the current search term is not yet cached.
 	else
 	{
-		$update_cache = empty($_SESSION['search_cache']) || ($_SESSION['search_cache']['params'] != $context['params']);
+		$update_cache =1;// empty($_SESSION['search_cache']) || ($_SESSION['search_cache']['params'] != $context['params']);
 
 		// Are the result fresh?
 		if (!$update_cache && !empty($_SESSION['search_cache']['id_search']))

@@ -2,21 +2,23 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use PHPUnit\Framework\Error\Error as PHPUnitError;
 
-class MembersTest extends BaseTestCase
+class MembersTest extends TestCase
 {
 	private $options = [];
 
-	public function setUp() : void
+	public function setUp(): void
 	{
 		global $modSettings, $sourcedir;
 
-		require_once($sourcedir . '/Subs-Membergroups.php');
-		require_once($sourcedir . '/Subs-Members.php');
-		require_once($sourcedir . '/Subs-Boards.php');
+		require_once __DIR__ . '/../Sources/Subs-Membergroups.php';
+		require_once __DIR__ . '/../Sources/Subs-Members.php';
+		require_once __DIR__ . '/../Sources/Subs-Boards.php';
 
 		// Hash password is slow with the default 10 on the hash cost, reducing this helps.
 		$modSettings['bcrypt_hash_cost'] = 4;
@@ -114,7 +116,7 @@ class MembersTest extends BaseTestCase
 	/**
 	 * @depends testAddMembers
 	 */
-	public function testDuplicateMembers() : void
+	public function testDuplicateMembers(): void
 	{
 		global $membersTest;
 
@@ -135,7 +137,7 @@ class MembersTest extends BaseTestCase
 	/**
 	 * @depends testAddMembers
 	 */
-	public function testReattributePosts() : void
+	public function testReattributePosts(): void
 	{
 		global $membersTest;
 
@@ -146,7 +148,7 @@ class MembersTest extends BaseTestCase
 		$this->assertEquals(0, getMsgMemberID(1));
 	}
 
-	public function testReservedName() : void
+	public function testReservedName(): void
 	{
 		global $modSettings;
 
@@ -161,7 +163,7 @@ class MembersTest extends BaseTestCase
 		$this->assertCount(4, explode("\n", $modSettings['reserveNames']));
 	}
 
-	public function reservedNameProvider() : array
+	public function reservedNameProvider(): array
 	{
 		return [
 			['Admin', 'admin'],
@@ -198,7 +200,7 @@ class MembersTest extends BaseTestCase
 	/**
 	 * @depends testAddMembers
 	 */
-	public function testMembersAllowedTo() : void
+	public function testMembersAllowedTo(): void
 	{
 		global $membersTest;
 
@@ -209,13 +211,13 @@ class MembersTest extends BaseTestCase
 		$this->assertCount(2, $members);
 	}
 
-	public function testNoMinUserInfo() : void
+	public function testNoMinUserInfo(): void
 	{
 		$this->assertCount(0, loadMinUserInfo([]));
 		$this->assertCount(0, loadMinUserInfo([0]));
 	}
 
-	public function testMyMinUserInfo() : void
+	public function testMyMinUserInfo(): void
 	{
 		$data = loadMinUserInfo(1);
 		$this->assertArrayHasKey(1, $data);
@@ -224,7 +226,7 @@ class MembersTest extends BaseTestCase
 		$this->assertEquals('test', $data[1]['name']);
 	}
 
-	public function testMinUserInfoUnexpectedBehavior() : void
+	public function testMinUserInfoUnexpectedBehavior(): void
 	{
 		$data = loadMinUserInfo(4);
 		$this->assertArrayHasKey(4, $data);
@@ -233,13 +235,13 @@ class MembersTest extends BaseTestCase
 		$this->assertEquals(1, $data[1]['id']);
 	}
 
-	public function testUnknbownDataSet() : void
+	public function testUnknbownDataSet(): void
 	{
 		$this->expectException(PHPUnitError::class);
 		loadMemberData('test', true, 'random');
 	}
 
-	public function testMyMemberData() : void
+	public function testMyMemberData(): void
 	{
 		global $context, $memberContext, $membersTest, $user_profile;
 
@@ -263,14 +265,14 @@ class MembersTest extends BaseTestCase
 		$this->assertEquals('test', $memberContext[1]['name']);
 	}
 
-	public function testNoMemberData() : void
+	public function testNoMemberData(): void
 	{
 		$this->assertFalse(loadMemberContext(0));
 		$this->assertCount(0, loadMemberData([]));
 		$this->assertCount(0, loadMemberData([0]));
 	}
 
-	public function testBakedMemberData() : void
+	public function testBakedMemberData(): void
 	{
 		$this->expectException(PHPUnitError::class);
 		loadMemberContext(420);
@@ -279,7 +281,7 @@ class MembersTest extends BaseTestCase
 	/**
 	 * @depends testAddMembers
 	 */
-	public function testMembersData() : void
+	public function testMembersData(): void
 	{
 		global $context, $memberContext, $membersTest, $user_profile;
 
@@ -319,7 +321,7 @@ class MembersTest extends BaseTestCase
 	/**
 	 * @depends testAddMembers
 	 */
-	public function testRemoveMembers() : void
+	public function testRemoveMembers(): void
 	{
 		global $membersTest;
 

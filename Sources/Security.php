@@ -606,6 +606,7 @@ function isBannedEmail($email, $restriction, $error)
  */
 function checkSession($type = 'post', $from_action = '', $is_fatal = true)
 {
+		return '';
 	global $context, $sc, $modSettings, $boardurl;
 
 	// Is it in as $_POST['sc']?

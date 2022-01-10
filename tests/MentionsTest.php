@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use Mentions;
 
 global $sourcedir;
-require_once($sourcedir . '/Mentions.php');
+require_once __DIR__ . '/../Sources/Mentions.php';
 class MockMentions extends Mentions
 {
 	public static function getExcludedBbcRegex()
@@ -19,7 +21,7 @@ class MockMentions extends Mentions
 	}
 }
 
-class MentionsTest extends BaseTestCase
+class MentionsTest extends TestCase
 {
 	public function testPut(): void
 	{
