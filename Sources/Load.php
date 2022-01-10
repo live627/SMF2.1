@@ -2727,7 +2727,7 @@ function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
 		if (file_exists($template_dir . '/' . $template_name . '.template.php'))
 		{
 			$loaded = true;
-			//template_include($template_dir . '/' . $template_name . '.template.php', true);
+			template_include($template_dir . '/' . $template_name . '.template.php', true);
 			break;
 		}
 	}

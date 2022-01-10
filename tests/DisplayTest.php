@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class DisplayTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class DisplayTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Display.php');
+		require_once __DIR__ . '/../Sources/Display.php';
 	}
 
 	public function test(): void

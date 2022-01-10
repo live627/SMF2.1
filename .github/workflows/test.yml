@@ -1,0 +1,141 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4', 8.4]
+        db: [mysql, postgres]
+
+    env:
+      DB: ${{ matrix.db }}
+
+    services:
+      memcached:
+        image: memcached:latest
+        ports:
+          - 11211:11211
+
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+          MYSQL_DATABASE: smf
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: smf
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: apcu, memcached, mysqli, pgsql, pdo_pgsql
+          coverage: xdebug
+          ini-values: >-
+            apcu.enabled=1, apcu.enable_cli=1,
+            apc.enabled=1, apc.enable_cli=1
+
+      - name: Setup problem matchers for PHP
+        run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+
+      - name: Setup problem matchers for PHPUnit
+        run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Prepare files
+        run: cp ./other/*.* .
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Install SMF (MySQL)
+        if: matrix.db == 'mysql'
+        run: php -f install.php -- -u test -p test --dbname smf --dbuser root
+
+      - name: Install SMF (PostgreSQL)
+        if: matrix.db == 'postgres'
+        run: php -f install.php -- -u test -p test --dbtype postgresql --dbname smf --dbuser postgres
+
+      - name: Populate test data
+        run: php tests/env/Populate.php
+
+      # SMF's is_fetch_safe() refuses loopback/private addresses and fetch_web_data()
+      # only uses ports 80/443, so the fixture server gets a routable-looking address
+      # on the loopback interface and listens on port 80.
+      - name: Add fixture server address
+        run: |
+          sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
+          sudo ip addr add 11.0.0.1/32 dev lo
+
+      - name: Start test web server
+        run: |
+          node -v
+          node tests/env/server.js 80 > node-server.log 2>&1 &
+          for i in $(seq 1 10); do
+            curl -s -o /dev/null http://11.0.0.1/ && exit 0
+            sleep 1
+          done
+          echo "Fixture server did not start"
+          cat node-server.log
+          exit 1
+
+      - name: Start SMF web server
+        run: |
+          php -S 127.0.0.1:8080 -t . > php-server.log 2>&1 &
+          for i in $(seq 1 20); do
+            curl -s -o /dev/null http://127.0.0.1:8080/index.php && exit 0
+            sleep 1
+          done
+          echo "SMF web server did not start"
+          cat php-server.log
+          exit 1
+
+      - name: Run online log test
+        run: vendor/phpunit/phpunit/phpunit tests/OnlineLogTest.php --testdox
+
+      - name: Prepare files
+        if: always()
+        run: sh other/prepare-files
+
+      - name: Run PHPUnit
+        if: always()
+        run: vendor/phpunit/phpunit/phpunit --colors=never --debug
+
+      - name: Show SMF web server log
+        if: failure()
+        run: cat php-server.log
+
+      - name: Show Node.js request log
+        if: always()
+        run: cat node-server.log

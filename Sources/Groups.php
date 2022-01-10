@@ -728,7 +728,7 @@ function list_getGroupRequestCount($where, $where_parameters)
  * 		'reason'
  * 		'time_submitted'
  */
-function list_getGroupRequests($start, $items_per_page, $sort, $where, $where_parameters)
+function list_getGroupRequests2($start, $items_per_page, $sort, $where, $where_parameters)
 {
 	global $smcFunc, $scripturl, $txt;
 

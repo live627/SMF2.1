@@ -197,7 +197,7 @@ function fatal_error($error, $log = 'general', $status = 500)
  *
  * @param string $error The error message
  * @param string|false $log The type of error, or false to not log it
- * @param array $sprintf An array of data to be sprintf()'d into the specified message
+ * @param string|array $sprintf An array of data to be sprintf()'d into the specified message
  * @param int $status = false The HTTP status code associated with this error
  */
 function fatal_lang_error($error, $log = 'general', $sprintf = array(), $status = 403)
@@ -205,10 +205,17 @@ function fatal_lang_error($error, $log = 'general', $sprintf = array(), $status 
 	global $txt, $language, $user_info, $context;
 	static $fatal_error_called = false;
 
-	throw new Exception($error);
+	// Attempt to load the text string.
+	loadLanguage('Errors');
+	if (empty($txt[$error]))
+		$error_message = $error;
+	else
+		$error_message = empty($sprintf) ? $txt[$error] : vsprintf($txt[$error], $sprintf);
 
 	// Ensure this is an array.
 	$sprintf = (array) $sprintf;
+
+	throw new Exception($error_message);
 
 	// Send the status header - set this to 0 or false if you don't want to send one at all
 	if (!empty($status))
@@ -220,13 +227,6 @@ function fatal_lang_error($error, $log = 'general', $sprintf = array(), $status 
 		$fatal_error_called = true;
 		loadTheme();
 	}
-
-	// Attempt to load the text string.
-	loadLanguage('Errors');
-	if (empty($txt[$error]))
-		$error_message = $error;
-	else
-		$error_message = empty($sprintf) ? $txt[$error] : vsprintf($txt[$error], $sprintf);
 
 	// Send a custom header if we have a custom message.
 	if (isset($_REQUEST['js']) || isset($_REQUEST['xml']) || isset($_RQEUEST['ajax']))

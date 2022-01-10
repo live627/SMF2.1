@@ -1,9 +1,11 @@
 <?php
 
 declare(strict_types=1);
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class CensoringTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class CensoringTest extends TestCase
 {
 	protected $tests = [
 		'this' => ['this' => 'not_this'],
@@ -131,7 +133,7 @@ class CensoringTest extends BaseTestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function setUp() : void
+	public function setUp(): void
 	{
 		global $modSettings;
 
@@ -148,7 +150,7 @@ class CensoringTest extends BaseTestCase
 		$modSettings['censor_proper'] = implode("\n", $proper);
 	}
 
-	public function tearDown() : void
+	public function tearDown(): void
 	{
 		global $modSettings;
 

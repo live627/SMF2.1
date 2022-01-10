@@ -30,7 +30,7 @@ $members = [];
 $topics = [];
 
 for ($i = 0; $i < 10; $i++)
-{
+{ 
 	$regOptions = [
 		'interface' => 'guest',
 		'username' => 'user' . $i,

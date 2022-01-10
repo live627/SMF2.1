@@ -2,22 +2,20 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use ErrorException;
 use xmlArray;
 
-class TestxmlArray extends BaseTestCase
+class TestxmlArray extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Class-Package.php');
+		require_once __DIR__ . '/../Sources/Class-Package.php';
 	}
 
-	/**
-	 */
 	public function data(): array
 	{
 		return [
@@ -89,7 +87,7 @@ class TestxmlArray extends BaseTestCase
 			}
 		);
 
-		$this->expectException(ErrorException::class);
+		$this->expectException(\Throwable::class);
 		$result = new xmlArray($xml);
 		$result->to_array('error');
 
