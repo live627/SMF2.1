@@ -8,15 +8,26 @@ class SubsTest extends BaseTestCase
 {
 	public function testTimeformat(): void
 	{
-		global $context, $txt, $modSettings, $user_info;
+		global $modSettings, $user_info;
 
 		$this->assertEquals('%b %d, %Y, %I:%M %p', $user_info['time_format']);
 		$this->assertEquals('%b %d, %Y, %I:%M %p', $modSettings['time_format']);
 		$this->assertEquals('May 23, 1970, 09:21 PM', timeformat(12345678));
-		$this->assertEquals('May 23, 1970, 09:21 PM', timeformat(12345678), '%F %H:%M');
+		$this->assertEquals('1970-05-23 21:21', timeformat(12345678, '%F %H:%M'));
 		$this->assertEquals('May 23, 1970, 09:21 PM', timeformat(12345678, false));
 		$this->assertEquals('1970-05-23', timeformat(12345678, '%F'));
 		$this->assertStringContainsString('Today', timeformat(time()));
+	}
+
+	public function testTimeformatTz(): void
+	{
+		$this->assertEquals('1970-05-23 14:21', smf_strftime('%F %H:%M', 12345678, 'America/Phoenix'));
+		$this->assertEquals('1970-05-23 14:21', timeformat(12345678, '%F %H:%M', 'America/Phoenix'));
+		$this->assertStringContainsString('Today', timeformat(strtotime('today 00:00'), true, 'America/Phoenix'));
+		$this->assertStringContainsString('Today', timeformat(strtotime('today 03:00') + 25200, true, 'America/Phoenix'));
+		$this->assertStringContainsString('Today', timeformat(strtotime('today 13:00') + 25200, true, 'America/Phoenix'));
+		$this->assertStringContainsString('Today', timeformat(strtotime('today 23:00') + 25200, true, 'America/Phoenix'));
+		$this->assertStringContainsString('Today', timeformat(time(), true, 'America/Phoenix'));
 	}
 
 	public function dateOrTimeProvider(): array

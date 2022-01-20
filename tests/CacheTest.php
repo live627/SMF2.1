@@ -136,8 +136,17 @@ class CacheTest extends BaseTestCase
 
 		$this->cacheObj->putData('test', 'val1');
 		$this->assertSame('val1', $this->cacheObj->getData('test'));
+		$this->assertTrue($this->cacheObj->cleanCache('expired'));
+		$this->assertNotNull($this->cacheObj->getData('test'));
 
+		$this->cacheObj->putData('test', 'val1');
+		$this->assertSame('val1', $this->cacheObj->getData('test'));
+		$this->assertTrue(touch($GLOBALS['cachedir'] . '/index.php', 12345678));
+		clearstatcache();
+		$this->assertSame(12345678, filemtime($GLOBALS['cachedir'] . '/index.php'));
 		$this->assertTrue($this->cacheObj->cleanCache());
+		clearstatcache();
+		$this->assertSame(time(), filemtime($GLOBALS['cachedir'] . '/index.php'));
 		$this->assertNull($this->cacheObj->getData('test'));
 
 		$this->assertNull($this->cacheObj->getData('test'));
