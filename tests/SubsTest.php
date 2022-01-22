@@ -23,11 +23,14 @@ class SubsTest extends BaseTestCase
 	{
 		$this->assertEquals('1970-05-23 14:21', smf_strftime('%F %H:%M', 12345678, 'America/Phoenix'));
 		$this->assertEquals('1970-05-23 14:21', timeformat(12345678, '%F %H:%M', 'America/Phoenix'));
+		$this->assertRegExp('/[A-Z][a-z]{2} [0-9]{1,2}, [0-9]{4}, [0-9]{1,2}:[0-9]{2} [AP]M/', timeformat(strtotime('yesterday 00:00'), true, 'America/Phoenix'));
+		$this->assertRegExp('/[A-Z][a-z]{2} [0-9]{1,2}, [0-9]{4}, [0-9]{1,2}:[0-9]{2} [AP]M/', timeformat(strtotime('yesterday 03:00'), true, 'America/Phoenix'));
+		$this->assertStringContainsString('Today', timeformat(strtotime('yesterday 13:00'), true, 'America/Phoenix'));
+		$this->assertStringContainsString('Today', timeformat(strtotime('yesterday 23:00'), true, 'America/Phoenix'));
 		$this->assertStringContainsString('Today', timeformat(strtotime('today 00:00'), true, 'America/Phoenix'));
-		$this->assertStringContainsString('Today', timeformat(strtotime('today 03:00') + 25200, true, 'America/Phoenix'));
-		$this->assertStringContainsString('Today', timeformat(strtotime('today 13:00') + 25200, true, 'America/Phoenix'));
-		$this->assertStringContainsString('Today', timeformat(strtotime('today 23:00') + 25200, true, 'America/Phoenix'));
-		$this->assertStringContainsString('Today', timeformat(time(), true, 'America/Phoenix'));
+		$this->assertStringContainsString('Today', timeformat(strtotime('today 03:00'), true, 'America/Phoenix'));
+		$this->assertRegExp('/[A-Z][a-z]{2} [0-9]{1,2}, [0-9]{4}, [0-9]{1,2}:[0-9]{2} [AP]M/', timeformat(strtotime('today 13:00'), true, 'America/Phoenix'));
+		$this->assertRegExp('/[A-Z][a-z]{2} [0-9]{1,2}, [0-9]{4}, [0-9]{1,2}:[0-9]{2} [AP]M/', timeformat(strtotime('today 23:00'), true, 'America/Phoenix'));
 	}
 
 	public function dateOrTimeProvider(): array
