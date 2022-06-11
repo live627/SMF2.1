@@ -9,193 +9,229 @@
  * @version 2.1 RC4
  */
 
-(function ($) {
-	var setCustomTextualCommands = function (cmds)
+(sceditor => {
+	sceditor.icons.smf = function ()
 	{
-		for (let cmd of cmds)
-		{
-			var obj = {
-				tooltip: cmd.description || cmd.code
+		let buttons = {};
+
+		return {
+			create(command, button)
+			{
+				buttons[command] = button;
+			},
+			update(isSourceMode, currentNode)
+			{
+				buttons['color'].firstChild.style.textDecoration = 'underline ' + (!isSourceMode && currentNode ? currentNode.ownerDocument.queryCommandValue('forecolor') : '');
+			}
+		};
+	};
+
+	sceditor.plugins.smf = function ()
+	{
+		let editor;
+		let opts;
+		let line;
+
+		const appendEmoticon = (code, {newrow, url, tooltip}) => {
+			if (newrow)
+				line.appendChild(document.createElement('br'));
+
+			const i = document.createElement("img");
+			i.src = opts.emoticonsRoot + url;
+			i.alt = code;
+			i.title = tooltip;
+			i.addEventListener('click', function (e)
+			{
+				if (editor.inSourceMode())
+					editor.insertText(' ' + this.alt + ' ');
+				else
+					editor.wysiwygEditorInsertHtml(' <img src="' + this.src + '" data-sceditor-emoticon="' + this.alt + '"> ');
+
+				e.preventDefault();
+			});
+			line.appendChild(i);
+		};
+
+		const createPopup = el => {
+			const t = document.createElement("div");
+			const cover = document.createElement('div');
+			const root = document.createElement('div');
+
+			const hide = () => {
+				cover.classList.remove('show');
+				document.removeEventListener('keydown', esc);
 			};
 
-			// Legacy support for 2.0 BBC mods
-			if (cmd.before)
+			var esc = ({keyCode}) => {
+				if (keyCode === 27)
+					hide();
+			};
+
+			const a = document.createElement('button');
+
+			root.appendChild(a);
+			cover.appendChild(root);
+			document.body.appendChild(cover);
+			root.id = 'popup-container';
+			cover.id = 'popup';
+			a.id = 'close';
+			cover.addEventListener('click', ({target}) => {
+				if (target.id === 'popup')
+					hide();
+			});
+			a.addEventListener('click', hide);
+			document.addEventListener('keydown', esc);
+			root.appendChild(el);
+			root.appendChild(a);
+			cover.classList.add('show');
+			editor.hidePopup = hide;
+		};
+
+		const ev = ({children, nextSibling}, col, row) => {
+			for (let i = 1; i <= 144; i++)
+				children[i - 1].className = Math.ceil(i / 12) <= col && (i % 12 || 12) <= row ? 'highlight2' : 'windowbg';
+
+			nextSibling.textContent = col + 'x' + row;
+		};
+
+		const tbl = callback => {
+			const content = document.createElement('div');
+			content.className = 'sceditor-insert-table';
+			const div = document.createElement('div');
+			div.className = 'sceditor-insert-table-grid';
+			div.addEventListener('mouseleave', ev.bind(null, div, 0, 0));
+			const div2 = document.createElement('div');
+			div2.className = 'largetext';
+			div2.textContent = '0x0';
+
+			for (let i = 1; i <= 144; i++)
+			{
+				const row = i % 12 || 12;
+				const col = Math.ceil(i / 12);
+				const span = document.createElement('span');
+				span.className = 'windowbg';
+				span.addEventListener('mouseenter', ev.bind(null, div, col, row));
+				span.addEventListener('click', function (col, row) {
+					callback(col, row);
+					editor.hidePopup();
+					editor.focus();
+				}.bind(null, col, row));
+				div.appendChild(span);
+			}
+			content.appendChild(div);
+			content.appendChild(div2);
+			createPopup(content);
+		};
+
+		this.init = function ()
+		{
+			editor = this;
+			opts = editor.opts;
+
+			if (opts.emoticonsEnabled)
+			{
+				const emoticons = opts.emoticons;
+				content = opts.smileyContainer;
+				if (emoticons.dropdown)
+				{
+					line = document.createElement('div');
+					sceditor.utils.each(emoticons.dropdown, appendEmoticon);
+					content.appendChild(line);
+				}
+
+				if (emoticons.more)
+				{
+					const moreButton = document.createElement('button');
+					moreButton.className = 'button_submit';
+					moreButton.textContent = editor._('More');
+					moreButton.addEventListener('click', e => {
+						line = document.createElement('div');
+						sceditor.utils.each(emoticons.more, appendEmoticon);
+						createPopup(line);
+
+						e.preventDefault();
+					});
+					content.appendChild(moreButton);
+				}
+				content.className = 'sceditor-insertemoticon';
+			}
+			editor.commands.table = {
+				state(parents, firstBlock) {
+					return firstBlock && firstBlock.closest('table') ? 1 : 0;
+				},
+				exec() {
+					tbl((cols, rows) => {
+						editor.wysiwygEditorInsertHtml(
+						'<table><tr><td>',
+						'</td>'+ Array(cols).join('<td><br></td>') + Array(rows).join('</tr><tr>' + Array(cols+1).join('<td><br></td>')) + '</tr></table>'
+						);
+					});
+				},
+				txtExec() {
+					tbl((cols, rows) => {
+						editor.insertText(
+						'[table]\n[tr]\n[td]',
+						'[/td]'+ Array(cols).join('\n[td][/td]') + Array(rows).join('\n[/tr]\n[tr]' + Array(cols+1).join('\n[td][/td]')) + '\n[/tr]\n[/table]'
+						);
+					});
+				},
+			};
+			editor.insertQuoteFast = messageid =>
+			{
+				getXMLDocument(
+					smf_prepareScriptUrl(smf_scripturl) + 'action=quotefast;quote=' + messageid + ';xml',
+					XMLDoc =>
+					{
+						var text = '';
+
+						for (var i = 0, n = XMLDoc.getElementsByTagName('quote')[0].childNodes.length; i < n; i++)
+							text += XMLDoc.getElementsByTagName('quote')[0].childNodes[i].nodeValue;
+						editor.insert(text);
+
+						// Manually move cursor to after the quote.
+						var
+							rangeHelper = editor.getRangeHelper(),
+							parent = rangeHelper.parentNode();
+						if (parent && parent.nodeName === 'BLOCKQUOTE')
+						{
+							var range = rangeHelper.selectedRange();
+							range.setStartAfter(parent);
+							rangeHelper.selectRange(range);
+						}
+
+						ajax_indicator(false);
+					}
+				);
+			};
+		};
+	};
+
+	const setCustomTextualCommands = cmds => {
+		for (let [code, description, before, after] of cmds)
+		{
+			const obj = {
+				tooltip: description || code
+			};
+			if (!sceditor.commands[code])
 			{
 				obj.exec = function ()
 				{
-					this.insertText(cmd.before, cmd.after);
+					this.insertText(before, after);
 				};
-				obj.txtExec = [cmd.before, cmd.after];
+				if (before === after)
+					obj.txtExec = [before];
+				else if (before)
+					obj.txtExec = [before, after];
 			}
-			sceditor.command.set(cmd.code, obj);
+			sceditor.command.set(code, obj);
 		}
 	};
-	var extensionMethods = {
-		insertQuoteFast: function (messageid)
-		{
-			var self = this;
-			getXMLDocument(
-				smf_prepareScriptUrl(smf_scripturl) + 'action=quotefast;quote=' + messageid + ';xml',
-				function(XMLDoc)
-				{
-					var text = '';
-
-					for (var i = 0, n = XMLDoc.getElementsByTagName('quote')[0].childNodes.length; i < n; i++)
-						text += XMLDoc.getElementsByTagName('quote')[0].childNodes[i].nodeValue;
-					self.insert(text);
-
-					// Manually move cursor to after the quote.
-					var
-						rangeHelper = self.getRangeHelper(),
-						parent = rangeHelper.parentNode();
-					if (parent && parent.nodeName === 'BLOCKQUOTE')
-					{
-						var range = rangeHelper.selectedRange();
-						range.setStartAfter(parent);
-						rangeHelper.selectRange(range);
-					}
-
-					ajax_indicator(false);
-				}
-			);
-		},
-		appendEmoticon: function (code, emoticon)
-		{
-			var base = this;
-			if (emoticon.newrow)
-				line.append($('<br>'));
-
-			line.append($('<img>')
-				.attr({
-					src: base.opts.emoticonsRoot + emoticon.url,
-					alt: code,
-					title: emoticon.tooltip,
-				})
-				.click(function (e)
-				{
-					var	start = '', end = '';
-
-					if (base.opts.emoticonsCompat)
-					{
-						start = '<span> ';
-						end = ' </span>';
-					}
-
-					if (base.inSourceMode())
-						base.sourceEditorInsertText(' ' + $(this).attr('alt') + ' ');
-					else
-						base.wysiwygEditorInsertHtml(start + '<img src="' + $(this).attr("src") + '" data-sceditor-emoticon="' + $(this).attr('alt') + '">' + end);
-
-					e.preventDefault();
-				})
-			);
-		},
-		createPermanentDropDown: function ()
-		{
-			var base = this;
-			var emoticons = base.opts.emoticons.dropdown;
-			content = $('<div class="sceditor-insertemoticon">');
-			line = $('<div>');
-
-			if (base.opts.emoticons.more)
-			{
-				moreButton = $('<div class="sceditor-more-button sceditor-more button">').text(this._('More')).click(function () {
-					if ($(".sceditor-smileyPopup").length > 0)
-					{
-						$(".sceditor-smileyPopup").fadeIn('fast');
-					}
-					else
-					{
-						var emoticons = base.opts.emoticons.more;
-						var popup_position;
-						var titlebar = $('<div class="catbg sceditor-popup-grip"/>');
-						popupContent = $('<div id="sceditor-popup"/>');
-						allowHide = true;
-						line = $('<div id="sceditor-popup-smiley"/>');
-						adjheight = 0;
-
-						popupContent.append(titlebar);
-						closeButton = $('<span class="button">').text(base._('Close')).click(function () {
-							$(".sceditor-smileyPopup").fadeOut('fast');
-						});
-
-						$.each(emoticons, function(code, emoticon)
-						{
-							base.appendEmoticon(code, emoticon);
-						});
-
-						if (line.children().length > 0)
-							popupContent.append(line);
-						if (typeof closeButton !== "undefined")
-							popupContent.append(closeButton);
-
-						dropdownIgnoreLastClick = true;
-						adjheight = closeButton.height() + titlebar.height();
-						$dropdown = $('<div class="centerbox sceditor-smileyPopup">')
-							.append(popupContent)
-							.appendTo($('.sceditor-container'));
-
-						$('.sceditor-smileyPopup').animaDrag({
-							speed: 150,
-							interval: 120,
-							during: function (e) {
-								$(this).height(this.startheight);
-								$(this).width(this.startwidth);
-							},
-							before: function (e) {
-								this.startheight = $(this).innerHeight();
-								this.startwidth = $(this).innerWidth();
-							},
-							grip: '.sceditor-popup-grip'
-						});
-						// stop clicks within the dropdown from being handled
-						$dropdown.click(function (e) {
-							e.stopPropagation();
-						});
-					}
-				});
-			}
-			$.each(emoticons, function( code, emoticon ) {
-				base.appendEmoticon(code, emoticon);
-			});
-			if (line.children().length > 0)
-				content.append(line);
-			$(".sceditor-toolbar").append(content);
-			if (typeof moreButton !== "undefined")
-				content.append($('<center/>').append(moreButton));
-		}
-	};
-
-	var createFn = sceditor.create;
-	var isPatched = false;
-
-	sceditor.create = function (textarea, options)
-	{
+	const createFn = sceditor.create;
+	sceditor.create = (textarea, options) => {
 		setCustomTextualCommands(options.customTextualCommands);
-		// Call the original create function
 		createFn(textarea, options);
-
-		// Constructor isn't exposed so get reference to it when
-		// creating the first instance and extend it then
-		var instance = sceditor.instance(textarea);
-		if (!isPatched && instance) {
-			sceditor.utils.extend(instance.constructor.prototype, extensionMethods);
-
-			/*
-			 * Stop SCEditor from resizing the entire container. Long
-			 * toolbars and tons of smilies play havoc with this.
-			 * Only resize the text areas instead.
-			 */
-			document.querySelector(".sceditor-container").removeAttribute("style");
-			document.querySelector(".sceditor-container textarea").style.height = options.height;
-			document.querySelector(".sceditor-container textarea").style.flexBasis = options.height;
-
-			isPatched = true;
-		}
 	};
-})(jQuery);
-
-sceditor.command.set(
+})(sceditor).set(
 	'pre', {
 		txtExec: ["[pre]", "[/pre]"],
 		exec: function () {
@@ -228,9 +264,7 @@ sceditor.command.set(
 			});
 		}
 	}
-);
-
-sceditor.command.set(
+).set(
 	'bulletlist', {
 		txtExec: function (caller, selected) {
 			if (selected)
@@ -243,9 +277,7 @@ sceditor.command.set(
 				this.insertText('[list]\n[li]', '[/li]\n[li][/li]\n[/list]');
 		}
 	}
-);
-
-sceditor.command.set(
+).set(
 	'orderedlist', {
 		txtExec: function (caller, selected) {
 			if (selected)
@@ -258,45 +290,21 @@ sceditor.command.set(
 				this.insertText('[list type=decimal]\n[li]', '[/li]\n[li][/li]\n[/list]');
 		}
 	}
-);
-
-sceditor.command.set(
-	'table', {
-		txtExec: ["[table]\n[tr]\n[td]", "[/td]\n[/tr]\n[/table]"]
-	}
-);
-
-sceditor.command.set(
+).set(
 	'floatleft', {
 		txtExec: ["[float=left max=45%]", "[/float]"],
 		exec: function () {
 			this.wysiwygEditorInsertHtml('<div class="floatleft">', '</div>');
 		}
 	}
-);
-
-sceditor.command.set(
+).set(
 	'floatright', {
 		txtExec: ["[float=right max=45%]", "[/float]"],
 		exec: function () {
 			this.wysiwygEditorInsertHtml('<div class="floatright">', '</div>');
 		}
 	}
-);
-
-sceditor.command.set(
-	'maximize', {
-		shortcut: ''
-	}
-);
-
-sceditor.command.set(
-	'source', {
-		shortcut: ''
-	}
-);
-
-sceditor.command.set(
+).set(
 	'youtube', {
 		exec: function (caller) {
 			var editor = this;
@@ -306,9 +314,7 @@ sceditor.command.set(
 			});
 		}
 	}
-);
-
-sceditor.command.set(
+).set(
 	'email', {
 		exec: function (caller)
 		{
@@ -337,9 +343,7 @@ sceditor.command.set(
 			);
 		},
 	}
-);
-
-sceditor.command.set(
+).set(
 	'image', {
 		exec: function (caller)
 		{
@@ -375,19 +379,12 @@ sceditor.formats.bbcode.set(
 				title: null
 			}
 		},
-		format: function (element, content) {
-			return '[abbr=' + $(element).attr('title') + ']' + content + '[/abbr]';
+		format(element, content) {
+			return '[abbr=' + element.getAttribute('title') + ']' + content + '[/abbr]';
 		},
-		html: function (element, attrs, content) {
-			if (typeof attrs.defaultattr === "undefined" || attrs.defaultattr.length === 0)
-				return content;
-
-			return '<abbr title="' + attrs.defaultattr + '">' + content + '</abbr>';
-		}
+		html: '<abbr title="{defaultattr}">{0}</abbr>'
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'list', {
 		breakStart: true,
 		isInline: false,
@@ -409,9 +406,7 @@ sceditor.formats.bbcode.set(
 			return '<' + code + style + '>' + content + '</' + code + '>';
 		}
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'ul', {
 		tags: {
 			ul: null
@@ -426,9 +421,7 @@ sceditor.formats.bbcode.set(
 				return '[list type=' + $(element).css('list-style-type') + ']' + content + '[/list]';
 		}
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'ol', {
 		tags: {
 			ol: null
@@ -443,9 +436,7 @@ sceditor.formats.bbcode.set(
 				return '[list type=' + $(element).css('list-style-type') + ']' + content + '[/list]';
 		}
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'li', {
 		tags: {
 			li: null
@@ -562,9 +553,7 @@ sceditor.formats.bbcode.set(
 		html: '<li type="circle" data-bbc-tag="0">{0}</li>',
 		format: '[o]{0}',
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'img', {
 		tags: {
 			img: {
@@ -623,9 +612,7 @@ sceditor.formats.bbcode.set(
 			return '<img' + attribs + ' src="' + content + '">';
 		}
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'attach', {
 		tags: {
 			img: {
@@ -719,20 +706,18 @@ sceditor.formats.bbcode.set(
 
 				var contentUrl = smf_scripturl +'?action=dlattach;attach='+ id + ';type=preview;thumb';
 				contentIMG = new Image();
-					contentIMG.src = contentUrl;
+				contentIMG.src = contentUrl;
 			}
 
 			// If not an image, show a boring ol' link
 			if (typeof contentUrl === "undefined" || contentIMG.getAttribute('width') == 0)
-				return '<a href="' + smf_scripturl + '?action=dlattach;attach=' + id + ';type=preview;file"' + attribs + '>' + content + '</a>';
+				return '<a data-type="attach" href="' + smf_scripturl + '?action=dlattach;attach=' + id + ';type=preview;file"' + attribs + '>' + content + '</a>';
 			// Show our purdy li'l picture
 			else
 				return '<img' + attribs + ' src="' + contentUrl + '">';
 		}
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'email', {
 		allowsEmpty: true,
 		quoteType: sceditor.BBCodeParser.QuoteType.never,
@@ -750,9 +735,7 @@ sceditor.formats.bbcode.set(
 			return '<a data-type="email" href="mailto:' + sceditor.escapeEntities(attrs.defaultattr || content, true) + '">' + content + '</a>';
 		}
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'url', {
 		allowsEmpty: true,
 		quoteType: sceditor.BBCodeParser.QuoteType.always,
@@ -770,9 +753,7 @@ sceditor.formats.bbcode.set(
 			return '<a data-type="url" href="' + encodeURI(attrs.defaultattr || content) + '">' + content + '</a>';
 		}
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'iurl', {
 		allowsEmpty: true,
 		quoteType: sceditor.BBCodeParser.QuoteType.always,
@@ -790,9 +771,7 @@ sceditor.formats.bbcode.set(
 			return '<a data-type="iurl" href="' + encodeURI(attrs.defaultattr || content) + '">' + content + '</a>';
 		}
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'pre', {
 		tags: {
 			pre: null
@@ -801,17 +780,13 @@ sceditor.formats.bbcode.set(
 		format: "[pre]{0}[/pre]",
 		html: "<pre>{0}</pre>\n"
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'php', {
 		isInline: false,
 		format: "[php]{0}[/php]",
 		html: '<code class="php">{0}</code>'
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'code', {
 		tags: {
 			code: null
@@ -836,9 +811,7 @@ sceditor.formats.bbcode.set(
 			return '<code data-name="' + this.opts.txtVars.code + '"' + from + '>' + content.replace('[', '&#91;') + '</code>'
 		}
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'quote', {
 		tags: {
 			blockquote: null,
@@ -898,9 +871,7 @@ sceditor.formats.bbcode.set(
 			return '<blockquote data-author="' + attr_author + '" data-date="' + attr_date + '" data-link="' + attr_link + '"><cite>' + (author || bbc_quote) + ' ' + sDate + '</cite>' + content + '</blockquote>';
 		}
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'font', {
 		format: function (element, content) {
 			var element = $(element);
@@ -917,9 +888,7 @@ sceditor.formats.bbcode.set(
 			return '[font=' + font + ']' + content + '[/font]';
 		}
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'member', {
 		isInline: true,
 		tags: {
@@ -937,9 +906,7 @@ sceditor.formats.bbcode.set(
 			return '<a href="' + smf_scripturl +'?action=profile;u='+ attrs.defaultattr + '" class="mention" data-mention="'+ attrs.defaultattr + '">@'+ content.replace('@','') +'</a>';
 		}
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'float', {
 		tags: {
 			div: {
@@ -968,26 +935,16 @@ sceditor.formats.bbcode.set(
 			return '<div class="' + floatclass + '"' + style + '>' + content + '</div>';
 		}
 	}
-);
-
-sceditor.formats.bbcode.set(
+).set(
 	'youtube', {
-		allowsEmpty: true,
 		tags: {
 			div: {
-				class: 'videocontainer'
+				'data-youtube-id': null
 			}
 		},
 		isInline: false,
 		skipLastLineBreak: true,
-		format: function (element, content) {
-			youtube_id = $(element).find('iframe').data('youtube-id');
-
-			if (typeof youtube_id !== "undefined")
-				return '[youtube]' + youtube_id + '[/youtube]';
-			else
-				return content;
-		},
-		html: '<div class="videocontainer"><div><iframe frameborder="0" src="https://www.youtube-nocookie.com/embed/{0}?wmode=opaque" data-youtube-id="{0}" loading="lazy" allowfullscreen></iframe></div></div>'
+		format: el => `[youtube]${el.getAttribute('data-youtube-id')}[/youtube]`,
+		html: '<div data-youtube-id="{0}"><iframe frameborder="0" src="https://www.youtube-nocookie.com/embed/{0}?wmode=opaque" allowfullscreen></iframe></div>'
 	}
 );
