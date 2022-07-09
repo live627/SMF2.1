@@ -241,10 +241,10 @@
 );
 sceditor.command.set(
 	'link', {
-		exec: function (caller) {
-			var editor = this;
+		exec(caller) {
+			const editor = this;
 
-			editor.commands.link._dropDown(editor, caller, function (url, text) {
+			editor.commands.link._dropDown(editor, caller, (url, text) => {
 				if (!editor.getRangeHelper().selectedHtml() || text) {
 					text = text || url;
 
@@ -254,8 +254,6 @@ sceditor.command.set(
 						sceditor.escapeEntities(text, true) + '</a>'
 					);
 				} else {
-					// Can't just use `editor.execCommand('createlink', url)`
-					// because we need to set a custom attribute.
 					editor.wysiwygEditorInsertHtml(
 						'<a data-type="url" href="' +
 						sceditor.escapeEntities(url) + '">', '</a>'
@@ -266,7 +264,7 @@ sceditor.command.set(
 	}
 ).set(
 	'bulletlist', {
-		txtExec: function (caller, selected) {
+		txtExec(caller, selected) {
 			if (selected)
 				this.insertText(
 					'[list]\n[li]' +
@@ -279,7 +277,7 @@ sceditor.command.set(
 	}
 ).set(
 	'orderedlist', {
-		txtExec: function (caller, selected) {
+		txtExec(caller, selected) {
 			if (selected)
 				this.insertText(
 					'[list type=decimal]\n[li]' +
@@ -315,6 +313,54 @@ sceditor.command.set(
 		}
 	}
 ).set(
+	'color', {
+		_dropDown(editor, caller, callback)
+		{
+			const content = document.createElement('div');
+
+			for (const [color, name] of editor.opts.colors)
+			{
+				const link = document.createElement('a');
+				const span = document.createElement('span');
+				link.setAttribute('data-color', color);
+				link.textContent = name;
+				span.style.backgroundColor = color;
+				link.addEventListener('click', function (e) {
+					callback(this.getAttribute('data-color'));
+					editor.closeDropDown(true);
+					e.preventDefault();
+				});
+				link.appendChild(span);
+				content.appendChild(link);
+			}
+
+			editor.createDropDown(caller, 'color-picker', content);
+		}
+	}
+).set(
+	'size', {
+		_dropDown(editor, caller, callback)
+		{
+			const content = document.createElement('div');
+
+			for (let i = 1; i <= 7; i++)
+			{
+				const link = document.createElement('a');
+				link.setAttribute('data-size', i);
+				link.textContent = i;
+				link.addEventListener('click', function (e) {
+					callback(this.getAttribute('data-size'));
+					editor.closeDropDown(true);
+					e.preventDefault();
+				});
+				content.appendChild(link);
+				link.style.fontSize = i * 6 + 'px';
+			}
+
+			editor.createDropDown(caller, 'fontsize-picker', content);
+		}
+	}
+).set(
 	'email', {
 		exec: function (caller)
 		{
@@ -345,24 +391,22 @@ sceditor.command.set(
 	}
 ).set(
 	'image', {
-		exec: function (caller)
-		{
-			var editor = this;
+		exec(caller) {
+			const editor = this;
 
 			editor.commands.image._dropDown(
 				editor,
 				caller,
 				'',
-				function (url, width, height)
-				{
-					var attrs = ['src="' + sceditor.escapeEntities(url) + '"'];
+				(url, width, height) => {
+					const attrs = ['src="' + sceditor.escapeEntities(url) + '"'];
 
 					if (width)
 						attrs.push('width="' + sceditor.escapeEntities(width, true) + '"');
 
 					if (height)
 						attrs.push('height="' + sceditor.escapeEntities(height, true) + '"');
-
+ 
 					editor.wysiwygEditorInsertHtml(
 						'<img ' + attrs.join(' ') + '>'
 					);
@@ -371,7 +415,30 @@ sceditor.command.set(
 		}
 	}
 );
-
+let itemCodes = [
+	['*', 'disc'],
+	['@', 'disc'],
+	['+', 'square'],
+	['x', 'square'],
+	['o', 'circle'],
+	['O', 'circle'],
+	['0', 'circle'],
+];
+for (const [code, attr] of itemCodes)
+{
+	sceditor.formats.bbcode.set(code, {
+		tags: {
+			li: {
+				'data-itemcode': [code]
+			}
+		},
+		isInline: false,
+		closedBy: ['/ul', '/ol', '/list', 'li', '*', '@', '+', 'x', '0', 'o', 'O'],
+		excludeClosing: true,
+		html: '<li type="' + attr + '" data-itemcode="' + code + '">{0}</li>',
+		format: '[' + code + ']{0}',
+	});
+}
 sceditor.formats.bbcode.set(
 	'abbr', {
 		tags: {
@@ -389,15 +456,15 @@ sceditor.formats.bbcode.set(
 		breakStart: true,
 		isInline: false,
 		// allowedChildren: ['*', 'li'], // Disabled for SCE 2.1.2 because it triggers a bug with inserting extra line breaks
-		html: function (element, attrs, content) {
-			var style = '';
-			var code = 'ul';
-			var olTypes = new Array('decimal', 'decimal-leading-zero', 'lower-roman', 'upper-roman', 'lower-alpha', 'upper-alpha', 'lower-greek', 'upper-greek', 'lower-latin', 'upper-latin', 'hebrew', 'armenian', 'georgian', 'cjk-ideographic', 'hiragana', 'katakana', 'hiragana-iroha', 'katakana-iroha');
+		html(element, {type}, content) {
+			let style = '';
+			let code = 'ul';
+			const olTypes = ['decimal', 'decimal-leading-zero', 'lower-roman', 'upper-roman', 'lower-alpha', 'upper-alpha', 'lower-greek', 'upper-greek', 'lower-latin', 'upper-latin', 'hebrew', 'armenian', 'georgian', 'cjk-ideographic', 'hiragana', 'katakana', 'hiragana-iroha', 'katakana-iroha'];
 
-			if (attrs.type) {
-				style = ' style="list-style-type: ' + attrs.type + '"';
+			if (type) {
+				style = ' style="list-style-type: ' + type + '"';
 
-				if (olTypes.indexOf(attrs.type) > -1)
+				if (olTypes.includes(type))
 					code = 'ol';
 			}
 			else
@@ -414,11 +481,12 @@ sceditor.formats.bbcode.set(
 		breakStart: true,
 		isInline: false,
 		html: '<ul>{0}</ul>',
-		format: function (element, content) {
-			if ($(element).css('list-style-type') == 'disc')
+		format(element, content) {
+			const type = element.getAttribute('type') || element.style.listStyleType;
+			if (type == 'disc')
 				return '[list]' + content + '[/list]';
 			else
-				return '[list type=' + $(element).css('list-style-type') + ']' + content + '[/list]';
+				return '[list type=' + type + ']' + content + '[/list]';
 		}
 	}
 ).set(
@@ -429,11 +497,12 @@ sceditor.formats.bbcode.set(
 		breakStart: true,
 		isInline: false,
 		html: '<ol>{0}</ol>',
-		format: function (element, content) {
-			if ($(element).css('list-style-type') == 'none')
-				return '[list type=decimal]' + content + '[/list]';
-			else
-				return '[list type=' + $(element).css('list-style-type') + ']' + content + '[/list]';
+		format(element, content) {
+			const type = element.getAttribute('type') || element.style.listStyleType;
+			if (type == 'none')
+				type = 'decimal';
+
+			return '[list type=' + type + ']' + content + '[/list]';
 		}
 	}
 ).set(
@@ -443,115 +512,17 @@ sceditor.formats.bbcode.set(
 		},
 		isInline: false,
 		closedBy: ['/ul', '/ol', '/list', 'li', '*', '@', '+', 'x', 'o', 'O', '0'],
-		html: '<li data-bbc-tag="li">{0}</li>',
-		format: function (element, content) {
-			var	element = $(element),
-				token = 'li',
-				allowedTokens = ['li', '*', '@', '+', 'x', 'o', 'O', '0'];
+		html: '<li data-itemcode="li">{0}</li>',
+		format(element, content) {
+			let token = 'li';
+			const tok = element.getAttribute('data-itemcode');
+			const allowedTokens = ['li', '*', '@', '+', 'x', 'o', 'O', '0'];
 
-			if (element.attr('data-bbc-tag') && allowedTokens.indexOf(element.attr('data-bbc-tag') > -1))
-				token = element.attr('data-bbc-tag');
+			if (tok && allowedTokens.includes(tok))
+				token = tok;
 
 			return '[' + token + ']' + content + (token === 'li' ? '[/' + token + ']' : '');
 		},
-	}
-);
-sceditor.formats.bbcode.set(
-	'*', {
-		tags: {
-			li: {
-				'data-bbc-tag': ['*']
-			}
-		},
-		isInline: false,
-		closedBy: ['/ul', '/ol', '/list', 'li', '*', '@', '+', 'x', 'o', 'O', '0'],
-		excludeClosing: true,
-		html: '<li type="disc" data-bbc-tag="*">{0}</li>',
-		format: '[*]{0}',
-	}
-);
-sceditor.formats.bbcode.set(
-	'@', {
-		tags: {
-			li: {
-				'data-bbc-tag': ['@']
-			}
-		},
-		isInline: false,
-		closedBy: ['/ul', '/ol', '/list', 'li', '*', '@', '+', 'x', 'o', 'O', '0'],
-		excludeClosing: true,
-		html: '<li type="disc" data-bbc-tag="@">{0}</li>',
-		format: '[@]{0}',
-	}
-);
-sceditor.formats.bbcode.set(
-	'+', {
-		tags: {
-			li: {
-				'data-bbc-tag': ['+']
-			}
-		},
-		isInline: false,
-		closedBy: ['/ul', '/ol', '/list', 'li', '*', '@', '+', 'x', 'o', 'O', '0'],
-		excludeClosing: true,
-		html: '<li type="square" data-bbc-tag="+">{0}</li>',
-		format: '[+]{0}',
-	}
-);
-sceditor.formats.bbcode.set(
-	'x', {
-		tags: {
-			li: {
-				'data-bbc-tag': ['x']
-			}
-		},
-		isInline: false,
-		closedBy: ['/ul', '/ol', '/list', 'li', '*', '@', '+', 'x', 'o', 'O', '0'],
-		excludeClosing: true,
-		html: '<li type="square" data-bbc-tag="x">{0}</li>',
-		format: '[x]{0}',
-	}
-);
-sceditor.formats.bbcode.set(
-	'o', {
-		tags: {
-			li: {
-				'data-bbc-tag': ['o']
-			}
-		},
-		isInline: false,
-		closedBy: ['/ul', '/ol', '/list', 'li', '*', '@', '+', 'x', 'o', 'O', '0'],
-		excludeClosing: true,
-		html: '<li type="circle" data-bbc-tag="o">{0}</li>',
-		format: '[o]{0}',
-	}
-);
-sceditor.formats.bbcode.set(
-	'O', {
-		tags: {
-			li: {
-				'data-bbc-tag': ['O']
-			}
-		},
-		isInline: false,
-		closedBy: ['/ul', '/ol', '/list', 'li', '*', '@', '+', 'x', 'o', 'O', '0'],
-		excludeClosing: true,
-		html: '<li type="circle" data-bbc-tag="O">{0}</li>',
-		format: '[o]{0}',
-	}
-);
-sceditor.formats.bbcode.set(
-	'0', {
-		tags: {
-			li: {
-				'data-bbc-tag': ['0']
-			}
-		},
-		isInline: false,
-		closedBy: ['/ul', '/ol', '/list', 'li', '*', '@', '+', 'x', 'o', 'O', '0'],
-		excludeClosing: true,
-		html: '<li type="circle" data-bbc-tag="0">{0}</li>',
-		format: '[o]{0}',
 	}
 ).set(
 	'img', {
@@ -561,53 +532,40 @@ sceditor.formats.bbcode.set(
 			}
 		},
 		allowsEmpty: true,
-		quoteType: $.sceditor.BBCodeParser.QuoteType.never,
-		format: function (element, content) {
-			var	element = $(element),
-				attribs = '',
-				style = function (name) {
-					return element.style ? element.style[name] : null;
-				};
-
+		quoteType: sceditor.BBCodeParser.QuoteType.never,
+		format(element, content) {
 			// check if this is an emoticon image
-			if (typeof element.attr('data-sceditor-emoticon') !== "undefined")
+			if (element.hasAttribute('data-sceditor-emoticon'))
 				return content;
 
-			// only add width and height if one is specified
-			if (element.attr('width') || style('width'))
-				attribs += " width=" + element.attr('width');
-			if (element.attr('height') || style('height'))
-				attribs += " height=" + element.attr('height');
-			if (element.attr('alt'))
-				attribs += " alt=" + element.attr('alt');
+			let attribs = '';
+			const width = element.getAttribute('width') || element.style.width;
+			const height = element.getAttribute('height') || element.style.height;
 
-			// Is this an attachment?
-			if (element.attr('data-attachment'))
-			{
-				attribs = " id=" + element.attr('data-attachment') + attribs;
-				if (element.attr('data-type'))
-					attribs += " type=" + element.attr('data-type');
+			if (width)
+				attribs += " width=" + width;
+			if (height)
+				attribs += " height=" + height;
+			if (element.alt)
+				attribs += " alt=" + element.alt;
+			if (element.title)
+				attribs += " title=" + element.title;
 
-				return '[attach' + attribs + ']' + element.attr('title') + '[/attach]';
-			}
-			else if (element.attr('title'))
-				attribs += " title=" + element.attr('title');
-
-			return '[img' + attribs + ']' + element.attr('src') + '[/img]';
+			return '[img' + attribs + ']' + element.src + '[/img]';
 		},
-		html: function (token, attrs, content) {
-			var	parts,
-				attribs = '';
+		html(token, {width, height, alt, title}, content) {
+			let parts;
+			let attribs = '';
 
 			// handle [img width=340 height=240]url[/img]
-			if (typeof attrs.width !== "undefined")
-				attribs += ' width="' + attrs.width + '"';
-			if (typeof attrs.height !== "undefined")
-				attribs += ' height="' + attrs.height + '"';
-			if (typeof attrs.alt !== "undefined")
-				attribs += ' alt="' + attrs.alt + '"';
-			if (typeof attrs.title !== "undefined")
-				attribs += ' title="' + attrs.title + '"';
+			if (typeof width !== "undefined")
+				attribs += ' width="' + width + '"';
+			if (typeof height !== "undefined")
+				attribs += ' height="' + height + '"';
+			if (typeof alt !== "undefined")
+				attribs += ' alt="' + alt + '"';
+			if (typeof title !== "undefined")
+				attribs += ' title="' + title + '"';
 
 			return '<img' + attribs + ' src="' + content + '">';
 		}
@@ -706,7 +664,7 @@ sceditor.formats.bbcode.set(
 
 				var contentUrl = smf_scripturl +'?action=dlattach;attach='+ id + ';type=preview;thumb';
 				contentIMG = new Image();
-				contentIMG.src = contentUrl;
+					contentIMG.src = contentUrl;
 			}
 
 			// If not an image, show a boring ol' link
@@ -735,56 +693,105 @@ sceditor.formats.bbcode.set(
 			return '<a data-type="email" href="mailto:' + sceditor.escapeEntities(attrs.defaultattr || content, true) + '">' + content + '</a>';
 		}
 	}
-).set(
+);
+sceditor.formats.bbcode.set(
 	'url', {
 		allowsEmpty: true,
-		quoteType: sceditor.BBCodeParser.QuoteType.always,
+		quoteType: sceditor.BBCodeParser.QuoteType.never,
 		tags: {
 			a: {
-				'data-type': ['url']
+				href: null
 			}
 		},
-		format: function (element, content)
-		{
+		format(element, content) {
+			if (element.getAttribute('data-type') != 'url')
+				return content;
+
 			return '[url=' + decodeURI(element.href) + ']' + content + '[/url]';
 		},
-		html: function (token, attrs, content)
-		{
-			return '<a data-type="url" href="' + encodeURI(attrs.defaultattr || content) + '">' + content + '</a>';
+		html(token, {defaultattr}, content) {
+			return '<a data-type="url" href="' + encodeURI(defaultattr || content) + '">' + content + '</a>';
 		}
 	}
 ).set(
 	'iurl', {
 		allowsEmpty: true,
-		quoteType: sceditor.BBCodeParser.QuoteType.always,
+		quoteType: sceditor.BBCodeParser.QuoteType.never,
 		tags: {
 			a: {
 				'data-type': ['iurl']
 			}
 		},
-		format: function (element, content)
-		{
-			return '[iurl=' + decodeURI(element.href) + ']' + content + '[/iurl]';
+		format({href}, content) {
+			return '[iurl=' + href + ']' + content + '[/iurl]';
 		},
-		html: function (token, attrs, content)
-		{
-			return '<a data-type="iurl" href="' + encodeURI(attrs.defaultattr || content) + '">' + content + '</a>';
+		html(token, {defaultattr}, content) {
+			return '<a data-type="iurl" href="' + (defaultattr || content) + '">' + content + '</a>';
 		}
-	}
-).set(
-	'pre', {
+	})
+.set(
+	'ftp', {
+		allowsEmpty: true,
+		quoteType: sceditor.BBCodeParser.QuoteType.never,
+		tags: {
+			a: {
+				'data-type': ['ftp']
+			}
+		},
+		format({href}, content) {
+			return (href == content ? '[ftp]' : '[ftp=' + href + ']') + content + '[/ftp]';
+		},
+		html(token, {defaultattr}, content) {
+			return '<a data-type="ftp" href="' + (defaultattr || content) + '">' + content + '</a>';
+		}
+	})
+	.set('table', {
+		breakStart: true,
+		isHtmlInline: false,
+		skipLastLineBreak: false,
+	})
+	.set('tr', {
+		breakStart: true,
+	})
+	.set('tt', {
+		tags: {
+			tt: null,
+			span: {'class': ['tt']}
+		},
+		format: '[tt]{0}[/tt]',
+		html: '<span class="tt">{0}</span>'
+	})
+	.set('pre', {
 		tags: {
 			pre: null
 		},
-		isBlock: true,
-		format: "[pre]{0}[/pre]",
-		html: "<pre>{0}</pre>\n"
-	}
-).set(
-	'php', {
 		isInline: false,
+		format: '[pre]{0}[/pre]',
+		html: '<pre>{0}</pre>'
+	})
+	.set('me', {
+		tags: {
+			div: {
+				'data-name' : null
+			}
+		},
+		isInline: false,
+		format(element, content) {
+			return '[me=' + element.getAttribute('data-name') + ']' + content.replace(element.getAttribute('data-name') + ' ', '') + '[/me]';
+		},
+		html: '<div class="meaction" data-name="{defaultattr}">* {defaultattr} {0}</div>'
+	})
+.set(
+	'php', {
+		tags: {
+			code: {
+				'data-title': ['php']
+			}
+		},
+		isInline: false,
+		allowedChildren: ['#', '#newline'],
 		format: "[php]{0}[/php]",
-		html: '<code class="php">{0}</code>'
+		html: '<code data-title="php">{0}</code>'
 	}
 ).set(
 	'code', {
@@ -793,22 +800,19 @@ sceditor.formats.bbcode.set(
 		},
 		isInline: false,
 		allowedChildren: ['#', '#newline'],
-		format: function (element, content) {
-			if ($(element).hasClass('php'))
-				return '[php]' + content.replace('&#91;', '[') + '[/php]';
+		format(element, content) {
+			const title = element.getAttribute('data-title');
+			const from = title ? ' =' + title : '';
 
-			var
-				dom = sceditor.dom,
-				attr = dom.attr,
-				title = attr(element, 'data-title'),
-				from = title ?' =' + title : '';
+			if (title === 'php')
+				return '[php]' + content.replace('&#91;', '[') + '[/php]';
 
 			return '[code' + from + ']' + content.replace('&#91;', '[') + '[/code]';
 		},
-		html: function (element, attrs, content) {
-			var from = attrs.defaultattr ? ' data-title="' + attrs.defaultattr + '"'  : '';
+		html(element, {defaultattr}, content) {
+			const from = defaultattr ? ' data-title="' + defaultattr + '"'  : '';
 
-			return '<code data-name="' + this.opts.txtVars.code + '"' + from + '>' + content.replace('[', '&#91;') + '</code>'
+			return '<code data-name="' + sceditor.locale.code + '"' + from + '>' + content.replace('[', '&#91;') + '</code>'
 		}
 	}
 ).set(
@@ -820,12 +824,11 @@ sceditor.formats.bbcode.set(
 		quoteType: sceditor.BBCodeParser.QuoteType.never,
 		breakBefore: false,
 		isInline: false,
-		format: function (element, content)
-		{
-			var attrs = '';
-			var author = element.getAttribute('data-author');
-			var date = element.getAttribute('data-date');
-			var link = element.getAttribute('data-link');
+		format(element, content) {
+			let attrs = '';
+			const author = element.getAttribute('data-author');
+			const date = element.getAttribute('data-date');
+			const link = element.getAttribute('data-link');
 
 			// The <cite> contains only the graphic for the quote, so we can skip it
 			if (element.tagName === 'CITE')
@@ -840,11 +843,13 @@ sceditor.formats.bbcode.set(
 
 			return '[quote' + attrs + ']' + content + '[/quote]';
 		},
-		html: function (element, attrs, content)
-		{
-			var attr_author = '', author = '';
-			var attr_date = '', sDate = '';
-			var attr_link = '', link = '';
+		html(element, attrs, content) {
+			let attr_author = '';
+			let author = '';
+			let attr_date = '';
+			let sDate = '';
+			let attr_link = '';
+			let link = '';
 
 			if (attrs.author || attrs.defaultattr)
 			{

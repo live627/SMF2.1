@@ -1526,9 +1526,9 @@ function create_control_richedit($editorOptions)
 		loadTemplate('GenericControls');
 
 		/*
-		 *		THEME AUTHORS:
-		 			If you want to change or tweak the CSS for the editor,
-					include a file named 'jquery.sceditor.theme.css' in your theme.
+		 * THEME AUTHORS:
+		 * If you want to change or tweak the CSS for the editor,
+		 * include a file named 'jquery.sceditor.theme.css' in your theme.
 		*/
 		loadCSSFile('jquery.sceditor.theme.css', array('force_current' => true, 'validate' => true,), 'smf_jquery_sceditor_theme');
 
@@ -1607,20 +1607,33 @@ function create_control_richedit($editorOptions)
 	if ($context['controls']['richedit'][$editorOptions['id']]['preview_type'] == 2)
 		$editorOptions['plugins'][] = 'xmlPreview';
 
-	// Set up the SCEditor options
 	$sce_options = array(
 		'width' => $editorOptions['width'] ?? '70%',
 		'height' => $editorOptions['height'] ?? '150px',
 		'style' => $settings[file_exists($settings['theme_dir'] . '/css/sceditorframe.css') ? 'theme_url' : 'default_theme_url'] . '/css/sceditorframe.css',
 		'autoUpdate' => true,
 		'emoticonsCompat' => true,
-		'emoticons' => [
-			'dropdown' => [],
-			'more' => [],
+		'emoticons' => [],
+		'emoticonsEnabled' => (!empty($context['smileys']['postform']) || !empty($context['smileys']['popup'])) && empty($editorOptions['disable_smiley_box']),
+		'colors' => [
+			['black', $txt['black']],
+			['red', $txt['red']],
+			['yellow', $txt['yellow']],
+			['pink', $txt['pink']],
+			['green', $txt['green']],
+			['orange', $txt['orange']],
+			['purple', $txt['purple']],
+			['blue', $txt['blue']],
+			['beige', $txt['beige']],
+			['brown', $txt['brown']],
+			['teal', $txt['teal']],
+			['navy', $txt['navy']],
+			['maroon', $txt['maroon']],
+			['limegreen', $txt['lime_green']],
+			['white', $txt['white']],
 		],
-		'emoticonsRoot' => $settings['smileys_url'] . '/',
-		'emoticonsEnabled' => !empty($smileys['postform']) || !empty($smileys['popup']),
-		'colors' => 'black,maroon,brown,green,navy,grey,red,orange,teal,blue,white,hotpink,yellow,limegreen,purple',
+		'fonts' => 'Arial,Arial Black,Comic Sans MS,Courier New,Georgia,Impact,Sans-serif,Serif,Times New Roman,Trebuchet MS,Verdana',
+		'icons' => 'smf',
 		'format' => 'bbcode',
 		'plugins' => implode(',', $editorOptions['plugins'] ?? []),
 		'toolbar' => implode_recursive(['||', '|', ','], load_toolbar()),
@@ -1631,18 +1644,18 @@ function create_control_richedit($editorOptions)
 		'locale' => $txt['lang_dictionary'] ?? 'en',
 		'autofocus' => $editorOptions['id'] != 'quickReply',
 		'rtl' => !empty($context['right_to_left']),
-	) + $editorOptions['options'] ?? [];
+	) + ($editorOptions['options'] ?? []);
 
 	if ($sce_options['emoticonsEnabled'])
 	{
-		$location_translations = array(
+		$translations = array(
 			0 => 'dropdown',
 			2 => 'more',
 		);
 		$prevRowIndex = 0;
 		foreach ($smileys as $smiley)
 		{
-			$sce_options['emoticons'][$location_translations[$smiley['hidden']]][$smiley['code']] = [
+			$sce_options['emoticons'][$translations[$smiley['hidden']]][$smiley['code']] = [
 				'newRow' => $smiley['smiley_row'] != $prevRowIndex,
 				'url' => $smiley['filename'],
 				'tooltip' => $smcFunc['htmlspecialchars']($txt['icon_' . strtolower($smiley['description'])] ?? $smiley['description']),
