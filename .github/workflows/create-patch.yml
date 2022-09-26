@@ -1,0 +1,88 @@
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - linttest
+
+jobs:
+  create-patch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Reading Git logs
+        id: vars
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          RE='[^0-9]*\([0-9]*\)[.]\([0-9]*\)[.]\([0-9]*\)\([0-9A-Za-z-]*\)'
+          echo "::set-output name=major::$(echo $LATEST_TAG | sed -e "s#$RE#\1#")"
+          echo "::set-output name=minor::$(echo $LATEST_TAG | sed -e "s#$RE#\2#")"
+          echo "::set-output name=patch::$(echo $LATEST_TAG | sed -e "s#$RE#\3#")"
+
+      - uses: actions/github-script@v3
+        id: issues
+        with:
+          script: |
+              const milestones = await github.issues.listMilestones({
+              	direction: 'desc',
+              	owner: context.repo.owner,
+              	repo: context.repo.repo,
+              	owner: 'SimpleMachines',
+              	repo: 'SMF'
+              });
+              const issues = await github
+              	.paginate(github.issues.listForRepo, {
+              		milestone: milestones.data.find(({title}) => title == '${{ steps.vars.outputs.major }}.${{ steps.vars.outputs.minor }}.' + (${{ steps.vars.outputs.patch }} + 1)).number,
+              		state: 'closed',
+              		direction: 'desc',
+              		owner: context.repo.owner,
+              		repo: context.repo.repo,
+              		owner: 'SimpleMachines',
+              		repo: 'SMF'
+              	})
+              	.then(issues => issues.filter(({pull_request}) => pull_request));
+              	issues.forEach(({title, number}) => core.info(`\u001B[32m✔\u001B[39m ${title} \u001B[90m(#${number})`));
+
+              core.setOutput('issues', issues.map(({title, html_url, number}) => `${title} ([url=${html_url}]#${number}[/url])`).join('\n'));
+
+      - name: Preparing patch
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          RE='[^0-9]*\([0-9]*\)[.]\([0-9]*\)[.]\([0-9]*\)\([0-9A-Za-z-]*\)'
+          MAJOR=`echo $LATEST_TAG | sed -e "s#$RE#\1#"`
+          MINOR=`echo $LATEST_TAG | sed -e "s#$RE#\2#"`
+          PATCH=`echo $LATEST_TAG | sed -e "s#$RE#\3#"`
+          ((INCREMENTED_PATCH=PATCH+1))
+
+          git diff $LATEST_TAG HEAD --diff-filter=M --output=patch.diff
+
+          php bootstrap.php patch.diff smf_${MAJOR}-${MINOR}-${INCREMENTED_PATCH}_patch.xml -vv --tag ${MAJOR}.${MINOR}.${INCREMENTED_PATCH} --ignore-pattern "/(?:composer\.(?:\.json|lock)|(?:\.github|other)\/)/"
+
+          cat << EOF > package-info.xml
+          <?xml version="1.0"?>
+          <!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
+          <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
+          	<id>smf:smf-${MAJOR}.${MINOR}.${INCREMENTED_PATCH}</id>
+          	<name>SMF ${MAJOR}.${MINOR}.${INCREMENTED_PATCH} Update</name>
+          	<version>1.0</version>
+          	<type>modification</type>
+          
+          	<install for="${MAJOR}.${MINOR}.${PATCH}">
+          		<readme type="inline" parsebbc="true">[size=large][b]SMF ${MAJOR}.${MINOR}.${INCREMENTED_PATCH}[/b][/size]
+          
+          		${{ steps.vars.issues.issues }}</readme>
+          		<modification>smf_${MAJOR}-${MINOR}-${INCREMENTED_PATCH}_patch.xml</modification>
+          		<code type="inline"><![CDATA[<?php updateSettings(array('smfVersion' => '${MAJOR}.${MINOR}.${INCREMENTED_PATCH}'));]]></code>
+          	</install>
+          	<uninstall for="${MAJOR}.${MINOR}.${INCREMENTED_PATCH}">
+          		<readme type="inline" parsebbc="true">This will remove the changes introduced by SMF ${MAJOR}.${MINOR}.${INCREMENTED_PATCH}. [b]This is generally not a good idea.[/b]</readme>
+          		<modification reverse="true">smf_${MAJOR}-${MINOR}-${INCREMENTED_PATCH}_patch.xml</modification>
+          		<code type="inline"><![CDATA[<?php updateSettings(array('smfVersion' => '${MAJOR}.${MINOR}.${PATCH}'));]]></code>
+          	</uninstall>
+          </package-info>
+          EOF
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: "*.xml"
