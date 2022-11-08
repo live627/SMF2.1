@@ -14,16 +14,9 @@
         "friendsofphp/php-cs-fixer": "^3.0",
         "squizlabs/php_codesniffer": "^3.6"
     },
-    "autoload": {
-        "psr-4": {
-            "PHPTDD\\": "tests"
+    "config": {
+        "platform": {
+            "php": "7.4"
         }
-    },
-    "scripts": {
-        "lint": "php-cs-fixer fix --dry-run --verbose --show-progress=dots",
-        "lint-fix": "php-cs-fixer fix --verbose --show-progress=dots",
-        "phpcs": "phpcs --standard=coding-standards/SMF ./Sources/tasks",
-        "phpcbf": "phpcbf --standard=coding-standards/SMF ./Sources/tasks",
-        "phpstan": "phpstan analyze"
     }
 }
