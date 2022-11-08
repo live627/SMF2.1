@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class AgreementTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class AgreementTest extends TestCase
 {
 	public function setUp() : void
 	{

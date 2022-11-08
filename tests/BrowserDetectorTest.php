@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use browser_detector;
 
-class BrowserDetectorTest extends BaseTestCase
+class BrowserDetectorTest extends TestCase
 {
 	public function setUp() : void
 	{

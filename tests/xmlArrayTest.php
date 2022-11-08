@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use ErrorException;
 use xmlArray;
 
-class TestxmlArray extends BaseTestCase
+class TestxmlArray extends TestCase
 {
 	public function setUp() : void
 	{

@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class TaskTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class TaskTest extends TestCase
 {
 	public function testMenu(): void
 	{

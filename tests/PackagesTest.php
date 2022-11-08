@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class PackagesTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class PackagesTest extends TestCase
 {
 	public function setUp(): void
 	{

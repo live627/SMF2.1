@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class SubsTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class SubsTest extends TestCase
 {
 	public function testTimeformat(): void
 	{

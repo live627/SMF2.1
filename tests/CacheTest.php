@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use SMF\Cache\APIs\Apcu;
 use SMF\Cache\APIs\FileBased;
@@ -13,7 +15,7 @@ use SMF\Cache\APIs\Sqlite;
 use SMF\Cache\CacheApi;
 use SMF\Cache\CacheApiInterface;
 
-class CacheTest extends BaseTestCase
+class CacheTest extends TestCase
 {
 	private $cacheObj;
 

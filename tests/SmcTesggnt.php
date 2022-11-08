@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class SMCTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class SMCTest extends TestCase
 {
 	protected $tests = [
 		'this' => ['this' => 'not_this'],

@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class FetchWebdataTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class FetchWebdataTest extends TestCase
 {
 	/**
 	 * @return string[][]

@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use Punycode as Punycode;
 
-class PunycodeTest extends BaseTestCase
+class PunycodeTest extends TestCase
 {
 	public function setUp() : void
 	{

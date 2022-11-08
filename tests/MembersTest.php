@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use PHPUnit\Framework\Error\Error as PHPUnitError;
 
-class MembersTest extends BaseTestCase
+class MembersTest extends TestCase
 {
 	private $options = [];
 

@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use InvalidArgumentException;
 use TOTP\Auth;
 
-class TOTPTest extends BaseTestCase
+class TOTPTest extends TestCase
 {
 	public function setUp() : void
 	{

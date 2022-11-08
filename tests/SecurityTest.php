@@ -1,9 +1,11 @@
 <?php
 
 declare(strict_types=1);
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class SecurityTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class SecurityTest extends TestCase
 {
 	//~ public function domainsProvider(): array
 	//~ {

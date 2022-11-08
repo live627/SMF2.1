@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
 
-class HooksTest extends BaseTestCase
+use PHPUnit\Framework\TestCase;
+
+class HooksTest extends TestCase
 {
 	public function setUp(): void
 	{

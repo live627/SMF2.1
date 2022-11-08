@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PHPTDD;
+namespace SMF\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 use Mentions;
 
@@ -19,7 +21,7 @@ class MockMentions extends Mentions
 	}
 }
 
-class MentionsTest extends BaseTestCase
+class MentionsTest extends TestCase
 {
 	public function testPut(): void
 	{
