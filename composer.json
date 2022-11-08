@@ -17,10 +17,6 @@
     "autoload": {
         "psr-4": {
             "PHPTDD\\": "tests"
-    },
-    "config": {
-        "platform": {
-            "php": "7.0.2"
         }
     },
     "scripts": {
