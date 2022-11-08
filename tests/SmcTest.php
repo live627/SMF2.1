@@ -8,8 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class SMCTest extends TestCase
 {
-	/**
-	 */
 	public function callbackProvider(): array
 	{
 		return [
@@ -130,7 +128,6 @@ class SMCTest extends TestCase
 
 	/**
 	 * @dataProvider callbackProvider
-	 *
 	 */
 	public function testCallback($test, $params, $expected): void
 	{
@@ -169,9 +166,6 @@ class SMCTest extends TestCase
 		$this->assertEquals('&#32;', $smcFunc['entity_fix']('32'));
 	}
 
-	/**
-	 * @return string[][]
-	 */
 	public function htmlspecialcharsProvider(): array
 	{
 		return [
@@ -196,7 +190,6 @@ class SMCTest extends TestCase
 
 	/**
 	 * @dataProvider htmlspecialcharsProvider
-	 *
 	 */
 	public function testHtmlspecialchars($test, $expected): void
 	{
@@ -215,9 +208,6 @@ class SMCTest extends TestCase
 		);
 	}
 
-	/**
-	 * @return string[][]
-	 */
 	public function htmltrimProvider(): array
 	{
 		return [
@@ -287,7 +277,7 @@ class SMCTest extends TestCase
 		global $smcFunc;
 
 		$this->assertEquals(
-			'ElvIs "the KIng" PresLey Who\'s Online  Αλώπηξ Βαφής Ψημένη Γη, Δρασκελίζει Υπέρ Νωθρού Κυνός',
+			'ElvIs "The KIng" PresLey Who\'s Online  Αλώπηξ Βαφής Ψημένη Γη, Δρασκελίζει Υπέρ Νωθρού Κυνός',
 			$smcFunc['ucwords'](
 				'elvIs "the kIng" presLey who\'s online  αλώπηξ βαφής ψημένη γη, δρασκελίζει υπέρ νωθρού κυνός'
 			)
@@ -372,5 +362,195 @@ class SMCTest extends TestCase
 		$this->assertEquals('value11', $variable1);
 		$this->assertEquals('value22', $variable2);
 		$this->assertEquals('value33', $variable3);
+	}
+
+	public function nullProvider(): array
+	{
+		return [
+			[
+				[
+					'name' => 'test_legacy_null',
+					'type' => 'varchar',
+					'size' => 1,
+					'null' => true,
+				],
+				true,
+			],
+			[
+				[
+					'name' => 'test_legacy_not_null',
+					'type' => 'varchar',
+					'size' => 1,
+					'null' => false,
+				],
+				false,
+			],
+			[
+				[
+					'name' => 'test_not_null',
+					'type' => 'varchar',
+					'size' => 1,
+					'not_null' => false,
+				],
+				true,
+			],
+			[
+				[
+					'name' => 'test_null',
+					'type' => 'varchar',
+					'size' => 1,
+					'not_null' => true,
+				],
+				false,
+			],
+			[
+				[
+					'name' => 'test_default_null',
+					'type' => 'varchar',
+					'size' => 1,
+					'default' => null,
+				],
+				true,
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider nullProvider
+	 */
+	public function testNull(array $test, bool $expected): void
+	{
+		global $smcFunc;
+
+		$smcFunc['db_add_column']('{db_prefix}log_packages', $test, []);
+		$cols = $smcFunc['db_list_columns']('{db_prefix}log_packages', true);
+		$smcFunc['db_remove_column']('{db_prefix}log_packages', $test['name']);
+
+		$this->assertNotContains($test['name'], $smcFunc['db_list_columns']('{db_prefix}log_packages'));
+		$this->assertArrayHasKey($test['name'], $cols);
+		$col = $cols[$test['name']];
+		$this->assertIsString($col['name']);
+		$this->assertNotEmpty($col['name']);
+		$this->assertSame(!$expected, $col['not_null']);
+		$this->assertSame($expected, $col['null']);
+		$this->assertNull($col['default']);
+	}
+
+	public function defaultProvider(): array
+	{
+		return [
+			[
+				[
+					'name' => 'test_default_empty',
+					'type' => 'varchar',
+					'size' => 1,
+					'default' => '',
+				],
+				'',
+			],
+			[
+				[
+					'name' => 'test_default_value',
+					'type' => 'varchar',
+					'size' => 1,
+					'default' => 'a',
+				],
+				'a',
+			],
+			[
+				[
+					'name' => 'test_default_int',
+					'type' => 'varchar',
+					'size' => 1,
+					'default' => 1,
+				],
+				'1',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider defaultProvider
+	 */
+	public function testDefault(array $test, $expected): void
+	{
+		global $smcFunc;
+
+		$smcFunc['db_add_column']('{db_prefix}log_packages', $test, []);
+		$cols = $smcFunc['db_list_columns']('{db_prefix}log_packages', true);
+		$smcFunc['db_remove_column']('{db_prefix}log_packages', $test['name']);
+
+		$this->assertNotContains($test['name'], $smcFunc['db_list_columns']('{db_prefix}log_packages'));
+		$this->assertArrayHasKey($test['name'], $cols);
+		$col = $cols[$test['name']];
+		$this->assertIsString($col['name']);
+		$this->assertNotEmpty($col['name']);
+		$this->assertFalse($col['not_null']);
+		$this->assertTrue($col['null']);
+		$this->assertSame($expected, $col['default']);
+	}
+
+	public function testCreateTable(): void
+	{
+		global $smcFunc;
+
+		$def = [
+			'columns' => [
+				[
+					'name' => 'id_atest',
+					'type' => 'INT',
+					'not_null' => true,
+				],
+				[
+					'name' => 'fails_in_pg',
+					'type' => 'TEXT',
+					'not_null' => true,
+				],
+				[
+					'name' => 'fails_in_mysql_56',
+					'type' => 'varchar',
+					'size' => 512,
+					'default' => '',
+					'not_null' => true,
+				],
+			],
+			'indexes' => [
+				[
+					'type' => 'primary',
+					'columns' => ['id_atest'],
+				],
+				[
+					'type' => 'index',
+					'name' => 'ix_test_text',
+					'columns' => ['fails_in_pg (64)'],
+				],
+				[
+					'type' => 'index',
+					'name' => 'ix_test_ix_length',
+					'columns' => ['fails_in_mysql_56'],
+				],
+			],
+		];
+
+		$smcFunc['db_create_table']('{db_prefix}a_test_record', $def['columns'], $def['indexes']);
+		$structure = $smcFunc['db_table_structure']('{db_prefix}a_test_record');
+		$tables = $smcFunc['db_list_tables']();
+		$smcFunc['db_drop_table']('{db_prefix}a_test_record');
+		$this->assertCount(3, $def['columns']);
+		$this->assertCount(3, $def['indexes']);
+		$this->assertCount(3, $structure['columns']);
+		$this->assertCount(3, $structure['indexes']);
+		$this->assertEquals('smf_a_test_record', $structure['name']);
+		$this->assertContains('smf_a_test_record', $tables);
+		$this->assertNotContains('smf_a_test_record', $smcFunc['db_list_tables']());
+		foreach ($def['columns'] as $col)
+		{
+			$this->assertArrayHasKey($col['name'], $structure['columns']);
+			$dbcol = $structure['columns'][$col['name']];
+			$this->assertEquals($col['name'], $dbcol['name']);
+			$this->assertFalse($dbcol['null']);
+			$this->assertTrue($dbcol['not_null']);
+			$this->assertFalse($dbcol['auto']);
+		}
 	}
 }
