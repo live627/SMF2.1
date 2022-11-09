@@ -133,8 +133,7 @@ class SMCTest extends TestCase
 	{
 		global $smcFunc;
 
-		$db_string = $smcFunc['db_quote']($test, $params);
-		$this->assertEquals($db_string, $expected[$smcFunc['db_title']]);
+		$this->assertEquals($smcFunc['db_quote']($test, $params), $expected[$smcFunc['db_title']]);
 	}
 
 	public function testListTables(): void
@@ -492,7 +491,7 @@ class SMCTest extends TestCase
 
 	public function testCreateTable(): void
 	{
-		global $smcFunc;
+		global $db_prefix, $smcFunc;
 
 		$def = [
 			'columns' => [
@@ -540,9 +539,9 @@ class SMCTest extends TestCase
 		$this->assertCount(3, $def['indexes']);
 		$this->assertCount(3, $structure['columns']);
 		$this->assertCount(3, $structure['indexes']);
-		$this->assertEquals('smf_a_test_record', $structure['name']);
-		$this->assertContains('smf_a_test_record', $tables);
-		$this->assertNotContains('smf_a_test_record', $smcFunc['db_list_tables']());
+		$this->assertEquals($db_prefix . 'a_test_record', $structure['name']);
+		$this->assertContains($db_prefix . 'a_test_record', $tables);
+		$this->assertNotContains($db_prefix . 'a_test_record', $smcFunc['db_list_tables']());
 		foreach ($def['columns'] as $col)
 		{
 			$this->assertArrayHasKey($col['name'], $structure['columns']);

@@ -136,7 +136,7 @@ class RecentTest extends TestCase
 		$unread_topics = $context['topics'];
 		unset($_REQUEST['boards'], $context['topics']);
 
-		$this->assertEqual($modSettings['maxMsgID'], $actual);
+		$this->assertEquals($modSettings['maxMsgID'], $actual);
 		$this->assertNull($actual2);
 		$this->assertIsArray($topics);
 		$this->assertEmpty($topics);

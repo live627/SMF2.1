@@ -484,7 +484,7 @@ function smf_db_change_column($table_name, $old_column, $column_info)
 		);
 	}
 	// Different default?
-	if (array_key_exists('default', $column_info) && $column_info['default'] !==  $old_info['default'])
+	if (array_key_exists('default', $column_info) && $column_info['default'] !== $old_info['default'])
 	{
 		// Fix the default.
 		$default = '';
@@ -874,16 +874,15 @@ function smf_db_list_columns($table_name, $detail = false, $parameters = array()
 		else
 		{
 			$auto = false;
+			$default = null;
 			// What is the default?
-			if ($row['column_default'] === null)
-				$default = null;
-			elseif (preg_match('~nextval\(\'(.+?)\'(.+?)*\)~i', $row['column_default'], $matches) != 0)
+			if ($row['column_default'] !== null)
 			{
-				$default = null;
-				$auto = true;
+				if (preg_match('~nextval\(\'(.+?)\'(.+?)*\)~i', $row['column_default'], $matches) != 0)
+					$auto = true;
+				elseif (trim($row['column_default']) != '')
+					$default = trim(strpos($row['column_default'], '::') === false ? $row['column_default'] : substr($row['column_default'], 0, strpos($row['column_default'], '::')), '\'');
 			}
-			elseif (trim($row['column_default']) != '')
-				$default = trim(strpos($row['column_default'], '::') === false ? $row['column_default'] : substr($row['column_default'], 0, strpos($row['column_default'], '::')), '\'');
 
 			// Make the type generic.
 			list ($type, $size) = $smcFunc['db_calculate_type']($row['data_type'], $row['character_maximum_length'], true);
