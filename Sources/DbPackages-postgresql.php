@@ -888,6 +888,10 @@ function smf_db_list_columns($table_name, $detail = false, $parameters = array()
 				'size' => $size,
 				'auto' => $auto,
 			);
+
+			// Allow for unspecified (!isset) as opposed to null (null)
+			if (isset($row['Default']))
+				$columns[$row['Field']]['default'] = $row['Default'];
 		}
 	}
 	$smcFunc['db_free_result']($result);
