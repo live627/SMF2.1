@@ -864,8 +864,11 @@ function smf_db_list_columns($table_name, $detail = false, $parameters = array()
 			{
 				if (preg_match('~nextval\(\'(.+?)\'(.+?)*\)~i', $row['column_default'], $matches) != 0)
 					$auto = true;
-				elseif (trim($row['column_default']) != '')
-					$default = trim(strpos($row['column_default'], '::') === false ? $row['column_default'] : substr($row['column_default'], 0, strpos($row['column_default'], '::')), '\'');
+				elseif (substr($row['column_default'], 0, 4) != 'NULL' && trim($row['column_default']) != '')
+				{
+					$pos = strpos($row['column_default'], '::');
+					$default = trim($pos === false ? $row['column_default'] : substr($row['column_default'], 0, $pos), '\'');
+				}
 			}
 
 			// Make the type generic.
@@ -873,8 +876,8 @@ function smf_db_list_columns($table_name, $detail = false, $parameters = array()
 
 			$columns[$row['column_name']] = array(
 				'name' => $row['column_name'],
-				'not_null' => $row['is_nullable'] == 'YES' ? false : true,
-				'null' => $row['is_nullable'] == 'YES' ? true : false,
+				'not_null' => $row['is_nullable'] != 'YES',
+				'null' => $row['is_nullable'] == 'YES',
 				'default' => $default,
 				'type' => $type,
 				'size' => $size,

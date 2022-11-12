@@ -1056,6 +1056,6 @@ class SMCTest extends TestCase
 		$this->assertCount(73, $structure['columns']);
 		$this->assertCount(1, $structure['indexes']);
 		$this->assertJsonStringEqualsJsonFile(__DIR__ . '/fixtures/table1.json', json_encode($structure));
-		//~ file_put_contents(__DIR__ . '/fixtures/table1.json', json_encode($structure));
+		file_put_contents(__DIR__ . '/fixtures/table1.json', json_encode($structure));
 	}
 }
