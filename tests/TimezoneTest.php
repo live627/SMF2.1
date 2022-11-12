@@ -8,11 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class TimezoneTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Subs-Timezones.php');
+		require_once __DIR__ . '/../Sources/Subs-Timezones.php';
 	}
 
 	public function testMetazones(): void

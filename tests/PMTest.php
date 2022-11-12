@@ -10,16 +10,19 @@ class PMTest extends TestCase
 {
 	private $options = [];
 
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $modSettings, $sourcedir;
+		global $modSettings;
 
-		require_once($sourcedir . '/Subs-Members.php');
-		require_once($sourcedir . '/PersonalMessage.php');
+		require_once __DIR__ . '/../Sources/Subs-Members.php';
+		require_once __DIR__ . '/../Sources/PersonalMessage.php';
 
 		// Hash password is slow with the default 10 on the hash cost, reducing this helps.
 		$modSettings['bcrypt_hash_cost'] = 4;
+	}
 
+	public function setUp(): void
+	{
 		$this->options = [
 			[
 				'interface' => 'admin',
@@ -62,7 +65,7 @@ class PMTest extends TestCase
 	/**
 	 * @depends testAddMembers
 	 */
-	public function testSendPM() : void
+	public function testSendPM(): void
 	{
 		global $context, $membersTest;
 
@@ -96,7 +99,7 @@ class PMTest extends TestCase
 	/**
 	 * @depends testSendPM
 	 */
-	public function testAddLabel() : void
+	public function testAddLabel(): void
 	{
 		global $context;
 
@@ -115,7 +118,7 @@ class PMTest extends TestCase
 	/**
 	 * @depends testAddLabel
 	 */
-	public function testAddRule() : void
+	public function testAddRule(): void
 	{
 		global $context;
 
@@ -141,7 +144,7 @@ class PMTest extends TestCase
 	/**
 	 * @depends testAddRule
 	 */
-	public function testApplyRules() : void
+	public function testApplyRules(): void
 	{
 		global $context;
 
@@ -159,7 +162,7 @@ class PMTest extends TestCase
 	/**
 	 * @depends testAddRule
 	 */
-	public function testModifyRule() : void
+	public function testModifyRule(): void
 	{
 		global $context;
 
@@ -186,7 +189,7 @@ class PMTest extends TestCase
 	/**
 	 * @depends testModifyRule
 	 */
-	public function testApplyModifiedRules() : void
+	public function testApplyModifiedRules(): void
 	{
 		global $context;
 
@@ -207,7 +210,7 @@ class PMTest extends TestCase
 	/**
 	 * @depends testAddRule
 	 */
-	public function testDeleteRule() : void
+	public function testDeleteRule(): void
 	{
 		global $context;
 
@@ -231,7 +234,7 @@ class PMTest extends TestCase
 	/**
 	 * @depends testDeleteRule
 	 */
-	public function testRefreshRule() : void
+	public function testRefreshRule(): void
 	{
 		$this->testSendPM();
 		$this->testAddRule();
@@ -241,7 +244,7 @@ class PMTest extends TestCase
 	/**
 	 * @depends testAddLabel
 	 */
-	public function testSearch() : void
+	public function testSearch(): void
 	{
 		global $context;
 
@@ -261,7 +264,7 @@ class PMTest extends TestCase
 	/**
 	 * @depends testAddLabel
 	 */
-	public function testDeleteLabel() : void
+	public function testDeleteLabel(): void
 	{
 		global $context;
 
@@ -284,7 +287,7 @@ class PMTest extends TestCase
 	/**
 	 * @depends testAddMembers
 	 */
-	public function testRemoveMembers() : void
+	public function testRemoveMembers(): void
 	{
 		global $membersTest;
 

@@ -8,11 +8,11 @@ use PHPUnit\Framework\TestCase;
 
 class ListTest extends TestCase
 {
-	public function test() : void
+	public function test(): void
 	{
 		global $context, $sourcedir;
 
-		require_once $sourcedir . '/Subs-List.php';
+		require_once __DIR__ . '/../Sources//Subs-List.php';
 
 		$listOptions = [
 			'id' => 'a',
@@ -115,7 +115,7 @@ class ListTest extends TestCase
 	{
 		global $context, $sourcedir;
 
-		require_once $sourcedir . '/Subs-List.php';
+		require_once __DIR__ . '/../Sources//Subs-List.php';
 
 		$listOptions = [
 			'id' => 'a',

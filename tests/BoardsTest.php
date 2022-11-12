@@ -12,14 +12,15 @@ class BoardsTest extends TestCase
 {
 	private $options = [];
 
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
+		require_once __DIR__ . '/../Sources/BoardIndex.php';
+		require_once __DIR__ . '/../Sources/Subs-BoardIndex.php';
+		require_once __DIR__ . '/../Sources/Subs-Boards.php';
+	}
 
-		require_once($sourcedir . '/BoardIndex.php');
-		require_once($sourcedir . '/Subs-BoardIndex.php');
-		require_once($sourcedir . '/Subs-Boards.php');
-
+	public function setUp(): void
+	{
 		$this->options = [
 			[
 				'board_name' => 'Search 1',

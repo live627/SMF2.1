@@ -8,11 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class HooksTest extends TestCase
 {
-	public function setUp(): void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/ManageMaintenance.php');
+		require_once __DIR__ . '/../Sources/ManageMaintenance.php';
 	}
 
 	public function integrationProvider(): array

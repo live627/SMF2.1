@@ -8,11 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class ProfileTest extends TestCase
 {
-	public function setUp(): void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Profile.php');
+		require_once __DIR__ . '/../Sources/Profile.php';
 	}
 
 	public function tearDown(): void

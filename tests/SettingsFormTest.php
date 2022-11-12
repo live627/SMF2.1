@@ -12,16 +12,14 @@ class TestSettingsForm extends TestCase
 
 	protected $permissionResults = [];
 
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir, $user_info;
-
-		require_once($sourcedir . '/ManageServer.php');
+		require_once __DIR__ . '/../Sources/ManageServer.php';
 		loadLanguage('Admin', 'english', true, true);
+	}
 
-		// Elevate the user.
-		$user_info['permissions'][] = 'manage_permissions';
-
+	public function setUp(): void
+	{
 		$this->configVars = [
 			['text', 'name1'],
 			['int', 'name2'],
@@ -81,6 +79,11 @@ class TestSettingsForm extends TestCase
 			'name8' => [0 => 'on'],
 			'name9' => ['b', 'i'],
 		];
+	}
+
+	public function tearDown(): void
+	{
+		unset($_REQUEST);
 	}
 
 	public function testPrepareDBSettingContext(): void
@@ -222,7 +225,7 @@ class TestSettingsForm extends TestCase
 
 		// Reload
 		global $boarddir, $mtitle;
-		require($boarddir . '/Settings.php');
+		require $boarddir . '/Settings.php';
 		prepareServerSettingsContext($this->configVars);
 		$this->assertSame('value', $mtitle);
 		$this->assertSame('value', $context['config_vars'][$this->configVars[0][0]]['value']);

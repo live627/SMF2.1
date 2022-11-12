@@ -8,16 +8,14 @@ use PHPUnit\Framework\TestCase;
 
 class RecentTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Recent.php');
-		require_once($sourcedir . '/Subs-Boards.php');
-		require_once($sourcedir . '/Notify.php');
-		require_once($sourcedir . '/Subs-Post.php');
-		require_once($sourcedir . '/Display.php');
-		require_once($sourcedir . '/RemoveTopic.php');
+		require_once __DIR__ . '/../Sources/Recent.php';
+		require_once __DIR__ . '/../Sources/Subs-Boards.php';
+		require_once __DIR__ . '/../Sources/Notify.php';
+		require_once __DIR__ . '/../Sources/Subs-Post.php';
+		require_once __DIR__ . '/../Sources/Display.php';
+		require_once __DIR__ . '/../Sources/RemoveTopic.php';
 	}
 
 	public function testGetLastPost(): void

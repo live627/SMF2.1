@@ -12,11 +12,11 @@ class MenuTest extends TestCase
 
 	protected $test_options;
 
-	public function setUp() : void
+	public function setUp(): void
 	{
 		global $context, $sourcedir, $user_info;
 
-		require_once($sourcedir . '/Subs-Menu.php');
+		require_once __DIR__ . '/../Sources/Subs-Menu.php';
 
 		$this->test_areas = [
 			/*	'section1' => array(
@@ -174,7 +174,7 @@ class MenuTest extends TestCase
 		$context['current_action'] = 'bubbh';
 	}
 
-	public function tearDown() : void
+	public function tearDown(): void
 	{
 		global $context;
 
@@ -207,7 +207,6 @@ class MenuTest extends TestCase
 
 	/**
 	 * @dataProvider optionsProvider
-	 *
 	 */
 	public function testOptions($expectedKey, $expectedVal): void
 	{
@@ -219,9 +218,6 @@ class MenuTest extends TestCase
 		$this->assertContains($expectedVal, $result);
 	}
 
-	/**
-	 * @return string[][]
-	 */
 	public function optionsProvider(): array
 	{
 		return [

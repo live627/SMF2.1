@@ -8,13 +8,11 @@ use PHPUnit\Framework\TestCase;
 
 class PostTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Post.php');
-		require_once($sourcedir . '/Display.php');
-		require_once($sourcedir . '/RemoveTopic.php');
+		require_once __DIR__ . '/../Sources/Post.php';
+		require_once __DIR__ . '/../Sources/Display.php';
+		require_once __DIR__ . '/../Sources/RemoveTopic.php';
 	}
 
 	public function testMakeReplyPost()
@@ -96,11 +94,9 @@ class PostTest extends TestCase
 	/**
 	 * Test making a post
 	 */
-	public function testModifyPost()
+	public function tesstModifyPost()
 	{
 		global $context, $board, $topic, $modSettings;
-
-		require_once(SUBSDIR . '/Topic.subs.php');
 
 		// Set up for modifying a post
 		$board = 1;

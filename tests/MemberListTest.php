@@ -8,11 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class TestMemberList extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Memberlist.php');
+		require_once __DIR__ . '/../Sources/Memberlist.php';
 	}
 
 	public function test(): void

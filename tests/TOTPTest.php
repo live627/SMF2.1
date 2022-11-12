@@ -11,11 +11,9 @@ use TOTP\Auth;
 
 class TOTPTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $context, $sourcedir, $user_info;
-
-		require_once($sourcedir . '/Class-TOTP.php');
+		require_once __DIR__ . '/../Sources/Class-TOTP.php';
 	}
 
 	public function testInstantiate(): void

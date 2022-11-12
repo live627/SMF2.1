@@ -8,12 +8,10 @@ use PHPUnit\Framework\TestCase;
 
 class CalendarTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Calendar.php');
-		require_once($sourcedir . '/Subs-Calendar.php');
+		require_once __DIR__ . '/../Sources/Calendar.php';
+		require_once __DIR__ . '/../Sources/Subs-Calendar.php';
 	}
 
 	public function timeformatProvider(): array
