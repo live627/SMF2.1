@@ -22,7 +22,7 @@ install:
 
 before_script:
   - php tests/env/Populate.php
-  - node tests/env/server.js & sleep 1
+  - node tests/env/server.mjs & sleep 1
   - sh other/prepare-files
 
 script: vendor/phpunit/phpunit/phpunit
