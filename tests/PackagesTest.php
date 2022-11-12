@@ -19,7 +19,7 @@ class PackagesTest extends TestCase
 
 	public function tearDown(): void
 	{
-		unset($_REQUEST);
+		unset($_REQUEST, $_GET);
 	}
 
 	public function testPackageBrowse()
@@ -36,11 +36,11 @@ class PackagesTest extends TestCase
 
 	public function testPackageDownload()
 	{
-		global $context, $sc;
+		global $context;
 
-		$sc = null;
+		$_GET[$context['session_var']] = $context['session_id'];
+		$_GET[$_SESSION['session_var']] = $_SESSION['session_value'
 		$_REQUEST['package'] = 'http://127.0.0.1:8125/SimpleDesk_2.1.0.tgz';
-
 		loadLanguage('Packages');
 		PackageDownload();
 		$this->assertEquals('Package downloaded successfully', $context['page_title']);

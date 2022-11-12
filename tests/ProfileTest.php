@@ -32,6 +32,6 @@ class ProfileTest extends TestCase
 		ModifyProfile();
 		$this->assertFalse($context['user']['is_owner']);
 		$this->assertTrue($context['can_see_ip']);
-		$this->assertEquals('<strong>Test successful</strong>', $context['member']['name']);
+		$this->assertEquals('user0', $context['member']['name']);
 	}
 }
