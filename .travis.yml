@@ -22,6 +22,9 @@ install:
 
 before_script:
   - php tests/env/Populate.php
+  - node -v
+  - nvm install node
+  - node -v
   - node tests/env/server.mjs & sleep 1
   - sh other/prepare-files
 
