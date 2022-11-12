@@ -39,7 +39,7 @@ class PackagesTest extends TestCase
 		global $context;
 
 		$_GET[$context['session_var']] = $context['session_id'];
-		$_GET[$_SESSION['session_var']] = $_SESSION['session_value'
+		$_GET[$_SESSION['session_var']] = $_SESSION['session_value'];
 		$_REQUEST['package'] = 'http://127.0.0.1:8125/SimpleDesk_2.1.0.tgz';
 		loadLanguage('Packages');
 		PackageDownload();
