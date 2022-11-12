@@ -139,7 +139,7 @@ class SubsTest extends TestCase
 			// Test that it doesn't underflow.
 			array_map(fn($x) => [$x, 15, 5, 0, 0], range(-2, 4)),
 
-			// Operate witth normal parameters.
+			// Operate with normal parameters.
 			array_map(fn($x) => [$x, 15, 5, 1, 5], range(5, 9)),
 
 			// Test that it doesn't overflow.
@@ -147,6 +147,9 @@ class SubsTest extends TestCase
 
 			// Test that it outputs digits, not decimals.
 			[[3000001, 4205, 42, 100, 4200]],
+
+			// Ensure no rounding errors when normalising max.
+			array_map(fn($x) => [6, $x, 5, 1, 5], range(16, 19)),
 		);
 	}
 
@@ -160,14 +163,16 @@ class SubsTest extends TestCase
 		unset($context['current_page']);
 		$page_index = constructPageIndex('querystring', $start, $max_value, $num_per_page);
 		$pages = explode(' ', strip_tags($page_index));
-		var_dump(strip_tags($page_index));
+
 		foreach ($pages as $page)
 			if ($page !== 'Pages' && $page !== '...' && $page !== '')
 				$this->assertStringMatchesFormat('%d', strtr($page, ['Pages1' => '1']));
+
 		$this->assertIsInt($start);
 		$this->assertIsInt($context['current_page']);
 		$this->assertEquals($this_value, $start);
 		$this->assertEquals($this_page, $context['current_page']);
+
 		if ($start > 0)
 			$this->assertStringContainsString(
 				sprintf(
@@ -176,6 +181,7 @@ class SubsTest extends TestCase
 				),
 				$page_index
 			);
+
 		if ($this_page > 0)
 			$this->assertStringContainsString(
 				sprintf(
@@ -197,34 +203,27 @@ class SubsTest extends TestCase
 
 		unset($context['current_page']);
 		$modSettings['compactTopicPagesEnable'] = 0;
+		$start_invalid = $start < 0;
 		$page_index = constructPageIndex('querystring', $start, $max_value, $num_per_page);
 		$modSettings['compactTopicPagesEnable'] = 1;
-		$pages = explode(' ', strip_tags($page_index));
-		var_dump(strip_tags($page_index));
-		foreach ($pages as $page)
-			if ($page !== 'Pages' && $page !== '...' && $page !== '')
-				$this->assertStringMatchesFormat('%d', strtr($page, ['Pages1' => '1']));
+
+		for ($i = 0, $j = 1; $i < $max_value; $i += $num_per_page, $j++)
+		{
+			if ($start_invalid || $i != $start)
+				$this->assertStringContainsString(
+					sprintf('<a class="nav_page" href="querystring;start=%d">%d</a>', $i, $j),
+					$page_index
+				);
+			else
+				$this->assertStringContainsString(
+					sprintf('<span class="current_page">%d</span>', $j),
+					$page_index
+				);
+		}
+
 		$this->assertIsInt($start);
 		$this->assertIsInt($context['current_page']);
 		$this->assertEquals($this_value, $start);
 		$this->assertEquals($this_page, $context['current_page']);
-		if ($start > 0)
-			$this->assertStringContainsString(
-				sprintf(
-					'<span class="current_page">%d</span>',
-					$this_page + 1
-				),
-				$page_index
-			);
-		if ($this_page > 0)
-			$this->assertStringContainsString(
-				sprintf(
-					'<a class="nav_page" href="querystring;start=%d"><span class="main_icons previous_page"></span></a>',
-					$this_value - $num_per_page
-				),
-				$page_index
-			);
-		else
-			$this->assertStringNotContainsString('previous_page', $page_index);
 	}
 }

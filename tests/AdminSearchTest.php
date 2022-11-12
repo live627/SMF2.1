@@ -19,9 +19,6 @@ class AdminSearchTest extends TestCase
 		}
 	}
 
-	/**
-	 * @return string[][]
-	 */
 	public function settingsProvider(): array
 	{
 		global $context, $sourcedir, $user_info;

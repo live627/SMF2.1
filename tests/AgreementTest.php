@@ -71,7 +71,6 @@ class AgreementTest extends TestCase
 
 	/**
 	 * @depends testEditPrivacyPolicy
-	 *
 	 */
 	public function testAgreement2(): void
 	{

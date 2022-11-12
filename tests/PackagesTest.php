@@ -12,8 +12,81 @@ class PackagesTest extends TestCase
 	{
 		global $sourcedir;
 
+		require_once($sourcedir . '/PackageGet.php');
 		require_once($sourcedir . '/Packages.php');
 		require_once($sourcedir . '/Subs-Package.php');
+	}
+
+	public function tearDown(): void
+	{
+		unset($_REQUEST);
+	}
+
+	public function testPackageBrowse()
+	{
+		global $context;
+
+		loadLanguage('Admin');
+		$context['admin_menu_name'] = 'admin';
+		Packages();
+		$this->assertEquals('browse', $context['sub_action']);
+		$this->assertEquals('browse', $context['sub_template']);
+		$this->assertEquals('packages_lists', $context['default_list']);
+	}
+
+	public function testPackageDownload()
+	{
+		global $context, $sc;
+
+		$sc = null;
+		$_REQUEST['package'] = 'http://127.0.0.1:8125/SimpleDesk_2.1.0.tgz';
+
+		loadLanguage('Packages');
+		PackageDownload();
+		$this->assertEquals('Package downloaded successfully', $context['page_title']);
+		$this->assertEquals('SimpleDesk - Integrated Helpdesk for Simple Machines Forum', $context['package']['name']);
+	}
+
+	/**
+	 * @depends testPackageDownload
+	 */
+	public function testPackageDownloaded()
+	{
+		global $context;
+
+		PackageBrowse();
+		$this->assertEquals('idmodification', $context['packages_lists_modification']['sort']['id']);
+		$this->assertCount(1, $context['packages_lists_modification']['rows']);
+		$this->assertEquals('SimpleDesk - Integrated Helpdesk for Simple Machines Forum', $context['packages_lists_modification']['rows'][0]['data']['mod_namemodification']['value']);
+	}
+
+	/**
+	 * @depends testPackageDownload
+	 */
+	public function testActionInstall()
+	{
+		global $context;
+
+		$_REQUEST['package'] = 'SimpleDesk_2.1.0.tgz';
+		$_REQUEST['sa'] = 'install';
+		Packages();
+		$this->assertFalse($context['is_installed']);
+		$this->assertFalse($context['uninstalling']);
+		$this->assertCount(49, $context['actions']);
+		$this->assertEquals('<strong>Test successful</strong>', $context['actions'][7]['description'], $context['actions'][7]['description']);
+	}
+
+	/**
+	 * @depends testPackageDownload
+	 */
+	public function testPackageRemove()
+	{
+		global $context;
+
+		$this->assertFileExists(__DIR__ . '/../packages/SimpleDesk_2.1.0.tgz');
+		$_GET['package'] = 'SimpleDesk_2.1.0.tgz';
+		PackageRemove();
+		$this->assertFileNotExists(__DIR__ . '/../packages/SimpleDesk_2.1.0.tgz');
 	}
 
 	public function zipProvider(): array

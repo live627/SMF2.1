@@ -12,7 +12,7 @@ services:
 before_install:
   - sh -c "if [ '$DB' = 'postgres' ]; then psql -c 'CREATE DATABASE smf;' -U postgres; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE smf;'; fi"
-  - phpenv config-add tests/config.ini
+  - phpenv config-add tests/env/config.ini
   - cp ./other/*.* .
   - composer install
 
@@ -21,7 +21,8 @@ install:
   - sh -c "if [ '$DB' = 'mysql' ]; then php -f install.php -- -u test -p test --dbname smf --dbuser travis; fi"
 
 before_script:
-  - php tests/Populate.php
+  - php tests/env/Populate.php
+  - node tests/env/server.js & sleep 1
   - sh other/prepare-files
 
 script: vendor/phpunit/phpunit/phpunit

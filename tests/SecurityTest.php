@@ -119,7 +119,7 @@ class SecurityTest extends TestCase
 
 		corsPolicyHeader(false);
 		$this->assertEquals('same', $context['valid_cors_found']);
-		$this->assertEquals($context['cors_domain'], $boardurl);
+		$this->assertStringStartsWith($context['cors_domain'], $boardurl);
 
 		$modSettings['allow_cors'] = 0;
 		$context['cors_domain'] = 0;
