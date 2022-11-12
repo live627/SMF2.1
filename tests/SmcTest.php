@@ -223,7 +223,6 @@ class SMCTest extends TestCase
 
 	/**
 	 * @dataProvider htmltrimProvider
-	 *
 	 */
 	public function testHtmltrim($test, $expected): void
 	{
@@ -544,8 +543,8 @@ class SMCTest extends TestCase
 		$this->assertCount(3, $structure['columns']);
 		$this->assertCount(3, $structure['indexes']);
 		$this->assertEquals($db_prefix . 'a_test_record', $structure['name']);
-		$this->assertContains($db_prefix . 'a_test_record', $tables);
-		$this->assertNotContains($db_prefix . 'a_test_record', $smcFunc['db_list_tables']());
+		$this->assertContains('smf_a_test_record', $tables);
+		$this->assertNotContains('smf_a_test_record', $smcFunc['db_list_tables']());
 		foreach ($def['columns'] as $col)
 		{
 			$this->assertArrayHasKey($col['name'], $structure['columns']);
@@ -561,513 +560,502 @@ class SMCTest extends TestCase
 	{
 		global $db_prefix, $smcFunc;
 
-		$def = array(
-		'columns' => array(
-		    array(
-				'name' => 'id_atest',
-				'type' => 'INT',
-				'auto' => true,
-			),
+		$def = [
+			'columns' => [
+				[
+					'name' => 'id_atest',
+					'type' => 'INT',
+					'auto' => true,
+				],
 
-			// unspec
-		    array(
-				'name' => 'from_int_unspec_to_int_unspec',
-				'type' => 'int',
+				// unspec
+				[
+					'name' => 'from_int_unspec_to_int_unspec',
+					'type' => 'int',
 
-			),
-		    array(
-				'name' => 'from_int_unspec_to_int_0',
-				'type' => 'int',
+				],
+				[
+					'name' => 'from_int_unspec_to_int_0',
+					'type' => 'int',
 
-			),
-		    array(
-				'name' => 'from_int_unspec_to_int_25',
-				'type' => 'int',
+				],
+				[
+					'name' => 'from_int_unspec_to_int_25',
+					'type' => 'int',
 
-			),
-		    array(
-				'name' => 'from_int_unspec_to_int_null',
-				'type' => 'int',
+				],
+				[
+					'name' => 'from_int_unspec_to_int_null',
+					'type' => 'int',
 
-			),
-		    array(
-				'name' => 'from_int_unspec_to_text_unspec',
-				'type' => 'int',
+				],
+				[
+					'name' => 'from_int_unspec_to_text_unspec',
+					'type' => 'int',
 
-			),
-		    array(
-				'name' => 'from_int_unspec_to_text_emptystr',
-				'type' => 'int',
+				],
+				[
+					'name' => 'from_int_unspec_to_text_emptystr',
+					'type' => 'int',
 
-			),
-		    array(
-				'name' => 'from_int_unspec_to_text_george',
-				'type' => 'int',
+				],
+				[
+					'name' => 'from_int_unspec_to_text_george',
+					'type' => 'int',
 
-			),
-		    array(
-				'name' => 'from_int_unspec_to_text_null',
-				'type' => 'int',
+				],
+				[
+					'name' => 'from_int_unspec_to_text_null',
+					'type' => 'int',
 
-			),
-		    array(
-				'name' => 'from_int_unspec_drop_default',
-				'type' => 'int',
+				],
+				[
+					'name' => 'from_int_unspec_drop_default',
+					'type' => 'int',
 
-			),
+				],
 
-			// 0
-		    array(
-				'name' => 'from_int_0_to_int_unspec',
-				'type' => 'int',
-				'default' => 0,
+				// 0
+				[
+					'name' => 'from_int_0_to_int_unspec',
+					'type' => 'int',
+					'default' => 0,
 
-			),
-		    array(
-				'name' => 'from_int_0_to_int_0',
-				'type' => 'int',
-				'default' => 0,
+				],
+				[
+					'name' => 'from_int_0_to_int_0',
+					'type' => 'int',
+					'default' => 0,
 
-			),
-		    array(
-				'name' => 'from_int_0_to_int_25',
-				'type' => 'int',
-				'default' => 0,
+				],
+				[
+					'name' => 'from_int_0_to_int_25',
+					'type' => 'int',
+					'default' => 0,
 
-			),
-		    array(
-				'name' => 'from_int_0_to_int_null',
-				'type' => 'int',
-				'default' => 0,
+				],
+				[
+					'name' => 'from_int_0_to_int_null',
+					'type' => 'int',
+					'default' => 0,
 
-			),
-		    array(
-				'name' => 'from_int_0_to_text_unspec',
-				'type' => 'int',
-				'default' => 0,
+				],
+				[
+					'name' => 'from_int_0_to_text_unspec',
+					'type' => 'int',
+					'default' => 0,
 
-			),
-		    array(
-				'name' => 'from_int_0_to_text_emptystr',
-				'type' => 'int',
-				'default' => 0,
+				],
+				[
+					'name' => 'from_int_0_to_text_emptystr',
+					'type' => 'int',
+					'default' => 0,
 
-			),
-		    array(
-				'name' => 'from_int_0_to_text_george',
-				'type' => 'int',
-				'default' => 0,
+				],
+				[
+					'name' => 'from_int_0_to_text_george',
+					'type' => 'int',
+					'default' => 0,
 
-			),
-		    array(
-				'name' => 'from_int_0_to_text_null',
-				'type' => 'int',
-				'default' => 0,
+				],
+				[
+					'name' => 'from_int_0_to_text_null',
+					'type' => 'int',
+					'default' => 0,
 
-			),
-		    array(
-				'name' => 'from_int_0_drop_default',
-				'type' => 'int',
-				'default' => 0,
+				],
+				[
+					'name' => 'from_int_0_drop_default',
+					'type' => 'int',
+					'default' => 0,
 
-			),
+				],
 
-			// 25
-		    array(
-				'name' => 'from_int_25_to_int_unspec',
-				'type' => 'int',
-				'default' => 25,
+				// 25
+				[
+					'name' => 'from_int_25_to_int_unspec',
+					'type' => 'int',
+					'default' => 25,
 
-			),
-		    array(
-				'name' => 'from_int_25_to_int_0',
-				'type' => 'int',
-				'default' => 25,
+				],
+				[
+					'name' => 'from_int_25_to_int_0',
+					'type' => 'int',
+					'default' => 25,
 
-			),
-		    array(
-				'name' => 'from_int_25_to_int_25',
-				'type' => 'int',
-				'default' => 25,
+				],
+				[
+					'name' => 'from_int_25_to_int_25',
+					'type' => 'int',
+					'default' => 25,
 
-			),
-		    array(
-				'name' => 'from_int_25_to_int_null',
-				'type' => 'int',
-				'default' => 25,
+				],
+				[
+					'name' => 'from_int_25_to_int_null',
+					'type' => 'int',
+					'default' => 25,
 
-			),
-		    array(
-				'name' => 'from_int_25_to_text_unspec',
-				'type' => 'int',
-				'default' => 25,
+				],
+				[
+					'name' => 'from_int_25_to_text_unspec',
+					'type' => 'int',
+					'default' => 25,
 
-			),
-		    array(
-				'name' => 'from_int_25_to_text_emptystr',
-				'type' => 'int',
-				'default' => 25,
+				],
+				[
+					'name' => 'from_int_25_to_text_emptystr',
+					'type' => 'int',
+					'default' => 25,
 
-			),
-		    array(
-				'name' => 'from_int_25_to_text_george',
-				'type' => 'int',
-				'default' => 25,
+				],
+				[
+					'name' => 'from_int_25_to_text_george',
+					'type' => 'int',
+					'default' => 25,
 
-			),
-		    array(
-				'name' => 'from_int_25_to_text_null',
-				'type' => 'int',
-				'default' => 25,
+				],
+				[
+					'name' => 'from_int_25_to_text_null',
+					'type' => 'int',
+					'default' => 25,
 
-			),
-		    array(
-				'name' => 'from_int_25_drop_default',
-				'type' => 'int',
-				'default' => 25,
+				],
+				[
+					'name' => 'from_int_25_drop_default',
+					'type' => 'int',
+					'default' => 25,
 
-			),
+				],
 
-			// null
-		    array(
-				'name' => 'from_int_null_to_int_unspec',
-				'type' => 'int',
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_int_null_to_int_0',
-				'type' => 'int',
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_int_null_to_int_25',
-				'type' => 'int',
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_int_null_to_int_null',
-				'type' => 'int',
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_int_null_to_text_unspec',
-				'type' => 'int',
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_int_null_to_text_emptystr',
-				'type' => 'int',
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_int_null_to_text_george',
-				'type' => 'int',
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_int_null_to_text_null',
-				'type' => 'int',
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_int_null_drop_default',
-				'type' => 'int',
-				'default' => null,
-				'null' =>  true,
-			),
+				// null
+				[
+					'name' => 'from_int_null_to_int_unspec',
+					'type' => 'int',
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_int_null_to_int_0',
+					'type' => 'int',
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_int_null_to_int_25',
+					'type' => 'int',
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_int_null_to_int_null',
+					'type' => 'int',
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_int_null_to_text_unspec',
+					'type' => 'int',
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_int_null_to_text_emptystr',
+					'type' => 'int',
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_int_null_to_text_george',
+					'type' => 'int',
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_int_null_to_text_null',
+					'type' => 'int',
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_int_null_drop_default',
+					'type' => 'int',
+					'default' => null,
+					'null' => true,
+				],
 
-			// unspec
-		    array(
-				'name' => 'from_text_unspec_to_int_unspec',
-				'type' => 'VARCHAR',
-				'size' => 25,
+				// unspec
+				[
+					'name' => 'from_text_unspec_to_int_unspec',
+					'type' => 'VARCHAR',
+					'size' => 25,
 
-			),
-		    array(
-				'name' => 'from_text_unspec_to_int_0',
-				'type' => 'VARCHAR',
-				'size' => 25,
+				],
+				[
+					'name' => 'from_text_unspec_to_int_0',
+					'type' => 'VARCHAR',
+					'size' => 25,
 
-			),
-		    array(
-				'name' => 'from_text_unspec_to_int_25',
-				'type' => 'VARCHAR',
-				'size' => 25,
+				],
+				[
+					'name' => 'from_text_unspec_to_int_25',
+					'type' => 'VARCHAR',
+					'size' => 25,
 
-			),
-		    array(
-				'name' => 'from_text_unspec_to_int_null',
-				'type' => 'VARCHAR',
-				'size' => 25,
+				],
+				[
+					'name' => 'from_text_unspec_to_int_null',
+					'type' => 'VARCHAR',
+					'size' => 25,
 
-			),
-		    array(
-				'name' => 'from_text_unspec_to_text_unspec',
-				'type' => 'VARCHAR',
-				'size' => 25,
+				],
+				[
+					'name' => 'from_text_unspec_to_text_unspec',
+					'type' => 'VARCHAR',
+					'size' => 25,
 
-			),
-		    array(
-				'name' => 'from_text_unspec_to_text_emptystr',
-				'type' => 'VARCHAR',
-				'size' => 25,
+				],
+				[
+					'name' => 'from_text_unspec_to_text_emptystr',
+					'type' => 'VARCHAR',
+					'size' => 25,
 
-			),
-		    array(
-				'name' => 'from_text_unspec_to_text_george',
-				'type' => 'VARCHAR',
-				'size' => 25,
+				],
+				[
+					'name' => 'from_text_unspec_to_text_george',
+					'type' => 'VARCHAR',
+					'size' => 25,
 
-			),
-		    array(
-				'name' => 'from_text_unspec_to_text_null',
-				'type' => 'VARCHAR',
-				'size' => 25,
+				],
+				[
+					'name' => 'from_text_unspec_to_text_null',
+					'type' => 'VARCHAR',
+					'size' => 25,
 
-			),
-		    array(
-				'name' => 'from_text_unspec_drop_default',
-				'type' => 'VARCHAR',
-				'size' => 25,
+				],
+				[
+					'name' => 'from_text_unspec_drop_default',
+					'type' => 'VARCHAR',
+					'size' => 25,
 
-			),
+				],
 
-			// ''
-		    array(
-				'name' => 'from_text_emptystr_to_int_unspec',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => '',
+				// ''
+				[
+					'name' => 'from_text_emptystr_to_int_unspec',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => '',
 
-			),
-		    array(
-				'name' => 'from_text_emptystr_to_int_0',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => '',
+				],
+				[
+					'name' => 'from_text_emptystr_to_int_0',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => '',
 
-			),
-		    array(
-				'name' => 'from_text_emptystr_to_int_25',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => '',
+				],
+				[
+					'name' => 'from_text_emptystr_to_int_25',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => '',
 
-			),
-		    array(
-				'name' => 'from_text_emptystr_to_int_null',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => '',
+				],
+				[
+					'name' => 'from_text_emptystr_to_int_null',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => '',
 
-			),
-		    array(
-				'name' => 'from_text_emptystr_to_text_unspec',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => '',
+				],
+				[
+					'name' => 'from_text_emptystr_to_text_unspec',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => '',
 
-			),
-		    array(
-				'name' => 'from_text_emptystr_to_text_emptystr',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => '',
+				],
+				[
+					'name' => 'from_text_emptystr_to_text_emptystr',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => '',
 
-			),
-		    array(
-				'name' => 'from_text_emptystr_to_text_george',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => '',
+				],
+				[
+					'name' => 'from_text_emptystr_to_text_george',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => '',
 
-			),
-		    array(
-				'name' => 'from_text_emptystr_to_text_null',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => '',
+				],
+				[
+					'name' => 'from_text_emptystr_to_text_null',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => '',
 
-			),
-		    array(
-				'name' => 'from_text_emptystr_drop_default',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => '',
+				],
+				[
+					'name' => 'from_text_emptystr_drop_default',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => '',
 
-			),
+				],
 
-			// george
-		    array(
-				'name' => 'from_text_george_to_int_unspec',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => 'george',
+				// george
+				[
+					'name' => 'from_text_george_to_int_unspec',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => 'george',
 
-			),
-		    array(
-				'name' => 'from_text_george_to_int_0',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => 'george',
+				],
+				[
+					'name' => 'from_text_george_to_int_0',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => 'george',
 
-			),
-		    array(
-				'name' => 'from_text_george_to_int_25',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => 'george',
+				],
+				[
+					'name' => 'from_text_george_to_int_25',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => 'george',
 
-			),
-		    array(
-				'name' => 'from_text_george_to_int_null',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => 'george',
+				],
+				[
+					'name' => 'from_text_george_to_int_null',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => 'george',
 
-			),
-		    array(
-				'name' => 'from_text_george_to_text_unspec',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => 'george',
+				],
+				[
+					'name' => 'from_text_george_to_text_unspec',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => 'george',
 
-			),
-		    array(
-				'name' => 'from_text_george_to_text_emptystr',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => 'george',
+				],
+				[
+					'name' => 'from_text_george_to_text_emptystr',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => 'george',
 
-			),
-		    array(
-				'name' => 'from_text_george_to_text_george',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => 'george',
+				],
+				[
+					'name' => 'from_text_george_to_text_george',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => 'george',
 
-			),
-		    array(
-				'name' => 'from_text_george_to_text_null',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => 'george',
+				],
+				[
+					'name' => 'from_text_george_to_text_null',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => 'george',
 
-			),
-		    array(
-				'name' => 'from_text_george_drop_default',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => 'george',
+				],
+				[
+					'name' => 'from_text_george_drop_default',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => 'george',
 
-			),
+				],
 
-			// null
-		    array(
-				'name' => 'from_text_null_to_int_unspec',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_text_null_to_int_0',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_text_null_to_int_25',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_text_null_to_int_null',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_text_null_to_text_unspec',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_text_null_to_text_emptystr',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_text_null_to_text_george',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_text_null_to_text_null',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => null,
-				'null' =>  true,
-			),
-		    array(
-				'name' => 'from_text_null_drop_default',
-				'type' => 'VARCHAR',
-				'size' => 25,
-				'default' => null,
-				'null' =>  true,
-			),
+				// null
+				[
+					'name' => 'from_text_null_to_int_unspec',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_text_null_to_int_0',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_text_null_to_int_25',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_text_null_to_int_null',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_text_null_to_text_unspec',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_text_null_to_text_emptystr',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_text_null_to_text_george',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_text_null_to_text_null',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => null,
+					'null' => true,
+				],
+				[
+					'name' => 'from_text_null_drop_default',
+					'type' => 'VARCHAR',
+					'size' => 25,
+					'default' => null,
+					'null' => true,
+				],
 
-		),
-		'indexes' => array(
-			array(
-				'type' => 'primary',
-				'columns' => array('id_atest'),
-			),
-		),
-);
+			],
+			'indexes' => [
+				[
+					'type' => 'primary',
+					'columns' => ['id_atest'],
+				],
+			],
+		];
 
 		// All write operations must be performed BEFORE any assertions
 		// because any failures will break (interrupt) the script,
 		// leaving the database in an unexpected state.
 		$smcFunc['db_create_table']('{db_prefix}a_test_record', $def['columns'], $def['indexes']);
 		$structure = $smcFunc['db_table_structure']('{db_prefix}a_test_record');
-		file_put_contents(' tbl',var_export(	$structure,true));
 		$tables = $smcFunc['db_list_tables']();
 		$smcFunc['db_drop_table']('{db_prefix}a_test_record');
 
 		$this->assertCount(73, $def['columns']);
-		$this->assertCount(73, $def['indexes']);
+		$this->assertCount(1, $def['indexes']);
 		$this->assertCount(73, $structure['columns']);
-		$this->assertCount(73, $structure['indexes']);
-		$this->assertEquals($db_prefix . 'a_test_record', $structure['name']);
-		$this->assertContains($db_prefix . 'a_test_record', $tables);
-		$this->assertNotContains($db_prefix . 'a_test_record', $smcFunc['db_list_tables']());
-		foreach ($def['columns'] as $col)
-		{
-			$this->assertArrayHasKey($col['name'], $structure['columns']);
-			$dbcol = $structure['columns'][$col['name']];
-			$this->assertEquals($col['name'], $dbcol['name']);
-			$this->assertFalse($dbcol['null']);
-			$this->assertTrue($dbcol['not_null']);
-			$this->assertFalse($dbcol['auto']);
-		}
+		$this->assertCount(1, $structure['indexes']);
+		$this->assertJsonStringEqualsJsonFile(__DIR__ . '/fixtures/table1.json', json_encode($structure));
+		//~ file_put_contents(__DIR__ . '/fixtures/table1.json', json_encode($structure));
 	}
 }

@@ -34,7 +34,7 @@ let webserver = http.createServer( async (req, res) => {
   // parse URL
   const baseURL = 'http://' + req.headers.host + '/';
   const parsedUrl = new URL(req.url, baseURL);
-  let pathname = decodeURIComponent(join('packages', parsedUrl.pathname));
+  let pathname = decodeURIComponent(join('tests/packages', parsedUrl.pathname));
 
   try {
     let stats = await stat(pathname)

@@ -57,7 +57,10 @@ class PackagesTest extends TestCase
 		PackageBrowse();
 		$this->assertEquals('idmodification', $context['packages_lists_modification']['sort']['id']);
 		$this->assertCount(1, $context['packages_lists_modification']['rows']);
-		$this->assertEquals('SimpleDesk - Integrated Helpdesk for Simple Machines Forum', $context['packages_lists_modification']['rows'][0]['data']['mod_namemodification']['value']);
+		$this->assertEquals(
+			'SimpleDesk - Integrated Helpdesk for Simple Machines Forum',
+			$context['packages_lists_modification']['rows'][0]['data']['mod_namemodification']['value']
+		);
 	}
 
 	/**
@@ -73,7 +76,11 @@ class PackagesTest extends TestCase
 		$this->assertFalse($context['is_installed']);
 		$this->assertFalse($context['uninstalling']);
 		$this->assertCount(49, $context['actions']);
-		$this->assertEquals('<strong>Test successful</strong>', $context['actions'][7]['description'], $context['actions'][7]['description']);
+		$this->assertEquals(
+			'<strong>Test successful</strong>',
+			$context['actions'][7]['description'],
+			$context['actions'][7]['description']
+		);
 	}
 
 	/**
@@ -83,6 +90,8 @@ class PackagesTest extends TestCase
 	{
 		global $context;
 
+		$_GET[$context['session_var']] = $context['session_id'];
+		$_GET[$_SESSION['session_var']] = $_SESSION['session_value'];
 		$this->assertFileExists(__DIR__ . '/../packages/SimpleDesk_2.1.0.tgz');
 		$_GET['package'] = 'SimpleDesk_2.1.0.tgz';
 		PackageRemove();
