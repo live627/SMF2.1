@@ -11,7 +11,7 @@ http.createServer(function (req, res) {
   // parse URL
   const parsedUrl = url.parse(req.url);
   // extract URL path
-  let pathname = `.${parsedUrl.pathname}`;
+  let pathname = path.join('tests/packages', parsedUrl.pathname);
   // based on the URL path, extract the file extention. e.g. .js, .doc, ...
   const ext = path.parse(pathname).ext;
   // maps file extention to MIME typere
