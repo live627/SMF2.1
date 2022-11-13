@@ -16,9 +16,9 @@ class MembersTest extends TestCase
 	{
 		global $modSettings, $sourcedir;
 
-		require_once($sourcedir . '/Subs-Membergroups.php');
-		require_once($sourcedir . '/Subs-Members.php');
-		require_once($sourcedir . '/Subs-Boards.php');
+		require_once __DIR__ . '/../Sources/Subs-Membergroups.php';
+		require_once __DIR__ . '/../Sources/Subs-Members.php';
+		require_once __DIR__ . '/../Sources/Subs-Boards.php';
 
 		// Hash password is slow with the default 10 on the hash cost, reducing this helps.
 		$modSettings['bcrypt_hash_cost'] = 4;

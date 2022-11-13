@@ -10,13 +10,11 @@ use gif_file;
 
 class GraphicsTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Class-Graphics.php');
-		require_once($sourcedir . '/Subs-Graphics.php');
-		require_once($sourcedir . '/ManageAttachments.php');
+		require_once __DIR__ . '/../Sources/Class-Graphics.php';
+		require_once __DIR__ . '/../Sources/Subs-Graphics.php';
+		require_once __DIR__ . '/../Sources/ManageAttachments.php';
 	}
 
 	public function tearDown() : void

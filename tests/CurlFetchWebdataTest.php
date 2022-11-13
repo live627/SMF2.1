@@ -10,11 +10,9 @@ use curl_fetch_web_data;
 
 class CurlFetchWebdataTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Class-CurlFetchWeb.php');
+		require_once __DIR__ . '/../Sources/Class-CurlFetchWeb.php';
 	}
 
 	/**

@@ -8,12 +8,10 @@ use PHPUnit\Framework\TestCase;
 
 class TestMembergroups extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Subs-Members.php');
-		require_once($sourcedir . '/Subs-Membergroups.php');
+		require_once __DIR__ . '/../Sources/Subs-Members.php';
+		require_once __DIR__ . '/../Sources/Subs-Membergroups.php';
 	}
 
 	public function testGroupsAllowedTo(): void

@@ -8,11 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class SearchTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Search.php');
+		require_once __DIR__ . '/../Sources/Search.php';
 	}
 
 	public function testSearch(): void

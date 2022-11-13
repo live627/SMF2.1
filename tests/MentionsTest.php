@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Mentions;
 
 global $sourcedir;
-require_once($sourcedir . '/Mentions.php');
+require_once __DIR__ . '/../Sources/Mentions.php';
 class MockMentions extends Mentions
 {
 	public static function getExcludedBbcRegex()

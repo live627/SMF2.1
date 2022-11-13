@@ -16,7 +16,7 @@ class MenuTest extends TestCase
 	{
 		global $context, $sourcedir, $user_info;
 
-		require_once($sourcedir . '/Subs-Menu.php');
+		require_once __DIR__ . '/../Sources/Subs-Menu.php';
 
 		$this->test_areas = [
 			/*	'section1' => array(

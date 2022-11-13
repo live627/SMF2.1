@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class GroupsTest extends TestCase
 {
-	public function setUp(): void
+	public static function setUpBeforeClass(): void
 	{
 		require_once __DIR__ . '/../Sources/Groups.php';
 	}

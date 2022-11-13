@@ -8,11 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class TopicsTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Subs-Post.php');
+		require_once __DIR__ . '/../Sources/Subs-Post.php';
 	}
 
 	public function testApprove(): void

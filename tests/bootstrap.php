@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-require_once('./SSI.php');
-require_once "./vendor/autoload.php";
+require_once './SSI.php';
+require_once './vendor/autoload.php';
 $db_show_debug = true;
 $cache_memcached = 'localhost';
 $pg_cache_server = 'localhost';
@@ -23,7 +23,6 @@ function FeignLoginIntegration()
 }
 
 $pi = 0;
-prof_print('s' . $pi++);
 function FeignLogin($id = 1): void
 {
 	global $mem;
@@ -48,9 +47,7 @@ $smcFunc['db_query'](
 	TRUNCATE {db_prefix}mail_queue'
 );
 
-prof_print('s' . $pi++);
 FeignLogin(1);
-prof_print('s' . $pi++);
 
 add_integration_function('integrate_outgoing_email', 'SendMailToQueue');
 
@@ -59,15 +56,4 @@ function SendMailToQueue(&$subject, &$message, &$headers, &$to_array)
 	return AddMailQueue(false, $to_array, $subject, $message, $headers);
 
 	//return true;
-}
-
-// Call this at each point of interest, passing a descriptive string
-function prof_print($str): void
-{
-	static $time_begin = 0;
-
-	if ($time_begin != 0)
-		echo sprintf("%s: %f\n", $str, microtime(true) - $time_begin);
-
-	$time_begin = microtime(true);
 }

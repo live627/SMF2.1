@@ -88,7 +88,7 @@ class BBCTest extends TestCase
 		if ($test == '[time]now[/time]')
 			$expected = '[time]' . forum_time() . '[/time]';
 
-		require_once($sourcedir . '/Subs-Post.php');
+		require_once __DIR__ . '/../Sources/Subs-Post.php';
 		preparsecode($test);
 
 		$this->assertEquals($expected, $test);
@@ -705,7 +705,7 @@ class BBCTest extends TestCase
 	{
 		global $context, $boardurl, $sourcedir;
 
-		require_once($sourcedir . '/Subs-Editor.php');
+		require_once __DIR__ . '/../Sources/Subs-Editor.php';
 
 		return [
 			[

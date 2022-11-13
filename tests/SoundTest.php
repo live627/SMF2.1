@@ -8,11 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class SoundTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Subs-Sound.php');
+		require_once __DIR__ . '/../Sources/Subs-Sound.php';
 	}
 
 	public function testCreateWaveFile(): void

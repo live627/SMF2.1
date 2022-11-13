@@ -10,16 +10,19 @@ class PMTest extends TestCase
 {
 	private $options = [];
 
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $modSettings, $sourcedir;
+		global $modSettings;
 
-		require_once($sourcedir . '/Subs-Members.php');
-		require_once($sourcedir . '/PersonalMessage.php');
+		require_once __DIR__ . '/../Sources/Subs-Members.php';
+		require_once __DIR__ . '/../Sources/PersonalMessage.php';
 
 		// Hash password is slow with the default 10 on the hash cost, reducing this helps.
 		$modSettings['bcrypt_hash_cost'] = 4;
+	}
 
+	public function setUp() : void
+	{
 		$this->options = [
 			[
 				'interface' => 'admin',

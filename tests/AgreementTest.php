@@ -8,15 +8,13 @@ use PHPUnit\Framework\TestCase;
 
 class AgreementTest extends TestCase
 {
-	public function setUp() : void
+	public static function setUpBeforeClass(): void
 	{
-		global $sourcedir;
-
-		require_once($sourcedir . '/Agreement.php');
-		require_once($sourcedir . '/Modlog.php');
-		require_once($sourcedir . '/ManageRegistration.php');
-		require_once($sourcedir . '/Subs-Members.php');
-		require_once($sourcedir . '/Profile-View.php');
+		require_once __DIR__ . '/../Sources/Agreement.php';
+		require_once __DIR__ . '/../Sources/Modlog.php';
+		require_once __DIR__ . '/../Sources/ManageRegistration.php';
+		require_once __DIR__ . '/../Sources/Subs-Members.php';
+		require_once __DIR__ . '/../Sources/Profile-View.php';
 	}
 
 	public function testAgreement(): void
