@@ -562,7 +562,7 @@ class SMCTest extends TestCase
 		}
 	}
 
-	public function testCreateTableToUpdate(): void
+	public function testCreateTableToUpdate(): array
 	{
 		global $db_prefix, $smcFunc;
 
@@ -1024,34 +1024,39 @@ class SMCTest extends TestCase
 		$this->assertCount(1, $structure['indexes']);
 		$this->assertEquals($db_prefix . 'a_test_record', $structure['name']);
 		$this->assertContains('smf_a_test_record', $tables);
-		$this->checkColumn();
+
+		return $structure['columns'];
 	}
 
-	private function checkColumn(string $filename = 'table1.json'): void
+	public function columnProvider(): iterable
 	{
-		global $smcFunc;
+		$file = json_decode(file_get_contents(__DIR__ . '/fixtures/table1.json'), true);
 
-		$structure = $smcFunc['db_table_structure']('{db_prefix}a_test_record');
-		$file = json_decode(file_get_contents(__DIR__ . '/fixtures/' . $filename), true);
+		foreach ($file['columns'] as $name => $test)
+			yield $name => [$test];
+	}
 
-		foreach ($structure['columns'] as $name => $test)
-		{
-			$expected = $file['columns'][$name];
-			$this->assertArrayHasKey('name', $test);
-			$this->assertArrayHasKey('size', $test);
-			$this->assertArrayHasKey('null', $test);
-			$this->assertArrayHasKey('not_null', $test);
-			$this->assertArrayHasKey('default', $test);
-			$this->assertIsString($test['name']);
-			$this->assertNotEmpty($test['name']);
-			$this->assertIsBool($test['not_null']);
-			$this->assertIsBool($test['null']);
-			$this->assertSame($expected['name'], $name);
-			$this->assertSame($expected['name'], $test['name']);
-			$this->assertSame($expected['null'], $test['null']);
-			$this->assertSame($expected['not_null'], $test['not_null']);
-			$this->assertSame($expected['default'], $test['default']);
-		}
+	/**
+	 * @dataProvider columnProvider
+	 * @depends testCreateTableToUpdate
+	 */
+	public function testCheckColumn(array $test, array $columns): void
+	{
+		$this->assertArrayHasKey('name', $test);
+		$this->assertArrayHasKey($test['name'], $columns);
+		$expected = $columns[$test['name']];
+		$this->assertArrayHasKey('size', $test);
+		$this->assertArrayHasKey('null', $test);
+		$this->assertArrayHasKey('not_null', $test);
+		$this->assertArrayHasKey('default', $test);
+		$this->assertIsString($test['name']);
+		$this->assertNotEmpty($test['name']);
+		$this->assertIsBool($test['not_null']);
+		$this->assertIsBool($test['null']);
+		$this->assertSame($expected['name'], $test['name']);
+		$this->assertSame($expected['null'], $test['null']);
+		$this->assertSame($expected['not_null'], $test['not_null']);
+		$this->assertSame($expected['default'], $test['default']);
 	}
 
 	public function testDropTable(): void

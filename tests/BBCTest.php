@@ -7,9 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class BBCTest extends TestCase
 {
-	/**
-	 * @return string[][]
-	 */
 	public function preparseProvider(): array
 	{
 		return [

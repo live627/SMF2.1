@@ -19,7 +19,7 @@ class CacheTest extends TestCase
 {
 	private $cacheObj;
 
-	public function setUp() : void
+	public function setUp(): void
 	{
 		global $cache_enable;
 
@@ -27,7 +27,7 @@ class CacheTest extends TestCase
 		$cache_enable = 1;
 	}
 
-	public function tearDown() : void
+	public function tearDown(): void
 	{
 		global $cache_enable, $cacheAPI;
 

@@ -17,7 +17,10 @@ class BoardsTest extends TestCase
 		require_once __DIR__ . '/../Sources/BoardIndex.php';
 		require_once __DIR__ . '/../Sources/Subs-BoardIndex.php';
 		require_once __DIR__ . '/../Sources/Subs-Boards.php';
+	}
 
+	public function setUp(): void
+	{
 		$this->options = [
 			[
 				'board_name' => 'Search 1',

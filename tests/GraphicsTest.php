@@ -17,7 +17,7 @@ class GraphicsTest extends TestCase
 		require_once __DIR__ . '/../Sources/ManageAttachments.php';
 	}
 
-	public function tearDown() : void
+	public function tearDown(): void
 	{
 		removeAttachments(['id_member' => 1]);
 	}

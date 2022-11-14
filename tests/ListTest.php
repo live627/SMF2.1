@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class ListTest extends TestCase
 {
-	public function test() : void
+	public function test(): void
 	{
 		global $context, $sourcedir;
 

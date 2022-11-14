@@ -12,8 +12,6 @@ class AdminSearchTest extends TestCase
 	{
 		global $context, $scripturl;
 
-		global $context, $sourcedir, $user_info;
-
 		loadLanguage('Admin');
 		$context['search_term'] = 'enable';
 		require_once __DIR__ . '/../Sources/Admin.php';
@@ -22,7 +20,7 @@ class AdminSearchTest extends TestCase
 		AdminSearchInternal();
 		$results = array_filter(
 			array_map(
-				fn($result) => [$result['url'], strtolower($search_result['name'])],
+				fn($result) => [$result['url'], strtolower($result['name'])],
 				$context['search_results']
 			),
 			fn($result) => stripos($result[1], $context['search_term']) !== false
