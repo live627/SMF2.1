@@ -8,10 +8,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.3
  */
 
 if (!defined('SMF'))
@@ -76,11 +76,14 @@ function bbc_to_html($text, $compat_mode = false)
 
 	// Parse unique ID's and disable javascript into the smileys - using the double space.
 	$i = 1;
-	$text = preg_replace_callback('~(?:\s|&nbsp;)?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/[^<>]+?/([^<>]+?)"\s*)[^<>]*?class="smiley">~',
+	$text = preg_replace_callback(
+		'~(?:\s|&nbsp;)?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/[^<>]+?/([^<>]+?)"\s*)[^<>]*?class="smiley">~',
 		function($m) use (&$i)
 		{
 			return '<' . stripslashes($m[1]) . 'alt="" title="" onresizestart="return false;" id="smiley_' . $i++ . '_' . $m[2] . '" style="padding: 0 3px 0 3px;">';
-		}, $text);
+		},
+		$text
+	);
 
 	return $text;
 }
@@ -443,7 +446,7 @@ function html_to_bbc($text)
 	if (connection_aborted() && $context['server']['is_apache'])
 		@apache_reset_timeout();
 
-	if (count($parts = preg_split('~<(/?)(li|ol|ul)([^>]*)>~i', $text, null, PREG_SPLIT_DELIM_CAPTURE)) > 1)
+	if (count($parts = preg_split('~<(/?)(li|ol|ul)([^>]*)>~i', $text, -1, PREG_SPLIT_DELIM_CAPTURE)) > 1)
 	{
 		// A toggle that dermines whether we're directly under a <ol> or <ul>.
 		$inList = false;
@@ -676,7 +679,7 @@ function html_to_bbc($text)
 		if (!empty($src))
 		{
 			// Attempt to fix the path in case it's not present.
-			if (preg_match('~^https?://~i', $src) === 0 && is_array($parsedURL = parse_url($scripturl)) && isset($parsedURL['host']))
+			if (preg_match('~^https?://~i', $src) === 0 && is_array($parsedURL = parse_iri($scripturl)) && isset($parsedURL['host']))
 			{
 				$baseURL = (isset($parsedURL['scheme']) ? $parsedURL['scheme'] : 'http') . '://' . $parsedURL['host'] . (empty($parsedURL['port']) ? '' : ':' . $parsedURL['port']);
 
@@ -899,7 +902,7 @@ function html_to_bbc($text)
 				}
 
 				// No http(s), so attempt to fix this potential relative URL.
-				elseif (preg_match('~^https?://~i', $href) === 0 && is_array($parsedURL = parse_url($scripturl)) && isset($parsedURL['host']))
+				elseif (preg_match('~^https?://~i', $href) === 0 && is_array($parsedURL = parse_iri($scripturl)) && isset($parsedURL['host']))
 				{
 					$baseURL = (isset($parsedURL['scheme']) ? $parsedURL['scheme'] : 'http') . '://' . $parsedURL['host'] . (empty($parsedURL['port']) ? '' : ':' . $parsedURL['port']);
 
@@ -1087,10 +1090,13 @@ function legalise_bbc($text)
 		$lastlen = strlen($text = preg_replace($backToBackPattern, '', $text));
 
 	// Need to sort the tags by name length.
-	uksort($valid_tags, function($a, $b)
-	{
-		return strlen($a) < strlen($b) ? 1 : -1;
-	});
+	uksort(
+		$valid_tags,
+		function($a, $b)
+		{
+			return strlen($a) < strlen($b) ? 1 : -1;
+		}
+	);
 
 	// These inline tags can compete with each other regarding style.
 	$competing_tags = array(
@@ -1516,8 +1522,15 @@ function create_control_richedit($editorOptions)
 			$context['drafts_autosave_frequency'] = empty($modSettings['drafts_autosave_frequency']) ? 60000 : $modSettings['drafts_autosave_frequency'] * 1000;
 
 		// This really has some WYSIWYG stuff.
-		loadCSSFile('jquery.sceditor.css', array('force_current' => false, 'validate' => true), 'smf_jquery_sceditor');
+		loadCSSFile('jquery.sceditor.css', array('default_theme' => true, 'validate' => true), 'smf_jquery_sceditor');
 		loadTemplate('GenericControls');
+
+		/*
+		 *		THEME AUTHORS:
+		 			If you want to change or tweak the CSS for the editor,
+					include a file named 'jquery.sceditor.theme.css' in your theme.
+		*/
+		loadCSSFile('jquery.sceditor.theme.css', array('force_current' => true, 'validate' => true,), 'smf_jquery_sceditor_theme');
 
 		// JS makes the editor go round
 		loadJavaScriptFile('editor.js', array('minimize' => true), 'smf_editor');
@@ -1538,7 +1551,7 @@ function create_control_richedit($editorOptions)
 			"More": "' . $editortxt['more'] . '",
 			"Close": "' . $editortxt['close'] . '",
 			dateFormat: "' . $editortxt['dateformat'] . '"
-		}';
+		};';
 
 		addInlineJavaScript($scExtraLangs, true);
 
@@ -1746,6 +1759,9 @@ function create_control_richedit($editorOptions)
 			'hr' => 'horizontalrule',
 		);
 
+		// Define this here so mods can add to it via the hook.
+		$context['disabled_tags'] = array();
+
 		// Allow mods to modify BBC buttons.
 		// Note: passing the array here is not necessary and is deprecated, but it is kept for backward compatibility with 2.0
 		call_integration_hook('integrate_bbc_buttons', array(&$context['bbc_tags'], &$editor_tag_map));
@@ -1763,6 +1779,12 @@ function create_control_richedit($editorOptions)
 			{
 				$context['disabled_tags']['bulletlist'] = true;
 				$context['disabled_tags']['orderedlist'] = true;
+			}
+
+			if ($tag === 'float')
+			{
+				$context['disabled_tags']['floatleft'] = true;
+				$context['disabled_tags']['floatright'] = true;
 			}
 
 			foreach ($editor_tag_map as $thisTag => $tagNameBBC)
@@ -1785,7 +1807,12 @@ function create_control_richedit($editorOptions)
 
 			foreach ($tagRow as $tag)
 			{
-				if ((!empty($tag['code'])) && empty($context['disabled_tags'][$tag['code']]))
+				if (empty($tag['code']))
+				{
+					$context['bbc_toolbar'][$row][] = implode(',', $tagsRow);
+					$tagsRow = array();
+				}
+				elseif (empty($context['disabled_tags'][$tag['code']]))
 				{
 					$tagsRow[] = $tag['code'];
 
@@ -1815,11 +1842,6 @@ function create_control_richedit($editorOptions)
 
 					$context['bbcodes_handlers'] .= '
 						});';
-				}
-				else
-				{
-					$context['bbc_toolbar'][$row][] = implode(',', $tagsRow);
-					$tagsRow = array();
 				}
 			}
 
@@ -1887,7 +1909,7 @@ function create_control_richedit($editorOptions)
 	$sce_options = array(
 		'width' => isset($editorOptions['width']) ? $editorOptions['width'] : '100%',
 		'height' => isset($editorOptions['height']) ? $editorOptions['height'] : '175px',
-		'style' => $settings[file_exists($settings['theme_dir'] . '/css/jquery.sceditor.default.css') ? 'theme_url' : 'default_theme_url'] . '/css/jquery.sceditor.default.css',
+		'style' => $settings[file_exists($settings['theme_dir'] . '/css/jquery.sceditor.default.css') ? 'theme_url' : 'default_theme_url'] . '/css/jquery.sceditor.default.css' . $context['browser_cache'],
 		'emoticonsCompat' => true,
 		'colors' => 'black,maroon,brown,green,navy,grey,red,orange,teal,blue,white,hotpink,yellow,limegreen,purple',
 		'format' => 'bbcode',
@@ -1940,6 +1962,9 @@ function create_control_richedit($editorOptions)
 	}
 
 	$sce_options['toolbar'] = '';
+	$sce_options['parserOptions']['txtVars'] = [
+		'code' => $txt['code']
+	];
 	if (!empty($modSettings['enableBBC']))
 	{
 		$count_tags = count($context['bbc_tags']);
@@ -2053,7 +2078,7 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 				$id_question = $row['id_question'];
 				unset ($row['id_question']);
 				// Make them all lowercase. We can't directly use $smcFunc['strtolower'] with array_walk, so do it manually, eh?
-				$row['answers'] = $smcFunc['json_decode']($row['answers'], true);
+				$row['answers'] = (array) $smcFunc['json_decode']($row['answers'], true);
 				foreach ($row['answers'] as $k => $v)
 					$row['answers'][$k] = $smcFunc['strtolower']($v);
 
@@ -2086,9 +2111,9 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 		// This cannot happen!
 		if (!isset($_SESSION[$verificationOptions['id'] . '_vv']['count']))
 			fatal_lang_error('no_access', false);
-		// ... nor this!
+		// Verification question does not exist for this language.
 		if ($thisVerification['number_questions'] && (!isset($_SESSION[$verificationOptions['id'] . '_vv']['q']) || !isset($_REQUEST[$verificationOptions['id'] . '_vv']['q'])))
-			fatal_lang_error('no_access', false);
+			fatal_lang_error('registration_no_verification_questions');
 		// Hmm, it's requested but not actually declared. This shouldn't happen.
 		if ($thisVerification['empty_field'] && empty($_SESSION[$verificationOptions['id'] . '_vv']['empty_field']))
 			fatal_lang_error('no_access', false);
@@ -2131,7 +2156,7 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 				// Second, is their answer in the list of possible answers?
 				else
 				{
-					$given_answer = trim($smcFunc['htmlspecialchars'](strtolower($_REQUEST[$verificationOptions['id'] . '_vv']['q'][$q])));
+					$given_answer = trim($smcFunc['htmlspecialchars']($smcFunc['strtolower']($_REQUEST[$verificationOptions['id'] . '_vv']['q'][$q])));
 					if (!in_array($given_answer, $modSettings['question_id_cache']['questions'][$q]['answers']))
 						$incorrectQuestions[] = $q;
 				}
@@ -2376,7 +2401,7 @@ function AutoSuggest_Search_MemberGroups()
 			AND id_group NOT IN ({array_int:invalid_groups})
 			AND hidden != {int:hidden}',
 		array(
-			'group_name' => $smcFunc['db_case_sensitive'] ? 'LOWER(group_name}' : 'group_name',
+			'group_name' => $smcFunc['db_case_sensitive'] ? 'LOWER(group_name)' : 'group_name',
 			'min_posts' => -1,
 			'invalid_groups' => array(1, 3),
 			'hidden' => 2,
@@ -2448,7 +2473,7 @@ function AutoSuggest_Search_SMFVersions()
 
 	// Just in case we don't have ANYthing.
 	if (empty($versions))
-		$versions = array('SMF 2.0');
+		$versions = array(SMF_FULL_VERSION);
 
 	foreach ($versions as $id => $version)
 		if (strpos($version, strtoupper($_REQUEST['search'])) !== false)

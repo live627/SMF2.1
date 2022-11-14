@@ -1,5 +1,5 @@
 <?php
-// Version: 2.1 RC3; Errors
+// Version: 2.1.3; Errors
 
 global $scripturl, $modSettings;
 
@@ -121,7 +121,7 @@ $txt['cannot_profile_server_avatar'] = 'You are not permitted to use a server st
 $txt['cannot_profile_upload_avatar'] = 'You do not have permission to upload an avatar.';
 $txt['cannot_profile_remote_avatar'] = 'You don\'t have the privilege of using a remote avatar.';
 $txt['cannot_profile_view'] = 'Many apologies, but you can\'t view profiles.';
-$txt['cannot_delete_own'] = 'You are not, on this board, allowed to delete your own posts.';
+$txt['cannot_delete_own'] = 'You are not allowed to delete your own posts on this board.';
 $txt['cannot_delete_replies'] = 'Sorry, but you cannot remove these posts, even though they are replies to your topic.';
 $txt['cannot_delete_any'] = 'Deleting posts in this board is not allowed.';
 $txt['cannot_report_any'] = 'You are not allowed to report posts in this board.';
@@ -139,6 +139,7 @@ $txt['no_theme'] = 'That theme does not exist.';
 $txt['theme_dir_wrong'] = 'The default theme\'s directory is wrong, please correct it by clicking this text.';
 $txt['registration_disabled'] = 'Sorry, registration is currently disabled.';
 $txt['registration_no_secret_question'] = 'Sorry, there is no secret question set for this member.';
+$txt['registration_no_verification_questions'] = 'Verification questions not configured properly. Please report this error to an administrator.';
 $txt['poll_range_error'] = 'Sorry, the poll must run for more than 0 days.';
 $txt['delFirstPost'] = 'You are not allowed to delete the first post in a topic.<p>If you want to delete this topic, click on the Remove Topic link, or ask a moderator/administrator to do it for you.</p>';
 $txt['parent_error'] = 'Unable to create board!';
@@ -350,9 +351,11 @@ $txt['profile_error_already_requested_group'] = 'You already have an outstanding
 $txt['profile_error_signature_not_yet_saved'] = 'The signature has not been saved.';
 $txt['profile_error_personal_text_too_long'] = 'The personal text is too long.';
 $txt['profile_error_user_title_too_long'] = 'The custom title is too long.';
+$txt['profile_error_website_title_too_long'] = 'The website title is too long.';
 $txt['profile_error_custom_field_mail_fail'] = 'The mail validation check returned an error, you need to enter an email in a valid format (user@domain).';
 $txt['profile_error_custom_field_regex_fail'] = 'The regex verification returned an error. If you are unsure about what to type here, please contact the forum administrator.';
 $txt['profile_error_custom_field_nohtml_fail'] = 'HTML tags are not allowed.';
+$txt['profile_error_posts_out_of_range'] = 'The number of posts is out of range';
 
 // Registration form.
 $txt['under_age_registration_prohibited'] = 'Sorry, but users under the age of %1$d are not allowed to register on this forum.';

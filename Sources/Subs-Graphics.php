@@ -12,10 +12,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.2
  */
 
 if (!defined('SMF'))
@@ -186,6 +186,8 @@ function reencodeImage($fileName, $preferred_format = 0)
 
 	if (!rename($fileName . '.tmp', $fileName))
 		return false;
+
+	return true;
 }
 
 /**
@@ -415,6 +417,10 @@ function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $
 {
 	global $gd2, $modSettings;
 
+	$orientation = 0;
+	if (function_exists('exif_read_data') && ($exif_data = @exif_read_data($destName)) !== false && !empty($exif_data['Orientation']))
+		$orientation = $exif_data['Orientation'];
+
 	if (checkImagick() || checkMagickWand())
 	{
 		static $default_formats = array(
@@ -439,6 +445,19 @@ function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $
 
 			$imagick->setImageFormat($default_formats[$preferred_format]);
 			$imagick->resizeImage($dest_width, $dest_height, Imagick::FILTER_LANCZOS, 1, true);
+
+			if ($orientation > 1 && $preferred_format == 3)
+			{
+				if (in_array($orientation, [3, 4]))
+					$imagick->rotateImage('#00000000', 180);
+				elseif (in_array($orientation, [5, 6]))
+					$imagick->rotateImage('#00000000', 90);
+				elseif (in_array($orientation, [7, 8]))
+					$imagick->rotateImage('#00000000', 270);
+
+				if (in_array($orientation, [2, 4, 5, 7]))
+					$imagick->flopImage();
+			}
 			$success = $imagick->writeImage($destName);
 		}
 		else
@@ -455,6 +474,19 @@ function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $
 
 			MagickSetImageFormat($magick_wand, $default_formats[$preferred_format]);
 			MagickResizeImage($magick_wand, $dest_width, $dest_height, MW_LanczosFilter, 1, true);
+
+			if ($orientation > 1)
+			{
+				if (in_array($orientation, [3, 4]))
+					MagickResizeImage($magick_wand, NewPixelWand('white'), 180);
+				elseif (in_array($orientation, [5, 6]))
+					MagickResizeImage($magick_wand, NewPixelWand('white'), 90);
+				elseif (in_array($orientation, [7, 8]))
+					MagickResizeImage($magick_wand, NewPixelWand('white'), 270);
+
+				if (in_array($orientation, [2, 4, 5, 7]))
+					MagickFlopImage($magick_wand);
+			}
 			$success = MagickWriteImage($magick_wand, $destName);
 		}
 
@@ -509,11 +541,28 @@ function resizeImage($src_img, $destName, $src_width, $src_height, $max_width, $
 		else
 			$dst_img = $src_img;
 
+		if ($orientation > 1)
+		{
+			if (in_array($orientation, [3, 4]))
+				$dst_img = imagerotate($dst_img, 180, 0);
+			elseif (in_array($orientation, [5, 6]))
+				$dst_img = imagerotate($dst_img, 270, 0);
+			elseif (in_array($orientation, [7, 8]))
+				$dst_img = imagerotate($dst_img, 90, 0);
+
+			if (in_array($orientation, [2, 4, 5, 7]))
+				imageflip($dst_img, IMG_FLIP_HORIZONTAL);
+		}
+
 		// Save the image as ...
 		if (!empty($preferred_format) && ($preferred_format == 3) && function_exists('imagepng'))
 			$success = imagepng($dst_img, $destName);
 		elseif (!empty($preferred_format) && ($preferred_format == 1) && function_exists('imagegif'))
 			$success = imagegif($dst_img, $destName);
+		elseif (!empty($preferred_format) && ($preferred_format == 6) && function_exists('imagebmp'))
+			$success = imagebmp($dst_img, $destName);
+		elseif (!empty($preferred_format) && ($preferred_format == 15) && function_exists('imagewbmp'))
+			$success = imagewbmp($dst_img, $destName);
 		elseif (function_exists('imagejpeg'))
 			$success = imagejpeg($dst_img, $destName, !empty($modSettings['avatar_jpeg_quality']) ? $modSettings['avatar_jpeg_quality'] : 82);
 

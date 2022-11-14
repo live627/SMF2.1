@@ -735,7 +735,7 @@ CREATE TABLE {$db_prefix}members (
 	warning TINYINT NOT NULL DEFAULT '0',
 	passwd_flood VARCHAR(12) NOT NULL DEFAULT '',
 	pm_receive_from TINYINT UNSIGNED NOT NULL DEFAULT '1',
-	timezone VARCHAR(80) NOT NULL DEFAULT 'UTC',
+	timezone VARCHAR(80) NOT NULL DEFAULT '',
 	tfa_secret VARCHAR(24) NOT NULL DEFAULT '',
 	tfa_backup VARCHAR(64) NOT NULL DEFAULT '',
 	PRIMARY KEY (id_member),
@@ -751,7 +751,8 @@ CREATE TABLE {$db_prefix}members (
 	INDEX idx_id_post_group (id_post_group),
 	INDEX idx_warning (warning),
 	INDEX idx_total_time_logged_in (total_time_logged_in),
-	INDEX idx_id_theme (id_theme)
+	INDEX idx_id_theme (id_theme),
+	INDEX idx_active_real_name (is_activated, real_name)
 ) ENGINE={$engine};
 
 #
@@ -807,9 +808,8 @@ CREATE TABLE {$db_prefix}messages (
 	approved TINYINT NOT NULL DEFAULT '1',
 	likes SMALLINT UNSIGNED NOT NULL DEFAULT '0',
 	PRIMARY KEY (id_msg),
-	UNIQUE idx_id_board (id_board, id_msg),
+	UNIQUE idx_id_board (id_board, id_msg, approved),
 	UNIQUE idx_id_member (id_member, id_msg),
-	INDEX idx_approved (approved),
 	INDEX idx_ip_index (poster_ip, id_topic),
 	INDEX idx_participation (id_member, id_topic),
 	INDEX idx_show_posts (id_member, id_board),
@@ -1795,10 +1795,10 @@ VALUES (1, 0, '{$default_category_name}', '', 1);
 
 INSERT INTO {$db_prefix}custom_fields
 	(`col_name`, `field_name`, `field_desc`, `field_type`, `field_length`, `field_options`, `field_order`, `mask`, `show_reg`, `show_display`, `show_mlist`, `show_profile`, `private`, `active`, `bbc`, `can_search`, `default_value`, `enclose`, `placement`)
-VALUES ('cust_icq', 'ICQ', 'This is your ICQ number.', 'text', 12, '', 1, 'regex~[1-9][0-9]{4,9}~i', 0, 1, 0, 'forumprofile', 0, 1, 0, 0, '', '<a class="icq" href="//www.icq.com/people/{INPUT}" target="_blank" rel="noopener" title="ICQ - {INPUT}"><img src="{DEFAULT_IMAGES_URL}/icq.png" alt="ICQ - {INPUT}"></a>', 1),
-	('cust_skype', 'Skype', 'Your Skype name', 'text', 32, '', 2, 'nohtml', 0, 1, 0, 'forumprofile', 0, 1, 0, 0, '', '<a href="skype:{INPUT}?call"><img src="{DEFAULT_IMAGES_URL}/skype.png" alt="{INPUT}" title="{INPUT}" /></a> ', 1),
-	('cust_loca', 'Location', 'Geographic location.', 'text', 50, '', 4, 'nohtml', 0, 1, 0, 'forumprofile', 0, 1, 0, 0, '', '', 0),
-	('cust_gender', 'Gender', 'Your gender.', 'radio', 255, 'None,Male,Female', 5, 'nohtml', 1, 1, 0, 'forumprofile', 0, 1, 0, 0, 'None', '<span class=" main_icons gender_{KEY}" title="{INPUT}"></span>', 1);
+VALUES ('cust_icq', '{icq}', '{icq_desc}', 'text', 12, '', 1, 'regex~[1-9][0-9]{4,9}~i', 0, 1, 0, 'forumprofile', 0, 1, 0, 0, '', '<a class="icq" href="//www.icq.com/people/{INPUT}" target="_blank" rel="noopener" title="ICQ - {INPUT}"><img src="{DEFAULT_IMAGES_URL}/icq.png" alt="ICQ - {INPUT}"></a>', 1),
+	('cust_skype', '{skype}', '{skype_desc}', 'text', 32, '', 2, 'nohtml', 0, 1, 0, 'forumprofile', 0, 1, 0, 0, '', '<a href="skype:{INPUT}?call"><img src="{DEFAULT_IMAGES_URL}/skype.png" alt="{INPUT}" title="{INPUT}" /></a> ', 1),
+	('cust_loca', '{location}', '{location_desc}', 'text', 50, '', 4, 'nohtml', 0, 1, 0, 'forumprofile', 0, 1, 0, 0, '', '', 0),
+	('cust_gender', '{gender}', '{gender_desc}', 'radio', 255, '{gender_0},{gender_1},{gender_2}', 5, 'nohtml', 1, 1, 0, 'forumprofile', 0, 1, 0, 0, '{gender_0}', '<span class=" main_icons gender_{KEY}" title="{INPUT}"></span>', 1);
 
 # --------------------------------------------------------
 
@@ -2072,7 +2072,6 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('knownThemes', '1'),
 	('enableThemes', '1'),
 	('who_enabled', '1'),
-	('time_offset', '0'),
 	('cookieTime', '3153600'),
 	('lastActive', '15'),
 	('smiley_sets_known', 'fugue,alienine'),
@@ -2147,6 +2146,7 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('defaultMaxListItems', '15'),
 	('loginHistoryDays', '30'),
 	('httponlyCookies', '1'),
+	('samesiteCookies', 'lax'),
 	('tfa_mode', '1'),
 	('export_dir', '{$boarddir}/exports'),
 	('export_expiry', '7'),
@@ -2154,6 +2154,7 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('export_rate', '250'),
 	('allow_expire_redirect', '1'),
 	('json_done', '1'),
+	('attachments_21_done', '1'),
 	('displayFields', '[{"col_name":"cust_icq","title":"ICQ","type":"text","order":"1","bbc":"0","placement":"1","enclose":"<a class=\\"icq\\" href=\\"\\/\\/www.icq.com\\/people\\/{INPUT}\\" target=\\"_blank\\" title=\\"ICQ - {INPUT}\\"><img src=\\"{DEFAULT_IMAGES_URL}\\/icq.png\\" alt=\\"ICQ - {INPUT}\\"><\\/a>","mlist":"0"},{"col_name":"cust_skype","title":"Skype","type":"text","order":"2","bbc":"0","placement":"1","enclose":"<a href=\\"skype:{INPUT}?call\\"><img src=\\"{DEFAULT_IMAGES_URL}\\/skype.png\\" alt=\\"{INPUT}\\" title=\\"{INPUT}\\" \\/><\\/a> ","mlist":"0"},{"col_name":"cust_loca","title":"Location","type":"text","order":"4","bbc":"0","placement":"0","enclose":"","mlist":"0"},{"col_name":"cust_gender","title":"Gender","type":"radio","order":"5","bbc":"0","placement":"1","enclose":"<span class=\\" main_icons gender_{KEY}\\" title=\\"{INPUT}\\"><\\/span>","mlist":"0","options":["None","Male","Female"]}]'),
 	('minimize_files', '1'),
 	('securityDisable_moderate', '1');

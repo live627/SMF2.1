@@ -8,10 +8,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.3
  */
 
 if (!defined('SMF'))
@@ -32,7 +32,7 @@ function Post($post_errors = array())
 {
 	global $txt, $scripturl, $topic, $modSettings, $board;
 	global $user_info, $context, $settings;
-	global $sourcedir, $smcFunc, $language;
+	global $sourcedir, $smcFunc, $language, $options;
 
 	loadLanguage('Post');
 	if (!empty($modSettings['drafts_post_enabled']))
@@ -296,6 +296,8 @@ function Post($post_errors = array())
 			'%T' => '%l:%M',
 		));
 
+		$time_string = preg_replace('~:(?=\s|$|%[pPzZ])~', '', $time_string);
+
 		// Editing an event?  (but NOT previewing!?)
 		if (empty($context['event']['new']) && !isset($_REQUEST['subject']))
 		{
@@ -326,7 +328,7 @@ function Post($post_errors = array())
 		}
 
 		// Find the last day of the month.
-		$context['event']['last_day'] = (int) strftime('%d', mktime(0, 0, 0, $context['event']['month'] == 12 ? 1 : $context['event']['month'] + 1, 0, $context['event']['month'] == 12 ? $context['event']['year'] + 1 : $context['event']['year']));
+		$context['event']['last_day'] = (int) smf_strftime('%d', mktime(0, 0, 0, $context['event']['month'] == 12 ? 1 : $context['event']['month'] + 1, 0, $context['event']['month'] == 12 ? $context['event']['year'] + 1 : $context['event']['year']));
 
 		// An all day event? Set up some nice defaults in case the user wants to change that
 		if ($context['event']['allday'] == true)
@@ -391,7 +393,7 @@ function Post($post_errors = array())
 	// only at preview
 	if (empty($_REQUEST['msg']) && !empty($topic))
 	{
-		if (isset($_REQUEST['last_msg']) && $context['topic_last_message'] > $_REQUEST['last_msg'])
+		if (empty($options['no_new_reply_warning']) && isset($_REQUEST['last_msg']) && $context['topic_last_message'] > $_REQUEST['last_msg'])
 		{
 			$request = $smcFunc['db_query']('', '
 				SELECT COUNT(*)
@@ -580,7 +582,7 @@ function Post($post_errors = array())
 					m.poster_name, m.poster_email, m.subject, m.icon, m.approved,
 					COALESCE(a.size, -1) AS filesize, a.filename, a.id_attach,
 					a.approved AS attachment_approved, t.id_member_started AS id_member_poster,
-					m.poster_time, log.id_action
+					m.poster_time, log.id_action, t.id_first_msg
 				FROM {db_prefix}messages AS m
 					INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
 					LEFT JOIN {db_prefix}attachments AS a ON (a.id_msg = m.id_msg AND a.attachment_type = {int:attachment_type})
@@ -620,10 +622,10 @@ function Post($post_errors = array())
 			else
 				isAllowedTo('modify_any');
 
-			if ($context['can_announce'] && !empty($row['id_action']))
+			if ($context['can_announce'] && !empty($row['id_action']) && $row['id_first_msg'] == $_REQUEST['msg'])
 			{
 				loadLanguage('Errors');
-				$context['post_error']['messages'][] = $txt['error_topic_already_announced'];
+				$context['post_error']['already_announced'] = $txt['error_topic_already_announced'];
 			}
 
 			if (!empty($modSettings['attachmentEnable']))
@@ -698,7 +700,7 @@ function Post($post_errors = array())
 				m.poster_name, m.poster_email, m.subject, m.icon, m.approved,
 				COALESCE(a.size, -1) AS filesize, a.filename, a.id_attach, a.mime_type, a.id_thumb,
 				a.approved AS attachment_approved, t.id_member_started AS id_member_poster,
-				m.poster_time, log.id_action
+				m.poster_time, log.id_action, t.id_first_msg
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
 				LEFT JOIN {db_prefix}attachments AS a ON (a.id_msg = m.id_msg AND a.attachment_type = {int:attachment_type})
@@ -737,10 +739,10 @@ function Post($post_errors = array())
 		else
 			isAllowedTo('modify_any');
 
-		if ($context['can_announce'] && !empty($row['id_action']))
+		if ($context['can_announce'] && !empty($row['id_action']) && $row['id_first_msg'] == $_REQUEST['msg'])
 		{
 			loadLanguage('Errors');
-			$context['post_error']['messages'][] = $txt['error_topic_already_announced'];
+			$context['post_error']['already_announced'] = $txt['error_topic_already_announced'];
 		}
 
 		// When was it last modified?
@@ -821,10 +823,12 @@ function Post($post_errors = array())
 			$request = $smcFunc['db_query']('', '
 				SELECT m.subject, COALESCE(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.body
 				FROM {db_prefix}messages AS m
-					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)' . (!$modSettings['postmod_active'] || allowedTo('approve_posts') ? '' : '
+					INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)') . '
 				WHERE {query_see_message_board}
 					AND m.id_msg = {int:id_msg}' . (!$modSettings['postmod_active'] || allowedTo('approve_posts') ? '' : '
-					AND m.approved = {int:is_approved}') . '
+					AND m.approved = {int:is_approved}
+					AND t.approved = {int:is_approved}') . '
 				LIMIT 1',
 				array(
 					'id_msg' => (int) $_REQUEST['quote'],
@@ -852,10 +856,14 @@ function Post($post_errors = array())
 				{
 					// It goes 0 = outside, 1 = begin tag, 2 = inside, 3 = close tag, repeat.
 					if ($i % 4 == 0)
-						$parts[$i] = preg_replace_callback('~\[html\](.+?)\[/html\]~is', function($m)
-						{
-							return '[html]' . preg_replace('~<br\s?/?' . '>~i', '&lt;br /&gt;<br>', "$m[1]") . '[/html]';
-						}, $parts[$i]);
+						$parts[$i] = preg_replace_callback(
+							'~\[html\](.+?)\[/html\]~is',
+							function($m)
+							{
+								return '[html]' . preg_replace('~<br\s?/?' . '>~i', '&lt;br /&gt;<br>', "$m[1]") . '[/html]';
+							},
+							$parts[$i]
+						);
 				}
 				$form_message = implode('', $parts);
 			}
@@ -992,7 +1000,7 @@ function Post($post_errors = array())
 
 				if ($attachID == 'initial_error')
 				{
-					$txt['error_attach_initial_error'] = $txt['attach_no_upload'] . '<div style="padding: 0 1em;">' . (is_array($attachment) ? vsprintf($txt[$attachment[0]], $attachment[1]) : $txt[$attachment]) . '</div>';
+					$txt['error_attach_initial_error'] = $txt['attach_no_upload'] . '<div style="padding: 0 1em;">' . (is_array($attachment) ? vsprintf($txt[$attachment[0]], (array) $attachment[1]) : $txt[$attachment]) . '</div>';
 					$post_errors[] = 'attach_initial_error';
 					unset($_SESSION['temp_attachments']);
 					break;
@@ -1002,9 +1010,9 @@ function Post($post_errors = array())
 				if (!empty($attachment['errors']))
 				{
 					$txt['error_attach_errors'] = empty($txt['error_attach_errors']) ? '<br>' : '';
-					$txt['error_attach_errors'] .= vsprintf($txt['attach_warning'], $attachment['name']) . '<div style="padding: 0 1em;">';
+					$txt['error_attach_errors'] .= sprintf($txt['attach_warning'], $attachment['name']) . '<div style="padding: 0 1em;">';
 					foreach ($attachment['errors'] as $error)
-						$txt['error_attach_errors'] .= (is_array($error) ? vsprintf($txt[$error[0]], $error[1]) : $txt[$error]) . '<br >';
+						$txt['error_attach_errors'] .= (is_array($error) ? vsprintf($txt[$error[0]], (array) $error[1]) : $txt[$error]) . '<br >';
 					$txt['error_attach_errors'] .= '</div>';
 					$post_errors[] = 'attach_errors';
 
@@ -1055,6 +1063,38 @@ function Post($post_errors = array())
 			$_SESSION['attachments_can_preview'][$attachment['thumb']] = true;
 	}
 
+	// Previously uploaded attachments have 2 flavors:
+	// - Existing post - at this point, now in $context['current_attachments']
+	// - Just added, current session only - at this point, now in $_SESSION['already_attached']
+	// We need to make sure *all* of these are in $context['current_attachments'], otherwise they won't show in dropzone during edits.
+	if (!empty($_SESSION['already_attached']))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT
+				a.id_attach, a.filename, COALESCE(a.size, 0) AS filesize, a.approved, a.mime_type, a.id_thumb
+			FROM {db_prefix}attachments AS a
+			WHERE a.attachment_type = {int:attachment_type}
+				AND a.id_attach IN ({array_int:just_uploaded})',
+			array(
+				'attachment_type' => 0,
+				'just_uploaded' => $_SESSION['already_attached']
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$context['current_attachments'][$row['id_attach']] = array(
+				'name' => $smcFunc['htmlspecialchars']($row['filename']),
+				'size' => $row['filesize'],
+				'attachID' => $row['id_attach'],
+				'approved' => $row['approved'],
+				'mime_type' => $row['mime_type'],
+				'thumb' => $row['id_thumb'],
+			);
+		}
+		$smcFunc['db_free_result']($request);
+	}
+
 	// Do we need to show the visual verification image?
 	$context['require_verification'] = !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha'] || ($user_info['is_guest'] && $modSettings['posts_require_captcha'] == -1));
 	if ($context['require_verification'])
@@ -1090,7 +1130,7 @@ function Post($post_errors = array())
 			if (is_array($post_error))
 			{
 				$post_error_id = $post_error[0];
-				$context['post_error'][$post_error_id] = vsprintf($txt['error_' . $post_error_id], $post_error[1]);
+				$context['post_error'][$post_error_id] = vsprintf($txt['error_' . $post_error_id], (array) $post_error[1]);
 
 				// If it's not a minor error flag it as such.
 				if (!in_array($post_error_id, $minor_errors))
@@ -1138,7 +1178,7 @@ function Post($post_errors = array())
 
 	// Are post drafts enabled?
 	$context['drafts_save'] = !empty($modSettings['drafts_post_enabled']) && allowedTo('post_draft');
-	$context['drafts_autosave'] = !empty($context['drafts_save']) && !empty($modSettings['drafts_autosave_enabled']) && allowedTo('post_autosave_draft');
+	$context['drafts_autosave'] = !empty($context['drafts_save']) && !empty($modSettings['drafts_autosave_enabled']) && allowedTo('post_autosave_draft') && !empty($options['drafts_autosave_enabled']);
 
 	// Build a list of drafts that they can load in to the editor
 	if (!empty($context['drafts_save']))
@@ -1218,7 +1258,7 @@ function Post($post_errors = array())
 	if ($context['can_post_attachment'])
 	{
 		// If they've unchecked an attachment, they may still want to attach that many more files, but don't allow more than num_allowed_attachments.
-		$context['num_allowed_attachments'] = min(ini_get('max_file_uploads'), (empty($modSettings['attachmentNumPerPostLimit']) ? 50 : $modSettings['attachmentNumPerPostLimit'] - count($context['current_attachments'])));
+		$context['num_allowed_attachments'] = !isset($modSettings['attachmentNumPerPostLimit']) ? 4 : $modSettings['attachmentNumPerPostLimit'];
 		$context['can_post_attachment_unapproved'] = allowedTo('post_attachment');
 		$context['attachment_restrictions'] = array();
 		$context['allowed_extensions'] = !empty($modSettings['attachmentCheckExtensions']) ? (strtr(strtolower($modSettings['attachmentExtensions']), array(',' => ', '))) : '';
@@ -1226,9 +1266,18 @@ function Post($post_errors = array())
 		foreach ($attachmentRestrictionTypes as $type)
 			if (!empty($modSettings[$type]))
 			{
+				$context['attachment_restrictions'][$type] = sprintf($txt['attach_restrict_' . $type . ($modSettings[$type] >= 1024 ? '_MB' : '')], comma_format($modSettings[$type] >= 1024 ? $modSettings[$type] / 1024 : $modSettings[$type], 2));
+
 				// Show the max number of attachments if not 0.
 				if ($type == 'attachmentNumPerPostLimit')
-					$context['attachment_restrictions'][] = sprintf($txt['attach_remaining'], $modSettings['attachmentNumPerPostLimit'] - $context['attachments']['quantity']);
+				{
+					$context['attachment_restrictions'][$type] .= ' (' . sprintf($txt['attach_remaining'], max($modSettings['attachmentNumPerPostLimit'] - $context['attachments']['quantity'], 0)) . ')';
+				}
+				elseif ($type == 'attachmentPostLimit' && $context['attachments']['total_size'] > 0)
+				{
+ 					$context['attachment_restrictions'][$type] .= '<span class="attach_available"> (' . sprintf($txt['attach_available'], max($modSettings['attachmentPostLimit'] - ($context['attachments']['total_size'] / 1024), 0)) . ')</span>';
+				}
+
 			}
 	}
 
@@ -1249,6 +1298,10 @@ function Post($post_errors = array())
 		loadJavaScriptFile('jquery.atwho.min.js', array('defer' => true), 'smf_atwho');
 		loadJavaScriptFile('mentions.js', array('defer' => true, 'minimize' => true), 'smf_mentions');
 	}
+
+	// Load the drafts js file
+	if ($context['drafts_autosave'])
+		loadJavaScriptFile('drafts.js', array('defer' => false, 'minimize' => true), 'smf_drafts');
 
 	// quotedText.js
 	loadJavaScriptFile('quotedText.js', array('defer' => true, 'minimize' => true), 'smf_quotedText');
@@ -1274,10 +1327,13 @@ function Post($post_errors = array())
 	// File Upload.
 	if ($context['can_post_attachment'])
 	{
-		$acceptedFiles = empty($context['allowed_extensions']) ? '' : implode(',', array_map(function ($val) use ($smcFunc)
-		{
-			return !empty($val) ? ('.' . $smcFunc['htmltrim']($val)) : '';
-		}, explode(',', $context['allowed_extensions'])));
+		$acceptedFiles = empty($context['allowed_extensions']) ? '' : implode(',', array_map(
+			function ($val) use ($smcFunc)
+			{
+				return !empty($val) ? ('.' . $smcFunc['htmltrim']($val)) : '';
+			},
+			explode(',', $context['allowed_extensions'])
+		));
 
 		loadJavaScriptFile('dropzone.min.js', array('defer' => true), 'smf_dropzone');
 		loadJavaScriptFile('smf_fileUpload.js', array('defer' => true, 'minimize' => true), 'smf_fileUpload');
@@ -1450,6 +1506,7 @@ function Post($post_errors = array())
 				'type' => 'text',
 				'attributes' => array(
 					'size' => 25,
+					'maxlength' => 25,
 					'value' => $context['name'],
 					'required' => true,
 				),
@@ -1510,7 +1567,7 @@ function Post($post_errors = array())
 			'type' => 'text',
 			'attributes' => array(
 				'size' => 80,
-				'maxlength' => !empty($topic) ? 84 : 80,
+				'maxlength' => 80 + (!empty($topic) ? $smcFunc['strlen']($context['response_prefix']) : 0),
 				'value' => $context['subject'],
 				'required' => true,
 			),
@@ -1558,7 +1615,7 @@ function Post($post_errors = array())
 function Post2()
 {
 	global $board, $topic, $txt, $modSettings, $sourcedir, $context;
-	global $user_info, $board_info, $smcFunc, $settings;
+	global $user_info, $board_info, $options, $smcFunc, $settings;
 
 	// Sneaking off, are we?
 	if (empty($_POST) && empty($topic))
@@ -1775,7 +1832,7 @@ function Post2()
 		}
 
 		// If the number of replies has changed, if the setting is enabled, go back to Post() - which handles the error.
-		if (isset($_POST['last_msg']) && $topic_info['id_last_msg'] > $_POST['last_msg'])
+		if (empty($options['no_new_reply_warning']) && isset($_POST['last_msg']) && $topic_info['id_last_msg'] > $_POST['last_msg'])
 		{
 			$_REQUEST['preview'] = true;
 			return Post();
@@ -1950,7 +2007,7 @@ function Post2()
 	// If the poster is a guest evaluate the legality of name and email.
 	if ($posterIsGuest)
 	{
-		$_POST['guestname'] = !isset($_POST['guestname']) ? '' : trim($_POST['guestname']);
+		$_POST['guestname'] = !isset($_POST['guestname']) ? '' : trim(normalize_spaces(sanitize_chars($_POST['guestname'], 1, ' '), true, true, array('no_breaks' => true, 'replace_tabs' => true, 'collapse_hspace' => true)));
 		$_POST['email'] = !isset($_POST['email']) ? '' : trim($_POST['email']);
 
 		if ($_POST['guestname'] == '' || $_POST['guestname'] == '_')
@@ -2167,7 +2224,7 @@ function Post2()
 			if ($attachID == 'initial_error')
 			{
 				$attach_errors[] = '<dt>' . $txt['attach_no_upload'] . '</dt>';
-				$attach_errors[] = '<dd>' . (is_array($attachment) ? vsprintf($txt[$attachment[0]], $attachment[1]) : $txt[$attachment]) . '</dd>';
+				$attach_errors[] = '<dd>' . (is_array($attachment) ? vsprintf($txt[$attachment[0]], (array) $attachment[1]) : $txt[$attachment]) . '</dd>';
 
 				unset($_SESSION['temp_attachments']);
 				break;
@@ -2200,7 +2257,7 @@ function Post2()
 			if (!empty($attachmentOptions['errors']))
 			{
 				// Sort out the errors for display and delete any associated files.
-				$attach_errors[] = '<dt>' . vsprintf($txt['attach_warning'], $attachment['name']) . '</dt>';
+				$attach_errors[] = '<dt>' . sprintf($txt['attach_warning'], $attachment['name']) . '</dt>';
 				$log_these = array('attachments_no_create', 'attachments_no_write', 'attach_timeout', 'ran_out_of_space', 'cant_access_upload_path', 'attach_0_byte_file');
 				foreach ($attachmentOptions['errors'] as $error)
 				{
@@ -2211,14 +2268,14 @@ function Post2()
 							log_error($attachment['name'] . ': ' . $txt[$error], 'critical');
 					}
 					else
-						$attach_errors[] = '<dd>' . vsprintf($txt[$error[0]], $error[1]) . '</dd>';
+						$attach_errors[] = '<dd>' . vsprintf($txt[$error[0]], (array) $error[1]) . '</dd>';
 				}
 				if (file_exists($attachment['tmp_name']))
 					unlink($attachment['tmp_name']);
 			}
 		}
-		unset($_SESSION['temp_attachments']);
 	}
+	unset($_SESSION['temp_attachments']);
 
 	// Make the poll...
 	if (isset($_REQUEST['poll']))
@@ -2293,6 +2350,8 @@ function Post2()
 		'sticky_mode' => isset($_POST['sticky']) ? (int) $_POST['sticky'] : null,
 		'mark_as_read' => true,
 		'is_approved' => !$modSettings['postmod_active'] || empty($topic) || !empty($board_info['cur_topic_approved']),
+		'first_msg' => empty($topic_info['id_first_msg']) ? null : $topic_info['id_first_msg'],
+		'last_msg' => empty($topic_info['id_last_msg']) ? null : $topic_info['id_last_msg'],
 	);
 	$posterOptions = array(
 		'id' => $user_info['id'],
@@ -2310,11 +2369,8 @@ function Post2()
 			$msgOptions['modify_time'] = time();
 			$msgOptions['modify_name'] = $user_info['name'];
 			$msgOptions['modify_reason'] = $_POST['modify_reason'];
+			$msgOptions['poster_time'] = $row['poster_time'];
 		}
-
-		// This will save some time...
-		if (empty($approve_has_changed))
-			unset($msgOptions['approved']);
 
 		modifyPost($msgOptions, $topicOptions, $posterOptions);
 	}
@@ -2809,7 +2865,7 @@ function getTopic()
 			'poster' => $row['poster_name'],
 			'message' => $row['body'],
 			'time' => timeformat($row['poster_time']),
-			'timestamp' => forum_time(true, $row['poster_time']),
+			'timestamp' => $row['poster_time'],
 			'id' => $row['id_msg'],
 			'is_new' => !empty($context['new_replies']),
 			'is_ignored' => !empty($modSettings['enable_buddylist']) && !empty($options['posts_apply_ignore_list']) && in_array($row['id_member'], $context['user']['ignoreusers']),
@@ -3077,6 +3133,7 @@ function JavaScriptModify()
 			'body' => isset($_POST['message']) ? $_POST['message'] : null,
 			'icon' => isset($_REQUEST['icon']) ? preg_replace('~[\./\\\\*\':"<>]~', '', $_REQUEST['icon']) : null,
 			'modify_reason' => (isset($_POST['modify_reason']) ? $_POST['modify_reason'] : ''),
+			'approved' => (isset($row['approved']) ? $row['approved'] : null),
 		);
 		$topicOptions = array(
 			'id' => $topic,
@@ -3159,7 +3216,7 @@ function JavaScriptModify()
 				'id' => $row['id_msg'],
 				'modified' => array(
 					'time' => isset($msgOptions['modify_time']) ? timeformat($msgOptions['modify_time']) : '',
-					'timestamp' => isset($msgOptions['modify_time']) ? forum_time(true, $msgOptions['modify_time']) : 0,
+					'timestamp' => isset($msgOptions['modify_time']) ? $msgOptions['modify_time'] : 0,
 					'name' => isset($msgOptions['modify_time']) ? $msgOptions['modify_name'] : '',
 					'reason' => $msgOptions['modify_reason'],
 				),
@@ -3181,7 +3238,7 @@ function JavaScriptModify()
 				'id' => $row['id_msg'],
 				'modified' => array(
 					'time' => isset($msgOptions['modify_time']) ? timeformat($msgOptions['modify_time']) : '',
-					'timestamp' => isset($msgOptions['modify_time']) ? forum_time(true, $msgOptions['modify_time']) : 0,
+					'timestamp' => isset($msgOptions['modify_time']) ? $msgOptions['modify_time'] : 0,
 					'name' => isset($msgOptions['modify_time']) ? $msgOptions['modify_name'] : '',
 				),
 				'subject' => isset($msgOptions['subject']) ? $msgOptions['subject'] : '',

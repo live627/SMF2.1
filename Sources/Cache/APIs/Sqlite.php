@@ -5,10 +5,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.2
  */
 
 namespace SMF\Cache\APIs;
@@ -109,7 +109,7 @@ class Sqlite extends CacheApi implements CacheApiInterface
 	public function cleanCache($type = '')
 	{
 		if ($type == 'expired')
-			$query = 'DELETE FROM cache WHERE ttl >= ' . time() . ';';
+			$query = 'DELETE FROM cache WHERE ttl < ' . time() . ';';
 		else
 			$query = 'DELETE FROM cache;';
 
@@ -117,6 +117,8 @@ class Sqlite extends CacheApi implements CacheApiInterface
 
 		$query = 'VACUUM;';
 		$this->cacheDB->exec($query);
+
+		$this->invalidateCache();
 
 		return $result;
 	}
@@ -138,12 +140,14 @@ class Sqlite extends CacheApi implements CacheApiInterface
 			'file',
 			'text',
 			36,
-			'cache_'. $class_name_txt_key .'_cachedir');
+			'cache_'. $class_name_txt_key .'_cachedir',
+		);
 
 		if (!isset($context['settings_post_javascript']))
 			$context['settings_post_javascript'] = '';
 
-		$context['settings_post_javascript'] .= '
+		if (empty($context['settings_not_writable']))
+			$context['settings_post_javascript'] .= '
 			$("#cache_accelerator").change(function (e) {
 				var cache_type = e.currentTarget.value;
 				$("#cachedir_'. $class_name_txt_key .'").prop("disabled", cache_type != "'. $class_name .'");
@@ -161,14 +165,21 @@ class Sqlite extends CacheApi implements CacheApiInterface
 	 */
 	public function setCachedir($dir = null)
 	{
-		global $cachedir, $cachedir_sqlite;
+		global $cachedir, $cachedir_sqlite, $sourcedir;
 
 		// If its invalid, use SMF's.
-		if (is_null($dir) || !is_writable($dir))
-			if (is_null($cachedir_sqlite) || !is_writable($cachedir_sqlite))
-				$this->cachedir = $cachedir;
-			else
-				$this->cachedir = $cachedir_sqlite;
+		if (!isset($dir) || !is_writable($dir))
+		{
+			if (!isset($cachedir_sqlite) || !is_writable($cachedir_sqlite))
+			{
+				$cachedir_sqlite = $cachedir;
+
+				require_once($sourcedir . '/Subs-Admin.php');
+				updateSettingsFile(array('cachedir_sqlite' => $cachedir_sqlite));
+			}
+
+			$this->cachedir = $cachedir_sqlite;
+		}
 		else
 			$this->cachedir = $dir;
 	}

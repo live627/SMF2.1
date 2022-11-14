@@ -7,10 +7,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.0
  */
 
 if (!defined('SMF'))
@@ -137,7 +137,7 @@ class xmlArray
 	 *
 	 * @param $path string The path to the element to get
 	 * @param $return_full bool Whether to return the full result set
-	 * @return xmlArray, a new xmlArray.
+	 * @return xmlArray a new xmlArray.
 	 */
 	public function path($path, $return_full = false)
 	{
@@ -630,10 +630,17 @@ class xmlArray
 		$trans_tbl = array_flip(get_html_translation_table(HTML_ENTITIES, ENT_QUOTES));
 
 		// Translate all the entities out.
-		$data = strtr(preg_replace_callback('~&#(\d{1,4});~', function($m)
-		{
-			return chr("$m[1]");
-		}, $data), $trans_tbl);
+		$data = strtr(
+			preg_replace_callback(
+				'~&#(\d{1,4});~',
+				function($m)
+				{
+					return chr("$m[1]");
+				},
+				$data
+			),
+			$trans_tbl
+		);
 
 		return $this->trim ? trim($data) : $data;
 	}

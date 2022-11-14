@@ -5,10 +5,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.3
  *
  * This file contains helper functions for upgrade.php
  */
@@ -343,7 +343,9 @@ function deleteFile($file)
  */
 function smf_strtolower($string)
 {
-	return mb_strtolower($string, 'UTF-8');
+	global $sourcedir;
+	require_once($sourcedir . '/Subs-Charset.php');
+	return utf8_strtolower($string);
 }
 
 /**
@@ -414,7 +416,7 @@ function smf_mysql_free_result($rs)
  * @param $rs Ignored
  * @return int|string
  */
-function smf_mysql_insert_id($rs)
+function smf_mysql_insert_id($rs = null)
 {
 	global $db_connection;
 	return mysqli_insert_id($db_connection);
@@ -450,18 +452,21 @@ if (!function_exists('array_column'))
 {
 	function array_column($input, $column_key, $index_key = null)
 	{
-		$arr = array_map(function($d) use ($column_key, $index_key)
-		{
-			if (!isset($d[$column_key]))
+		$arr = array_map(
+			function($d) use ($column_key, $index_key)
 			{
-				return null;
-			}
-			if ($index_key !== null)
-			{
-				return array($d[$index_key] => $d[$column_key]);
-			}
-			return $d[$column_key];
-		}, $input);
+				if (!isset($d[$column_key]))
+				{
+					return null;
+				}
+				if ($index_key !== null)
+				{
+					return array($d[$index_key] => $d[$column_key]);
+				}
+				return $d[$column_key];
+			},
+			$input
+		);
 
 		if ($index_key !== null)
 		{

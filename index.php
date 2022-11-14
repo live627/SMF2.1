@@ -14,19 +14,19 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.3
  */
 
 // Get everything started up...
 define('SMF', 1);
-define('SMF_VERSION', '2.1 RC3');
+define('SMF_VERSION', '2.1.3');
 define('SMF_FULL_VERSION', 'SMF ' . SMF_VERSION);
-define('SMF_SOFTWARE_YEAR', '2021');
+define('SMF_SOFTWARE_YEAR', '2022');
 
-define('JQUERY_VERSION', '3.5.1');
+define('JQUERY_VERSION', '3.6.0');
 define('POSTGRE_TITLE', 'PostgreSQL');
 define('MYSQL_TITLE', 'MySQL');
 define('SMF_USER_AGENT', 'Mozilla/5.0 (' . php_uname('s') . ' ' . php_uname('m') . ') AppleWebKit/605.1.15 (KHTML, like Gecko)  SMF/' . strtr(SMF_VERSION, ' ', '.'));
@@ -51,7 +51,7 @@ require_once(dirname(__FILE__) . '/Settings.php');
 error_reporting(!empty($db_show_debug) ? E_ALL : E_ALL & ~E_DEPRECATED);
 
 // Ensure there are no trailing slashes in these variables.
-foreach (array('boardurl', 'boarddir', 'sourcedir', 'packagesdir', 'taskddir', 'cachedir') as $variable)
+foreach (array('boardurl', 'boarddir', 'sourcedir', 'packagesdir', 'tasksdir', 'cachedir') as $variable)
 	if (!empty($GLOBALS[$variable]))
 		$GLOBALS[$variable] = rtrim($GLOBALS[$variable], "\\/");
 
@@ -75,10 +75,17 @@ require_once($sourcedir . '/Subs.php');
 require_once($sourcedir . '/Subs-Auth.php');
 require_once($sourcedir . '/Errors.php');
 require_once($sourcedir . '/Load.php');
+require_once($sourcedir . '/Security.php');
+
+// Ensure we don't trip over disabled internal functions
+if (version_compare(PHP_VERSION, '8.0.0', '>='))
+	require_once($sourcedir . '/Subs-Compat.php');
 
 // If $maintenance is set specifically to 2, then we're upgrading or something.
 if (!empty($maintenance) &&  2 === $maintenance)
+{
 	display_maintenance_message();
+}
 
 // Create a variable to store some SMF specific functions in.
 $smcFunc = array();
@@ -141,18 +148,24 @@ cleanRequest();
 if (empty($modSettings['rand_seed']) || mt_rand(1, 250) == 69)
 	smf_seed_generator();
 
+// And important includes.
+require_once($sourcedir . '/Session.php');
+require_once($sourcedir . '/Logging.php');
+require_once($sourcedir . '/Class-BrowserDetect.php');
+
+// If a Preflight is occurring, lets stop now.
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS')
+{
+	send_http_status(204);
+	die;
+}
+
 // Before we get carried away, are we doing a scheduled task? If so save CPU cycles by jumping out!
 if (isset($_GET['scheduled']))
 {
 	require_once($sourcedir . '/ScheduledTasks.php');
 	AutoTask();
 }
-
-// And important includes.
-require_once($sourcedir . '/Session.php');
-require_once($sourcedir . '/Logging.php');
-require_once($sourcedir . '/Security.php');
-require_once($sourcedir . '/Class-BrowserDetect.php');
 
 // Check if compressed output is enabled, supported, and not already being done.
 if (!empty($modSettings['enableCompressedOutput']) && !headers_sent())
@@ -200,6 +213,9 @@ function smf_main()
 
 	// We should set our security headers now.
 	frameOptionsHeader();
+
+	// Set our CORS policy.
+	corsPolicyHeader();
 
 	// Load the user's cookie (or set as guest) and load their settings.
 	loadUserSettings();

@@ -4,10 +4,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.0
  */
 
 /**
@@ -21,7 +21,7 @@ function template_login()
 		<div class="login">
 			<div class="cat_bar">
 				<h3 class="catbg">
-					<img src="', $settings['images_url'], '/icons/login_hd.png" alt="" class="icon"> ', $txt['login'], '
+					<span class="main_icons login"></span> ', $txt['login'], '
 				</h3>
 			</div>
 			<div class="roundframe">
@@ -90,7 +90,8 @@ function template_login()
 							document.getElementById("', !empty($context['from_ajax']) ? 'ajax_' : '', isset($context['default_username']) && $context['default_username'] != '' ? 'loginpass' : 'loginuser', '").focus();
 						}, 150);';
 
-	if (!empty($context['from_ajax']))
+	if (!empty($context['from_ajax']) && ((empty($modSettings['allow_cors']) || empty($modSettings['allow_cors_credentials']) || empty($context['valid_cors_found']) || !in_array($context['valid_cors_found'], array('samel', 'subsite')))))
+	{
 		echo '
 						form = $("#frmLogin");
 						form.submit(function(e) {
@@ -98,17 +99,33 @@ function template_login()
 							e.stopPropagation();
 
 							$.ajax({
-								url: form.prop("action"),
+								url: form.prop("action") + ";ajax",
 								method: "POST",
+								headers: {
+									"X-SMF-AJAX": 1
+								},
+								xhrFields: {
+									withCredentials: typeof allow_xhjr_credentials !== "undefined" ? allow_xhjr_credentials : false
+								},
 								data: form.serialize(),
-								success: function(data) {
+								success: function(data) {';
+
+
+		// While a nice action is to replace the document body after a login, this may fail on CORS requests because the action may not be redirected back to the page they started the login process from.  So for these cases, we simply just reload the page.
+		if (empty($context['valid_cors_found']) || $context['valid_cors_found'] == 'same')
+			echo '
 									if (data.indexOf("<bo" + "dy") > -1) {
 										document.open();
 										document.write(data);
 										document.close();
 									}
 									else
-										form.parent().html($(data).find(".roundframe").html());
+										form.parent().html($(data).find(".roundframe").html());';
+		else
+			echo '
+									window.location.reload();';
+
+		echo '
 								},
 								error: function(xhr) {
 									var data = xhr.responseText;
@@ -124,10 +141,18 @@ function template_login()
 
 							return false;
 						});';
+	}
 
 	echo '
 					</script>
 				</form>';
+
+	if (!empty($context['can_register']))
+		echo '
+				<hr>
+				<div class="centertext">
+					', sprintf($txt['register_prompt'], $scripturl), '
+				</div>';
 
 	// It is a long story as to why we have this when we're clearly not going to use it.
 	if (!empty($context['from_ajax']))
@@ -248,7 +273,7 @@ function template_kick_guest()
 	echo '
 			<div class="cat_bar">
 				<h3 class="catbg">
-					<img src="', $settings['images_url'], '/icons/login_hd.png" alt="" class="icon"> ', $txt['login'], '
+					<span class="main_icons login"></span> ', $txt['login'], '
 				</h3>
 			</div>
 			<div class="roundframe">
@@ -349,7 +374,7 @@ function template_admin_login()
 		<div class="login" id="admin_login">
 			<div class="cat_bar">
 				<h3 class="catbg">
-					<img src="', $settings['images_url'], '/icons/login_hd.png" alt="" class="icon"> ', $txt['login'], '
+					<span class="main_icons login"></span> ', $txt['login'], '
 				</h3>
 			</div>
 			<div class="roundframe centertext">';
@@ -449,6 +474,34 @@ function template_resend()
 				<p><input type="submit" value="', $txt['invalid_activation_resend'], '" class="button"></p>
 			</div><!-- .roundframe -->
 		</form>';
+}
+
+/**
+ * Confirm a logout.
+ */
+function template_logout()
+{
+	global $context, $settings, $scripturl, $modSettings, $txt;
+
+	// This isn't that much... just like normal login but with a message at the top.
+	echo '
+	<form action="', $scripturl . '?action=logout;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '" name="frmLogout" id="frmLogout">
+		<div class="logout">
+			<div class="cat_bar">
+				<h3 class="catbg">', $txt['logout_confirm'], '</h3>
+			</div>
+			<div class="roundframe">
+				<p class="information centertext">
+					', $txt['logout_notice'], '
+				</p>
+
+				<p class="centertext">
+					<input type="submit" value="', $txt['logout'], '" class="button">
+					<input type="submit" name="cancel" value="', $txt['logout_return'], '" class="button">
+				</p>
+			</div>
+		</div><!-- .logout -->
+	</form>';
 }
 
 ?>

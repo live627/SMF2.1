@@ -8,10 +8,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.3
  */
 
 if (!defined('SMF'))
@@ -478,14 +478,14 @@ function Display()
 		{
 			// No limit! (actually, there is a limit, but...)
 			$context['messages_per_page'] = -1;
-			$context['page_index'] .= empty($modSettings['compactTopicPagesEnable']) ? '<strong>' . $txt['all'] . '</strong> ' : '[<strong>' . $txt['all'] . '</strong>] ';
+			$context['page_index'] .= sprintf(strtr($settings['page_index']['current_page'], array('%1$d' => '%1$s')), $txt['all']);
 
 			// Set start back to 0...
 			$_REQUEST['start'] = 0;
 		}
 		// They aren't using it, but the *option* is there, at least.
 		else
-			$context['page_index'] .= '&nbsp;<a href="' . $scripturl . '?topic=' . $topic . '.0;all">' . $txt['all'] . '</a> ';
+			$context['page_index'] .= sprintf(strtr($settings['page_index']['page'], array('{URL}' => $scripturl . '?topic=' . $topic . '.0;all')), '', $txt['all']);
 	}
 
 	// Build the link tree.
@@ -1039,8 +1039,13 @@ function Display()
 					'now' => time(),
 				)
 			);
-			$user_info['alerts'] = $user_info['alerts'] - max(0, $smcFunc['db_affected_rows']());
-			updateMemberData($user_info['id'], array('alerts' => $user_info['alerts']));
+			// If changes made, update the member record as well
+			if ($smcFunc['db_affected_rows']() > 0)
+			{
+				require_once($sourcedir . '/Profile-Modify.php');
+				$user_info['alerts'] = alert_count($user_info['id'], true);
+				updateMemberData($user_info['id'], array('alerts' => $user_info['alerts']));
+			}
 		}
 	}
 
@@ -1122,7 +1127,7 @@ function Display()
 
 	$context['jump_to'] = array(
 		'label' => addslashes(un_htmlspecialchars($txt['jump_to'])),
-		'board_name' => $smcFunc['htmlspecialchars'](strtr(strip_tags($board_info['name']), array('&amp;' => '&'))),
+		'board_name' => strtr($smcFunc['htmlspecialchars'](strip_tags($board_info['name'])), array('&amp;' => '&')),
 		'child_level' => $board_info['child_level'],
 	);
 
@@ -1158,7 +1163,6 @@ function Display()
 		'can_remove_poll' => 'poll_remove',
 		'can_reply' => 'post_reply',
 		'can_reply_unapproved' => 'post_unapproved_replies',
-		'can_view_warning' => 'profile_warning',
 	);
 	foreach ($anyown_permissions as $contextual => $perm)
 		$context[$contextual] = allowedTo($perm . '_any') || ($context['user']['started'] && allowedTo($perm . '_own'));
@@ -1206,7 +1210,7 @@ function Display()
 
 	// Check if the draft functions are enabled and that they have permission to use them (for quick reply.)
 	$context['drafts_save'] = !empty($modSettings['drafts_post_enabled']) && allowedTo('post_draft') && $context['can_reply'];
-	$context['drafts_autosave'] = !empty($context['drafts_save']) && !empty($modSettings['drafts_autosave_enabled']);
+	$context['drafts_autosave'] = !empty($context['drafts_save']) && !empty($modSettings['drafts_autosave_enabled']) && !empty($options['drafts_autosave_enabled']);
 	if (!empty($context['drafts_save']))
 		loadLanguage('Drafts');
 
@@ -1342,6 +1346,26 @@ function Display()
 	// Note: integrate_mod_buttons is no more necessary and deprecated, but is kept for backward compatibility with 2.0
 	call_integration_hook('integrate_mod_buttons', array(&$context['mod_buttons']));
 
+	// If any buttons have a 'test' check, run those tests now to keep things clean.
+	foreach (array('normal_buttons', 'mod_buttons') as $button_strip)
+	{
+		foreach ($context[$button_strip] as $key => $value)
+		{
+			if (isset($value['test']) && empty($context[$value['test']]))
+			{
+				unset($context[$button_strip][$key]);
+			}
+			elseif (isset($value['sub_buttons']))
+			{
+				foreach ($value['sub_buttons'] as $subkey => $subvalue)
+				{
+					if (isset($subvalue['test']) && empty($context[$subvalue['test']]))
+						unset($context[$button_strip][$key]['sub_buttons'][$subkey]);
+				}
+			}
+		}
+	}
+
 	// Load the drafts js file
 	if ($context['drafts_autosave'])
 		loadJavaScriptFile('drafts.js', array('defer' => false, 'minimize' => true), 'smf_drafts');
@@ -1446,7 +1470,7 @@ function prepareDisplayContext($reset = false)
 	else
 	{
 		// Define this here to make things a bit more readable
-		$can_view_warning = allowedTo('moderate_forum') || allowedTo('view_warning_any') || ($message['id_member'] == $user_info['id'] && allowedTo('view_warning_own'));
+		$can_view_warning = $user_info['is_mod'] || allowedTo('moderate_forum') || allowedTo('view_warning_any') || ($message['id_member'] == $user_info['id'] && allowedTo('view_warning_own'));
 
 		$memberContext[$message['id_member']]['can_view_profile'] = allowedTo('profile_view') || ($message['id_member'] == $user_info['id'] && !$user_info['is_guest']);
 		$memberContext[$message['id_member']]['is_topic_starter'] = $message['id_member'] == $context['topic_starter_id'];
@@ -1482,11 +1506,11 @@ function prepareDisplayContext($reset = false)
 		'icon_url' => $settings[$context['icon_sources'][$message['icon']]] . '/post/' . $message['icon'] . '.png',
 		'subject' => $message['subject'],
 		'time' => timeformat($message['poster_time']),
-		'timestamp' => forum_time(true, $message['poster_time']),
+		'timestamp' => $message['poster_time'],
 		'counter' => $counter,
 		'modified' => array(
 			'time' => timeformat($message['modified_time']),
-			'timestamp' => forum_time(true, $message['modified_time']),
+			'timestamp' => $message['modified_time'],
 			'name' => $message['modified_name'],
 			'reason' => $message['modified_reason']
 		),

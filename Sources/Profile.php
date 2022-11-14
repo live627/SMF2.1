@@ -9,10 +9,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.3
  */
 
 if (!defined('SMF'))
@@ -301,7 +301,7 @@ function ModifyProfile($post_errors = array())
 					'label' => $txt['notification'],
 					'file' => 'Profile-Modify.php',
 					'function' => 'notification',
-					'icon' => 'mail',
+					'icon' => 'alerts',
 					'sc' => 'post',
 					//'token' => 'profile-nt%u', This is not checked here. We do it in the function itself - but if it was checked, this is what it'd be.
 					'subsections' => array(
@@ -479,6 +479,7 @@ function ModifyProfile($post_errors = array())
 				'logout' => array(
 					'label' => $txt['logout'],
 					'custom_url' => $scripturl . '?action=logout;%1$s=%2$s',
+					'icon' => 'logout',
 					'enabled' => !empty($_REQUEST['area']) && $_REQUEST['area'] === 'popup',
 					'permission' => array(
 						'own' => array('is_not_guest'),
@@ -581,7 +582,7 @@ function ModifyProfile($post_errors = array())
 				}
 
 				// Does this require session validating?
-				if (!empty($area['validate']) || (isset($_REQUEST['save']) && !$context['user']['is_owner']))
+				if (!empty($area['validate']) || (isset($_REQUEST['save']) && !$context['user']['is_owner'] && ($area_id != 'issuewarning' || empty($modSettings['securityDisable_moderate']))))
 					$security_checks['validate'] = true;
 
 				// Permissions for good measure.
@@ -908,7 +909,7 @@ function profile_popup($memID)
  */
 function alerts_popup($memID)
 {
-	global $context, $sourcedir, $db_show_debug, $cur_profile;
+	global $context, $sourcedir, $db_show_debug, $cur_profile, $modSettings;
 
 	// Load the Alerts language file.
 	loadLanguage('Alerts');
@@ -921,17 +922,14 @@ function alerts_popup($memID)
 
 	// No funny business allowed
 	$counter = isset($_REQUEST['counter']) ? max(0, (int) $_REQUEST['counter']) : 0;
+	$limit = !empty($modSettings['alerts_per_page']) && (int) $modSettings['alerts_per_page'] < 1000 ? min((int) $modSettings['alerts_per_page'], 1000) : 25;
 
 	$context['unread_alerts'] = array();
 	if ($counter < $cur_profile['alerts'])
 	{
 		// Now fetch me my unread alerts, pronto!
 		require_once($sourcedir . '/Profile-View.php');
-		$context['unread_alerts'] = fetch_alerts($memID, false, !empty($counter) ? $cur_profile['alerts'] - $counter : 0, 0, !isset($_REQUEST['counter']));
-
-		// This shouldn't happen, but just in case...
-		if (empty($counter) && $cur_profile['alerts'] != count($context['unread_alerts']))
-			updateMemberData($memID, array('alerts' => count($context['unread_alerts'])));
+		$context['unread_alerts'] = fetch_alerts($memID, false, !empty($counter) ? $cur_profile['alerts'] - $counter : $limit, 0, !isset($_REQUEST['counter']));
 	}
 }
 
@@ -1001,7 +999,7 @@ function loadCustomFields($memID, $area = 'summary')
 		}
 
 		// Don't show the "disabled" option for the "gender" field if we are on the "summary" area.
-		if ($area == 'summary' && $row['col_name'] == 'cust_gender' && $value == 'None')
+		if ($area == 'summary' && $row['col_name'] == 'cust_gender' && $value == '{gender_0}')
 			continue;
 
 		// HTML for the input form.
@@ -1019,7 +1017,7 @@ function loadCustomFields($memID, $area = 'summary')
 			foreach ($options as $k => $v)
 			{
 				$true = (!$exists && $row['default_value'] == $v) || $value == $v;
-				$input_html .= '<option value="' . $k . '"' . ($true ? ' selected' : '') . '>' . $v . '</option>';
+				$input_html .= '<option value="' . $k . '"' . ($true ? ' selected' : '') . '>' . tokenTxtReplace($v) . '</option>';
 				if ($true)
 					$output_html = $v;
 			}
@@ -1033,7 +1031,7 @@ function loadCustomFields($memID, $area = 'summary')
 			foreach ($options as $k => $v)
 			{
 				$true = (!$exists && $row['default_value'] == $v) || $value == $v;
-				$input_html .= '<label for="customfield_' . $row['col_name'] . '_' . $k . '"><input type="radio" name="customfield[' . $row['col_name'] . ']" id="customfield_' . $row['col_name'] . '_' . $k . '" value="' . $k . '"' . ($true ? ' checked' : '') . '>' . $v . '</label><br>';
+				$input_html .= '<label for="customfield_' . $row['col_name'] . '_' . $k . '"><input type="radio" name="customfield[' . $row['col_name'] . ']" id="customfield_' . $row['col_name'] . '_' . $k . '" value="' . $k . '"' . ($true ? ' checked' : '') . '>' . tokenTxtReplace($v) . '</label><br>';
 				if ($true)
 					$output_html = $v;
 			}
@@ -1067,12 +1065,12 @@ function loadCustomFields($memID, $area = 'summary')
 			));
 
 		$context['custom_fields'][] = array(
-			'name' => $row['field_name'],
-			'desc' => $row['field_desc'],
+			'name' => tokenTxtReplace($row['field_name']),
+			'desc' => tokenTxtReplace($row['field_desc']),
 			'type' => $row['field_type'],
 			'order' => $row['field_order'],
 			'input_html' => $input_html,
-			'output_html' => $output_html,
+			'output_html' => tokenTxtReplace($output_html),
 			'placement' => $row['placement'],
 			'colname' => $row['col_name'],
 			'value' => $value,

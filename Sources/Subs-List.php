@@ -6,10 +6,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.0
  */
 
 if (!defined('SMF'))
@@ -79,7 +79,7 @@ function createList($listOptions)
 	else
 	{
 		// First get an impression of how many items to expect.
-		if (!empty($listOptions['get_count']['value']) && ctype_digit($listOptions['get_count']['value']))
+		if (isset($listOptions['get_count']['value']) && (is_int($listOptions['get_count']['value']) || ctype_digit($listOptions['get_count']['value'])))
 			$list_context['total_num_items'] = $listOptions['get_count']['value'];
 
 		else

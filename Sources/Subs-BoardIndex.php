@@ -8,10 +8,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.0
  */
 
 if (!defined('SMF'))
@@ -390,7 +390,7 @@ function getBoardIndex($board_index_options)
 		$this_last_post = array(
 			'id' => $row_board['id_msg'],
 			'time' => $row_board['poster_time'],
-			'timestamp' => forum_time(true, $row_board['poster_time']),
+			'timestamp' => $row_board['poster_time'],
 			'subject' => $row_board['short_subject'],
 			'member' => array(
 				'id' => $row_board['id_member'],
@@ -426,13 +426,15 @@ function getBoardIndex($board_index_options)
 
 		// Set the last post in the parent board.
 		if ($isChild && !empty($row_board['poster_time'])
-			&& $row_boards[$row_board['id_parent']]['poster_time'] < $row_board['poster_time'])
+			&& $row_boards[$row_board['id_parent']]['poster_time'] < $row_board['poster_time']
+			&& (empty($this_category[$row_board['id_parent']]['last_post'])
+				|| $this_category[$row_board['id_parent']]['last_post']['timestamp'] < $this_last_post['timestamp']))
 			$this_category[$row_board['id_parent']]['last_post'] = $this_last_post;
 
 		// Set the last post in the root board
 		if (!$isChild && !empty($row_board['poster_time'])
 			&& (empty($this_category[$row_board['id_board']]['last_post']['timestamp'])
-				|| $this_category[$row_board['id_board']]['last_post']['timestamp'] < forum_time(true, $row_board['poster_time'])
+				|| $this_category[$row_board['id_board']]['last_post']['timestamp'] < $row_board['poster_time']
 			)
 		)
 			$this_category[$row_board['id_board']]['last_post'] = $this_last_post;

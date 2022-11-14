@@ -4,10 +4,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.3
  */
 
 // @todo
@@ -47,10 +47,10 @@ function template_fatal_error()
 		</div>
 	</div>';
 
-		// Show a back button (using javascript.)
+		// Show a back button
 		echo '
 	<div class="centertext">
-		<a class="button" href="javascript:document.location=document.referrer">', $txt['back'], '</a>
+		<a class="button floatnone" href="', $context['error_link'], '">', $txt['back'], '</a>
 	</div>';
 	}
 }
@@ -69,54 +69,52 @@ function template_error_log()
 					<a href="', $scripturl, '?action=helpadmin;help=error_log" onclick="return reqOverlayDiv(this.href);" class="help"><span class="main_icons help" title="', $txt['help'], '"></span></a> ', $txt['errorlog'], '
 				</h3>
 			</div>
-			<div class="pagesection">
-				<div class="floatleft">
-					', $context['page_index'], '
-				</div>';
+			<div class="information flow_hidden">
+				<div class="additional_row">';
 
-	if (!empty($context['errors']))
+	// No errors, so just show a message and be done with it.
+	if (empty($context['errors']))
+	{
 		echo '
-				<div class="floatright">
-					<input type="submit" name="removeSelection" value="', $txt['remove_selection'], '" data-confirm="', $txt['remove_selection_confirm'], '" class="button you_sure">
-					<input type="submit" name="delall" value="', ($context['has_filter'] ? $txt['remove_filtered_results'] : $txt['remove_all']), '" data-confirm="', ($context['has_filter'] ? $txt['remove_filtered_results_confirm'] : $txt['sure_about_errorlog_remove']), '" class="button you_sure">
+					', $txt['errorlog_no_entries'], '
+				</div>
+			</div>
+		</form>';
+		return;
+	}
+
+	if ($context['has_filter'])
+		echo '
+				<div class="infobox">
+					<strong>', $txt['applying_filter'], ':</strong> ', $context['filter']['entity'], ' ', $context['filter']['value']['html'], '
 				</div>';
 
 	echo '
-			</div>
-			<div class="title_bar">
-				<div style="padding: 6px 12px 5px 12px">
-					', $txt['apply_filter_of_type'], ':';
+				<div class="floatright">
+					<input type="submit" name="removeSelection" value="', $txt['remove_selection'], '" data-confirm="', $txt['remove_selection_confirm'], '" class="button you_sure">
+					<input type="submit" name="delall" value="', ($context['has_filter'] ? $txt['remove_filtered_results'] : $txt['remove_all']), '" data-confirm="', ($context['has_filter'] ? $txt['remove_filtered_results_confirm'] : $txt['sure_about_errorlog_remove']), '" class="button you_sure">
+					', ($context['has_filter'] ? '<a href="' . $scripturl . '?action=admin;area=logs;sa=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : '') . '" class="button">' . $txt['clear_filter'] . '</a>' : ''), '
+				</div>
+				', $txt['apply_filter_of_type'], ':';
 
 	$error_types = array();
 
 	foreach ($context['error_types'] as $type => $details)
-		$error_types[] = ($details['is_selected'] ? '<span class="main_icons right_arrow"></span> ' : '') . '<a href="' . $details['url'] . '" ' . ($details['is_selected'] ? 'style="font-weight: bold;"' : '') . ' title="' . $details['description'] . '">' . ($details['error_type'] === 'critical' ? '<span class="error">' . $details['label'] . '</span>' : $details['label']) . '</a>';
+		$error_types[] = ($details['is_selected'] ? '<span class="main_icons right_arrow"></span> ' : '') . '<a href="' . $details['url'] . '" ' . ($details['is_selected'] ? 'style="font-weight: bold;"' : 'style="font-weight: normal;"') . ' title="' . $details['description'] . '">' . ($details['error_type'] === 'critical' ? '<span class="error">' . $details['label'] . '</span>' : $details['label']) . '</a>';
 
 	echo '
-					', implode(' | ', $error_types), '
+				', implode(' | ', $error_types), '
+				</div>
+			</div>
+			<div class="pagesection">
+				<div class="pagelinks">
+					', $context['page_index'], '
+				</div>
+				<div class="floatright" style="padding: 0 12px">
+					<label for="check_all"><strong>', $txt['check_all'], '</strong></label>
+					<input type="checkbox" id="check_all" onclick="invertAll(this, this.form, \'delete[]\');">
 				</div>
 			</div>';
-
-	if ($context['has_filter'])
-		echo '
-			<div class="information">
-				<strong>', $txt['applying_filter'], ':</strong> ', $context['filter']['entity'], ' ', $context['filter']['value']['html'], ' [<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', '">', $txt['clear_filter'], '</a>]
-			</div>';
-
-	// No errors, then show a message
-	if (empty($context['errors']))
-	{
-		echo '
-			<div class="information">', $txt['errorlog_no_entries'], '</div>';
-	}
-	else
-	{
-		echo '
-			<div class="righttext">
-				<label for="check_all"><strong>', $txt['check_all'], '</strong></label>
-				<input type="checkbox" id="check_all" onclick="invertAll(this, this.form, \'delete[]\');">
-			</div>';
-	}
 
 	// We have some errors, must be some mods installed :P
 	foreach ($context['errors'] as $error)
@@ -147,12 +145,12 @@ function template_error_log()
 		if (!empty($error['member']['session']))
 			echo '
 						<br>
-						<a  href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=session;value=', $error['member']['session'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_session'], '"><span class="main_icons filter"></span></a> <a class="bbc_link" href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=session;value=', $error['member']['session'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_session'], '">', $error['member']['session'], '</a>';
+						<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=session;value=', $error['member']['session'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_session'], '"><span class="main_icons filter"></span></a> <a class="bbc_link" href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=session;value=', $error['member']['session'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_session'], '">', $error['member']['session'], '</a>';
 
 		echo '
 						<br>
 						<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=url;value=', $error['url']['href'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_url'], '"><span class="main_icons filter"></span></a>
-						<a href="', $error['url']['html'], '" class="bbc_link">', $error['url']['html'], '</a>';
+						<a href="', $error['url']['html'], '" class="bbc_link word_break">', $error['url']['html'], '</a>';
 
 		if (!empty($error['file']))
 			echo '
@@ -179,18 +177,13 @@ function template_error_log()
 
 	echo '
 			<div class="pagesection">
-				<div class="floatleft">
+				<div class="pagelinks">
 					', $context['page_index'], '
-				</div>';
-
-	if (!empty($context['errors']))
-		echo '
+				</div>
 				<div class="floatright">
 					<input type="submit" name="removeSelection" value="', $txt['remove_selection'], '" data-confirm="', $txt['remove_selection_confirm'], '" class="button you_sure">
 					<input type="submit" name="delall" value="', ($context['has_filter'] ? $txt['remove_filtered_results'] : $txt['remove_all']), '" data-confirm="', ($context['has_filter'] ? $txt['remove_filtered_results_confirm'] : $txt['sure_about_errorlog_remove']), '" class="button you_sure">
-				</div>';
-
-	echo '
+				</div>
 			</div>';
 
 	if ($context['sort_direction'] == 'down')
@@ -215,7 +208,7 @@ function template_show_file()
 	<head>
 		<meta charset="', $context['character_set'], '">
 		<title>', $context['file_data']['file'], '</title>
-		<link rel="stylesheet" href="', $settings['theme_url'], '/css/index', $context['theme_variant'], '.css', $context['browser_cache'], '">
+		', template_css(), '
 	</head>
 	<body>
 		<table class="errorfile_table">';
@@ -280,7 +273,9 @@ function template_show_backtrace()
 	<head>
 		<meta charset="', $context['character_set'], '">
 		<title>', $txt['backtrace_title'], '</title>';
+
 	template_css();
+
 	echo '
 	</head>
 	<body class="padding">';
@@ -294,7 +289,7 @@ function template_show_backtrace()
 				</h3>
 			</div>
 			<div class="windowbg" id="backtrace">
-				<table class="table_grid centertext">
+				<table class="table_grid">
 					<tbody>';
 
 		if (!empty($context['error_info']['error_type']))
@@ -338,7 +333,7 @@ function template_show_backtrace()
 						<tr class="title_bar">
 							<td><strong>', $txt['error_url'], '</strong></td>
 						</tr>
-						<tr class="windowbg">
+						<tr class="windowbg word_break">
 							<td>', $context['error_info']['url'], '</td>
 						</tr>';
 
@@ -364,6 +359,7 @@ function template_show_backtrace()
 			//Check for existing
 			if (!property_exists($value, 'file') || empty($value->file))
 				$value->file = $txt['unknown'];
+
 			if (!property_exists($value, 'line') || empty($value->line))
 				$value->line = -1;
 

@@ -3,10 +3,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.3
  */
 
 (function ($) {
@@ -23,6 +23,19 @@
 					for (var i = 0, n = XMLDoc.getElementsByTagName('quote')[0].childNodes.length; i < n; i++)
 						text += XMLDoc.getElementsByTagName('quote')[0].childNodes[i].nodeValue;
 					self.insert(text);
+
+					// Manually move cursor to after the quote.
+					var
+						rangeHelper = self.getRangeHelper(),
+						parent = rangeHelper.parentNode();
+					if (parent && parent.nodeName === 'BLOCKQUOTE')
+					{
+						var range = rangeHelper.selectedRange();
+						range.setStartAfter(parent);
+						rangeHelper.selectRange(range);
+					}
+
+					ajax_indicator(false);
 				}
 			);
 		},
@@ -207,25 +220,19 @@ sceditor.command.set(
 			var editor = this;
 
 			editor.commands.link._dropDown(editor, caller, function (url, text) {
-				// needed for IE to restore the last range
-				editor.focus();
-
-				// If there is no selected text then must set the URL as
-				// the text. Most browsers do this automatically, sadly
-				// IE doesn't.
 				if (!editor.getRangeHelper().selectedHtml() || text) {
 					text = text || url;
 
 					editor.wysiwygEditorInsertHtml(
-						'<a target="_blank" rel="noopener" href="' +
+						'<a data-type="url" href="' +
 						sceditor.escapeEntities(url) + '">' +
 						sceditor.escapeEntities(text, true) + '</a>'
 					);
 				} else {
 					// Can't just use `editor.execCommand('createlink', url)`
-					// because we need to set the target attribute.
+					// because we need to set a custom attribute.
 					editor.wysiwygEditorInsertHtml(
-						'<a target="_blank" rel="noopener" href="' +
+						'<a data-type="url" href="' +
 						sceditor.escapeEntities(url) + '">', '</a>'
 					);
 				}
@@ -238,15 +245,11 @@ sceditor.command.set(
 	'bulletlist', {
 		txtExec: function (caller, selected) {
 			if (selected)
-			{
-				var content = '';
-
-				$.each(selected.split(/\r?\n/), function () {
-					content += (content ? '\n' : '') + '[li]' + this + '[/li]';
-				});
-
-				this.insertText('[list]\n' + content + '\n[/list]');
-			}
+				this.insertText(
+					'[list]\n[li]' +
+					selected.split(/\r?\n/).join('[/li]\n[li]') +
+					'[/li]\n[/list]'
+				);
 			else
 				this.insertText('[list]\n[li]', '[/li]\n[li][/li]\n[/list]');
 		}
@@ -257,15 +260,11 @@ sceditor.command.set(
 	'orderedlist', {
 		txtExec: function (caller, selected) {
 			if (selected)
-			{
-				var content = '';
-
-				$.each(selected.split(/\r?\n/), function () {
-					content += (content ? '\n' : '') + '[li]' + this + '[/li]';
-				});
-
-				this.insertText('[list type=decimal]\n' + content + '\n[/list]');
-			}
+				this.insertText(
+					'[list type=decimal]\n[li]' +
+					selected.split(/\r?\n/).join('[/li]\n[li]') +
+					'[/li]\n[/list]'
+				);
 			else
 				this.insertText('[list type=decimal]\n[li]', '[/li]\n[li][/li]\n[/list]');
 		}
@@ -314,7 +313,7 @@ sceditor.command.set(
 			var editor = this;
 
 			editor.commands.youtube._dropDown(editor, caller, function (id, time) {
-				editor.wysiwygEditorInsertHtml('<div class="videocontainer"><div><iframe frameborder="0" allowfullscreen src="https://www.youtube.com/embed/' + id + '?wmode=opaque&start=' + time + '" data-youtube-id="' + id + '" loading="lazy"></iframe></div></div>');
+				editor.wysiwygEditorInsertHtml('<div class="videocontainer"><div><iframe frameborder="0" allowfullscreen src="https://www.youtube-nocookie.com/embed/' + id + '?wmode=opaque&start=' + time + '" data-youtube-id="' + id + '" loading="lazy"></iframe></div></div>');
 			});
 		}
 	}
@@ -331,18 +330,20 @@ sceditor.command.set(
 				caller,
 				function (email, text)
 				{
-					// needed for IE to reset the last range
-					editor.focus();
-
 					if (!editor.getRangeHelper().selectedHtml() || text)
 						editor.wysiwygEditorInsertHtml(
-							'<a href="' +
+							'<a data-type="email" href="' +
 							'mailto:' + sceditor.escapeEntities(email) + '">' +
 								sceditor.escapeEntities(text || email) +
 							'</a>'
 						);
 					else
-						editor.execCommand('createlink', 'mailto:' + email);
+						// Can't just use `editor.execCommand('createlink', email)`
+						// because we need to set a custom attribute.
+						editor.wysiwygEditorInsertHtml(
+							'<a data-type="email" href="mailto:' +
+							sceditor.escapeEntities(email) + '">', '</a>'
+						);
 				}
 			);
 		},
@@ -368,7 +369,7 @@ sceditor.command.set(
 
 					if (height)
 						attrs.push('height="' + sceditor.escapeEntities(height, true) + '"');
- 
+
 					editor.wysiwygEditorInsertHtml(
 						'<img ' + attrs.join(' ') + '>'
 					);
@@ -638,8 +639,11 @@ sceditor.formats.bbcode.set(
 sceditor.formats.bbcode.set(
 	'attach', {
 		tags: {
-			attach: {
-				src: null
+			img: {
+				'data-attachment': null
+			},
+			a: {
+				'data-attachment': null
 			}
 		},
 		allowsEmpty: true,
@@ -663,7 +667,7 @@ sceditor.formats.bbcode.set(
 
 			if (typeof current_attachments !== "undefined")
 				for (index = 0; index < current_attachments.length; ++index) {
-					if (current_attachments[index]['attachID'] == id) {
+					if (current_attachments[index]['attachID'] == element.attr('data-attachment')) {
 						attach_type = current_attachments[index]['type'];
 						break;
 					}
@@ -740,49 +744,39 @@ sceditor.formats.bbcode.set(
 );
 
 sceditor.formats.bbcode.set(
-	'url', {
+	'email', {
 		allowsEmpty: true,
-		quoteType: $.sceditor.BBCodeParser.QuoteType.never,
+		quoteType: sceditor.BBCodeParser.QuoteType.never,
 		tags: {
 			a: {
-				href: null
+				'data-type': ['email']
 			}
 		},
-		format: function (element, content) {
-			var element = $(element),
-				url = element.attr('href');
-
-			// make sure this link is not an e-mail, if it is return e-mail BBCode
-			if (url.substr(0, 7) === 'mailto:')
-				return '[email=' + url.substr(7) + ']' + content + '[/email]';
-
-			if (typeof element.attr('target') !== "undefined")
-				return '[url=\"' + decodeURI(url) + '\"]' + content + '[/url]';
-
-			// A mention?
-			else if (typeof element.attr('data-mention') !== "undefined")
-				return '[member='+ element.attr('data-mention') +']'+ content.replace('@','') +'[/member]';
-
-			// Is this an attachment?
-			else if (typeof element.attr('data-attachment') !== "undefined")
-			{
-				var attribs = ' id=' + element.attr('data-attachment');
-				if (typeof element.attr('alt') !== "undefined")
-					attribs += ' alt=' + element.attr('alt');
-				if (typeof element.attr('data-type') !== "undefined")
-					attribs += ' type=' + element.attr("data-type");
-
-				return '[attach' + attribs + ']' + content + '[/attach]';
-			}
-
-			else
-				return '[iurl=\"' + decodeURI(url) + '\"]' + content + '[/iurl]';
+		format: function (element, content)
+		{
+			return '[email=' + element.href.substr(7) + ']' + content + '[/email]';
 		},
-		html: function (token, attrs, content) {
-			if (typeof attrs.defaultattr === "undefined" || attrs.defaultattr.length === 0)
-				attrs.defaultattr = content;
+		html: function (token, attrs, content)
+		{
+			return '<a data-type="email" href="mailto:' + sceditor.escapeEntities(attrs.defaultattr || content, true) + '">' + content + '</a>';
+		}
+	}
+);
 
-			return '<a target="_blank" rel="noopener" href="' + encodeURI(attrs.defaultattr) + '">' + content + '</a>';
+sceditor.formats.bbcode.set(
+	'url', {
+		allowsEmpty: true,
+		quoteType: sceditor.BBCodeParser.QuoteType.always,
+		format(element, content)
+		{
+			if (element.hasAttribute('data-type') && element.getAttribute('data-type') != 'url')
+				return content;
+
+			return '[url=' + decodeURI(element.href) + ']' + content + '[/url]';
+		},
+		html: function (token, attrs, content)
+		{
+			return '<a data-type="url" href="' + encodeURI(attrs.defaultattr || content) + '">' + content + '</a>';
 		}
 	}
 );
@@ -790,13 +784,19 @@ sceditor.formats.bbcode.set(
 sceditor.formats.bbcode.set(
 	'iurl', {
 		allowsEmpty: true,
-		quoteType: $.sceditor.BBCodeParser.QuoteType.never,
-		html: function (token, attrs, content) {
-
-			if (typeof attrs.defaultattr === "undefined" || attrs.defaultattr.length === 0)
-				attrs.defaultattr = content;
-
-			return '<a href="' + encodeURI(attrs.defaultattr) + '">' + content + '</a>';
+		quoteType: sceditor.BBCodeParser.QuoteType.always,
+		tags: {
+			a: {
+				'data-type': ['iurl']
+			}
+		},
+		format: function (element, content)
+		{
+			return '[iurl=' + decodeURI(element.href) + ']' + content + '[/iurl]';
+		},
+		html: function (token, attrs, content)
+		{
+			return '<a data-type="iurl" href="' + encodeURI(attrs.defaultattr || content) + '">' + content + '</a>';
 		}
 	}
 );
@@ -832,7 +832,9 @@ sceditor.formats.bbcode.set(
 				return '[php]' + content.replace('&#91;', '[') + '[/php]';
 
 			var
-				title = $(element).attr('data-title'),
+				dom = sceditor.dom,
+				attr = dom.attr,
+				title = attr(element, 'data-title'),
 				from = title ?' =' + title : '';
 
 			return '[code' + from + ']' + content.replace('&#91;', '[') + '[/code]';
@@ -840,7 +842,7 @@ sceditor.formats.bbcode.set(
 		html: function (element, attrs, content) {
 			var from = attrs.defaultattr ? ' data-title="' + attrs.defaultattr + '"'  : '';
 
-			return '<code' + from + '>' + content.replace('[', '&#91;') + '</code>'
+			return '<code data-name="' + this.opts.txtVars.code + '"' + from + '>' + content.replace('[', '&#91;') + '</code>'
 		}
 	}
 );
@@ -851,81 +853,58 @@ sceditor.formats.bbcode.set(
 			blockquote: null,
 			cite: null
 		},
-		quoteType: $.sceditor.BBCodeParser.QuoteType.never,
+		quoteType: sceditor.BBCodeParser.QuoteType.never,
 		breakBefore: false,
 		isInline: false,
-		format: function (element, content) {
-			var element = $(element);
-			var author = '';
-			var date = '';
-			var link = '';
+		format: function (element, content)
+		{
+			var attrs = '';
+			var author = element.getAttribute('data-author');
+			var date = element.getAttribute('data-date');
+			var link = element.getAttribute('data-link');
 
 			// The <cite> contains only the graphic for the quote, so we can skip it
-			if (element[0].tagName.toLowerCase() === 'cite')
+			if (element.tagName === 'CITE')
 				return '';
 
-			if (element.attr('author'))
-				author = ' author=' + element.attr('author').php_unhtmlspecialchars();
-			if (element.attr('link'))
-				link = ' link=' + element.attr('link');
-			if (element.attr('date'))
-				date = ' date=' + element.attr('date');
+			if (author)
+				attrs += ' author=' + author.php_unhtmlspecialchars();
+			if (link)
+				attrs += ' link=' + link;
+			if (date)
+				attrs += ' date=' + date;
 
-			return '[quote' + author + link + date + ']' + content + '[/quote]';
+			return '[quote' + attrs + ']' + content + '[/quote]';
 		},
-		html: function (element, attrs, content) {
+		html: function (element, attrs, content)
+		{
 			var attr_author = '', author = '';
 			var attr_date = '', sDate = '';
 			var attr_link = '', link = '';
 
-			if (typeof attrs.author !== "undefined" && attrs.author)
+			if (attrs.author || attrs.defaultattr)
 			{
-				attr_author = attrs.author;
+				attr_author = attrs.author || attrs.defaultattr;
 				author = bbc_quote_from + ': ' + attr_author;
 			}
 
-			// Links could be in the form: link=topic=71.msg201#msg201 that would fool javascript, so we need a workaround
-			// Probably no more necessary
-			for (var key in attrs)
+			if (attrs.link)
 			{
-				if (key.substr(0, 4) == 'link' && attrs.hasOwnProperty(key))
-				{
-					var attr_link = key.length > 4 ? key.substr(5) + '=' + attrs[key] : attrs[key];
-
-					link = attr_link.substr(0, 7) == 'http://' ? attr_link : smf_scripturl + '?' + attr_link;
-					author = author == '' ? '<a href="' + link + '">' + bbc_quote_from + ': ' + link + '</a>' : '<a href="' + link + '">' + author + '</a>';
-				}
+				attr_link = attrs.link;
+				link = attr_link.substr(0, 7) == 'http://' ? attr_link : smf_prepareScriptUrl(smf_scripturl) + attr_link;
+				author = '<a href="' + link + '">' + (author || bbc_quote_from + ': ' + link) + '</a>';
 			}
 
-			if (typeof attrs.date !== "undefined" && attrs.date)
+			if (attrs.date)
 			{
 				attr_date = attrs.date;
-				tDate = new Date(attr_date * 1000);
-				sDate_string = tDate.toLocaleString();
-				sDate = '<date timestamp="' + attr_date + '">' + sDate_string + '</date>';
+				sDate = '<date timestamp="' + attr_date + '">' + new Date(attr_date * 1000).toLocaleString() + '</date>';
+
+				if (author !== '')
+					author += ' ' + bbc_search_on;
 			}
 
-			if (author == '' && sDate == '')
-				author = bbc_quote;
-			else if (author == '' && sDate != '')
-				author += ' ' + bbc_search_on;
-
-			/*
-			 * This fixes #2845
-			 *
-			 * As SMF allows "[quote=text]message[/quote]" it is lost during
-			 * sceditor when it converts bbc to html and then html back to
-			 * bbc code. The simplest method is to tell sceditor that this
-			 * is a "author", which is how the bbc parser treats it in SMF.
-			 *
-			 * This will cause all bbc to be updated to "[quote author=text]message[/quote]".
-			*/
-			if (attr_author == '' && attrs.defaultattr)
-				attr_author = attrs.defaultattr;
-
-			content = '<blockquote author="' + attr_author + '" date="' + attr_date + '" link="' + attr_link + '"><cite>' + author + ' ' + sDate + '</cite>' + content + '</blockquote>';
-
-			return content;
+			return '<blockquote data-author="' + attr_author + '" data-date="' + attr_date + '" data-link="' + attr_link + '"><cite>' + (author || bbc_quote) + ' ' + sDate + '</cite>' + content + '</blockquote>';
 		}
 	}
 );
@@ -946,12 +925,17 @@ sceditor.formats.bbcode.set(
 
 			return '[font=' + font + ']' + content + '[/font]';
 		}
-}
+	}
 );
 
 sceditor.formats.bbcode.set(
 	'member', {
 		isInline: true,
+		tags: {
+			a: {
+				'data-mention': null
+			}
+		},
 		format: function (element, content) {
 			return '[member='+ $(element).attr('data-mention') +']'+ content.replace('@','') +'[/member]';
 		},
@@ -1013,6 +997,6 @@ sceditor.formats.bbcode.set(
 			else
 				return content;
 		},
-		html: '<div class="videocontainer"><div><iframe frameborder="0" src="https://www.youtube.com/embed/{0}?wmode=opaque" data-youtube-id="{0}" loading="lazy" allowfullscreen></iframe></div></div>'
+		html: '<div class="videocontainer"><div><iframe frameborder="0" src="https://www.youtube-nocookie.com/embed/{0}?wmode=opaque" data-youtube-id="{0}" loading="lazy" allowfullscreen></iframe></div></div>'
 	}
 );

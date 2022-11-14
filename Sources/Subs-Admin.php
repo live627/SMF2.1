@@ -7,10 +7,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.2
  */
 
 use SMF\Cache\CacheApiInterface;
@@ -287,110 +287,16 @@ function getFileVersions(&$versionOptions)
 }
 
 /**
- * Update the Settings.php file.
+ * Describes properties of all known Settings.php variables and other content.
+ * Helper for updateSettingsFile(); also called by saveSettings().
  *
- * The most important function in this file for mod makers happens to be the
- * updateSettingsFile() function, but it shouldn't be used often anyway.
- *
- * - Updates the Settings.php file with the changes supplied in config_vars.
- *
- * - Expects config_vars to be an associative array, with the keys as the
- *   variable names in Settings.php, and the values the variable values.
- *
- * - Correctly formats the values using smf_var_export().
- *
- * - Restores standard formatting of the file, if $rebuild is true.
- *
- * - Checks for changes to db_last_error and passes those off to a separate
- *   handler.
- *
- * - Creates a backup file and will use it should the writing of the
- *   new settings file fail.
- *
- * - Tries to intelligently trim quotes and remove slashes from string values.
- *   This is done for backwards compatibility purposes (old versions of this
- *   function expected strings to have been manually escaped and quoted). This
- *   behaviour can be controlled by the $keep_quotes parameter.
- *
- * @param array $config_vars An array of one or more variables to update.
- * @param bool|null $keep_quotes Whether to strip slashes & trim quotes from string values. Defaults to auto-detection.
- * @param bool $rebuild If true, attempts to rebuild with standard format. Default false.
- * @return bool True on success, false on failure.
+ * @return array Descriptions of all known Settings.php content
  */
-function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
+function get_settings_defs()
 {
-	// In this function we intentionally don't declare any global variables.
-	// This allows us to work with everything cleanly.
-
-	static $mtime;
-
-	// Should we try to unescape the strings?
-	if (empty($keep_quotes))
-	{
-		foreach ($config_vars as $var => $val)
-		{
-			if (is_string($val) && ($keep_quotes === false || strpos($val, '\'') === 0 && strrpos($val, '\'') === strlen($val) - 1))
-				$config_vars[$var] = trim(stripcslashes($val), '\'');
-		}
-	}
-
-	// Updating the db_last_error, then don't mess around with Settings.php
-	if (isset($config_vars['db_last_error']))
-	{
-		updateDbLastError($config_vars['db_last_error']);
-
-		if (count($config_vars) === 1 && empty($rebuild))
-			return true;
-
-		// Make sure we delete this from Settings.php, if present.
-		$config_vars['db_last_error'] = 0;
-	}
-
-	// Rebuilding should not be undertaken lightly, so we're picky about the parameter.
-	if (!is_bool($rebuild))
-		$rebuild = false;
-
-	$mtime = isset($mtime) ? (int) $mtime : (defined('TIME_START') ? TIME_START : $_SERVER['REQUEST_TIME']);
-
-	/*****************
-	 * PART 1: Setup *
-	 *****************/
-
-	// Typically Settings.php is in $boarddir, but maybe this is a custom setup...
-	foreach (get_included_files() as $settingsFile)
-		if (basename($settingsFile) === 'Settings.php')
-			break;
-
-	// Fallback in case Settings.php isn't loaded (e.g. while installing)
-	if (basename($settingsFile) !== 'Settings.php')
-		$settingsFile = (!empty($GLOBALS['boarddir']) && @realpath($GLOBALS['boarddir']) ? $GLOBALS['boarddir'] : (!empty($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : dirname(__DIR__))) . '/Settings.php';
-
-	// File not found? Attempt an emergency on-the-fly fix!
-	if (!file_exists($settingsFile))
-		@touch($settingsFile);
-
-	// When was Settings.php last changed?
-	$last_settings_change = filemtime($settingsFile);
-
-	// Get the current values of everything in Settings.php.
-	$settings_vars = get_current_settings($mtime, $settingsFile);
-
-	// If Settings.php is empty for some reason, see if we can use the backup.
-	if (empty($settings_vars) && file_exists(dirname($settingsFile) . '/Settings_bak.php'))
-		$settings_vars = get_current_settings($mtime, dirname($settingsFile) . '/Settings_bak.php');
-
-	// False means there was a problem with the file and we can't safely continue.
-	if ($settings_vars === false)
-		return false;
-
-	// It works best to set everything afresh.
-	$new_settings_vars = array_merge($settings_vars, $config_vars);
-
-	// Are we using UTF-8?
-	$utf8 = isset($GLOBALS['context']['utf8']) ? $GLOBALS['context']['utf8'] : (isset($GLOBALS['utf8']) ? $GLOBALS['utf8'] : (isset($settings_vars['db_character_set']) ? $settings_vars['db_character_set'] === 'utf8' : false));
-
 	/*
-	 * A big, fat array to define properties of all the Settings.php variables.
+	 * A big, fat array to define properties of all the Settings.php variables
+	 * and other content like code blocks.
 	 *
 	 * - String keys are used to identify actual variables.
 	 *
@@ -421,6 +327,10 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 	 *   depends on $rebuild: if $rebuild is true, 'auto_delete' == 2 behaves
 	 *   like 'auto_delete' == 1; if $rebuild is false, 'auto_delete' == 2
 	 *   behaves like 'auto_delete' == 0.
+	 *
+	 * - The 'is_password' element indicates that a value is a password. This
+	 *   is used primarily to tell SMF how to interpret input when the value
+	 *   is being set to a new value.
 	 *
 	 * - The optional 'search_pattern' element defines a custom regular
 	 *   expression to search for the existing entry in the file. This is
@@ -637,6 +547,7 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 			'default' => '',
 			'required' => true,
 			'type' => 'string',
+			'is_password' => true,
 		),
 		'ssi_db_user' => array(
 			'text' => implode("\n", array(
@@ -659,6 +570,7 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 			)),
 			'default' => '',
 			'type' => 'string',
+			'is_password' => true,
 		),
 		'db_prefix' => array(
 			'text' => implode("\n", array(
@@ -755,6 +667,19 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 			)),
 			'default' => 'dirname(__FILE__) . \'/cache\'',
 			'raw_default' => true,
+			'type' => 'string',
+		),
+		'cachedir_sqlite' => array(
+			'text' => implode("\n", array(
+				'/**',
+				' * This is only for SQLite3 cache system. It is the path to the directory where the SQLite3',
+				' * database file will be saved.',
+				' *',
+				' * @var string',
+				' */',
+			)),
+			'default' => '',
+			'auto_delete' => 2,
 			'type' => 'string',
 		),
 		'image_proxy_enabled' => array(
@@ -916,6 +841,118 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 	// Check if function exists, in case we are calling from installer or upgrader.
 	if (function_exists('call_integration_hook'))
 		call_integration_hook('integrate_update_settings_file', array(&$settings_defs));
+
+	return $settings_defs;
+}
+
+/**
+ * Update the Settings.php file.
+ *
+ * The most important function in this file for mod makers happens to be the
+ * updateSettingsFile() function, but it shouldn't be used often anyway.
+ *
+ * - Updates the Settings.php file with the changes supplied in config_vars.
+ *
+ * - Expects config_vars to be an associative array, with the keys as the
+ *   variable names in Settings.php, and the values the variable values.
+ *
+ * - Correctly formats the values using smf_var_export().
+ *
+ * - Restores standard formatting of the file, if $rebuild is true.
+ *
+ * - Checks for changes to db_last_error and passes those off to a separate
+ *   handler.
+ *
+ * - Creates a backup file and will use it should the writing of the
+ *   new settings file fail.
+ *
+ * - Tries to intelligently trim quotes and remove slashes from string values.
+ *   This is done for backwards compatibility purposes (old versions of this
+ *   function expected strings to have been manually escaped and quoted). This
+ *   behaviour can be controlled by the $keep_quotes parameter.
+ *
+ * MOD AUTHORS: If you are adding a setting to Settings.php, you should use the
+ * integrate_update_settings_file hook to define it in get_settings_defs().
+ *
+ * @param array $config_vars An array of one or more variables to update.
+ * @param bool|null $keep_quotes Whether to strip slashes & trim quotes from string values. Defaults to auto-detection.
+ * @param bool $rebuild If true, attempts to rebuild with standard format. Default false.
+ * @return bool True on success, false on failure.
+ */
+function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
+{
+	// In this function we intentionally don't declare any global variables.
+	// This allows us to work with everything cleanly.
+
+	static $mtime;
+
+	// Should we try to unescape the strings?
+	if (empty($keep_quotes))
+	{
+		foreach ($config_vars as $var => $val)
+		{
+			if (is_string($val) && ($keep_quotes === false || strpos($val, '\'') === 0 && strrpos($val, '\'') === strlen($val) - 1))
+				$config_vars[$var] = trim(stripcslashes($val), '\'');
+		}
+	}
+
+	// Updating the db_last_error, then don't mess around with Settings.php
+	if (isset($config_vars['db_last_error']))
+	{
+		updateDbLastError($config_vars['db_last_error']);
+
+		if (count($config_vars) === 1 && empty($rebuild))
+			return true;
+
+		// Make sure we delete this from Settings.php, if present.
+		$config_vars['db_last_error'] = 0;
+	}
+
+	// Rebuilding should not be undertaken lightly, so we're picky about the parameter.
+	if (!is_bool($rebuild))
+		$rebuild = false;
+
+	$mtime = isset($mtime) ? (int) $mtime : (defined('TIME_START') ? TIME_START : $_SERVER['REQUEST_TIME']);
+
+	/*****************
+	 * PART 1: Setup *
+	 *****************/
+
+	// Typically Settings.php is in $boarddir, but maybe this is a custom setup...
+	foreach (get_included_files() as $settingsFile)
+		if (basename($settingsFile) === 'Settings.php')
+			break;
+
+	// Fallback in case Settings.php isn't loaded (e.g. while installing)
+	if (basename($settingsFile) !== 'Settings.php')
+		$settingsFile = (!empty($GLOBALS['boarddir']) && @realpath($GLOBALS['boarddir']) ? $GLOBALS['boarddir'] : (!empty($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : dirname(__DIR__))) . '/Settings.php';
+
+	// File not found? Attempt an emergency on-the-fly fix!
+	if (!file_exists($settingsFile))
+		@touch($settingsFile);
+
+	// When was Settings.php last changed?
+	$last_settings_change = filemtime($settingsFile);
+
+	// Get the current values of everything in Settings.php.
+	$settings_vars = get_current_settings($mtime, $settingsFile);
+
+	// If Settings.php is empty for some reason, see if we can use the backup.
+	if (empty($settings_vars) && file_exists(dirname($settingsFile) . '/Settings_bak.php'))
+		$settings_vars = get_current_settings($mtime, dirname($settingsFile) . '/Settings_bak.php');
+
+	// False means there was a problem with the file and we can't safely continue.
+	if ($settings_vars === false)
+		return false;
+
+	// It works best to set everything afresh.
+	$new_settings_vars = array_merge($settings_vars, $config_vars);
+
+	// Are we using UTF-8?
+	$utf8 = isset($GLOBALS['context']['utf8']) ? $GLOBALS['context']['utf8'] : (isset($GLOBALS['utf8']) ? $GLOBALS['utf8'] : (isset($settings_vars['db_character_set']) ? $settings_vars['db_character_set'] === 'utf8' : false));
+
+	// Get our definitions for all known Settings.php variables and other content.
+	$settings_defs = get_settings_defs();
 
 	// If Settings.php is empty or invalid, try to recover using whatever is in $GLOBALS.
 	if ($settings_vars === array())
@@ -1168,6 +1205,7 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 				else
 				{
 					$replacement = '';
+					$substitutions[$var]['placeholder'] = '';
 
 					// This is just for cosmetic purposes. Removes the blank line.
 					$substitutions[$var]['search_pattern'] = str_replace('(?<=^|\s)', '\n?', $substitutions[$var]['search_pattern']);
@@ -1232,16 +1270,19 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 	}
 
 	// It's important to do the numbered ones before the named ones, or messes happen.
-	uksort($substitutions, function($a, $b) {
-		if (is_int($a) && is_int($b))
-			return $a > $b ? 1 : ($a < $b ? -1 : 0);
-		elseif (is_int($a))
-			return -1;
-		elseif (is_int($b))
-			return 1;
-		else
-			return strcasecmp($b, $a);
-	});
+	uksort(
+		$substitutions,
+		function($a, $b) {
+			if (is_int($a) && is_int($b))
+				return $a > $b ? 1 : ($a < $b ? -1 : 0);
+			elseif (is_int($a))
+				return -1;
+			elseif (is_int($b))
+				return 1;
+			else
+				return strcasecmp($b, $a);
+		}
+	);
 
 	/******************************
 	 * PART 3: Content processing *
@@ -1265,7 +1306,7 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 			$settingsText = '<' . "?php\n";
 			foreach ($settings_defs as $var => $setting_def)
 			{
-				if (!empty($setting_def['text']) && strpos($substitutions[$var]['replacement'], $setting_def['text']) === false)
+				if (is_string($var) && !empty($setting_def['text']) && strpos($substitutions[$var]['replacement'], $setting_def['text']) === false)
 					$substitutions[$var]['replacement'] = $setting_def['text'] . "\n" . $substitutions[$var]['replacement'];
 
 				$settingsText .= $substitutions[$var]['replacement'] . "\n";
@@ -1276,11 +1317,11 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 	}
 
 	// Settings.php is unlikely to contain any heredocs, but just in case...
-	if (preg_match_all('/<<<(\'?)(\w+)\'?\n(.*?)\n\2;$/m', $settingsText, $matches))
+	if (preg_match_all('/<<<([\'"]?)(\w+)\1\R(.*?)\R\h*\2;$/ms', $settingsText, $matches))
 	{
 		foreach ($matches[0] as $mkey => $heredoc)
 		{
-			if (!empty($matches[1][$mkey]))
+			if (!empty($matches[1][$mkey]) && $matches[1][$mkey] === '\'')
 				$heredoc_replacements[$heredoc] = var_export($matches[3][$mkey], true) . ';';
 			else
 				$heredoc_replacements[$heredoc] = '"' . strtr(substr(var_export($matches[3][$mkey], true), 1, -1), array("\\'" => "'", '"' => '\"')) . '";';
@@ -1658,11 +1699,11 @@ function updateSettingsFile($config_vars, $keep_quotes = null, $rebuild = false)
 			// Insert it either before or after the path correction code, whichever is appropriate.
 			if (!$pathcode_reached || in_array($var, $force_before_pathcode))
 			{
-				$settingsText = preg_replace($substitutions[$pathcode_var]['search_pattern'], $substitutions[$var]['replacement'] . "\n$0", $settingsText);
+				$settingsText = preg_replace($substitutions[$pathcode_var]['search_pattern'], $substitutions[$var]['replacement'] . "\n\n$0", $settingsText);
 			}
 			else
 			{
-				$settingsText = preg_replace($substitutions[$pathcode_var]['search_pattern'], "$0\n" . $substitutions[$var]['replacement'], $settingsText);
+				$settingsText = preg_replace($substitutions[$pathcode_var]['search_pattern'], "$0\n\n" . $substitutions[$var]['replacement'], $settingsText);
 			}
 		}
 	}
@@ -1791,8 +1832,6 @@ function get_current_settings($mtime = null, $settingsFile = null)
  */
 function safe_file_write($file, $data, $backup_file = null, $mtime = null, $append = false)
 {
-	global $cachedir;
-
 	// Sanity checks.
 	if (!file_exists($file) && !is_dir(dirname($file)))
 		return false;
@@ -1928,9 +1967,17 @@ function smf_var_export($var)
 	// For the same reason, replace literal returns and newlines with "\r" and "\n"
 	elseif (is_string($var) && (strpos($var, "\n") !== false || strpos($var, "\r") !== false))
 	{
-		return strtr(preg_replace_callback('/[\r\n]+/', function($m) {
-			return '\' . "' . strtr($m[0], array("\r" => '\r', "\n" => '\n')) . '" . \'';
-		}, $var), array("'' . " => '', " . ''" => ''));
+		return strtr(
+			preg_replace_callback(
+				'/[\r\n]+/',
+				function($m)
+				{
+					return '\' . "' . strtr($m[0], array("\r" => '\r', "\n" => '\n')) . '" . \'';
+				},
+				var_export($var, true)
+			),
+			array("'' . " => '', " . ''" => '')
+		);
 	}
 
 	// We typically use lowercase true/false/null.
@@ -1944,45 +1991,75 @@ function smf_var_export($var)
 
 /**
  * Deletes all PHP comments from a string.
- * Useful when analyzing input from file_get_contents, etc.
- *
- * If the code contains any strings in nowdoc or heredoc syntax, they will be
- * converted to single- or double-quote strings.
  *
  * @param string $code_str A string containing PHP code.
- * @param string|null $line_ending One of "\r", "\n", or "\r\n". Leave unset for auto-detect.
  * @return string A string of PHP code with no comments in it.
  */
-function strip_php_comments($code_str, $line_ending = null)
+function strip_php_comments($code_str)
 {
-	// What line ending should we use?
-	// Note: this depends on the string, not the host OS, so PHP_EOL isn't what we want.
-	if (!in_array($line_ending, array("\r", "\n", "\r\n")))
+	// This is the faster, better way.
+	if (is_callable('token_get_all'))
 	{
-		if (strpos($code_str, "\r\n") !== false)
-			$line_ending = "\r\n";
-		elseif (strpos($code_str, "\n") !== false)
-			$line_ending = "\n";
-		elseif (strpos($code_str, "\r") !== false)
-			$line_ending = "\r";
+		$tokens = token_get_all($code_str);
+
+		$parts = array();
+		foreach ($tokens as $token)
+		{
+			if (is_string($token))
+				$parts[] = $token;
+			else
+			{
+				list($id, $text) = $token;
+
+				switch ($id) {
+					case T_COMMENT:
+					case T_DOC_COMMENT:
+						end($parts);
+						$prev_part = key($parts);
+
+						// For the sake of tider output, trim any horizontal
+						// whitespace that immediately preceded the comment.
+						$parts[$prev_part] = rtrim($parts[$prev_part], "\t ");
+
+						// For 'C' style comments, also trim one preceding
+						// line break, if present.
+						if (strpos($text, '/*') === 0)
+						{
+							if (substr($parts[$prev_part], -2) === "\r\n")
+								$parts[$prev_part] = substr($parts[$prev_part], 0, -2);
+							elseif (in_array(substr($parts[$prev_part], -1), array("\r", "\n")))
+								$parts[$prev_part] = substr($parts[$prev_part], 0, -1);
+						}
+
+						break;
+
+					default:
+						$parts[] = $text;
+						break;
+				}
+			}
+		}
+
+		$code_str = implode('', $parts);
+
+		return $code_str;
 	}
 
-	// Everything is simpler if we convert heredocs to normal strings first.
-	if (preg_match_all('/<<<(\'?)(\w+)\'?'. $line_ending . '(.*?)'. $line_ending . '\2;$/m', $code_str, $matches))
+	// If the tokenizer extension has been disabled, do the job manually.
+
+	// Leave any heredocs alone.
+	if (preg_match_all('/<<<([\'"]?)(\w+)\1?\R(.*?)\R\h*\2;$/ms', $code_str, $matches))
 	{
+		$heredoc_replacements = array();
+
 		foreach ($matches[0] as $mkey => $heredoc)
-		{
-			if (!empty($matches[1][$mkey]))
-				$heredoc_replacements[$heredoc] = var_export($matches[3][$mkey], true) . ';';
-			else
-				$heredoc_replacements[$heredoc] = '"' . strtr(substr(var_export($matches[3][$mkey], true), 1, -1), array("\\'" => "'", '"' => '\"')) . '";';
-		}
+			$heredoc_replacements[$heredoc] = var_export(md5($matches[3][$mkey]), true) . ';';
 
 		$code_str = strtr($code_str, $heredoc_replacements);
 	}
 
 	// Split before everything that could possibly delimit a comment or a string.
-	$parts = preg_split('~(?=#+|/(?=/|\*)|\*/|'. $line_ending . '|(?<!\\\)[\'"])~m', $code_str);
+	$parts = preg_split('~(?=#+|/(?=/|\*)|\*/|\R|(?<!\\\)[\'"])~m', $code_str);
 
 	$in_string = 0;
 	$in_comment = 0;
@@ -2022,21 +2099,35 @@ function strip_php_comments($code_str, $line_ending = null)
 		elseif ($one_char == '#' || $two_char == '//')
 		{
 			$in_comment = !empty($in_string) ? 0 : (empty($in_comment) ? 1 : $in_comment);
-		}
-		elseif (($line_ending === "\r\n" && $two_char === $line_ending) || $one_char == $line_ending)
-		{
+
 			if ($in_comment == 1)
 			{
-				$in_comment = 0;
+				$parts[$partkey - 1] = rtrim($parts[$partkey - 1], "\t ");
 
-				// If we've removed everything on this line, take out the line ending, too.
-				if ($parts[$partkey - 1] === $line_ending)
-					$to_remove = strlen($line_ending);
+				if (substr($parts[$partkey - 1], -2) === "\r\n")
+					$parts[$partkey - 1] = substr($parts[$partkey - 1], 0, -2);
+				elseif (in_array(substr($parts[$partkey - 1], -1), array("\r", "\n")))
+					$parts[$partkey - 1] = substr($parts[$partkey - 1], 0, -1);
 			}
+		}
+		elseif ($two_char === "\r\n" || $one_char === "\r" || $one_char === "\n")
+		{
+			if ($in_comment == 1)
+				$in_comment = 0;
 		}
 		elseif ($two_char == '/*')
 		{
 			$in_comment = !empty($in_string) ? 0 : (empty($in_comment) ? 2 : $in_comment);
+
+			if ($in_comment == 2)
+			{
+				$parts[$partkey - 1] = rtrim($parts[$partkey - 1], "\t ");
+
+				if (substr($parts[$partkey - 1], -2) === "\r\n")
+					$parts[$partkey - 1] = substr($parts[$partkey - 1], 0, -2);
+				elseif (in_array(substr($parts[$partkey - 1], -1), array("\r", "\n")))
+					$parts[$partkey - 1] = substr($parts[$partkey - 1], 0, -1);
+			}
 		}
 		elseif ($two_char == '*/')
 		{
@@ -2055,7 +2146,12 @@ function strip_php_comments($code_str, $line_ending = null)
 			$parts[$partkey] = '';
 	}
 
-	return implode('', $parts);
+	$code_str = implode('', $parts);
+
+	if (!empty($heredoc_replacements))
+		$code_str = strtr($code_str, array_flip($heredoc_replacements));
+
+	return $code_str;
 }
 
 /**
@@ -2226,6 +2322,8 @@ function emailAdmins($template, $replacements = array(), $additional_recipients 
 */
 function sm_temp_dir()
 {
+	global $cachedir;
+
 	static $temp_dir = null;
 
 	// Already did this.
@@ -2250,7 +2348,23 @@ function sm_temp_dir()
 	// Search for a working temp directory.
 	foreach ($temp_dir_options as $id_temp => $temp_option)
 	{
-		$possible_temp = sm_temp_dir_option($temp_option);
+		switch ($temp_option) {
+			case 'cachedir':
+				$possible_temp = rtrim($cachedir, '/');
+				break;
+
+			case 'session.save_path':
+				$possible_temp = rtrim(ini_get('session.save_path'), '/');
+				break;
+
+			case 'upload_tmp_dir':
+				$possible_temp = rtrim(ini_get('upload_tmp_dir'), '/');
+				break;
+
+			default:
+				$possible_temp = sys_get_temp_dir();
+				break;
+		}
 
 		// Check if we have a restriction preventing this from working.
 		if ($restriction)
@@ -2274,7 +2388,7 @@ function sm_temp_dir()
 
 	// Fall back to sys_get_temp_dir even though it won't work, so we have something.
 	if (empty($temp_dir))
-		$temp_dir = sm_temp_dir_option('default');
+		$temp_dir = sys_get_temp_dir();
 
 	// Fix the path.
 	$temp_dir = substr($temp_dir, -1) === '/' ? $temp_dir : $temp_dir . '/';
@@ -2283,30 +2397,6 @@ function sm_temp_dir()
 	error_reporting($old_error_reporting);
 
 	return $temp_dir;
-}
-
-/**
- * Internal function for sm_temp_dir.
- *
- * @param string $option Which temp_dir option to use
- * @return string The path to the temp directory
- */
-function sm_temp_dir_option($option = 'sys_get_temp_dir')
-{
-	global $cachedir;
-
-	if ($option === 'cachedir')
-		return rtrim($cachedir, '/');
-
-	elseif ($option === 'session.save_path')
-		return rtrim(ini_get('session.save_path'), '/');
-
-	elseif ($option === 'upload_tmp_dir')
-		return rtrim(ini_get('upload_tmp_dir'), '/');
-
-	// This is the default option.
-	else
-		return sys_get_temp_dir();
 }
 
 ?>

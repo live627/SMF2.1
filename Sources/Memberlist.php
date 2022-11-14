@@ -8,10 +8,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.2
  */
 
 if (!defined('SMF'))
@@ -79,8 +79,8 @@ function Memberlist()
 			'label' => $txt['website'],
 			'link_with' => 'website',
 			'sort' => array(
-				'down' => 'mem.website_url = \'\', mem.website_url is null, mem.website_url DESC',
-				'up' => 'mem.website_url != \'\', mem.website_url is not null, mem.website_url ASC'
+				'down' => $context['user']['is_guest'] ? '1=1' : 'mem.website_url = \'\', mem.website_url is null, mem.website_url DESC',
+				'up' => $context['user']['is_guest'] ? ' 1=1' : 'mem.website_url != \'\', mem.website_url is not null, mem.website_url ASC'
 			),
 		),
 		'id_group' => array(
@@ -271,6 +271,13 @@ function MLAll()
 
 		$context['columns'][$col]['link'] = '<a href="' . $context['columns'][$col]['href'] . '" rel="nofollow">' . $context['columns'][$col]['label'] . '</a>';
 		$context['columns'][$col]['selected'] = $_REQUEST['sort'] == $col;
+	}
+
+	// Don't offer website sort to guests
+	if ($context['user']['is_guest'])
+	{
+		$context['columns']['website_url']['href'] = '';
+		$context['columns']['website_url']['link'] = $context['columns']['website_url']['label'];
 	}
 
 	// Are we sorting the results
@@ -528,12 +535,17 @@ function MLSearch()
 
 		$context['page_index'] = constructPageIndex($scripturl . '?action=mlist;sa=search;search=' . $_POST['search'] . ';fields=' . implode(',', $_POST['fields']), $_REQUEST['start'], $numResults, $modSettings['defaultMaxMembers']);
 
+		$custom_fields_qry = '';
+		if (array_search('cust_' . $_REQUEST['sort'], $_POST['fields']) === false && !empty($context['custom_profile_fields']['join'][$_REQUEST['sort']]))
+			$custom_fields_qry = $context['custom_profile_fields']['join'][$_REQUEST['sort']];
+
 		// Find the members from the database.
 		$request = $smcFunc['db_query']('', '
 			SELECT mem.id_member
 			FROM {db_prefix}members AS mem
 				LEFT JOIN {db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
 				LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:regular_id_group} THEN mem.id_post_group ELSE mem.id_group END)' .
+				$custom_fields_qry .
 				(empty($customJoin) ? '' : implode('
 				', $customJoin)) . '
 			WHERE (' . implode(' ' . $query . ' OR ', $fields) . ' ' . $query . ')
@@ -570,7 +582,7 @@ function MLSearch()
 		}
 
 		foreach ($context['custom_search_fields'] as $field)
-			$context['search_fields']['cust_' . $field['colname']] = sprintf($txt['mlist_search_by'], $field['name']);
+			$context['search_fields']['cust_' . $field['colname']] = sprintf($txt['mlist_search_by'], tokenTxtReplace($field['name']));
 
 		$context['sub_template'] = 'search';
 		$context['old_search'] = isset($_GET['search']) ? $_GET['search'] : (isset($_POST['search']) ? $smcFunc['htmlspecialchars']($_POST['search']) : '');
@@ -630,7 +642,7 @@ function printMemberListRows($request)
 
 		$context['members'][$member] = $memberContext[$member];
 		$context['members'][$member]['post_percent'] = round(($context['members'][$member]['real_posts'] * 100) / $most_posts);
-		$context['members'][$member]['registered_date'] = strftime('%Y-%m-%d', $context['members'][$member]['registered_timestamp']);
+		$context['members'][$member]['registered_date'] = smf_strftime('%Y-%m-%d', $context['members'][$member]['registered_timestamp']);
 
 		if (!empty($context['custom_profile_fields']['columns']))
 		{
@@ -639,10 +651,11 @@ function printMemberListRows($request)
 				// Don't show anything if there isn't anything to show.
 				if (!isset($context['members'][$member]['options'][$key]))
 				{
-					$context['members'][$member]['options'][$key] = '';
+					$context['members'][$member]['options'][$key] = isset($column['default_value']) ? $column['default_value'] : '';
 					continue;
 				}
 
+				$context['members'][$member]['options'][$key] = tokenTxtReplace($context['members'][$member]['options'][$key]);
 				$currentKey = 0;
 				if (!empty($column['options']))
 				{
@@ -666,7 +679,7 @@ function printMemberListRows($request)
 						'{SCRIPTURL}' => $scripturl,
 						'{IMAGES_URL}' => $settings['images_url'],
 						'{DEFAULT_IMAGES_URL}' => $settings['default_images_url'],
-						'{INPUT}' => $context['members'][$member]['options'][$key],
+						'{INPUT}' => tokenTxtReplace($context['members'][$member]['options'][$key]),
 						'{KEY}' => $currentKey
 					));
 			}
@@ -686,7 +699,7 @@ function getCustFieldsMList()
 	$cpf = array();
 
 	$request = $smcFunc['db_query']('', '
-		SELECT col_name, field_name, field_desc, field_type, field_options, bbc, enclose
+		SELECT col_name, field_name, field_desc, field_type, field_options, bbc, enclose, default_value
 		FROM {db_prefix}custom_fields
 		WHERE active = {int:active}
 			AND show_mlist = {int:show}
@@ -702,11 +715,12 @@ function getCustFieldsMList()
 	{
 		// Get all the data we're gonna need.
 		$cpf['columns'][$row['col_name']] = array(
-			'label' => $row['field_name'],
+			'label' => tokenTxtReplace($row['field_name']),
 			'type' => $row['field_type'],
-			'options' => $row['field_options'],
+			'options' => tokenTxtReplace($row['field_options']),
 			'bbc' => !empty($row['bbc']),
 			'enclose' => $row['enclose'],
+			'default_value' => tokenTxtReplace($row['default_value']),
 		);
 
 		// Get the right sort method depending on the cust field type.

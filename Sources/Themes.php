@@ -24,10 +24,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.0
  */
 
 if (!defined('SMF'))
@@ -1088,7 +1088,7 @@ function PickTheme()
 			$txt['theme_description'] = '';
 		}
 
-		$context['available_themes'][$id_theme]['thumbnail_href'] = $txt['theme_thumbnail_href'];
+		$context['available_themes'][$id_theme]['thumbnail_href'] = sprintf($txt['theme_thumbnail_href'], $settings['images_url']);
 		$context['available_themes'][$id_theme]['description'] = $txt['theme_description'];
 
 		// Are there any variants?
@@ -1127,11 +1127,14 @@ function PickTheme()
 	// Then return it.
 	addJavaScriptVar(
 		'oThemeVariants',
-		json_encode(array_map(function($theme)
-		{
-			return $theme['variants'];
-		}, $context['available_themes']
-	)));
+		json_encode(array_map(
+			function($theme)
+			{
+				return $theme['variants'];
+			},
+			$context['available_themes']
+		))
+	);
 	loadJavaScriptFile('profile.js', array('defer' => false, 'minimize' => true), 'smf_profile');
 	$settings['images_url'] = $current_images_url;
 	$settings['theme_variants'] = $current_theme_variants;
@@ -1340,8 +1343,23 @@ function InstallCopy()
 	mkdir($context['to_install']['theme_dir'] . '/css', 0777);
 	mkdir($context['to_install']['theme_dir'] . '/scripts', 0777);
 
+	// Create subdirectory for language files
+	mkdir($context['to_install']['theme_dir'] . '/languages', 0777);
+
 	// Copy over the default non-theme files.
-	$to_copy = array('/index.php', '/index.template.php', '/css/index.css', '/css/responsive.css', '/css/slider.min.css', '/css/rtl.css', '/css/calendar.css', '/css/calendar.rtl.css', '/css/admin.css', '/scripts/theme.js');
+	$to_copy = array(
+		'/index.php',
+		'/index.template.php',
+		'/css/admin.css',
+		'/css/calendar.css',
+		'/css/calendar.rtl.css',
+		'/css/index.css',
+		'/css/responsive.css',
+		'/css/rtl.css',
+		'/scripts/theme.js',
+		'/languages/index.php',
+		'/languages/Settings.english.php',
+	);
 
 	foreach ($to_copy as $file)
 	{

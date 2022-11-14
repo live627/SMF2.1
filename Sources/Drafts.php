@@ -8,10 +8,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.0
  */
 
 if (!defined('SMF'))
@@ -636,7 +636,7 @@ function showProfileDrafts($memID, $draft_type = 0)
 			),
 			'subject' => $row['subject'],
 			'time' => timeformat($row['poster_time']),
-			'timestamp' => forum_time(true, $row['poster_time']),
+			'timestamp' => $row['poster_time'],
 			'icon' => $row['icon'],
 			'id_draft' => $row['id_draft'],
 			'locked' => $row['locked'],
@@ -667,7 +667,7 @@ function showProfileDrafts($memID, $draft_type = 0)
 	$context[$context['profile_menu_name']]['tab_data'] = array(
 		'title' => $txt['drafts_show'],
 		'description' => $txt['drafts_show_desc'],
-		'icon_class' => 'pm_icons inbox'
+		'icon_class' => 'main_icons drafts'
 	);
 	$context['sub_template'] = 'showDrafts';
 }
@@ -829,7 +829,7 @@ function showPMDrafts($memID = -1)
 			'counter' => $counter,
 			'subject' => $row['subject'],
 			'time' => timeformat($row['poster_time']),
-			'timestamp' => forum_time(true, $row['poster_time']),
+			'timestamp' => $row['poster_time'],
 			'id_draft' => $row['id_draft'],
 			'recipients' => $recipients,
 			'age' => floor((time() - $row['poster_time']) / 86400),

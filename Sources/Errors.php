@@ -9,10 +9,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.2
  */
 
 if (!defined('SMF'))
@@ -196,6 +196,9 @@ function fatal_lang_error($error, $log = 'general', $sprintf = array(), $status 
 	global $txt, $language, $user_info, $context;
 	static $fatal_error_called = false;
 
+	// Ensure this is an array.
+	$sprintf = (array) $sprintf;
+
 	// Send the status header - set this to 0 or false if you don't want to send one at all
 	if (!empty($status))
 		send_http_status($status);
@@ -249,7 +252,7 @@ function smf_error_handler($error_level, $error_string, $file, $line)
 	global $settings, $modSettings, $db_show_debug;
 
 	// Error was suppressed with the @-operator.
-	if (error_reporting() == 0)
+	if (error_reporting() == 0 || error_reporting() == (E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR | E_RECOVERABLE_ERROR))
 		return true;
 
 	// Ignore errors that should should not be logged.
@@ -351,6 +354,8 @@ function setup_fatal_error_context($error_message, $error_code = null)
 
 	$context['error_code'] = isset($error_code) ? 'id="' . $error_code . '" ' : '';
 
+	$context['error_link'] = isset($context['error_link']) ? $context['error_link'] : 'javascript:document.location=document.referrer';
+
 	if (empty($context['page_title']))
 		$context['page_title'] = $context['error_title'];
 
@@ -389,7 +394,7 @@ function setup_fatal_error_context($error_message, $error_code = null)
 		PROGRAM FLOW.  Otherwise, security error messages will not be shown, and
 		your forum will be in a very easily hackable state.
 	*/
-	trigger_error('Hacking attempt...', E_USER_ERROR);
+	trigger_error('No direct access...', E_USER_ERROR);
 }
 
 /**

@@ -7,10 +7,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.3
  */
 
 if (!defined('SMF'))
@@ -39,16 +39,6 @@ function ModifyMembergroups()
 		'settings' => array('ModifyMembergroupsettings', 'admin_forum'),
 	);
 
-	// Default to sub action 'index' or 'settings' depending on permissions.
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : (allowedTo('manage_membergroups') ? 'index' : 'settings');
-
-	// Is it elsewhere?
-	if (isset($subActions[$_REQUEST['sa']][2]))
-		require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][2]);
-
-	// Do the permission check, you might not be allowed her.
-	isAllowedTo($subActions[$_REQUEST['sa']][1]);
-
 	// Language and template stuff, the usual.
 	loadLanguage('ManageMembers');
 	loadTemplate('ManageMembergroups');
@@ -61,6 +51,16 @@ function ModifyMembergroups()
 	);
 
 	call_integration_hook('integrate_manage_membergroups', array(&$subActions));
+
+	// Default to sub action 'index' or 'settings' depending on permissions.
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : (allowedTo('manage_membergroups') ? 'index' : 'settings');
+
+	// Is it elsewhere?
+	if (isset($subActions[$_REQUEST['sa']][2]))
+		require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][2]);
+
+	// Do the permission check, you might not be allowed here.
+	isAllowedTo($subActions[$_REQUEST['sa']][1]);
 
 	// Call the right function.
 	call_helper($subActions[$_REQUEST['sa']][0]);
@@ -765,7 +765,7 @@ function EditMembergroup()
 				'group_name' => $smcFunc['htmlspecialchars']($_POST['group_name']),
 				'online_color' => $_POST['online_color'],
 				'icons' => $_POST['icons'],
-				'group_desc' => $_POST['group_desc'],
+				'group_desc' => $smcFunc['normalize']($_POST['group_desc']),
 				'tfa_required' => $_POST['group_tfa_force'],
 			)
 		);

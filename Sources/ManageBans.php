@@ -9,10 +9,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.3
  */
 
 if (!defined('SMF'))
@@ -44,12 +44,6 @@ function Ban()
 		'list' => 'BanList',
 		'log' => 'BanLog',
 	);
-
-	// Default the sub-action to 'view ban list'.
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
-
-	$context['page_title'] = $txt['ban_title'];
-	$context['sub_action'] = $_REQUEST['sa'];
 
 	// Tabs for browsing the different ban functions.
 	$context[$context['admin_menu_name']]['tab_data'] = array(
@@ -83,6 +77,12 @@ function Ban()
 
 	call_integration_hook('integrate_manage_bans', array(&$subActions));
 
+	// Default the sub-action to 'view ban list'.
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
+
+	$context['page_title'] = $txt['ban_title'];
+	$context['sub_action'] = $_REQUEST['sa'];
+
 	// Call the right function for this sub-action.
 	call_helper($subActions[$_REQUEST['sa']]);
 }
@@ -111,7 +111,6 @@ function BanList()
 
 		// Unban them all!
 		removeBanGroups($_POST['remove']);
-		removeBanTriggers($_POST['remove']);
 
 		// No more caching this ban!
 		updateSettings(array('banLastUpdated' => time()));
@@ -638,7 +637,7 @@ function list_getBanItems($start = 0, $items_per_page = 0, $sort = 0, $ban_group
 		SELECT
 			bi.id_ban, bi.hostname, bi.email_address, bi.id_member, bi.hits,
 			bi.ip_low, bi.ip_high,
-			bg.id_ban_group, bg.name, bg.ban_time, COALESCE(bg.expire_time, 0) AS expire_time, bg.reason, bg.notes, bg.cannot_access, bg.cannot_register, bg.cannot_login, bg.cannot_post,
+			bg.id_ban_group, bg.name, bg.ban_time, bg.expire_time AS expire_time, bg.reason, bg.notes, bg.cannot_access, bg.cannot_register, bg.cannot_login, bg.cannot_post,
 			COALESCE(mem.id_member, 0) AS id_member, mem.member_name, mem.real_name
 		FROM {db_prefix}ban_groups AS bg
 			LEFT JOIN {db_prefix}ban_items AS bi ON (bi.id_ban_group = bg.id_ban_group)
@@ -662,7 +661,7 @@ function list_getBanItems($start = 0, $items_per_page = 0, $sort = 0, $ban_group
 				'id' => $row['id_ban_group'],
 				'name' => $row['name'],
 				'expiration' => array(
-					'status' => empty($row['expire_time']) ? 'never' : ($row['expire_time'] < time() ? 'expired' : 'one_day'),
+					'status' => $row['expire_time'] === null ? 'never' : ($row['expire_time'] < time() ? 'expired' : 'one_day'),
 					'days' => $row['expire_time'] > time() ? ($row['expire_time'] - time() < 86400 ? 1 : ceil(($row['expire_time'] - time()) / 86400)) : 0
 				),
 				'reason' => $row['reason'],
@@ -894,8 +893,11 @@ function banEdit2()
 	if (!empty($context['ban_errors']))
 	{
 		$context['ban_suggestions'] = !empty($saved_triggers) ? $saved_triggers : array();
-		$context['ban']['from_user'] = true;
-		$context['ban_suggestions'] = array_merge($context['ban_suggestions'], getMemberData((int) $_REQUEST['u']));
+		if (isset($_REQUEST['u']))
+		{
+			$context['ban']['from_user'] = true;
+			$context['ban_suggestions'] = array_merge($context['ban_suggestions'], getMemberData((int) $_REQUEST['u']));
+		}
 
 		// Not strictly necessary, but it's nice
 		if (!empty($context['ban_suggestions']['member']['id']))
@@ -1103,7 +1105,7 @@ function removeBanTriggers($items_ids = array(), $group_id = false)
  * Doesn't clean the inputs
  *
  * @param int[] $group_ids The IDs of the groups to remove
- * @return bool Returns ture if successful or false if $group_ids is empty
+ * @return bool Returns true if successful or false if $group_ids is empty
  */
 function removeBanGroups($group_ids)
 {
@@ -1124,6 +1126,25 @@ function removeBanGroups($group_ids)
 			'ban_list' => $group_ids,
 		)
 	);
+
+	// Remove all ban triggers for these bans groups
+	$request = $smcFunc['db_query']('', '
+		SELECT id_ban
+		FROM {db_prefix}ban_items
+		WHERE id_ban_group IN ({array_int:ban_list})',
+		array(
+			'ban_list' => $group_ids,
+		)
+	);
+
+	$id_ban_triggers = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$id_ban_triggers[] = $row['id_ban'];
+	}
+	$smcFunc['db_free_result']($request);
+
+	removeBanTriggers($id_ban_triggers);
 
 	return true;
 }
@@ -1180,7 +1201,7 @@ function validateTriggers(&$triggers)
 	global $context, $smcFunc;
 
 	if (empty($triggers))
-		$context['ban_erros'][] = 'ban_empty_triggers';
+		$context['ban_errors'][] = 'ban_empty_triggers';
 
 	$ban_triggers = array();
 	$log_info = array();
@@ -1197,7 +1218,7 @@ function validateTriggers(&$triggers)
 				$value = trim($value);
 				$ip_parts = ip2range($value);
 				if (!checkExistingTriggerIP($ip_parts, $value))
-					$context['ban_erros'][] = 'invalid_ip';
+					$context['ban_errors'][] = 'invalid_ip';
 				else
 				{
 					$ban_triggers['main_ip'] = array(
@@ -1209,7 +1230,7 @@ function validateTriggers(&$triggers)
 			elseif ($key == 'hostname')
 			{
 				if (preg_match('/[^\w.\-*]/', $value) == 1)
-					$context['ban_erros'][] = 'invalid_hostname';
+					$context['ban_errors'][] = 'invalid_hostname';
 				else
 				{
 					// Replace the * wildcard by a MySQL wildcard %.
@@ -1221,7 +1242,7 @@ function validateTriggers(&$triggers)
 			elseif ($key == 'email')
 			{
 				if (preg_match('/[^\w.\-\+*@]/', $value) == 1)
-					$context['ban_erros'][] = 'invalid_email';
+					$context['ban_errors'][] = 'invalid_email';
 
 				// Check the user is not banning an admin.
 				$request = $smcFunc['db_query']('', '
@@ -1236,7 +1257,7 @@ function validateTriggers(&$triggers)
 					)
 				);
 				if ($smcFunc['db_num_rows']($request) != 0)
-					$context['ban_erros'][] = 'no_ban_admin';
+					$context['ban_errors'][] = 'no_ban_admin';
 				$smcFunc['db_free_result']($request);
 
 				$value = substr(strtolower(str_replace('*', '%', $value)), 0, 255);
@@ -1258,14 +1279,14 @@ function validateTriggers(&$triggers)
 					)
 				);
 				if ($smcFunc['db_num_rows']($request) == 0)
-					$context['ban_erros'][] = 'invalid_username';
+					$context['ban_errors'][] = 'invalid_username';
 				list ($value, $isAdmin) = $smcFunc['db_fetch_row']($request);
 				$smcFunc['db_free_result']($request);
 
 				if ($isAdmin && strtolower($isAdmin) != 'f')
 				{
 					unset($value);
-					$context['ban_erros'][] = 'no_ban_admin';
+					$context['ban_errors'][] = 'no_ban_admin';
 				}
 				else
 					$ban_triggers['user']['id_member'] = $value;
@@ -1283,7 +1304,7 @@ function validateTriggers(&$triggers)
 					$val = trim($val);
 					$ip_parts = ip2range($val);
 					if (!checkExistingTriggerIP($ip_parts, $val))
-						$context['ban_erros'][] = 'invalid_ip';
+						$context['ban_errors'][] = 'invalid_ip';
 					else
 					{
 						$ban_triggers[$key][] = array(
@@ -1299,7 +1320,7 @@ function validateTriggers(&$triggers)
 				}
 			}
 			else
-				$context['ban_erros'][] = 'no_bantype_selected';
+				$context['ban_errors'][] = 'no_bantype_selected';
 
 			if (isset($value) && !is_array($value))
 				$log_info[] = array(
@@ -1638,10 +1659,7 @@ function BanEditTrigger()
 	}
 	elseif (isset($_POST['edit_trigger']) && !empty($_POST['ban_suggestions']))
 	{
-		// The first replaces the old one, the others are added new (simplification, otherwise it would require another query and some work...)
-		saveTriggers(array_shift($_POST['ban_suggestions']), $ban_group, 0, $ban_id);
-		if (!empty($_POST['ban_suggestions']))
-			saveTriggers($_POST['ban_suggestions'], $ban_group);
+		saveTriggers($_POST['ban_suggestions'], $ban_group, 0, $ban_id);
 
 		redirectexit('action=admin;area=ban;sa=edit' . (!empty($ban_group) ? ';bg=' . $ban_group : ''));
 	}
@@ -2116,7 +2134,7 @@ function BanLog()
 		),
 		'additional_rows' => array(
 			array(
-				'position' => 'top_of_list',
+				'position' => 'after_title',
 				'value' => '
 					<input type="submit" name="removeSelected" value="' . $txt['ban_log_remove_selected'] . '" data-confirm="' . $txt['ban_log_remove_selected_confirm'] . '" class="button you_sure">
 					<input type="submit" name="removeAll" value="' . $txt['ban_log_remove_all'] . '" data-confirm="' . $txt['ban_log_remove_all_confirm'] . '" class="button you_sure">',

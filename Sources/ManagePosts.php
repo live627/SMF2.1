@@ -7,10 +7,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2021 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1 RC3
+ * @version 2.1.3
  */
 
 if (!defined('SMF'))
@@ -39,9 +39,6 @@ function ManagePostSettings()
 		'drafts' => 'ModifyDraftSettings',
 	);
 
-	// Default the sub-action to 'posts'.
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'posts';
-
 	$context['page_title'] = $txt['manageposts_title'];
 
 	// Tabs for browsing the different post functions.
@@ -66,6 +63,9 @@ function ManagePostSettings()
 	);
 
 	call_integration_hook('integrate_manage_posts', array(&$subActions));
+
+	// Default the sub-action to 'posts'.
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'posts';
 
 	// Call the right function for this sub-action.
 	call_helper($subActions[$_REQUEST['sa']]);
@@ -123,8 +123,8 @@ function SetCensor()
 
 		// Set the new arrays and settings in the database.
 		$updates = array(
-			'censor_vulgar' => implode("\n", $censored_vulgar),
-			'censor_proper' => implode("\n", $censored_proper),
+			'censor_vulgar' => $smcFunc['normalize'](implode("\n", $censored_vulgar)),
+			'censor_proper' => $smcFunc['normalize'](implode("\n", $censored_proper)),
 			'allow_no_censored' => empty($_POST['allow_no_censored']) ? '0' : '1',
 			'censorWholeWord' => empty($_POST['censorWholeWord']) ? '0' : '1',
 			'censorIgnoreCase' => empty($_POST['censorIgnoreCase']) ? '0' : '1',
