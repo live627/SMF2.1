@@ -22,7 +22,6 @@ function FeignLoginIntegration()
 	return $mem;
 }
 
-$pi = 0;
 function FeignLogin($id = 1): void
 {
 	global $mem;
