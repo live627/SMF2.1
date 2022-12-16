@@ -116,9 +116,6 @@ function reloadSettings()
 		};
 	$fix_utf8mb4 = function($string) use ($utf8, $smcFunc)
 	{
-		if (!$utf8 || $smcFunc['db_mb4'])
-			return $string;
-
 		$i = 0;
 		$len = strlen($string);
 		$new_string = '';

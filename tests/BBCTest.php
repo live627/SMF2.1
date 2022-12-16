@@ -544,7 +544,7 @@ class BBCTest extends TestCase
 			],
 			[
 				'http://ar.wikipedia.org/wiki/النطاقات_العربية',
-				'<a href="http://ar.wikipedia.org/wiki/النطاقات_العربية" class="bbc_link" target="_blank" rel="noopener">http://ar.wikipedia.org/wiki/النطاقات_العربية</a>',
+				'<a href="http://ar.wikipedia.org/wiki/%D8%A7%D9%84%D9%86%D8%B7%D8%A7%D9%82%D8%A7%D8%AA_%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9" class="bbc_link" target="_blank" rel="noopener">http://ar.wikipedia.org/wiki/النطاقات_العربية</a>',
 			],
 			[
 				'http://example.com/foo_(bar_baz)',
@@ -564,11 +564,11 @@ class BBCTest extends TestCase
 			],
 			[
 				'example.com/?test=[(foo)]{bar}',
-				'<a href="//example.com/?test=&#91;(foo)&#93;{bar}" class="bbc_link" target="_blank" rel="noopener">example.com/?test=[(foo)]{bar}</a>',
+				'<a href="//example.com/?test=%5B(foo)%5D%7Bbar%7D" class="bbc_link" target="_blank" rel="noopener">example.com/?test=[(foo)]{bar}</a>',
 			],
 			[
 				'http://www.example.com/a/test?one=for#{all”',
-				'<a href="http://www.example.com/a/test?one=for#{all" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/a/test?one=for#{all</a>"',
+				'<a href="http://www.example.com/a/test?one=for#%7Ball" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/a/test?one=for#{all</a>"',
 			],
 			[
 				'http://www.example.com/a/test?one=for<all>#derp',
@@ -615,8 +615,20 @@ class BBCTest extends TestCase
 				'Have you been to <a href="//example.com" class="bbc_link" target="_blank" rel="noopener">//example.com</a>?It is exemplary!',
 			],
 			[
+				'Have you been to http://example?It is exemplary!',
+				'Have you been to http://example?It is exemplary!',
+			],
+			[
 				'Have you been to http://example.com?It is exemplary!',
 				'Have you been to <a href="http://example.com" class="bbc_link" target="_blank" rel="noopener">http://example.com</a>?It is exemplary!',
+			],
+			[
+				'artial domain name matches. Now http://www.com.urboiuwr/derp.txt in its entirety will fail to match',
+				'artial domain name matches. Now http://www.com.urboiuwr/derp.txt in its entirety will fail to match',
+			],
+			[
+				'artial domain name matches. Now http://www.com ',
+				'artial domain name matches. Now <a href="http://www.com" class="bbc_link" target="_blank" rel="noopener">http://www.com</a> ',
 			],
 			[
 				'http://123.4.56.78/',
@@ -664,19 +676,19 @@ class BBCTest extends TestCase
 			],
 			[
 				'For an example of a valuably variable foo, go to http://www.example.com/index.php?var[foo]=value!',
-				'For an example of a valuably variable foo, go to <a href="http://www.example.com/index.php?var&#91;foo&#93;=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>!',
+				'For an example of a valuably variable foo, go to <a href="http://www.example.com/index.php?var%5Bfoo%5D=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>!',
 			],
 			[
 				'Have you been to http://www.example.com/index.php?var[foo]=value?',
-				'Have you been to <a href="http://www.example.com/index.php?var&#91;foo&#93;=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>?',
+				'Have you been to <a href="http://www.example.com/index.php?var%5Bfoo%5D=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>?',
 			],
 			[
 				'In parentheses (http://www.example.com/index.php?var[foo]=value), will this still be autolinked correctly? ',
-				'In parentheses (<a href="http://www.example.com/index.php?var&#91;foo&#93;=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>), will this still be autolinked correctly? ',
+				'In parentheses (<a href="http://www.example.com/index.php?var%5Bfoo%5D=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>), will this still be autolinked correctly? ',
 			],
 			[
 				'What about in brackets [http://www.example.com/index.php?var[foo]=value]?',
-				'What about in brackets [<a href="http://www.example.com/index.php?var&#91;foo&#93;=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>]?',
+				'What about in brackets [<a href="http://www.example.com/index.php?var%5Bfoo%5D=value" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/index.php?var[foo]=value</a>]?',
 			],
 			[
 				'http://www.google.co.uk/search?hl=en&q=BA6596F&btnG=Google+Search&meta=',
@@ -684,7 +696,7 @@ class BBCTest extends TestCase
 			],
 			[
 				'täst.de',
-				'<a href="//xn--tst-qla.de=" class="bbc_link" target="_blank" rel="noopener">täst.de</a>',
+				'<a href="//xn--tst-qla.de" class="bbc_link" target="_blank" rel="noopener">täst.de</a>',
 			],
 		];
 	}

@@ -226,4 +226,15 @@ class SubsTest extends TestCase
 		$this->assertEquals($this_value, $start);
 		$this->assertEquals($this_page, $context['current_page']);
 	}
+
+	public function testWhitespace(): void
+	{
+		$this->assertEquals("ja\n\n\n\t\t\t\r\r\r\v\v\vh", normalize_spaces("ja\n\n\n\t\t\t\r\r\r\v\v\vh", false));
+		$this->assertEquals("ja\n\n\n \n\n\n\n\n\nh", normalize_spaces("ja\n\n\n\t\t\t\r\r\r\v\v\vh", true, true, array('replace_tabs' => true, 'collapse_hspace' => true)));
+		$this->assertEquals('ja h', normalize_spaces("ja\n\n\n\t\t\t\r\r\r\v\v\vh", true, true, array('no_breaks' => true, 'replace_tabs' => true, 'collapse_hspace' => true)));
+		$this->assertEquals("ja \t\t\t h", normalize_spaces("ja\n\n\n\t\t\t\r\r\r\v\v\vh", true, true, array('no_breaks' => true, 'collapse_hspace' => true)));
+		$this->assertEquals("ja   \t\t\t      h", normalize_spaces("ja\n\n\n\t\t\t\r\r\r\v\v\vh", true, true, array('no_breaks' => true)));
+		$this->assertEquals("ja\n\n\n\t\t\t\n\n\n\n\n\nh", normalize_spaces("ja\n\n\n\t\t\t\r\r\r\v\v\vh", true, true, array('collapse_hspace' => true)));
+		$this->assertEquals('ja            h', normalize_spaces("ja\n\n\n\t\t\t\r\r\r\v\v\vh", true, true, array('no_breaks' => true, 'replace_tabs' => true)));
+	}
 }

@@ -38,10 +38,10 @@ class SearchTest extends TestCase
 		$this->assertEquals('Simple Machines', $message['matches'][0]['member']['name']);
 		$this->assertEquals('Welcome to Simple Machines Forum!<br><br>We hope you enjoy using your forum.&nbsp; If you have any problems, please feel free to <a href="https://www.simplemachines.org/community/index.php" class="bbc_link" target="_blank" rel="noopener">ask us for assistance</a>.<br><br>Thanks!<br>Simple Machines', $message['matches'][0]['body']);
 		$this->assertEquals('Welcome to <mark class="highlight">Simple</mark> <mark class="highlight">Machines</mark> Forum!<br><br>We hope you enjoy using your forum.&nbsp; If you have any problems, please feel free to <a href="https://www.simplemachines.org/community/index.php" class="bbc_link" target="_blank" rel="noopener">ask us for assistance</a>.<br><br>Thanks!<br><mark class="highlight">Simple</mark> <mark class="highlight">Machines</mark>', $message['matches'][0]['body_highlighted']);
-		unset($_REQUEST['start'], $_POST['search'], $context['topics']);
+		unset($_REQUEST, $_POST['search'], $context['topics']);
 	}
 
-	public function testSearch2(): void
+	public function testSearchWord(): void
 	{
 		global $context;
 
@@ -49,10 +49,43 @@ class SearchTest extends TestCase
 		$_REQUEST['show_complete'] = '0';
 		$_POST['search'] = 'automated';
 		PlushSearch2();
+		$topics = $context['topics'];
+		$fn = $context['get_topics'];
 
 		$this->assertTrue($context['compact']);
-		$this->assertCount(10, $context['topics']);
+		$this->assertCount(10, $topics);
 
+		$message = $fn();
+		$this->assertNotFalse($message);
+		$this->assertIsArray($message);
+		$this->assertStringContainsString('Automated', $message['matches'][0]['subject']);
+		$this->assertStringContainsString('user', $message['matches'][0]['member']['name']);
+		$this->assertStringContainsString('Automated', $message['matches'][0]['body']);
+		$this->assertStringContainsString('<mark class="highlight">Automated</mark>', $message['matches'][0]['body_highlighted']);
+		unset($_REQUEST, $_POST['search'], $context['topics']);
+	}
+
+	public function testSearchWholeWord(): void
+	{
+		global $context, $modSettings;
+
+		$_REQUEST['start'] = '0';
+		$_REQUEST['show_complete'] = '0';
+		$_POST['search'] = 'auto';
+		$modSettings['search_match_words'] = '1';
+		PlushSearch2();
+		$modSettings['search_match_words'] = '0';
+
+		$this->assertArrayNotHasKey('topics', $context);
+
+		$_REQUEST['start'] = '0';
+		$_REQUEST['show_complete'] = '0';
+		$_POST['search'] = 'automated';
+		$modSettings['search_match_words'] = '1';
+		PlushSearch2();
+		$modSettings['search_match_words'] = '0';
+
+		$this->assertCount(10, $context['topics']);
 		$message = $context['get_topics']();
 		$this->assertNotFalse($message);
 		$this->assertIsArray($message);
@@ -60,7 +93,7 @@ class SearchTest extends TestCase
 		$this->assertStringContainsString('user', $message['matches'][0]['member']['name']);
 		$this->assertStringContainsString('Automated', $message['matches'][0]['body']);
 		$this->assertStringContainsString('<mark class="highlight">Automated</mark>', $message['matches'][0]['body_highlighted']);
-		unset($_REQUEST['start'], $_POST['search'], $context['topics']);
+		unset($_REQUEST, $_POST['search'], $context['topics']);
 	}
 
 	public function testSearchSubject(): void
@@ -92,7 +125,7 @@ class SearchTest extends TestCase
 
 		$_REQUEST['start'] = '0';
 		$_REQUEST['userspec'] = 'user0,user1';
-		$_POST['search'] = 'subject';
+		$_POST['search'] = 'subject -mate';
 		PlushSearch2();
 
 		$this->assertTrue($context['compact']);
