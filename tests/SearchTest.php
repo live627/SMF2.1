@@ -13,11 +13,29 @@ class SearchTest extends TestCase
 		require_once __DIR__ . '/../Sources/Search.php';
 	}
 
+	public function tearDown(): void
+	{
+		global $context;
+
+		unset($_REQUEST, $_POST['search'], $context['topics'], $_SESSION['search_cache']);
+		global $context, $smcFunc;
+
+		$smcFunc['db_query']('truncate_table', '
+			TRUNCATE {db_prefix}log_search_topics');
+
+		$smcFunc['db_query']('truncate_table', '
+			TRUNCATE {db_prefix}log_search_messages');
+
+		$smcFunc['db_query']('truncate_table', '
+			TRUNCATE {db_prefix}log_search_results');
+
+		updateSettings(array('search_pointer' => 0));
+	}
+
 	public function testSearch(): void
 	{
 		global $context;
 
-		unset($context['topics']);
 		$_REQUEST['start'] = '0';
 		$_REQUEST['show_complete'] = '1';
 		$_POST['search'] = 'Simple Machines';
@@ -38,10 +56,9 @@ class SearchTest extends TestCase
 		$this->assertEquals('Simple Machines', $message['matches'][0]['member']['name']);
 		$this->assertEquals('Welcome to Simple Machines Forum!<br><br>We hope you enjoy using your forum.&nbsp; If you have any problems, please feel free to <a href="https://www.simplemachines.org/community/index.php" class="bbc_link" target="_blank" rel="noopener">ask us for assistance</a>.<br><br>Thanks!<br>Simple Machines', $message['matches'][0]['body']);
 		$this->assertEquals('Welcome to <mark class="highlight">Simple</mark> <mark class="highlight">Machines</mark> Forum!<br><br>We hope you enjoy using your forum.&nbsp; If you have any problems, please feel free to <a href="https://www.simplemachines.org/community/index.php" class="bbc_link" target="_blank" rel="noopener">ask us for assistance</a>.<br><br>Thanks!<br><mark class="highlight">Simple</mark> <mark class="highlight">Machines</mark>', $message['matches'][0]['body_highlighted']);
-		unset($_REQUEST['start'], $_POST['search'], $context['topics']);
 	}
 
-	public function testSearch2(): void
+	public function testSearchWord(): void
 	{
 		global $context;
 
@@ -49,10 +66,59 @@ class SearchTest extends TestCase
 		$_REQUEST['show_complete'] = '0';
 		$_POST['search'] = 'automated';
 		PlushSearch2();
+		$topics = $context['topics'];
+		$fn = $context['get_topics'];
 
 		$this->assertTrue($context['compact']);
-		$this->assertCount(10, $context['topics']);
+		$this->assertArrayHasKey('topics', $context);
+		$this->assertCount(10, $topics);
 
+		$message = $fn();
+		$this->assertNotFalse($message);
+		$this->assertIsArray($message);
+		$this->assertStringContainsString('Automated', $message['matches'][0]['subject']);
+		$this->assertStringContainsString('user', $message['matches'][0]['member']['name']);
+		$this->assertStringContainsString('Automated', $message['matches'][0]['body']);
+		$this->assertStringContainsString('<mark class="highlight">Automated</mark>', $message['matches'][0]['body_highlighted']);
+	}
+
+	public function indexProvider()
+	{
+		return [
+			['custom'],
+			['fulltext'],
+			[''],
+		];
+	}
+
+	/**
+	 * @dataProvider indexProvider
+	 */
+	public function testSearchWholeWord(string $search_class_name): void
+	{
+		global $context, $modSettings;
+
+		$_REQUEST['start'] = '0';
+		$_REQUEST['show_complete'] = '0';
+		$_POST['search'] = 'auto';
+		$modSettings['search_index'] = $search_class_name;
+		$modSettings['search_match_words'] = '1';
+		PlushSearch2();
+		$modSettings['search_index'] = '';
+		$modSettings['search_match_words'] = '0';
+
+		$this->assertArrayNotHasKey('topics', $context);
+
+		$_REQUEST['start'] = '0';
+		$_REQUEST['show_complete'] = '0';
+		$_POST['search'] = 'automated';
+		$modSettings['search_index'] = $search_class_name;
+		$modSettings['search_match_words'] = '1';
+		PlushSearch2();
+		$modSettings['search_index'] = '';
+		$modSettings['search_match_words'] = '0';
+
+		$this->assertCount(10, $context['topics']);
 		$message = $context['get_topics']();
 		$this->assertNotFalse($message);
 		$this->assertIsArray($message);
@@ -60,19 +126,24 @@ class SearchTest extends TestCase
 		$this->assertStringContainsString('user', $message['matches'][0]['member']['name']);
 		$this->assertStringContainsString('Automated', $message['matches'][0]['body']);
 		$this->assertStringContainsString('<mark class="highlight">Automated</mark>', $message['matches'][0]['body_highlighted']);
-		unset($_REQUEST['start'], $_POST['search'], $context['topics']);
 	}
 
-	public function testSearchSubject(): void
+	/**
+	 * @dataProvider indexProvider
+	 */
+	public function testSearchSubject(string $search_class_name): void
 	{
-		global $context;
+		global $context, $modSettings;
 
 		$_REQUEST['start'] = '0';
 		$_REQUEST['subject_only'] = '1';
 		$_POST['search'] = 'subject #0';
+		$modSettings['search_index'] = $search_class_name;
 		PlushSearch2();
+		$modSettings['search_index'] = '';
 
 		$this->assertTrue($context['compact']);
+		$this->assertArrayHasKey('topics', $context);
 		$this->assertCount(1, $context['topics']);
 
 		$message = $context['get_topics']();
@@ -83,19 +154,65 @@ class SearchTest extends TestCase
 		$this->assertStringContainsString('Automated', $message['matches'][0]['body']);
 		$this->assertStringContainsString('Topic <mark class="highlight">#0</mark>', $message['matches'][0]['body_highlighted']);
 		$this->assertEquals('Automated <mark class="highlight">Subject</mark> <mark class="highlight">#0</mark>', $message['matches'][0]['subject_highlighted']);
-		unset($_REQUEST, $_POST['search'], $context['topics']);
 	}
 
-	public function testSearchUser(): void
+	/**
+	 * @dataProvider indexProvider
+	 */
+	public function testSearchExcluded(string $search_class_name): void
 	{
-		global $context;
+		global $context, $modSettings;
+
+		$_REQUEST['start'] = '0';
+		$_POST['search'] = 'Automated -#0 -#1';
+		$modSettings['search_index'] = $search_class_name;
+		PlushSearch2();
+		$modSettings['search_index'] = '';
+
+		$this->assertTrue($context['compact']);
+		$this->assertArrayHasKey('topics', $context);
+		$this->assertCount(8, $context['topics']);
+
+		for ($i = 2; $i < 10; $i++)
+		{
+			$message = $context['get_topics']();
+			$this->assertNotFalse($message);
+			$this->assertIsArray($message);
+			$this->assertCount(1, $message['matches']);
+			$this->assertEquals('Automated Subject #' . $i, $message['matches'][0]['subject']);
+			$this->assertStringContainsString('user', $message['matches'][0]['member']['name']);
+			$this->assertStringContainsString('Automated', $message['matches'][0]['body']);
+			$this->assertStringContainsString('Topic #' . $i, $message['matches'][0]['body_highlighted']);
+			$this->assertEquals('<mark class="highlight">Automated</mark> Subject #' . $i, $message['matches'][0]['subject_highlighted']);
+		}
+
+		$message = $context['get_topics']();
+		$this->assertFalse($message);
+	}
+
+	/**
+	 * @dataProvider indexProvider
+	 */
+	public function testSearchUser(string $search_class_name): void
+	{
+		global $context, $modSettings;
 
 		$_REQUEST['start'] = '0';
 		$_REQUEST['userspec'] = 'user0,user1';
-		$_POST['search'] = 'subject';
+		$_POST['search'] = 'subject -mate';
+		$modSettings['search_index'] = $search_class_name;
 		PlushSearch2();
+		$modSettings['search_index'] = '';
+
+		$this->assertArrayNotHasKey('topics', $context);
+
+		$_POST['search'] = 'subject';
+		$modSettings['search_index'] = $search_class_name;
+		PlushSearch2();
+		$modSettings['search_index'] = '';
 
 		$this->assertTrue($context['compact']);
+		$this->assertArrayHasKey('topics', $context);
 		$this->assertCount(2, $context['topics']);
 
 		$message = $context['get_topics']();
@@ -118,7 +235,6 @@ class SearchTest extends TestCase
 
 		$message = $context['get_topics']();
 		$this->assertFalse($message);
-		unset($_REQUEST, $_POST['search'], $context['topics']);
 	}
 
 	public function highlightProvider()

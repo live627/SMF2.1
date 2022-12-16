@@ -10,6 +10,7 @@ class TestMembergroups extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{
+		require_once __DIR__ . '/../Sources/Modlog.php';
 		require_once __DIR__ . '/../Sources/Subs-Members.php';
 		require_once __DIR__ . '/../Sources/Subs-Membergroups.php';
 	}
@@ -82,13 +83,31 @@ class TestMembergroups extends TestCase
 		$this->assertFalse(addMembersToGroup([], 2));
 	}
 
-	public function testAddMembersToGroup(): void
+	public function testAddMembersToGroup(): int
 	{
-		$this->assertTrue(addMembersToGroup(1, 2));
+		$mem = (int) list_getMembers(0, 1, 'id_member', 'member_name = {string:member_name}', ['member_name' => 'user0'])[0]['id_member'];
+		$this->assertTrue(addMembersToGroup($mem, 2));
 		$members = [];
 		$this->assertFalse(listMembergroupMembers_Href($members, 2));
 		$this->assertCount(1, $members);
-		$this->assertArrayHasKey(1, $members);
+		$this->assertArrayHasKey($mem, $members);
+		loadLanguage('Modlog');
+		$this->assertEquals(
+			['Added &quot;<a href="http://127.0.0.1/smf/index.php?action=profile;u=677">user0</a>&quot; to the &quot;Global Moderator&quot; group'],
+			array_column(
+				list_getModLogEntries(
+					0,
+					1,
+					'log_time DESC',
+					'action = {string:action}',
+					['action' => 'added_to_group'],
+					3
+				),
+				'action_text'
+			)
+		);
+
+		return $mem;
 	}
 
 	public function testRemoveNoMembersFromGroups(): void
@@ -96,9 +115,12 @@ class TestMembergroups extends TestCase
 		$this->assertFalse(removeMembersFromGroups([], [2]));
 	}
 
-	public function testRemoveMembersFromGroups(): void
+	/**
+	 * @depends testAddMembersToGroup
+	 */
+	public function testRemoveMembersFromGroups(int $mem): void
 	{
-		$this->assertTrue(removeMembersFromGroups(1, 2));
+		$this->assertTrue(removeMembersFromGroups($mem, 2));
 		$members = [];
 		$this->assertFalse(listMembergroupMembers_Href($members, 2));
 		$this->assertCount(0, $members);

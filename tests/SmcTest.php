@@ -201,6 +201,43 @@ class SMCTest extends TestCase
 		$this->assertEquals($expected, $smcFunc['htmlspecialchars']($test));
 	}
 
+	public function fourByteProvider(): array
+	{
+		return [
+			[
+				'€😄A𐍈¢',
+				'€&#128516;A&#66376;¢',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider fourByteProvider
+	 */
+	public function testFourByte($test, $expected): void
+	{
+		global $smcFunc;
+
+		$this->assertEquals($expected, $smcFunc['htmlspecialchars']($test));
+		$this->assertEquals(
+			$expected,
+			preg_replace_callback(
+				'|[\x{10000}-\x{10FFFF}]|u',
+				function ($m)
+				{
+					$val = (ord($m[0][0]) & 0x07) << 18;
+					$val += (ord($m[0][1]) & 0x3F) << 12;
+					$val += (ord($m[0][2]) & 0x3F) << 6;
+					$val += (ord($m[0][3]) & 0x3F);
+
+					return '&#' . $val . ';';
+				},
+				$test
+			)
+		);
+		$this->assertEquals($test, preg_replace_callback('~&#(\d{3,8});~', 'fixchar__callback', $expected));
+	}
+
 	public function testHtmlspecialchars2(): void
 	{
 		global $smcFunc;
@@ -298,7 +335,7 @@ class SMCTest extends TestCase
 
 	public function testReplaceValues(): void
 	{
-		global $db_prefix, $smcFunc;
+		global $smcFunc;
 
 		$smcFunc['db_insert'](
 			'replace',
@@ -1014,6 +1051,9 @@ class SMCTest extends TestCase
 			],
 		];
 
+		// All write operations must be performed BEFORE any assertions
+		// because any failures will break (interrupt) the script,
+		// leaving the database in an unexpected state.
 		$smcFunc['db_create_table']('{db_prefix}a_test_record', $def['columns'], $def['indexes']);
 		$structure = $smcFunc['db_table_structure']('{db_prefix}a_test_record');
 		$tables = $smcFunc['db_list_tables']();
@@ -1038,502 +1078,473 @@ class SMCTest extends TestCase
 
 	/**
 	 * @dataProvider columnProvider
+	 * @depends      testCreateTableToUpdate
+	 */
+	public function testCheckColumn(array $expected, array $columns): void
+	{
+		$this->assertArrayHasKey('name', $expected);
+		$this->assertArrayHasKey($expected['name'], $columns);
+		$expected_column = $columns[$expected['name']];
+		$this->assertArrayHasKey('size', $expected);
+		$this->assertArrayHasKey('null', $expected);
+		$this->assertArrayHasKey('not_null', $expected);
+		$this->assertArrayHasKey('default', $expected);
+		$this->assertArrayHasKey('name', $expected_column);
+		$this->assertArrayHasKey('size', $expected_column);
+		$this->assertArrayHasKey('null', $expected_column);
+		$this->assertArrayHasKey('not_null', $expected_column);
+		$this->assertArrayHasKey('default', $expected_column);
+		$this->assertIsString($expected_column['name']);
+		$this->assertNotEmpty($expected_column['name']);
+		$this->assertIsBool($expected_column['not_null']);
+		$this->assertIsBool($expected_column['null']);
+		$this->assertSame($expected['name'], $expected_column['name']);
+		$this->assertSame($expected['null'], $expected_column['null']);
+		$this->assertSame($expected['not_null'], $expected_column['not_null']);
+		$this->assertSame($expected['default'], $expected_column['default']);
+	}
+
+	/**
 	 * @depends testCreateTableToUpdate
 	 */
-	public function testCheckColumn(array $test, array $columns): void
+	public function testUpdateTable(array $columns): array
 	{
-		$this->assertArrayHasKey('name', $test);
-		$this->assertArrayHasKey($test['name'], $columns);
-		$expected = $columns[$test['name']];
-		$this->assertArrayHasKey('size', $test);
-		$this->assertArrayHasKey('null', $test);
-		$this->assertArrayHasKey('not_null', $test);
-		$this->assertArrayHasKey('default', $test);
-		$this->assertIsString($test['name']);
-		$this->assertNotEmpty($test['name']);
-		$this->assertIsBool($test['not_null']);
-		$this->assertIsBool($test['null']);
-		$this->assertSame($expected['name'], $test['name']);
-		$this->assertSame($expected['null'], $test['null']);
-		$this->assertSame($expected['not_null'], $test['not_null']);
-		$this->assertSame($expected['default'], $test['default']);
+		global $db_prefix, $smcFunc;
+
+		$def = [
+			// unspec
+			'from_int_unspec_to_int_unspec' => [
+				'type' => 'int',
+			],
+			'from_int_unspec_to_int_0' => [
+				'type' => 'int',
+				'default' => 0,
+			],
+			'from_int_unspec_to_int_25' => [
+				'type' => 'int',
+				'default' => 25,
+			],
+			'from_int_unspec_to_int_null' => [
+				'type' => 'int',
+				'default' => null,
+				'null' => true,
+			],
+			'from_int_unspec_to_text_unspec' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+			],
+			'from_int_unspec_to_text_emptystr' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => '',
+			],
+			'from_int_unspec_to_text_george' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => 'george',
+			],
+			'from_int_unspec_to_text_null' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => null,
+				'null' => true,
+			],
+			'from_int_unspec_drop_default' => [
+				'drop_default' => true,
+			],
+
+			// 0
+			'from_int_0_to_int_unspec' => [
+				'type' => 'int',
+			],
+			'from_int_0_to_int_0' => [
+				'type' => 'int',
+				'default' => 0,
+			],
+			'from_int_0_to_int_25' => [
+				'type' => 'int',
+				'default' => 25,
+			],
+			'from_int_0_to_int_null' => [
+				'type' => 'int',
+				'default' => null,
+				'null' => true,
+			],
+			// Without a new default specified, this one SHOULD FAIL due to incompatible data types...
+			// For purposes of letting the test complete, providing a default here...
+			'from_int_0_to_text_unspec' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => 'would fail otherwise',
+			],
+			'from_int_0_to_text_emptystr' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => '',
+			],
+			'from_int_0_to_text_george' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => 'george',
+			],
+			'from_int_0_to_text_null' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => null,
+				'null' => true,
+			],
+			'from_int_0_drop_default' => [
+				'drop_default' => true,
+			],
+
+			// 25
+			'from_int_25_to_int_unspec' => [
+				'type' => 'int',
+			],
+			'from_int_25_to_int_0' => [
+				'type' => 'int',
+				'default' => 0,
+			],
+			'from_int_25_to_int_25' => [
+				'type' => 'int',
+				'default' => 25,
+			],
+			'from_int_25_to_int_null' => [
+				'type' => 'int',
+				'default' => null,
+				'null' => true,
+			],
+			// Without a new default specified, this one SHOULD FAIL due to incompatible data types...
+			// For purposes of letting the test complete, setting a default here...
+			'from_int_25_to_text_unspec' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => 'would fail otherwise',
+			],
+			'from_int_25_to_text_emptystr' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => '',
+			],
+			'from_int_25_to_text_george' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => 'george',
+			],
+			'from_int_25_to_text_null' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => null,
+				'null' => true,
+			],
+			'from_int_25_drop_default' => [
+				'drop_default' => true,
+			],
+
+			// null
+			'from_int_null_to_int_unspec' => [
+				'type' => 'int',
+			],
+			'from_int_null_to_int_0' => [
+				'type' => 'int',
+				'default' => 0,
+			],
+			'from_int_null_to_int_25' => [
+				'type' => 'int',
+				'default' => 25,
+			],
+			'from_int_null_to_int_null' => [
+				'type' => 'int',
+				'default' => null,
+				'null' => true,
+			],
+			'from_int_null_to_text_unspec' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+			],
+			'from_int_null_to_text_emptystr' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => '',
+			],
+			'from_int_null_to_text_george' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => 'george',
+			],
+			'from_int_null_to_text_null' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => null,
+				'null' => true,
+			],
+			'from_int_null_drop_default' => [
+				'null' => false,
+				'drop_default' => true,
+			],
+
+			// unspec
+			'from_text_unspec_to_int_unspec' => [
+				'type' => 'int',
+			],
+			'from_text_unspec_to_int_0' => [
+				'type' => 'int',
+				'default' => 0,
+			],
+			'from_text_unspec_to_int_25' => [
+				'type' => 'int',
+				'default' => 25,
+			],
+			'from_text_unspec_to_int_null' => [
+				'type' => 'int',
+				'default' => null,
+				'null' => true,
+			],
+			'from_text_unspec_to_text_unspec' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+			],
+			'from_text_unspec_to_text_emptystr' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => '',
+			],
+			'from_text_unspec_to_text_george' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => 'george',
+			],
+			'from_text_unspec_to_text_null' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => null,
+				'null' => true,
+			],
+			'from_text_unspec_drop_default' => [
+				'null' => false,
+				'drop_default' => true,
+			],
+
+			// ''
+			// Without a new default specified, this one SHOULD FAIL due to incompatible data types...
+			// For purposes of letting the test complete, setting a default here...
+			'from_text_emptystr_to_int_unspec' => [
+				'type' => 'int',
+				'default' => 9999999,
+			],
+			'from_text_emptystr_to_int_0' => [
+				'type' => 'int',
+				'default' => 0,
+			],
+			'from_text_emptystr_to_int_25' => [
+				'type' => 'int',
+				'default' => 25,
+			],
+			'from_text_emptystr_to_int_null' => [
+				'type' => 'int',
+				'default' => null,
+				'null' => true,
+			],
+			'from_text_emptystr_to_text_unspec' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+			],
+			'from_text_emptystr_to_text_emptystr' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => '',
+			],
+			'from_text_emptystr_to_text_george' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => 'george',
+			],
+			'from_text_emptystr_to_text_null' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => null,
+				'null' => true,
+			],
+			'from_text_emptystr_drop_default' => [
+				'null' => false,
+				'drop_default' => true,
+			],
+
+			// george
+			// Without a new default specified, this one SHOULD FAIL due to incompatible data types...
+			// For purposes of letting the test complete, setting a default here...
+			'from_text_george_to_int_unspec' => [
+				'type' => 'int',
+				'default' => 9999999,
+			],
+			'from_text_george_to_int_0' => [
+				'type' => 'int',
+				'default' => 0,
+			],
+			'from_text_george_to_int_25' => [
+				'type' => 'int',
+				'default' => 25,
+			],
+			'from_text_george_to_int_null' => [
+				'type' => 'int',
+				'default' => null,
+				'null' => true,
+			],
+			'from_text_george_to_text_unspec' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+			],
+			'from_text_george_to_text_emptystr' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => '',
+			],
+			'from_text_george_to_text_george' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => 'george',
+			],
+			'from_text_george_to_text_null' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => null,
+				'null' => true,
+			],
+			'from_text_george_drop_default' => [
+				'null' => false,
+				'drop_default' => true,
+			],
+
+			// null
+			'from_text_null_to_int_unspec' => [
+				'type' => 'int',
+			],
+			'from_text_null_to_int_0' => [
+				'type' => 'int',
+				'default' => 0,
+			],
+			'from_text_null_to_int_25' => [
+				'type' => 'int',
+				'default' => 25,
+			],
+			'from_text_null_to_int_null' => [
+				'type' => 'int',
+				'default' => null,
+				'null' => true,
+			],
+			'from_text_null_to_text_unspec' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+			],
+			'from_text_null_to_text_emptystr' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => '',
+			],
+			'from_text_null_to_text_george' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => 'george',
+			],
+			'from_text_null_to_text_null' => [
+				'type' => 'VARCHAR',
+				'size' => 50,
+				'default' => null,
+				'null' => true,
+			],
+			'from_text_null_drop_default' => [
+				'null' => false,
+				'drop_default' => true,
+			],
+
+			// null tests
+			'from_null_true_to_null_false' => [
+				'type' => 'VARCHAR',
+				'size' => 25,
+				'null' => false,
+			],
+			'from_null_false_to_null_true' => [
+				'type' => 'VARCHAR',
+				'size' => 25,
+				'null' => true,
+			],
+
+			// not_null tests
+			'from_not_null_true_to_not_null_false' => [
+				'type' => 'VARCHAR',
+				'size' => 25,
+				'not_null' => false,
+			],
+			'from_not_null_false_to_not_null_true' => [
+				'type' => 'VARCHAR',
+				'size' => 25,
+				'not_null' => true,
+			],
+		];
+
+		foreach ($def as $col_name => $col_info)
+		{
+			$this->assertArrayHasKey($col_name, $columns);
+			$smcFunc['db_change_column']('{db_prefix}a_test_record', $col_name, $col_info);
+		}
+
+		$structure = $smcFunc['db_table_structure']('{db_prefix}a_test_record');
+		$tables = $smcFunc['db_list_tables']();
+
+		$this->assertCount(77, $structure['columns']);
+		$this->assertCount(1, $structure['indexes']);
+		$this->assertEquals($db_prefix . 'a_test_record', $structure['name']);
+		$this->assertContains('smf_a_test_record', $tables);
+
+		return $structure['columns'];
+	}
+
+	public function updatedColumnProvider(): iterable
+	{
+		$file = json_decode(file_get_contents(__DIR__ . '/fixtures/table2.json'), true);
+
+		foreach ($file['columns'] as $name => $test)
+			yield $name => [$test];
+	}
+
+	/**
+	 * @dataProvider updatedColumnProvider
+	 * @depends      testCreateTableToUpdate
+	 * @depends      testUpdateTable
+	 */
+	public function testCheckUpdatedColumn(array $expected, array $columns, array $updated): void
+	{
+		$this->assertArrayHasKey('name', $expected);
+		$this->assertArrayHasKey($expected['name'], $columns);
+		$this->assertArrayHasKey($expected['name'], $updated);
+		$expected_column = $updated[$expected['name']];
+		$this->assertArrayHasKey('size', $expected);
+		$this->assertArrayHasKey('null', $expected);
+		$this->assertArrayHasKey('not_null', $expected);
+		$this->assertArrayHasKey('default', $expected);
+		$this->assertArrayHasKey('name', $expected_column);
+		$this->assertArrayHasKey('size', $expected_column);
+		$this->assertArrayHasKey('null', $expected_column);
+		$this->assertArrayHasKey('not_null', $expected_column);
+		$this->assertArrayHasKey('default', $expected_column);
+		$this->assertIsString($expected_column['name']);
+		$this->assertNotEmpty($expected_column['name']);
+		$this->assertIsBool($expected_column['not_null']);
+		$this->assertIsBool($expected_column['null']);
+		$this->assertSame($expected['name'], $expected_column['name']);
+		$this->assertSame($expected['null'], $expected_column['null']);
+		$this->assertSame($expected['not_null'], $expected_column['not_null']);
+		$this->assertSame($expected['default'], $expected_column['default']);
 	}
 
 	public function testDropTable(): void
 	{
 		global $smcFunc;
 
+		// Always drop the table regardless of whether the two
+		// tests above for creating and updating it have failed.
+		// Keep the database in a known and expected state.
 		$smcFunc['db_drop_table']('{db_prefix}a_test_record');
 		$this->assertNotContains('smf_a_test_record', $smcFunc['db_list_tables']());
-	}
-
-	/**
-	 * @depends testCreateTableToUpdate
-	 */
-	public function tccbestUpdateTable(): void
-	{
-		global $smcFunc;
-
-		$def = [
-			'columns' => [
-				// pk
-				[
-					'name' => 'id_atest',
-					'type' => 'int',
-					'auto' => true,
-				],
-				// unspec
-				[
-					'name' => 'from_int_unspec_to_int_unspec',
-					'type' => 'int',
-				],
-				[
-					'name' => 'from_int_unspec_to_int_0',
-					'type' => 'int',
-				],
-				[
-					'name' => 'from_int_unspec_to_int_25',
-					'type' => 'int',
-				],
-				[
-					'name' => 'from_int_unspec_to_int_null',
-					'type' => 'int',
-				],
-				[
-					'name' => 'from_int_unspec_to_text_unspec',
-					'type' => 'int',
-				],
-				[
-					'name' => 'from_int_unspec_to_text_emptystr',
-					'type' => 'int',
-				],
-				[
-					'name' => 'from_int_unspec_to_text_george',
-					'type' => 'int',
-				],
-				[
-					'name' => 'from_int_unspec_to_text_null',
-					'type' => 'int',
-				],
-				[
-					'name' => 'from_int_unspec_drop_default',
-					'type' => 'int',
-				],
-				// 0
-				[
-					'name' => 'from_int_0_to_int_unspec',
-					'type' => 'int',
-					'default' => 0,
-				],
-				[
-					'name' => 'from_int_0_to_int_0',
-					'type' => 'int',
-					'default' => 0,
-				],
-				[
-					'name' => 'from_int_0_to_int_25',
-					'type' => 'int',
-					'default' => 0,
-				],
-				[
-					'name' => 'from_int_0_to_int_null',
-					'type' => 'int',
-					'default' => 0,
-				],
-				[
-					'name' => 'from_int_0_to_text_unspec',
-					'type' => 'int',
-					'default' => 0,
-				],
-				[
-					'name' => 'from_int_0_to_text_emptystr',
-					'type' => 'int',
-					'default' => 0,
-				],
-				[
-					'name' => 'from_int_0_to_text_george',
-					'type' => 'int',
-					'default' => 0,
-				],
-				[
-					'name' => 'from_int_0_to_text_null',
-					'type' => 'int',
-					'default' => 0,
-				],
-				[
-					'name' => 'from_int_0_drop_default',
-					'type' => 'int',
-					'default' => 0,
-				],
-				// 25
-				[
-					'name' => 'from_int_25_to_int_unspec',
-					'type' => 'int',
-					'default' => 25,
-				],
-				[
-					'name' => 'from_int_25_to_int_0',
-					'type' => 'int',
-					'default' => 25,
-				],
-				[
-					'name' => 'from_int_25_to_int_25',
-					'type' => 'int',
-					'default' => 25,
-				],
-				[
-					'name' => 'from_int_25_to_int_null',
-					'type' => 'int',
-					'default' => 25,
-				],
-				[
-					'name' => 'from_int_25_to_text_unspec',
-					'type' => 'int',
-					'default' => 25,
-				],
-				[
-					'name' => 'from_int_25_to_text_emptystr',
-					'type' => 'int',
-					'default' => 25,
-				],
-				[
-					'name' => 'from_int_25_to_text_george',
-					'type' => 'int',
-					'default' => 25,
-				],
-				[
-					'name' => 'from_int_25_to_text_null',
-					'type' => 'int',
-					'default' => 25,
-				],
-				[
-					'name' => 'from_int_25_drop_default',
-					'type' => 'int',
-					'default' => 25,
-				],
-				// null
-				[
-					'name' => 'from_int_null_to_int_unspec',
-					'type' => 'int',
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_int_null_to_int_0',
-					'type' => 'int',
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_int_null_to_int_25',
-					'type' => 'int',
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_int_null_to_int_null',
-					'type' => 'int',
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_int_null_to_text_unspec',
-					'type' => 'int',
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_int_null_to_text_emptystr',
-					'type' => 'int',
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_int_null_to_text_george',
-					'type' => 'int',
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_int_null_to_text_null',
-					'type' => 'int',
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_int_null_drop_default',
-					'type' => 'int',
-					'default' => null,
-					'null' => true,
-				],
-				// unspec
-				[
-					'name' => 'from_text_unspec_to_int_unspec',
-					'type' => 'VARCHAR',
-					'size' => 25,
-				],
-				[
-					'name' => 'from_text_unspec_to_int_0',
-					'type' => 'VARCHAR',
-					'size' => 25,
-				],
-				[
-					'name' => 'from_text_unspec_to_int_25',
-					'type' => 'VARCHAR',
-					'size' => 25,
-				],
-				[
-					'name' => 'from_text_unspec_to_int_null',
-					'type' => 'VARCHAR',
-					'size' => 25,
-				],
-				[
-					'name' => 'from_text_unspec_to_text_unspec',
-					'type' => 'VARCHAR',
-					'size' => 25,
-				],
-				[
-					'name' => 'from_text_unspec_to_text_emptystr',
-					'type' => 'VARCHAR',
-					'size' => 25,
-				],
-				[
-					'name' => 'from_text_unspec_to_text_george',
-					'type' => 'VARCHAR',
-					'size' => 25,
-				],
-				[
-					'name' => 'from_text_unspec_to_text_null',
-					'type' => 'VARCHAR',
-					'size' => 25,
-				],
-				[
-					'name' => 'from_text_unspec_drop_default',
-					'type' => 'VARCHAR',
-					'size' => 25,
-				],
-				// ''
-				[
-					'name' => 'from_text_emptystr_to_int_unspec',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => '',
-				],
-				[
-					'name' => 'from_text_emptystr_to_int_0',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => '',
-				],
-				[
-					'name' => 'from_text_emptystr_to_int_25',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => '',
-				],
-				[
-					'name' => 'from_text_emptystr_to_int_null',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => '',
-				],
-				[
-					'name' => 'from_text_emptystr_to_text_unspec',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => '',
-				],
-				[
-					'name' => 'from_text_emptystr_to_text_emptystr',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => '',
-				],
-				[
-					'name' => 'from_text_emptystr_to_text_george',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => '',
-				],
-				[
-					'name' => 'from_text_emptystr_to_text_null',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => '',
-				],
-				[
-					'name' => 'from_text_emptystr_drop_default',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => '',
-				],
-				// george
-				[
-					'name' => 'from_text_george_to_int_unspec',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => 'george',
-				],
-				[
-					'name' => 'from_text_george_to_int_0',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => 'george',
-				],
-				[
-					'name' => 'from_text_george_to_int_25',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => 'george',
-				],
-				[
-					'name' => 'from_text_george_to_int_null',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => 'george',
-				],
-				[
-					'name' => 'from_text_george_to_text_unspec',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => 'george',
-				],
-				[
-					'name' => 'from_text_george_to_text_emptystr',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => 'george',
-				],
-				[
-					'name' => 'from_text_george_to_text_george',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => 'george',
-				],
-				[
-					'name' => 'from_text_george_to_text_null',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => 'george',
-				],
-				[
-					'name' => 'from_text_george_drop_default',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => 'george',
-				],
-				// null
-				[
-					'name' => 'from_text_null_to_int_unspec',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_text_null_to_int_0',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_text_null_to_int_25',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_text_null_to_int_null',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_text_null_to_text_unspec',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_text_null_to_text_emptystr',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_text_null_to_text_george',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_text_null_to_text_null',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => null,
-					'null' => true,
-				],
-				[
-					'name' => 'from_text_null_drop_default',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'default' => null,
-					'null' => true,
-				],
-				// null tests
-				[
-					'name' => 'from_null_true_to_null_false',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'null' => true,
-				],
-				[
-					'name' => 'from_null_false_to_null_true',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'null' => false,
-				],
-				// not_null tests
-				[
-					'name' => 'from_not_null_true_to_not_null_false',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'not_null' => true,
-				],
-				[
-					'name' => 'from_not_null_false_to_not_null_true',
-					'type' => 'VARCHAR',
-					'size' => 25,
-					'not_null' => false,
-				],
-			],
-			'indexes' => [
-				[
-					'type' => 'primary',
-					'columns' => ['id_atest'],
-				],
-			],
-		];
-
-		// All write operations must be performed BEFORE any assertions
-		// because any failures will break (interrupt) the script,
-		// leaving the database in an unexpected state.
-		$smcFunc['db_create_table']('{db_prefix}a_test_record', $def['columns'], $def['indexes']);
-		$structure = $smcFunc['db_table_structure']('{db_prefix}a_test_record');
-		$tables = $smcFunc['db_list_tables']();
-		$smcFunc['db_drop_table']('{db_prefix}a_test_record');
-
-		$this->assertCount(77, $def['columns']);
-		$this->assertCount(1, $def['indexes']);
-		$this->assertCount(77, $structure['columns']);
-		$this->assertCount(1, $structure['indexes']);
-		$this->assertJsonStringEqualsJsonFile(__DIR__ . '/fixtures/table1.json', json_encode($structure));
-		file_put_contents(__DIR__ . '/fixtures/table1.json', json_encode($structure));
 	}
 }
