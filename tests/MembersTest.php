@@ -12,7 +12,7 @@ class MembersTest extends TestCase
 {
 	private $options = [];
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		global $modSettings, $sourcedir;
 

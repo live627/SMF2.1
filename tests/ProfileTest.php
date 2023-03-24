@@ -13,7 +13,7 @@ class ProfileTest extends TestCase
 		require_once __DIR__ . '/../Sources/Profile.php';
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		unset($_REQUEST);
 	}

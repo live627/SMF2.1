@@ -18,7 +18,7 @@ class TestSettingsForm extends TestCase
 		loadLanguage('Admin', 'english', true, true);
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->configVars = [
 			['text', 'name1'],
@@ -81,7 +81,7 @@ class TestSettingsForm extends TestCase
 		];
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		unset($_REQUEST);
 	}

@@ -15,7 +15,7 @@ class BrowserDetectorTest extends TestCase
 		require_once __DIR__ . '/../Sources/Class-BrowserDetect.php';
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$_SERVER['HTTP_USER_AGENT'] = '';
 	}

@@ -13,7 +13,7 @@ class GroupsTest extends TestCase
 		require_once __DIR__ . '/../Sources/Groups.php';
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		unset($_REQUEST);
 	}

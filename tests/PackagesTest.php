@@ -15,7 +15,7 @@ class PackagesTest extends TestCase
 		require_once __DIR__ . '/../Sources/Subs-Package.php';
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		unset($_REQUEST, $_GET);
 	}

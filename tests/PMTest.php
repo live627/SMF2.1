@@ -21,7 +21,7 @@ class PMTest extends TestCase
 		$modSettings['bcrypt_hash_cost'] = 4;
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->options = [
 			[

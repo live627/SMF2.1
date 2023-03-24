@@ -133,7 +133,7 @@ class CensoringTest extends TestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		global $modSettings;
 
@@ -150,7 +150,7 @@ class CensoringTest extends TestCase
 		$modSettings['censor_proper'] = implode("\n", $proper);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		global $modSettings;
 
