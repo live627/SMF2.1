@@ -18,7 +18,7 @@ class GroupsTest extends TestCase
 		unset($_REQUEST);
 	}
 
-	public function test()
+	public function test(): void
 	{
 		global $context;
 
@@ -27,7 +27,7 @@ class GroupsTest extends TestCase
 		$this->assertEquals(4, $context['group_lists']['num_columns']);
 	}
 
-	public function testShowMembers()
+	public function testShowMembers(): void
 	{
 		global $context;
 

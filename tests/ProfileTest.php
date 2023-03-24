@@ -18,7 +18,7 @@ class ProfileTest extends TestCase
 		unset($_REQUEST);
 	}
 
-	public function testSummary()
+	public function testSummary(): void
 	{
 		global $context;
 

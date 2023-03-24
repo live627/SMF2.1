@@ -317,7 +317,7 @@ class RecentTest extends TestCase
 		$this->assertEquals('test', $topics[1]['last_post']['subject']);
 	}
 
-	public function testTopicNotify()
+	public function testTopicNotify(): void
 	{
 		global $board, $context, $smcFunc, $topic;
 

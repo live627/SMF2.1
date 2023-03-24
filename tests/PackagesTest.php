@@ -20,7 +20,7 @@ class PackagesTest extends TestCase
 		unset($_REQUEST, $_GET);
 	}
 
-	public function testPackageBrowse()
+	public function testPackageBrowse(): void
 	{
 		global $context;
 
@@ -32,7 +32,7 @@ class PackagesTest extends TestCase
 		$this->assertEquals('packages_lists', $context['default_list']);
 	}
 
-	public function testPackageDownload()
+	public function testPackageDownload(): void
 	{
 		global $context;
 
@@ -46,7 +46,7 @@ class PackagesTest extends TestCase
 	}
 
 	#[\PHPUnit\Framework\Attributes\Depends('testPackageDownload')]
-    public function testPackageDownloaded()
+    public function testPackageDownloaded(): void
 	{
 		global $context;
 
@@ -60,7 +60,7 @@ class PackagesTest extends TestCase
 	}
 
 	#[\PHPUnit\Framework\Attributes\Depends('testPackageDownload')]
-    public function testActionInstall()
+    public function testActionInstall(): void
 	{
 		global $context;
 
@@ -78,7 +78,7 @@ class PackagesTest extends TestCase
 	}
 
 	#[\PHPUnit\Framework\Attributes\Depends('testPackageDownload')]
-    public function testPackageRemove()
+    public function testPackageRemove(): void
 	{
 		global $context;
 
