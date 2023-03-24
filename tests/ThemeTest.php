@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 use Exception;
 
-class ThemeTest extends TestCase
+final class ThemeTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{

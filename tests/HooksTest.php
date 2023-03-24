@@ -7,7 +7,7 @@ namespace SMF\Tests;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
-class HooksTest extends TestCase
+final class HooksTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{

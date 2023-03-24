@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
 use TOTP\Auth;
 
-class TOTPTest extends TestCase
+final class TOTPTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{

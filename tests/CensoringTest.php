@@ -5,7 +5,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class CensoringTest extends TestCase
+final class CensoringTest extends TestCase
 {
 	protected $tests = [
 		'this' => ['this' => 'not_this'],

@@ -21,7 +21,7 @@ class MockMentions extends Mentions
 	}
 }
 
-class MentionsTest extends TestCase
+final class MentionsTest extends TestCase
 {
 	public function testPut(): void
 	{

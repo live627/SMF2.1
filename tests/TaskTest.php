@@ -6,7 +6,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class TaskTest extends TestCase
+final class TaskTest extends TestCase
 {
 	public function testMenu(): void
 	{

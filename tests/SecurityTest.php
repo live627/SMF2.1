@@ -5,7 +5,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class SecurityTest extends TestCase
+final class SecurityTest extends TestCase
 {
 	//~ public function domainsProvider(): array
 	//~ {

@@ -6,7 +6,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class CalendarTest extends TestCase
+final class CalendarTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{

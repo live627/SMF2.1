@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 use curl_fetch_web_data;
 
-class CurlFetchWebdataTest extends TestCase
+final class CurlFetchWebdataTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{

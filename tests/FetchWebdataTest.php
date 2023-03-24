@@ -7,7 +7,7 @@ namespace SMF\Tests;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-class FetchWebdataTest extends TestCase
+final class FetchWebdataTest extends TestCase
 {
 	/**
 	 * @return string[][]

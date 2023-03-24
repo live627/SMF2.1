@@ -6,7 +6,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class TimezoneTest extends TestCase
+final class TimezoneTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{

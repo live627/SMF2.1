@@ -7,7 +7,7 @@ namespace SMF\Tests;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
-class SMCTest extends TestCase
+final class SMCTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{

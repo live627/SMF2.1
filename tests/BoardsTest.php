@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use PHPUnit\Framework\Error\Error as PHPUnitError;
 
-class BoardsTest extends TestCase
+final class BoardsTest extends TestCase
 {
 	private $options = [];
 

@@ -6,7 +6,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class PostTest extends TestCase
+final class PostTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{

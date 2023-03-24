@@ -6,7 +6,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class MenuTest extends TestCase
+final class MenuTest extends TestCase
 {
 	protected $test_areas;
 

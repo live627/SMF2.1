@@ -6,7 +6,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class SoundTest extends TestCase
+final class SoundTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{

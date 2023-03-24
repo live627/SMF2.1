@@ -15,7 +15,7 @@ use SMF\Cache\APIs\Sqlite;
 use SMF\Cache\CacheApi;
 use SMF\Cache\CacheApiInterface;
 
-class CacheTest extends TestCase
+final class CacheTest extends TestCase
 {
 	private $cacheObj;
 

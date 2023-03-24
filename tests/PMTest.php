@@ -6,7 +6,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class PMTest extends TestCase
+final class PMTest extends TestCase
 {
 	private $options = [];
 

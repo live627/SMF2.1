@@ -5,7 +5,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class BBCTest extends TestCase
+final class BBCTest extends TestCase
 {
 	public function preparseProvider(): array
 	{

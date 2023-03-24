@@ -6,7 +6,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class SubsTest extends TestCase
+final class SubsTest extends TestCase
 {
 	public function testTimeformat(): void
 	{

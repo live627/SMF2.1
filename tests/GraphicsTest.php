@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 use gif_file;
 
-class GraphicsTest extends TestCase
+final class GraphicsTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{

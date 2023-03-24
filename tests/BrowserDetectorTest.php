@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use browser_detector;
 
-class BrowserDetectorTest extends TestCase
+final class BrowserDetectorTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{
