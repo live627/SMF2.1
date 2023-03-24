@@ -25,11 +25,8 @@ class CensoringTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider keepCaseWholeWordProvider
-	 *
-	 */
-	public function testWholeWordsCaseSensitive($inputText, $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('keepCaseWholeWordProvider')]
+    public function testWholeWordsCaseSensitive($inputText, $expected): void
 	{
 		global $modSettings;
 
@@ -53,11 +50,8 @@ class CensoringTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider wholeWordsCaseInsensitiveProvider
-	 *
-	 */
-	public function testWholeWordsCaseInsensitive($inputText, $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('wholeWordsCaseInsensitiveProvider')]
+    public function testWholeWordsCaseInsensitive($inputText, $expected): void
 	{
 		global $modSettings;
 
@@ -85,11 +79,8 @@ class CensoringTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider notWholeWordsCaseSensitiveProvider
-	 *
-	 */
-	public function testNotWholeWordsCaseSensitive($inputText, $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('notWholeWordsCaseSensitiveProvider')]
+    public function testNotWholeWordsCaseSensitive($inputText, $expected): void
 	{
 		global $modSettings;
 
@@ -117,11 +108,8 @@ class CensoringTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider notWholeWordsCaseInsensitiveProvider
-	 *
-	 */
-	public function testNotWholeWordsCaseInsensitive($inputText, $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('notWholeWordsCaseInsensitiveProvider')]
+    public function testNotWholeWordsCaseInsensitive($inputText, $expected): void
 	{
 		global $modSettings;
 

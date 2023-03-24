@@ -42,10 +42,8 @@ class TimezoneTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider countryCodesProvider
-	 */
-	public function testValidCountryCodes(string $test, string $expected, array $expected2): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('countryCodesProvider')]
+    public function testValidCountryCodes(string $test, string $expected, array $expected2): void
 	{
 		$result = validate_iso_country_codes($test, true);
 		$this->assertEquals($expected, $result);

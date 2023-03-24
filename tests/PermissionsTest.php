@@ -24,11 +24,8 @@ class PermissionsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider permissionsControllerProvider
-	 *
-	 */
-	public function testPermissionsController(int $group): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('permissionsControllerProvider')]
+    public function testPermissionsController(int $group): void
 	{
 		global $context;
 

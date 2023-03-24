@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SMF\Tests;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
 class AgreementTest extends TestCase
@@ -67,10 +68,8 @@ class AgreementTest extends TestCase
 		);
 	}
 
-	/**
-	 * @depends testEditPrivacyPolicy
-	 */
-	public function testAgreement2(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testEditPrivacyPolicy')]
+    public function testAgreement2(): void
 	{
 		global $context;
 
@@ -121,12 +120,9 @@ class AgreementTest extends TestCase
 		$this->assertEquals('1', $GLOBALS['modSettings']['requirePolicyAgreement']);
 	}
 
-	/**
-	 * @depends testEditPrivacyPolicy
-	 * @depends testModifyRegistrationSettings
-	 *
-	 */
-	public function testAgreement3(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testEditPrivacyPolicy')]
+    #[Depends('testModifyRegistrationSettings')]
+    public function testAgreement3(): void
 	{
 		global $context;
 
@@ -145,11 +141,8 @@ class AgreementTest extends TestCase
 		$this->assertEquals(1, $GLOBALS['user_info']['id']);
 	}
 
-	/**
-	 * @depends testModifyRegistrationSettings
-	 *
-	 */
-	public function testAcceptAgreement(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testModifyRegistrationSettings')]
+    public function testAcceptAgreement(): void
 	{
 		global $context;
 
@@ -178,11 +171,8 @@ class AgreementTest extends TestCase
 		$this->assertEquals(1, $GLOBALS['user_info']['id']);
 	}
 
-	/**
-	 * @depends testAcceptAgreement
-	 *
-	 */
-	public function testAgreement4(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAcceptAgreement')]
+    public function testAgreement4(): void
 	{
 		global $context;
 
@@ -195,11 +185,8 @@ class AgreementTest extends TestCase
 		$this->assertEquals(1, $GLOBALS['user_info']['id']);
 	}
 
-	/**
-	 * @depends testAcceptAgreement
-	 *
-	 */
-	public function testTracking(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAcceptAgreement')]
+    public function testTracking(): void
 	{
 		global $context;
 

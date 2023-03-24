@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SMF\Tests;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
 class SMCTest extends TestCase
@@ -131,10 +132,8 @@ class SMCTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider callbackProvider
-	 */
-	public function testCallback($test, $params, $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('callbackProvider')]
+    public function testCallback($test, $params, $expected): void
 	{
 		global $smcFunc;
 
@@ -191,10 +190,8 @@ class SMCTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider htmlspecialcharsProvider
-	 */
-	public function testHtmlspecialchars($test, $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('htmlspecialcharsProvider')]
+    public function testHtmlspecialchars($test, $expected): void
 	{
 		global $smcFunc;
 
@@ -211,10 +208,8 @@ class SMCTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider fourByteProvider
-	 */
-	public function testFourByte($test, $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('fourByteProvider')]
+    public function testFourByte($test, $expected): void
 	{
 		global $smcFunc;
 
@@ -262,10 +257,8 @@ class SMCTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider htmltrimProvider
-	 */
-	public function testHtmltrim($test, $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('htmltrimProvider')]
+    public function testHtmltrim($test, $expected): void
 	{
 		global $smcFunc;
 
@@ -455,10 +448,8 @@ class SMCTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider nullProvider
-	 */
-	public function testNull(array $test, bool $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('nullProvider')]
+    public function testNull(array $test, bool $expected): void
 	{
 		global $smcFunc;
 
@@ -510,10 +501,8 @@ class SMCTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider defaultProvider
-	 */
-	public function testDefault(array $test, $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('defaultProvider')]
+    public function testDefault(array $test, $expected): void
 	{
 		global $smcFunc;
 
@@ -1076,11 +1065,9 @@ class SMCTest extends TestCase
 			yield $name => [$test];
 	}
 
-	/**
-	 * @dataProvider columnProvider
-	 * @depends      testCreateTableToUpdate
-	 */
-	public function testCheckColumn(array $expected, array $columns): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('columnProvider')]
+    #[Depends('testCreateTableToUpdate')]
+    public function testCheckColumn(array $expected, array $columns): void
 	{
 		$this->assertArrayHasKey('name', $expected);
 		$this->assertArrayHasKey($expected['name'], $columns);
@@ -1104,10 +1091,8 @@ class SMCTest extends TestCase
 		$this->assertSame($expected['default'], $expected_column['default']);
 	}
 
-	/**
-	 * @depends testCreateTableToUpdate
-	 */
-	public function testUpdateTable(array $columns): array
+	#[\PHPUnit\Framework\Attributes\Depends('testCreateTableToUpdate')]
+    public function testUpdateTable(array $columns): array
 	{
 		global $db_prefix, $smcFunc;
 
@@ -1507,12 +1492,10 @@ class SMCTest extends TestCase
 			yield $name => [$test];
 	}
 
-	/**
-	 * @dataProvider updatedColumnProvider
-	 * @depends      testCreateTableToUpdate
-	 * @depends      testUpdateTable
-	 */
-	public function testCheckUpdatedColumn(array $expected, array $columns, array $updated): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('updatedColumnProvider')]
+    #[Depends('testCreateTableToUpdate')]
+    #[Depends('testUpdateTable')]
+    public function testCheckUpdatedColumn(array $expected, array $columns, array $updated): void
 	{
 		$this->assertArrayHasKey('name', $expected);
 		$this->assertArrayHasKey($expected['name'], $columns);

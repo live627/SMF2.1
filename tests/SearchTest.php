@@ -170,10 +170,8 @@ class SearchTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider highlightProvider
-	 */
-	public function testHighlight(string $string, array $words, string $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('highlightProvider')]
+    public function testHighlight(string $string, array $words, string $expected): void
 	{
 		$this->assertEquals($expected, highlight($string, $words));
 	}

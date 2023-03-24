@@ -45,11 +45,8 @@ class TestxmlArray extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider data
-	 *
-	 */
-	public function test(string $xml, array $array): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('data')]
+    public function test(string $xml, array $array): void
 	{
 		$result = new xmlArray($xml);
 		$this->assertTrue($result->exists('characters[0]'));
@@ -74,11 +71,8 @@ class TestxmlArray extends TestCase
 		$this->assertEquals(preg_replace('/\s\s+/', '', $xml), preg_replace('/\s\s+/', '', $cdatalessResult));
 	}
 
-	/**
-	 * @dataProvider data
-	 *
-	 */
-	public function testNoisyFailure(string $xml): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('data')]
+    public function testNoisyFailure(string $xml): void
 	{
 		set_error_handler(
 			function ($errno, $errstr, $errfile, $errline, $errcontext): void
@@ -94,11 +88,8 @@ class TestxmlArray extends TestCase
 		restore_error_handler();
 	}
 
-	/**
-	 * @dataProvider data
-	 *
-	 */
-	public function testSilentFailure(string $xml): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('data')]
+    public function testSilentFailure(string $xml): void
 	{
 		$result = new xmlArray($xml, true, 0);
 		$this->assertFalse($result->to_array('error'));

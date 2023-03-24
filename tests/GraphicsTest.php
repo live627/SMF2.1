@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SMF\Tests;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 use gif_file;
@@ -52,13 +53,9 @@ class GraphicsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider data
-	 *
-	 * @group        slow
-	 *
-	 */
-	public function test(string $url): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('data')]
+    #[Group('slow')]
+    public function test(string $url): void
 	{
 		global $modSettings, $smcFunc;
 

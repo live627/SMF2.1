@@ -95,10 +95,8 @@ class MentionsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider data
-	 */
-	public function test(string $code): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('data')]
+    public function test(string $code): void
 	{
 		$this->assertEmpty(
 			Mentions::getExistingMentions(

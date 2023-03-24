@@ -62,10 +62,8 @@ class PMTest extends TestCase
 		}
 	}
 
-	/**
-	 * @depends testAddMembers
-	 */
-	public function testSendPM(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAddMembers')]
+    public function testSendPM(): void
 	{
 		global $context, $membersTest;
 
@@ -96,10 +94,8 @@ class PMTest extends TestCase
 		$this->assertNotEmpty($context['personal_messages']);
 	}
 
-	/**
-	 * @depends testSendPM
-	 */
-	public function testAddLabel(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testSendPM')]
+    public function testAddLabel(): void
 	{
 		global $context;
 
@@ -115,10 +111,8 @@ class PMTest extends TestCase
 		$this->assertContains('test', array_column($context['labels'], 'name', 'id'));
 	}
 
-	/**
-	 * @depends testAddLabel
-	 */
-	public function testAddRule(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAddLabel')]
+    public function testAddRule(): void
 	{
 		global $context;
 
@@ -141,10 +135,8 @@ class PMTest extends TestCase
 		$this->assertContains('test', array_column($context['rules'], 'name'));
 	}
 
-	/**
-	 * @depends testAddRule
-	 */
-	public function testApplyRules(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAddRule')]
+    public function testApplyRules(): void
 	{
 		global $context;
 
@@ -159,10 +151,8 @@ class PMTest extends TestCase
 		$this->assertContains('test', array_column($labels, 'name'));
 	}
 
-	/**
-	 * @depends testAddRule
-	 */
-	public function testModifyRule(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAddRule')]
+    public function testModifyRule(): void
 	{
 		global $context;
 
@@ -186,10 +176,8 @@ class PMTest extends TestCase
 		$this->assertContains('test', array_column($context['rules'], 'name', 'id'));
 	}
 
-	/**
-	 * @depends testModifyRule
-	 */
-	public function testApplyModifiedRules(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testModifyRule')]
+    public function testApplyModifiedRules(): void
 	{
 		global $context;
 
@@ -207,10 +195,8 @@ class PMTest extends TestCase
 		$this->assertEmpty($context['personal_messages']);
 	}
 
-	/**
-	 * @depends testAddRule
-	 */
-	public function testDeleteRule(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAddRule')]
+    public function testDeleteRule(): void
 	{
 		global $context;
 
@@ -231,20 +217,16 @@ class PMTest extends TestCase
 		$this->assertNotContains('test', array_column($context['rules'], 'name'));
 	}
 
-	/**
-	 * @depends testDeleteRule
-	 */
-	public function testRefreshRule(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testDeleteRule')]
+    public function testRefreshRule(): void
 	{
 		$this->testSendPM();
 		$this->testAddRule();
 		$this->testApplyRules();
 	}
 
-	/**
-	 * @depends testAddLabel
-	 */
-	public function testSearch(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAddLabel')]
+    public function testSearch(): void
 	{
 		global $context;
 
@@ -261,10 +243,8 @@ class PMTest extends TestCase
 		$this->assertStringContainsString('great', $context['personal_messages'][0]['body']);
 	}
 
-	/**
-	 * @depends testAddLabel
-	 */
-	public function testDeleteLabel(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAddLabel')]
+    public function testDeleteLabel(): void
 	{
 		global $context;
 
@@ -284,10 +264,8 @@ class PMTest extends TestCase
 		$this->assertNotContains('test', array_column($context['labels'], 'name'));
 	}
 
-	/**
-	 * @depends testAddMembers
-	 */
-	public function testRemoveMembers(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAddMembers')]
+    public function testRemoveMembers(): void
 	{
 		global $membersTest;
 

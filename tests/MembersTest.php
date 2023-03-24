@@ -89,11 +89,8 @@ class MembersTest extends TestCase
 		];
 	}
 
-	/**
-	 * @group slow
-	 *
-	 */
-	public function testAddMembers(): void
+	#[\PHPUnit\Framework\Attributes\Group('slow')]
+    public function testAddMembers(): void
 	{
 		global $membersTest;
 
@@ -113,10 +110,8 @@ class MembersTest extends TestCase
 			$this->assertContains($member['id_member'], $membersTest);
 	}
 
-	/**
-	 * @depends testAddMembers
-	 */
-	public function testDuplicateMembers(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAddMembers')]
+    public function testDuplicateMembers(): void
 	{
 		global $membersTest;
 
@@ -134,10 +129,8 @@ class MembersTest extends TestCase
 		$this->assertCount(0, $members[3]['duplicate_members']);
 	}
 
-	/**
-	 * @depends testAddMembers
-	 */
-	public function testReattributePosts(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAddMembers')]
+    public function testReattributePosts(): void
 	{
 		global $membersTest;
 
@@ -173,10 +166,8 @@ class MembersTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider reservedNameProvider
-	 */
-	public function testReservedNameCaseSensitive(string $uname, string $uname2) : void
+	#[\PHPUnit\Framework\Attributes\DataProvider('reservedNameProvider')]
+    public function testReservedNameCaseSensitive(string $uname, string $uname2) : void
 	{
 		global $modSettings;
 
@@ -185,10 +176,8 @@ class MembersTest extends TestCase
 		$this->assertFalse(isReservedName($uname2, 1, true, false));
 	}
 
-	/**
-	 * @dataProvider reservedNameProvider
-	 */
-	public function testReservedNameCaseInsensitive(string $uname, string $uname2) : void
+	#[\PHPUnit\Framework\Attributes\DataProvider('reservedNameProvider')]
+    public function testReservedNameCaseInsensitive(string $uname, string $uname2) : void
 	{
 		global $modSettings;
 
@@ -197,10 +186,8 @@ class MembersTest extends TestCase
 		$this->assertTrue(isReservedName($uname2, 1, true, false));
 	}
 
-	/**
-	 * @depends testAddMembers
-	 */
-	public function testMembersAllowedTo(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAddMembers')]
+    public function testMembersAllowedTo(): void
 	{
 		global $membersTest;
 
@@ -278,10 +265,8 @@ class MembersTest extends TestCase
 		loadMemberContext(420);
 	}
 
-	/**
-	 * @depends testAddMembers
-	 */
-	public function testMembersData(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAddMembers')]
+    public function testMembersData(): void
 	{
 		global $context, $memberContext, $membersTest, $user_profile;
 
@@ -318,10 +303,8 @@ class MembersTest extends TestCase
 		);
 	}
 
-	/**
-	 * @depends testAddMembers
-	 */
-	public function testRemoveMembers(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAddMembers')]
+    public function testRemoveMembers(): void
 	{
 		global $membersTest;
 

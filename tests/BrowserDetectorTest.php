@@ -131,10 +131,8 @@ class BrowserDetectorTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider data
-	 */
-	public function test(string $userAgent, string $browser, string $browserVar): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('data')]
+    public function test(string $userAgent, string $browser, string $browserVar): void
 	{
 		global $context;
 

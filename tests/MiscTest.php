@@ -40,11 +40,8 @@ class MiscTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider data
-	 *
-	 */
-	public function testServerVersions(string $checkFor): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('data')]
+    public function testServerVersions(string $checkFor): void
 	{
 		$versions = getServerVersions([$checkFor]);
 
@@ -131,11 +128,8 @@ class MiscTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider cssdata
-	 *
-	 */
-	public function testLoadCSSFile($name, $params, $id): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('cssdata')]
+    public function testLoadCSSFile($name, $params, $id): void
 	{
 		global $context;
 
@@ -192,11 +186,8 @@ class MiscTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider javascriptdata
-	 *
-	 */
-	public function testLoad_javascriptFile($name, $params, $id): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('javascriptdata')]
+    public function testLoad_javascriptFile($name, $params, $id): void
 	{
 		global $context;
 

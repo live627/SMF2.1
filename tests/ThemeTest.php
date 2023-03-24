@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SMF\Tests;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
 use Exception;
@@ -78,11 +79,8 @@ class ThemeTest extends TestCase
 		$this->assertStringContainsString('Themes/123', $single['theme_url']);
 	}
 
-	/**
-	 * @depends testInstallCopy
-	 *
-	 */
-	public function testInstallDuplicateCopy(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testInstallCopy')]
+    public function testInstallDuplicateCopy(): void
 	{
 		global $context;
 
@@ -104,11 +102,8 @@ class ThemeTest extends TestCase
 		}
 	}
 
-	/**
-	 * @depends testInstallCopy
-	 *
-	 */
-	public function testInstallCopyWithNoName(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testInstallCopy')]
+    public function testInstallCopyWithNoName(): void
 	{
 		global $context;
 
@@ -128,12 +123,9 @@ class ThemeTest extends TestCase
 		}
 	}
 
-	/**
-	 * @depends testThemeInfo
-	 * @depends testInstallCopy
-	 *
-	 */
-	public function testInstallDependentTheme(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testThemeInfo')]
+    #[Depends('testInstallCopy')]
+    public function testInstallDependentTheme(): void
 	{
 		global $context, $themedir, $themeurl;
 
@@ -157,11 +149,8 @@ class ThemeTest extends TestCase
 		$this->assertCount(3, $context['themes']);
 	}
 
-	/**
-	 * @depends testInstallDependentTheme
-	 *
-	 */
-	public function testUpdateDependentTheme(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testInstallDependentTheme')]
+    public function testUpdateDependentTheme(): void
 	{
 		global $context, $themedir, $themeurl;
 
@@ -182,11 +171,8 @@ class ThemeTest extends TestCase
 		$this->assertCount(3, $context['themes']);
 	}
 
-	/**
-	 * @depends testInstallDependentTheme
-	 *
-	 */
-	public function testRemoveDependentTheme(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testInstallDependentTheme')]
+    public function testRemoveDependentTheme(): void
 	{
 		global $context;
 
@@ -207,11 +193,8 @@ class ThemeTest extends TestCase
 		$this->assertCount(2, $context['themes']);
 	}
 
-	/**
-	 * @depends testInstallCopy
-	 *
-	 */
-	public function testRemoveTheme(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testInstallCopy')]
+    public function testRemoveTheme(): void
 	{
 		global $context;
 

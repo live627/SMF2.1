@@ -73,11 +73,8 @@ class BBCTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider preparseProvider
-	 *
-	 */
-	public function testPreparseBBcode(string $test, string $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('preparseProvider')]
+    public function testPreparseBBcode(string $test, string $expected): void
 	{
 		global $sourcedir;
 
@@ -480,11 +477,8 @@ class BBCTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider bbcProvider
-	 *
-	 */
-	public function testBBC(string $tag, string $test, string $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('bbcProvider')]
+    public function testBBC(string $tag, string $test, string $expected): void
 	{
 		$result = parse_bbc($test);
 		$this->assertEquals($expected, $result);
@@ -701,10 +695,8 @@ class BBCTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider autolinkProvider
-	 */
-	public function testAutolink(string $test, string $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('autolinkProvider')]
+    public function testAutolink(string $test, string $expected): void
 	{
 		$result = parse_bbc($test);
 		$this->assertEquals($expected, $result);
@@ -796,11 +788,8 @@ class BBCTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider html_to_bbcProvider
-	 *
-	 */
-	public function testHtmlToBbc(string $test, string $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('html_to_bbcProvider')]
+    public function testHtmlToBbc(string $test, string $expected): void
 	{
 		$this->assertEquals($expected, html_to_bbc($test));
 	}
@@ -836,11 +825,8 @@ class BBCTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider smileyProvider
-	 *
-	 */
-	public function testSmiley(string $test, string $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('smileyProvider')]
+    public function testSmiley(string $test, string $expected): void
 	{
 		parsesmileys($test);
 		$this->assertEquals($expected, $test);
@@ -926,11 +912,8 @@ class BBCTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider legacyBBCProvider
-	 *
-	 */
-	public function testLegacyBBC($tag, string $test, string $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('legacyBBCProvider')]
+    public function testLegacyBBC($tag, string $test, string $expected): void
 	{
 		preparsecode($test);
 		$this->assertEquals($expected, $test);

@@ -205,10 +205,8 @@ class MenuTest extends TestCase
 		$this->assertTrue($result['sections']['section2']['areas']['area3']['subsections']['sub1']['is_first']);
 	}
 
-	/**
-	 * @dataProvider optionsProvider
-	 */
-	public function testOptions($expectedKey, $expectedVal): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('optionsProvider')]
+    public function testOptions($expectedKey, $expectedVal): void
 	{
 		global $context;
 		createMenu($this->test_areas, $this->test_options);

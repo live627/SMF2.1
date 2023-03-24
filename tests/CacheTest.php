@@ -101,10 +101,8 @@ class CacheTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider data
-	 */
-	public function test(string $fqcn): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('data')]
+    public function test(string $fqcn): void
 	{
 		$this->cacheObj = loadCacheAccelerator($fqcn, false);
 

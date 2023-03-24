@@ -75,10 +75,8 @@ class SoundTest extends TestCase
 		return array_map(fn($x) => [$x], str_split('abcdefghijklmnopqrstuvwxyz'));
 	}
 
-	/**
-	 * @dataProvider data
-	 */
-	public function test(string $char): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('data')]
+    public function test(string $char): void
 	{
 		$this->assertFileExists('./Themes/default/fonts/sound/' . $char . '.english.wav');
 		if (($fp = fopen('./Themes/default/fonts/sound/' . $char . '.english.wav', 'r')) !== false)
