@@ -6,13 +6,13 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class MenuTest extends TestCase
+final class MenuTest extends TestCase
 {
 	protected $test_areas;
 
 	protected $test_options;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		global $context, $sourcedir, $user_info;
 
@@ -174,7 +174,7 @@ class MenuTest extends TestCase
 		$context['current_action'] = 'bubbh';
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		global $context;
 
@@ -205,10 +205,8 @@ class MenuTest extends TestCase
 		$this->assertTrue($result['sections']['section2']['areas']['area3']['subsections']['sub1']['is_first']);
 	}
 
-	/**
-	 * @dataProvider optionsProvider
-	 */
-	public function testOptions($expectedKey, $expectedVal): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('optionsProvider')]
+    public function testOptions($expectedKey, $expectedVal): void
 	{
 		global $context;
 		createMenu($this->test_areas, $this->test_options);

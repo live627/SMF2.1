@@ -6,7 +6,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class PermissionsTest extends TestCase
+final class PermissionsTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{
@@ -24,11 +24,8 @@ class PermissionsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider permissionsControllerProvider
-	 *
-	 */
-	public function testPermissionsController(int $group): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('permissionsControllerProvider')]
+    public function testPermissionsController(int $group): void
 	{
 		global $context;
 

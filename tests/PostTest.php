@@ -6,7 +6,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class PostTest extends TestCase
+final class PostTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{
@@ -15,7 +15,7 @@ class PostTest extends TestCase
 		require_once __DIR__ . '/../Sources/RemoveTopic.php';
 	}
 
-	public function testMakeReplyPost()
+	public function testMakeReplyPost(): void
 	{
 		global $board, $board_info, $context, $smcFunc, $topic;
 

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace SMF\Tests;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 use curl_fetch_web_data;
 
-class CurlFetchWebdataTest extends TestCase
+final class CurlFetchWebdataTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{
@@ -57,13 +58,9 @@ class CurlFetchWebdataTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider getProvider
-	 *
-	 * @group        slow
-	 *
-	 */
-	public function testGet(string $url, int $responseCode, string $responseBody): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('getProvider')]
+    #[Group('slow')]
+    public function testGet(string $url, int $responseCode, string $responseBody): void
 	{
 		$curl = new curl_fetch_web_data([CURLOPT_RETURNTRANSFER => 1], 1);
 		$curl->get_url_data($url);
@@ -71,13 +68,9 @@ class CurlFetchWebdataTest extends TestCase
 		$this->assertStringContainsString($responseBody, $curl->result('body'));
 	}
 
-	/**
-	 * @dataProvider postProvider
-	 *
-	 * @group        slow
-	 *
-	 */
-	public function testPost(string $url, array $postData, int $responseCode, string $responseBody): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('postProvider')]
+    #[Group('slow')]
+    public function testPost(string $url, array $postData, int $responseCode, string $responseBody): void
 	{
 		$curl = new curl_fetch_web_data();
 		$curl->get_url_data($url, $postData);

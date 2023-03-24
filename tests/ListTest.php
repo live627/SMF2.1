@@ -6,7 +6,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class ListTest extends TestCase
+final class ListTest extends TestCase
 {
 	public function test(): void
 	{
@@ -108,10 +108,8 @@ class ListTest extends TestCase
 		return [[0], [2], [32], [65], ['2'], ['65']];
 	}
 
-	/**
-	 * @dataProvider data
-	 */
-	public function test2(/*mixed */$count): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('data')]
+    public function test2(/*mixed */$count): void
 	{
 		global $context, $sourcedir;
 

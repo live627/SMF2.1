@@ -6,7 +6,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class SubsTest extends TestCase
+final class SubsTest extends TestCase
 {
 	public function testTimeformat(): void
 	{
@@ -56,10 +56,8 @@ class SubsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider dateOrTimeProvider
-	 */
-	public function testDateOrTime(string $test, string $expected_date, string $expected_time): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('dateOrTimeProvider')]
+    public function testDateOrTime(string $test, string $expected_date, string $expected_time): void
 	{
 		$this->assertEquals($expected_date, get_date_or_time_format('date', $test));
 		$this->assertEquals($expected_time, get_date_or_time_format('time', $test));
@@ -94,10 +92,8 @@ class SubsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider sentenceListProvider
-	 */
-	public function testSentenceList(array $test, string $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('sentenceListProvider')]
+    public function testSentenceList(array $test, string $expected): void
 	{
 		$this->assertEquals($expected, sentence_list($test));
 	}
@@ -124,10 +120,8 @@ class SubsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider iriProvider
-	 */
-	public function testIri(string $test, string $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('iriProvider')]
+    public function testIri(string $test, string $expected): void
 	{
 		$this->assertEquals($expected, iri_to_url($test));
 		$this->assertEquals($test, url_to_iri($expected));
@@ -153,10 +147,8 @@ class SubsTest extends TestCase
 		);
 	}
 
-	/**
-	 * @dataProvider pageIndexProvider
-	 */
-	public function testPageIndex(int $start, int $max_value, int $num_per_page, int $this_page, int $this_value): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('pageIndexProvider')]
+    public function testPageIndex(int $start, int $max_value, int $num_per_page, int $this_page, int $this_value): void
 	{
 		global $context;
 
@@ -194,10 +186,8 @@ class SubsTest extends TestCase
 			$this->assertStringNotContainsString('previous_page', $page_index);
 	}
 
-	/**
-	 * @dataProvider pageIndexProvider
-	 */
-	public function testPageIndexAll(int $start, int $max_value, int $num_per_page, int $this_page, int $this_value): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('pageIndexProvider')]
+    public function testPageIndexAll(int $start, int $max_value, int $num_per_page, int $this_page, int $this_value): void
 	{
 		global $context, $modSettings;
 

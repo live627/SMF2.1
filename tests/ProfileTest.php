@@ -6,19 +6,19 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class ProfileTest extends TestCase
+final class ProfileTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{
 		require_once __DIR__ . '/../Sources/Profile.php';
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		unset($_REQUEST);
 	}
 
-	public function testSummary()
+	public function testSummary(): void
 	{
 		global $context;
 

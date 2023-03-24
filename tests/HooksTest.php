@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace SMF\Tests;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
-class HooksTest extends TestCase
+final class HooksTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{
@@ -37,10 +38,8 @@ class HooksTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider integrationProvider
-	 */
-	public function testAddHooks($hook, $function, $permanent, $file, $object, $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('integrationProvider')]
+    public function testAddHooks($hook, $function, $permanent, $file, $object, $expected): void
 	{
 		global $modSettings, $smcFunc;
 
@@ -62,10 +61,8 @@ class HooksTest extends TestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-	/**
-	 * @depends testAddHooks
-	 */
-	public function testManageHooks(): void
+	#[\PHPUnit\Framework\Attributes\Depends('testAddHooks')]
+    public function testManageHooks(): void
 	{
 		global $context;
 
@@ -93,12 +90,9 @@ class HooksTest extends TestCase
 		);
 	}
 
-	/**
-	 * @dataProvider integrationProvider
-	 *
-	 * @depends testAddHooks
-	 */
-	public function testCallHooks($hook): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('integrationProvider')]
+    #[Depends('testAddHooks')]
+    public function testCallHooks($hook): void
 	{
 		global $db_show_debug, $context;
 
@@ -109,12 +103,9 @@ class HooksTest extends TestCase
 		$this->assertContains($hook, $context['debug']['hooks']);
 	}
 
-	/**
-	 * @dataProvider integrationProvider
-	 *
-	 * @depends testAddHooks
-	 */
-	public function testRemoveHooks($hook, $function, $permanent, $file, $object): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('integrationProvider')]
+    #[Depends('testAddHooks')]
+    public function testRemoveHooks($hook, $function, $permanent, $file, $object): void
 	{
 		global $modSettings, $smcFunc;
 

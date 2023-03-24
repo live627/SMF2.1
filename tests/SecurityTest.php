@@ -5,7 +5,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class SecurityTest extends TestCase
+final class SecurityTest extends TestCase
 {
 	//~ public function domainsProvider(): array
 	//~ {
@@ -136,10 +136,8 @@ class SecurityTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider corsDomainAliasProvider
-	 */
-	public function testCorsAlias(string $domain): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('corsDomainAliasProvider')]
+    public function testCorsAlias(string $domain): void
 	{
 		global $context, $modSettings;
 
@@ -167,10 +165,8 @@ class SecurityTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider corsDomainProvider
-	 */
-	public function testCorsAdditional(string $domain): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('corsDomainProvider')]
+    public function testCorsAdditional(string $domain): void
 	{
 		global $context, $modSettings;
 
@@ -189,10 +185,8 @@ class SecurityTest extends TestCase
 		$_SERVER['HTTP_ORIGIN'] = '';
 	}
 
-	/**
-	 * @dataProvider corsDomainProvider
-	 */
-	public function testCorsAdditionalWildcard(string $domain): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('corsDomainProvider')]
+    public function testCorsAdditionalWildcard(string $domain): void
 	{
 		global $context, $modSettings;
 

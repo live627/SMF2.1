@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace SMF\Tests;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-class FetchWebdataTest extends TestCase
+final class FetchWebdataTest extends TestCase
 {
 	/**
 	 * @return string[][]
@@ -35,25 +36,17 @@ class FetchWebdataTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider getProvider
-	 *
-	 * @group        slow
-	 *
-	 */
-	public function testGet(string $url, string $responseBody): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('getProvider')]
+    #[Group('slow')]
+    public function testGet(string $url, string $responseBody): void
 	{
 		if (($data = fetch_web_data($url)) !== false)
 			$this->assertStringContainsString($responseBody, $data);
 	}
 
-	/**
-	 * @dataProvider postProvider
-	 *
-	 * @group        slow
-	 *
-	 */
-	public function testPost(string $url, string $postData, string $responseBody): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('postProvider')]
+    #[Group('slow')]
+    public function testPost(string $url, string $postData, string $responseBody): void
 	{
 		if (($data = fetch_web_data($url, $postData)) !== false)
 			$this->assertStringContainsString($responseBody, $data);

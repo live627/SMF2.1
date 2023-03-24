@@ -8,14 +8,14 @@ use PHPUnit\Framework\TestCase;
 
 use browser_detector;
 
-class BrowserDetectorTest extends TestCase
+final class BrowserDetectorTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{
 		require_once __DIR__ . '/../Sources/Class-BrowserDetect.php';
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$_SERVER['HTTP_USER_AGENT'] = '';
 	}
@@ -131,10 +131,8 @@ class BrowserDetectorTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider data
-	 */
-	public function test(string $userAgent, string $browser, string $browserVar): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('data')]
+    public function test(string $userAgent, string $browser, string $browserVar): void
 	{
 		global $context;
 

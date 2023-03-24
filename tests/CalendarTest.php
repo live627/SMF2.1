@@ -6,7 +6,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class CalendarTest extends TestCase
+final class CalendarTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{
@@ -22,10 +22,8 @@ class CalendarTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider timeformatProvider
-	 */
-	public function testCalendarPost(string $timeformat): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('timeformatProvider')]
+    public function testCalendarPost(string $timeformat): void
 	{
 		global $user_info, $context;
 
@@ -53,10 +51,8 @@ class CalendarTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider dateToEnglishProvider
-	 */
-	public function testDateToEnglish(string $test, string $test_short, string $expected, string $expected_short): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('dateToEnglishProvider')]
+    public function testDateToEnglish(string $test, string $test_short, string $expected, string $expected_short): void
 	{
 		global $txt, $context;
 
@@ -145,10 +141,8 @@ class CalendarTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider gridProvider
-	 */
-	public function testGrid(array $calendarOptions): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('gridProvider')]
+    public function testGrid(array $calendarOptions): void
 	{
 		$calendarGrid = getCalendarGrid('2021-04-02', $calendarOptions);
 		$this->assertCount(5, $calendarGrid['weeks']);

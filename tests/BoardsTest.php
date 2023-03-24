@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use PHPUnit\Framework\Error\Error as PHPUnitError;
 
-class BoardsTest extends TestCase
+final class BoardsTest extends TestCase
 {
 	private $options = [];
 
@@ -19,7 +19,7 @@ class BoardsTest extends TestCase
 		require_once __DIR__ . '/../Sources/Subs-Boards.php';
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->options = [
 			[

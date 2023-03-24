@@ -6,7 +6,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class AdminSearchTest extends TestCase
+final class AdminSearchTest extends TestCase
 {
 	public function testSearchSettings(): void
 	{

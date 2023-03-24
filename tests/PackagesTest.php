@@ -6,7 +6,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class PackagesTest extends TestCase
+final class PackagesTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{
@@ -15,12 +15,12 @@ class PackagesTest extends TestCase
 		require_once __DIR__ . '/../Sources/Subs-Package.php';
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		unset($_REQUEST, $_GET);
 	}
 
-	public function testPackageBrowse()
+	public function testPackageBrowse(): void
 	{
 		global $context;
 
@@ -32,7 +32,7 @@ class PackagesTest extends TestCase
 		$this->assertEquals('packages_lists', $context['default_list']);
 	}
 
-	public function testPackageDownload()
+	public function testPackageDownload(): void
 	{
 		global $context;
 
@@ -45,10 +45,8 @@ class PackagesTest extends TestCase
 		$this->assertEquals('SimpleDesk - Integrated Helpdesk for Simple Machines Forum', $context['package']['name']);
 	}
 
-	/**
-	 * @depends testPackageDownload
-	 */
-	public function testPackageDownloaded()
+	#[\PHPUnit\Framework\Attributes\Depends('testPackageDownload')]
+    public function testPackageDownloaded(): void
 	{
 		global $context;
 
@@ -61,10 +59,8 @@ class PackagesTest extends TestCase
 		);
 	}
 
-	/**
-	 * @depends testPackageDownload
-	 */
-	public function testActionInstall()
+	#[\PHPUnit\Framework\Attributes\Depends('testPackageDownload')]
+    public function testActionInstall(): void
 	{
 		global $context;
 
@@ -81,10 +77,8 @@ class PackagesTest extends TestCase
 		);
 	}
 
-	/**
-	 * @depends testPackageDownload
-	 */
-	public function testPackageRemove()
+	#[\PHPUnit\Framework\Attributes\Depends('testPackageDownload')]
+    public function testPackageRemove(): void
 	{
 		global $context;
 
@@ -106,10 +100,8 @@ class PackagesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider zipProvider
-	 */
-	public function testZip(string $filename): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('zipProvider')]
+    public function testZip(string $filename): void
 	{
 		$file_info = read_tgz_file(
 			__DIR__ . '/packages/' . $filename,
@@ -194,10 +186,8 @@ class PackagesTest extends TestCase
 		return [['nested.tar.gz'], ['nested.zip']];
 	}
 
-	/**
-	 * @dataProvider nestedProvider
-	 */
-	public function testNested(string $filename): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('nestedProvider')]
+    public function testNested(string $filename): void
 	{
 		$this->assertFalse(read_tgz_file(__DIR__ . '/packages/' . $filename, 's.txt', true));
 		$this->assertEquals('Short one', read_tgz_file(__DIR__ . '/packages/' . $filename, 's/s.txt', true));
@@ -206,10 +196,8 @@ class PackagesTest extends TestCase
 		$this->assertFileNotExists(__DIR__ . '/packages/tmp/s/s.txt');
 	}
 
-	/**
-	 * @dataProvider nestedProvider
-	 */
-	public function testListNested(string $filename): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('nestedProvider')]
+    public function testListNested(string $filename): void
 	{
 		$file_info = read_tgz_file(__DIR__ . '/packages/' . $filename, null);
 		$this->assertCount(1, $file_info);
@@ -218,10 +206,8 @@ class PackagesTest extends TestCase
 		$this->assertEquals('s/s.txt', $file_info[0]['filename']);
 	}
 
-	/**
-	 * @dataProvider nestedProvider
-	 */
-	public function testListRestrictedNested(string $filename): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('nestedProvider')]
+    public function testListRestrictedNested(string $filename): void
 	{
 		$file_info = read_tgz_file(__DIR__ . '/packages/' . $filename, null, false, false, ['s/s.txt']);
 		$this->assertCount(1, $file_info);
@@ -230,10 +216,8 @@ class PackagesTest extends TestCase
 		$this->assertEquals('s/s.txt', $file_info[0]['filename']);
 	}
 
-	/**
-	 * @dataProvider nestedProvider
-	 */
-	public function testInvalidRestrictedNested(string $filename): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('nestedProvider')]
+    public function testInvalidRestrictedNested(string $filename): void
 	{
 		$file_info = read_tgz_file(__DIR__ . '/packages/' . $filename, __DIR__ . '/packages/tmp', false, false, ['a']);
 		$this->assertIsArray($file_info);
@@ -270,10 +254,8 @@ class PackagesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider compareVersionsProvider
-	 */
-	public function testCompareVersions(string $version1, string $version2): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('compareVersionsProvider')]
+    public function testCompareVersions(string $version1, string $version2): void
 	{
 		$this->assertSame(-1, compareVersions($version1, $version2));
 		$this->assertSame(1, compareVersions($version2, $version1));
@@ -291,18 +273,14 @@ class PackagesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider matchHighestPackageVersionProvider
-	 */
-	public function testMatchHighestPackageVersion(string $expected, string $range, string $version): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('matchHighestPackageVersionProvider')]
+    public function testMatchHighestPackageVersion(string $expected, string $range, string $version): void
 	{
 		$this->assertSame($expected, matchHighestPackageVersion($range, false, $version));
 	}
 
-	/**
-	 * @dataProvider matchHighestPackageVersionProvider
-	 */
-	public function testMatchHighestPackageVersion2(string $expected, string $range, string $version): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('matchHighestPackageVersionProvider')]
+    public function testMatchHighestPackageVersion2(string $expected, string $range, string $version): void
 	{
 		$this->assertSame($expected, matchHighestPackageVersion($range, true, $version));
 	}
@@ -317,10 +295,8 @@ class PackagesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider matchPackageVersionProvider
-	 */
-	public function testMatchPackageVersion(string $range, string $version): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('matchPackageVersionProvider')]
+    public function testMatchPackageVersion(string $range, string $version): void
 	{
 		$this->assertTrue(matchPackageVersion($version, $range));
 	}

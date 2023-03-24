@@ -5,7 +5,7 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class CensoringTest extends TestCase
+final class CensoringTest extends TestCase
 {
 	protected $tests = [
 		'this' => ['this' => 'not_this'],
@@ -25,11 +25,8 @@ class CensoringTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider keepCaseWholeWordProvider
-	 *
-	 */
-	public function testWholeWordsCaseSensitive($inputText, $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('keepCaseWholeWordProvider')]
+    public function testWholeWordsCaseSensitive($inputText, $expected): void
 	{
 		global $modSettings;
 
@@ -53,11 +50,8 @@ class CensoringTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider wholeWordsCaseInsensitiveProvider
-	 *
-	 */
-	public function testWholeWordsCaseInsensitive($inputText, $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('wholeWordsCaseInsensitiveProvider')]
+    public function testWholeWordsCaseInsensitive($inputText, $expected): void
 	{
 		global $modSettings;
 
@@ -85,11 +79,8 @@ class CensoringTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider notWholeWordsCaseSensitiveProvider
-	 *
-	 */
-	public function testNotWholeWordsCaseSensitive($inputText, $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('notWholeWordsCaseSensitiveProvider')]
+    public function testNotWholeWordsCaseSensitive($inputText, $expected): void
 	{
 		global $modSettings;
 
@@ -117,11 +108,8 @@ class CensoringTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider notWholeWordsCaseInsensitiveProvider
-	 *
-	 */
-	public function testNotWholeWordsCaseInsensitive($inputText, $expected): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('notWholeWordsCaseInsensitiveProvider')]
+    public function testNotWholeWordsCaseInsensitive($inputText, $expected): void
 	{
 		global $modSettings;
 
@@ -133,7 +121,7 @@ class CensoringTest extends TestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		global $modSettings;
 
@@ -150,7 +138,7 @@ class CensoringTest extends TestCase
 		$modSettings['censor_proper'] = implode("\n", $proper);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		global $modSettings;
 

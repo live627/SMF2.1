@@ -6,19 +6,19 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class GroupsTest extends TestCase
+final class GroupsTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{
 		require_once __DIR__ . '/../Sources/Groups.php';
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		unset($_REQUEST);
 	}
 
-	public function test()
+	public function test(): void
 	{
 		global $context;
 
@@ -27,7 +27,7 @@ class GroupsTest extends TestCase
 		$this->assertEquals(4, $context['group_lists']['num_columns']);
 	}
 
-	public function testShowMembers()
+	public function testShowMembers(): void
 	{
 		global $context;
 

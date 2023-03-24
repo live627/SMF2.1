@@ -15,11 +15,11 @@ use SMF\Cache\APIs\Sqlite;
 use SMF\Cache\CacheApi;
 use SMF\Cache\CacheApiInterface;
 
-class CacheTest extends TestCase
+final class CacheTest extends TestCase
 {
 	private $cacheObj;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		global $cache_enable;
 
@@ -27,7 +27,7 @@ class CacheTest extends TestCase
 		$cache_enable = 1;
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		global $cache_enable, $cacheAPI;
 
@@ -101,10 +101,8 @@ class CacheTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider data
-	 */
-	public function test(string $fqcn): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('data')]
+    public function test(string $fqcn): void
 	{
 		$this->cacheObj = loadCacheAccelerator($fqcn, false);
 

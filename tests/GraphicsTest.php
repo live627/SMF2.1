@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace SMF\Tests;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 use gif_file;
 
-class GraphicsTest extends TestCase
+final class GraphicsTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{
@@ -17,7 +18,7 @@ class GraphicsTest extends TestCase
 		require_once __DIR__ . '/../Sources/ManageAttachments.php';
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		removeAttachments(['id_member' => 1]);
 	}
@@ -52,13 +53,9 @@ class GraphicsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider data
-	 *
-	 * @group        slow
-	 *
-	 */
-	public function test(string $url): void
+	#[\PHPUnit\Framework\Attributes\DataProvider('data')]
+    #[Group('slow')]
+    public function test(string $url): void
 	{
 		global $modSettings, $smcFunc;
 
