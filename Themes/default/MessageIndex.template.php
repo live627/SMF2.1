@@ -429,7 +429,7 @@ function template_bi_board_stats($board)
 {
 	echo '
 		<p>
-			', Lang::$txt['posts'], ': ', Lang::numberFormat($board['posts']), '<br>', Lang::$txt['board_topics'], ': ', Lang::numberFormat($board['topics']), '
+		<span class="board_stats_number">', Lang::numberFormat($board['posts']), '</span> ', Lang::$txt['posts'], '<br><span class="board_stats_number">', Lang::numberFormat($board['topics']), '</span> ', Lang::$txt['board_topics'], '
 		</p>';
 }
 
@@ -455,8 +455,25 @@ function template_bi_redirect_stats($board)
 function template_bi_board_lastpost($board)
 {
 	if (!empty($board['last_post']['id']))
+	{
+		if (!empty($board['last_post']['member']['avatar']))
 		echo '
-			<p>', $board['last_post']['last_post_message'], '</p>';
+					<span class="board_avatar"><a href="', $board['last_post']['member']['href'], '"><img class="avatar" src="', $board['last_post']['member']['avatar']['href'], '" alt=""></a></span>';
+		else
+		echo '
+					<span class="board_avatar"><a href="#"></a></span>';
+
+		echo '
+					<p class="board_lastpost">';
+		echo '
+		<span>
+		' . $board['last_post']['link'] .'
+		</span>
+		<span class="postby">
+		' . $board['last_post']['member']['link'] . ' : '. timeformat($board['last_post']['timestamp']). '
+		</span>';
+		echo ' </p>';
+	}
 }
 
 /**
