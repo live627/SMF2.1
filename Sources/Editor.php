@@ -445,7 +445,7 @@ class Editor implements \ArrayAccess
 			'save_draft' => [
 				'type' => 'submit',
 				'value' => Lang::$txt['draft_save'],
-				'onclick' => !empty(Utils::$context['drafts_save']) ? 'submitThisOnce(this);' : (!empty(Utils::$context['drafts_save']) ? 'return confirm(' . Utils::JavaScriptEscape(Lang::$txt['draft_save_note']) . ') && submitThisOnce(this);' : ''),
+				'onclick' => !empty(Utils::$context['drafts_save']) ? 'return confirm(' . Utils::JavaScriptEscape(Lang::$txt['draft_save_note']) . ');' : '',
 				'accessKey' => 'd',
 				'show' => !empty(Utils::$context['drafts_save']),
 			],
