@@ -756,12 +756,12 @@ function template_calendar_top($calendar_data)
 
 	echo '
 			<form action="', Config::$scripturl, '?action=calendar;', Utils::$context['calendar_view'], '" id="', !empty($calendar_data['end_date']) ? 'calendar_range' : 'calendar_navigation', '" method="post" accept-charset="', Utils::$context['character_set'], '">
-				<input type="text" name="start_date" id="start_date" value="', trim($calendar_data['start_date']), '" tabindex="', Utils::$context['tabindex']++, '" class="date_input start" data-type="date">';
+				<input type="text" name="start_date" id="start_date" value="', trim($calendar_data['start_date']), '" class="date_input start" data-type="date">';
 
 	if (!empty($calendar_data['end_date']))
 		echo '
 				<span>', strtolower(Lang::$txt['to']), '</span>
-				<input type="text" name="end_date" id="end_date" value="', trim($calendar_data['end_date']), '" tabindex="', Utils::$context['tabindex']++, '" class="date_input end" data-type="date">';
+				<input type="text" name="end_date" id="end_date" value="', trim($calendar_data['end_date']), '" class="date_input end" data-type="date">';
 
 	echo '
 				<input type="submit" class="button" style="float:none" id="view_button" value="', Lang::$txt['view'], '">
@@ -810,7 +810,7 @@ function template_event_post()
 						<input type="hidden" name="calendar" value="1">
 						<div class="event_options_left" id="event_title">
 							<div>
-								<input type="text" id="evtitle" name="evtitle" maxlength="255" size="55" value="', Utils::$context['event']['title'], '" tabindex="', Utils::$context['tabindex']++, '">
+								<input type="text" id="evtitle" name="evtitle" maxlength="255" size="55" value="', Utils::$context['event']['title'], '">
 							</div>
 						</div>';
 
@@ -849,19 +849,19 @@ function template_event_post()
 						<div class="event_options_left" id="event_time_input">
 							<div>
 								<span class="label">', Lang::$txt['start'], '</span>
-								<input type="text" name="start_date" id="start_date" value="', trim(Utils::$context['event']['start_date_orig']), '" tabindex="', Utils::$context['tabindex']++, '" class="date_input start" data-type="date">
-								<input type="text" name="start_time" id="start_time" maxlength="11" value="', Utils::$context['event']['start_time_orig'], '" tabindex="', Utils::$context['tabindex']++, '" class="time_input start" data-type="time"', !empty(Utils::$context['event']['allday']) ? ' disabled' : '', '>
+								<input type="text" name="start_date" id="start_date" value="', trim(Utils::$context['event']['start_date_orig']), '" class="date_input start" data-type="date">
+								<input type="text" name="start_time" id="start_time" maxlength="11" value="', Utils::$context['event']['start_time_orig'], '" class="time_input start" data-type="time"', !empty(Utils::$context['event']['allday']) ? ' disabled' : '', '>
 							</div>
 							<div>
 								<span class="label">', Lang::$txt['end'], '</span>
-								<input type="text" name="end_date" id="end_date" value="', trim(Utils::$context['event']['end_date_orig']), '" tabindex="', Utils::$context['tabindex']++, '" class="date_input end" data-type="date"', Config::$modSettings['cal_maxspan'] == 1 ? ' disabled' : '', '>
-								<input type="text" name="end_time" id="end_time" maxlength="11" value="', Utils::$context['event']['end_time_orig'], '" tabindex="', Utils::$context['tabindex']++, '" class="time_input end" data-type="time"', !empty(Utils::$context['event']['allday']) ? ' disabled' : '', '>
+								<input type="text" name="end_date" id="end_date" value="', trim(Utils::$context['event']['end_date_orig']), '" class="date_input end" data-type="date"', Config::$modSettings['cal_maxspan'] == 1 ? ' disabled' : '', '>
+								<input type="text" name="end_time" id="end_time" maxlength="11" value="', Utils::$context['event']['end_time_orig'], '" class="time_input end" data-type="time"', !empty(Utils::$context['event']['allday']) ? ' disabled' : '', '>
 							</div>
 						</div><!-- #event_time_input -->
 						<div class="event_options_right" id="event_time_options">
 							<div id="event_allday">
 								<label for="allday"><span class="label">', Lang::$txt['calendar_allday'], '</span></label>
-								<input type="checkbox" name="allday" id="allday"', !empty(Utils::$context['event']['allday']) ? ' checked' : '', ' tabindex="', Utils::$context['tabindex']++, '">
+								<input type="checkbox" name="allday" id="allday"', !empty(Utils::$context['event']['allday']) ? ' checked' : '', '>
 							</div>
 							<div id="event_timezone">
 								<span class="label">', Lang::$txt['calendar_timezone'], '</span>
@@ -877,7 +877,7 @@ function template_event_post()
 						</div><!-- #event_time_options -->
 						<div>
 							<span class="label">', Lang::$txt['location'], '</span>
-							<input type="text" name="event_location" id="event_location" maxlength="255" value="', !empty(Utils::$context['event']['location']) ? Utils::$context['event']['location'] : '', '" tabindex="', Utils::$context['tabindex']++, '">
+							<input type="text" name="event_location" id="event_location" maxlength="255" value="', !empty(Utils::$context['event']['location']) ? Utils::$context['event']['location'] : '', '">
 						</div>
 					</fieldset>';
 
