@@ -1326,12 +1326,12 @@ function template_admin_search_results()
 {
 	echo '
 						<div id="section_header" class="cat_bar">
-							', template_admin_quick_search(), '
 							<h3 class="catbg">
 								<span id="quick_search_results">
 									', sprintf(Lang::$txt['admin_search_results_desc'], Utils::$context['search_term']), '
 								</span>
 							</h3>
+							', template_admin_quick_search(), '
 						</div><!-- #section_header -->
 						<div class="windowbg generic_list_wrapper">';
 
