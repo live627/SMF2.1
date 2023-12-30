@@ -79,16 +79,17 @@ function template_main()
 		echo '
 		<div class="main_container">
 			<div class="cat_bar ', $category['is_collapsed'] ? 'collapsed' : '', '" id="category_', $category['id'], '">
-				<h3 class="catbg">';
+				<h3 class="catbg">
+					', $category['link'], '
+				</h3>';
 
 		// If this category even can collapse, show a link to collapse it.
 		if ($category['can_collapse'])
 			echo '
-					<span id="category_', $category['id'], '_upshrink" class="', $category['is_collapsed'] ? 'toggle_down' : 'toggle_up', ' floatright" data-collapsed="', (int) $category['is_collapsed'], '" title="', !$category['is_collapsed'] ? Lang::$txt['hide_category'] : Lang::$txt['show_category'], '" style="display: none;"></span>';
+				<span id="category_', $category['id'], '_upshrink" class="', $category['is_collapsed'] ? 'toggle_down' : 'toggle_up', '" data-collapsed="', (int) $category['is_collapsed'], '" title="', !$category['is_collapsed'] ? Lang::$txt['hide_category'] : Lang::$txt['show_category'], '" style="display: none;"></span>';
 
 		echo '
-					', $category['link'], '
-				</h3>', !empty($category['description']) ? '
+				', !empty($category['description']) ? '
 				<div class="desc">' . $category['description'] . '</div>' : '', '
 			</div>
 			<div id="category_', $category['id'], '_boards" ', (!empty($category['css_class']) ? ('class="' . $category['css_class'] . '"') : ''), $category['is_collapsed'] ? ' style="display: none;"' : '', '>';
@@ -306,9 +307,9 @@ function template_info_center()
 	<div id="info_center">
 		<div class="title_bar">
 			<h3 class="titlebg">
-				<span class="toggle_up floatright" id="upshrink_ic" title="', Lang::$txt['hide_infocenter'], '" style="display: none;"></span>
 				<a href="#" id="upshrink_link">', sprintf(Lang::$txt['info_center_title'], Utils::$context['forum_name_html_safe']), '</a>
 			</h3>
+			<span class="toggle_up" id="upshrink_ic" title="', Lang::$txt['hide_infocenter'], '" style="display: none;"></span>
 		</div>
 		<div id="upshrink_stats"', empty(Theme::$current->options['collapse_header_ic']) ? '' : ' style="display: none;"', '>';
 
