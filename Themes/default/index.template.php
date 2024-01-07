@@ -203,10 +203,9 @@ function template_html_above()
  */
 function template_body_above()
 {
-
 	// Header
 	echo '
-	<div id="header">
+	<header id="header">
 		<div class="inner_wrap">
 			<h1 class="forumtitle">
 				<a id="top" href="', Config::$scripturl, '">
@@ -329,7 +328,7 @@ function template_body_above()
 				</ul>
 			</div>
 		</div>
-	</div>';
+	</header>';
 
 	// Show the menu here
 	template_menu();
@@ -359,14 +358,20 @@ function template_body_below()
 
 	// Show the footer with copyright, terms and help links.
 	echo '
-	<div id="footer">
+	<footer id="footer">
 		<div class="inner_wrap">';
 
 	// There is now a global "Go to top" link at the right.
 	echo '
 		<ul>
-			<li class="floatright"><a href="', Config::$scripturl, '?action=help">', Lang::$txt['help'], '<i class="fa-solid fa-circle-question"></i></a> ', (!empty(Config::$modSettings['requireAgreement'])) ? '| <a href="' . Config::$scripturl . '?action=agreement">' . Lang::$txt['terms_and_rules'] . '<i class="fa-solid fa-list-ul"></i></a>' : '', ' | <a href="#top_section">', Lang::$txt['go_up'], ' &#9650;</a></li>
 			<li class="copyright">', Theme::copyright(), '</li>
+		</ul>
+		<ul>
+			<li class="helplinks">
+				<a href="', Config::$scripturl, '?action=help">', Lang::$txt['help'], ' <i class="fa-solid fa-circle-question"></i></a>', (!empty(Config::$modSettings['requireAgreement'])) ? '
+				<a href="' . Config::$scripturl . '?action=agreement">' . Lang::$txt['terms_and_rules'] . ' <i class="fa-solid fa-list-ul"></i></a>' : '', '
+				<a href="#top_section">', Lang::$txt['go_up'], ' &#9650;</a>
+			</li>
 		</ul>';
 
 	// Show the load time?
@@ -376,7 +381,7 @@ function template_body_below()
 
 	echo '
 		</div>
-	</div><!-- #footer -->';
+	</footer><!-- #footer -->';
 
 }
 
@@ -407,7 +412,7 @@ function theme_linktree($force_show = false)
 		return;
 
 	echo '
-				<div class="navigate_section">
+				<nav aria-label="', Lang::$txt['breadcrumb'], '" class="navigate_section">
 					<ul>';
 
 	// Each tree item has a URL and name. Some may have extra_before and extra_after.
@@ -421,7 +426,7 @@ function theme_linktree($force_show = false)
 		// Picked a better looking HTML entity, and added support for RTL plus a span for styling.
 		if ($link_num != 0)
 			echo '
-					     <span class="dividers">', Utils::$context['right_to_left'] ? ' &#9668; ' : ' &#9658; ', '</span>';
+					     <span class="dividers"><i class="fa-solid fa-angle-', Utils::$context['right_to_left'] ? 'left' : 'right', '"></i></span>';
 
 		// Show something before the link?
 		if (isset($tree['extra_before']))
@@ -445,7 +450,7 @@ function theme_linktree($force_show = false)
 
 	echo '
 					</ul>
-				</div><!-- .navigate_section -->';
+				</nav><!-- .navigate_section -->';
 
 	$shown_linktree = true;
 }
@@ -456,7 +461,7 @@ function theme_linktree($force_show = false)
 function template_menu()
 {
 	echo '
-	<nav id="main_menu">
+	<nav id="main_menu" aria-label="', Lang::$txt['mobile_user_menu'], '">
 		<div class="inner_wrap">
 			<a class="mobile_user_menu">
 				<span class="main_icons navigation"></span>
