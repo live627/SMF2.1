@@ -65,6 +65,7 @@ function template_profile_popup()
 					<a href="', Config::$scripturl, '?action=profile;u=', User::$me->id, '">', User::$me->name, '</a>
 				</span>
 				<span class="profile_group">', Utils::$context['member']['group'], '</span>
+				<time datetime="', smf_gmstrftime('%FT%TZ'), '">', Utils::$context['current_time'], '</time>
 			</div>
 		</div>
 		<div class="body">
@@ -2098,7 +2099,7 @@ function template_groupMembership()
 
 		if (Utils::$context['can_edit_primary'])
 			echo '
-				<div class="padding righttext">
+				<div class="windowbg righttext">
 					<input type="submit" value="', Lang::$txt['make_primary'], '" class="button">
 				</div>';
 
