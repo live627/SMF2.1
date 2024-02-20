@@ -130,26 +130,26 @@ function template_main()
 							<div class="event_options" id="event_title">
 								<div>
 									<span class="label">', Lang::$txt['calendar_event_title'], '</span>
-									<input type="text" id="evtitle" name="evtitle" maxlength="255" value="', Utils::$context['event']['title'], '" tabindex="', Utils::$context['tabindex']++, '">
+									<input type="text" id="evtitle" name="evtitle" maxlength="255" value="', Utils::$context['event']['title'], '">
 								</div>
 							</div>
 							<div class="event_options">
 								<div class="event_options_left" id="event_time_input">
 									<div>
 										<span class="label">', Lang::$txt['start'], '</span>
-										<input type="text" name="start_date" id="start_date" value="', trim(Utils::$context['event']['start_date_orig']), '" tabindex="', Utils::$context['tabindex']++, '" class="date_input start" data-type="date">
-										<input type="text" name="start_time" id="start_time" maxlength="11" value="', Utils::$context['event']['start_time_orig'], '" tabindex="', Utils::$context['tabindex']++, '" class="time_input start" data-type="time"', !empty(Utils::$context['event']['allday']) ? ' disabled' : '', '>
+										<input type="text" name="start_date" id="start_date" value="', trim(Utils::$context['event']['start_date_orig']), '" class="date_input start" data-type="date">
+										<input type="text" name="start_time" id="start_time" maxlength="11" value="', Utils::$context['event']['start_time_orig'], '" class="time_input start" data-type="time"', !empty(Utils::$context['event']['allday']) ? ' disabled' : '', '>
 									</div>
 									<div>
 										<span class="label">', Lang::$txt['end'], '</span>
-										<input type="text" name="end_date" id="end_date" value="', trim(Utils::$context['event']['end_date_orig']), '" tabindex="', Utils::$context['tabindex']++, '" class="date_input end" data-type="date"', Config::$modSettings['cal_maxspan'] == 1 ? ' disabled' : '', '>
-										<input type="text" name="end_time" id="end_time" maxlength="11" value="', Utils::$context['event']['end_time_orig'], '" tabindex="', Utils::$context['tabindex']++, '" class="time_input end" data-type="time"', !empty(Utils::$context['event']['allday']) ? ' disabled' : '', '>
+										<input type="text" name="end_date" id="end_date" value="', trim(Utils::$context['event']['end_date_orig']), '" class="date_input end" data-type="date"', Config::$modSettings['cal_maxspan'] == 1 ? ' disabled' : '', '>
+										<input type="text" name="end_time" id="end_time" maxlength="11" value="', Utils::$context['event']['end_time_orig'], '" class="time_input end" data-type="time"', !empty(Utils::$context['event']['allday']) ? ' disabled' : '', '>
 									</div>
 								</div>
 								<div class="event_options_right" id="event_time_options">
 									<div id="event_allday">
 										<label for="allday"><span class="label">', Lang::$txt['calendar_allday'], '</span></label>
-										<input type="checkbox" name="allday" id="allday"', !empty(Utils::$context['event']['allday']) ? ' checked' : '', ' tabindex="', Utils::$context['tabindex']++, '">
+										<input type="checkbox" name="allday" id="allday"', !empty(Utils::$context['event']['allday']) ? ' checked' : '', '>
 									</div>
 									<div id="event_timezone">
 										<span class="label">', Lang::$txt['calendar_timezone'], '</span>
@@ -167,7 +167,7 @@ function template_main()
 							<div class="event_options">
 								<div>
 									<span class="label">', Lang::$txt['location'], '</span>
-									<input type="text" name="event_location" id="event_location" maxlength="255" value="', Utils::$context['event']['location'], '" tabindex="', Utils::$context['tabindex']++, '">
+									<input type="text" name="event_location" id="event_location" maxlength="255" value="', Utils::$context['event']['location'], '">
 								</div>
 							</div>
 						</fieldset>
@@ -185,7 +185,7 @@ function template_main()
 							<dl class="settings poll_options" data-more-txt="', Lang::$txt['poll_add_option'], '" data-option-txt="', Lang::$txt['option'], '">
 								<dt>', Lang::$txt['poll_question'], '</dt>
 								<dd>
-									<input type="text" name="question" value="', isset(Utils::$context['question']) ? Utils::$context['question'] : '', '" tabindex="', Utils::$context['tabindex']++, '" size="80">
+									<input type="text" name="question" value="', isset(Utils::$context['question']) ? Utils::$context['question'] : '', '" size="80">
 								</dd>';
 
 		// Loop through all the choices and print them out.
@@ -195,7 +195,7 @@ function template_main()
 									<label for="options-', $choice['id'], '">', Lang::getTxt('option_number', [$choice['number']]), '</label>
 								</dt>
 								<dd>
-									<input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" value="', $choice['label'], '" tabindex="', Utils::$context['tabindex']++, '" size="80" maxlength="255">
+									<input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" value="', $choice['label'], '" size="80" maxlength="255">
 								</dd>';
 
 		echo '
@@ -998,7 +998,7 @@ function template_post_header()
 				}
 			}
 
-			echo ' tabindex="', Utils::$context['tabindex']++, '">';
+			echo '>';
 		}
 		// textarea
 		elseif ($pf['input']['type'] === 'textarea')
@@ -1025,7 +1025,7 @@ function template_post_header()
 				}
 			}
 
-			echo ' tabindex="', Utils::$context['tabindex']++, '">', !empty($pf['input']['attributes']['value']) ? $pf['input']['attributes']['value'] : '', '</textarea>';
+			echo '>', !empty($pf['input']['attributes']['value']) ? $pf['input']['attributes']['value'] : '', '</textarea>';
 		}
 		// Select menus are more complicated
 		elseif ($pf['input']['type'] === 'select' && is_array($pf['input']['options']))
@@ -1051,7 +1051,7 @@ function template_post_header()
 				}
 			}
 
-			echo ' tabindex="', Utils::$context['tabindex']++, '">';
+			echo '>';
 
 			// The options
 			foreach ($pf['input']['options'] as $optlabel => $option)
@@ -1158,7 +1158,7 @@ function template_post_header()
 						echo ' ', $attribute, '="', $value, '"';
 				}
 
-				echo ' tabindex="', Utils::$context['tabindex']++, '"> ', isset($option['label']) ? $option['label'] : $optlabel, '</label>';
+				echo '> ', isset($option['label']) ? $option['label'] : $optlabel, '</label>';
 			}
 
 			echo '
