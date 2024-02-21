@@ -162,7 +162,7 @@ function template_main()
 							<div class="event_options">
 								<div>
 									<span class="label">', Lang::$txt['location'], '</span>
-									<input type="text" name="event_location" id="event_location" maxlength="255" value="', Utils::$context['event']['location'], '">
+									<textarea name="event_location" id="event_location" maxlength="255" style="height: 100px;" maxlength="255">', Utils::$context['event']['location'], '</textarea>
 								</div>
 							</div>
 						</fieldset>

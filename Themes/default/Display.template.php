@@ -232,9 +232,8 @@ function template_main()
 					echo ' ', $event['tz_abbrev'], '</time>';
 			}
 
-			if (!empty($event['location']))
-				echo '
-					<br>', $event['location'];
+			if ($event['location'] != '')
+				echo '<br>', nl2br($event['location']);
 
 			echo '
 				</li>';
