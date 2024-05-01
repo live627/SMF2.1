@@ -22,6 +22,8 @@ use SMF\Config;
 use SMF\ErrorHandler;
 use SMF\Lang;
 use SMF\Profile;
+use SMF\ProvidesSubActionInterface;
+use SMF\ProvidesSubActionTrait;
 use SMF\SecurityToken;
 use SMF\Theme;
 use SMF\User;
@@ -31,9 +33,10 @@ use SMF\Verifier;
 /**
  * Shows the registration form.
  */
-class Register implements ActionInterface
+class Register implements ActionInterface, ProvidesSubActionInterface
 {
 	use ActionTrait;
+	use ProvidesSubActionTrait;
 
 	/*******************
 	 * Public properties
@@ -44,28 +47,12 @@ class Register implements ActionInterface
 	 *
 	 * The sub-action to call.
 	 */
-	public string $subaction = 'show';
-
 	/**
 	 * @var array
 	 *
 	 * Errors encountered while trying to register.
 	 */
 	public array $errors = [];
-
-	/**************************
-	 * Public static properties
-	 **************************/
-
-	/**
-	 * @var array
-	 *
-	 * Available sub-actions.
-	 */
-	public static array $subactions = [
-		'show' => 'show',
-		'usernamecheck' => 'checkUsername',
-	];
 
 	/****************
 	 * Public methods
@@ -76,11 +63,12 @@ class Register implements ActionInterface
 	 */
 	public function execute(): void
 	{
-		$call = method_exists($this, self::$subactions[$this->subaction]) ? [$this, self::$subactions[$this->subaction]] : Utils::getCallable(self::$subactions[$this->subaction]);
+		$this->setDefaultSubAction('show');
 
-		if (!empty($call)) {
-			call_user_func($call);
-		}
+		$this->addSubAction('show', [$this, 'show']);
+		$this->addSubAction('usernamecheck', [$this, 'checkUsername']);
+
+		$this->callSubAction($_REQUEST['sa'] ?? null);
 	}
 
 	/**
@@ -331,24 +319,10 @@ class Register implements ActionInterface
 	 */
 	public static function register(array $reg_errors = []): void
 	{
-		self::load();
-		self::$obj->subaction = 'show';
-		self::$obj->errors = (array) $reg_errors;
-		self::$obj->execute();
-	}
-
-	/******************
-	 * Internal methods
-	 ******************/
-
-	/**
-	 * Constructor. Protected to force instantiation via self::load().
-	 */
-	protected function __construct()
-	{
-		if (!empty($_GET['sa']) && isset(self::$subactions[$_GET['sa']])) {
-			$this->subaction = $_GET['sa'];
-		}
+		$obj = self::load();
+		$obj->setDefaultSubAction('show');
+		$obj->errors = (array) $reg_errors;
+		$obj->execute();
 	}
 }
 

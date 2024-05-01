@@ -26,6 +26,8 @@ use SMF\Lang;
 use SMF\Logging;
 use SMF\Menu;
 use SMF\Msg;
+use SMF\ProvidesSubActionInterface;
+use SMF\ProvidesSubActionTrait;
 use SMF\SecurityToken;
 use SMF\Theme;
 use SMF\Time;
@@ -35,27 +37,12 @@ use SMF\Utils;
 /**
  * Allows the moderator to view stuff related to warnings.
  */
-class Warnings implements ActionInterface
+class Warnings implements ActionInterface, ProvidesSubActionInterface
 {
 	use ActionTrait;
+	use ProvidesSubActionTrait;
 
 	use BackwardCompatibility;
-
-	/*******************
-	 * Public properties
-	 *******************/
-
-	/**
-	 * @var string
-	 *
-	 * The requested sub-action.
-	 * This should be set by the constructor.
-	 */
-	public string $subaction = 'log';
-
-	/**************************
-	 * Public static properties
-	 **************************/
 
 	/**
 	 * @var array
@@ -85,7 +72,9 @@ class Warnings implements ActionInterface
 			'description' => Lang::$txt['mc_warnings_description'],
 		];
 
-		$call = method_exists($this, self::$subactions[$this->subaction][0]) ? [$this, self::$subactions[$this->subaction][0]] : Utils::getCallable(self::$subactions[$this->subaction][0]);
+		IntegrationHook::call('integrate_warning_log_actions', [&$this->sub_actions]);
+
+		$call = method_exists($this, $this->sub_actions[$this->sub_action][0]) ? [$this, $this->sub_actions[$this->sub_action][0]] : Utils::getCallable($this->sub_actions[$this->sub_action][0]);
 
 		if (!empty($call)) {
 			call_user_func($call);
@@ -698,49 +687,6 @@ class Warnings implements ActionInterface
 
 		return $templates;
 	}
-
-	/******************
-	 * Internal methods
-	 ******************/
-
-	/**
-	 * Constructor. Protected to force instantiation via self::load().
-	 */
-	protected function __construct()
-	{
-		IntegrationHook::call('integrate_warning_log_actions', [&self::$subactions]);
-
-		if (!empty($_REQUEST['sa']) && isset(self::$subactions[$_REQUEST['sa']])) {
-			$this->subaction = $_REQUEST['sa'];
-		}
-
-		// If the user can't do the specified sub-action, choose the first one they can.
-		if (!User::$me->allowedTo(self::$subactions[$this->subaction][1])) {
-			$this->subaction = '';
-
-			foreach (self::$subactions as $sa => $sa_info) {
-				if ($sa === $this->subaction) {
-					continue;
-				}
-
-				if (User::$me->allowedTo(self::$subactions[$sa][1])) {
-					$this->subaction = $sa;
-					break;
-				}
-			}
-
-			// This shouldn't happen, but just in case...
-			if (empty($this->subaction)) {
-				Utils::redirectexit('action=moderate;area=index');
-			}
-		}
-	}
-
-	/*************************
-	 * Internal static methods
-	 *************************/
-
-	// code...
 }
 
 ?>

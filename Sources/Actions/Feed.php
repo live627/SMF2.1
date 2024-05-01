@@ -28,6 +28,8 @@ use SMF\ErrorHandler;
 use SMF\IntegrationHook;
 use SMF\IP;
 use SMF\Lang;
+use SMF\ProvidesSubActionInterface;
+use SMF\ProvidesSubActionTrait;
 use SMF\Sapi;
 use SMF\Theme;
 use SMF\Time;
@@ -60,9 +62,10 @@ use SMF\Utils;
  *
  * Uses Stats, Profile, Post, and PersonalMessage language files.
  */
-class Feed implements ActionInterface
+class Feed implements ActionInterface, ProvidesSubActionInterface
 {
 	use ActionTrait;
+	use ProvidesSubActionTrait;
 
 	/*****************
 	 * Class constants
@@ -117,13 +120,6 @@ class Feed implements ActionInterface
 	/*******************
 	 * Public properties
 	 *******************/
-
-	/**
-	 * @var string
-	 *
-	 * The requested sub-action.
-	 */
-	public string $subaction = 'recent';
 
 	/**
 	 * @var string
@@ -206,24 +202,6 @@ class Feed implements ActionInterface
 		'footer' => '',
 	];
 
-	/**************************
-	 * Public static properties
-	 **************************/
-
-	/**
-	 * @var array
-	 *
-	 * List all the different types of data they can pull.
-	 */
-	public static array $subactions = [
-		'recent' => 'getXmlRecent',
-		'news' => 'getXmlNews',
-		'members' => 'getXmlMembers',
-		'profile' => 'getXmlProfile',
-		'posts' => 'getXmlPosts',
-		'personal_messages' => 'getXmlPMs',
-	];
-
 	/*********************
 	 * Internal properties
 	 *********************/
@@ -263,7 +241,7 @@ class Feed implements ActionInterface
 		$this->host = Url::create(Config::$scripturl)->host;
 
 		// Easy adding of sub actions
-		IntegrationHook::call('integrate_xmlfeeds', [&self::$subactions]);
+		IntegrationHook::call('integrate_xmlfeeds', [&$this->sub_actions]);
 
 		// These things are simple to set.
 		$this->setSubaction($subaction);
@@ -444,8 +422,17 @@ class Feed implements ActionInterface
 	 */
 	public function execute(): void
 	{
+		$this->addSubAction('recent', [$this, 'getXmlRecent']);
+		$this->addSubAction('news', [$this, 'getXmlNews']);
+		$this->addSubAction('members', [$this, 'getXmlMembers']);
+		$this->addSubAction('profile', [$this, 'getXmlProfile']);
+		$this->addSubAction('posts', [$this, 'getXmlPosts']);
+		$this->addSubAction('personal_messages', [$this, 'getXmlPMs']);
+
+		$this->findRequestedSubAction($_REQUEST['sa'] ?? null);
+
 		$this->getData();
-		$this->xml = self::build($this->format, $this->data, $this->metadata, $this->subaction);
+		$this->xml = self::build($this->format, $this->data, $this->metadata, $this->getSubAction());
 		$this->emit();
 	}
 
@@ -479,10 +466,10 @@ class Feed implements ActionInterface
 
 		if (empty($this->data)) {
 			// Should we call one of this class's own methods, or something added by a mod?
-			if (is_callable([$this, self::$subactions[$this->subaction]])) {
-				$call = [$this, self::$subactions[$this->subaction]];
+			if (is_callable([$this, $this->sub_actions[$this->subaction]])) {
+				$call = [$this, $this->sub_actions[$this->subaction]];
 			} else {
-				$call = Utils::getCallable(self::$subactions[$this->subaction]);
+				$call = Utils::getCallable($this->sub_actions[$this->subaction]);
 			}
 
 			$this->data = !empty($call) ? call_user_func($call, $this->format) : [];
@@ -2926,12 +2913,12 @@ class Feed implements ActionInterface
 
 	protected function setSubaction(?string $subaction): void
 	{
-		if (isset($subaction, self::$subactions[$subaction])) {
+		if (isset($subaction, $this->sub_actions[$subaction])) {
 			$this->subaction = $subaction;
-		} elseif (isset($_GET['sa'], self::$subactions[$_GET['sa']])) {
+		} elseif (isset($_GET['sa'], $this->sub_actions[$_GET['sa']])) {
 			$this->subaction = $_GET['sa'];
 		} else {
-			$this->subaction = array_key_first(self::$subactions);
+			$this->subaction = array_key_first($this->sub_actions);
 		}
 	}
 

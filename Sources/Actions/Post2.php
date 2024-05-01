@@ -52,8 +52,6 @@ class Post2 extends Post
 	 *
 	 * The sub-action to call.
 	 */
-	public string $subaction = 'submit';
-
 	/**
 	 * @var bool
 	 *
@@ -67,16 +65,6 @@ class Post2 extends Post
 	/**************************
 	 * Public static properties
 	 **************************/
-
-	/**
-	 * @var array
-	 *
-	 * Available sub-actions.
-	 */
-	public static array $subactions = [
-		'submit' => 'submit',
-		'show' => 'show',
-	];
 
 	/*********************
 	 * Internal properties
@@ -114,13 +102,9 @@ class Post2 extends Post
 		}
 
 		// Allow mods to add new sub-actions.
-		IntegrationHook::call('integrate_post2_subactions', [&self::$subactions]);
+		IntegrationHook::call('integrate_post2_subactions', [&$this->sub_actions]);
 
-		$call = method_exists($this, self::$subactions[$this->subaction]) ? [$this, self::$subactions[$this->subaction]] : Utils::getCallable(self::$subactions[$this->subaction]);
-
-		if (!empty($call)) {
-			call_user_func($call);
-		}
+		$this->callSubAction($_REQUEST['sa'] ?? null);
 	}
 
 	/**
@@ -650,6 +634,9 @@ class Post2 extends Post
 	 */
 	protected function __construct()
 	{
+		$this->addSubAction('submit', [$this, 'submit']);
+		$this->addSubAction('show', [$this, 'show']);
+
 		parent::__construct();
 	}
 

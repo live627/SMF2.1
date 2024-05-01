@@ -28,6 +28,8 @@ use SMF\IntegrationHook;
 use SMF\ItemList;
 use SMF\Lang;
 use SMF\Menu;
+use SMF\ProvidesSubActionInterface;
+use SMF\ProvidesSubActionTrait;
 use SMF\SecurityToken;
 use SMF\Theme;
 use SMF\Time;
@@ -37,38 +39,12 @@ use SMF\Utils;
 /**
  * This class allows you to manage the calendar.
  */
-class Calendar implements ActionInterface
+class Calendar implements ActionInterface, ProvidesSubActionInterface
 {
 	use ActionTrait;
+	use ProvidesSubActionTrait;
 
 	use BackwardCompatibility;
-
-	/*******************
-	 * Public properties
-	 *******************/
-
-	/**
-	 * @var string
-	 *
-	 * The requested sub-action.
-	 * This should be set by the constructor.
-	 */
-	public string $subaction = 'holidays';
-
-	/**************************
-	 * Public static properties
-	 **************************/
-
-	/**
-	 * @var array
-	 *
-	 * Available sub-actions.
-	 */
-	public static array $subactions = [
-		'holidays' => 'holidays',
-		'editholiday' => 'edit',
-		'settings' => 'settings',
-	];
 
 	/****************
 	 * Public methods
@@ -79,13 +55,11 @@ class Calendar implements ActionInterface
 	 */
 	public function execute(): void
 	{
+		IntegrationHook::call('integrate_manage_calendar', [&$this->sub_actions]);
+
 		User::$me->isAllowedTo('admin_forum');
 
-		$call = method_exists($this, self::$subactions[$this->subaction]) ? [$this, self::$subactions[$this->subaction]] : Utils::getCallable(self::$subactions[$this->subaction]);
-
-		if (!empty($call)) {
-			call_user_func($call);
-		}
+		$this->callSubAction($_REQUEST['sa'] ?? null);
 	}
 
 	/**
@@ -445,13 +419,15 @@ class Calendar implements ActionInterface
 	 */
 	protected function __construct()
 	{
+		if (!empty(Config::$modSettings['cal_enabled'])) {
+			$this->addSubAction('holidays', [$this, 'holidays']);
+			$this->addSubAction('editholiday', [$this, 'edit']);
+		}
+
+		$this->addSubAction('settings', [$this, 'settings']);
+
 		// Everything's gonna need this.
 		Lang::load('ManageCalendar');
-
-		if (empty(Config::$modSettings['cal_enabled'])) {
-			unset(self::$subactions['holidays'], self::$subactions['editholiday']);
-			$this->subaction = 'settings';
-		}
 
 		// Set up the two tabs here...
 		Menu::$loaded['admin']->tab_data = [
@@ -469,12 +445,6 @@ class Calendar implements ActionInterface
 					'description' => Lang::$txt['calendar_settings_desc'],
 				],
 			];
-		}
-
-		IntegrationHook::call('integrate_manage_calendar', [&self::$subactions]);
-
-		if (!empty($_REQUEST['sa']) && isset(self::$subactions[$_REQUEST['sa']])) {
-			$this->subaction = $_REQUEST['sa'];
 		}
 	}
 }

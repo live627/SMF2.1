@@ -26,6 +26,8 @@ use SMF\ErrorHandler;
 use SMF\Event;
 use SMF\IntegrationHook;
 use SMF\Lang;
+use SMF\ProvidesSubActionInterface;
+use SMF\ProvidesSubActionTrait;
 use SMF\Theme;
 use SMF\Time;
 use SMF\TimeZone;
@@ -37,39 +39,12 @@ use SMF\Utils;
  * This class has only one real task, showing the calendar.
  * Original module by Aaron O'Neil - aaron@mud-master.com
  */
-class Calendar implements ActionInterface
+class Calendar implements ActionInterface, ProvidesSubActionInterface
 {
 	use ActionTrait;
+	use ProvidesSubActionTrait;
 
 	use BackwardCompatibility;
-
-	/*******************
-	 * Public properties
-	 *******************/
-
-	/**
-	 * @var string
-	 *
-	 * The requested sub-action.
-	 * This should be set by the constructor.
-	 */
-	public string $subaction = 'show';
-
-	/**************************
-	 * Public static properties
-	 **************************/
-
-	/**
-	 * @var array
-	 *
-	 * Available sub-actions of this action.
-	 */
-	public static array $subactions = [
-		'show' => 'show',
-		'ical' => 'export',
-		'post' => 'post',
-		'clock' => 'clock',
-	];
 
 	/****************
 	 * Public methods
@@ -80,11 +55,14 @@ class Calendar implements ActionInterface
 	 */
 	public function execute(): void
 	{
-		$call = method_exists($this, self::$subactions[$this->subaction]) ? [$this, self::$subactions[$this->subaction]] : Utils::getCallable(self::$subactions[$this->subaction]);
-
-		if (!empty($call)) {
-			call_user_func($call);
+		if ($_GET['action'] === 'clock') {
+			$this->setDefaultAction('clock');
 		}
+
+		// Permissions, permissions, permissions.
+		User::$me->isAllowedTo('calendar_view');
+
+		$this->callSubAction($_REQUEST['sa'] ?? null);
 	}
 
 	/**
@@ -1798,18 +1776,10 @@ class Calendar implements ActionInterface
 	 */
 	protected function __construct()
 	{
-		if ($_GET['action'] === 'clock') {
-			$this->subaction = 'clock';
-		} elseif (!empty($_GET['sa']) && isset(self::$subactions[$_GET['sa']])) {
-			$this->subaction = $_GET['sa'];
-		}
-
-		if ($this->subaction === 'clock') {
-			return;
-		}
-
-		// Permissions, permissions, permissions.
-		User::$me->isAllowedTo('calendar_view');
+		$this->addSubAction('show', [$this, 'show']);
+		$this->addSubAction('ical', [$this, 'export']);
+		$this->addSubAction('post', [$this, 'post']);
+		$this->addSubAction('clock', [$this, 'clock']);
 
 		// Some global template resources.
 		Utils::$context['calendar_resources'] = [

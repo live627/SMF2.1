@@ -21,12 +21,13 @@ use SMF\ActionTrait;
 use SMF\BBCodeParser;
 use SMF\Config;
 use SMF\Db\DatabaseApi as Db;
-use SMF\ErrorHandler;
 use SMF\IP;
 use SMF\ItemList;
 use SMF\Lang;
 use SMF\Menu;
 use SMF\Profile;
+use SMF\ProvidesSubActionInterface;
+use SMF\ProvidesSubActionTrait;
 use SMF\Time;
 use SMF\User;
 use SMF\Utils;
@@ -34,27 +35,11 @@ use SMF\Utils;
 /**
  * Rename here and in the exportStatic call at the end of the file.
  */
-class Tracking implements ActionInterface
+class Tracking implements ActionInterface, ProvidesSubActionInterface
 {
 	use ActionTrait;
-
+	use ProvidesSubActionTrait;
 	use BackwardCompatibility;
-
-	/*******************
-	 * Public properties
-	 *******************/
-
-	/**
-	 * @var string
-	 *
-	 * The requested sub-action.
-	 * This should be set by the constructor.
-	 */
-	public string $subaction = 'activity';
-
-	/**************************
-	 * Public static properties
-	 **************************/
 
 	/**
 	 * @var array
@@ -103,12 +88,21 @@ class Tracking implements ActionInterface
 	 */
 	public function execute(): void
 	{
-		if (!isset($this->subaction, self::$subactions)) {
-			ErrorHandler::fatalLang('no_access', false);
+
+		// Moderation must be on to track edits.
+		if (empty(Config::$modSettings['userlog_enabled'])) {
+			unset($this->sub_actions['edits']);
 		}
 
+		// Group requests must be active to show it...
+		if (empty(Config::$modSettings['show_group_membership'])) {
+			unset($this->sub_actions['groupreq']);
+		}
+
+		$this->findRequestedSubAction($_REQUEST['sa'] ?? null);
+
 		// This is only here for backward compatibility in case a mod needs it.
-		Utils::$context['tracking_area'] = &$this->subaction;
+		Utils::$context['tracking_area'] = &$this->sub_action;
 
 		// Create the tabs for the template.
 		Menu::$loaded['profile']->tab_data = [
@@ -118,14 +112,14 @@ class Tracking implements ActionInterface
 			'tabs' => [],
 		];
 
-		foreach (self::$subactions as $sa => $dummy) {
+		foreach ($this->sub_actions as $sa => $dummy) {
 			Menu::$loaded['profile']->tab_data['tabs'][$sa] = [];
 		}
 
 		// Set a page title.
-		Utils::$context['page_title'] = Lang::getTxt('trackUser_page_title', ['name' => Profile::$member->name, 'subaction' => Lang::$txt[self::$subactions[$this->subaction][1]]]);
+		Utils::$context['page_title'] = Lang::getTxt('trackUser_page_title', ['name' => Profile::$member->name, 'subaction' => Lang::$txt[$this->sub_actions[$this->sub_action][1]]]);
 
-		$call = method_exists($this, self::$subactions[$this->subaction][0]) ? [$this, self::$subactions[$this->subaction][0]] : Utils::getCallable(self::$subactions[$this->subaction][0]);
+		$call = method_exists($this, $this->sub_actions[$this->sub_action][0]) ? [$this, $this->sub_actions[$this->sub_action][0]] : Utils::getCallable($this->sub_actions[$this->sub_action][0]);
 
 		if (!empty($call)) {
 			call_user_func($call);
@@ -975,31 +969,6 @@ class Tracking implements ActionInterface
 	{
 		if (!isset(Profile::$member)) {
 			Profile::load();
-		}
-
-		// Moderation must be on to track edits.
-		if (empty(Config::$modSettings['userlog_enabled'])) {
-			unset(self::$subactions['edits']);
-		}
-
-		// Group requests must be active to show it...
-		if (empty(Config::$modSettings['show_group_membership'])) {
-			unset(self::$subactions['groupreq']);
-		}
-
-		// Only show the sub-actions they are allowed to see.
-		foreach (self::$subactions as $sa => $action) {
-			if (!User::$me->allowedTo($action[2])) {
-				unset(self::$subactions[$sa]);
-			}
-		}
-
-		// Now that we've filtered out all the sub-actions they cannot do,
-		// let them choose from whatever is left.
-		if (!empty($_REQUEST['sa']) && isset(self::$subactions[$_REQUEST['sa']])) {
-			$this->subaction = $_REQUEST['sa'];
-		} elseif (!empty(self::$subactions)) {
-			$this->subaction = array_key_first(self::$subactions);
 		}
 	}
 }
