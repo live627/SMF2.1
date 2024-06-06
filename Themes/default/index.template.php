@@ -402,7 +402,7 @@ function template_body_above()
 	// The main content should go here.
 	echo '
 		<div id="content_section">
-			<div id="main_content_section">';
+			<main id="main_content_section">';
 }
 
 /**
@@ -411,7 +411,7 @@ function template_body_above()
 function template_body_below()
 {
 	echo '
-			</div><!-- #main_content_section -->
+			</main><!-- #main_content_section -->
 		</div><!-- #content_section -->
 	</div><!-- #wrapper -->
 </div><!-- #footerfix -->';
@@ -479,13 +479,15 @@ function theme_linktree($force_show = false)
 
 	echo '
 				<nav aria-label="', Lang::$txt['breadcrumb'], '" class="navigate_section">
-					<ul>';
+					<ol>';
 
 	// Each tree item has a URL and name. Some may have extra_before and extra_after.
 	foreach (Utils::$context['linktree'] as $link_num => $tree)
 	{
+		$is_last = $link_num == count(Utils::$context['linktree']) - 1;
+
 		echo '
-						<li', ($link_num == count(Utils::$context['linktree']) - 1) ? ' class="last"' : '', '>';
+						<li', $is_last ? ' class="last"' : '', '>';
 
 		// Don't show a separator for the first one.
 		// Better here. Always points to the next level when the linktree breaks to a second line.
@@ -501,10 +503,10 @@ function theme_linktree($force_show = false)
 		// Show the link, including a URL if it should have one.
 		if (isset($tree['url']))
 			echo '
-							<a href="' . $tree['url'] . '"><span>' . $tree['name'] . '</span></a>';
+							<a href="', $tree['url'], '"', $is_last ? ' aria-current="page"' : '', '><span>', $tree['name'], '</span></a>';
 		else
 			echo '
-							<span>' . $tree['name'] . '</span>';
+							<span>', $tree['name'], '</span>';
 
 		// Show something after the link...?
 		if (isset($tree['extra_after']))
@@ -515,7 +517,7 @@ function theme_linktree($force_show = false)
 	}
 
 	echo '
-					</ul>
+					</ol>
 				</nav><!-- .navigate_section -->';
 
 	$shown_linktree = true;
