@@ -447,6 +447,15 @@ hr {
 .csscolumn .title_bar {
 	margin-block: 0.25em 0;
 }
+.visually_hidden {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap; 
+	width: 1px;
+}
 
 /* Default font sizes: small (8pt), normal (10pt), and large (14pt). */
 .smalltext, tr.smalltext th {
@@ -2072,7 +2081,7 @@ ul li.greeting {
 	margin-inline: 0;
 	padding: 0;
 }
-.navigate_section ul {
+.navigate_section ol {
 	align-items: center;
 	background: var(--breadcrumb-bg);
 	border: var(--breadcrumb-border-color);
@@ -2088,7 +2097,7 @@ ul li.greeting {
 	margin: 0;
 	padding: .75em;
 }
-.navigate_section ul:before {
+.navigate_section ol:before {
 	font-family: "Font Awesome 6 Free";
 	content: "\f015";
 	font-size: 0.8em;
@@ -2145,7 +2154,7 @@ ul li.greeting {
 .navigate_section span.board_moderators a {
 	padding-inline-start: 0.25em;
 }
-.navigate_section ul li .dividers {
+.navigate_section ol li .dividers {
 	color: var(--breadcrumb-divider-color);
 	font-family: var(--breadcrumb_divider_font_family);
 	font-size: var(--breadcrumb-divider-font-size);
