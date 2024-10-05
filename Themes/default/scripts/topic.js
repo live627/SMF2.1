@@ -107,7 +107,7 @@ QuickModifyTopic.prototype.modify_topic_show_edit = function (subject)
 	this.oCurSubjectDiv.onmouseover = function (oEvent) {return this.instanceRef.modify_topic_mouseover(oEvent);};
 }
 
-// Yup thats right, save it
+// Yup that's right, save it
 QuickModifyTopic.prototype.modify_topic_save = function (cur_session_id, cur_session_var)
 {
 	if (!this.bInEditMode)
@@ -715,7 +715,7 @@ $(function() {
 		e.preventDefault();
 		var title = $(this).parent().text(),
 			url = $(this).attr('href') + ';js=1';
-		return reqOverlayDiv(url, title, 'post/thumbup.png');
+		return reqOverlayDiv(url, title, 'like');
 	});
 
 	// Message likes.

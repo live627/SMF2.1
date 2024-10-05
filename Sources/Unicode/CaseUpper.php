@@ -5,14 +5,19 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2022 Simple Machines and individual contributors
+ * @copyright 2024 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1.3
+ * @version 3.0 Alpha 2
  */
 
-if (!defined('SMF'))
+declare(strict_types=1);
+
+namespace SMF\Unicode;
+
+if (!defined('SMF')) {
 	die('No direct access...');
+}
 
 /**
  * Helper function for utf8_strtoupper.
@@ -22,9 +27,9 @@ if (!defined('SMF'))
  *
  * @return array Lowercase to uppercase maps.
  */
-function utf8_strtoupper_simple_maps()
+function utf8_strtoupper_simple_maps(): array
 {
-	return array(
+	return [
 		"\x61" => "\x41",
 		"\x62" => "\x42",
 		"\x63" => "\x43",
@@ -1475,7 +1480,7 @@ function utf8_strtoupper_simple_maps()
 		"\xF0\x9E\xA5\x81" => "\xF0\x9E\xA4\x9F",
 		"\xF0\x9E\xA5\x82" => "\xF0\x9E\xA4\xA0",
 		"\xF0\x9E\xA5\x83" => "\xF0\x9E\xA4\xA1",
-	);
+	];
 }
 
 /**
@@ -1486,9 +1491,9 @@ function utf8_strtoupper_simple_maps()
  *
  * @return array Lowercase to uppercase maps.
  */
-function utf8_strtoupper_maps()
+function utf8_strtoupper_maps(): array
 {
-	return array(
+	return [
 		"\x61" => "\x41",
 		"\x62" => "\x42",
 		"\x63" => "\x43",
@@ -3015,7 +3020,7 @@ function utf8_strtoupper_maps()
 		"\xEF\xBD\x98" => "\xEF\xBC\xB8",
 		"\xEF\xBD\x99" => "\xEF\xBC\xB9",
 		"\xEF\xBD\x9A" => "\xEF\xBC\xBA",
-	);
+	];
 }
 
 ?>

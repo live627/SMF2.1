@@ -4,29 +4,32 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2022 Simple Machines and individual contributors
+ * @copyright 2024 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1.0
+ * @version 3.0 Alpha 2
  */
+
+use SMF\Config;
+use SMF\Lang;
+use SMF\Theme;
+use SMF\Utils;
 
 /**
  * Choose which type of report to run?
  */
 function template_report_type()
 {
-	global $context, $scripturl, $txt;
-
 	echo '
-		<form action="', $scripturl, '?action=admin;area=reports" method="post" accept-charset="', $context['character_set'], '">
+		<form action="', Config::$scripturl, '?action=admin;area=reports" method="post" accept-charset="', Utils::$context['character_set'], '">
 			<div class="cat_bar">
-				<h3 class="catbg">', $txt['generate_reports_type'], '</h3>
+				<h3 class="catbg">', Lang::$txt['generate_reports_type'], '</h3>
 			</div>
 			<div class="windowbg">
 				<dl class="settings">';
 
 	// Go through each type of report they can run.
-	foreach ($context['report_types'] as $type)
+	foreach (Utils::$context['report_types'] as $type)
 	{
 		if (isset($type['description']))
 			echo '
@@ -40,8 +43,8 @@ function template_report_type()
 	}
 	echo '
 				</dl>
-				<input type="submit" name="continue" value="', $txt['generate_reports_continue'], '" class="button">
-				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+				<input type="submit" name="continue" value="', Lang::$txt['generate_reports_continue'], '" class="button">
+				<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
 			</div><!-- .windowbg -->
 		</form>';
 }
@@ -51,25 +54,51 @@ function template_report_type()
  */
 function template_main()
 {
-	global $context, $txt;
-
 	echo '
 		<div class="cat_bar">
-			<h3 class="catbg">', $txt['results'], '</h3>
+			<h3 class="catbg">', Lang::$txt['results'], '</h3>
 		</div>
 		<div id="report_buttons">';
 
-	if (!empty($context['report_buttons']))
-		template_button_strip($context['report_buttons'], 'right');
+	if (!empty(Utils::$context['report_buttons']))
+		template_button_strip(Utils::$context['report_buttons'], 'right');
 
 	echo '
 		</div>';
 
-	// Go through each table!
-	foreach ($context['tables'] as $table)
+	if (count(Utils::$context['tables']) > 1)
 	{
 		echo '
-		<table class="table_grid report_results">';
+		<style>';
+
+		foreach (Utils::$context['tables'] as $i => $table)
+			echo '
+			body:has(#report_check_', $i + 1, ':not(:checked)) [data-id=report_', $i + 1, '] {
+				display: none;
+			}';
+
+	echo '
+		</style>
+		<form class="windowbg clear" id="report_filter">
+			<fieldset>';
+
+		foreach (Utils::$context['tables'] as $i => $table)
+			if (!empty($table['title']))
+				echo '
+			<label>
+				<input type="checkbox" id="report_check_', $i + 1, '" checked>
+				', $table['title'], '
+			</label>';
+
+		echo '
+			</fieldset>
+		</form>';
+	}
+
+	foreach (Utils::$context['tables'] as $i => $table)
+	{
+		echo '
+		<table class="table_grid report_result" data-id="report_', $i + 1, '">';
 
 		if (!empty($table['title']))
 			echo '
@@ -84,15 +113,16 @@ function template_main()
 		$row_number = 0;
 		foreach ($table['data'] as $row)
 		{
-			if ($row_number == 0 && !empty($table['shading']['top']))
+			if ($row_number == 0 && !empty($table['shading']['top']) && empty(current($row)['header']))
 				echo '
 				<tr class="windowbg table_caption">';
 			else
 				echo '
-				<tr class="', !empty($row[0]['separator']) ? 'title_bar' : 'windowbg', '">';
+				<tr class="', !empty(current($row)['separator']) || !empty(current($row)['header']) ? 'title_bar' : 'windowbg', '">';
 
 			// Now do each column.
 			$column_number = 0;
+			$th = false;
 
 			foreach ($row as $data)
 			{
@@ -100,21 +130,30 @@ function template_main()
 				if (!empty($data['separator']) && $column_number == 0)
 				{
 					echo '
-					<td colspan="', $table['column_count'], '" class="smalltext">
+					<th colspan="', $table['column_count'], '" class="smalltext">
 						', $data['v'], ':
-					</td>';
+					</th>';
 					break;
 				}
+				// These table cells shall be a heading if the first row says so.
+				elseif ($th || !empty($data['header']))
+				{
+					echo '
+					<th>
+						', $data['v'], '
+					</th>';
 
+					$th = true;
+				}
 				// Shaded?
-				if ($column_number == 0 && !empty($table['shading']['left']))
+				elseif ($column_number == 0 && !empty($table['shading']['left']))
 					echo '
 					<td class="table_caption ', $table['align']['shaded'], 'text"', $table['width']['shaded'] != 'auto' ? ' width="' . $table['width']['shaded'] . '"' : '', '>
 						', $data['v'] == $table['default_value'] ? '' : ($data['v'] . (empty($data['v']) ? '' : ':')), '
 					</td>';
 				else
 					echo '
-					<td class="smalltext centertext" ', $table['width']['normal'] != 'auto' ? ' width="' . $table['width']['normal'] . '"' : '', !empty($data['style']) ? ' style="' . $data['style'] . '"' : '', '>
+					<td class="smalltext ', $table['align']['normal'], 'text" ', $table['width']['normal'] != 'auto' ? ' width="' . $table['width']['normal'] . '"' : '', !empty($data['style']) ? ' style="' . $data['style'] . '"' : '', '>
 						', $data['v'], '
 					</td>';
 
@@ -137,14 +176,13 @@ function template_main()
  */
 function template_print_above()
 {
-	global $context, $settings, $modSettings;
-
 	echo '<!DOCTYPE html>
-<html', $context['right_to_left'] ? ' dir="rtl"' : '', '>
+<html', Utils::$context['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
-		<meta charset="', $context['character_set'], '">
-		<title>', $context['page_title'], '</title>
-		<link rel="stylesheet" href="', $settings['default_theme_url'], '/css/report.css', $context['browser_cache'], '">
+		<meta charset="', Utils::$context['character_set'], '">
+		<title>', Utils::$context['page_title'], '</title>
+		<link rel="stylesheet" href="', Theme::$current->settings['default_theme_url'], '/css/report.css', Utils::$context['browser_cache'], '">
+		<script src="', Theme::$current->settings['default_theme_url'], '/scripts/reports.js', Utils::$context['browser_cache'], '"></script>
 	</head>
 	<body>';
 }
@@ -154,10 +192,8 @@ function template_print_above()
  */
 function template_print()
 {
-	global $context;
-
 	// Go through each table!
-	foreach ($context['tables'] as $table)
+	foreach (Utils::$context['tables'] as $table)
 	{
 		echo '
 		<div style="overflow: visible;', $table['max_width'] != 'auto' ? ' width: ' . $table['max_width'] . 'px;' : '', '">
@@ -229,7 +265,7 @@ function template_print()
 function template_print_below()
 {
 	echo '
-		<div class="copyright">', theme_copyright(), '</div>
+		<div class="copyright">', Theme::copyright(), '</div>
 	</body>
 </html>';
 }

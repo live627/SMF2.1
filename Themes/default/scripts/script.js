@@ -371,8 +371,9 @@ function reqOverlayDiv(desktopURL, sHeader, sIcon)
 			oPopup_body.html(textStatus);
 		},
 		statusCode: {
-			403: function() {
-				oPopup_body.html(banned_text);
+			403: function(res, status, xhr) {
+				let errorMsg = res.getResponseHeader('x-smf-errormsg');
+				oPopup_body.html(errorMsg ?? banned_text);
 			},
 			500: function() {
 				oPopup_body.html('500 Internal Server Error');
@@ -954,6 +955,8 @@ smc_Toggle.prototype.changeState = function(bCollapse, bInit)
 	{
 		for (var i = 0, n = this.opt.aSwapImages.length; i < n; i++)
 		{
+			this.opt.aSwapImages[i].altExpanded = this.opt.aSwapImages[i].altExpanded ? this.opt.aSwapImages[i].altExpanded : smf_collapseAlt;
+			this.opt.aSwapImages[i].altCollapsed = this.opt.aSwapImages[i].altCollapsed ? this.opt.aSwapImages[i].altCollapsed : smf_expandAlt;
 			if (this.opt.aSwapImages[i].isCSS)
 			{
 				$('#' + this.opt.aSwapImages[i].sId).toggleClass(this.opt.aSwapImages[i].cssCollapsed, bCollapse).toggleClass(this.opt.aSwapImages[i].cssExpanded, !bCollapse).attr('title', bCollapse ? this.opt.aSwapImages[i].altCollapsed : this.opt.aSwapImages[i].altExpanded);
@@ -1535,6 +1538,7 @@ function expandThumb(thumbID)
 	img.src = link.href;
 	img.style.width = link.style.width;
 	img.style.height = link.style.height;
+	img.classList.toggle('original_size');
 
 	// place the image attributes back
 	link.href = tmp_src;
@@ -1585,11 +1589,6 @@ function generateDays(offset)
 
 	if (selected < days)
 		dayElement.selectedIndex = selected;
-}
-
-function toggleLinked(form)
-{
-	form.board.disabled = !form.link_to_board.checked;
 }
 
 function initSearch()
@@ -1728,6 +1727,10 @@ $(function() {
 
 	// Generic confirmation message.
 	$(document).on('click', '.you_sure', function() {
+		if (this.getAttribute('type') === 'checkbox' && !this.checked) {
+			return true;
+		}
+
 		var custom_message = $(this).attr('data-confirm');
 		var timeBefore = new Date();
 		var result = confirm(custom_message ? custom_message.replace(/-n-/g, "\n") : smf_you_sure);

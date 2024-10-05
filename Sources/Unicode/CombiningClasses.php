@@ -5,14 +5,19 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2022 Simple Machines and individual contributors
+ * @copyright 2024 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1.3
+ * @version 3.0 Alpha 2
  */
 
-if (!defined('SMF'))
+declare(strict_types=1);
+
+namespace SMF\Unicode;
+
+if (!defined('SMF')) {
 	die('No direct access...');
+}
 
 /**
  * Helper function for utf8_normalize_d.
@@ -22,9 +27,9 @@ if (!defined('SMF'))
  *
  * @return array Combining Class data for Unicode normalization.
  */
-function utf8_combining_classes()
+function utf8_combining_classes(): array
 {
-	return array(
+	return [
 		"\xCC\x80" => 230,
 		"\xCC\x81" => 230,
 		"\xCC\x82" => 230,
@@ -947,7 +952,7 @@ function utf8_combining_classes()
 		"\xF0\x9E\xA5\x88" => 230,
 		"\xF0\x9E\xA5\x89" => 230,
 		"\xF0\x9E\xA5\x8A" => 7,
-	);
+	];
 }
 
 ?>

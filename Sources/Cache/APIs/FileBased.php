@@ -5,21 +5,27 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2022 Simple Machines and individual contributors
+ * @copyright 2024 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1.3
+ * @version 3.0 Alpha 2
  */
+
+declare(strict_types=1);
 
 namespace SMF\Cache\APIs;
 
-use GlobIterator;
 use FilesystemIterator;
+use GlobIterator;
 use SMF\Cache\CacheApi;
 use SMF\Cache\CacheApiInterface;
+use SMF\Config;
+use SMF\Lang;
+use SMF\Utils;
 
-if (!defined('SMF'))
+if (!defined('SMF')) {
 	die('No direct access...');
+}
 
 /**
  * Our Cache API class
@@ -29,7 +35,7 @@ if (!defined('SMF'))
 class FileBased extends CacheApi implements CacheApiInterface
 {
 	/**
-	 * @var string The path to the current $cachedir directory.
+	 * @var string The path to the current directory.
 	 */
 	private $cachedir = null;
 
@@ -47,71 +53,21 @@ class FileBased extends CacheApi implements CacheApiInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isSupported($test = false)
+	public function isSupported(bool $test = false): bool
 	{
 		$supported = is_writable($this->cachedir);
 
-		if ($test)
+		if ($test) {
 			return $supported;
+		}
 
 		return parent::isSupported() && $supported;
-	}
-
-	private function readFile($file)
-	{
-		if (file_exists($file) && ($fp = fopen($file, 'rb')) !== false)
-		{
-			if (!flock($fp, LOCK_SH))
-			{
-				fclose($fp);
-				return false;
-			}
-			$string = '';
-			while (!feof($fp))
-				$string .= fread($fp, 8192);
-
-			flock($fp, LOCK_UN);
-			fclose($fp);
-
-			return $string;
-		}
-
-		return false;
-	}
-
-	private function writeFile($file, $string)
-	{
-		if (($fp = fopen($file, 'cb')) !== false)
-		{
-			if (!flock($fp, LOCK_EX))
-			{
-				fclose($fp);
-				return false;
-			}
-			ftruncate($fp, 0);
-			$bytes = 0;
-			$pieces = str_split($string, 8192);
-			foreach ($pieces as $piece)
-			{
-				if (($val = fwrite($fp, $piece, 8192)) !== false)
-					$bytes += $val;
-				else
-					return false;
-			}
-			fflush($fp);
-			flock($fp, LOCK_UN);
-			fclose($fp);
-
-			return $bytes;
-		}
-
-		return false;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function connect()
+	public function connect(): bool
 	{
 		return true;
 	}
@@ -119,20 +75,21 @@ class FileBased extends CacheApi implements CacheApiInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getData($key, $ttl = null)
+	public function getData(string $key, ?int $ttl = null): mixed
 	{
-		$file = sprintf('%s/data_%s.cache',
+		$file = sprintf(
+			'%s/data_%s.cache',
 			$this->cachedir,
-			$this->prefix . strtr($key, ':/', '-_')
+			$this->prefix . strtr($key, ':/', '-_'),
 		);
 
 		// SMF Data returns $value and $expired.  $expired has a unix timestamp of when this expires.
-		if (file_exists($file) && ($raw = $this->readFile($file)) !== false)
-		{
-			if (($value = smf_json_decode($raw, true, false)) !== array() && isset($value['expiration']) && $value['expiration'] >= time())
-				return $value['value'];
-			else
-				@unlink($file);
+		if (file_exists($file) && ($raw = $this->readFile($file)) !== false) {
+			if (($value = Utils::jsonDecode($raw, false, 512, 0, false)) !== null && isset($value->expiration) && $value->expiration >= time()) {
+				return $value->value;
+			}
+
+			@unlink($file);
 		}
 
 		return null;
@@ -141,52 +98,56 @@ class FileBased extends CacheApi implements CacheApiInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function putData($key, $value, $ttl = null)
+	public function putData(string $key, mixed $value, ?int $ttl = null): mixed
 	{
-		$file = sprintf('%s/data_%s.cache',
+		$file = sprintf(
+			'%s/data_%s.cache',
 			$this->cachedir,
-			$this->prefix . strtr($key, ':/', '-_')
+			$this->prefix . strtr($key, ':/', '-_'),
 		);
 		$ttl = $ttl !== null ? $ttl : $this->ttl;
 
-		if ($value === null)
+		if ($value === null) {
 			@unlink($file);
-		else
-		{
+
+			return true;
+		}
 			$cache_data = json_encode(
-				array(
+				[
 					'expiration' => time() + $ttl,
-					'value' => $value
-				),
-				JSON_NUMERIC_CHECK
+					'value' => $value,
+				],
+				JSON_NUMERIC_CHECK,
 			);
 
 			// Write out the cache file, check that the cache write was successful; all the data must be written
 			// If it fails due to low diskspace, or other, remove the cache file
-			if ($this->writeFile($file, $cache_data) !== strlen($cache_data))
-			{
+			if ($this->writeFile($file, $cache_data) !== strlen($cache_data)) {
 				@unlink($file);
+
 				return false;
 			}
-			else
-				return true;
-		}
+
+			return true;
+
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function cleanCache($type = '')
+	public function cleanCache($type = ''): bool
 	{
 		// No directory = no game.
-		if (!is_dir($this->cachedir))
-			return;
+		if (!is_dir($this->cachedir)) {
+			return false;
+		}
 
 		// Remove the files in SMF's own disk cache, if any
 		$files = new GlobIterator($this->cachedir . '/' . $type . '*.cache', FilesystemIterator::NEW_CURRENT_AND_KEY);
 
-		foreach ($files as $file => $info)
+		foreach ($files as $file => $info) {
 			unlink($this->cachedir . '/' . $file);
+		}
 
 		// Make this invalid.
 		$this->invalidateCache();
@@ -197,7 +158,7 @@ class FileBased extends CacheApi implements CacheApiInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function invalidateCache()
+	public function invalidateCache(): bool
 	{
 		// We don't worry about $cachedir here, since the key is based on the real $cachedir.
 		parent::invalidateCache();
@@ -211,53 +172,49 @@ class FileBased extends CacheApi implements CacheApiInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function cacheSettings(array &$config_vars)
+	public function cacheSettings(array &$config_vars): void
 	{
-		global $context, $txt;
-
 		$class_name = $this->getImplementationClassKeyName();
 		$class_name_txt_key = strtolower($class_name);
 
-		$config_vars[] = $txt['cache_'. $class_name_txt_key .'_settings'];
-		$config_vars[] = array('cachedir', $txt['cachedir'], 'file', 'text', 36, 'cache_cachedir');
+		$config_vars[] = Lang::$txt['cache_' . $class_name_txt_key . '_settings'];
+		$config_vars[] = ['cachedir', Lang::$txt['cachedir'], 'file', 'text', 36, 'cache_cachedir'];
 
-		if (!isset($context['settings_post_javascript']))
-			$context['settings_post_javascript'] = '';
+		if (!isset(Utils::$context['settings_post_javascript'])) {
+			Utils::$context['settings_post_javascript'] = '';
+		}
 
-		if (empty($context['settings_not_writable']))
-			$context['settings_post_javascript'] .= '
+		if (empty(Utils::$context['settings_not_writable'])) {
+			Utils::$context['settings_post_javascript'] .= '
 			$("#cache_accelerator").change(function (e) {
 				var cache_type = e.currentTarget.value;
-				$("#cachedir").prop("disabled", cache_type != "'. $class_name .'");
+				$("#cachedir").prop("disabled", cache_type != "' . $class_name . '");
 			});';
+		}
 	}
 
 	/**
 	 * Sets the $cachedir or uses the SMF default $cachedir..
 	 *
-	 * @access public
 	 * @param string $dir A valid path
-	 * @return boolean If this was successful or not.
+	 * @return bool If this was successful or not.
 	 */
-	public function setCachedir($dir = null)
+	public function setCachedir(?string $dir = null): void
 	{
-		global $cachedir;
-
-		// If its invalid, use SMF's.
-		if (is_null($dir) || !is_writable($dir))
-			$this->cachedir = $cachedir;
-
-		else
+		// If it's invalid, use SMF's.
+		if (is_null($dir) || !is_writable($dir)) {
+			$this->cachedir = Config::$cachedir;
+		} else {
 			$this->cachedir = $dir;
+		}
 	}
 
 	/**
 	 * Gets the current $cachedir.
 	 *
-	 * @access public
 	 * @return string the value of $ttl.
 	 */
-	public function getCachedir()
+	public function getCachedir(): string
 	{
 		return $this->cachedir;
 	}
@@ -265,9 +222,61 @@ class FileBased extends CacheApi implements CacheApiInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getVersion()
+	public function getVersion(): string|bool
 	{
 		return SMF_VERSION;
+	}
+
+	private function readFile(string $file): mixed
+	{
+		if (($fp = @fopen($file, 'rb')) !== false) {
+			if (!flock($fp, LOCK_SH)) {
+				fclose($fp);
+
+				return false;
+			}
+			$string = '';
+
+			while (!feof($fp)) {
+				$string .= fread($fp, 8192);
+			}
+
+			flock($fp, LOCK_UN);
+			fclose($fp);
+
+			return $string;
+		}
+
+		return false;
+	}
+
+	private function writeFile(string $file, mixed $string): mixed
+	{
+		if (($fp = fopen($file, 'cb')) !== false) {
+			if (!flock($fp, LOCK_EX)) {
+				fclose($fp);
+
+				return false;
+			}
+			ftruncate($fp, 0);
+			$bytes = 0;
+			$pieces = str_split($string, 8192);
+
+			foreach ($pieces as $piece) {
+				if (($val = fwrite($fp, $piece, 8192)) !== false) {
+					$bytes += $val;
+				} else {
+					return false;
+				}
+			}
+			fflush($fp);
+			flock($fp, LOCK_UN);
+			fclose($fp);
+
+			return $bytes;
+		}
+
+		return false;
 	}
 }
 

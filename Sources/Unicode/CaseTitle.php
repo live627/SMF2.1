@@ -5,14 +5,19 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2022 Simple Machines and individual contributors
+ * @copyright 2024 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.1.3
+ * @version 3.0 Alpha 2
  */
 
-if (!defined('SMF'))
+declare(strict_types=1);
+
+namespace SMF\Unicode;
+
+if (!defined('SMF')) {
 	die('No direct access...');
+}
 
 /**
  * Helper function for utf8_convert_case.
@@ -22,9 +27,9 @@ if (!defined('SMF'))
  *
  * @return array Simple title case maps.
  */
-function utf8_titlecase_simple_maps()
+function utf8_titlecase_simple_maps(): array
 {
-	return array(
+	return [
 		"\xC7\x84" => "\xC7\x85",
 		"\xC7\x85" => "\xC7\x85",
 		"\xC7\x86" => "\xC7\x85",
@@ -83,7 +88,7 @@ function utf8_titlecase_simple_maps()
 		"\xE1\x83\xBD" => "\xE1\x83\xBD",
 		"\xE1\x83\xBE" => "\xE1\x83\xBE",
 		"\xE1\x83\xBF" => "\xE1\x83\xBF",
-	);
+	];
 }
 
 /**
@@ -94,9 +99,9 @@ function utf8_titlecase_simple_maps()
  *
  * @return array Full title case maps.
  */
-function utf8_titlecase_maps()
+function utf8_titlecase_maps(): array
 {
-	return array(
+	return [
 		"\xC3\x9F" => "\x53\x73",
 		"\xC7\x84" => "\xC7\x85",
 		"\xC7\x85" => "\xC7\x85",
@@ -232,7 +237,7 @@ function utf8_titlecase_maps()
 		"\xEF\xAC\x95" => "\xD5\x84\xD5\xAB",
 		"\xEF\xAC\x96" => "\xD5\x8E\xD5\xB6",
 		"\xEF\xAC\x97" => "\xD5\x84\xD5\xAD",
-	);
+	];
 }
 
 ?>
