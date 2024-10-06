@@ -4,26 +4,21 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2024 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 3.0 Alpha 2
+ * @version 2.1.3
  */
-
-use SMF\BrowserDetector;
-use SMF\Config;
-use SMF\Lang;
-use SMF\Theme;
-use SMF\Utils;
-use SMF\User;
 
 /**
  * Minor stuff shown above the main profile - mostly used for error messages and showing that the profile update was successful.
  */
 function template_profile_above()
 {
+	global $context;
+
 	// Prevent Chrome from auto completing fields when viewing/editing other members profiles
-	if (BrowserDetector::isBrowser('is_chrome') && !User::$me->is_owner)
+	if (isBrowser('is_chrome') && !$context['user']['is_owner'])
 		echo '
 			<script>
 				disableAutoComplete();
@@ -34,10 +29,10 @@ function template_profile_above()
 			', template_error_message();
 
 	// If the profile was update successfully, let the user know this.
-	if (!empty(Utils::$context['profile_updated']))
+	if (!empty($context['profile_updated']))
 		echo '
 			<div class="infobox">
-				', Utils::$context['profile_updated'], '
+				', $context['profile_updated'], '
 			</div>';
 }
 
@@ -53,23 +48,25 @@ function template_profile_below()
  */
 function template_profile_popup()
 {
+	global $context, $scripturl;
+
 	// Unlike almost every other template, this is designed to be included into the HTML directly via $().load()
 
 	echo '
 		<div class="profile_user_avatar floatleft">
-			<a href="', Config::$scripturl, '?action=profile;u=', User::$me->id, '">', Utils::$context['member']['avatar']['image'], '</a>
+			<a href="', $scripturl, '?action=profile;u=', $context['user']['id'], '">', $context['member']['avatar']['image'], '</a>
 		</div>
 		<div class="profile_user_info floatleft">
-			<span class="profile_username"><a href="', Config::$scripturl, '?action=profile;u=', User::$me->id, '">', User::$me->name, '</a></span>
-			<span class="profile_group">', Utils::$context['member']['group'], '</span>
+			<span class="profile_username"><a href="', $scripturl, '?action=profile;u=', $context['user']['id'], '">', $context['user']['name'], '</a></span>
+			<span class="profile_group">', $context['member']['group'], '</span>
 		</div>
 		<div class="profile_user_links">
 			<ol>';
 
-	$menu_context = &Utils::$context[Utils::$context['profile_menu_name']];
-	foreach (Utils::$context['profile_items'] as $item)
+	$menu_context = &$context[$context['profile_menu_name']];
+	foreach ($context['profile_items'] as $item)
 	{
-		$area = $menu_context['sections'][$item['menu']]['areas'][$item['area']];
+		$area = &$menu_context['sections'][$item['menu']]['areas'][$item['area']];
 		$item_url = (isset($item['url']) ? $item['url'] : (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $item['area'])) . $menu_context['extra_parameters'];
 		echo '
 				<li>
@@ -87,28 +84,30 @@ function template_profile_popup()
  */
 function template_alerts_popup()
 {
+	global $context, $txt, $scripturl;
+
 	// Unlike almost every other template, this is designed to be included into the HTML directly via $().load()
 	echo '
 		<div class="alert_bar">
 			<div class="alerts_opts block">
-				<a href="' . Config::$scripturl . '?action=profile;area=notification;sa=markread;', Utils::$context['session_var'], '=', Utils::$context['session_id'], '" onclick="return markAlertsRead(this)">', Lang::$txt['mark_alerts_read'], '</a>
-				<a href="', Config::$scripturl, '?action=profile;area=notification;sa=alerts" class="floatright">', Lang::$txt['alert_settings'], '</a>
+				<a href="' . $scripturl . '?action=profile;area=notification;sa=markread;', $context['session_var'], '=', $context['session_id'], '" onclick="return markAlertsRead(this)">', $txt['mark_alerts_read'], '</a>
+				<a href="', $scripturl, '?action=profile;area=notification;sa=alerts" class="floatright">', $txt['alert_settings'], '</a>
 			</div>
 			<div class="alerts_box centertext">
-				<a href="', Config::$scripturl, '?action=profile;area=showalerts" class="button">', Lang::$txt['all_alerts'], '</a>
+				<a href="', $scripturl, '?action=profile;area=showalerts" class="button">', $txt['all_alerts'], '</a>
 			</div>
 		</div>
 		<div class="alerts_unread">';
 
-	if (empty(Utils::$context['unread_alerts']))
+	if (empty($context['unread_alerts']))
 		template_alerts_all_read();
 
 	else
 	{
-		foreach (Utils::$context['unread_alerts'] as $id_alert => $details)
+		foreach ($context['unread_alerts'] as $id_alert => $details)
 		{
 			echo '
-			<', !$details['show_links'] ? 'a href="' . Config::$scripturl . '?action=profile;area=showalerts;alert=' . $id_alert . '" onclick="this.classList.add(\'alert_read\')"' : 'div', ' class="unread_notify">
+			<', !$details['show_links'] ? 'a href="' . $scripturl . '?action=profile;area=showalerts;alert=' . $id_alert . '" onclick="this.classList.add(\'alert_read\')"' : 'div', ' class="unread_notify">
 				<div class="unread_notify_image">
 					', empty($details['sender']['avatar']['image']) ? '' : $details['sender']['avatar']['image'] . '
 					', $details['icon'], '
@@ -145,7 +144,9 @@ function template_alerts_popup()
  */
 function template_alerts_all_read()
 {
-	echo '<div class="no_unread">', Lang::$txt['alerts_no_unread'], '</div>';
+	global $txt;
+
+	echo '<div class="no_unread">', $txt['alerts_no_unread'], '</div>';
 }
 
 /**
@@ -153,16 +154,18 @@ function template_alerts_all_read()
  */
 function template_summary()
 {
+	global $context, $settings, $scripturl, $modSettings, $txt;
+
 	// Display the basic information about the user
 	echo '
 	<div id="profileview" class="roundframe flow_auto noup">
 		<div id="basicinfo">';
 
 	// Are there any custom profile fields for above the name?
-	if (!empty(Utils::$context['print_custom_fields']['above_member']))
+	if (!empty($context['print_custom_fields']['above_member']))
 	{
 		$fields = '';
-		foreach (Utils::$context['print_custom_fields']['above_member'] as $field)
+		foreach ($context['print_custom_fields']['above_member'] as $field)
 			if (!empty($field['output_html']))
 				$fields .= '
 					<li>' . $field['output_html'] . '</li>';
@@ -179,32 +182,32 @@ function template_summary()
 			<div class="username clear">
 				<h4>';
 
-	if (!empty(Utils::$context['print_custom_fields']['before_member']))
-		foreach (Utils::$context['print_custom_fields']['before_member'] as $field)
+	if (!empty($context['print_custom_fields']['before_member']))
+		foreach ($context['print_custom_fields']['before_member'] as $field)
 			if (!empty($field['output_html']))
 				echo '
 					<span>', $field['output_html'], '</span>';
 
 	echo '
-					', Utils::$context['member']['name'];
+					', $context['member']['name'];
 
-	if (!empty(Utils::$context['print_custom_fields']['after_member']))
-		foreach (Utils::$context['print_custom_fields']['after_member'] as $field)
+	if (!empty($context['print_custom_fields']['after_member']))
+		foreach ($context['print_custom_fields']['after_member'] as $field)
 			if (!empty($field['output_html']))
 				echo '
 					<span>', $field['output_html'], '</span>';
 
 	echo '
-					<span class="position">', (!empty(Utils::$context['member']['group']) ? Utils::$context['member']['group'] : Utils::$context['member']['post_group']), '</span>
+					<span class="position">', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '</span>
 				</h4>
 			</div>
-			', Utils::$context['member']['avatar']['image'];
+			', $context['member']['avatar']['image'];
 
 	// Are there any custom profile fields for below the avatar?
-	if (!empty(Utils::$context['print_custom_fields']['below_avatar']))
+	if (!empty($context['print_custom_fields']['below_avatar']))
 	{
 		$fields = '';
-		foreach (Utils::$context['print_custom_fields']['below_avatar'] as $field)
+		foreach ($context['print_custom_fields']['below_avatar'] as $field)
 			if (!empty($field['output_html']))
 				$fields .= '
 					<li>' . $field['output_html'] . '</li>';
@@ -221,19 +224,19 @@ function template_summary()
 			<ul class="icon_fields clear">';
 
 	// Email is only visible if it's your profile or you have the moderate_forum permission
-	if (Utils::$context['member']['show_email'])
+	if ($context['member']['show_email'])
 		echo '
-				<li><a href="mailto:', Utils::$context['member']['email'], '" title="', Utils::$context['member']['email'], '" rel="nofollow"><span class="main_icons mail" title="' . Lang::$txt['email'] . '"></span></a></li>';
+				<li><a href="mailto:', $context['member']['email'], '" title="', $context['member']['email'], '" rel="nofollow"><span class="main_icons mail" title="' . $txt['email'] . '"></span></a></li>';
 
 	// Don't show an icon if they haven't specified a website.
-	if (Utils::$context['member']['website']['url'] !== '' && !isset(Utils::$context['disabled_fields']['website']))
+	if ($context['member']['website']['url'] !== '' && !isset($context['disabled_fields']['website']))
 		echo '
-				<li><a href="', Utils::$context['member']['website']['url'], '" title="' . Utils::$context['member']['website']['title'] . '" target="_blank" rel="noopener">', (Theme::$current->settings['use_image_buttons'] ? '<span class="main_icons www" title="' . Utils::$context['member']['website']['title'] . '"></span>' : Lang::$txt['www']), '</a></li>';
+				<li><a href="', $context['member']['website']['url'], '" title="' . $context['member']['website']['title'] . '" target="_blank" rel="noopener">', ($settings['use_image_buttons'] ? '<span class="main_icons www" title="' . $context['member']['website']['title'] . '"></span>' : $txt['www']), '</a></li>';
 
 	// Are there any custom profile fields as icons?
-	if (!empty(Utils::$context['print_custom_fields']['icons']))
+	if (!empty($context['print_custom_fields']['icons']))
 	{
-		foreach (Utils::$context['print_custom_fields']['icons'] as $field)
+		foreach ($context['print_custom_fields']['icons'] as $field)
 			if (!empty($field['output_html']))
 				echo '
 				<li class="custom_field">', $field['output_html'], '</li>';
@@ -242,36 +245,36 @@ function template_summary()
 	echo '
 			</ul>
 			<span id="userstatus">
-				', Utils::$context['can_send_pm'] ? '<a href="' . Utils::$context['member']['online']['href'] . '" title="' . Utils::$context['member']['online']['text'] . '" rel="nofollow">' : '', Theme::$current->settings['use_image_buttons'] ? '<span class="' . (Utils::$context['member']['online']['is_online'] == 1 ? 'on' : 'off') . '" title="' . Utils::$context['member']['online']['text'] . '"></span>' : Utils::$context['member']['online']['label'], Utils::$context['can_send_pm'] ? '</a>' : '', Theme::$current->settings['use_image_buttons'] ? '<span class="smalltext"> ' . Utils::$context['member']['online']['label'] . '</span>' : '';
+				', $context['can_send_pm'] ? '<a href="' . $context['member']['online']['href'] . '" title="' . $context['member']['online']['text'] . '" rel="nofollow">' : '', $settings['use_image_buttons'] ? '<span class="' . ($context['member']['online']['is_online'] == 1 ? 'on' : 'off') . '" title="' . $context['member']['online']['text'] . '"></span>' : $context['member']['online']['label'], $context['can_send_pm'] ? '</a>' : '', $settings['use_image_buttons'] ? '<span class="smalltext"> ' . $context['member']['online']['label'] . '</span>' : '';
 
 	// Can they add this member as a buddy?
-	if (!empty(Utils::$context['can_have_buddy']) && !User::$me->is_owner)
+	if (!empty($context['can_have_buddy']) && !$context['user']['is_owner'])
 		echo '
 				<br>
-				<a href="', Config::$scripturl, '?action=buddy;u=', Utils::$context['id_member'], ';', Utils::$context['session_var'], '=', Utils::$context['session_id'], '">', Lang::$txt['buddy_' . (Utils::$context['member']['is_buddy'] ? 'remove' : 'add')], '</a>';
+				<a href="', $scripturl, '?action=buddy;u=', $context['id_member'], ';', $context['session_var'], '=', $context['session_id'], '">', $txt['buddy_' . ($context['member']['is_buddy'] ? 'remove' : 'add')], '</a>';
 
 	echo '
 			</span>';
 
-	if (!User::$me->is_owner && Utils::$context['can_send_pm'])
+	if (!$context['user']['is_owner'] && $context['can_send_pm'])
 		echo '
-			<a href="', Config::$scripturl, '?action=pm;sa=send;u=', Utils::$context['id_member'], '" class="infolinks">', Lang::$txt['profile_sendpm_short'], '</a>';
+			<a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], '" class="infolinks">', $txt['profile_sendpm_short'], '</a>';
 
 	echo '
-			<a href="', Config::$scripturl, '?action=profile;area=showposts;u=', Utils::$context['id_member'], '" class="infolinks">', Lang::$txt['showPosts'], '</a>';
+			<a href="', $scripturl, '?action=profile;area=showposts;u=', $context['id_member'], '" class="infolinks">', $txt['showPosts'], '</a>';
 
-	if (User::$me->is_owner && !empty(Config::$modSettings['drafts_post_enabled']))
+	if ($context['user']['is_owner'] && !empty($modSettings['drafts_post_enabled']))
 		echo '
-			<a href="', Config::$scripturl, '?action=profile;area=showdrafts;u=', Utils::$context['id_member'], '" class="infolinks">', Lang::$txt['drafts_show'], '</a>';
+			<a href="', $scripturl, '?action=profile;area=showdrafts;u=', $context['id_member'], '" class="infolinks">', $txt['drafts_show'], '</a>';
 
 	echo '
-			<a href="', Config::$scripturl, '?action=profile;area=statistics;u=', Utils::$context['id_member'], '" class="infolinks">', Lang::$txt['statPanel'], '</a>';
+			<a href="', $scripturl, '?action=profile;area=statistics;u=', $context['id_member'], '" class="infolinks">', $txt['statPanel'], '</a>';
 
 	// Are there any custom profile fields for bottom?
-	if (!empty(Utils::$context['print_custom_fields']['bottom_poster']))
+	if (!empty($context['print_custom_fields']['bottom_poster']))
 	{
 		$fields = '';
-		foreach (Utils::$context['print_custom_fields']['bottom_poster'] as $field)
+		foreach ($context['print_custom_fields']['bottom_poster'] as $field)
 			if (!empty($field['output_html']))
 				$fields .= '
 					<li>' . $field['output_html'] . '</li>';
@@ -290,44 +293,44 @@ function template_summary()
 		<div id="detailedinfo">
 			<dl class="settings">';
 
-	if (User::$me->is_owner || User::$me->is_admin)
+	if ($context['user']['is_owner'] || $context['user']['is_admin'])
 		echo '
-				<dt>', Lang::$txt['username'], '</dt>
-				<dd>', Utils::$context['member']['username'], '</dd>';
+				<dt>', $txt['username'], ': </dt>
+				<dd>', $context['member']['username'], '</dd>';
 
-	if (!isset(Utils::$context['disabled_fields']['posts']))
+	if (!isset($context['disabled_fields']['posts']))
 		echo '
-				<dt>', Lang::$txt['profile_posts'], '</dt>
-				<dd>', Utils::$context['member']['posts'], ' (', is_numeric(Utils::$context['member']['posts_per_day']) ? Lang::getTxt('posts_per_day', [Utils::$context['member']['posts_per_day']]) : Utils::$context['member']['posts_per_day'], ')</dd>';
+				<dt>', $txt['profile_posts'], ': </dt>
+				<dd>', $context['member']['posts'], ' (', $context['member']['posts_per_day'], ' ', $txt['posts_per_day'], ')</dd>';
 
-	if (Utils::$context['member']['show_email'])
+	if ($context['member']['show_email'])
 		echo '
-				<dt>', Lang::$txt['email'], '</dt>
-				<dd><a href="mailto:', Utils::$context['member']['email'], '">', Utils::$context['member']['email'], '</a></dd>';
+				<dt>', $txt['email'], ': </dt>
+				<dd><a href="mailto:', $context['member']['email'], '">', $context['member']['email'], '</a></dd>';
 
-	if (!empty(Config::$modSettings['titlesEnable']) && !empty(Utils::$context['member']['title']))
+	if (!empty($modSettings['titlesEnable']) && !empty($context['member']['title']))
 		echo '
-				<dt>', Lang::$txt['custom_title'], '</dt>
-				<dd>', Utils::$context['member']['title'], '</dd>';
+				<dt>', $txt['custom_title'], ': </dt>
+				<dd>', $context['member']['title'], '</dd>';
 
-	if (!empty(Utils::$context['member']['blurb']))
+	if (!empty($context['member']['blurb']))
 		echo '
-				<dt>', Lang::$txt['personal_text'], '</dt>
-				<dd>', Utils::$context['member']['blurb'], '</dd>';
+				<dt>', $txt['personal_text'], ': </dt>
+				<dd>', $context['member']['blurb'], '</dd>';
 
 	echo '
-				<dt>', Lang::$txt['age'], '</dt>
-				<dd>', Utils::$context['member']['age'] . (Utils::$context['member']['today_is_birthday'] ? ' &nbsp; <img src="' . Theme::$current->settings['images_url'] . '/cake.png" alt="">' : ''), '</dd>';
+				<dt>', $txt['age'], ':</dt>
+				<dd>', $context['member']['age'] . ($context['member']['today_is_birthday'] ? ' &nbsp; <img src="' . $settings['images_url'] . '/cake.png" alt="">' : ''), '</dd>';
 
 	echo '
 			</dl>';
 
 	// Any custom fields for standard placement?
-	if (!empty(Utils::$context['print_custom_fields']['standard']))
+	if (!empty($context['print_custom_fields']['standard']))
 	{
 		$fields = array();
 
-		foreach (Utils::$context['print_custom_fields']['standard'] as $field)
+		foreach ($context['print_custom_fields']['standard'] as $field)
 			if (!empty($field['output_html']))
 				$fields[] = $field;
 
@@ -350,43 +353,43 @@ function template_summary()
 			<dl class="settings noborder">';
 
 	// Can they view/issue a warning?
-	if (Utils::$context['can_view_warning'] && Utils::$context['member']['warning'])
+	if ($context['can_view_warning'] && $context['member']['warning'])
 	{
 		echo '
-				<dt>', Lang::$txt['profile_warning_level'], '</dt>
+				<dt>', $txt['profile_warning_level'], ': </dt>
 				<dd>
-					<a href="', Config::$scripturl, '?action=profile;u=', Utils::$context['id_member'], ';area=', (Utils::$context['can_issue_warning'] && !User::$me->is_owner ? 'issuewarning' : 'viewwarning'), '">', Lang::formatTxt('{0, number, :: percent}', [Utils::$context['member']['warning']]), '</a>';
+					<a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=', ($context['can_issue_warning'] && !$context['user']['is_owner'] ? 'issuewarning' : 'viewwarning'), '">', $context['member']['warning'], '%</a>';
 
 		// Can we provide information on what this means?
-		if (!empty(Utils::$context['warning_status']))
+		if (!empty($context['warning_status']))
 			echo '
-					<span class="smalltext">(', Utils::$context['warning_status'], ')</span>';
+					<span class="smalltext">(', $context['warning_status'], ')</span>';
 
 		echo '
 				</dd>';
 	}
 
 	// Is this member requiring activation and/or banned?
-	if (!empty(Utils::$context['activate_message']) || !empty(Utils::$context['member']['bans']))
+	if (!empty($context['activate_message']) || !empty($context['member']['bans']))
 	{
 		// If the person looking at the summary has permission, and the account isn't activated, give the viewer the ability to do it themselves.
-		if (!empty(Utils::$context['activate_message']))
+		if (!empty($context['activate_message']))
 			echo '
 				<dt class="clear">
-					<span class="alert">', Utils::$context['activate_message'], '</span> (<a href="', Utils::$context['activate_link'], '">', Utils::$context['activate_link_text'], '</a>)
+					<span class="alert">', $context['activate_message'], '</span> (<a href="', $context['activate_link'], '">', $context['activate_link_text'], '</a>)
 				</dt>';
 
 		// If the current member is banned, show a message and possibly a link to the ban.
-		if (!empty(Utils::$context['member']['bans']))
+		if (!empty($context['member']['bans']))
 		{
 			echo '
 				<dt class="clear">
-					<span class="alert">', Lang::$txt['user_is_banned'], '</span>&nbsp;<a href="#" onclick="document.getElementById(\'ban_info\').classList.toggle(\'hidden\');return false;">' . Lang::$txt['view_ban'] . '</a>
+					<span class="alert">', $txt['user_is_banned'], '</span>&nbsp;[<a href="#" onclick="document.getElementById(\'ban_info\').classList.toggle(\'hidden\');return false;">' . $txt['view_ban'] . '</a>]
 				</dt>
 				<dt class="clear hidden" id="ban_info">
-					<strong>', Lang::$txt['user_banned_by_following'], '</strong>';
+					<strong>', $txt['user_banned_by_following'], ':</strong>';
 
-			foreach (Utils::$context['member']['bans'] as $ban)
+			foreach ($context['member']['bans'] as $ban)
 				echo '
 					<br>
 					<span class="smalltext">', $ban['explanation'], '</span>';
@@ -397,45 +400,45 @@ function template_summary()
 	}
 
 	echo '
-				<dt>', Lang::$txt['date_registered'], '</dt>
-				<dd>', Utils::$context['member']['registered'], '</dd>';
+				<dt>', $txt['date_registered'], ': </dt>
+				<dd>', $context['member']['registered'], '</dd>';
 
 	// If the person looking is allowed, they can check the members IP address and hostname.
-	if (Utils::$context['can_see_ip'])
+	if ($context['can_see_ip'])
 	{
-		if (!empty(Utils::$context['member']['ip']))
+		if (!empty($context['member']['ip']))
 			echo '
-				<dt>', Lang::$txt['ip'], '</dt>
-				<dd><a href="', Config::$scripturl, '?action=profile;area=tracking;sa=ip;searchip=', Utils::$context['member']['ip'], ';u=', Utils::$context['member']['id'], '">', Utils::$context['member']['ip'], '</a></dd>';
+				<dt>', $txt['ip'], ': </dt>
+				<dd><a href="', $scripturl, '?action=profile;area=tracking;sa=ip;searchip=', $context['member']['ip'], ';u=', $context['member']['id'], '">', $context['member']['ip'], '</a></dd>';
 
-		if (!empty(Utils::$context['member']['hostname']))
+		if (empty($modSettings['disableHostnameLookup']) && !empty($context['member']['ip']))
 			echo '
-				<dt>', Lang::$txt['hostname'], '</dt>
-				<dd>', Utils::$context['member']['hostname'], '</dd>';
+				<dt>', $txt['hostname'], ': </dt>
+				<dd>', $context['member']['hostname'], '</dd>';
 	}
 
 	echo '
-				<dt>', Lang::$txt['local_time'], '</dt>
-				<dd>', Utils::$context['member']['local_time'], '</dd>';
+				<dt>', $txt['local_time'], ':</dt>
+				<dd>', $context['member']['local_time'], '</dd>';
 
-	if (!empty(Config::$modSettings['userLanguage']) && !empty(Utils::$context['member']['language']))
+	if (!empty($modSettings['userLanguage']) && !empty($context['member']['language']))
 		echo '
-				<dt>', Lang::$txt['language'], '</dt>
-				<dd>', Utils::$context['member']['language'], '</dd>';
+				<dt>', $txt['language'], ':</dt>
+				<dd>', $context['member']['language'], '</dd>';
 
-	if (Utils::$context['member']['show_last_login'])
+	if ($context['member']['show_last_login'])
 		echo '
-				<dt>', Lang::$txt['lastLoggedIn'], '</dt>
-				<dd>', Utils::$context['member']['last_login'], (!empty(Utils::$context['member']['is_hidden']) ? ' (' . Lang::$txt['hidden'] . ')' : ''), '</dd>';
+				<dt>', $txt['lastLoggedIn'], ': </dt>
+				<dd>', $context['member']['last_login'], (!empty($context['member']['is_hidden']) ? ' (' . $txt['hidden'] . ')' : ''), '</dd>';
 
 	echo '
 			</dl>';
 
 	// Are there any custom profile fields for above the signature?
-	if (!empty(Utils::$context['print_custom_fields']['above_signature']))
+	if (!empty($context['print_custom_fields']['above_signature']))
 	{
 		$fields = '';
-		foreach (Utils::$context['print_custom_fields']['above_signature'] as $field)
+		foreach ($context['print_custom_fields']['above_signature'] as $field)
 			if (!empty($field['output_html']))
 				$fields .= '
 					<li>' . $field['output_html'] . '</li>';
@@ -449,18 +452,18 @@ function template_summary()
 	}
 
 	// Show the users signature.
-	if (Utils::$context['signature_enabled'] && !empty(Utils::$context['member']['signature']))
+	if ($context['signature_enabled'] && !empty($context['member']['signature']))
 		echo '
 			<div class="signature">
-				<h5>', Lang::$txt['signature'], '</h5>
-				', Utils::$context['member']['signature'], '
+				<h5>', $txt['signature'], ':</h5>
+				', $context['member']['signature'], '
 			</div>';
 
 	// Are there any custom profile fields for below the signature?
-	if (!empty(Utils::$context['print_custom_fields']['below_signature']))
+	if (!empty($context['print_custom_fields']['below_signature']))
 	{
 		$fields = '';
-		foreach (Utils::$context['print_custom_fields']['below_signature'] as $field)
+		foreach ($context['print_custom_fields']['below_signature'] as $field)
 			if (!empty($field['output_html']))
 				$fields .= '
 					<li>' . $field['output_html'] . '</li>';
@@ -483,28 +486,30 @@ function template_summary()
  */
 function template_showPosts()
 {
+	global $context, $scripturl, $txt;
+
 	echo '
-		<div class="cat_bar', !isset(Utils::$context['attachments']) ? ' cat_bar_round' : '', '">
+		<div class="cat_bar', !isset($context['attachments']) ? ' cat_bar_round' : '', '">
 			<h3 class="catbg">
-				', (!isset(Utils::$context['attachments']) && empty(Utils::$context['is_topics']) ? Lang::$txt['showMessages'] : (!empty(Utils::$context['is_topics']) ? Lang::$txt['showTopics'] : Lang::$txt['showAttachments'])), !User::$me->is_owner ? ' - ' . Utils::$context['member']['name'] : '', '
+				', (!isset($context['attachments']) && empty($context['is_topics']) ? $txt['showMessages'] : (!empty($context['is_topics']) ? $txt['showTopics'] : $txt['showAttachments'])), !$context['user']['is_owner'] ? ' - ' . $context['member']['name'] : '', '
 			</h3>
-		</div>', !empty(Utils::$context['page_index']) ? '
+		</div>', !empty($context['page_index']) ? '
 		<div class="pagesection">
-			<div class="pagelinks">' . Utils::$context['page_index'] . '</div>
+			<div class="pagelinks">' . $context['page_index'] . '</div>
 		</div>' : '';
 
 	// Are we displaying posts or attachments?
-	if (!isset(Utils::$context['attachments']))
+	if (!isset($context['attachments']))
 	{
 		// For every post to be displayed, give it its own div, and show the important details of the post.
-		foreach (Utils::$context['posts'] as $post)
+		foreach ($context['posts'] as $post)
 		{
 			echo '
 		<div class="', $post['css_class'], '">
 			<div class="page_number floatright"> #', $post['counter'], '</div>
 			<div class="topic_details">
 				<h5>
-					<strong><a href="', Config::$scripturl, '?board=', $post['board']['id'], '.0">', $post['board']['name'], '</a> / <a href="', Config::$scripturl, '?topic=', $post['topic'], '.', $post['start'], '#msg', $post['id'], '">', $post['subject'], '</a></strong>
+					<strong><a href="', $scripturl, '?board=', $post['board']['id'], '.0">', $post['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $post['topic'], '.', $post['start'], '#msg', $post['id'], '">', $post['subject'], '</a></strong>
 				</h5>
 				<span class="smalltext">', $post['time'], '</span>
 			</div>';
@@ -512,7 +517,7 @@ function template_showPosts()
 			if (!$post['approved'])
 				echo '
 			<div class="noticebox">
-				', Lang::$txt['post_awaiting_approval'], '
+				', $txt['post_awaiting_approval'], '
 			</div>';
 
 			echo '
@@ -532,18 +537,18 @@ function template_showPosts()
 	else
 		template_show_list('attachments');
 
-	// No posts? Just end with an informative message.
-	if ((isset(Utils::$context['attachments']) && empty(Utils::$context['attachments'])) || (!isset(Utils::$context['attachments']) && empty(Utils::$context['posts'])))
+	// No posts? Just end with a informative message.
+	if ((isset($context['attachments']) && empty($context['attachments'])) || (!isset($context['attachments']) && empty($context['posts'])))
 		echo '
 		<div class="windowbg">
-			', isset(Utils::$context['attachments']) ? Lang::$txt['show_attachments_none'] : (Utils::$context['is_topics'] ? Lang::$txt['show_topics_none'] : Lang::$txt['show_posts_none']), '
+			', isset($context['attachments']) ? $txt['show_attachments_none'] : ($context['is_topics'] ? $txt['show_topics_none'] : $txt['show_posts_none']), '
 		</div>';
 
 	// Show more page numbers.
-	if (!empty(Utils::$context['page_index']))
+	if (!empty($context['page_index']))
 		echo '
 		<div class="pagesection">
-			<div class="pagelinks">', Utils::$context['page_index'], '</div>
+			<div class="pagelinks">', $context['page_index'], '</div>
 		</div>';
 }
 
@@ -552,37 +557,39 @@ function template_showPosts()
  */
 function template_showAlerts()
 {
+	global $context, $txt, $scripturl;
+
 	// Do we have an update message?
-	if (!empty(Utils::$context['update_message']))
+	if (!empty($context['update_message']))
 		echo '
 		<div class="infobox">
-			', Utils::$context['update_message'], '
+			', $context['update_message'], '
 		</div>';
 
 	echo '
 		<div class="cat_bar">
 			<h3 class="catbg">
-			', !User::$me->is_owner ? Lang::getTxt('alerts_member', ['member' => Utils::$context['member']['name']]) : Lang::$txt['alerts'], '
+			', $txt['alerts'], !$context['user']['is_owner'] ? ' - ' . $context['member']['name'] : '', '
 			</h3>
 		</div>';
 
-	if (empty(Utils::$context['alerts']))
+	if (empty($context['alerts']))
 		echo '
 		<div class="information">
-			', Lang::$txt['alerts_none'], '
+			', $txt['alerts_none'], '
 		</div>';
 
 	else
 	{
 		// Start the form if checkboxes are in use
-		if (Utils::$context['showCheckboxes'])
+		if ($context['showCheckboxes'])
 			echo '
-		<form action="', Config::$scripturl, '?action=profile;u=', Utils::$context['id_member'], ';area=showalerts;save" method="post" accept-charset="', Utils::$context['character_set'], '" id="mark_all">';
+		<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=showalerts;save" method="post" accept-charset="', $context['character_set'], '" id="mark_all">';
 
 		echo '
 			<table id="alerts" class="table_grid">';
 
-		foreach (Utils::$context['alerts'] as $id => $alert)
+		foreach ($context['alerts'] as $id => $alert)
 		{
 			echo '
 				<tr class="windowbg">
@@ -612,27 +619,27 @@ function template_showAlerts()
 		echo '
 			</table>
 			<div class="pagesection">
-				<div class="pagelinks">', Utils::$context['pagination'], '</div>
+				<div class="pagelinks">', $context['pagination'], '</div>
 				<div class="floatright">';
 
-		if (Utils::$context['showCheckboxes'])
+		if ($context['showCheckboxes'])
 			echo '
-					', Lang::$txt['check_all'], ' <input type="checkbox" name="select_all" id="select_all">
+					', $txt['check_all'], ': <input type="checkbox" name="select_all" id="select_all">
 					<select name="mark_as">
-						<option value="read">', Lang::$txt['quick_mod_markread'], '</option>
-						<option value="unread">', Lang::$txt['quick_mod_markunread'], '</option>
-						<option value="remove">', Lang::$txt['quick_mod_remove'], '</option>
+						<option value="read">', $txt['quick_mod_markread'], '</option>
+						<option value="unread">', $txt['quick_mod_markunread'], '</option>
+						<option value="remove">', $txt['quick_mod_remove'], '</option>
 					</select>
-					<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
-					<input type="hidden" name="start" value="', Utils::$context['start'], '">
-					<input type="submit" name="req" value="', Lang::$txt['quick_mod_go'], '" class="button you_sure">';
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+					<input type="hidden" name="start" value="', $context['start'], '">
+					<input type="submit" name="req" value="', $txt['quick_mod_go'], '" class="button you_sure">';
 
 		echo '
-					<a href="', Utils::$context['alert_purge_link'], '" class="button you_sure">', Lang::$txt['alert_purge'], '</a>
+					<a href="', $context['alert_purge_link'], '" class="button you_sure">', $txt['alert_purge'], '</a>
 				</div>
 			</div>';
 
-		if (Utils::$context['showCheckboxes'])
+		if ($context['showCheckboxes'])
 			echo '
 		</form>';
 	}
@@ -643,45 +650,47 @@ function template_showAlerts()
  */
 function template_showDrafts()
 {
+	global $context, $scripturl, $txt;
+
 	echo '
 		<div class="cat_bar cat_bar_round">
 			<h3 class="catbg">
-				', !User::$me->is_owner ? Lang::getTxt('drafts_member', ['member' => Utils::$context['member']['name']]) : Lang::$txt['drafts'], '
+				', $txt['drafts'], !$context['user']['is_owner'] ? ' - ' . $context['member']['name'] : '', '
 			</h3>
-		</div>', !empty(Utils::$context['page_index']) ? '
+		</div>', !empty($context['page_index']) ? '
 		<div class="pagesection">
-			<div class="pagelinks">' . Utils::$context['page_index'] . '</div>
+			<div class="pagelinks">' . $context['page_index'] . '</div>
 		</div>' : '';
 
 	// No drafts? Just show an informative message.
-	if (empty(Utils::$context['drafts']))
+	if (empty($context['drafts']))
 		echo '
 		<div class="windowbg centertext">
-			', Lang::$txt['draft_none'], '
+			', $txt['draft_none'], '
 		</div>';
 	else
 	{
 		// For every draft to be displayed, give it its own div, and show the important details of the draft.
-		foreach (Utils::$context['drafts'] as $draft)
+		foreach ($context['drafts'] as $draft)
 		{
 			echo '
 		<div class="windowbg">
 			<div class="page_number floatright"> #', $draft['counter'], '</div>
 			<div class="topic_details">
 				<h5>
-					<strong><a href="', Config::$scripturl, '?board=', $draft['board']['id'], '.0">', $draft['board']['name'], '</a> / ', $draft['topic']['link'], '</strong> &nbsp; &nbsp;';
+					<strong><a href="', $scripturl, '?board=', $draft['board']['id'], '.0">', $draft['board']['name'], '</a> / ', $draft['topic']['link'], '</strong> &nbsp; &nbsp;';
 
 			if (!empty($draft['sticky']))
 				echo '
-					<span class="main_icons sticky" title="', Lang::$txt['sticky_topic'], '"></span>';
+					<span class="main_icons sticky" title="', $txt['sticky_topic'], '"></span>';
 
 			if (!empty($draft['locked']))
 				echo '
-					<span class="main_icons lock" title="', Lang::$txt['locked_topic'], '"></span>';
+					<span class="main_icons lock" title="', $txt['locked_topic'], '"></span>';
 
 			echo '
 				</h5>
-				<span class="smalltext">', Lang::getTxt('draft_saved_on', ['date' => $draft['time']]), '</span>
+				<span class="smalltext"><strong>', $txt['draft_saved_on'], ':</strong> ', $draft['time'], '</span>
 			</div><!-- .topic_details -->
 			<div class="list_posts">
 				', $draft['body'], '
@@ -700,7 +709,7 @@ function template_showDrafts()
 	// Show page numbers.
 	echo '
 		<div class="pagesection">
-			<div class="pagelinks">', Utils::$context['page_index'], '</div>
+			<div class="pagelinks">', $context['page_index'], '</div>
 		</div>';
 }
 
@@ -709,55 +718,57 @@ function template_showDrafts()
  */
 function template_editBuddies()
 {
-	if (!empty(Utils::$context['saved_successful']))
-		echo '
-	<div class="infobox">', User::$me->is_owner ? Lang::$txt['profile_updated_own'] : Lang::getTxt('profile_updated_else', Utils::$context['member']), '</div>';
+	global $context, $scripturl, $txt;
 
-	elseif (!empty(Utils::$context['saved_failed']))
+	if (!empty($context['saved_successful']))
 		echo '
-	<div class="errorbox">', Utils::$context['saved_failed'], '</div>';
+	<div class="infobox">', $context['user']['is_owner'] ? $txt['profile_updated_own'] : sprintf($txt['profile_updated_else'], $context['member']['name']), '</div>';
+
+	elseif (!empty($context['saved_failed']))
+		echo '
+	<div class="errorbox">', $context['saved_failed'], '</div>';
 
 	echo '
 	<div id="edit_buddies">
 		<div class="cat_bar">
 			<h3 class="catbg">
-				<span class="main_icons people icon"></span> ', Lang::$txt['editBuddies'], '
+				<span class="main_icons people icon"></span> ', $txt['editBuddies'], '
 			</h3>
 		</div>
 		<table class="table_grid">
 			<thead>
 				<tr class="title_bar">
-					<th scope="col" class="quarter_table buddy_link">', Lang::$txt['name'], '</th>
-					<th scope="col" class="buddy_status">', Lang::$txt['status'], '</th>';
+					<th scope="col" class="quarter_table buddy_link">', $txt['name'], '</th>
+					<th scope="col" class="buddy_status">', $txt['status'], '</th>';
 
-	if (Utils::$context['can_moderate_forum'])
+	if ($context['can_moderate_forum'])
 		echo '
-					<th scope="col" class="buddy_email">', Lang::$txt['email'], '</th>';
+					<th scope="col" class="buddy_email">', $txt['email'], '</th>';
 
-	if (!empty(Utils::$context['custom_pf']))
-		foreach (Utils::$context['custom_pf'] as $column)
+	if (!empty($context['custom_pf']))
+		foreach ($context['custom_pf'] as $column)
 			echo '
 					<th scope="col" class="buddy_custom_fields">', $column['label'], '</th>';
 
 	echo '
-					<th scope="col" class="buddy_remove">', Lang::$txt['remove'], '</th>
+					<th scope="col" class="buddy_remove">', $txt['remove'], '</th>
 				</tr>
 			</thead>
 			<tbody>';
 
 	// If they don't have any buddies don't list them!
-	if (empty(Utils::$context['buddies']))
+	if (empty($context['buddies']))
 		echo '
 				<tr class="windowbg">
-					<td colspan="', Utils::$context['can_moderate_forum'] ? '10' : '9', '">
-						<strong>', Lang::$txt['no_buddies'], '</strong>
+					<td colspan="', $context['can_moderate_forum'] ? '10' : '9', '">
+						<strong>', $txt['no_buddies'], '</strong>
 					</td>
 				</tr>';
 
 	// Now loop through each buddy showing info on each.
 	else
 	{
-		foreach (Utils::$context['buddies'] as $buddy)
+		foreach ($context['buddies'] as $buddy)
 		{
 			echo '
 				<tr class="windowbg">
@@ -769,18 +780,18 @@ function template_editBuddies()
 			if ($buddy['show_email'])
 				echo '
 					<td class="buddy_email centertext">
-						<a href="mailto:' . $buddy['email'] . '" rel="nofollow"><span class="main_icons mail icon" title="' . Lang::$txt['email'] . ' ' . $buddy['name'] . '"></span></a>
+						<a href="mailto:' . $buddy['email'] . '" rel="nofollow"><span class="main_icons mail icon" title="' . $txt['email'] . ' ' . $buddy['name'] . '"></span></a>
 					</td>';
 
 			// Show the custom profile fields for this user.
-			if (!empty(Utils::$context['custom_pf']))
-				foreach (Utils::$context['custom_pf'] as $key => $column)
+			if (!empty($context['custom_pf']))
+				foreach ($context['custom_pf'] as $key => $column)
 					echo '
 					<td class="centertext buddy_custom_fields">', $buddy['options'][$key], '</td>';
 
 			echo '
 					<td class="centertext buddy_remove">
-						<a href="', Config::$scripturl, '?action=profile;area=lists;sa=buddies;u=', Utils::$context['id_member'], ';remove=', $buddy['id'], ';', Utils::$context['session_var'], '=', Utils::$context['session_id'], '"><span class="main_icons delete" title="', Lang::$txt['buddy_remove'], '"></span></a>
+						<a href="', $scripturl, '?action=profile;area=lists;sa=buddies;u=', $context['id_member'], ';remove=', $buddy['id'], ';', $context['session_var'], '=', $context['session_id'], '"><span class="main_icons delete" title="', $txt['buddy_remove'], '"></span></a>
 					</td>
 				</tr>';
 		}
@@ -793,28 +804,28 @@ function template_editBuddies()
 
 	// Add a new buddy?
 	echo '
-	<form action="', Config::$scripturl, '?action=profile;u=', Utils::$context['id_member'], ';area=lists;sa=buddies" method="post" accept-charset="', Utils::$context['character_set'], '">
+	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=lists;sa=buddies" method="post" accept-charset="', $context['character_set'], '">
 		<div class="cat_bar">
-			<h3 class="catbg">', Lang::$txt['buddy_add'], '</h3>
+			<h3 class="catbg">', $txt['buddy_add'], '</h3>
 		</div>
 		<div class="information">
 			<dl class="settings">
 				<dt>
-					<label for="new_buddy"><strong>', Lang::$txt['who_member'], ':</strong></label>
+					<label for="new_buddy"><strong>', $txt['who_member'], ':</strong></label>
 				</dt>
 				<dd>
 					<input type="text" name="new_buddy" id="new_buddy" size="30">
-					<input type="submit" value="', Lang::$txt['buddy_add_button'], '" class="button floatnone">
+					<input type="submit" value="', $txt['buddy_add_button'], '" class="button floatnone">
 				</dd>
 			</dl>
 		</div>';
 
-	if (!empty(Utils::$context['token_check']))
+	if (!empty($context['token_check']))
 		echo '
-		<input type="hidden" name="', Utils::$context[Utils::$context['token_check'] . '_token_var'], '" value="', Utils::$context[Utils::$context['token_check'] . '_token'], '">';
+		<input type="hidden" name="', $context[$context['token_check'] . '_token_var'], '" value="', $context[$context['token_check'] . '_token'], '">';
 
 	echo '
-		<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
 	</form>
 	<script>
 		var oAddBuddySuggest = new smc_AutoSuggest({
@@ -824,7 +835,7 @@ function template_editBuddies()
 			sSuggestId: \'new_buddy\',
 			sControlId: \'new_buddy\',
 			sSearchType: \'member\',
-			sTextDeleteItem: \'', Lang::$txt['autosuggest_delete_item'], '\',
+			sTextDeleteItem: \'', $txt['autosuggest_delete_item'], '\',
 			bItemList: false
 		});
 	</script>';
@@ -835,48 +846,50 @@ function template_editBuddies()
  */
 function template_editIgnoreList()
 {
-	if (!empty(Utils::$context['saved_successful']))
-		echo '
-	<div class="infobox">', User::$me->is_owner ? Lang::$txt['profile_updated_own'] : Lang::getTxt('profile_updated_else', Utils::$context['member']), '</div>';
+	global $context, $scripturl, $txt;
 
-	elseif (!empty(Utils::$context['saved_failed']))
+	if (!empty($context['saved_successful']))
 		echo '
-	<div class="errorbox">', Utils::$context['saved_failed'], '</div>';
+	<div class="infobox">', $context['user']['is_owner'] ? $txt['profile_updated_own'] : sprintf($txt['profile_updated_else'], $context['member']['name']), '</div>';
+
+	elseif (!empty($context['saved_failed']))
+		echo '
+	<div class="errorbox">', $context['saved_failed'], '</div>';
 
 	echo '
 	<div id="edit_buddies">
 		<div class="cat_bar">
 			<h3 class="catbg profile_hd">
-				', Lang::$txt['editIgnoreList'], '
+				', $txt['editIgnoreList'], '
 			</h3>
 		</div>
 		<table class="table_grid">
 			<thead>
 				<tr class="title_bar">
-					<th scope="col" class="quarter_table buddy_link">', Lang::$txt['name'], '</th>
-					<th scope="col" class="buddy_status">', Lang::$txt['status'], '</th>';
+					<th scope="col" class="quarter_table buddy_link">', $txt['name'], '</th>
+					<th scope="col" class="buddy_status">', $txt['status'], '</th>';
 
-	if (Utils::$context['can_moderate_forum'])
+	if ($context['can_moderate_forum'])
 		echo '
-					<th scope="col" class="buddy_email">', Lang::$txt['email'], '</th>';
+					<th scope="col" class="buddy_email">', $txt['email'], '</th>';
 
 	echo '
-					<th scope="col" class="buddy_remove">', Lang::$txt['ignore_remove'], '</th>
+					<th scope="col" class="buddy_remove">', $txt['ignore_remove'], '</th>
 				</tr>
 			</thead>
 			<tbody>';
 
 	// If they don't have anyone on their ignore list, don't list it!
-	if (empty(Utils::$context['ignore_list']))
+	if (empty($context['ignore_list']))
 		echo '
 				<tr class="windowbg">
-					<td colspan="', Utils::$context['can_moderate_forum'] ? '4' : '3', '">
-						<strong>', Lang::$txt['no_ignore'], '</strong>
+					<td colspan="', $context['can_moderate_forum'] ? '4' : '3', '">
+						<strong>', $txt['no_ignore'], '</strong>
 					</td>
 				</tr>';
 
 	// Now loop through each buddy showing info on each.
-	foreach (Utils::$context['ignore_list'] as $member)
+	foreach ($context['ignore_list'] as $member)
 	{
 		echo '
 				<tr class="windowbg">
@@ -885,14 +898,14 @@ function template_editIgnoreList()
 						<a href="', $member['online']['href'], '"><span class="' . ($member['online']['is_online'] == 1 ? 'on' : 'off') . '" title="' . $member['online']['text'] . '"></span></a>
 					</td>';
 
-		if (Utils::$context['can_moderate_forum'])
+		if ($context['can_moderate_forum'])
 			echo '
 					<td class="centertext buddy_email">
-						<a href="mailto:' . $member['email'] . '" rel="nofollow"><span class="main_icons mail icon" title="' . Lang::$txt['email'] . ' ' . $member['name'] . '"></span></a>
+						<a href="mailto:' . $member['email'] . '" rel="nofollow"><span class="main_icons mail icon" title="' . $txt['email'] . ' ' . $member['name'] . '"></span></a>
 					</td>';
 		echo '
 					<td class="centertext buddy_remove">
-						<a href="', Config::$scripturl, '?action=profile;u=', Utils::$context['id_member'], ';area=lists;sa=ignore;remove=', $member['id'], ';', Utils::$context['session_var'], '=', Utils::$context['session_id'], '"><span class="main_icons delete" title="', Lang::$txt['ignore_remove'], '"></span></a>
+						<a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=lists;sa=ignore;remove=', $member['id'], ';', $context['session_var'], '=', $context['session_id'], '"><span class="main_icons delete" title="', $txt['ignore_remove'], '"></span></a>
 					</td>
 				</tr>';
 	}
@@ -904,38 +917,38 @@ function template_editIgnoreList()
 
 	// Add to the ignore list?
 	echo '
-	<form action="', Config::$scripturl, '?action=profile;u=', Utils::$context['id_member'], ';area=lists;sa=ignore" method="post" accept-charset="', Utils::$context['character_set'], '">
+	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=lists;sa=ignore" method="post" accept-charset="', $context['character_set'], '">
 		<div class="cat_bar">
-			<h3 class="catbg">', Lang::$txt['ignore_add'], '</h3>
+			<h3 class="catbg">', $txt['ignore_add'], '</h3>
 		</div>
 		<div class="information">
 			<dl class="settings">
 				<dt>
-					<label for="new_buddy"><strong>', Lang::$txt['who_member'], '</strong></label>
+					<label for="new_buddy"><strong>', $txt['who_member'], ':</strong></label>
 				</dt>
 				<dd>
 					<input type="text" name="new_ignore" id="new_ignore" size="30">
-					<input type="submit" value="', Lang::$txt['ignore_add_button'], '" class="button">
+					<input type="submit" value="', $txt['ignore_add_button'], '" class="button">
 				</dd>
 			</dl>
 		</div>';
 
-	if (!empty(Utils::$context['token_check']))
+	if (!empty($context['token_check']))
 		echo '
-		<input type="hidden" name="', Utils::$context[Utils::$context['token_check'] . '_token_var'], '" value="', Utils::$context[Utils::$context['token_check'] . '_token'], '">';
+		<input type="hidden" name="', $context[$context['token_check'] . '_token_var'], '" value="', $context[$context['token_check'] . '_token'], '">';
 
 	echo '
-		<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
 	</form>
 	<script>
 		var oAddIgnoreSuggest = new smc_AutoSuggest({
 			sSelf: \'oAddIgnoreSuggest\',
-			sSessionId: \'', Utils::$context['session_id'], '\',
-			sSessionVar: \'', Utils::$context['session_var'], '\',
+			sSessionId: \'', $context['session_id'], '\',
+			sSessionVar: \'', $context['session_var'], '\',
 			sSuggestId: \'new_ignore\',
 			sControlId: \'new_ignore\',
 			sSearchType: \'member\',
-			sTextDeleteItem: \'', Lang::$txt['autosuggest_delete_item'], '\',
+			sTextDeleteItem: \'', $txt['autosuggest_delete_item'], '\',
 			bItemList: false
 		});
 	</script>';
@@ -946,10 +959,12 @@ function template_editIgnoreList()
  */
 function template_trackActivity()
 {
+	global $context, $scripturl, $txt;
+
 	// The first table shows IP information about the user.
 	echo '
 		<div class="cat_bar">
-			<h3 class="catbg">', Lang::getTxt('view_ips_by', ['member' => Utils::$context['member']['name']]), '</h3>
+			<h3 class="catbg">', $txt['view_ips_by'], ' ', $context['member']['name'], '</h3>
 		</div>';
 
 	// The last IP the user used.
@@ -957,37 +972,37 @@ function template_trackActivity()
 		<div id="tracking" class="windowbg">
 			<dl class="settings noborder">
 				<dt>
-					', Lang::$txt['most_recent_ip'], '
-					', (empty(Utils::$context['last_ip2']) ? '' : '<br>
-					<span class="smalltext"><a href="' . Config::$scripturl . '?action=helpadmin;help=whytwoip" onclick="return reqOverlayDiv(this.href);">' . Lang::$txt['why_two_ip_address'] . '</a></span>'), '
+					', $txt['most_recent_ip'], ':
+					', (empty($context['last_ip2']) ? '' : '<br>
+					<span class="smalltext">(<a href="' . $scripturl . '?action=helpadmin;help=whytwoip" onclick="return reqOverlayDiv(this.href);">' . $txt['why_two_ip_address'] . '</a>)</span>'), '
 				</dt>
 				<dd>
-					<a href="', Config::$scripturl, '?action=profile;area=tracking;sa=ip;searchip=', Utils::$context['last_ip'], ';u=', Utils::$context['member']['id'], '">', Utils::$context['last_ip'], '</a>';
+					<a href="', $scripturl, '?action=profile;area=tracking;sa=ip;searchip=', $context['last_ip'], ';u=', $context['member']['id'], '">', $context['last_ip'], '</a>';
 
 	// Second address detected?
-	if (!empty(Utils::$context['last_ip2']))
+	if (!empty($context['last_ip2']))
 		echo '
-					, <a href="', Config::$scripturl, '?action=profile;area=tracking;sa=ip;searchip=', Utils::$context['last_ip2'], ';u=', Utils::$context['member']['id'], '">', Utils::$context['last_ip2'], '</a>';
+					, <a href="', $scripturl, '?action=profile;area=tracking;sa=ip;searchip=', $context['last_ip2'], ';u=', $context['member']['id'], '">', $context['last_ip2'], '</a>';
 
 	echo '
 				</dd>';
 
 	// Lists of IP addresses used in messages / error messages.
 	echo '
-				<dt>', Lang::$txt['ips_in_messages'], '</dt>
+				<dt>', $txt['ips_in_messages'], ':</dt>
 				<dd>
-					', (count(Utils::$context['ips']) > 0 ? Lang::sentenceList(Utils::$context['ips']) : Lang::$txt['none']), '
+					', (count($context['ips']) > 0 ? implode(', ', $context['ips']) : '(' . $txt['none'] . ')'), '
 				</dd>
-				<dt>', Lang::$txt['ips_in_errors'], '</dt>
+				<dt>', $txt['ips_in_errors'], ':</dt>
 				<dd>
-					', (count(Utils::$context['error_ips']) > 0 ? Lang::sentenceList(Utils::$context['error_ips']) : Lang::$txt['none']), '
+					', (count($context['error_ips']) > 0 ? implode(', ', $context['error_ips']) : '(' . $txt['none'] . ')'), '
 				</dd>';
 
 	// List any members that have used the same IP addresses as the current member.
 	echo '
-				<dt>', Lang::$txt['members_in_range'], '</dt>
+				<dt>', $txt['members_in_range'], ':</dt>
 				<dd>
-					', (count(Utils::$context['members_in_range']) > 0 ? Lang::sentenceList(Utils::$context['members_in_range']) : Lang::$txt['none']), '
+					', (count($context['members_in_range']) > 0 ? implode(', ', $context['members_in_range']) : '(' . $txt['none'] . ')'), '
 				</dd>
 			</dl>
 		</div><!-- #tracking -->';
@@ -1001,37 +1016,39 @@ function template_trackActivity()
  */
 function template_trackIP()
 {
+	global $context, $txt;
+
 	// This function always defaults to the last IP used by a member but can be set to track any IP.
 	// The first table in the template gives an input box to allow the admin to enter another IP to track.
 	echo '
 		<div class="cat_bar">
-			<h3 class="catbg">', Lang::$txt['trackIP'], '</h3>
+			<h3 class="catbg">', $txt['trackIP'], '</h3>
 		</div>
 		<div class="windowbg">
-			<form action="', Utils::$context['base_url'], '" method="post" accept-charset="', Utils::$context['character_set'], '">
+			<form action="', $context['base_url'], '" method="post" accept-charset="', $context['character_set'], '">
 				<dl class="settings">
 					<dt>
-						<label for="searchip"><strong>', Lang::$txt['enter_ip'], '</strong></label>
+						<label for="searchip"><strong>', $txt['enter_ip'], ':</strong></label>
 					</dt>
 					<dd>
-						<input type="text" name="searchip" value="', Utils::$context['ip'], '">
+						<input type="text" name="searchip" value="', $context['ip'], '">
 					</dd>
 				</dl>
-				<input type="submit" value="', Lang::$txt['trackIP'], '" class="button">
+				<input type="submit" value="', $txt['trackIP'], '" class="button">
 			</form>
 		</div>
 		<br>';
 
 	// The table inbetween the first and second table shows links to the whois server for every region.
-	if (Utils::$context['single_ip'])
+	if ($context['single_ip'])
 	{
 		echo '
 		<div class="cat_bar">
-			<h3 class="catbg">', Lang::getTxt('whois_title', Utils::$context), '</h3>
+			<h3 class="catbg">', $txt['whois_title'], ' ', $context['ip'], '</h3>
 		</div>
 		<div class="windowbg">';
 
-		foreach (Utils::$context['whois_servers'] as $server)
+		foreach ($context['whois_servers'] as $server)
 			echo '
 			<a href="', $server['url'], '" target="_blank" rel="noopener"', '>', $server['name'], '</a><br>';
 		echo '
@@ -1042,13 +1059,13 @@ function template_trackIP()
 	// The second table lists all the members who have been logged as using this IP address.
 	echo '
 		<div class="cat_bar">
-			<h3 class="catbg">', Lang::getTxt('members_from_ip', Utils::$context), '</h3>
+			<h3 class="catbg">', $txt['members_from_ip'], ' ', $context['ip'], '</h3>
 		</div>';
 
-	if (empty(Utils::$context['ips']))
+	if (empty($context['ips']))
 		echo '
 		<p class="windowbg description">
-			<em>', Lang::$txt['no_members_from_ip'], '</em>
+			<em>', $txt['no_members_from_ip'], '</em>
 		</p>';
 
 	else
@@ -1057,17 +1074,17 @@ function template_trackIP()
 		<table class="table_grid">
 			<thead>
 				<tr class="title_bar">
-					<th scope="col">', Lang::$txt['ip_address'], '</th>
-					<th scope="col">', Lang::$txt['display_name'], '</th>
+					<th scope="col">', $txt['ip_address'], '</th>
+					<th scope="col">', $txt['display_name'], '</th>
 				</tr>
 			</thead>
 			<tbody>';
 
 		// Loop through each of the members and display them.
-		foreach (Utils::$context['ips'] as $ip => $memberlist)
+		foreach ($context['ips'] as $ip => $memberlist)
 			echo '
 				<tr class="windowbg">
-					<td><a href="', Utils::$context['base_url'], ';searchip=', $ip, '">', $ip, '</a></td>
+					<td><a href="', $context['base_url'], ';searchip=', $ip, '">', $ip, '</a></td>
 					<td>', implode(', ', $memberlist), '</td>
 				</tr>';
 
@@ -1086,9 +1103,9 @@ function template_trackIP()
 	template_show_list('track_user_list');
 
 	// 3rd party integrations may have added additional tracking.
-	if (!empty(Utils::$context['additional_track_lists']))
+	if (!empty($context['additional_track_lists']))
 	{
-		foreach (Utils::$context['additional_track_lists'] as $list)
+		foreach ($context['additional_track_lists'] as $list)
 		{
 			echo '<br>';
 
@@ -1102,39 +1119,38 @@ function template_trackIP()
  */
 function template_showPermissions()
 {
+	global $context, $scripturl, $txt;
+
 	echo '
 		<div class="cat_bar">
 			<h3 class="catbg profile_hd">
-				', Lang::$txt['showPermissions'], '
+				', $txt['showPermissions'], '
 			</h3>
 		</div>';
 
-	if (Utils::$context['member']['has_all_permissions'])
+	if ($context['member']['has_all_permissions'])
 		echo '
-		<div class="information">', Lang::$txt['showPermissions_all'], '</div>';
+		<div class="information">', $txt['showPermissions_all'], '</div>';
 
 	else
 	{
 		echo '
-		<div class="information">', Lang::$txt['showPermissions_help'], '</div>
+		<div class="information">', $txt['showPermissions_help'], '</div>
 		<div id="permissions" class="flow_hidden">';
 
-		if (!empty(Utils::$context['no_access_boards']))
+		if (!empty($context['no_access_boards']))
 		{
 			echo '
 			<div class="cat_bar">
-				<h3 class="catbg">', Lang::$txt['showPermissions_restricted_boards'], '</h3>
+				<h3 class="catbg">', $txt['showPermissions_restricted_boards'], '</h3>
 			</div>
-			<div class="windowbg smalltext">',
-			Lang::getTxt(
-				'showPermissions_restricted_boards_desc',
-				[
-					'list' => Lang::sentenceList(array_map(
-						fn ($brd) => '<a href="' . Config::$scripturl . '?board=' . $brd['id'] . '.0" class="bbc_link">' . $brd['name'] . '</a>',
-						Utils::$context['no_access_boards'],
-					)),
-				],
-			), '
+			<div class="windowbg smalltext">
+				', $txt['showPermissions_restricted_boards_desc'], ':<br>';
+
+			foreach ($context['no_access_boards'] as $no_access_board)
+				echo '
+				<a href="', $scripturl, '?board=', $no_access_board['id'], '.0">', $no_access_board['name'], '</a>', $no_access_board['is_last'] ? '' : ', ';
+			echo '
 			</div>';
 		}
 
@@ -1142,21 +1158,21 @@ function template_showPermissions()
 		echo '
 			<div class="tborder">
 				<div class="cat_bar">
-					<h3 class="catbg">', Lang::$txt['showPermissions_general'], '</h3>
+					<h3 class="catbg">', $txt['showPermissions_general'], '</h3>
 				</div>';
-		if (!empty(Utils::$context['member']['permissions']['general']))
+		if (!empty($context['member']['permissions']['general']))
 		{
 			echo '
 				<table class="table_grid">
 					<thead>
 						<tr class="title_bar">
-							<th class="lefttext half_table">', Lang::$txt['showPermissions_permission'], '</th>
-							<th class="lefttext half_table">', Lang::$txt['showPermissions_status'], '</th>
+							<th class="lefttext half_table">', $txt['showPermissions_permission'], '</th>
+							<th class="lefttext half_table">', $txt['showPermissions_status'], '</th>
 						</tr>
 					</thead>
 					<tbody>';
 
-			foreach (Utils::$context['member']['permissions']['general'] as $permission)
+			foreach ($context['member']['permissions']['general'] as $permission)
 			{
 				echo '
 						<tr class="windowbg">
@@ -1167,10 +1183,10 @@ function template_showPermissions()
 
 				if ($permission['is_denied'])
 					echo '
-								<span class="alert">', Lang::getTxt('showPermissions_denied', ['list' => Lang::sentenceList($permission['groups']['denied'])]), '</span>';
+								<span class="alert">', $txt['showPermissions_denied'], ': ', implode(', ', $permission['groups']['denied']), '</span>';
 				else
 					echo '
-								', Lang::getTxt('showPermissions_given', ['list' => Lang::sentenceList($permission['groups']['allowed'])]);
+								', $txt['showPermissions_given'], ': ', implode(', ', $permission['groups']['allowed']);
 
 				echo '
 							</td>
@@ -1184,23 +1200,23 @@ function template_showPermissions()
 		}
 		else
 			echo '
-			<p class="windowbg">', Lang::$txt['showPermissions_none_general'], '</p>';
+			<p class="windowbg">', $txt['showPermissions_none_general'], '</p>';
 
 		// Board permission section.
 		echo '
-			<form action="' . Config::$scripturl . '?action=profile;u=', Utils::$context['id_member'], ';area=permissions#board_permissions" method="post" accept-charset="', Utils::$context['character_set'], '">
+			<form action="' . $scripturl . '?action=profile;u=', $context['id_member'], ';area=permissions#board_permissions" method="post" accept-charset="', $context['character_set'], '">
 				<div class="cat_bar">
 					<h3 class="catbg">
-						<span id="board_permissions">', Lang::$txt['showPermissions_select'], '</span>
+						<a id="board_permissions"></a>', $txt['showPermissions_select'], ':
 						<select name="board" onchange="if (this.options[this.selectedIndex].value) this.form.submit();">
-							<option value="0"', Utils::$context['board'] == 0 ? ' selected' : '', '>', Lang::$txt['showPermissions_global'], '</option>';
+							<option value="0"', $context['board'] == 0 ? ' selected' : '', '>', $txt['showPermissions_global'], '</option>';
 
-		if (!empty(Utils::$context['boards']))
+		if (!empty($context['boards']))
 			echo '
 							<option value="" disabled>---------------------------</option>';
 
 		// Fill the box with any local permission boards.
-		foreach (Utils::$context['boards'] as $board)
+		foreach ($context['boards'] as $board)
 			echo '
 							<option value="', $board['id'], '"', $board['selected'] ? ' selected' : '', '>', $board['name'], ' (', $board['profile_name'], ')</option>';
 
@@ -1210,34 +1226,34 @@ function template_showPermissions()
 				</div><!-- .cat_bar -->
 			</form>';
 
-		if (!empty(Utils::$context['member']['permissions']['board']))
+		if (!empty($context['member']['permissions']['board']))
 		{
 			echo '
 			<table class="table_grid">
 				<thead>
 					<tr class="title_bar">
-						<th class="lefttext half_table">', Lang::$txt['showPermissions_permission'], '</th>
-						<th class="lefttext half_table">', Lang::$txt['showPermissions_status'], '</th>
+						<th class="lefttext half_table">', $txt['showPermissions_permission'], '</th>
+						<th class="lefttext half_table">', $txt['showPermissions_status'], '</th>
 					</tr>
 				</thead>
 				<tbody>';
 
-			foreach (Utils::$context['member']['permissions']['board'] as $permission)
+			foreach ($context['member']['permissions']['board'] as $permission)
 			{
 				echo '
 					<tr class="windowbg">
 						<td title="', $permission['id'], '">
-							', $permission['is_denied'] ? '<del class="error">' . $permission['name'] . '</del>' : $permission['name'], '
+							', $permission['is_denied'] ? '<del>' . $permission['name'] . '</del>' : $permission['name'], '
 						</td>
 						<td class="smalltext">';
 
 				if ($permission['is_denied'])
 					echo '
-							<span class="alert">', Lang::getTxt('showPermissions_denied', ['list' => Lang::sentenceList($permission['groups']['denied'])]), '</span>';
+							<span class="alert">', $txt['showPermissions_denied'], ': ', implode(', ', $permission['groups']['denied']), '</span>';
 
 				else
 					echo '
-							', Lang::getTxt('showPermissions_given', ['list' => Lang::sentenceList($permission['groups']['allowed'])]);
+							', $txt['showPermissions_given'], ': ', implode(', ', $permission['groups']['allowed']);
 
 				echo '
 						</td>
@@ -1249,7 +1265,7 @@ function template_showPermissions()
 		}
 		else
 			echo '
-			<p class="windowbg">', Lang::$txt['showPermissions_none_board'], '</p>';
+			<p class="windowbg">', $txt['showPermissions_none_board'], '</p>';
 		echo '
 		</div><!-- #permissions -->';
 	}
@@ -1260,16 +1276,18 @@ function template_showPermissions()
  */
 function template_statPanel()
 {
+	global $context, $txt;
+
 	// First, show a few text statistics such as post/topic count.
 	echo '
 	<div id="profileview" class="roundframe noup">
 		<div id="generalstats">
 			<dl class="stats">';
 
-	foreach (Utils::$context['text_stats'] as $key => $stat)
+	foreach ($context['text_stats'] as $key => $stat)
 	{
 		echo '
-				<dt>', Lang::$txt['statPanel_' . $key], '</dt>';
+				<dt>', $txt['statPanel_' . $key], '</dt>';
 
 		if (!empty($stat['url']))
 			echo '
@@ -1288,14 +1306,14 @@ function template_statPanel()
 		<div id="activitytime" class="flow_hidden">
 			<div class="title_bar">
 				<h3 class="titlebg">
-					<span class="main_icons history"></span> ', Lang::$txt['statPanel_activityTime'], '
+					<span class="main_icons history"></span> ', $txt['statPanel_activityTime'], '
 				</h3>
 			</div>';
 
 	// If they haven't post at all, don't draw the graph.
-	if (empty(Utils::$context['posts_by_time']))
+	if (empty($context['posts_by_time']))
 		echo '
-			<p class="centertext padding">', Lang::$txt['statPanel_noPosts'], '</p>';
+			<p class="centertext padding">', $txt['statPanel_noPosts'], '</p>';
 
 	// Otherwise do!
 	else
@@ -1304,12 +1322,12 @@ function template_statPanel()
 			<ul class="activity_stats flow_hidden">';
 
 		// The labels.
-		foreach (Utils::$context['posts_by_time'] as $time_of_day)
+		foreach ($context['posts_by_time'] as $time_of_day)
 			echo '
 				<li>
 					<div class="generic_bar vertical">
 						<div class="bar" style="height: ', (int) $time_of_day['relative_percent'], '%;">
-							<span>', Lang::getTxt('statPanel_activityTime_posts', [$time_of_day['posts'], $time_of_day['posts_percent'] / 100]), '</span>
+							<span>', sprintf($txt['statPanel_activityTime_posts'], $time_of_day['posts'], $time_of_day['posts_percent']), '</span>
 						</div>
 					</div>
 					<span class="stats_hour">', $time_of_day['hour_format'], '</span>
@@ -1328,13 +1346,13 @@ function template_statPanel()
 			<div class="half_content">
 				<div class="title_bar">
 					<h3 class="titlebg">
-						<span class="main_icons replies"></span> ', Lang::$txt['statPanel_topBoards'], '
+						<span class="main_icons replies"></span> ', $txt['statPanel_topBoards'], '
 					</h3>
 				</div>';
 
-	if (empty(Utils::$context['popular_boards']))
+	if (empty($context['popular_boards']))
 		echo '
-				<p class="centertext padding">', Lang::$txt['statPanel_noPosts'], '</p>';
+				<p class="centertext padding">', $txt['statPanel_noPosts'], '</p>';
 
 	else
 	{
@@ -1342,15 +1360,15 @@ function template_statPanel()
 				<dl class="stats">';
 
 		// Draw a bar for every board.
-		foreach (Utils::$context['popular_boards'] as $board)
+		foreach ($context['popular_boards'] as $board)
 		{
 			echo '
 					<dt>', $board['link'], '</dt>
 					<dd>
-						<div class="profile_pie" style="background-position: -', ((int) ($board['posts_percent'] / 5) * 20), 'px 0;" title="', Lang::getTxt('statPanel_topBoards_memberposts', [$board['posts'], $board['total_posts_member'], $board['posts_percent'] / 100]), '">
-							', Lang::getTxt('statPanel_topBoards_memberposts', [$board['posts'], $board['total_posts_member'], $board['posts_percent'] / 100]), '
+						<div class="profile_pie" style="background-position: -', ((int) ($board['posts_percent'] / 5) * 20), 'px 0;" title="', sprintf($txt['statPanel_topBoards_memberposts'], $board['posts'], $board['total_posts_member'], $board['posts_percent']), '">
+							', sprintf($txt['statPanel_topBoards_memberposts'], $board['posts'], $board['total_posts_member'], $board['posts_percent']), '
 						</div>
-						', empty(Utils::$context['hide_num_posts']) ? $board['posts'] : '', '
+						', empty($context['hide_num_posts']) ? $board['posts'] : '', '
 					</dd>';
 		}
 
@@ -1362,28 +1380,28 @@ function template_statPanel()
 			<div class="half_content">
 				<div class="title_bar">
 					<h3 class="titlebg">
-						<span class="main_icons replies"></span> ', Lang::$txt['statPanel_topBoardsActivity'], '
+						<span class="main_icons replies"></span> ', $txt['statPanel_topBoardsActivity'], '
 					</h3>
 				</div>';
 
-	if (empty(Utils::$context['board_activity']))
+	if (empty($context['board_activity']))
 		echo '
-				<p class="centertext padding">', Lang::$txt['statPanel_noPosts'], '</p>';
+				<p class="centertext padding">', $txt['statPanel_noPosts'], '</p>';
 	else
 	{
 		echo '
 				<dl class="stats">';
 
 		// Draw a bar for every board.
-		foreach (Utils::$context['board_activity'] as $activity)
+		foreach ($context['board_activity'] as $activity)
 		{
 			echo '
 					<dt>', $activity['link'], '</dt>
 					<dd>
-						<div class="profile_pie" style="background-position: -', ((int) ($activity['posts_percent'] / 5) * 20), 'px 0;" title="', Lang::getTxt('statPanel_topBoards_posts', [$activity['posts'], $activity['total_posts'], $activity['posts_percent'] / 100]), '">
-							', Lang::getTxt('statPanel_topBoards_posts', [$activity['posts'], $activity['total_posts'], $activity['posts_percent'] / 100]), '
+						<div class="profile_pie" style="background-position: -', ((int) ($activity['posts_percent'] / 5) * 20), 'px 0;" title="', sprintf($txt['statPanel_topBoards_posts'], $activity['posts'], $activity['total_posts'], $activity['posts_percent']), '">
+							', sprintf($txt['statPanel_topBoards_posts'], $activity['posts'], $activity['total_posts'], $activity['posts_percent']), '
 						</div>
-						', Lang::formatText('{0, number, percent}', [$activity['percent'] / 100]), '
+						', $activity['percent'], '%
 					</dd>';
 		}
 
@@ -1403,13 +1421,15 @@ function template_statPanel()
  */
 function template_edit_options()
 {
+	global $context, $scripturl, $txt, $modSettings;
+
 	// The main header!
 	// because some browsers ignore autocomplete=off and fill username in display name and/ or email field, fake them out.
-	$url = !empty(Utils::$context['profile_custom_submit_url']) ? Utils::$context['profile_custom_submit_url'] : Config::$scripturl . '?action=profile;area=' . Utils::$context['menu_item_selected'] . ';u=' . Utils::$context['id_member'];
-	$url = Utils::$context['require_password'] && !empty(Config::$modSettings['force_ssl']) ? strtr($url, array('http://' => 'https://')) : $url;
+	$url = !empty($context['profile_custom_submit_url']) ? $context['profile_custom_submit_url'] : $scripturl . '?action=profile;area=' . $context['menu_item_selected'] . ';u=' . $context['id_member'];
+	$url = $context['require_password'] && !empty($modSettings['force_ssl']) ? strtr($url, array('http://' => 'https://')) : $url;
 
 	echo '
-		<form action="', $url, '" method="post" accept-charset="', Utils::$context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data"', (Utils::$context['menu_item_selected'] == 'account' ? ' autocomplete="off"' : ''), '>
+		<form action="', $url, '" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data"', ($context['menu_item_selected'] == 'account' ? ' autocomplete="off"' : ''), '>
 			<div style="height:0;overflow:hidden;">
 				<input type="text" id="autocompleteFakeName">
 				<input type="password" id="autocompleteFakePassword">
@@ -1418,37 +1438,37 @@ function template_edit_options()
 				<h3 class="catbg profile_hd">';
 
 	// Don't say "Profile" if this isn't the profile...
-	if (!empty(Utils::$context['profile_header_text']))
+	if (!empty($context['profile_header_text']))
 		echo '
-					', Utils::$context['profile_header_text'];
+					', $context['profile_header_text'];
 	else
 		echo '
-					', Lang::$txt['profile'];
+					', $txt['profile'];
 
 	echo '
 				</h3>
 			</div>';
 
 	// Have we some description?
-	if (Utils::$context['page_desc'])
+	if ($context['page_desc'])
 		echo '
-			<p class="information">', Utils::$context['page_desc'], '</p>';
+			<p class="information">', $context['page_desc'], '</p>';
 
 	echo '
 			<div class="roundframe">';
 
 	// Any bits at the start?
-	if (!empty(Utils::$context['profile_prehtml']))
+	if (!empty($context['profile_prehtml']))
 		echo '
-				<div>', Utils::$context['profile_prehtml'], '</div>';
+				<div>', $context['profile_prehtml'], '</div>';
 
-	if (!empty(Utils::$context['profile_fields']))
+	if (!empty($context['profile_fields']))
 		echo '
 				<dl class="settings">';
 
 	// Start the big old loop 'of love.
 	$lastItem = 'hr';
-	foreach (Utils::$context['profile_fields'] as $key => $field)
+	foreach ($context['profile_fields'] as $key => $field)
 	{
 		// We add a little hack to be sure we never get more than one hr in a row!
 		if ($lastItem == 'hr' && $field['type'] == 'hr')
@@ -1546,12 +1566,12 @@ function template_edit_options()
 		}
 	}
 
-	if (!empty(Utils::$context['profile_fields']))
+	if (!empty($context['profile_fields']))
 		echo '
 				</dl>';
 
 	// Are there any custom profile fields - if so print them!
-	if (!empty(Utils::$context['custom_fields']))
+	if (!empty($context['custom_fields']))
 	{
 		if ($lastItem != 'hr')
 			echo '
@@ -1560,7 +1580,7 @@ function template_edit_options()
 		echo '
 				<dl class="settings">';
 
-		foreach (Utils::$context['custom_fields'] as $field)
+		foreach ($context['custom_fields'] as $field)
 			echo '
 					<dt>
 						<strong>', $field['name'], '</strong><br>
@@ -1575,17 +1595,17 @@ function template_edit_options()
 	}
 
 	// Any closing HTML?
-	if (!empty(Utils::$context['profile_posthtml']))
+	if (!empty($context['profile_posthtml']))
 		echo '
-				<div>', Utils::$context['profile_posthtml'], '</div>';
+				<div>', $context['profile_posthtml'], '</div>';
 
 	// Only show the password box if it's actually needed.
-	if (Utils::$context['require_password'])
+	if ($context['require_password'])
 		echo '
 				<dl class="settings">
 					<dt>
-						<strong', isset(Utils::$context['modify_error']['bad_password']) || isset(Utils::$context['modify_error']['no_password']) ? ' class="error"' : '', '><label for="oldpasswrd">', Lang::$txt['current_password'], '</label></strong><br>
-						<span class="smalltext">', Lang::$txt['required_security_reasons'], '</span>
+						<strong', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' class="error"' : '', '><label for="oldpasswrd">', $txt['current_password'], '</label></strong><br>
+						<span class="smalltext">', $txt['required_security_reasons'], '</span>
 					</dt>
 					<dd>
 						<input type="password" name="oldpasswrd" id="oldpasswrd" size="20">
@@ -1593,28 +1613,28 @@ function template_edit_options()
 				</dl>';
 
 	// The button shouldn't say "Change profile" unless we're changing the profile...
-	if (!empty(Utils::$context['submit_button_text']))
+	if (!empty($context['submit_button_text']))
 		echo '
-				<input type="submit" name="save" value="', Utils::$context['submit_button_text'], '" class="button floatright">';
+				<input type="submit" name="save" value="', $context['submit_button_text'], '" class="button floatright">';
 	else
 		echo '
-				<input type="submit" name="save" value="', Lang::$txt['change_profile'], '" class="button floatright">';
+				<input type="submit" name="save" value="', $txt['change_profile'], '" class="button floatright">';
 
-	if (!empty(Utils::$context['token_check']))
+	if (!empty($context['token_check']))
 		echo '
-				<input type="hidden" name="', Utils::$context[Utils::$context['token_check'] . '_token_var'], '" value="', Utils::$context[Utils::$context['token_check'] . '_token'], '">';
+				<input type="hidden" name="', $context[$context['token_check'] . '_token_var'], '" value="', $context[$context['token_check'] . '_token'], '">';
 
 	echo '
-				<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
-				<input type="hidden" name="u" value="', Utils::$context['id_member'], '">
-				<input type="hidden" name="sa" value="', Utils::$context['menu_item_selected'], '">
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+				<input type="hidden" name="u" value="', $context['id_member'], '">
+				<input type="hidden" name="sa" value="', $context['menu_item_selected'], '">
 			</div><!-- .roundframe -->
 		</form>';
 
 	// Any final spellchecking stuff?
-	if (!empty(Utils::$context['show_spellchecking']))
+	if (!empty($context['show_spellchecking']))
 		echo '
-		<form name="spell_form" id="spell_form" method="post" accept-charset="', Utils::$context['character_set'], '" target="spellWindow" action="', Config::$scripturl, '?action=spellcheck"><input type="hidden" name="spellstring" value=""></form>';
+		<form name="spell_form" id="spell_form" method="post" accept-charset="', $context['character_set'], '" target="spellWindow" action="', $scripturl, '?action=spellcheck"><input type="hidden" name="spellstring" value=""></form>';
 }
 
 /**
@@ -1622,59 +1642,61 @@ function template_edit_options()
  */
 function template_profile_pm_settings()
 {
+	global $context, $modSettings, $txt;
+
 	echo '
 					<dt>
-						<label for="pm_prefs">', Lang::$txt['pm_display_mode'], '</label>
+						<label for="pm_prefs">', $txt['pm_display_mode'], ':</label>
 					</dt>
 					<dd>
 						<select name="pm_prefs" id="pm_prefs">
-							<option value="0"', Utils::$context['display_mode'] == 0 ? ' selected' : '', '>', Lang::$txt['pm_display_mode_all'], '</option>
-							<option value="1"', Utils::$context['display_mode'] == 1 ? ' selected' : '', '>', Lang::$txt['pm_display_mode_one'], '</option>
-							<option value="2"', Utils::$context['display_mode'] == 2 ? ' selected' : '', '>', Lang::$txt['pm_display_mode_linked'], '</option>
+							<option value="0"', $context['display_mode'] == 0 ? ' selected' : '', '>', $txt['pm_display_mode_all'], '</option>
+							<option value="1"', $context['display_mode'] == 1 ? ' selected' : '', '>', $txt['pm_display_mode_one'], '</option>
+							<option value="2"', $context['display_mode'] == 2 ? ' selected' : '', '>', $txt['pm_display_mode_linked'], '</option>
 						</select>
 					</dd>
 					<dt>
-						<label for="view_newest_pm_first">', Lang::$txt['recent_pms_at_top'], '</label>
+						<label for="view_newest_pm_first">', $txt['recent_pms_at_top'], '</label>
 					</dt>
 					<dd>
 						<input type="hidden" name="default_options[view_newest_pm_first]" value="0">
-						<input type="checkbox" name="default_options[view_newest_pm_first]" id="view_newest_pm_first" value="1"', !empty(Utils::$context['member']['options']['view_newest_pm_first']) ? ' checked' : '', '>
+						<input type="checkbox" name="default_options[view_newest_pm_first]" id="view_newest_pm_first" value="1"', !empty($context['member']['options']['view_newest_pm_first']) ? ' checked' : '', '>
 					</dd>
 				</dl>
 				<hr>
 				<dl class="settings">
 					<dt>
-						<label for="pm_receive_from">', Lang::$txt['pm_receive_from'], '</label>
+						<label for="pm_receive_from">', $txt['pm_receive_from'], '</label>
 					</dt>
 					<dd>
 						<select name="pm_receive_from" id="pm_receive_from">
-							<option value="0"', empty(Utils::$context['receive_from']) || (empty(Config::$modSettings['enable_buddylist']) && Utils::$context['receive_from'] < 3) ? ' selected' : '', '>', Lang::$txt['pm_receive_from_everyone'], '</option>';
+							<option value="0"', empty($context['receive_from']) || (empty($modSettings['enable_buddylist']) && $context['receive_from'] < 3) ? ' selected' : '', '>', $txt['pm_receive_from_everyone'], '</option>';
 
-	if (!empty(Config::$modSettings['enable_buddylist']))
+	if (!empty($modSettings['enable_buddylist']))
 		echo '
-							<option value="1"', !empty(Utils::$context['receive_from']) && Utils::$context['receive_from'] == 1 ? ' selected' : '', '>', Lang::$txt['pm_receive_from_ignore'], '</option>
-							<option value="2"', !empty(Utils::$context['receive_from']) && Utils::$context['receive_from'] == 2 ? ' selected' : '', '>', Lang::$txt['pm_receive_from_buddies'], '</option>';
+							<option value="1"', !empty($context['receive_from']) && $context['receive_from'] == 1 ? ' selected' : '', '>', $txt['pm_receive_from_ignore'], '</option>
+							<option value="2"', !empty($context['receive_from']) && $context['receive_from'] == 2 ? ' selected' : '', '>', $txt['pm_receive_from_buddies'], '</option>';
 
 	echo '
-							<option value="3"', !empty(Utils::$context['receive_from']) && Utils::$context['receive_from'] > 2 ? ' selected' : '', '>', Lang::$txt['pm_receive_from_admins'], '</option>
+							<option value="3"', !empty($context['receive_from']) && $context['receive_from'] > 2 ? ' selected' : '', '>', $txt['pm_receive_from_admins'], '</option>
 						</select>
 					</dd>
 					<dt>
-						<label for="popup_messages">', Lang::$txt['popup_messages'], '</label>
+						<label for="popup_messages">', $txt['popup_messages'], '</label>
 					</dt>
 					<dd>
 						<input type="hidden" name="default_options[popup_messages]" value="0">
-						<input type="checkbox" name="default_options[popup_messages]" id="popup_messages" value="1"', !empty(Utils::$context['member']['options']['popup_messages']) ? ' checked' : '', '>
+						<input type="checkbox" name="default_options[popup_messages]" id="popup_messages" value="1"', !empty($context['member']['options']['popup_messages']) ? ' checked' : '', '>
 					</dd>
 				</dl>
 				<hr>
 				<dl class="settings">
 					<dt>
-						<label for="pm_remove_inbox_label">', Lang::$txt['pm_remove_inbox_label'], '</label>
+						<label for="pm_remove_inbox_label">', $txt['pm_remove_inbox_label'], '</label>
 					</dt>
 					<dd>
 						<input type="hidden" name="default_options[pm_remove_inbox_label]" value="0">
-						<input type="checkbox" name="default_options[pm_remove_inbox_label]" id="pm_remove_inbox_label" value="1"', !empty(Utils::$context['member']['options']['pm_remove_inbox_label']) ? ' checked' : '', '>
+						<input type="checkbox" name="default_options[pm_remove_inbox_label]" id="pm_remove_inbox_label" value="1"', !empty($context['member']['options']['pm_remove_inbox_label']) ? ' checked' : '', '>
 					</dd>';
 
 }
@@ -1684,25 +1706,27 @@ function template_profile_pm_settings()
  */
 function template_profile_theme_settings()
 {
-	$skeys = array_keys(Utils::$context['theme_options']);
+	global $context, $modSettings;
+
+	$skeys = array_keys($context['theme_options']);
 	$first_option_key = array_shift($skeys);
 	$titled_section = false;
 
-	foreach (Utils::$context['theme_options'] as $i => $setting)
+	foreach ($context['theme_options'] as $i => $setting)
 	{
 		// Just spit out separators and move on
 		if (empty($setting) || !is_array($setting))
 		{
 			// Avoid double separators and empty titled sections
 			$empty_section = true;
-			for ($j=$i+1; $j < count(Utils::$context['theme_options']); $j++)
+			for ($j=$i+1; $j < count($context['theme_options']); $j++)
 			{
 				// Found another separator, so we're done
-				if (!is_array(Utils::$context['theme_options'][$j]))
+				if (!is_array($context['theme_options'][$j]))
 					break;
 
 				// Once we know there's something to show in this section, we can stop
-				if (!isset(Utils::$context['theme_options'][$j]['enabled']) || !empty(Utils::$context['theme_options'][$j]['enabled']))
+				if (!isset($context['theme_options'][$j]['enabled']) || !empty($context['theme_options'][$j]['enabled']))
 				{
 					$empty_section = false;
 					break;
@@ -1748,8 +1772,8 @@ function template_profile_theme_settings()
 
 		// Some of these may not be set...  Set to defaults here
 		$opts = array('calendar_start_day', 'topics_per_page', 'messages_per_page', 'display_quick_mod');
-		if (in_array($setting['id'], $opts) && !isset(Utils::$context['member']['options'][$setting['id']]))
-			Utils::$context['member']['options'][$setting['id']] = 0;
+		if (in_array($setting['id'], $opts) && !isset($context['member']['options'][$setting['id']]))
+			$context['member']['options'][$setting['id']] = 0;
 
 		if (!isset($setting['type']) || $setting['type'] == 'bool')
 			$setting['type'] = 'checkbox';
@@ -1779,7 +1803,7 @@ function template_profile_theme_settings()
 		if ($setting['type'] == 'checkbox')
 			echo '
 						<input type="hidden" name="default_options[' . $setting['id'] . ']" value="0">
-						<input type="checkbox" name="default_options[', $setting['id'], ']" id="', $setting['id'], '"', !empty(Utils::$context['member']['options'][$setting['id']]) ? ' checked' : '', ' value="1">';
+						<input type="checkbox" name="default_options[', $setting['id'], ']" id="', $setting['id'], '"', !empty($context['member']['options'][$setting['id']]) ? ' checked' : '', ' value="1">';
 
 		// How about selection lists, we all love them
 		elseif ($setting['type'] == 'list')
@@ -1789,7 +1813,7 @@ function template_profile_theme_settings()
 
 			foreach ($setting['options'] as $value => $label)
 				echo '
-							<option value="', $value, '"', isset(Utils::$context['member']['options'][$setting['id']]) && $value == Utils::$context['member']['options'][$setting['id']] ? ' selected' : '', '>', $label, '</option>';
+							<option value="', $value, '"', isset($context['member']['options'][$setting['id']]) && $value == $context['member']['options'][$setting['id']] ? ' selected' : '', '>', $label, '</option>';
 
 			echo '
 						</select>';
@@ -1814,10 +1838,10 @@ function template_profile_theme_settings()
 				echo '
 						<input type="text"';
 
-			echo ' name="default_options[', $setting['id'], ']" id="', $setting['id'], '" value="', isset(Utils::$context['member']['options'][$setting['id']]) ? Utils::$context['member']['options'][$setting['id']] : $setting['value'], '"', $setting['type'] == 'number' ? ' size="5"' : '', '>';
+			echo ' name="default_options[', $setting['id'], ']" id="', $setting['id'], '" value="', isset($context['member']['options'][$setting['id']]) ? $context['member']['options'][$setting['id']] : $setting['value'], '"', $setting['type'] == 'number' ? ' size="5"' : '', '>';
 		}
 
-		// end of this definition
+		// end of this defintion
 		echo '
 					</dd>';
 	}
@@ -1828,40 +1852,42 @@ function template_profile_theme_settings()
  */
 function template_alert_configuration()
 {
+	global $context, $txt, $scripturl, $modSettings;
+
 	echo '
 		<div class="cat_bar">
 			<h3 class="catbg">
-				', Lang::$txt['alert_prefs'], '
+				', $txt['alert_prefs'], '
 			</h3>
 		</div>
 		<p class="information">
-			', (empty(Utils::$context['description']) ? Lang::$txt['alert_prefs_desc'] : Utils::$context['description']), '
+			', (empty($context['description']) ? $txt['alert_prefs_desc'] : $context['description']), '
 		</p>
-		<form action="', Config::$scripturl, '?', Utils::$context['action'], '" method="post" accept-charset="', Utils::$context['character_set'], '" id="notify_options" class="flow_auto">
+		<form action="', $scripturl, '?', $context['action'], '" method="post" accept-charset="', $context['character_set'], '" id="notify_options" class="flow_auto">
 			<div class="cat_bar">
 				<h3 class="catbg">
-					', Lang::$txt['notification_general'], '
+					', $txt['notification_general'], '
 				</h3>
 			</div>
 			<div class="windowbg">
 				<dl class="settings">
 					<dt>
-						<label for="notify_announcements">', Lang::$txt['notify_important_email'], '</label>', Utils::$context['id_member'] == 0 ? '
+						<label for="notify_announcements">', $txt['notify_important_email'], '</label>', $context['id_member'] == 0 ? '
 						<br>
-						<span class="smalltext alert">' . Lang::$txt['notify_announcements_desc'] . '</span>' : '', '
+						<span class="smalltext alert">' . $txt['notify_announcements_desc'] . '</span>' : '', '
 					</dt>
 					<dd>
 						<input type="hidden" name="notify_announcements" value="0">
-						<input type="checkbox" id="notify_announcements" name="notify_announcements" value="1"', !empty(Utils::$context['member']['notify_announcements']) ? ' checked' : '', '>
+						<input type="checkbox" id="notify_announcements" name="notify_announcements" value="1"', !empty($context['member']['notify_announcements']) ? ' checked' : '', '>
 					</dd>';
 
-	if (!empty(Config::$modSettings['enable_ajax_alerts']))
+	if (!empty($modSettings['enable_ajax_alerts']))
 		echo '
 					<dt>
-						<label for="notify_send_body">', Lang::$txt['notify_alert_timeout'], '</label>
+						<label for="notify_send_body">', $txt['notify_alert_timeout'], '</label>
 					</dt>
 					<dd>
-						<input type="number" size="4" id="notify_alert_timeout" name="opt_alert_timeout" min="0" max="127" value="', Utils::$context['member']['alert_timeout'], '">
+						<input type="number" size="4" id="notify_alert_timeout" name="opt_alert_timeout" min="0" max="127" value="', $context['member']['alert_timeout'], '">
 					</dd>';
 
 	echo '
@@ -1869,24 +1895,24 @@ function template_alert_configuration()
 			</div><!-- .windowbg -->
 			<div class="cat_bar">
 				<h3 class="catbg">
-					', Lang::$txt['notify_what_how'], '
+					', $txt['notify_what_how'], '
 				</h3>
 			</div>
 			<table class="table_grid">';
 
-	foreach (Utils::$context['alert_types'] as $alert_group => $alerts)
+	foreach ($context['alert_types'] as $alert_group => $alerts)
 	{
 		echo '
 				<tr class="title_bar">
-					<th>', Lang::$txt['alert_group_' . $alert_group], '</th>
-					<th>', Lang::$txt['receive_alert'], '</th>
-					<th>', Lang::$txt['receive_mail'], '</th>
+					<th>', $txt['alert_group_' . $alert_group], '</th>
+					<th>', $txt['receive_alert'], '</th>
+					<th>', $txt['receive_mail'], '</th>
 				</tr>
 				<tr class="windowbg">';
 
-		if (isset(Utils::$context['alert_group_options'][$alert_group]))
+		if (isset($context['alert_group_options'][$alert_group]))
 		{
-			foreach (Utils::$context['alert_group_options'][$alert_group] as $opts)
+			foreach ($context['alert_group_options'][$alert_group] as $opts)
 			{
 				if ($opts[0] == 'hide')
 					continue;
@@ -1895,13 +1921,13 @@ function template_alert_configuration()
 				<tr class="windowbg">
 					<td colspan="3">';
 
-				$label = Lang::$txt['alert_opt_' . $opts[1]];
+				$label = $txt['alert_opt_' . $opts[1]];
 				$label_pos = isset($opts['label']) ? $opts['label'] : '';
 				if ($label_pos == 'before')
 					echo '
 						<label for="opt_', $opts[1], '">', $label, '</label>';
 
-				$this_value = isset(Utils::$context['alert_prefs'][$opts[1]]) ? Utils::$context['alert_prefs'][$opts[1]] : 0;
+				$this_value = isset($context['alert_prefs'][$opts[1]]) ? $context['alert_prefs'][$opts[1]] : 0;
 				switch ($opts[0])
 				{
 					case 'check':
@@ -1936,15 +1962,15 @@ function template_alert_configuration()
 			echo '
 				<tr class="windowbg">
 					<td>
-						', Lang::$txt['alert_' . $alert_id], isset($alert_details['help']) ? '<a href="' . Config::$scripturl . '?action=helpadmin;help=' . $alert_details['help'] . '" onclick="return reqOverlayDiv(this.href);" class="help floatright"><span class="main_icons help" title="' . Lang::$txt['help'] . '"></span></a>' : '', '
+						', $txt['alert_' . $alert_id], isset($alert_details['help']) ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $alert_details['help'] . '" onclick="return reqOverlayDiv(this.href);" class="help floatright"><span class="main_icons help" title="' . $txt['help'] . '"></span></a>' : '', '
 					</td>';
 
-			foreach (Utils::$context['alert_bits'] as $type => $bitmask)
+			foreach ($context['alert_bits'] as $type => $bitmask)
 			{
 				echo '
 					<td class="centercol">';
 
-				$this_value = isset(Utils::$context['alert_prefs'][$alert_id]) ? Utils::$context['alert_prefs'][$alert_id] : 0;
+				$this_value = isset($context['alert_prefs'][$alert_id]) ? $context['alert_prefs'][$alert_id] : 0;
 				switch ($alert_details[$type])
 				{
 					case 'always':
@@ -1973,11 +1999,11 @@ function template_alert_configuration()
 			</table>
 			<br>
 			<div>
-				<input id="notify_submit" type="submit" name="notify_submit" value="', Lang::$txt['notify_save'], '" class="button">
-				<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">', !empty(Utils::$context['token_check']) ? '
-				<input type="hidden" name="' . Utils::$context[Utils::$context['token_check'] . '_token_var'] . '" value="' . Utils::$context[Utils::$context['token_check'] . '_token'] . '">' : '', '
-				<input type="hidden" name="u" value="', Utils::$context['id_member'], '">
-				<input type="hidden" name="sa" value="', Utils::$context['menu_item_selected'], '">
+				<input id="notify_submit" type="submit" name="notify_submit" value="', $txt['notify_save'], '" class="button">
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">', !empty($context['token_check']) ? '
+				<input type="hidden" name="' . $context[$context['token_check'] . '_token_var'] . '" value="' . $context[$context['token_check'] . '_token'] . '">' : '', '
+				<input type="hidden" name="u" value="', $context['id_member'], '">
+				<input type="hidden" name="sa" value="', $context['menu_item_selected'], '">
 			</div>
 		</form>
 		<br>';
@@ -1988,14 +2014,16 @@ function template_alert_configuration()
  */
 function template_alert_notifications_topics()
 {
+	global $txt;
+
 	// The main containing header.
 	echo '
 		<div class="cat_bar">
 			<h3 class="catbg">
-				', Lang::$txt['watched_topics'], '
+				', $txt['watched_topics'], '
 			</h3>
 		</div>
-		<p class="information">', Lang::$txt['watched_topics_desc'], '</p>
+		<p class="information">', $txt['watched_topics_desc'], '</p>
 		<br>';
 
 	template_show_list('topic_notification_list');
@@ -2006,13 +2034,15 @@ function template_alert_notifications_topics()
  */
 function template_alert_notifications_boards()
 {
+	global $txt;
+
 	echo '
 		<div class="cat_bar">
 			<h3 class="catbg">
-				', Lang::$txt['watched_boards'], '
+				', $txt['watched_boards'], '
 			</h3>
 		</div>
-		<p class="information">', Lang::$txt['watched_boards_desc'], '</p>
+		<p class="information">', $txt['watched_boards_desc'], '</p>
 		<br>';
 
 	template_show_list('board_notification_list');
@@ -2023,40 +2053,42 @@ function template_alert_notifications_boards()
  */
 function template_groupMembership()
 {
+	global $context, $scripturl, $txt;
+
 	// The main containing header.
 	echo '
-		<form action="', Config::$scripturl, '?action=profile;area=groupmembership;save" method="post" accept-charset="', Utils::$context['character_set'], '" name="creator" id="creator">
+		<form action="', $scripturl, '?action=profile;area=groupmembership;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 			<div class="cat_bar">
 				<h3 class="catbg profile_hd">
-					', Lang::$txt['profile'], '
+					', $txt['profile'], '
 				</h3>
 			</div>
-			<p class="information">', Lang::$txt['groupMembership_info'], '</p>';
+			<p class="information">', $txt['groupMembership_info'], '</p>';
 
 	// Do we have an update message?
-	if (!empty(Utils::$context['update_message']))
+	if (!empty($context['update_message']))
 		echo '
 			<div class="infobox">
-				', Utils::$context['update_message'], '
+				', $context['update_message'], '.
 			</div>';
 
 	echo '
 			<div id="groups">';
 
 	// Requesting membership to a group?
-	if (!empty(Utils::$context['group_request']))
+	if (!empty($context['group_request']))
 	{
 		echo '
 			<div class="groupmembership">
 				<div class="cat_bar">
-					<h3 class="catbg">', Lang::$txt['request_group_membership'], '</h3>
+					<h3 class="catbg">', $txt['request_group_membership'], '</h3>
 				</div>
 				<div class="roundframe">
-					<span>', Lang::$txt['request_group_membership_desc'], '</span>
+					', $txt['request_group_membership_desc'], ':
 					<textarea name="reason" rows="4"></textarea>
 					<div class="righttext">
-						<input type="hidden" name="gid" value="', Utils::$context['group_request']['id'], '">
-						<input type="submit" name="req" value="', Lang::$txt['submit_request'], '" class="button">
+						<input type="hidden" name="gid" value="', $context['group_request']['id'], '">
+						<input type="submit" name="req" value="', $txt['submit_request'], '" class="button">
 						</div>
 					</div>
 				</div><!-- .groupmembership -->';
@@ -2065,15 +2097,15 @@ function template_groupMembership()
 	{
 		echo '
 				<div class="title_bar">
-					<h3 class="titlebg">', Lang::$txt['current_membergroups'], '</h3>
+					<h3 class="titlebg">', $txt['current_membergroups'], '</h3>
 				</div>';
 
-		foreach (Utils::$context['groups']['member'] as $group)
+		foreach ($context['groups']['member'] as $group)
 		{
 			echo '
 				<div class="windowbg" id="primdiv_', $group['id'], '">';
 
-			if (Utils::$context['can_edit_primary'])
+			if ($context['can_edit_primary'])
 				echo '
 					<input type="radio" name="primary" id="primary_', $group['id'], '" value="', $group['id'], '"', $group['is_primary'] ? ' checked' : '', ' onclick="highlightSelected(\'primdiv_' . $group['id'] . '\');"', $group['can_be_primary'] ? '' : ' disabled', '>';
 
@@ -2083,27 +2115,27 @@ function template_groupMembership()
 			// Can they leave their group?
 			if ($group['can_leave'])
 				echo '
-					<a href="' . Config::$scripturl . '?action=profile;save;u=' . Utils::$context['id_member'] . ';area=groupmembership;' . Utils::$context['session_var'] . '=' . Utils::$context['session_id'] . ';gid=' . $group['id'] . ';', Utils::$context[Utils::$context['token_check'] . '_token_var'], '=', Utils::$context[Utils::$context['token_check'] . '_token'], '">' . Lang::$txt['leave_group'] . '</a>';
+					<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;' . $context['session_var'] . '=' . $context['session_id'] . ';gid=' . $group['id'] . ';', $context[$context['token_check'] . '_token_var'], '=', $context[$context['token_check'] . '_token'], '">' . $txt['leave_group'] . '</a>';
 
 			echo '
 				</div><!-- .windowbg -->';
 		}
 
-		if (Utils::$context['can_edit_primary'])
+		if ($context['can_edit_primary'])
 			echo '
 				<div class="padding righttext">
-					<input type="submit" value="', Lang::$txt['make_primary'], '" class="button">
+					<input type="submit" value="', $txt['make_primary'], '" class="button">
 				</div>';
 
 		// Any groups they can join?
-		if (!empty(Utils::$context['groups']['available']))
+		if (!empty($context['groups']['available']))
 		{
 			echo '
 				<div class="title_bar">
-					<h3 class="titlebg">', Lang::$txt['available_groups'], '</h3>
+					<h3 class="titlebg">', $txt['available_groups'], '</h3>
 				</div>';
 
-			foreach (Utils::$context['groups']['available'] as $group)
+			foreach ($context['groups']['available'] as $group)
 			{
 				echo '
 				<div class="windowbg">
@@ -2111,15 +2143,15 @@ function template_groupMembership()
 
 				if ($group['type'] == 3)
 					echo '
-					<a href="', Config::$scripturl, '?action=profile;save;u=', Utils::$context['id_member'], ';area=groupmembership;', Utils::$context['session_var'], '=', Utils::$context['session_id'], ';gid=', $group['id'], ';', Utils::$context[Utils::$context['token_check'] . '_token_var'], '=', Utils::$context[Utils::$context['token_check'] . '_token'], '" class="button floatright">', Lang::$txt['join_group'], '</a>';
+					<a href="', $scripturl, '?action=profile;save;u=', $context['id_member'], ';area=groupmembership;', $context['session_var'], '=', $context['session_id'], ';gid=', $group['id'], ';', $context[$context['token_check'] . '_token_var'], '=', $context[$context['token_check'] . '_token'], '" class="button floatright">', $txt['join_group'], '</a>';
 
 				elseif ($group['type'] == 2 && $group['pending'])
 					echo '
-					<span class="floatright">', Lang::$txt['approval_pending'], '</span>';
+					<span class="floatright">', $txt['approval_pending'], '</span>';
 
 				elseif ($group['type'] == 2)
 					echo '
-					<a href="', Config::$scripturl, '?action=profile;u=', Utils::$context['id_member'], ';area=groupmembership;request=', $group['id'], '" class="button floatright">', Lang::$txt['request_group'], '</a>';
+					<a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=groupmembership;request=', $group['id'], '" class="button floatright">', $txt['request_group'], '</a>';
 
 				echo '
 				</div><!-- .windowbg -->';
@@ -2142,9 +2174,9 @@ function template_groupMembership()
 
 						prevDiv.className = "windowbg";
 					}';
-		if (isset(Utils::$context['groups']['member'][Utils::$context['primary_group']]))
+		if (isset($context['groups']['member'][$context['primary_group']]))
 			echo '
-					highlightSelected("primdiv_' . Utils::$context['primary_group'] . '");';
+					highlightSelected("primdiv_' . $context['primary_group'] . '");';
 
 		echo '
 				</script>';
@@ -2153,13 +2185,13 @@ function template_groupMembership()
 	echo '
 			</div><!-- #groups -->';
 
-	if (!empty(Utils::$context['token_check']))
+	if (!empty($context['token_check']))
 		echo '
-			<input type="hidden" name="', Utils::$context[Utils::$context['token_check'] . '_token_var'], '" value="', Utils::$context[Utils::$context['token_check'] . '_token'], '">';
+			<input type="hidden" name="', $context[$context['token_check'] . '_token_var'], '" value="', $context[$context['token_check'] . '_token'], '">';
 
 	echo '
-			<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
-			<input type="hidden" name="u" value="', Utils::$context['id_member'], '">
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+			<input type="hidden" name="u" value="', $context['id_member'], '">
 		</form>';
 }
 
@@ -2168,20 +2200,22 @@ function template_groupMembership()
  */
 function template_ignoreboards()
 {
+	global $context, $txt, $scripturl;
+
 	// The main containing header.
 	echo '
-	<form action="', Config::$scripturl, '?action=profile;area=ignoreboards;save" method="post" accept-charset="', Utils::$context['character_set'], '" name="creator" id="creator">
+	<form action="', $scripturl, '?action=profile;area=ignoreboards;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 		<div class="cat_bar">
 			<h3 class="catbg profile_hd">
-				', Lang::$txt['profile'], '
+				', $txt['profile'], '
 			</h3>
 		</div>
-		<p class="information">', Lang::$txt['ignoreboards_info'], '</p>
+		<p class="information">', $txt['ignoreboards_info'], '</p>
 		<div class="windowbg">
 			<div class="flow_hidden boardslist">
 				<ul>';
 
-	foreach (Utils::$context['categories'] as $category)
+	foreach ($context['categories'] as $category)
 	{
 		echo '
 					<li>
@@ -2205,7 +2239,7 @@ function template_ignoreboards()
 			if ($next_child_level > $curr_child_level)
 			{
 				echo '
-								<ul style="margin-', Utils::$context['right_to_left'] ? 'right' : 'left', ': 2.5ch;">';
+								<ul style="margin-', $context['right_to_left'] ? 'right' : 'left', ': 2.5ch;">';
 			}
 			else
 			{
@@ -2246,19 +2280,21 @@ function template_ignoreboards()
  */
 function template_load_warning_variables()
 {
+	global $modSettings, $context;
+
 	// Setup the warning mode
-	Utils::$context['warning_mode'] = array(
+	$context['warning_mode'] = array(
 		0 => 'none',
-		Config::$modSettings['warning_watch'] => 'watched',
-		Config::$modSettings['warning_moderate'] => 'moderated',
-		Config::$modSettings['warning_mute'] => 'muted',
+		$modSettings['warning_watch'] => 'watched',
+		$modSettings['warning_moderate'] => 'moderated',
+		$modSettings['warning_mute'] => 'muted',
 	);
 
 	// Work out the starting warning.
-	Utils::$context['current_warning_mode'] = Utils::$context['warning_mode'][0];
-	foreach (Utils::$context['warning_mode'] as $limit => $warning)
-		if (Utils::$context['member']['warning'] >= $limit)
-			Utils::$context['current_warning_mode'] = $warning;
+	$context['current_warning_mode'] = $context['warning_mode'][0];
+	foreach ($context['warning_mode'] as $limit => $warning)
+		if ($context['member']['warning'] >= $limit)
+			$context['current_warning_mode'] = $warning;
 }
 
 /**
@@ -2266,41 +2302,43 @@ function template_load_warning_variables()
  */
 function template_viewWarning()
 {
+	global $context, $txt;
+
 	template_load_warning_variables();
 
 	echo '
 		<div class="cat_bar">
 			<h3 class="catbg profile_hd">
-				', Lang::getTxt('profile_viewwarning_for_user', Utils::$context['member']), '
+				', sprintf($txt['profile_viewwarning_for_user'], $context['member']['name']), '
 			</h3>
 		</div>
-		<p class="information">', Lang::$txt['viewWarning_help'], '</p>
+		<p class="information">', $txt['viewWarning_help'], '</p>
 		<div class="windowbg">
 			<dl class="settings">
 				<dt>
-					<strong>', Lang::$txt['profile_warning_name'], '</strong>
+					<strong>', $txt['profile_warning_name'], ':</strong>
 				</dt>
 				<dd>
-					', Utils::$context['member']['name'], '
+					', $context['member']['name'], '
 				</dd>
 				<dt>
-					<strong>', Lang::$txt['profile_warning_level'], '</strong>
+					<strong>', $txt['profile_warning_level'], ':</strong>
 				</dt>
 				<dd>
-					<div class="generic_bar warning_level ', Utils::$context['current_warning_mode'], '">
-						<div class="bar" style="width: ', Utils::$context['member']['warning'], '%;"></div>
-						<span>', Utils::$context['member']['warning'], '%</span>
+					<div class="generic_bar warning_level ', $context['current_warning_mode'], '">
+						<div class="bar" style="width: ', $context['member']['warning'], '%;"></div>
+						<span>', $context['member']['warning'], '%</span>
 					</div>
 				</dd>';
 
 	// There's some impact of this?
-	if (!empty(Utils::$context['level_effects'][Utils::$context['current_level']]))
+	if (!empty($context['level_effects'][$context['current_level']]))
 		echo '
 				<dt>
-					<strong>', Lang::$txt['profile_viewwarning_impact'], '</strong>
+					<strong>', $txt['profile_viewwarning_impact'], ':</strong>
 				</dt>
 				<dd>
-					', Utils::$context['level_effects'][Utils::$context['current_level']], '
+					', $context['level_effects'][$context['current_level']], '
 				</dd>';
 
 	echo '
@@ -2315,6 +2353,8 @@ function template_viewWarning()
  */
 function template_issueWarning()
 {
+	global $context, $scripturl, $txt;
+
 	template_load_warning_variables();
 
 	echo '
@@ -2339,10 +2379,10 @@ function template_issueWarning()
 
 			// Otherwise see what we can do...';
 
-	foreach (Utils::$context['notification_templates'] as $k => $type)
+	foreach ($context['notification_templates'] as $k => $type)
 		echo '
 			if (index == ', $k, ')
-				document.getElementById(\'warn_body\').value = ', Utils::escapeJavaScript($type['body']), ';';
+				document.getElementById(\'warn_body\').value = "', strtr($type['body'], array('"' => "'", "\n" => '\\n', "\r" => '')), '";';
 
 	echo '
 		}
@@ -2352,128 +2392,127 @@ function template_issueWarning()
 			// Also set the right effect.
 			effectText = "";';
 
-	foreach (Utils::$context['level_effects'] as $limit => $text)
+	foreach ($context['level_effects'] as $limit => $text)
 		echo '
 			if (slideAmount >= ', $limit, ')
 				effectText = "', $text, '";';
 
 	echo '
-			let percent_format = "', Lang::getTxt('percent_format'), '";
-			setInnerHTML(document.getElementById(\'cur_level_div\'), percent_format.replace("{0}", slideAmount) + \' (\' + effectText + \')\');
+			setInnerHTML(document.getElementById(\'cur_level_div\'), slideAmount + \'% (\' + effectText + \')\');
 		}
 	</script>';
 
 	echo '
-	<form action="', Config::$scripturl, '?action=profile;u=', Utils::$context['id_member'], ';area=issuewarning" method="post" class="flow_hidden" accept-charset="', Utils::$context['character_set'], '">
+	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=issuewarning" method="post" class="flow_hidden" accept-charset="', $context['character_set'], '">
 		<div class="cat_bar">
 			<h3 class="catbg profile_hd">
-				', User::$me->is_owner ? Lang::$txt['profile_warning_level'] : Lang::$txt['profile_issue_warning'], '
+				', $context['user']['is_owner'] ? $txt['profile_warning_level'] : $txt['profile_issue_warning'], '
 			</h3>
 		</div>';
 
-	if (!User::$me->is_owner)
+	if (!$context['user']['is_owner'])
 		echo '
-		<p class="information">', Lang::$txt['profile_warning_desc'], '</p>';
+		<p class="information">', $txt['profile_warning_desc'], '</p>';
 
 	echo '
 		<div class="windowbg">
 			<dl class="settings">';
 
-	if (!User::$me->is_owner)
+	if (!$context['user']['is_owner'])
 		echo '
 				<dt>
-					<strong>', Lang::$txt['profile_warning_name'], '</strong>
+					<strong>', $txt['profile_warning_name'], ':</strong>
 				</dt>
 				<dd>
-					<strong>', Utils::$context['member']['name'], '</strong>
+					<strong>', $context['member']['name'], '</strong>
 				</dd>';
 
 	echo '
 				<dt>
-					<strong>', Lang::$txt['profile_warning_level'], '</strong>';
+					<strong>', $txt['profile_warning_level'], ':</strong>';
 
 	// Is there only so much they can apply?
-	if (Utils::$context['warning_limit'])
+	if ($context['warning_limit'])
 		echo '
 					<br>
-					<span class="smalltext">', Lang::getTxt('profile_warning_limit_attribute', [Utils::$context['warning_limit'] / 100]), '</span>';
+					<span class="smalltext">', sprintf($txt['profile_warning_limit_attribute'], $context['warning_limit']), '</span>';
 
 	echo '
 				</dt>
 				<dd>
-					', Lang::formatText('{0, number, :: percent}', [0]), ' <input name="warning_level" id="warning_level" type="range" min="0" max="100" step="5" value="', Utils::$context['member']['warning'], '" onchange="updateSlider(this.value)"> ', Lang::formatText('{0, number, :: percent}', [100]), '
+					0% <input name="warning_level" id="warning_level" type="range" min="0" max="100" step="5" value="', $context['member']['warning'], '" onchange="updateSlider(this.value)"> 100%
 					<div class="clear_left">
-						', Lang::$txt['profile_warning_impact'], ': <span id="cur_level_div">', Lang::formatText('{0, number, :: percent}', [Utils::$context['member']['warning']]), ' (', Utils::$context['level_effects'][Utils::$context['current_level']], ')</span>
+						', $txt['profile_warning_impact'], ': <span id="cur_level_div">', $context['member']['warning'], '% (', $context['level_effects'][$context['current_level']], ')</span>
 					</div>
 				</dd>';
 
-	if (!User::$me->is_owner)
+	if (!$context['user']['is_owner'])
 	{
 		echo '
 				<dt>
-					<strong>', Lang::$txt['profile_warning_reason'], '</strong><br>
-					<span class="smalltext">', Lang::$txt['profile_warning_reason_desc'], '</span>
+					<strong>', $txt['profile_warning_reason'], ':</strong><br>
+					<span class="smalltext">', $txt['profile_warning_reason_desc'], '</span>
 				</dt>
 				<dd>
-					<input type="text" name="warn_reason" id="warn_reason" value="', Utils::$context['warning_data']['reason'], '" size="50">
+					<input type="text" name="warn_reason" id="warn_reason" value="', $context['warning_data']['reason'], '" size="50">
 				</dd>
 			</dl>
 			<hr>
-			<div id="box_preview"', !empty(Utils::$context['warning_data']['body_preview']) ? '' : ' style="display:none"', '>
+			<div id="box_preview"', !empty($context['warning_data']['body_preview']) ? '' : ' style="display:none"', '>
 				<dl class="settings">
 					<dt>
-						<strong>', Lang::$txt['preview'], '</strong>
+						<strong>', $txt['preview'], '</strong>
 					</dt>
 					<dd id="body_preview">
-						', !empty(Utils::$context['warning_data']['body_preview']) ? Utils::$context['warning_data']['body_preview'] : '', '
+						', !empty($context['warning_data']['body_preview']) ? $context['warning_data']['body_preview'] : '', '
 					</dd>
 				</dl>
 				<hr>
 			</div>
 			<dl class="settings">
 				<dt>
-					<strong><label for="warn_notify">', Lang::$txt['profile_warning_notify'], '</label></strong>
+					<strong><label for="warn_notify">', $txt['profile_warning_notify'], ':</label></strong>
 				</dt>
 				<dd>
-					<input type="checkbox" name="warn_notify" id="warn_notify" onclick="modifyWarnNotify();"', Utils::$context['warning_data']['notify'] ? ' checked' : '', '>
+					<input type="checkbox" name="warn_notify" id="warn_notify" onclick="modifyWarnNotify();"', $context['warning_data']['notify'] ? ' checked' : '', '>
 				</dd>
 				<dt>
-					<strong><label for="warn_sub">', Lang::$txt['profile_warning_notify_subject'], '</label></strong>
+					<strong><label for="warn_sub">', $txt['profile_warning_notify_subject'], ':</label></strong>
 				</dt>
 				<dd>
-					<input type="text" name="warn_sub" id="warn_sub" value="', empty(Utils::$context['warning_data']['notify_subject']) ? Lang::$txt['profile_warning_notify_template_subject'] : Utils::$context['warning_data']['notify_subject'], '" size="50">
+					<input type="text" name="warn_sub" id="warn_sub" value="', empty($context['warning_data']['notify_subject']) ? $txt['profile_warning_notify_template_subject'] : $context['warning_data']['notify_subject'], '" size="50">
 				</dd>
 				<dt>
-					<strong><label for="warn_temp">', Lang::$txt['profile_warning_notify_body'], '</label></strong>
+					<strong><label for="warn_temp">', $txt['profile_warning_notify_body'], ':</label></strong>
 				</dt>
 				<dd>
 					<select name="warn_temp" id="warn_temp" disabled onchange="populateNotifyTemplate();">
-						<option value="-1">', Lang::$txt['profile_warning_notify_template'], '</option>
+						<option value="-1">', $txt['profile_warning_notify_template'], '</option>
 						<option value="-1" disabled>------------------------------</option>';
 
-		foreach (Utils::$context['notification_templates'] as $id_template => $template)
+		foreach ($context['notification_templates'] as $id_template => $template)
 			echo '
 						<option value="', $id_template, '">', $template['title'], '</option>';
 
 		echo '
 					</select>
-					<span id="new_template_link" style="display: none;"><a href="', Config::$scripturl, '?action=moderate;area=warnings;sa=templateedit;tid=0" class="button floatnone" target="_blank" rel="noopener">', Lang::$txt['profile_warning_new_template'], '</a></span>
+					<span class="smalltext" id="new_template_link" style="display: none;">[<a href="', $scripturl, '?action=moderate;area=warnings;sa=templateedit;tid=0" target="_blank" rel="noopener">', $txt['profile_warning_new_template'], '</a>]</span>
 					<br>
-					<textarea name="warn_body" id="warn_body" cols="40" rows="8">', Utils::$context['warning_data']['notify_body'], '</textarea>
+					<textarea name="warn_body" id="warn_body" cols="40" rows="8">', $context['warning_data']['notify_body'], '</textarea>
 				</dd>';
 	}
 	echo '
 			</dl>
 			<div class="righttext">';
 
-	if (!empty(Utils::$context['token_check']))
+	if (!empty($context['token_check']))
 		echo '
-				<input type="hidden" name="', Utils::$context[Utils::$context['token_check'] . '_token_var'], '" value="', Utils::$context[Utils::$context['token_check'] . '_token'], '">';
+				<input type="hidden" name="', $context[$context['token_check'] . '_token_var'], '" value="', $context[$context['token_check'] . '_token'], '">';
 
 	echo '
-				<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
-				<input type="button" name="preview" id="preview_button" value="', Lang::$txt['preview'], '" class="button">
-				<input type="submit" name="save" value="', User::$me->is_owner ? Lang::$txt['change_profile'] : Lang::$txt['profile_warning_issue'], '" class="button">
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+				<input type="button" name="preview" id="preview_button" value="', $txt['preview'], '" class="button">
+				<input type="submit" name="save" value="', $context['user']['is_owner'] ? $txt['change_profile'] : $txt['profile_warning_issue'], '" class="button">
 			</div><!-- .righttext -->
 		</div><!-- .windowbg -->
 	</form>';
@@ -2484,7 +2523,7 @@ function template_issueWarning()
 	echo '
 	<script>';
 
-	if (!User::$me->is_owner)
+	if (!$context['user']['is_owner'])
 		echo '
 		modifyWarnNotify();
 		$(document).ready(function() {
@@ -2503,7 +2542,7 @@ function template_issueWarning()
 				xhrFields: {
 					withCredentials: typeof allow_xhjr_credentials !== "undefined" ? allow_xhjr_credentials : false
 				},
-				url: "' . Config::$scripturl . '?action=xmlhttp;sa=previews;xml",
+				url: "' . $scripturl . '?action=xmlhttp;sa=previews;xml",
 				data: {item: "warning_preview", title: $("#warn_sub").val(), body: $("#warn_body").val(), issuing: true},
 				context: document.body,
 				success: function(request){
@@ -2540,74 +2579,76 @@ function template_issueWarning()
  */
 function template_deleteAccount()
 {
+	global $context, $scripturl, $txt;
+
 	// The main containing header.
 	echo '
-		<form action="', Config::$scripturl, '?action=profile;area=deleteaccount;save" method="post" accept-charset="', Utils::$context['character_set'], '" name="creator" id="creator">
+		<form action="', $scripturl, '?action=profile;area=deleteaccount;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 			<div class="cat_bar">
 				<h3 class="catbg profile_hd">
-					', Lang::$txt['deleteAccount'], '
+					', $txt['deleteAccount'], '
 				</h3>
 			</div>';
 
 	// If deleting another account give them a lovely info box.
-	if (!User::$me->is_owner)
+	if (!$context['user']['is_owner'])
 		echo '
-			<p class="information">', Lang::$txt['deleteAccount_desc'], '</p>';
+			<p class="information">', $txt['deleteAccount_desc'], '</p>';
 
 	echo '
 			<div class="windowbg">';
 
 	// If they are deleting their account AND the admin needs to approve it - give them another piece of info ;)
-	if (Utils::$context['needs_approval'])
+	if ($context['needs_approval'])
 		echo '
-				<div class="errorbox">', Lang::$txt['deleteAccount_approval'], '</div>';
+				<div class="errorbox">', $txt['deleteAccount_approval'], '</div>';
 
 	// If the user is deleting their own account warn them first - and require a password!
-	if (User::$me->is_owner)
+	if ($context['user']['is_owner'])
 	{
 		echo '
-				<div class="alert">', Lang::$txt['own_profile_confirm'], '</div>
+				<div class="alert">', $txt['own_profile_confirm'], '</div>
 				<div>
-					<strong', (isset(Utils::$context['modify_error']['bad_password']) || isset(Utils::$context['modify_error']['no_password']) ? ' class="error"' : ''), '>', Lang::$txt['current_password'], '</strong>
+					<strong', (isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' class="error"' : ''), '>', $txt['current_password'], ': </strong>
 					<input type="password" name="oldpasswrd" size="20">
-					<input type="submit" value="', Lang::$txt['yes'], '" class="button">';
+					<input type="submit" value="', $txt['yes'], '" class="button">';
 
-		if (!empty(Utils::$context['token_check']))
+		if (!empty($context['token_check']))
 			echo '
-					<input type="hidden" name="', Utils::$context[Utils::$context['token_check'] . '_token_var'], '" value="', Utils::$context[Utils::$context['token_check'] . '_token'], '">';
+					<input type="hidden" name="', $context[$context['token_check'] . '_token_var'], '" value="', $context[$context['token_check'] . '_token'], '">';
 
 		echo '
-					<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
-					<input type="hidden" name="u" value="', Utils::$context['id_member'], '">
-					<input type="hidden" name="sa" value="', Utils::$context['menu_item_selected'], '">
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+					<input type="hidden" name="u" value="', $context['id_member'], '">
+					<input type="hidden" name="sa" value="', $context['menu_item_selected'], '">
 				</div>';
 	}
 	// Otherwise an admin doesn't need to enter a password - but they still get a warning - plus the option to delete lovely posts!
 	else
 	{
 		echo '
-				<div class="alert">', Lang::$txt['deleteAccount_warning'], '</div>';
+				<div class="alert">', $txt['deleteAccount_warning'], '</div>';
 
 		// Only actually give these options if they are kind of important.
-		if (Utils::$context['can_delete_posts'])
+		if ($context['can_delete_posts'])
 		{
 			echo '
 				<div>
 					<label for="deleteVotes">
-						<input type="checkbox" name="deleteVotes" id="deleteVotes" value="1"> ', Lang::$txt['deleteAccount_votes'], '
+						<input type="checkbox" name="deleteVotes" id="deleteVotes" value="1"> ', $txt['deleteAccount_votes'], ':
 					</label><br>
 					<label for="deletePosts">
-						<input type="checkbox" name="deletePosts" id="deletePosts" value="1"> ', Lang::$txt['deleteAccount_posts'], '
+						<input type="checkbox" name="deletePosts" id="deletePosts" value="1"> ', $txt['deleteAccount_posts'], ':
 					</label>
 					<select name="remove_type">
-						<option value="posts">', Lang::$txt['deleteAccount_all_posts'], '</option>
-						<option value="topics">', Lang::$txt['deleteAccount_topics'], '</option>
+						<option value="posts">', $txt['deleteAccount_all_posts'], '</option>
+						<option value="topics">', $txt['deleteAccount_topics'], '</option>
 					</select>';
 
-			if (Utils::$context['show_perma_delete'])
+			if ($context['show_perma_delete'])
 				echo '
 					<br>
-					<label for="perma_delete"><input type="checkbox" name="perma_delete" id="perma_delete" value="1">', Lang::$txt['deleteAccount_permanent'], '</label>';
+					<label for="perma_delete"><input type="checkbox" name="perma_delete" id="perma_delete" value="1">', $txt['deleteAccount_permanent'], '</label>';
 
 			echo '
 				</div>';
@@ -2615,19 +2656,19 @@ function template_deleteAccount()
 
 		echo '
 				<div>
-					<label for="deleteAccount"><input type="checkbox" name="deleteAccount" id="deleteAccount" value="1" onclick="if (this.checked) return confirm(\'', Lang::$txt['deleteAccount_confirm'], '\');"> ', Lang::$txt['deleteAccount_member'], '</label>
+					<label for="deleteAccount"><input type="checkbox" name="deleteAccount" id="deleteAccount" value="1" onclick="if (this.checked) return confirm(\'', $txt['deleteAccount_confirm'], '\');"> ', $txt['deleteAccount_member'], '.</label>
 				</div>
 				<div>
-					<input type="submit" value="', Lang::$txt['delete'], '" class="button">';
+					<input type="submit" value="', $txt['delete'], '" class="button">';
 
-		if (!empty(Utils::$context['token_check']))
+		if (!empty($context['token_check']))
 			echo '
-				<input type="hidden" name="', Utils::$context[Utils::$context['token_check'] . '_token_var'], '" value="', Utils::$context[Utils::$context['token_check'] . '_token'], '">';
+				<input type="hidden" name="', $context[$context['token_check'] . '_token_var'], '" value="', $context[$context['token_check'] . '_token'], '">';
 
 		echo '
-					<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
-					<input type="hidden" name="u" value="', Utils::$context['id_member'], '">
-					<input type="hidden" name="sa" value="', Utils::$context['menu_item_selected'], '">
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+					<input type="hidden" name="u" value="', $context['id_member'], '">
+					<input type="hidden" name="sa" value="', $context['menu_item_selected'], '">
 				</div>';
 	}
 	echo '
@@ -2641,17 +2682,19 @@ function template_deleteAccount()
  */
 function template_profile_save()
 {
+	global $context, $txt;
+
 	echo '
 
 					<hr>';
 
 	// Only show the password box if it's actually needed.
-	if (Utils::$context['require_password'])
+	if ($context['require_password'])
 		echo '
 					<dl class="settings">
 						<dt>
-							<strong', isset(Utils::$context['modify_error']['bad_password']) || isset(Utils::$context['modify_error']['no_password']) ? ' class="error"' : '', '>', Lang::$txt['current_password'], '</strong><br>
-							<span class="smalltext">', Lang::$txt['required_security_reasons'], '</span>
+							<strong', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' class="error"' : '', '>', $txt['current_password'], ': </strong><br>
+							<span class="smalltext">', $txt['required_security_reasons'], '</span>
 						</dt>
 						<dd>
 							<input type="password" name="oldpasswrd" size="20">
@@ -2661,15 +2704,15 @@ function template_profile_save()
 	echo '
 					<div class="righttext">';
 
-	if (!empty(Utils::$context['token_check']))
+	if (!empty($context['token_check']))
 		echo '
-						<input type="hidden" name="', Utils::$context[Utils::$context['token_check'] . '_token_var'], '" value="', Utils::$context[Utils::$context['token_check'] . '_token'], '">';
+						<input type="hidden" name="', $context[$context['token_check'] . '_token_var'], '" value="', $context[$context['token_check'] . '_token'], '">';
 
 	echo '
-						<input type="submit" value="', Lang::$txt['change_profile'], '" class="button">
-						<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
-						<input type="hidden" name="u" value="', Utils::$context['id_member'], '">
-						<input type="hidden" name="sa" value="', Utils::$context['menu_item_selected'], '">
+						<input type="submit" value="', $txt['change_profile'], '" class="button">
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+						<input type="hidden" name="u" value="', $context['id_member'], '">
+						<input type="hidden" name="sa" value="', $context['menu_item_selected'], '">
 					</div>';
 }
 
@@ -2678,26 +2721,26 @@ function template_profile_save()
  */
 function template_error_message()
 {
-	echo '
-		<div class="errorbox" ', empty(Utils::$context['post_errors']) ? 'style="display:none" ' : '', 'id="profile_error">';
+	global $context, $modSettings, $txt;
 
-	if (!empty(Utils::$context['post_errors']))
+	echo '
+		<div class="errorbox" ', empty($context['post_errors']) ? 'style="display:none" ' : '', 'id="profile_error">';
+
+	if (!empty($context['post_errors']))
 	{
 		echo '
-			<span>', !empty(Utils::$context['custom_error_title']) ? Utils::$context['custom_error_title'] : Lang::$txt['profile_errors_occurred'], '</span>
+			<span>', !empty($context['custom_error_title']) ? $context['custom_error_title'] : $txt['profile_errors_occurred'], ':</span>
 			<ul id="list_errors">';
 
 		// Cycle through each error and display an error message.
-		foreach (Utils::$context['post_errors'] as $error)
+		foreach ($context['post_errors'] as $error)
 		{
-			if ($error == 'password_short') {
-				$error_message = Lang::getTxt('profile_error_' . $error, [empty(Config::$modSettings['password_strength']) ? 4 : 8]);
-			} else {
-				$error_message = isset(Lang::$txt['profile_error_' . $error]) ? Lang::getTxt('profile_error_' . $error) : $error;
-			}
+			$text_key_error = $error == 'password_short' ?
+				sprintf($txt['profile_error_' . $error], (empty($modSettings['password_strength']) ? 4 : 8)) :
+				(isset($txt['profile_error_' . $error]) ? $txt['profile_error_' . $error] : '');
 
 			echo '
-				<li>', $error_message, '</li>';
+				<li>', isset($txt['profile_error_' . $error]) ? $text_key_error : $error, '</li>';
 		}
 
 		echo '
@@ -2713,16 +2756,18 @@ function template_error_message()
  */
 function template_profile_group_manage()
 {
+	global $context, $txt, $scripturl;
+
 	echo '
 							<dt>
-								<strong>', Lang::$txt['primary_membergroup'], '</strong><br>
-								<span class="smalltext"><a href="', Config::$scripturl, '?action=helpadmin;help=moderator_why_missing" onclick="return reqOverlayDiv(this.href);"><span class="main_icons help"></span> ', Lang::$txt['moderator_why_missing'], '</a></span>
+								<strong>', $txt['primary_membergroup'], '</strong><br>
+								<span class="smalltext"><a href="', $scripturl, '?action=helpadmin;help=moderator_why_missing" onclick="return reqOverlayDiv(this.href);"><span class="main_icons help"></span> ', $txt['moderator_why_missing'], '</a></span>
 							</dt>
 							<dd>
-								<select name="id_group" ', (User::$me->is_owner && Utils::$context['member']['group_id'] == 1 ? 'onchange="if (this.value != 1 &amp;&amp; !confirm(\'' . Lang::$txt['deadmin_confirm'] . '\')) this.value = 1;"' : ''), '>';
+								<select name="id_group" ', ($context['user']['is_owner'] && $context['member']['group_id'] == 1 ? 'onchange="if (this.value != 1 &amp;&amp; !confirm(\'' . $txt['deadmin_confirm'] . '\')) this.value = 1;"' : ''), '>';
 
 	// Fill the select box with all primary member groups that can be assigned to a member.
-	foreach (Utils::$context['member_groups'] as $member_group)
+	foreach ($context['member_groups'] as $member_group)
 		if (!empty($member_group['can_be_primary']))
 			echo '
 									<option value="', $member_group['id'], '"', $member_group['is_primary'] ? ' selected' : '', '>
@@ -2733,21 +2778,21 @@ function template_profile_group_manage()
 								</select>
 							</dd>
 							<dt>
-								<strong>', Lang::$txt['additional_membergroups'], '</strong>
+								<strong>', $txt['additional_membergroups'], '</strong>
 							</dt>
 							<dd>
 								<span id="additional_groupsList">
 									<input type="hidden" name="additional_groups[]" value="0">';
 
 	// For each membergroup show a checkbox so members can be assigned to more than one group.
-	foreach (Utils::$context['member_groups'] as $member_group)
+	foreach ($context['member_groups'] as $member_group)
 		if ($member_group['can_be_additional'])
 			echo '
 									<label for="additional_groups-', $member_group['id'], '"><input type="checkbox" name="additional_groups[]" value="', $member_group['id'], '" id="additional_groups-', $member_group['id'], '"', $member_group['is_additional'] ? ' checked' : '', '> ', $member_group['name'], '</label><br>';
 
 	echo '
 								</span>
-								<a href="javascript:void(0);" onclick="document.getElementById(\'additional_groupsList\').style.display = \'block\'; document.getElementById(\'additional_groupsLink\').style.display = \'none\'; return false;" id="additional_groupsLink" style="display: none;" class="toggle_down">', Lang::$txt['additional_membergroups_show'], '</a>
+								<a href="javascript:void(0);" onclick="document.getElementById(\'additional_groupsList\').style.display = \'block\'; document.getElementById(\'additional_groupsLink\').style.display = \'none\'; return false;" id="additional_groupsLink" style="display: none;" class="toggle_down">', $txt['additional_membergroups_show'], '</a>
 								<script>
 									document.getElementById("additional_groupsList").style.display = "none";
 									document.getElementById("additional_groupsLink").style.display = "";
@@ -2761,16 +2806,18 @@ function template_profile_group_manage()
  */
 function template_profile_birthdate()
 {
+	global $txt, $context;
+
 	// Just show the pretty box!
 	echo '
 							<dt>
-								<strong>', Lang::$txt['dob'], '</strong><br>
-								<span class="smalltext">', Lang::$txt['dob_year'], ' - ', Lang::$txt['dob_month'], ' - ', Lang::$txt['dob_day'], '</span>
+								<strong>', $txt['dob'], '</strong><br>
+								<span class="smalltext">', $txt['dob_year'], ' - ', $txt['dob_month'], ' - ', $txt['dob_day'], '</span>
 							</dt>
 							<dd>
-								<input type="text" name="bday3" size="4" maxlength="4" value="', Utils::$context['member']['birth_date']['year'], '"> -
-								<input type="text" name="bday1" size="2" maxlength="2" value="', Utils::$context['member']['birth_date']['month'], '"> -
-								<input type="text" name="bday2" size="2" maxlength="2" value="', Utils::$context['member']['birth_date']['day'], '">
+								<input type="text" name="bday3" size="4" maxlength="4" value="', $context['member']['birth_date']['year'], '"> -
+								<input type="text" name="bday1" size="2" maxlength="2" value="', $context['member']['birth_date']['month'], '"> -
+								<input type="text" name="bday2" size="2" maxlength="2" value="', $context['member']['birth_date']['day'], '">
 							</dd>';
 }
 
@@ -2779,52 +2826,54 @@ function template_profile_birthdate()
  */
 function template_profile_signature_modify()
 {
+	global $txt, $context;
+
 	echo '
 							<dt id="current_signature" style="display:none">
-								<strong>', Lang::$txt['current_signature'], '</strong>
+								<strong>', $txt['current_signature'], '</strong>
 							</dt>
 							<dd id="current_signature_display" style="display:none">
 								<hr>
 							</dd>
 
 							<dt id="preview_signature" style="display:none">
-								<strong>', Lang::$txt['signature_preview'], '</strong>
+								<strong>', $txt['signature_preview'], '</strong>
 							</dt>
 							<dd id="preview_signature_display" style="display:none">
 								<hr>
 							</dd>
 
 							<dt>
-								<strong>', Lang::$txt['signature'], '</strong><br>
-								<span class="smalltext">', Lang::$txt['sig_info'], '</span><br>
+								<strong>', $txt['signature'], '</strong><br>
+								<span class="smalltext">', $txt['sig_info'], '</span><br>
 								<br>';
 
-	if (Utils::$context['show_spellchecking'])
+	if ($context['show_spellchecking'])
 		echo '
-								<input type="button" value="', Lang::$txt['spell_check'], '" onclick="spellCheck(\'creator\', \'signature\');" class="button">';
+								<input type="button" value="', $txt['spell_check'], '" onclick="spellCheck(\'creator\', \'signature\');" class="button">';
 
 	echo '
 							</dt>
 							<dd>
-								<textarea class="editor" onkeyup="calcCharLeft();" id="signature" name="signature" rows="5" cols="50">', Utils::$context['member']['signature'], '</textarea><br>';
+								<textarea class="editor" onkeyup="calcCharLeft();" id="signature" name="signature" rows="5" cols="50">', $context['member']['signature'], '</textarea><br>';
 
 	// If there is a limit at all!
-	if (!empty(Utils::$context['signature_limits']['max_length']))
+	if (!empty($context['signature_limits']['max_length']))
 		echo '
-								<span class="smalltext">', Lang::getTxt('max_sig_characters', Utils::$context['signature_limits']), '</span><br>';
+								<span class="smalltext">', sprintf($txt['max_sig_characters'], $context['signature_limits']['max_length']), ' <span id="signatureLeft">', $context['signature_limits']['max_length'], '</span></span><br>';
 
-	if (!empty(Utils::$context['show_preview_button']))
+	if (!empty($context['show_preview_button']))
 		echo '
-								<input type="button" name="preview_signature" id="preview_button" value="', Lang::$txt['preview_signature'], '" class="button floatright">';
+								<input type="button" name="preview_signature" id="preview_button" value="', $txt['preview_signature'], '" class="button floatright">';
 
-	if (Utils::$context['signature_warning'])
+	if ($context['signature_warning'])
 		echo '
-								<span class="smalltext">', Utils::$context['signature_warning'], '</span>';
+								<span class="smalltext">', $context['signature_warning'], '</span>';
 
 	// Some javascript used to count how many characters have been used so far in the signature.
 	echo '
 								<script>
-									var maxLength = ', Utils::$context['signature_limits']['max_length'], ';
+									var maxLength = ', $context['signature_limits']['max_length'], ';
 
 									$(document).ready(function() {
 										calcCharLeft();
@@ -2841,53 +2890,55 @@ function template_profile_signature_modify()
  */
 function template_profile_avatar_select()
 {
+	global $context, $txt, $modSettings, $scripturl;
+
 	// Start with the upper menu
 	echo '
 							<dt>
 								<strong id="personal_picture">
-									<label for="avatar_upload_box">', Lang::$txt['personal_picture'], '</label>
+									<label for="avatar_upload_box">', $txt['personal_picture'], '</label>
 								</strong>';
 
-	if (empty(Config::$modSettings['gravatarEnabled']) || empty(Config::$modSettings['gravatarOverride']))
+	if (empty($modSettings['gravatarEnabled']) || empty($modSettings['gravatarOverride']))
 		echo '
-								<input type="radio" onclick="swap_avatar(this); return true;" name="avatar_choice" id="avatar_choice_none" value="none"' . (Utils::$context['member']['avatar']['choice'] == 'none' ? ' checked="checked"' : '') . '>
-								<label for="avatar_choice_none"' . (isset(Utils::$context['modify_error']['bad_avatar']) ? ' class="error"' : '') . '>
-									' . Lang::$txt['no_avatar'] . '
+								<input type="radio" onclick="swap_avatar(this); return true;" name="avatar_choice" id="avatar_choice_none" value="none"' . ($context['member']['avatar']['choice'] == 'none' ? ' checked="checked"' : '') . '>
+								<label for="avatar_choice_none"' . (isset($context['modify_error']['bad_avatar']) ? ' class="error"' : '') . '>
+									' . $txt['no_avatar'] . '
 								</label><br>';
 
-	if (!empty(Utils::$context['member']['avatar']['allow_server_stored']))
+	if (!empty($context['member']['avatar']['allow_server_stored']))
 		echo '
-								<input type="radio" onclick="swap_avatar(this); return true;" name="avatar_choice" id="avatar_choice_server_stored" value="server_stored"' . (Utils::$context['member']['avatar']['choice'] == 'server_stored' ? ' checked="checked"' : '') . '>
-								<label for="avatar_choice_server_stored"' . (isset(Utils::$context['modify_error']['bad_avatar']) ? ' class="error"' : '') . '>
-									', Lang::$txt['choose_avatar_gallery'], '
+								<input type="radio" onclick="swap_avatar(this); return true;" name="avatar_choice" id="avatar_choice_server_stored" value="server_stored"' . ($context['member']['avatar']['choice'] == 'server_stored' ? ' checked="checked"' : '') . '>
+								<label for="avatar_choice_server_stored"' . (isset($context['modify_error']['bad_avatar']) ? ' class="error"' : '') . '>
+									', $txt['choose_avatar_gallery'], '
 								</label><br>';
 
-	if (!empty(Utils::$context['member']['avatar']['allow_external']))
+	if (!empty($context['member']['avatar']['allow_external']))
 		echo '
-								<input type="radio" onclick="swap_avatar(this); return true;" name="avatar_choice" id="avatar_choice_external" value="external"' . (Utils::$context['member']['avatar']['choice'] == 'external' ? ' checked="checked"' : '') . '>
-								<label for="avatar_choice_external"' . (isset(Utils::$context['modify_error']['bad_avatar']) ? ' class="error"' : '') . '>
-									', Lang::$txt['my_own_pic'], '
+								<input type="radio" onclick="swap_avatar(this); return true;" name="avatar_choice" id="avatar_choice_external" value="external"' . ($context['member']['avatar']['choice'] == 'external' ? ' checked="checked"' : '') . '>
+								<label for="avatar_choice_external"' . (isset($context['modify_error']['bad_avatar']) ? ' class="error"' : '') . '>
+									', $txt['my_own_pic'], '
 								</label><br>';
 
-	if (!empty(Utils::$context['member']['avatar']['allow_upload']))
+	if (!empty($context['member']['avatar']['allow_upload']))
 		echo '
-								<input type="radio" onclick="swap_avatar(this); return true;" name="avatar_choice" id="avatar_choice_upload" value="upload"' . (Utils::$context['member']['avatar']['choice'] == 'upload' ? ' checked="checked"' : '') . '>
-								<label for="avatar_choice_upload"' . (isset(Utils::$context['modify_error']['bad_avatar']) ? ' class="error"' : '') . '>
-									', Lang::$txt['avatar_will_upload'], '
+								<input type="radio" onclick="swap_avatar(this); return true;" name="avatar_choice" id="avatar_choice_upload" value="upload"' . ($context['member']['avatar']['choice'] == 'upload' ? ' checked="checked"' : '') . '>
+								<label for="avatar_choice_upload"' . (isset($context['modify_error']['bad_avatar']) ? ' class="error"' : '') . '>
+									', $txt['avatar_will_upload'], '
 								</label><br>';
 
-	if (!empty(Utils::$context['member']['avatar']['allow_gravatar']))
+	if (!empty($context['member']['avatar']['allow_gravatar']))
 		echo '
-								<input type="radio" onclick="swap_avatar(this); return true;" name="avatar_choice" id="avatar_choice_gravatar" value="gravatar"' . (Utils::$context['member']['avatar']['choice'] == 'gravatar' ? ' checked="checked"' : '') . '>
-								<label for="avatar_choice_gravatar"' . (isset(Utils::$context['modify_error']['bad_avatar']) ? ' class="error"' : '') . '>' . Lang::$txt['use_gravatar'] . '</label>
-								<span class="smalltext"><a href="', Config::$scripturl, '?action=helpadmin;help=gravatar" onclick="return reqOverlayDiv(this.href);"><span class="main_icons help"></span></a></span>';
+								<input type="radio" onclick="swap_avatar(this); return true;" name="avatar_choice" id="avatar_choice_gravatar" value="gravatar"' . ($context['member']['avatar']['choice'] == 'gravatar' ? ' checked="checked"' : '') . '>
+								<label for="avatar_choice_gravatar"' . (isset($context['modify_error']['bad_avatar']) ? ' class="error"' : '') . '>' . $txt['use_gravatar'] . '</label>
+								<span class="smalltext"><a href="', $scripturl, '?action=helpadmin;help=gravatar" onclick="return reqOverlayDiv(this.href);"><span class="main_icons help"></span></a></span>';
 
 	echo '
 							</dt>
 							<dd>';
 
 	// If users are allowed to choose avatars stored on the server show selection boxes to choice them from.
-	if (!empty(Utils::$context['member']['avatar']['allow_server_stored']))
+	if (!empty($context['member']['avatar']['allow_server_stored']))
 	{
 		echo '
 								<div id="avatar_server_stored">
@@ -2895,7 +2946,7 @@ function template_profile_avatar_select()
 										<select name="cat" id="cat" size="10" onchange="changeSel(\'\');" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'server_stored\');">';
 
 		// This lists all the file categories.
-		foreach (Utils::$context['avatars'] as $avatar)
+		foreach ($context['avatars'] as $avatar)
 			echo '
 											<option value="', $avatar['filename'] . ($avatar['is_dir'] ? '/' : ''), '"', ($avatar['checked'] ? ' selected' : ''), '>', $avatar['name'], '</option>';
 
@@ -2906,14 +2957,14 @@ function template_profile_avatar_select()
 										<select name="file" id="file" size="10" style="display: none;" onchange="showAvatar()" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'server_stored\');" disabled><option></option></select>
 									</div>
 									<div class="edit_avatar_img">
-										<img id="avatar" src="', Utils::$context['member']['avatar']['choice'] == 'server_stored' ? Utils::$context['member']['avatar']['href'] : Config::$modSettings['avatar_url'] . '/blank.png', '" alt="">
+										<img id="avatar" src="', $context['member']['avatar']['choice'] == 'server_stored' ? $context['member']['avatar']['href'] : $modSettings['avatar_url'] . '/blank.png', '" alt="">
 									</div>
 									<script>
-										var files = ["' . implode('", "', Utils::$context['avatar_list']) . '"];
+										var files = ["' . implode('", "', $context['avatar_list']) . '"];
 										var avatar = document.getElementById("avatar");
 										var cat = document.getElementById("cat");
-										var selavatar = "' . Utils::$context['avatar_selected'] . '";
-										var avatardir = "' . Config::$modSettings['avatar_url'] . '/";
+										var selavatar = "' . $context['avatar_selected'] . '";
+										var avatardir = "' . $modSettings['avatar_url'] . '/";
 										var size = avatar.alt.substr(3, 2) + " " + avatar.alt.substr(0, 2) + String.fromCharCode(117, 98, 116);
 										var file = document.getElementById("file");
 
@@ -2927,43 +2978,43 @@ function template_profile_avatar_select()
 	}
 
 	// If the user can link to an off server avatar, show them a box to input the address.
-	if (!empty(Utils::$context['member']['avatar']['allow_external']))
+	if (!empty($context['member']['avatar']['allow_external']))
 		echo '
 								<div id="avatar_external">
-									', Utils::$context['member']['avatar']['choice'] == 'external' ? '<div class="edit_avatar_img"><img src="' . Utils::$context['member']['avatar']['href'] . '" alt="" class="avatar"></div>' : '', '
-									<div class="smalltext">', Lang::$txt['avatar_by_url'], '</div>', !empty(Config::$modSettings['avatar_action_too_large']) && Config::$modSettings['avatar_action_too_large'] == 'option_download_and_resize' ? template_max_size('external') : '', '
-									<input type="text" name="userpicpersonal" size="45" value="', ((stristr(Utils::$context['member']['avatar']['external'], 'http://') || stristr(Utils::$context['member']['avatar']['external'], 'https://')) ? Utils::$context['member']['avatar']['external'] : 'http://'), '" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'external\');" onchange="if (typeof(previewExternalAvatar) != \'undefined\') previewExternalAvatar(this.value);"><br>
+									', $context['member']['avatar']['choice'] == 'external' ? '<div class="edit_avatar_img"><img src="' . $context['member']['avatar']['href'] . '" alt="" class="avatar"></div>' : '', '
+									<div class="smalltext">', $txt['avatar_by_url'], '</div>', !empty($modSettings['avatar_action_too_large']) && $modSettings['avatar_action_too_large'] == 'option_download_and_resize' ? template_max_size('external') : '', '
+									<input type="text" name="userpicpersonal" size="45" value="', ((stristr($context['member']['avatar']['external'], 'http://') || stristr($context['member']['avatar']['external'], 'https://')) ? $context['member']['avatar']['external'] : 'http://'), '" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'external\');" onchange="if (typeof(previewExternalAvatar) != \'undefined\') previewExternalAvatar(this.value);"><br>
 								</div>';
 
 	// If the user is able to upload avatars to the server show them an upload box.
-	if (!empty(Utils::$context['member']['avatar']['allow_upload']))
+	if (!empty($context['member']['avatar']['allow_upload']))
 		echo '
 								<div id="avatar_upload">
-									', Utils::$context['member']['avatar']['choice'] == 'upload' ? '<div class="edit_avatar_img"><img src="' . Utils::$context['member']['avatar']['href'] . '" alt=""></div>' : '', '
-									<input type="file" size="44" name="attachment" id="avatar_upload_box" value="" onchange="readfromUpload(this)"  onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'upload\');" accept="image/gif, image/jpeg, image/jpg, image/png, image/svg+xml, image/webp">', template_max_size('upload'), '
-									', (!empty(Utils::$context['member']['avatar']['id_attach']) ? '<br><input type="hidden" name="id_attach" value="' . Utils::$context['member']['avatar']['id_attach'] . '">' : ''), '
+									', $context['member']['avatar']['choice'] == 'upload' ? '<div class="edit_avatar_img"><img src="' . $context['member']['avatar']['href'] . '" alt=""></div>' : '', '
+									<input type="file" size="44" name="attachment" id="avatar_upload_box" value="" onchange="readfromUpload(this)"  onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'upload\');" accept="image/gif, image/jpeg, image/jpg, image/png">', template_max_size('upload'), '
+									', (!empty($context['member']['avatar']['id_attach']) ? '<br><img src="' . $context['member']['avatar']['href'] . (strpos($context['member']['avatar']['href'], '?') === false ? '?' : '&amp;') . 'time=' . time() . '" alt="" id="attached_image"><input type="hidden" name="id_attach" value="' . $context['member']['avatar']['id_attach'] . '">' : ''), '
 								</div>';
 
 	// if the user is able to use Gravatar avatars show then the image preview
-	if (!empty(Utils::$context['member']['avatar']['allow_gravatar']))
+	if (!empty($context['member']['avatar']['allow_gravatar']))
 	{
 		echo '
 								<div id="avatar_gravatar">
-									', Utils::$context['member']['avatar']['choice'] == 'gravatar' ? '<div class="edit_avatar_img"><img src="' . Utils::$context['member']['avatar']['href'] . '" alt=""></div>' : '';
+									', $context['member']['avatar']['choice'] == 'gravatar' ? '<div class="edit_avatar_img"><img src="' . $context['member']['avatar']['href'] . '" alt=""></div>' : '';
 
-		if (empty(Config::$modSettings['gravatarAllowExtraEmail']))
+		if (empty($modSettings['gravatarAllowExtraEmail']))
 			echo '
-									<div class="smalltext">', Lang::$txt['gravatar_noAlternateEmail'], '</div>';
+									<div class="smalltext">', $txt['gravatar_noAlternateEmail'], '</div>';
 		else
 		{
 			// Depending on other stuff, the stored value here might have some odd things in it from other areas.
-			if (Utils::$context['member']['avatar']['external'] == Utils::$context['member']['email'])
+			if ($context['member']['avatar']['external'] == $context['member']['email'])
 				$textbox_value = '';
 			else
-				$textbox_value = Utils::$context['member']['avatar']['external'];
+				$textbox_value = $context['member']['avatar']['external'];
 
 			echo '
-									<div class="smalltext">', Lang::$txt['gravatar_alternateEmail'], '</div>
+									<div class="smalltext">', $txt['gravatar_alternateEmail'], '</div>
 									<input type="text" name="gravatarEmail" id="gravatarEmail" size="45" value="', $textbox_value, '">';
 		}
 		echo '
@@ -2972,45 +3023,45 @@ function template_profile_avatar_select()
 
 	echo '
 								<script>
-									', !empty(Utils::$context['member']['avatar']['allow_server_stored']) ? 'document.getElementById("avatar_server_stored").style.display = "' . (Utils::$context['member']['avatar']['choice'] == 'server_stored' ? '' : 'none') . '";' : '', '
-									', !empty(Utils::$context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "' . (Utils::$context['member']['avatar']['choice'] == 'external' ? '' : 'none') . '";' : '', '
-									', !empty(Utils::$context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "' . (Utils::$context['member']['avatar']['choice'] == 'upload' ? '' : 'none') . '";' : '', '
-									', !empty(Utils::$context['member']['avatar']['allow_gravatar']) ? 'document.getElementById("avatar_gravatar").style.display = "' . (Utils::$context['member']['avatar']['choice'] == 'gravatar' ? '' : 'none') . '";' : '', '
+									', !empty($context['member']['avatar']['allow_server_stored']) ? 'document.getElementById("avatar_server_stored").style.display = "' . ($context['member']['avatar']['choice'] == 'server_stored' ? '' : 'none') . '";' : '', '
+									', !empty($context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "' . ($context['member']['avatar']['choice'] == 'external' ? '' : 'none') . '";' : '', '
+									', !empty($context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "' . ($context['member']['avatar']['choice'] == 'upload' ? '' : 'none') . '";' : '', '
+									', !empty($context['member']['avatar']['allow_gravatar']) ? 'document.getElementById("avatar_gravatar").style.display = "' . ($context['member']['avatar']['choice'] == 'gravatar' ? '' : 'none') . '";' : '', '
 
 									function swap_avatar(type)
 									{
 										switch(type.id)
 										{
 											case "avatar_choice_server_stored":
-												', !empty(Utils::$context['member']['avatar']['allow_server_stored']) ? 'document.getElementById("avatar_server_stored").style.display = "";' : '', '
-												', !empty(Utils::$context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "none";' : '', '
-												', !empty(Utils::$context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "none";' : '', '
-												', !empty(Utils::$context['member']['avatar']['allow_gravatar']) ? 'document.getElementById("avatar_gravatar").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_server_stored']) ? 'document.getElementById("avatar_server_stored").style.display = "";' : '', '
+												', !empty($context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_gravatar']) ? 'document.getElementById("avatar_gravatar").style.display = "none";' : '', '
 												break;
 											case "avatar_choice_external":
-												', !empty(Utils::$context['member']['avatar']['allow_server_stored']) ? 'document.getElementById("avatar_server_stored").style.display = "none";' : '', '
-												', !empty(Utils::$context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "";' : '', '
-												', !empty(Utils::$context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "none";' : '', '
-												', !empty(Utils::$context['member']['avatar']['allow_gravatar']) ? 'document.getElementById("avatar_gravatar").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_server_stored']) ? 'document.getElementById("avatar_server_stored").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "";' : '', '
+												', !empty($context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_gravatar']) ? 'document.getElementById("avatar_gravatar").style.display = "none";' : '', '
 												break;
 											case "avatar_choice_upload":
-												', !empty(Utils::$context['member']['avatar']['allow_server_stored']) ? 'document.getElementById("avatar_server_stored").style.display = "none";' : '', '
-												', !empty(Utils::$context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "none";' : '', '
-												', !empty(Utils::$context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "";' : '', '
-												', !empty(Utils::$context['member']['avatar']['allow_gravatar']) ? 'document.getElementById("avatar_gravatar").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_server_stored']) ? 'document.getElementById("avatar_server_stored").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "";' : '', '
+												', !empty($context['member']['avatar']['allow_gravatar']) ? 'document.getElementById("avatar_gravatar").style.display = "none";' : '', '
 												break;
 											case "avatar_choice_none":
-												', !empty(Utils::$context['member']['avatar']['allow_server_stored']) ? 'document.getElementById("avatar_server_stored").style.display = "none";' : '', '
-												', !empty(Utils::$context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "none";' : '', '
-												', !empty(Utils::$context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "none";' : '', '
-												', !empty(Utils::$context['member']['avatar']['allow_gravatar']) ? 'document.getElementById("avatar_gravatar").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_server_stored']) ? 'document.getElementById("avatar_server_stored").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_gravatar']) ? 'document.getElementById("avatar_gravatar").style.display = "none";' : '', '
 												break;
 											case "avatar_choice_gravatar":
-												', !empty(Utils::$context['member']['avatar']['allow_server_stored']) ? 'document.getElementById("avatar_server_stored").style.display = "none";' : '', '
-												', !empty(Utils::$context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "none";' : '', '
-												', !empty(Utils::$context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "none";' : '', '
-												', !empty(Utils::$context['member']['avatar']['allow_gravatar']) ? 'document.getElementById("avatar_gravatar").style.display = "";' : '', '
-												', !empty(Config::$modSettings['gravatarAllowExtraEmail']) && (Utils::$context['member']['avatar']['external'] == Utils::$context['member']['email'] || strstr(Utils::$context['member']['avatar']['external'], 'http://') || strstr(Utils::$context['member']['avatar']['external'], 'https://')) ?
+												', !empty($context['member']['avatar']['allow_server_stored']) ? 'document.getElementById("avatar_server_stored").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_external']) ? 'document.getElementById("avatar_external").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_upload']) ? 'document.getElementById("avatar_upload").style.display = "none";' : '', '
+												', !empty($context['member']['avatar']['allow_gravatar']) ? 'document.getElementById("avatar_gravatar").style.display = "";' : '', '
+												', !empty($modSettings['gravatarAllowExtraEmail']) && ($context['member']['avatar']['external'] == $context['member']['email'] || strstr($context['member']['avatar']['external'], 'http://') || strstr($context['member']['avatar']['external'], 'https://')) ?
 												'document.getElementById("gravatarEmail").value = "";' : '', '
 												break;
 										}
@@ -3026,15 +3077,17 @@ function template_profile_avatar_select()
  */
 function template_max_size($type)
 {
-	$w = !empty(Config::$modSettings['avatar_max_width_' . $type]) ? Lang::numberFormat(Config::$modSettings['avatar_max_width_' . $type]) : 0;
-	$h = !empty(Config::$modSettings['avatar_max_height_' . $type]) ? Lang::numberFormat(Config::$modSettings['avatar_max_height_' . $type]) : 0;
+	global $modSettings, $txt;
+
+	$w = !empty($modSettings['avatar_max_width_' . $type]) ? comma_format($modSettings['avatar_max_width_' . $type]) : 0;
+	$h = !empty($modSettings['avatar_max_height_' . $type]) ? comma_format($modSettings['avatar_max_height_' . $type]) : 0;
 
 	$suffix = (!empty($w) ? 'w' : '') . (!empty($h) ? 'h' : '');
 	if (empty($suffix))
 		return;
 
 	echo '
-								<div class="smalltext">', Lang::getTxt('avatar_max_size_' . $suffix, ['w' => $w, 'h' => $h]), '</div>';
+								<div class="smalltext">', sprintf($txt['avatar_max_size_' . $suffix], $w, $h), '</div>';
 }
 
 /**
@@ -3042,25 +3095,27 @@ function template_max_size($type)
  */
 function template_profile_timeformat_modify()
 {
+	global $context, $txt, $scripturl;
+
 	echo '
 							<dt>
-								<strong><label for="easyformat">', Lang::$txt['time_format'], '</label></strong><br>
-								<a href="', Config::$scripturl, '?action=helpadmin;help=time_format" onclick="return reqOverlayDiv(this.href);" class="help"><span class="main_icons help" title="', Lang::$txt['help'], '"></span></a>
+								<strong><label for="easyformat">', $txt['time_format'], '</label></strong><br>
+								<a href="', $scripturl, '?action=helpadmin;help=time_format" onclick="return reqOverlayDiv(this.href);" class="help"><span class="main_icons help" title="', $txt['help'], '"></span></a>
 								<span class="smalltext">
-									<label for="time_format">', Lang::$txt['date_format'], '</label>
+									<label for="time_format">', $txt['date_format'], '</label>
 								</span>
 							</dt>
 							<dd>
 								<select name="easyformat" id="easyformat" onchange="document.forms.creator.time_format.value = this.options[this.selectedIndex].value;">';
 
 	// Help the user by showing a list of common time formats.
-	foreach (Utils::$context['easy_timeformats'] as $time_format)
+	foreach ($context['easy_timeformats'] as $time_format)
 		echo '
-									<option value="', $time_format['format'], '"', $time_format['format'] == Utils::$context['member']['time_format'] ? ' selected' : '', '>', $time_format['title'], '</option>';
+									<option value="', $time_format['format'], '"', $time_format['format'] == $context['member']['time_format'] ? ' selected' : '', '>', $time_format['title'], '</option>';
 
 	echo '
 								</select>
-								<input type="text" name="time_format" id="time_format" value="', Utils::$context['member']['time_format'], '" size="30">
+								<input type="text" name="time_format" id="time_format" value="', $context['member']['time_format'], '" size="30">
 							</dd>';
 }
 
@@ -3069,12 +3124,14 @@ function template_profile_timeformat_modify()
  */
 function template_profile_theme_pick()
 {
+	global $txt, $context, $scripturl;
+
 	echo '
 							<dt>
-								<strong>', Lang::$txt['current_theme'], '</strong>
+								<strong>', $txt['current_theme'], '</strong>
 							</dt>
 							<dd>
-								', Utils::$context['member']['theme']['name'], ' <a class="button" href="', Config::$scripturl, '?action=theme;sa=pick;u=', Utils::$context['id_member'], '">', Lang::$txt['change'], '</a>
+								', $context['member']['theme']['name'], ' <a class="button" href="', $scripturl, '?action=theme;sa=pick;u=', $context['id_member'], '">', $txt['change'], '</a>
 							</dd>';
 }
 
@@ -3083,20 +3140,22 @@ function template_profile_theme_pick()
  */
 function template_profile_smiley_pick()
 {
+	global $txt, $context, $modSettings, $settings;
+
 	echo '
 							<dt>
-								<strong><label for="smiley_set">', Lang::$txt['smileys_current'], '</label></strong>
+								<strong><label for="smiley_set">', $txt['smileys_current'], '</label></strong>
 							</dt>
 							<dd>
 								<select name="smiley_set" id="smiley_set">';
 
-	foreach (Utils::$context['smiley_sets'] as $set)
+	foreach ($context['smiley_sets'] as $set)
 		echo '
 									<option data-preview="', $set['preview'], '" value="', $set['id'], '"', $set['selected'] ? ' selected' : '', '>', $set['name'], '</option>';
 
 	echo '
 								</select>
-								<img id="smileypr" class="centericon" src="', Utils::$context['member']['smiley_set']['preview'], '" alt=":)">
+								<img id="smileypr" class="centericon" src="', $context['member']['smiley_set']['preview'], '" alt=":)">
 							</dd>';
 }
 
@@ -3105,73 +3164,75 @@ function template_profile_smiley_pick()
  */
 function template_tfasetup()
 {
+	global $txt, $context, $scripturl, $modSettings;
+
 	echo '
 			<div class="cat_bar">
-				<h3 class="catbg">', Lang::$txt['tfa_title'], '</h3>
+				<h3 class="catbg">', $txt['tfa_title'], '</h3>
 			</div>
 			<div class="roundframe">
 				<div>';
 
-	if (!empty(Utils::$context['tfa_backup']))
+	if (!empty($context['tfa_backup']))
 		echo '
 					<div class="smalltext error">
-						', Lang::$txt['tfa_backup_used_desc'], '
+						', $txt['tfa_backup_used_desc'], '
 					</div>';
 
-	elseif (Config::$modSettings['tfa_mode'] == 2)
+	elseif ($modSettings['tfa_mode'] == 2)
 		echo '
 					<div class="smalltext">
-						<strong>', Lang::$txt['tfa_forced_desc'], '</strong>
+						<strong>', $txt['tfa_forced_desc'], '</strong>
 					</div>';
 
 	echo '
 					<div class="smalltext">
-						', Lang::$txt['tfa_desc'], '
+						', $txt['tfa_desc'], '
 					</div>
 					<div class="floatleft">
-						<form action="', Config::$scripturl, '?action=profile;area=tfasetup" method="post">
+						<form action="', $scripturl, '?action=profile;area=tfasetup" method="post">
 							<div class="block">
-								<strong>', Lang::$txt['tfa_step1'], '</strong><br>';
+								<strong>', $txt['tfa_step1'], '</strong><br>';
 
-	if (!empty(Utils::$context['tfa_pass_error']))
+	if (!empty($context['tfa_pass_error']))
 		echo '
 								<div class="error smalltext">
-									', Lang::$txt['tfa_pass_invalid'], '
+									', $txt['tfa_pass_invalid'], '
 								</div>';
 
 	echo '
-								<input type="password" name="oldpasswrd" size="25"', !empty(Utils::$context['password_auth_failed']) ? ' class="error"' : '', !empty(Utils::$context['tfa_pass_value']) ? ' value="' . Utils::$context['tfa_pass_value'] . '"' : '', '>
+								<input type="password" name="oldpasswrd" size="25"', !empty($context['password_auth_failed']) ? ' class="error"' : '', !empty($context['tfa_pass_value']) ? ' value="' . $context['tfa_pass_value'] . '"' : '', '>
 							</div>
 							<div class="block">
-								<strong>', Lang::$txt['tfa_step2'], '</strong>
-								<div class="smalltext">', Lang::$txt['tfa_step2_desc'], '</div>
-								<div class="tfacode">', Utils::$context['tfa_secret'], '</div>
+								<strong>', $txt['tfa_step2'], '</strong>
+								<div class="smalltext">', $txt['tfa_step2_desc'], '</div>
+								<div class="tfacode">', $context['tfa_secret'], '</div>
 							</div>
 							<div class="block">
-								<strong>', Lang::$txt['tfa_step3'], '</strong><br>';
+								<strong>', $txt['tfa_step3'], '</strong><br>';
 
-	if (!empty(Utils::$context['tfa_error']))
+	if (!empty($context['tfa_error']))
 		echo '
 								<div class="error smalltext">
-									', Lang::$txt['tfa_code_invalid'], '
+									', $txt['tfa_code_invalid'], '
 								</div>';
 
 	echo '
-								<input type="text" name="tfa_code" size="25"', !empty(Utils::$context['tfa_error']) ? ' class="error"' : '', !empty(Utils::$context['tfa_value']) ? ' value="' . Utils::$context['tfa_value'] . '"' : '', '>
-								<input type="submit" name="save" value="', Lang::$txt['tfa_enable'], '" class="button">
+								<input type="text" name="tfa_code" size="25"', !empty($context['tfa_error']) ? ' class="error"' : '', !empty($context['tfa_value']) ? ' value="' . $context['tfa_value'] . '"' : '', '>
+								<input type="submit" name="save" value="', $txt['tfa_enable'], '" class="button">
 							</div>
-							<input type="hidden" name="', Utils::$context[Utils::$context['token_check'] . '_token_var'], '" value="', Utils::$context[Utils::$context['token_check'] . '_token'], '">
-							<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
+							<input type="hidden" name="', $context[$context['token_check'] . '_token_var'], '" value="', $context[$context['token_check'] . '_token'], '">
+							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
 						</form>
 					</div>
 					<div class="floatright tfa_qrcode">
 						<div id="qrcode"></div>
 						<script type="text/javascript">
-							new QRCode(document.getElementById("qrcode"), "', Utils::$context['tfa_qr_url'], '");
+							new QRCode(document.getElementById("qrcode"), "', $context['tfa_qr_url'], '");
 						</script>
 					</div>';
 
-	if (!empty(Utils::$context['from_ajax']))
+	if (!empty($context['from_ajax']))
 		echo '
 					<br>
 					<a href="javascript:self.close();"></a>';
@@ -3186,30 +3247,32 @@ function template_tfasetup()
  */
 function template_tfadisable()
 {
+	global $txt, $context, $scripturl;
+
 	echo '
 			<div class="cat_bar">
-				<h3 class="catbg">', Lang::$txt['tfadisable'], '</h3>
+				<h3 class="catbg">', $txt['tfadisable'], '</h3>
 			</div>
 			<div class="roundframe">
-				<form action="', Config::$scripturl, '?action=profile;area=tfadisable" method="post">';
+				<form action="', $scripturl, '?action=profile;area=tfadisable" method="post">';
 
-	if (User::$me->is_owner)
+	if ($context['user']['is_owner'])
 		echo '
 					<div class="block">
-						<strong', (isset(Utils::$context['modify_error']['bad_password']) || isset(Utils::$context['modify_error']['no_password']) ? ' class="error"' : ''), '>', Lang::$txt['current_password'], '</strong><br>
+						<strong', (isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' class="error"' : ''), '>', $txt['current_password'], '</strong><br>
 						<input type="password" name="oldpasswrd" size="20">
 					</div>';
 	else
 		echo '
 					<div class="smalltext">
-						', Lang::getTxt('tfa_disable_for_user', ['name' => User::$me->name]), '
+						', sprintf($txt['tfa_disable_for_user'], $context['user']['name']), '
 					</div>';
 
 	echo '
-					<input type="submit" name="save" value="', Lang::$txt['tfa_disable'], '" class="button floatright">
-					<input type="hidden" name="', Utils::$context[Utils::$context['token_check'] . '_token_var'], '" value="', Utils::$context[Utils::$context['token_check'] . '_token'], '">
-					<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
-					<input type="hidden" name="u" value="', Utils::$context['id_member'], '">
+					<input type="submit" name="save" value="', $txt['tfa_disable'], '" class="button floatright">
+					<input type="hidden" name="', $context[$context['token_check'] . '_token_var'], '" value="', $context[$context['token_check'] . '_token'], '">
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+					<input type="hidden" name="u" value="', $context['id_member'], '">
 				</form>
 			</div><!-- .roundframe -->';
 }
@@ -3219,14 +3282,16 @@ function template_tfadisable()
  */
 function template_tfasetup_backup()
 {
+	global $context, $txt;
+
 	echo '
 			<div class="cat_bar">
-				<h3 class="catbg">', Lang::$txt['tfa_backup_title'], '</h3>
+				<h3 class="catbg">', $txt['tfa_backup_title'], '</h3>
 			</div>
 			<div class="roundframe">
 				<div>
-					<div class="smalltext">', Lang::$txt['tfa_backup_desc'], '</div>
-					<div class="bbc_code" style="resize: none; border: none;">', Utils::$context['tfa_backup'], '</div>
+					<div class="smalltext">', $txt['tfa_backup_desc'], '</div>
+					<div class="bbc_code" style="resize: none; border: none;">', $context['tfa_backup'], '</div>
 				</div>
 			</div>';
 }
@@ -3236,24 +3301,26 @@ function template_tfasetup_backup()
  */
 function template_profile_tfa()
 {
+	global $context, $txt, $scripturl, $modSettings;
+
 	echo '
 							<dt>
-								<strong>', Lang::$txt['tfa_profile_label'], '</strong><br>
-								<div class="smalltext">', Lang::$txt['tfa_profile_desc'], '</div>
+								<strong>', $txt['tfa_profile_label'], '</strong><br>
+								<div class="smalltext">', $txt['tfa_profile_desc'], '</div>
 							</dt>
 							<dd>';
 
-	if (!Utils::$context['tfa_enabled'] && User::$me->is_owner)
+	if (!$context['tfa_enabled'] && $context['user']['is_owner'])
 		echo '
-								<a href="', !empty(Config::$modSettings['force_ssl']) ? strtr(Config::$scripturl, array('http://' => 'https://')) : Config::$scripturl, '?action=profile;area=tfasetup" id="enable_tfa">', Lang::$txt['tfa_profile_enable'], '</a>';
+								<a href="', !empty($modSettings['force_ssl']) ? strtr($scripturl, array('http://' => 'https://')) : $scripturl, '?action=profile;area=tfasetup" id="enable_tfa">', $txt['tfa_profile_enable'], '</a>';
 
-	elseif (!Utils::$context['tfa_enabled'])
+	elseif (!$context['tfa_enabled'])
 		echo '
-								', Lang::$txt['tfa_profile_disabled'];
+								', $txt['tfa_profile_disabled'];
 
 	else
 		echo '
-								', Lang::getTxt('tfa_profile_enabled', ['url' => (!empty(Config::$modSettings['force_ssl']) ? strtr(Config::$scripturl, array('http://' => 'https://')) : Config::$scripturl) . '?action=profile;u=' . Utils::$context['id_member'] . ';area=tfadisable']);
+								', sprintf($txt['tfa_profile_enabled'], (!empty($modSettings['force_ssl']) ? strtr($scripturl, array('http://' => 'https://')) : $scripturl) . '?action=profile;u=' . $context['id_member'] . ';area=tfadisable');
 
 	echo '
 							</dd>';
@@ -3264,6 +3331,8 @@ function template_profile_tfa()
  */
 function template_export_profile_data()
 {
+	global $context, $scripturl, $txt;
+
 	$default_settings = array('included' => array(), 'format' => '');
 	$dltoken = '';
 
@@ -3271,34 +3340,34 @@ function template_export_profile_data()
 	echo '
 		<div class="cat_bar">
 			<h3 class="catbg profile_hd">
-				', Lang::$txt['export_profile_data'], '
+				', $txt['export_profile_data'], '
 			</h3>
 		</div>
-		<div class="information">', Utils::$context['export_profile_data_desc'], '</div>';
+		<div class="information">', $context['export_profile_data_desc'], '</div>';
 
-	if (!empty(Utils::$context['completed_exports']))
+	if (!empty($context['completed_exports']))
 	{
 		echo '
 		<div class="title_bar">
-			<h3 class="titlebg">', Lang::$txt['completed_exports'], '</h3>
+			<h3 class="titlebg">', $txt['completed_exports'], '</h3>
 		</div>
 		<div class="windowbg noup">';
 
-		foreach (Utils::$context['completed_exports'] as $basehash_ext => $parts)
+		foreach ($context['completed_exports'] as $basehash_ext => $parts)
 		{
 			echo '
-			<form action="', Config::$scripturl, '?action=profile;area=getprofiledata;u=', Utils::$context['id_member'], '" method="post" accept-charset="', Utils::$context['character_set'], '" class="', count(Utils::$context['completed_exports']) > 1 ? 'descbox' : 'padding', '">';
+			<form action="', $scripturl, '?action=profile;area=getprofiledata;u=', $context['id_member'], '" method="post" accept-charset="', $context['character_set'], '" class="', count($context['completed_exports']) > 1 ? 'descbox' : 'padding', '">';
 
-			if (!empty(Utils::$context['outdated_exports'][$basehash_ext]))
+			if (!empty($context['outdated_exports'][$basehash_ext]))
 			{
 				echo '
 				<div class="noticebox">
-					<p>', Lang::$txt['export_outdated_warning'], '</p>
+					<p>', $txt['export_outdated_warning'], '</p>
 					<ul class="bbc_list">';
 
-				foreach (Utils::$context['outdated_exports'][$basehash_ext] as $datatype)
+				foreach ($context['outdated_exports'][$basehash_ext] as $datatype)
 					echo '
-						<li>', Lang::$txt[$datatype], '</li>';
+						<li>', $txt[$datatype], '</li>';
 
 				echo '
 					</ul>
@@ -3306,18 +3375,12 @@ function template_export_profile_data()
 			}
 
 			echo '
-				<p>', Lang::getTxt(
-					'export_file_desc',
-					[
-						'list' => $parts[1]['included_desc'],
-						'format' => Utils::$context['export_formats'][$parts[1]['format']]['description'],
-					],
-				), '</p>';
+				<p>', sprintf($txt['export_file_desc'], $parts[1]['included_desc'], $context['export_formats'][$parts[1]['format']]['description']), '</p>';
 
 			if (count($parts) > 10)
 				echo '
 				<details>
-					<summary>', Lang::getTxt('export_file_count', [count($parts)]), '</summary>';
+					<summary>', sprintf($txt['export_file_count'], count($parts)), '</summary>';
 
 			echo '
 				<ul class="bbc_list" id="', $parts[1]['format'], '_export_files">';
@@ -3332,7 +3395,7 @@ function template_export_profile_data()
 
 				echo '
 					<li>
-						<a href="', Config::$scripturl, '?action=profile;area=download;u=', Utils::$context['id_member'], ';format=', $file['format'], ';part=', $part, ';t=', $dltoken, '" class="bbc_link" download>', $file['dlbasename'], '</a> (', $file['size'], ', ', $file['mtime'], ')
+						<a href="', $scripturl, '?action=profile;area=download;u=', $context['id_member'], ';format=', $file['format'], ';part=', $part, ';t=', $dltoken, '" class="bbc_link" download>', $file['dlbasename'], '</a> (', $file['size'], ', ', $file['mtime'], ')
 					</li>';
 			}
 
@@ -3345,10 +3408,10 @@ function template_export_profile_data()
 
 			echo '
 				<div class="righttext">
-					<input type="submit" name="delete" value="', Lang::$txt['delete'], '" class="button you_sure">
+					<input type="submit" name="delete" value="', $txt['delete'], '" class="button you_sure">
 					<input type="hidden" name="format" value="', $parts[1]['format'], '">
 					<input type="hidden" name="t" value="', $dltoken, '">
-					<button type="button" class="button export_download_all" style="display:none" onclick="export_download_all(\'', $parts[1]['format'], '\');">', Lang::$txt['export_download_all'], '</button>
+					<button type="button" class="button export_download_all" style="display:none" onclick="export_download_all(\'', $parts[1]['format'], '\');">', $txt['export_download_all'], '</button>
 				</div>
 			</form>';
 		}
@@ -3357,15 +3420,15 @@ function template_export_profile_data()
 		</div>';
 	}
 
-	if (!empty(Utils::$context['active_exports']))
+	if (!empty($context['active_exports']))
 	{
 		echo '
 		<div class="title_bar">
-			<h3 class="titlebg">', Lang::$txt['active_exports'], '</h3>
+			<h3 class="titlebg">', $txt['active_exports'], '</h3>
 		</div>
 		<div class="windowbg noup">';
 
-		foreach (Utils::$context['active_exports'] as $file)
+		foreach ($context['active_exports'] as $file)
 		{
 			$dltoken = $file['dltoken'];
 			if (empty($default_settings['included']))
@@ -3374,16 +3437,10 @@ function template_export_profile_data()
 				$default_settings['format'] = $file['format'];
 
 			echo '
-			<form action="', Config::$scripturl, '?action=profile;area=getprofiledata;u=', Utils::$context['id_member'], '" method="post" accept-charset="', Utils::$context['character_set'], '"', count(Utils::$context['active_exports']) > 1 ? ' class="descbox"' : '', '>
-				<p class="padding">', Lang::getTxt(
-					'export_file_desc',
-					[
-						'list' => $file['included_desc'],
-						'format' => Utils::$context['export_formats'][$file['format']]['description'],
-					],
-				), '</p>
+			<form action="', $scripturl, '?action=profile;area=getprofiledata;u=', $context['id_member'], '" method="post" accept-charset="', $context['character_set'], '"', count($context['active_exports']) > 1 ? ' class="descbox"' : '', '>
+				<p class="padding">', sprintf($txt['export_file_desc'], $file['included_desc'], $context['export_formats'][$file['format']]['description']), '</p>
 				<div class="righttext">
-					<input type="submit" name="delete" value="', Lang::$txt['export_cancel'], '" class="button you_sure">
+					<input type="submit" name="delete" value="', $txt['export_cancel'], '" class="button you_sure">
 					<input type="hidden" name="format" value="', $file['format'], '">
 					<input type="hidden" name="t" value="', $dltoken, '">
 				</div>
@@ -3396,13 +3453,13 @@ function template_export_profile_data()
 
 	echo '
 		<div class="title_bar">
-			<h3 class="titlebg">', Lang::$txt['export_settings'], '</h3>
+			<h3 class="titlebg">', $txt['export_settings'], '</h3>
 		</div>
 		<div class="windowbg noup">
-			<form action="', Config::$scripturl, '?action=profile;area=getprofiledata;u=', Utils::$context['id_member'], '" method="post" accept-charset="', Utils::$context['character_set'], '">
+			<form action="', $scripturl, '?action=profile;area=getprofiledata;u=', $context['id_member'], '" method="post" accept-charset="', $context['character_set'], '">
 				<dl class="settings">';
 
-	foreach (Utils::$context['export_datatypes'] as $datatype => $datatype_settings)
+	foreach ($context['export_datatypes'] as $datatype => $datatype_settings)
 	{
 		if (!empty($datatype_settings['label']))
 			echo '
@@ -3418,12 +3475,12 @@ function template_export_profile_data()
 				</dl>
 				<dl class="settings">
 					<dt>
-						<strong>', Lang::$txt['export_format'], '</strong>
+						<strong>', $txt['export_format'], '</strong>
 					</dt>
 					<dd>
 						<select id="export_format_select" name="format">';
 
-	foreach (Utils::$context['export_formats'] as $format => $format_settings)
+	foreach ($context['export_formats'] as $format => $format_settings)
 		echo '
 							<option value="', $format, '"', $format == $default_settings['format'] ? ' selected' : '', '>', $format_settings['description'], '</option>';
 
@@ -3438,10 +3495,10 @@ function template_export_profile_data()
 	{
 		echo '
 					<div id="export_begin" style="display:none">
-						<input type="submit" name="export_begin" value="', Lang::$txt['export_begin'], '" class="button">
+						<input type="submit" name="export_begin" value="', $txt['export_begin'], '" class="button">
 					</div>
 					<div id="export_restart">
-						<input type="submit" name="export_begin" value="', Lang::$txt['export_restart'], '" class="button you_sure" data-confirm="', Lang::$txt['export_restart_confirm'], '">
+						<input type="submit" name="export_begin" value="', $txt['export_restart'], '" class="button you_sure" data-confirm="', $txt['export_restart_confirm'], '">
 						<input type="hidden" name="delete">
 						<input type="hidden" name="t" value="', $dltoken, '">
 					</div>';
@@ -3450,12 +3507,12 @@ function template_export_profile_data()
 	else
 	{
 		echo '
-					<input type="submit" name="export_begin" value="', Lang::$txt['export_begin'], '" class="button">';
+					<input type="submit" name="export_begin" value="', $txt['export_begin'], '" class="button">';
 	}
 
 	echo '
-					<input type="hidden" name="', Utils::$context[Utils::$context['token_check'] . '_token_var'], '" value="', Utils::$context[Utils::$context['token_check'] . '_token'], '">
-					<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
+					<input type="hidden" name="', $context[$context['token_check'] . '_token_var'], '" value="', $context[$context['token_check'] . '_token'], '">
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
 				</div>
 			</form>
 		</div><!-- .windowbg -->';

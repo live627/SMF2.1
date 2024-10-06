@@ -46,7 +46,7 @@ smf_AdminIndex.prototype.loadAdminIndex = function ()
 	if (this.opt.bLoadVersions)
 		this.showCurrentVersion();
 
-	// Load the text box that says there's a new version available.
+	// Load the text box that sais there's a new version available.
 	if (this.opt.bLoadUpdateNotification)
 		this.checkUpdateAvailable();
 }
@@ -144,7 +144,7 @@ smf_ViewVersions.prototype.compareVersions = function (sCurrent, sTarget)
 	for (var i = 0; i < 2; i++)
 	{
 		// Clean the version and extract the version parts.
-		var sClean = aCompare[i].toLowerCase().replace(/ /g, '');
+		var sClean = aCompare[i].toLowerCase().replace(/ /g, '').replace(/2.0rc1-1/, '2.0rc1.1');
 		aParts = sClean.match(/(\d+)(?:\.(\d+|))?(?:\.)?(\d+|)(?:(alpha|beta|rc)(\d+|)(?:\.)?(\d+|))?(?:(dev))?(\d+|)/);
 
 		// No matches?
@@ -187,24 +187,21 @@ smf_ViewVersions.prototype.compareVersions = function (sCurrent, sTarget)
 
 smf_ViewVersions.prototype.determineVersions = function ()
 {
-	let oHighYour = {
-		Root: '??',
+	var oHighYour = {
 		Sources: '??',
 		Default: '??',
 		Languages: '??',
 		Templates: '??',
 		Tasks: '??'
 	};
-	let oHighCurrent = {
-		Root: '??',
+	var oHighCurrent = {
 		Sources: '??',
 		Default: '??',
 		Languages: '??',
 		Templates: '??',
 		Tasks: '??'
 	};
-	let oLowVersion = {
-		Root: false,
+	var oLowVersion = {
 		Sources: false,
 		Default: false,
 		Languages: false,
@@ -212,8 +209,7 @@ smf_ViewVersions.prototype.determineVersions = function ()
 		Tasks: false
 	};
 
-	const sSections = [
-		'Root',
+	var sSections = [
 		'Sources',
 		'Default',
 		'Languages',
@@ -306,11 +302,6 @@ smf_ViewVersions.prototype.determineVersions = function ()
 			}
 		}
 	}
-
-	setInnerHTML(document.getElementById('yourRoot'), oLowVersion.Root ? oLowVersion.Root : oHighYour.Root);
-	setInnerHTML(document.getElementById('currentRoot'), oHighCurrent.Root);
-	if (oLowVersion.Root)
-		document.getElementById('yourRoot').className = 'alert';
 
 	setInnerHTML(document.getElementById('yourSources'), oLowVersion.Sources ? oLowVersion.Sources : oHighYour.Sources);
 	setInnerHTML(document.getElementById('currentSources'), oHighCurrent.Sources);
@@ -507,7 +498,7 @@ function updatePreview(filename, filepath)
 		relative_url = "/" + filepath + "/" + filename;
 
 	// Make sure no sneaky people are trying to be sneaky
-	var regex = new RegExp("^/(" + smf_smiley_sets.split(",").join("|") + ")/[^.]+\.(gif|png|jpg|jpeg|tiff|svg|webp)$");
+	var regex = new RegExp("^/(" + smf_smiley_sets.split(",").join("|") + ")/[^.]+\.(gif|png|jpg|jpeg|tiff|svg)$");
 	var is_valid = relative_url.match(regex);
 
 	if (is_valid !== null)

@@ -11,10 +11,10 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2024 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 3.0 Alpha 2
+ * @version 2.1.0
  *
  */
 
@@ -70,7 +70,7 @@
 				h: $('#' + oSettings.tooltipID).height()
 			}
 
-			// Display limits and window scroll position
+			// Display limits and window scroll postion
 			var oLimits = {
 				x: $(window).scrollLeft(),
 				y: $(window).scrollTop(),
@@ -78,7 +78,7 @@
 				h: $(window).height() - 24
 			};
 
-			// don't go off screen with our tooltip
+			// don't go off screen with our tooltop
 			if ((oPosition.y + oPosition.h > oLimits.y + oLimits.h) && (oPosition.x + oPosition.w > oLimits.x + oLimits.w))
 			{
 				oPosition.x = (oPosition.x - oPosition.w) - 45;

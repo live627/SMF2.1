@@ -4,27 +4,25 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2024 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 3.0 Alpha 2
+ * @version 2.1.0
  */
-
-use SMF\Config;
-use SMF\Lang;
-use SMF\Utils;
 
 /**
  * Our main calendar template, which encapsulates weeks and months.
  */
 function template_main()
 {
+	global $context;
+
 	// The main calendar wrapper.
 	echo '
 		<div id="calendar">';
 
 	// Show the mini-blocks if they're enabled.
-	if (empty(Utils::$context['blocks_disabled']))
+	if (empty($context['blocks_disabled']))
 		echo '
 			<div id="month_grid">
 				', template_show_month_grid('prev', true), '
@@ -33,12 +31,12 @@ function template_main()
 			</div>';
 
 	// What view are we showing?
-	if (Utils::$context['calendar_view'] == 'viewlist')
+	if ($context['calendar_view'] == 'viewlist')
 		echo '
 			<div id="main_grid">
 				', template_show_upcoming_list('main'), '
 			</div>';
-	elseif (Utils::$context['calendar_view'] == 'viewweek')
+	elseif ($context['calendar_view'] == 'viewweek')
 		echo '
 			<div id="main_grid">
 				', template_show_week_grid('main'), '
@@ -62,19 +60,21 @@ function template_main()
  */
 function template_show_upcoming_list($grid_name)
 {
+	global $context, $scripturl, $txt;
+
 	// Bail out if we have nothing to work with
-	if (!isset(Utils::$context['calendar_grid_' . $grid_name]))
+	if (!isset($context['calendar_grid_' . $grid_name]))
 		return false;
 
 	// Protect programmer sanity
-	$calendar_data = &Utils::$context['calendar_grid_' . $grid_name];
+	$calendar_data = &$context['calendar_grid_' . $grid_name];
 
 	// Do we want a title?
 	if (empty($calendar_data['disable_title']))
 		echo '
 			<div class="cat_bar">
 				<h3 class="catbg centertext largetext">
-					<a href="', Config::$scripturl, '?action=calendar;viewlist;year=', $calendar_data['start_year'], ';month=', $calendar_data['start_month'], ';day=', $calendar_data['start_day'], '">', Lang::$txt['calendar_upcoming'], '</a>
+					<a href="', $scripturl, '?action=calendar;viewlist;year=', $calendar_data['start_year'], ';month=', $calendar_data['start_month'], ';day=', $calendar_data['start_day'], '">', $txt['calendar_upcoming'], '</a>
 				</h3>
 			</div>';
 
@@ -84,7 +84,7 @@ function template_show_upcoming_list($grid_name)
 	// Output something just so people know it's not broken
 	if (empty($calendar_data['events']) && empty($calendar_data['birthdays']) && empty($calendar_data['holidays']))
 		echo '
-			<div class="descbox">', Lang::$txt['calendar_empty'], '</div>';
+			<div class="descbox">', $txt['calendar_empty'], '</div>';
 
 	// First, list any events
 	if (!empty($calendar_data['events']))
@@ -92,11 +92,9 @@ function template_show_upcoming_list($grid_name)
 		echo '
 			<div>
 				<div class="title_bar">
-					<h3 class="titlebg">', str_replace(':', '', Lang::$txt['events']), '</h3>
+					<h3 class="titlebg">', str_replace(':', '', $txt['events']), '</h3>
 				</div>
 				<ul>';
-
-		$first_shown = [];
 
 		foreach ($calendar_data['events'] as $date => $date_events)
 		{
@@ -107,17 +105,17 @@ function template_show_upcoming_list($grid_name)
 						<strong class="event_title">', $event['link'], '</strong>';
 
 				if ($event['can_edit'])
-					echo ' <a href="' . $event['modify_href'] . '"><span class="main_icons calendar_modify" title="', Lang::$txt['calendar_edit'], '"></span></a>';
+					echo ' <a href="' . $event['modify_href'] . '"><span class="main_icons calendar_modify" title="', $txt['calendar_edit'], '"></span></a>';
 
 				if ($event['can_export'])
-					echo ' <a href="' . $event['export_href'] . '"><span class="main_icons calendar_export" title="', Lang::$txt['calendar_export'], '"></span></a>';
+					echo ' <a href="' . $event['export_href'] . '"><span class="main_icons calendar_export" title="', $txt['calendar_export'], '"></span></a>';
 
 				echo '
 						<br>';
 
 				if (!empty($event['allday']))
 				{
-					echo '<time datetime="' . $event['start_iso_gmdate'] . '">', trim($event['start_date_local']), '</time>', ($event['start_date_local'] < $event['last_date_local']) ? ' &ndash; <time datetime="' . $event['last_iso_gmdate'] . '">' . trim($event['last_date_local']) . '</time>' : '';
+					echo '<time datetime="' . $event['start_iso_gmdate'] . '">', trim($event['start_date_local']), '</time>', ($event['start_date'] != $event['end_date']) ? ' &ndash; <time datetime="' . $event['end_iso_gmdate'] . '">' . trim($event['end_date_local']) . '</time>' : '';
 				}
 				else
 				{
@@ -152,19 +150,6 @@ function template_show_upcoming_list($grid_name)
 				if (!empty($event['location']))
 					echo '<br>', $event['location'];
 
-				// If the first occurrence is not visible on the current page,
-				// we mention it in the RRULE description.
-				if ($event->is_first) {
-					$first_shown[] = $event->id_event;
-				}
-
-				$rrule_description = $event->getParentEvent()->recurrence_iterator->getRRule()->getDescription($event, !in_array($event->id_event, $first_shown));
-
-				if (!empty($rrule_description)) {
-					echo '
-						<br>', $rrule_description;
-				}
-
 				echo '
 					</li>';
 			}
@@ -181,7 +166,7 @@ function template_show_upcoming_list($grid_name)
 		echo '
 			<div>
 				<div class="title_bar">
-					<h3 class="titlebg">', str_replace(':', '', Lang::$txt['birthdays']), '</h3>
+					<h3 class="titlebg">', str_replace(':', '', $txt['birthdays']), '</h3>
 				</div>
 				<div class="windowbg">';
 
@@ -195,8 +180,8 @@ function template_show_upcoming_list($grid_name)
 
 			$birthdays = array();
 
-			foreach ($date as $bday)
-				$birthdays[] = '<a href="' . Config::$scripturl . '?action=profile;u=' . $bday->member . '">' . $bday->name . (isset($bday->age) ? ' (' . $bday->age . ')' : '') . '</a>';
+			foreach ($date as $member)
+				$birthdays[] = '<a href="' . $scripturl . '?action=profile;u=' . $member['id'] . '">' . $member['name'] . (isset($member['age']) ? ' (' . $member['age'] . ')' : '') . '</a>';
 
 			echo implode(', ', $birthdays);
 
@@ -215,29 +200,23 @@ function template_show_upcoming_list($grid_name)
 		echo '
 			<div>
 				<div class="title_bar">
-					<h3 class="titlebg">', str_replace(':', '', Lang::$txt['calendar_prompt']), '</h3>
+					<h3 class="titlebg">', str_replace(':', '', $txt['calendar_prompt']), '</h3>
 				</div>
 				<div class="windowbg">
 					<p class="inline holidays">';
 
-		foreach ($calendar_data['holidays'] as $date) {
-			echo '
-						<span>
-							<strong>', $date['date_local'], '</strong>: ';
+		$holidays = array();
 
+		foreach ($calendar_data['holidays'] as $date)
+		{
+			$date_local = $date['date_local'];
 			unset($date['date_local']);
 
-			$holidays = array();
-
-			foreach ($date as $holiday) {
-				$holidays[] = $holiday->title . (!empty($holiday->location) ? ' (' . $holiday->location . ')' : '');
-			}
-
-			echo implode(', ', $holidays);
-
-			echo '.
-						</span>';
+			foreach ($date as $holiday)
+				$holidays[] = $holiday . ' (' . $date_local . ')';
 		}
+
+		echo implode(', ', $holidays);
 
 		echo '
 					</p>
@@ -255,12 +234,14 @@ function template_show_upcoming_list($grid_name)
  */
 function template_show_month_grid($grid_name, $is_mini = false)
 {
+	global $context, $txt, $scripturl, $modSettings;
+
 	// If the grid doesn't exist, no point in proceeding.
-	if (!isset(Utils::$context['calendar_grid_' . $grid_name]))
+	if (!isset($context['calendar_grid_' . $grid_name]))
 		return false;
 
 	// A handy little pointer variable.
-	$calendar_data = &Utils::$context['calendar_grid_' . $grid_name];
+	$calendar_data = &$context['calendar_grid_' . $grid_name];
 
 	// Some conditions for whether or not we should show the week links *here*.
 	if (isset($calendar_data['show_week_links']) && ($calendar_data['show_week_links'] == 3 || (($calendar_data['show_week_links'] == 1 && $is_mini === true) || $calendar_data['show_week_links'] == 2 && $is_mini === false)))
@@ -291,7 +272,7 @@ function template_show_month_grid($grid_name, $is_mini = false)
 
 		// Arguably the most exciting part, the title!
 		echo '
-					<a href="', Config::$scripturl, '?action=calendar;', Utils::$context['calendar_view'], ';year=', $calendar_data['current_year'], ';month=', $calendar_data['current_month'], ';day=', $calendar_data['current_day'], '">', Lang::$txt['months_titles'][$calendar_data['current_month']], ' ', $calendar_data['current_year'], '</a>
+					<a href="', $scripturl, '?action=calendar;', $context['calendar_view'], ';year=', $calendar_data['current_year'], ';month=', $calendar_data['current_month'], ';day=', $calendar_data['current_day'], '">', $txt['months_titles'][$calendar_data['current_month']], ' ', $calendar_data['current_year'], '</a>
 				</h3>
 			</div><!-- .cat_bar -->';
 	}
@@ -318,7 +299,7 @@ function template_show_month_grid($grid_name, $is_mini = false)
 		// Now, loop through each actual day of the week.
 		foreach ($calendar_data['week_days'] as $day)
 			echo '
-					<th class="days" scope="col">', !empty($calendar_data['short_day_titles']) || $is_mini === true ? Lang::$txt['days_short'][$day] : Lang::$txt['days'][$day], '</th>';
+					<th class="days" scope="col">', !empty($calendar_data['short_day_titles']) || $is_mini === true ? $txt['days_short'][$day] : $txt['days'][$day], '</th>';
 
 		echo '
 				</tr>';
@@ -339,7 +320,7 @@ function template_show_month_grid($grid_name, $is_mini = false)
 		if ($show_week_links === true)
 			echo '
 					<td class="windowbg weeks">
-						<a href="', Config::$scripturl, '?action=calendar;viewweek;year=', $calendar_data['current_year'], ';month=', $calendar_data['current_month'], ';day=', $week['days'][0]['day'], '" title="', Lang::$txt['calendar_view_week'], '">&#187;</a>
+						<a href="', $scripturl, '?action=calendar;viewweek;year=', $calendar_data['current_year'], ';month=', $calendar_data['current_month'], ';day=', $week['days'][0]['day'], '" title="', $txt['calendar_view_week'], '">&#187;</a>
 					</td>';
 
 		// Now loop through each day in the week we're on.
@@ -369,15 +350,15 @@ function template_show_month_grid($grid_name, $is_mini = false)
 			if (!empty($day['day']))
 			{
 				// If it's the first day of this month and not a mini-calendar, we'll add the month title - whether short or full.
-				$title_prefix = !empty($day['is_first_of_month']) && Utils::$context['current_month'] == $calendar_data['current_month'] && $is_mini === false ? (!empty($calendar_data['short_month_titles']) ? Lang::$txt['months_short'][$calendar_data['current_month']] . ' ' : Lang::$txt['months_titles'][$calendar_data['current_month']] . ' ') : '';
+				$title_prefix = !empty($day['is_first_of_month']) && $context['current_month'] == $calendar_data['current_month'] && $is_mini === false ? (!empty($calendar_data['short_month_titles']) ? $txt['months_short'][$calendar_data['current_month']] . ' ' : $txt['months_titles'][$calendar_data['current_month']] . ' ') : '';
 
 				// The actual day number - be it a link, or just plain old text!
-				if (!empty(Config::$modSettings['cal_daysaslink']) && Utils::$context['can_post'])
+				if (!empty($modSettings['cal_daysaslink']) && $context['can_post'])
 					echo '
-						<a href="', Config::$scripturl, '?action=calendar;sa=post;year=', $calendar_data['current_year'], ';month=', $calendar_data['current_month'], ';day=', $day['day'], ';', Utils::$context['session_var'], '=', Utils::$context['session_id'], '"><span class="day_text">', $title_prefix, $day['day'], '</span></a>';
+						<a href="', $scripturl, '?action=calendar;sa=post;year=', $calendar_data['current_year'], ';month=', $calendar_data['current_month'], ';day=', $day['day'], ';', $context['session_var'], '=', $context['session_id'], '"><span class="day_text">', $title_prefix, $day['day'], '</span></a>';
 				elseif ($is_mini)
 					echo '
-						<a href="', Config::$scripturl, '?action=calendar;', Utils::$context['calendar_view'], ';year=', $calendar_data['current_year'], ';month=', $calendar_data['current_month'], ';day=', $day['day'], '"><span class="day_text">', $title_prefix, $day['day'], '</span></a>';
+						<a href="', $scripturl, '?action=calendar;', $context['calendar_view'], ';year=', $calendar_data['current_year'], ';month=', $calendar_data['current_month'], ';day=', $day['day'], '"><span class="day_text">', $title_prefix, $day['day'], '</span></a>';
 				else
 					echo '
 						<span class="day_text">', $title_prefix, $day['day'], '</span>';
@@ -389,29 +370,7 @@ function template_show_month_grid($grid_name, $is_mini = false)
 					if (!empty($day['holidays']))
 						echo '
 						<div class="smalltext holiday">
-							<span class="label">', Lang::$txt['calendar_prompt'], '</span> ';
-
-						$holidays = [];
-
-						foreach ($day['holidays'] as $holiday) {
-							echo '<span class="holiday_wrapper">';
-
-							$holiday_string = $holiday->title;
-
-							if (empty($holiday->allday) && !empty($holiday->start_time_local) && $holiday->start_date == $day['date']) {
-								$holiday_string .= ' <span class="event_time">' . trim(str_replace(':00 ', ' ', $holiday->start_time_local)) . '</span>';
-							}
-
-							if (!empty($holiday->location)) {
-								$holiday_string .= ' <span class="event_location">' . $holiday->location . '</span>';
-							}
-
-							$holidays[] = $holiday_string;
-						}
-
-						echo implode('<span>, <span class="holiday_wrapper">', $holidays);
-
-						echo '</span>
+							<span>', $txt['calendar_prompt'], '</span> ', implode(', ', $day['holidays']), '
 						</div>';
 
 					// Happy Birthday Dear Member!
@@ -419,20 +378,20 @@ function template_show_month_grid($grid_name, $is_mini = false)
 					{
 						echo '
 						<div class="smalltext">
-							<span class="birthday">', Lang::$txt['birthdays'], '</span> ';
+							<span class="birthday">', $txt['birthdays'], '</span> ';
 
 						/* Each of the birthdays has:
 							id, name (person), age (if they have one set?), and is_last. (last in list?) */
-						$use_js_hide = empty(Utils::$context['show_all_birthdays']) && count($day['birthdays']) > 15;
+						$use_js_hide = empty($context['show_all_birthdays']) && count($day['birthdays']) > 15;
 						$birthday_count = 0;
-						foreach ($day['birthdays'] as $bday)
+						foreach ($day['birthdays'] as $member)
 						{
-							echo '<a href="', Config::$scripturl, '?action=profile;u=', $bday['member'], '"><span class="fix_rtl_names">', $bday['name'], '</span>', isset($bday['age']) ? ' (' . $bday['age'] . ')' : '', '</a>', $bday['is_last'] || ($count == 10 && $use_js_hide) ? '' : ', ';
+							echo '<a href="', $scripturl, '?action=profile;u=', $member['id'], '"><span class="fix_rtl_names">', $member['name'], '</span>', isset($member['age']) ? ' (' . $member['age'] . ')' : '', '</a>', $member['is_last'] || ($count == 10 && $use_js_hide) ? '' : ', ';
 
 							// 9...10! Let's stop there.
 							if ($birthday_count == 10 && $use_js_hide)
 								// !!TODO - Inline CSS and JavaScript should be moved.
-								echo '<span class="hidelink" id="bdhidelink_', $day['day'], '">...<br><a href="', Config::$scripturl, '?action=calendar;month=', $calendar_data['current_month'], ';year=', $calendar_data['current_year'], ';showbd" onclick="document.getElementById(\'bdhide_', $day['day'], '\').classList.remove(\'hidden\'); document.getElementById(\'bdhidelink_', $day['day'], '\').classList.add(\'hidden\'); return false;">(', Lang::getTxt('calendar_click_all'), ')</a></span><span id="bdhide_', $day['day'], '" class="hidden">, ';
+								echo '<span class="hidelink" id="bdhidelink_', $day['day'], '">...<br><a href="', $scripturl, '?action=calendar;month=', $calendar_data['current_month'], ';year=', $calendar_data['current_year'], ';showbd" onclick="document.getElementById(\'bdhide_', $day['day'], '\').classList.remove(\'hidden\'); document.getElementById(\'bdhidelink_', $day['day'], '\').classList.add(\'hidden\'); return false;">(', sprintf($txt['calendar_click_all'], count($day['birthdays'])), ')</a></span><span id="bdhide_', $day['day'], '" class="hidden">, ';
 
 							++$birthday_count;
 						}
@@ -461,7 +420,7 @@ function template_show_month_grid($grid_name, $is_mini = false)
 
 						echo '
 						<div class="smalltext lefttext">
-							<span class="event">', Lang::$txt['events'], '</span><br>';
+							<span class="event">', $txt['events'], '</span><br>';
 
 						/* The events are made up of:
 							title, href, is_last, can_edit (are they allowed to?), and modify_href. */
@@ -470,17 +429,16 @@ function template_show_month_grid($grid_name, $is_mini = false)
 							$event_icons_needed = ($event['can_edit'] || $event['can_export']) ? true : false;
 
 							echo '
-							<div class="event_wrapper', $event['start_date'] == $day['date'] ? ' event_starts_today' : '', $event['end_date'] == $day['date'] ? ' event_ends_today' : '', $event['allday'] == true ? ' allday' : '', $event['is_selected'] ? ' sel_event' : '', '">
+							<div class="event_wrapper', $event['starts_today'] == true ? ' event_starts_today' : '', $event['ends_today'] == true ? ' event_ends_today' : '', $event['allday'] == true ? ' allday' : '', $event['is_selected'] ? ' sel_event' : '', '">
 								', $event['link'], '<br>
 								<span class="event_time', empty($event_icons_needed) ? ' floatright' : '', '">';
 
-							if (!empty($event['allday'])) {
-								echo Lang::$txt['calendar_allday'];
-							} elseif (!empty($event['start_time_local']) && $event['start_date'] == $day['date']) {
+							if (!empty($event['start_time_local']) && $event['starts_today'] == true)
 								echo trim(str_replace(':00 ', ' ', $event['start_time_local']));
-							} elseif (!empty($event['end_time_local']) && $event['end_date'] == $day['date']) {
-								echo strtolower(Lang::$txt['ends']), ' ', trim(str_replace(':00 ', ' ', $event['end_time_local']));
-							}
+							elseif (!empty($event['end_time_local']) && $event['ends_today'] == true)
+								echo strtolower($txt['ends']), ' ', trim(str_replace(':00 ', ' ', $event['end_time_local']));
+							elseif (!empty($event['allday']))
+								echo $txt['calendar_allday'];
 
 							echo '
 								</span>';
@@ -499,14 +457,14 @@ function template_show_month_grid($grid_name, $is_mini = false)
 								if ($event['can_edit'])
 									echo '
 									<a class="modify_event" href="', $event['modify_href'], '">
-										<span class="main_icons calendar_modify" title="', Lang::$txt['calendar_edit'], '"></span>
+										<span class="main_icons calendar_modify" title="', $txt['calendar_edit'], '"></span>
 									</a>';
 
 								// Exporting!
 								if ($event['can_export'])
 									echo '
 									<a class="modify_event" href="', $event['export_href'], '">
-										<span class="main_icons calendar_export" title="', Lang::$txt['calendar_export'], '"></span>
+										<span class="main_icons calendar_export" title="', $txt['calendar_export'], '"></span>
 									</a>';
 
 								echo '
@@ -526,10 +484,10 @@ function template_show_month_grid($grid_name, $is_mini = false)
 			// Otherwise, assuming it's not a mini-calendar, we can show previous / next month days!
 			elseif ($is_mini === false)
 			{
-				if (empty($current_month_started) && !empty(Utils::$context['calendar_grid_prev']))
-					echo '<a href="', Config::$scripturl, '?action=calendar;viewmonth;year=', Utils::$context['calendar_grid_prev']['current_year'], ';month=', Utils::$context['calendar_grid_prev']['current_month'], '">', Utils::$context['calendar_grid_prev']['last_of_month'] - $calendar_data['shift']-- +1, '</a>';
-				elseif (!empty($current_month_started) && !empty(Utils::$context['calendar_grid_next']))
-					echo '<a href="', Config::$scripturl, '?action=calendar;viewmonth;year=', Utils::$context['calendar_grid_next']['current_year'], ';month=', Utils::$context['calendar_grid_next']['current_month'], '">', $current_month_started + 1 == $count ? (!empty($calendar_data['short_month_titles']) ? Lang::$txt['months_short'][Utils::$context['calendar_grid_next']['current_month']] . ' ' : Lang::$txt['months_titles'][Utils::$context['calendar_grid_next']['current_month']] . ' ') : '', $final_count++, '</a>';
+				if (empty($current_month_started) && !empty($context['calendar_grid_prev']))
+					echo '<a href="', $scripturl, '?action=calendar;year=', $context['calendar_grid_prev']['current_year'], ';month=', $context['calendar_grid_prev']['current_month'], '">', $context['calendar_grid_prev']['last_of_month'] - $calendar_data['shift']-- +1, '</a>';
+				elseif (!empty($current_month_started) && !empty($context['calendar_grid_next']))
+					echo '<a href="', $scripturl, '?action=calendar;year=', $context['calendar_grid_next']['current_year'], ';month=', $context['calendar_grid_next']['current_month'], '">', $current_month_started + 1 == $count ? (!empty($calendar_data['short_month_titles']) ? $txt['months_short'][$context['calendar_grid_next']['current_month']] . ' ' : $txt['months_titles'][$context['calendar_grid_next']['current_month']] . ' ') : '', $final_count++, '</a>';
 			}
 
 			// Close this day and increase var count.
@@ -556,12 +514,14 @@ function template_show_month_grid($grid_name, $is_mini = false)
  */
 function template_show_week_grid($grid_name)
 {
+	global $context, $txt, $scripturl, $modSettings;
+
 	// We might have no reason to proceed, if the variable isn't there.
-	if (!isset(Utils::$context['calendar_grid_' . $grid_name]))
+	if (!isset($context['calendar_grid_' . $grid_name]))
 		return false;
 
 	// Handy pointer.
-	$calendar_data = &Utils::$context['calendar_grid_' . $grid_name];
+	$calendar_data = &$context['calendar_grid_' . $grid_name];
 
 	// At the very least, we have one month. Possibly two, though.
 	$iteration = 1;
@@ -603,8 +563,8 @@ function template_show_week_grid($grid_name)
 		// Our actual month...
 		echo '
 				<div class="week_month_title">
-					<a href="', Config::$scripturl, '?action=calendar;viewmonth;month=', $month_data['current_month'], '">
-						', Lang::$txt['months_titles'][$month_data['current_month']], '
+					<a href="', $scripturl, '?action=calendar;month=', $month_data['current_month'], '">
+						', $txt['months_titles'][$month_data['current_month']], '
 					</a>
 				</div>';
 
@@ -612,17 +572,17 @@ function template_show_week_grid($grid_name)
 		echo '
 				<table class="table_grid calendar_week">
 					<tr>
-						<th class="days" scope="col">', Lang::$txt['calendar_day'], '</th>';
+						<th class="days" scope="col">', $txt['calendar_day'], '</th>';
 		if (!empty($calendar_data['show_events']))
 			echo '
-						<th class="days" scope="col">', Lang::$txt['events'], '</th>';
+						<th class="days" scope="col">', $txt['events'], '</th>';
 
 		if (!empty($calendar_data['show_holidays']))
 			echo '
-						<th class="days" scope="col">', Lang::$txt['calendar_prompt'], '</th>';
+						<th class="days" scope="col">', $txt['calendar_prompt'], '</th>';
 		if (!empty($calendar_data['show_birthdays']))
 			echo '
-						<th class="days" scope="col">', Lang::$txt['birthdays'], '</th>';
+						<th class="days" scope="col">', $txt['birthdays'], '</th>';
 		echo '
 					</tr>';
 
@@ -638,11 +598,11 @@ function template_show_week_grid($grid_name)
 						<td class="', implode(' ', $classes), ' act_day">';
 
 			// Should the day number be a link?
-			if (!empty(Config::$modSettings['cal_daysaslink']) && Utils::$context['can_post'])
+			if (!empty($modSettings['cal_daysaslink']) && $context['can_post'])
 				echo '
-							<a href="', Config::$scripturl, '?action=calendar;sa=post;month=', $month_data['current_month'], ';year=', $month_data['current_year'], ';day=', $day['day'], ';', Utils::$context['session_var'], '=', Utils::$context['session_id'], '">', Lang::$txt['days'][$day['day_of_week']], ' - ', $day['day'], '</a>';
+							<a href="', $scripturl, '?action=calendar;sa=post;month=', $month_data['current_month'], ';year=', $month_data['current_year'], ';day=', $day['day'], ';', $context['session_var'], '=', $context['session_id'], '">', $txt['days'][$day['day_of_week']], ' - ', $day['day'], '</a>';
 			else
-				echo Lang::$txt['days'][$day['day_of_week']], ' - ', $day['day'];
+				echo $txt['days'][$day['day_of_week']], ' - ', $day['day'];
 
 			echo '
 						</td>';
@@ -650,7 +610,7 @@ function template_show_week_grid($grid_name)
 			if (!empty($calendar_data['show_events']))
 			{
 				echo '
-						<td class="', implode(' ', $classes), '', empty($day['events']) ? (' disabled' . (Utils::$context['can_post'] ? ' week_post' : '')) : ' events', ' event_col" data-css-prefix="' . Lang::$txt['events'] . ' ', (empty($day['events']) && empty(Utils::$context['can_post'])) ? Lang::$txt['none'] : '', '">';
+						<td class="', implode(' ', $classes), '', empty($day['events']) ? (' disabled' . ($context['can_post'] ? ' week_post' : '')) : ' events', ' event_col" data-css-prefix="' . $txt['events'] . ' ', (empty($day['events']) && empty($context['can_post'])) ? $txt['none'] : '', '">';
 
 				// Show any events...
 				if (!empty($day['events']))
@@ -680,7 +640,7 @@ function template_show_week_grid($grid_name)
 						if (!empty($event['start_time_local']))
 							echo trim($event['start_time_local']), !empty($event['end_time_local']) ? ' &ndash; ' . trim($event['end_time_local']) : '';
 						else
-							echo Lang::$txt['calendar_allday'];
+							echo $txt['calendar_allday'];
 
 						echo '
 									</span>';
@@ -697,14 +657,14 @@ function template_show_week_grid($grid_name)
 							if (!empty($event['can_edit']))
 								echo '
 										<a class="modify_event" href="', $event['modify_href'], '">
-											<span class="main_icons calendar_modify" title="', Lang::$txt['calendar_edit'], '"></span>
+											<span class="main_icons calendar_modify" title="', $txt['calendar_edit'], '"></span>
 										</a>';
 
 							// Can we export? Sweet.
 							if (!empty($event['can_export']))
 								echo '
 										<a class="modify_event" href="', $event['export_href'], '">
-											<span class="main_icons calendar_export" title="', Lang::$txt['calendar_export'], '"></span>
+											<span class="main_icons calendar_export" title="', $txt['calendar_export'], '"></span>
 										</a>';
 
 							echo '
@@ -715,21 +675,21 @@ function template_show_week_grid($grid_name)
 								</div><!-- .event_wrapper -->';
 					}
 
-					if (!empty(Utils::$context['can_post']))
+					if (!empty($context['can_post']))
 					{
 						echo '
 								<div class="week_add_event">
-									<a href="', Config::$scripturl, '?action=calendar;sa=post;month=', $month_data['current_month'], ';year=', $month_data['current_year'], ';day=', $day['day'], ';', Utils::$context['session_var'], '=', Utils::$context['session_id'], '">', Lang::$txt['calendar_post_event'], '</a>
+									<a href="', $scripturl, '?action=calendar;sa=post;month=', $month_data['current_month'], ';year=', $month_data['current_year'], ';day=', $day['day'], ';', $context['session_var'], '=', $context['session_id'], '">', $txt['calendar_post_event'], '</a>
 								</div>
 								<br class="clear">';
 					}
 				}
 				else
 				{
-					if (!empty(Utils::$context['can_post']))
+					if (!empty($context['can_post']))
 						echo '
 								<div class="week_add_event">
-									<a href="', Config::$scripturl, '?action=calendar;sa=post;month=', $month_data['current_month'], ';year=', $month_data['current_year'], ';day=', $day['day'], ';', Utils::$context['session_var'], '=', Utils::$context['session_id'], '">', Lang::$txt['calendar_post_event'], '</a>
+									<a href="', $scripturl, '?action=calendar;sa=post;month=', $month_data['current_month'], ';year=', $month_data['current_year'], ';day=', $day['day'], ';', $context['session_var'], '=', $context['session_id'], '">', $txt['calendar_post_event'], '</a>
 								</div>';
 				}
 				echo '
@@ -739,52 +699,27 @@ function template_show_week_grid($grid_name)
 			if (!empty($calendar_data['show_holidays']))
 			{
 				echo '
-						<td class="', implode(' ', $classes), !empty($day['holidays']) ? ' holidays' : ' disabled', ' holiday_col" data-css-prefix="' . Lang::$txt['calendar_prompt'] . ' ">';
+						<td class="', implode(' ', $classes), !empty($day['holidays']) ? ' holidays' : ' disabled', ' holiday_col" data-css-prefix="' . $txt['calendar_prompt'] . ' ">';
 
 				// Show any holidays!
-				if (!empty($day['holidays'])) {
-					echo '
-							<div class="holiday_wrapper">';
-
-					$holidays = [];
-
-					foreach ($day['holidays'] as $holiday) {
-						$holiday_string = $holiday->title;
-
-						if (empty($holiday->allday) && !empty($holiday->start_time_local) && $holiday->start_date == $day['date']) {
-							$holiday_string .= ' <span class="event_time">' . trim(str_replace(':00 ', ' ', $holiday->start_time_local)) . '</span>';
-						}
-
-						if (!empty($holiday->location)) {
-							$holiday_string .= ' <span class="event_location">' . $holiday->location . '</span>';
-						}
-
-						$holidays[] = $holiday_string;
-					}
-
-					echo implode('
-							</div>
-							<div class="holiday_wrapper">', $holidays);
-
-					echo '
-							</div>';
-				}
+				if (!empty($day['holidays']))
+					echo implode('<br>', $day['holidays']);
 
 				echo '
-						</td>';
+							</td>';
 			}
 
 			if (!empty($calendar_data['show_birthdays']))
 			{
 				echo '
-						<td class="', implode(' ', $classes), '', !empty($day['birthdays']) ? ' birthdays' : ' disabled', ' birthday_col" data-css-prefix="' . Lang::$txt['birthdays'] . ' ">';
+						<td class="', implode(' ', $classes), '', !empty($day['birthdays']) ? ' birthdays' : ' disabled', ' birthday_col" data-css-prefix="' . $txt['birthdays'] . ' ">';
 
 				// Show any birthdays...
 				if (!empty($day['birthdays']))
 				{
 					foreach ($day['birthdays'] as $member)
 						echo '
-								<a href="', Config::$scripturl, '?action=profile;u=', $member['id'], '">', $member['name'], '</a>
+								<a href="', $scripturl, '?action=profile;u=', $member['id'], '">', $member['name'], '</a>
 								', isset($member['age']) ? ' (' . $member['age'] . ')' : '', '
 								', $member['is_last'] ? '' : '<br>';
 				}
@@ -814,26 +749,28 @@ function template_show_week_grid($grid_name)
  */
 function template_calendar_top($calendar_data)
 {
+	global $context, $scripturl, $txt;
+
 	echo '
 		<div class="calendar_top roundframe', empty($calendar_data['disable_title']) ? ' noup' : '', '">
 			<div id="calendar_viewselector" class="buttonrow floatleft">
-				<a href="', Config::$scripturl, '?action=calendar;viewlist;year=', Utils::$context['current_year'], ';month=', Utils::$context['current_month'], ';day=', Utils::$context['current_day'], '" class="button', Utils::$context['calendar_view'] == 'viewlist' ? ' active' : '', '">', Lang::$txt['calendar_list'], '</a>
-				<a href="', Config::$scripturl, '?action=calendar;viewmonth;year=', Utils::$context['current_year'], ';month=', Utils::$context['current_month'], ';day=', Utils::$context['current_day'], '" class="button', Utils::$context['calendar_view'] == 'viewmonth' ? ' active' : '', '">', Lang::$txt['calendar_month'], '</a>
-				<a href="', Config::$scripturl, '?action=calendar;viewweek;year=', Utils::$context['current_year'], ';month=', Utils::$context['current_month'], ';day=', Utils::$context['current_day'], '" class="button', Utils::$context['calendar_view'] == 'viewweek' ? ' active' : '', '">', Lang::$txt['calendar_week'], '</a>
+				<a href="', $scripturl, '?action=calendar;viewlist;year=', $context['current_year'], ';month=', $context['current_month'], ';day=', $context['current_day'], '" class="button', $context['calendar_view'] == 'viewlist' ? ' active' : '', '">', $txt['calendar_list'], '</a>
+				<a href="', $scripturl, '?action=calendar;viewmonth;year=', $context['current_year'], ';month=', $context['current_month'], ';day=', $context['current_day'], '" class="button', $context['calendar_view'] == 'viewmonth' ? ' active' : '', '">', $txt['calendar_month'], '</a>
+				<a href="', $scripturl, '?action=calendar;viewweek;year=', $context['current_year'], ';month=', $context['current_month'], ';day=', $context['current_day'], '" class="button', $context['calendar_view'] == 'viewweek' ? ' active' : '', '">', $txt['calendar_week'], '</a>
 			</div>
-			', template_button_strip(Utils::$context['calendar_buttons'], 'right');
+			', template_button_strip($context['calendar_buttons'], 'right');
 
 	echo '
-			<form action="', Config::$scripturl, '?action=calendar;', Utils::$context['calendar_view'], '" id="', !empty($calendar_data['end_date']) ? 'calendar_range' : 'calendar_navigation', '" method="post" accept-charset="', Utils::$context['character_set'], '">
-				<input type="date" name="start_date" id="start_date" value="', $calendar_data['iso_start_date'], '" tabindex="', Utils::$context['tabindex']++, '" class="date_input start" data-type="date">';
+			<form action="', $scripturl, '?action=calendar;', $context['calendar_view'], '" id="', !empty($calendar_data['end_date']) ? 'calendar_range' : 'calendar_navigation', '" method="post" accept-charset="', $context['character_set'], '">
+				<input type="text" name="start_date" id="start_date" value="', trim($calendar_data['start_date']), '" tabindex="', $context['tabindex']++, '" class="date_input start" data-type="date">';
 
 	if (!empty($calendar_data['end_date']))
 		echo '
-				<span>', Utils::strtolower(Lang::$txt['to']), '</span>
-				<input type="date" name="end_date" id="end_date" value="', $calendar_data['iso_end_date'], '" tabindex="', Utils::$context['tabindex']++, '" class="date_input end" data-type="date">';
+				<span>', strtolower($txt['to']), '</span>
+				<input type="text" name="end_date" id="end_date" value="', trim($calendar_data['end_date']), '" tabindex="', $context['tabindex']++, '" class="date_input end" data-type="date">';
 
 	echo '
-				<input type="submit" class="button" style="float:none" id="view_button" value="', Lang::$txt['view'], '">
+				<input type="submit" class="button" style="float:none" id="view_button" value="', $txt['view'], '">
 			</form>
 		</div><!-- .calendar_top -->';
 }
@@ -843,58 +780,127 @@ function template_calendar_top($calendar_data)
  */
 function template_event_post()
 {
-	echo '
-		<form action="', Config::$scripturl, '?action=calendar;sa=post" method="post" name="postevent" accept-charset="', Utils::$context['character_set'], '" onsubmit="submitonce(this);">';
+	global $context, $txt, $scripturl, $modSettings;
 
-	if (!empty(Utils::$context['event']->new))
+	echo '
+		<form action="', $scripturl, '?action=calendar;sa=post" method="post" name="postevent" accept-charset="', $context['character_set'], '" onsubmit="submitonce(this);">';
+
+	if (!empty($context['event']['new']))
 		echo '
-			<input type="hidden" name="eventid" value="', Utils::$context['event']->id, '">
-			<input type="hidden" name="recurrenceid" value="', Utils::$context['event']->selected_occurrence->id, '">';
+			<input type="hidden" name="eventid" value="', $context['event']['eventid'], '">';
 
 	// Start the main table.
 	echo '
 			<div id="post_event">
 				<div class="cat_bar">
 					<h3 class="catbg">
-						', Utils::$context['page_title'], '
+						', $context['page_title'], '
 					</h3>
 				</div>';
 
-	if (!empty(Utils::$context['post_error']['messages']))
+	if (!empty($context['post_error']['messages']))
 		echo '
 				<div class="errorbox">
 					<dl class="event_error">
 						<dt>
-							', Utils::$context['error_type'] == 'serious' ? '<strong>' . Lang::$txt['error_while_submitting'] . '</strong>' : '', '
+							', $context['error_type'] == 'serious' ? '<strong>' . $txt['error_while_submitting'] . '</strong>' : '', '
 						</dt>
 						<dt class="error">
-							', implode('<br>', Utils::$context['post_error']['messages']), '
+							', implode('<br>', $context['post_error']['messages']), '
 						</dt>
 					</dl>
 				</div>';
 
 	echo '
-				<div class="roundframe noup">';
+				<div class="roundframe noup">
+					<fieldset id="event_main">
+						<legend><span', isset($context['post_error']['no_event']) ? ' class="error"' : '', '>', $txt['calendar_event_title'], '</span></legend>
+						<input type="hidden" name="calendar" value="1">
+						<div class="event_options_left" id="event_title">
+							<div>
+								<input type="text" id="evtitle" name="evtitle" maxlength="255" size="55" value="', $context['event']['title'], '" tabindex="', $context['tabindex']++, '">
+							</div>
+						</div>';
 
-	template_event_options();
-
-	echo '
-					<div class="buttonlist">
-						<input type="submit" value="', empty(Utils::$context['event']->new) ? Lang::$txt['save'] : Lang::$txt['post'], '" class="button floatright">';
-
-	if (!Utils::$context['event']->new) {
+	// If this is a new event let the user specify which board they want the linked post to be put into.
+	if ($context['event']['new'] && !empty($context['event']['categories']))
+	{
 		echo '
-						<input type="submit" name="deleteevent" value="', Lang::$txt['calendar_repeat_delete_label'], '" class="button floatright you_sure" data-confirm="', Utils::$context['event']->selected_occurrence->is_first ? Lang::$txt['calendar_confirm_delete'] : Lang::$txt['calendar_confirm_occurrence_delete'], '">';
+						<div class="event_options_right" id="event_board">
+							<div>
+								<span class="label">', $txt['calendar_post_in'], '</span>
+								<input type="checkbox" name="link_to_board"', (!empty($context['event']['board']) ? ' checked' : ''), ' onclick="toggleLinked(this.form);">
+								<select name="board"', empty($context['event']['board']) ? ' disabled' : '', '>';
 
-		if (!Utils::$context['event']->selected_occurrence->is_first) {
+		foreach ($context['event']['categories'] as $category)
+		{
 			echo '
-						<a href="', Utils::$context['event']->modify_href, '" class="button floatright">', Lang::$txt['calendar_repeat_adjustment_edit_first'], '</a>';
+									<optgroup label="', $category['name'], '">';
+
+			foreach ($category['boards'] as $board)
+				echo '
+										<option value="', $board['id'], '"', $board['selected'] ? ' selected' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
+			echo '
+									</optgroup>';
 		}
+		echo '
+								</select>
+							</div>
+						</div><!-- #event_board -->';
 	}
 
+	// Note to theme writers: The JavaScript expects the input fields for the start and end dates & times to be contained in a wrapper element with the id "event_time_input"
 	echo '
-					</div>
-					<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
+					</fieldset>
+					<fieldset id="event_options">
+						<legend>', $txt['calendar_event_options'], '</legend>
+						<div class="event_options_left" id="event_time_input">
+							<div>
+								<span class="label">', $txt['start'], '</span>
+								<input type="text" name="start_date" id="start_date" value="', trim($context['event']['start_date_orig']), '" tabindex="', $context['tabindex']++, '" class="date_input start" data-type="date">
+								<input type="text" name="start_time" id="start_time" maxlength="11" value="', $context['event']['start_time_orig'], '" tabindex="', $context['tabindex']++, '" class="time_input start" data-type="time"', !empty($context['event']['allday']) ? ' disabled' : '', '>
+							</div>
+							<div>
+								<span class="label">', $txt['end'], '</span>
+								<input type="text" name="end_date" id="end_date" value="', trim($context['event']['end_date_orig']), '" tabindex="', $context['tabindex']++, '" class="date_input end" data-type="date"', $modSettings['cal_maxspan'] == 1 ? ' disabled' : '', '>
+								<input type="text" name="end_time" id="end_time" maxlength="11" value="', $context['event']['end_time_orig'], '" tabindex="', $context['tabindex']++, '" class="time_input end" data-type="time"', !empty($context['event']['allday']) ? ' disabled' : '', '>
+							</div>
+						</div><!-- #event_time_input -->
+						<div class="event_options_right" id="event_time_options">
+							<div id="event_allday">
+								<label for="allday"><span class="label">', $txt['calendar_allday'], '</span></label>
+								<input type="checkbox" name="allday" id="allday"', !empty($context['event']['allday']) ? ' checked' : '', ' tabindex="', $context['tabindex']++, '">
+							</div>
+							<div id="event_timezone">
+								<span class="label">', $txt['calendar_timezone'], '</span>
+								<select name="tz" id="tz"', !empty($context['event']['allday']) ? ' disabled' : '', '>';
+
+	foreach ($context['all_timezones'] as $tz => $tzname)
+		echo '
+									<option', is_numeric($tz) ? ' value="" disabled' : ' value="' . $tz . '"', $tz === $context['event']['tz'] ? ' selected' : '', '>', $tzname, '</option>';
+
+	echo '
+								</select>
+							</div>
+						</div><!-- #event_time_options -->
+						<div>
+							<span class="label">', $txt['location'], '</span>
+							<input type="text" name="event_location" id="event_location" maxlength="255" value="', !empty($context['event']['location']) ? $context['event']['location'] : '', '" tabindex="', $context['tabindex']++, '">
+						</div>
+					</fieldset>';
+
+	echo '
+					<input type="submit" value="', empty($context['event']['new']) ? $txt['save'] : $txt['post'], '" class="button">';
+
+	// Delete button?
+	if (empty($context['event']['new']))
+		echo '
+					<input type="submit" name="deleteevent" value="', $txt['event_delete'], '" data-confirm="', $txt['calendar_confirm_delete'], '" class="button you_sure">';
+
+	echo '
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+					<input type="hidden" name="eventid" value="', $context['event']['eventid'], '">
+
 				</div><!-- .roundframe -->
 			</div><!-- #post_event -->
 		</form>';
@@ -905,6 +911,7 @@ function template_event_post()
  */
 function template_bcd()
 {
+	global $context, $scripturl;
 	$alt = false;
 
 	echo '
@@ -914,14 +921,14 @@ function template_bcd()
 			</tr>
 			<tr class="windowbg">';
 
-	foreach (Utils::$context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		echo '
 				<td style="padding-', $alt ? 'right' : 'left', ': 1.5em;">';
 
 		foreach ($v as $i)
 			echo '
-					<img src="', Utils::$context['offimg'], '" alt="" id="', $t, '_', $i, '"><br>';
+					<img src="', $context['offimg'], '" alt="" id="', $t, '_', $i, '"><br>';
 
 		echo '
 				</td>';
@@ -932,7 +939,7 @@ function template_bcd()
 			</tr>
 			<tr class="windowbg" style="border-top: 1px solid #ccc; text-align: center;">
 				<td colspan="6">
-					<a href="', Config::$scripturl, '?action=clock;rb">Are you hardcore?</a>
+					<a href="', $scripturl, '?action=clock;rb">Are you hardcore?</a>
 				</td>
 			</tr>
 		</table>
@@ -940,7 +947,7 @@ function template_bcd()
 		<script>
 			var icons = new Object();';
 
-	foreach (Utils::$context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		foreach ($v as $i)
 			echo '
@@ -967,7 +974,7 @@ function template_bcd()
 				// For each digit figure out which ones to turn off and which ones to turn on
 				var turnon = new Array();';
 
-	foreach (Utils::$context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		foreach ($v as $i)
 			echo '
@@ -981,9 +988,9 @@ function template_bcd()
 	echo '
 				for (var i in icons)
 					if (!in_array(i, turnon))
-						icons[i].src = "', Utils::$context['offimg'], '";
+						icons[i].src = "', $context['offimg'], '";
 					else
-						icons[i].src = "', Utils::$context['onimg'], '";
+						icons[i].src = "', $context['onimg'], '";
 
 				window.setTimeout("update();", 500);
 			}
@@ -1007,6 +1014,7 @@ function template_bcd()
  */
 function template_hms()
 {
+	global $context, $scripturl;
 	$alt = false;
 
 	echo '
@@ -1015,7 +1023,7 @@ function template_hms()
 				<th class="windowbg" style="font-weight: bold; text-align: center; border-bottom: 1px solid #ccc;">Binary Clock</th>
 			</tr>';
 
-	foreach (Utils::$context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		echo '
 			<tr class="windowbg">
@@ -1023,7 +1031,7 @@ function template_hms()
 
 		foreach ($v as $i)
 			echo '
-					<img src="', Utils::$context['offimg'], '" alt="" id="', $t, '_', $i, '" style="padding: 2px;">';
+					<img src="', $context['offimg'], '" alt="" id="', $t, '_', $i, '" style="padding: 2px;">';
 
 		echo '
 				</td>
@@ -1034,7 +1042,7 @@ function template_hms()
 	echo '
 			<tr class="windowbg" style="border-top: 1px solid #ccc; text-align: center;">
 				<td>
-					<a href="', Config::$scripturl, '?action=clock">Too tough for you?</a>
+					<a href="', $scripturl, '?action=clock">Too tough for you?</a>
 				</td>
 			</tr>
 		</table>';
@@ -1043,7 +1051,7 @@ function template_hms()
 		<script>
 			var icons = new Object();';
 
-	foreach (Utils::$context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		foreach ($v as $i)
 			echo '
@@ -1062,7 +1070,7 @@ function template_hms()
 				// For each digit figure out which ones to turn off and which ones to turn on
 				var turnon = new Array();';
 
-	foreach (Utils::$context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		foreach ($v as $i)
 			echo '
@@ -1076,9 +1084,9 @@ function template_hms()
 	echo '
 				for (var i in icons)
 					if (!in_array(i, turnon))
-						icons[i].src = "', Utils::$context['offimg'], '";
+						icons[i].src = "', $context['offimg'], '";
 					else
-						icons[i].src = "', Utils::$context['onimg'], '";
+						icons[i].src = "', $context['onimg'], '";
 
 				window.setTimeout("update();", 500);
 			}
@@ -1102,6 +1110,7 @@ function template_hms()
  */
 function template_omfg()
 {
+	global $context;
 	$alt = false;
 
 	echo '
@@ -1110,7 +1119,7 @@ function template_omfg()
 				<th class="windowbg" style="font-weight: bold; text-align: center; border-bottom: 1px solid #ccc;">OMFG Binary Clock</th>
 			</tr>';
 
-	foreach (Utils::$context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		echo '
 			<tr class="windowbg">
@@ -1118,7 +1127,7 @@ function template_omfg()
 
 		foreach ($v as $i)
 			echo '
-					<img src="', Utils::$context['offimg'], '" alt="" id="', $t, '_', $i, '" style="padding: 2px;">';
+					<img src="', $context['offimg'], '" alt="" id="', $t, '_', $i, '" style="padding: 2px;">';
 
 		echo '
 				</td>
@@ -1132,7 +1141,7 @@ function template_omfg()
 		<script>
 			var icons = new Object();';
 
-	foreach (Utils::$context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		foreach ($v as $i)
 			echo '
@@ -1155,7 +1164,7 @@ function template_omfg()
 				// For each digit figure out which ones to turn off and which ones to turn on
 				var turnon = new Array();';
 
-	foreach (Utils::$context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		foreach ($v as $i)
 			echo '
@@ -1169,9 +1178,9 @@ function template_omfg()
 	echo '
 				for (var i in icons)
 					if (!in_array(i, turnon))
-						icons[i].src = "', Utils::$context['offimg'], '";
+						icons[i].src = "', $context['offimg'], '";
 					else
-						icons[i].src = "', Utils::$context['onimg'], '";
+						icons[i].src = "', $context['onimg'], '";
 
 				window.setTimeout("update();", 500);
 			}
@@ -1195,6 +1204,7 @@ function template_omfg()
  */
 function template_thetime()
 {
+	global $context;
 	$alt = false;
 
 	echo '
@@ -1203,7 +1213,7 @@ function template_thetime()
 				<th class="windowbg" style="font-weight: bold; text-align: center; border-bottom: 1px solid #ccc;">The time you requested</th>
 			</tr>';
 
-	foreach (Utils::$context['clockicons'] as $v)
+	foreach ($context['clockicons'] as $v)
 	{
 		echo '
 			<tr class="windowbg">
@@ -1211,7 +1221,7 @@ function template_thetime()
 
 		foreach ($v as $i)
 			echo '
-					<img src="', $i ? Utils::$context['onimg'] : Utils::$context['offimg'], '" alt="" style="padding: 2px;">';
+					<img src="', $i ? $context['onimg'] : $context['offimg'], '" alt="" style="padding: 2px;">';
 
 		echo '
 				</td>

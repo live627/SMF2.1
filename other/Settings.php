@@ -7,240 +7,252 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2024 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 3.0 Alpha 2
+ * @version 2.1.3
  */
 
 ########## Maintenance ##########
 /**
- * @var int 0, 1, 2
+ * The maintenance "mode"
+ * Set to 1 to enable Maintenance Mode, 2 to make the forum untouchable. (you'll have to make it 0 again manually!)
+ * 0 is default and disables maintenance mode.
  *
- * The maintenance "mode":
- * 0: Disable maintenance mode. This is the default.
- * 1: Enable maintenance mode but allow admins to login normally.
- * 2: Make the forum untouchable. You'll need to make it 0 again manually!
+ * @var int 0, 1, 2
+ * @global int $maintenance
  */
 $maintenance = 0;
 /**
- * @var string
- *
  * Title for the Maintenance Mode message.
+ *
+ * @var string
+ * @global int $mtitle
  */
 $mtitle = 'Maintenance Mode';
 /**
- * @var string
- *
  * Description of why the forum is in maintenance mode.
+ *
+ * @var string
+ * @global string $mmessage
  */
 $mmessage = 'Okay faithful users...we\'re attempting to restore an older backup of the database...news will be posted once we\'re back!';
 
 ########## Forum Info ##########
 /**
- * @var string
- *
  * The name of your forum.
+ *
+ * @var string
  */
 $mbname = 'My Community';
 /**
- * @var string
- *
  * The default language file set for the forum.
- */
-$language = 'en_US';
-/**
- * @var string
  *
+ * @var string
+ */
+$language = 'english';
+/**
  * URL to your forum's folder. (without the trailing /!)
+ *
+ * @var string
  */
 $boardurl = 'http://127.0.0.1/smf';
 /**
- * @var string
- *
  * Email address to send emails from. (like noreply@yourdomain.com.)
+ *
+ * @var string
  */
 $webmaster_email = 'noreply@myserver.com';
 /**
- * @var string
- *
  * Name of the cookie to set for authentication.
+ *
+ * @var string
  */
 $cookiename = 'SMFCookie11';
 
 ########## Database Info ##########
 /**
- * @var string
- *
- * The database type.
+ * The database type
  * Default options: mysql, postgresql
+ *
+ * @var string
  */
 $db_type = 'mysql';
 /**
- * @var int
+ * The database port
+ * 0 to use default port for the database type
  *
- * The database port.
- * 0 to use default port for the database type.
+ * @var int
  */
 $db_port = 0;
 /**
- * @var string
- *
  * The server to connect to (or a Unix socket)
+ *
+ * @var string
  */
 $db_server = 'localhost';
 /**
- * @var string
+ * The database name
  *
- * The database name.
+ * @var string
  */
 $db_name = 'smf';
 /**
- * @var string
+ * Database username
  *
- * Database username.
+ * @var string
  */
 $db_user = 'root';
 /**
- * @var string
+ * Database password
  *
- * Database password.
+ * @var string
  */
 $db_passwd = '';
 /**
- * @var string
+ * Database user for when connecting with SSI
  *
- * Database user for when connecting with SSI.
+ * @var string
  */
 $ssi_db_user = '';
 /**
- * @var string
+ * Database password for when connecting with SSI
  *
- * Database password for when connecting with SSI.
+ * @var string
  */
 $ssi_db_passwd = '';
 /**
- * @var string
- *
  * A prefix to put in front of your table names.
- * This helps to prevent conflicts.
+ * This helps to prevent conflicts
+ *
+ * @var string
  */
 $db_prefix = 'smf_';
 /**
- * @var bool
+ * Use a persistent database connection
  *
- * Use a persistent database connection.
+ * @var bool
  */
 $db_persist = false;
 /**
- * @var bool
+ * Send emails on database connection error
  *
- * Send emails on database connection error.
+ * @var bool
  */
 $db_error_send = false;
 /**
- * @var null|bool
+ * Override the default behavior of the database layer for mb4 handling
+ * null keep the default behavior untouched
  *
- * Override the default behavior of the database layer for mb4 handling.
- * null keep the default behavior untouched.
+ * @var null|bool
  */
 $db_mb4 = null;
 
 ########## Cache Info ##########
 /**
- * @var string
+ * Select a cache system. You want to leave this up to the cache area of the admin panel for
+ * proper detection of memcached, output_cache or SMF file_system
+ * (you can add more with a mod).
  *
- * Select a cache system. You should leave this up to the cache area of the
- * admin panel for proper detection of the available options.
+ * @var string
  */
 $cache_accelerator = '';
 /**
- * @var int
+ * The level at which you would like to cache. Between 0 (off) through 3 (cache a lot).
  *
- * The level at which you would like to cache.
- * Between 0 (off) through 3 (cache a lot).
+ * @var int
  */
 $cache_enable = 0;
 /**
- * @var array
+ * This is only used for memcache / memcached. Should be a string of 'server:port,server:port'
  *
- * This is only used for memcache / memcached.
- * Should be a string of 'server:port,server:port'
+ * @var array
  */
 $cache_memcached = '';
+
 /**
- * @var string
+ * This is only for the 'smf' file cache system. It is the path to the cache directory.
+ * It is also recommended that you place this in /tmp/ if you are going to use this.
  *
- * Path to the cache directory for the file-based cache system.
+ * @var string
  */
 $cachedir = dirname(__FILE__) . '/cache';
 
 ########## Image Proxy ##########
+# This is done entirely in Settings.php to avoid loading the DB while serving the images
 /**
- * @var bool
+ * Whether the proxy is enabled or not
  *
- * Whether the proxy is enabled or not.
+ * @var bool
  */
 $image_proxy_enabled = true;
 /**
- * @var string
+ * Secret key to be used by the proxy
  *
- * Secret key to be used by the proxy.
+ * @var string
  */
 $image_proxy_secret = 'smfisawesome';
 /**
- * @var int
+ * Maximum file size (in KB) for individual files
  *
- * Maximum file size (in KB) for individual files.
+ * @var int
  */
 $image_proxy_maxsize = 5192;
 
 ########## Directories/Files ##########
 # Note: These directories do not have to be changed unless you move things.
 /**
- * @var string
- *
  * The absolute path to the forum's folder. (not just '.'!)
+ *
+ * @var string
  */
 $boarddir = dirname(__FILE__);
 /**
- * @var string
- *
  * Path to the Sources directory.
+ *
+ * @var string
  */
 $sourcedir = dirname(__FILE__) . '/Sources';
 /**
- * @var string
- *
  * Path to the Packages directory.
+ *
+ * @var string
  */
 $packagesdir = dirname(__FILE__) . '/Packages';
 /**
+ * Path to the tasks directory.
+ *
  * @var string
- *
- * Path to the language directory.
  */
-$languagesdir = dirname(__FILE__) . '/Languages';
+$tasksdir = $sourcedir . '/tasks';
 
-######### Modification Support #########
-/**
- * @var int
- *
- * Master switch to enable backward compatibility behaviours:
- * 0: Off. This is the default.
- * 1: On. This will be set automatically if an installed modification needs it.
- * 2: Forced on. Use this to enable backward compatibility behaviours even when
- *    no installed modifications require them. This is usually not necessary.
- */
-$backward_compatibility = 0;
+# Make sure the paths are correct... at least try to fix them.
+if (!is_dir(realpath($boarddir)) && file_exists(dirname(__FILE__) . '/agreement.txt'))
+	$boarddir = dirname(__FILE__);
+if (!is_dir(realpath($sourcedir)) && is_dir($boarddir . '/Sources'))
+	$sourcedir = $boarddir . '/Sources';
+if (!is_dir(realpath($tasksdir)) && is_dir($sourcedir . '/tasks'))
+	$tasksdir = $sourcedir . '/tasks';
+if (!is_dir(realpath($packagesdir)) && is_dir($boarddir . '/Packages'))
+	$packagesdir = $boarddir . '/Packages';
+if (!is_dir(realpath($cachedir)) && is_dir($boarddir . '/cache'))
+	$cachedir = $boarddir . '/cache';
 
 ######### Legacy Settings #########
-/**
- * @var string
- *
- * Database character set. Should always be utf8.
- */
+# UTF-8 is now the only character set supported in 2.1.
 $db_character_set = 'utf8';
+
+########## Error-Catching ##########
+# Note: You shouldn't touch these settings.
+if (file_exists((isset($cachedir) ? $cachedir : dirname(__FILE__)) . '/db_last_error.php'))
+	include((isset($cachedir) ? $cachedir : dirname(__FILE__)) . '/db_last_error.php');
+
+if (!isset($db_last_error))
+{
+	// File does not exist so lets try to create it
+	file_put_contents((isset($cachedir) ? $cachedir : dirname(__FILE__)) . '/db_last_error.php', '<' . '?' . "php\n" . '$db_last_error = 0;' . "\n" . '?' . '>');
+	$db_last_error = 0;
+}
 
 if (file_exists(dirname(__FILE__) . '/install.php'))
 {

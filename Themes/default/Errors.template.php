@@ -4,21 +4,16 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2024 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 3.0 Alpha 2
+ * @version 2.1.3
  */
-
-use SMF\Config;
-use SMF\Lang;
-use SMF\Theme;
-use SMF\Utils;
 
 // @todo
 /*	This template file contains only the sub template fatal_error. It is
 	shown when an error occurs, and should show at least a back button and
-	Utils::$context['error_message'].
+	$context['error_message'].
 */
 
 /**
@@ -26,13 +21,15 @@ use SMF\Utils;
  */
 function template_fatal_error()
 {
-	if (!empty(Utils::$context['simple_action']))
+	global $context, $txt;
+
+	if (!empty($context['simple_action']))
 		echo '
 	<strong>
-		', Utils::$context['error_title'], '
+		', $context['error_title'], '
 	</strong><br>
-	<div ', Utils::$context['error_code'], 'class="padding">
-		', Utils::$context['error_message'], '
+	<div ', $context['error_code'], 'class="padding">
+		', $context['error_message'], '
 	</div>';
 	else
 	{
@@ -40,12 +37,12 @@ function template_fatal_error()
 	<div id="fatal_error">
 		<div class="cat_bar">
 			<h3 class="catbg">
-				', Utils::$context['error_title'], '
+				', $context['error_title'], '
 			</h3>
 		</div>
 		<div class="windowbg">
-			<div ', Utils::$context['error_code'], 'class="padding">
-				', Utils::$context['error_message'], '
+			<div ', $context['error_code'], 'class="padding">
+				', $context['error_message'], '
 			</div>
 		</div>
 	</div>';
@@ -53,7 +50,7 @@ function template_fatal_error()
 		// Show a back button
 		echo '
 	<div class="centertext">
-		<a class="button floatnone" href="', Utils::$context['error_link'], '">', Lang::$txt['back'], '</a>
+		<a class="button floatnone" href="', $context['error_link'], '">', $txt['back'], '</a>
 	</div>';
 	}
 }
@@ -63,61 +60,64 @@ function template_fatal_error()
  */
 function template_error_log()
 {
+	global $scripturl, $context, $txt;
+
 	echo '
-		<form action="', Config::$scripturl, '?action=admin;area=logs;sa=errorlog', Utils::$context['sort_direction'] == 'down' ? ';desc' : '', ';start=', Utils::$context['start'], Utils::$context['has_filter'] ? Utils::$context['filter']['href'] : '', '" method="post" accept-charset="', Utils::$context['character_set'], '">
+		<form action="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';start=', $context['start'], $context['has_filter'] ? $context['filter']['href'] : '', '" method="post" accept-charset="', $context['character_set'], '">
 			<div class="cat_bar">
 				<h3 class="catbg">
-					<a href="', Config::$scripturl, '?action=helpadmin;help=error_log" onclick="return reqOverlayDiv(this.href);" class="help"><span class="main_icons help" title="', Lang::$txt['help'], '"></span></a> ', Lang::$txt['errorlog'], '
+					<a href="', $scripturl, '?action=helpadmin;help=error_log" onclick="return reqOverlayDiv(this.href);" class="help"><span class="main_icons help" title="', $txt['help'], '"></span></a> ', $txt['errorlog'], '
 				</h3>
 			</div>
 			<div class="information flow_hidden">
 				<div class="additional_row">';
 
 	// No errors, so just show a message and be done with it.
-	if (empty(Utils::$context['errors']))
+	if (empty($context['errors']))
 	{
 		echo '
-					', Lang::$txt['errorlog_no_entries'], '
+					', $txt['errorlog_no_entries'], '
 				</div>
 			</div>
 		</form>';
 		return;
 	}
 
-	if (Utils::$context['has_filter'])
+	if ($context['has_filter'])
 		echo '
 				<div class="infobox">
-					', Lang::getTxt('applying_filter', ['type' => Utils::$context['filter']['entity'], 'value' => Utils::$context['filter']['value']['html']]), '
+					<strong>', $txt['applying_filter'], ':</strong> ', $context['filter']['entity'], ' ', $context['filter']['value']['html'], '
 				</div>';
 
 	echo '
 				<div class="floatright">
-					<input type="submit" name="removeSelection" value="', Lang::$txt['remove_selection'], '" data-confirm="', Lang::$txt['remove_selection_confirm'], '" class="button you_sure">
-					<input type="submit" name="delall" value="', (Utils::$context['has_filter'] ? Lang::$txt['remove_filtered_results'] : Lang::$txt['remove_all']), '" data-confirm="', (Utils::$context['has_filter'] ? Lang::$txt['remove_filtered_results_confirm'] : Lang::$txt['sure_about_errorlog_remove']), '" class="button you_sure">
-					', (Utils::$context['has_filter'] ? '<a href="' . Config::$scripturl . '?action=admin;area=logs;sa=errorlog' . (Utils::$context['sort_direction'] == 'down' ? ';desc' : '') . '" class="button">' . Lang::$txt['clear_filter'] . '</a>' : ''), '
-				</div>';
+					<input type="submit" name="removeSelection" value="', $txt['remove_selection'], '" data-confirm="', $txt['remove_selection_confirm'], '" class="button you_sure">
+					<input type="submit" name="delall" value="', ($context['has_filter'] ? $txt['remove_filtered_results'] : $txt['remove_all']), '" data-confirm="', ($context['has_filter'] ? $txt['remove_filtered_results_confirm'] : $txt['sure_about_errorlog_remove']), '" class="button you_sure">
+					', ($context['has_filter'] ? '<a href="' . $scripturl . '?action=admin;area=logs;sa=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : '') . '" class="button">' . $txt['clear_filter'] . '</a>' : ''), '
+				</div>
+				', $txt['apply_filter_of_type'], ':';
 
 	$error_types = array();
 
-	foreach (Utils::$context['error_types'] as $type => $details)
+	foreach ($context['error_types'] as $type => $details)
 		$error_types[] = ($details['is_selected'] ? '<span class="main_icons right_arrow"></span> ' : '') . '<a href="' . $details['url'] . '" ' . ($details['is_selected'] ? 'style="font-weight: bold;"' : 'style="font-weight: normal;"') . ' title="' . $details['description'] . '">' . ($details['error_type'] === 'critical' ? '<span class="error">' . $details['label'] . '</span>' : $details['label']) . '</a>';
 
 	echo '
-				', Lang::getTxt('apply_filter_of_type', ['list' => implode(' | ', $error_types)]), '
+				', implode(' | ', $error_types), '
 				</div>
 			</div>
 			<div class="pagesection">
 				<div class="pagelinks">
-					', Utils::$context['page_index'], '
+					', $context['page_index'], '
 				</div>
 				<div class="floatright" style="padding: 0 12px">
-					<label for="check_all"><strong>', Lang::$txt['check_all'], '</strong></label>
+					<label for="check_all"><strong>', $txt['check_all'], '</strong></label>
 					<input type="checkbox" id="check_all" onclick="invertAll(this, this.form, \'delete[]\');">
 				</div>
 			</div>';
 
 	// We have some errors, must be some mods installed :P
-	foreach (Utils::$context['errors'] as $error)
+	foreach ($context['errors'] as $error)
 	{
 		echo '
 			<div class="windowbg word_break">
@@ -127,49 +127,49 @@ function template_error_log()
 						<input type="checkbox" name="delete[]" value="', $error['id'], '">
 					</span>
 					<h5>
-						<a href="', Config::$scripturl, '?action=admin;area=logs;sa=errorlog', Utils::$context['sort_direction'] == 'down' ? '' : ';desc', Utils::$context['has_filter'] ? Utils::$context['filter']['href'] : '', '" title="', Lang::$txt['reverse_direction'], '"><span class="main_icons sort_' . Utils::$context['sort_direction'] . '"></span></a> ', $error['time'], '
+						<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? '' : ';desc', $context['has_filter'] ? $context['filter']['href'] : '', '" title="', $txt['reverse_direction'], '"><span class="main_icons sort_' . $context['sort_direction'] . '"></span></a> ', $error['time'], '
 					</h5>
 					<hr class="clear">
 				</div>
 				<div>
 					<div class="half_content">
-						<a href="', Config::$scripturl, '?action=admin;area=logs;sa=errorlog', Utils::$context['sort_direction'] == 'down' ? ';desc' : '', ';filter=id_member;value=', $error['member']['id'], '" title="', Lang::getTxt('apply_filter_type', ['type' => Lang::$txt['filter_only_member']]), '"><span class="main_icons filter"></span></a>
+						<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=id_member;value=', $error['member']['id'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_member'], '"><span class="main_icons filter"></span></a>
 						<strong>', $error['member']['link'], '</strong>';
 
 		if (!empty($error['member']['ip']))
 			echo '
 						<br>
-						<a href="', Config::$scripturl, '?action=admin;area=logs;sa=errorlog', Utils::$context['sort_direction'] == 'down' ? ';desc' : '', ';filter=ip;value=', $error['member']['ip'], '" title="', Lang::getTxt('apply_filter_type', ['type' => Lang::$txt['filter_only_ip']]), '"><span class="main_icons filter"></span></a>
-						<strong><a href="', Config::$scripturl, '?action=trackip;searchip=', $error['member']['ip'], '">', $error['member']['ip'], '</a></strong>';
+						<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=ip;value=', $error['member']['ip'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_ip'], '"><span class="main_icons filter"></span></a>
+						<strong><a href="', $scripturl, '?action=trackip;searchip=', $error['member']['ip'], '">', $error['member']['ip'], '</a></strong>';
 
 		if (!empty($error['member']['session']))
 			echo '
 						<br>
-						<a href="', Config::$scripturl, '?action=admin;area=logs;sa=errorlog', Utils::$context['sort_direction'] == 'down' ? ';desc' : '', ';filter=session;value=', $error['member']['session'], '" title="', Lang::getTxt('apply_filter_type', ['type' => Lang::$txt['filter_only_session']]), '"><span class="main_icons filter"></span></a> <a class="bbc_link" href="', Config::$scripturl, '?action=admin;area=logs;sa=errorlog', Utils::$context['sort_direction'] == 'down' ? ';desc' : '', ';filter=session;value=', $error['member']['session'], '" title="', Lang::getTxt('apply_filter_type', ['type' => Lang::$txt['filter_only_session']]), '">', $error['member']['session'], '</a>';
+						<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=session;value=', $error['member']['session'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_session'], '"><span class="main_icons filter"></span></a> <a class="bbc_link" href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=session;value=', $error['member']['session'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_session'], '">', $error['member']['session'], '</a>';
 
 		echo '
 						<br>
-						<a href="', Config::$scripturl, '?action=admin;area=logs;sa=errorlog', Utils::$context['sort_direction'] == 'down' ? ';desc' : '', ';filter=url;value=', $error['url']['href'], '" title="', Lang::getTxt('apply_filter_type', ['type' => Lang::$txt['filter_only_url']]), '"><span class="main_icons filter"></span></a>
+						<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=url;value=', $error['url']['href'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_url'], '"><span class="main_icons filter"></span></a>
 						<a href="', $error['url']['html'], '" class="bbc_link word_break">', $error['url']['html'], '</a>';
 
 		if (!empty($error['file']))
 			echo '
 						<br>
-						<a href="', Config::$scripturl, '?action=admin;area=logs;sa=errorlog', Utils::$context['sort_direction'] == 'down' ? ';desc' : '', ';filter=file;value=', $error['file']['search'], '" title="', Lang::getTxt('apply_filter_type', ['type' => Lang::$txt['filter_only_file']]), '"><span class="main_icons filter"></span></a> ', Lang::getTxt('error_file_and_line', ['file' => '<a class="bbc_link" href="' . $error['file']['href'] . '" onclick="return reqWin(this.href, 600, 480, false);">' . $error['file']['file'] . '</a>', 'line' => $error['file']['line']]);
+						<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=file;value=', $error['file']['search'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_file'], '"><span class="main_icons filter"></span></a> <a class="bbc_link" href="', $error['file']['href'], '" onclick="return reqWin(this.href, 600, 480, false);">', $error['file']['file'], '</a> (', $txt['line'], ' ', $error['file']['line'], ')';
 
 		echo '
 					</div>
 					<div class="half_content">
 						<strong class="floatright">
-							<span class="main_icons details"></span> <a class="bbc_link" href="', Config::$scripturl, '?action=admin;area=logs;sa=errorlog;backtrace=', $error['id'], '" onclick="return reqWin(this.href, 600, 480, false);">', Lang::$txt['backtrace_title'], '</a>
+							<span class="main_icons details"></span> <a class="bbc_link" href="', $scripturl, '?action=admin;area=logs;sa=errorlog;backtrace=', $error['id'], '" onclick="return reqWin(this.href, 600, 480, false);">', $txt['backtrace_title'], '</a>
 						</strong>
 					</div>
 				</div>
 				<div class="post">
 					<br class="clear">
-					<a href="', Config::$scripturl, '?action=admin;area=logs;sa=errorlog', Utils::$context['sort_direction'] == 'down' ? ';desc' : '', ';filter=error_type;value=', $error['error_type']['type'], '" title="', Lang::getTxt('apply_filter_type', ['type' => Lang::$txt['filter_only_type']]), '"><span class="main_icons filter"></span></a>', Lang::getTxt('error_type_name', ['type' => $error['error_type']['type'] === 'critical' ? '<span class="error">' . $error['error_type']['name'] . '</span>' : $error['error_type']['name']]), '<br>
-					<a href="', Config::$scripturl, '?action=admin;area=logs;sa=errorlog', Utils::$context['sort_direction'] == 'down' ? ';desc' : '', ';filter=message;value=', $error['message']['href'], '" title="', Lang::getTxt('apply_filter_type', ['type' => Lang::$txt['filter_only_message']]), '"><span class="main_icons filter floatleft"></span></a>
-					<div class="codeheader"><span class="code floatleft">' . Lang::$txt['error_message'] . '</span> <a class="codeoperation smf_select_text">' . Lang::$txt['code_select'] . '</a> <a class="codeoperation smf_expand_code hidden" data-shrink-txt="' . Lang::$txt['code_shrink'] . '" data-expand-txt="' . Lang::$txt['code_expand'] . '">' . Lang::$txt['code_expand'] . '</a>
+					<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=error_type;value=', $error['error_type']['type'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_type'], '"><span class="main_icons filter"></span></a>', $txt['error_type'], ': ', $error['error_type']['type'] === 'critical' ? '<span class="error">' . $error['error_type']['name'] . '</span>' : $error['error_type']['name'], '<br>
+					<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=message;value=', $error['message']['href'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_message'], '"><span class="main_icons filter floatleft"></span></a>
+					<div class="codeheader"><span class="code floatleft">' . $txt['error_message'] . '</span> <a class="codeoperation smf_select_text">' . $txt['code_select'] . '</a> <a class="codeoperation smf_expand_code hidden" data-shrink-txt="' . $txt['code_shrink'] . '" data-expand-txt="' . $txt['code_expand'] . '">' . $txt['code_expand'] . '</a>
 					</div><code class="bbc_code" style="white-space: pre-line; overflow-y: auto">', $error['message']['html'], '</code>
 				</div>
 			</div>';
@@ -178,21 +178,21 @@ function template_error_log()
 	echo '
 			<div class="pagesection">
 				<div class="pagelinks">
-					', Utils::$context['page_index'], '
+					', $context['page_index'], '
 				</div>
 				<div class="floatright">
-					<input type="submit" name="removeSelection" value="', Lang::$txt['remove_selection'], '" data-confirm="', Lang::$txt['remove_selection_confirm'], '" class="button you_sure">
-					<input type="submit" name="delall" value="', (Utils::$context['has_filter'] ? Lang::$txt['remove_filtered_results'] : Lang::$txt['remove_all']), '" data-confirm="', (Utils::$context['has_filter'] ? Lang::$txt['remove_filtered_results_confirm'] : Lang::$txt['sure_about_errorlog_remove']), '" class="button you_sure">
+					<input type="submit" name="removeSelection" value="', $txt['remove_selection'], '" data-confirm="', $txt['remove_selection_confirm'], '" class="button you_sure">
+					<input type="submit" name="delall" value="', ($context['has_filter'] ? $txt['remove_filtered_results'] : $txt['remove_all']), '" data-confirm="', ($context['has_filter'] ? $txt['remove_filtered_results_confirm'] : $txt['sure_about_errorlog_remove']), '" class="button you_sure">
 				</div>
 			</div>';
 
-	if (Utils::$context['sort_direction'] == 'down')
+	if ($context['sort_direction'] == 'down')
 		echo '
 			<input type="hidden" name="desc" value="1">';
 
 	echo '
-			<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
-			<input type="hidden" name="', Utils::$context['admin-el_token_var'], '" value="', Utils::$context['admin-el_token'], '">
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+			<input type="hidden" name="', $context['admin-el_token_var'], '" value="', $context['admin-el_token'], '">
 		</form>';
 }
 
@@ -201,19 +201,21 @@ function template_error_log()
  */
 function template_show_file()
 {
+	global $context, $settings, $modSettings;
+
 	echo '<!DOCTYPE html>
-<html', Utils::$context['right_to_left'] ? ' dir="rtl"' : '', '>
+<html', $context['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
-		<meta charset="', Utils::$context['character_set'], '">
-		<title>', Utils::$context['file_data']['file'], '</title>
-		', Theme::template_css(), '
+		<meta charset="', $context['character_set'], '">
+		<title>', $context['file_data']['file'], '</title>
+		', template_css(), '
 	</head>
 	<body>
 		<table class="errorfile_table">';
-	foreach (Utils::$context['file_data']['contents'] as $index => $line)
+	foreach ($context['file_data']['contents'] as $index => $line)
 	{
-		$line_num = $index + Utils::$context['file_data']['min'];
-		$is_target = $line_num == Utils::$context['file_data']['target'];
+		$line_num = $index + $context['file_data']['min'];
+		$is_target = $line_num == $context['file_data']['target'];
 
 		echo '
 			<tr>
@@ -232,26 +234,28 @@ function template_show_file()
  */
 function template_attachment_errors()
 {
+	global $context, $scripturl, $txt;
+
 	echo '
 	<div>
 		<div class="cat_bar">
 			<h3 class="catbg">
-				', Utils::$context['error_title'], '
+				', $context['error_title'], '
 			</h3>
 		</div>
 		<div class="windowbg">
 			<div class="padding">
 				<div class="noticebox">',
-					Utils::$context['error_message'], '
+					$context['error_message'], '
 				</div>';
 
-	if (!empty(Utils::$context['back_link']))
+	if (!empty($context['back_link']))
 		echo '
-				<a class="button" href="', Config::$scripturl, Utils::$context['back_link'], '">', Lang::$txt['back'], '</a>';
+				<a class="button" href="', $scripturl, $context['back_link'], '">', $txt['back'], '</a>';
 
 	echo '
 				<span style="float: right; margin:.5em;"></span>
-				<a class="button" href="', Config::$scripturl, Utils::$context['redirect_link'], '">', Lang::$txt['continue'], '</a>
+				<a class="button" href="', $scripturl, $context['redirect_link'], '">', $txt['continue'], '</a>
 			</div>
 		</div>
 	</div>';
@@ -262,73 +266,75 @@ function template_attachment_errors()
  */
 function template_show_backtrace()
 {
-	echo '<!DOCTYPE html>
-<html', Utils::$context['right_to_left'] ? ' dir="rtl"' : '', '>
-	<head>
-		<meta charset="', Utils::$context['character_set'], '">
-		<title>', Lang::$txt['backtrace_title'], '</title>';
+	global $context, $settings, $modSettings, $txt, $scripturl;
 
-	Theme::template_css();
+	echo '<!DOCTYPE html>
+<html', $context['right_to_left'] ? ' dir="rtl"' : '', '>
+	<head>
+		<meta charset="', $context['character_set'], '">
+		<title>', $txt['backtrace_title'], '</title>';
+
+	template_css();
 
 	echo '
 	</head>
 	<body class="padding">';
 
-	if (!empty(Utils::$context['error_info']))
+	if (!empty($context['error_info']))
 	{
 		echo '
 			<div class="cat_bar">
 				<h3 class="catbg">
-					', Lang::$txt['error'], '
+					', $txt['error'], '
 				</h3>
 			</div>
 			<div class="windowbg" id="backtrace">
 				<table class="table_grid">
 					<tbody>';
 
-		if (!empty(Utils::$context['error_info']['error_type']))
+		if (!empty($context['error_info']['error_type']))
 			echo '
 						<tr class="title_bar">
-							<td><strong>', Lang::$txt['error_type'], '</strong></td>
+							<td><strong>', $txt['error_type'], '</strong></td>
 						</tr>
 						<tr class="windowbg">
-							<td>', ucfirst(Utils::$context['error_info']['error_type']), '</td>
+							<td>', ucfirst($context['error_info']['error_type']), '</td>
 						</tr>';
 
-		if (!empty(Utils::$context['error_info']['message']))
+		if (!empty($context['error_info']['message']))
 			echo '
 						<tr class="title_bar">
-							<td><strong>', Lang::$txt['error_message'], '</strong></td>
+							<td><strong>', $txt['error_message'], '</strong></td>
 						</tr>
 						<tr class="windowbg lefttext">
-							<td><code class="bbc_code" style="white-space: pre-line; overflow-y: auto">', Utils::$context['error_info']['message'], '</code></td>
+							<td><code class="bbc_code" style="white-space: pre-line; overflow-y: auto">', $context['error_info']['message'], '</code></td>
 						</tr>';
 
-		if (!empty(Utils::$context['error_info']['file']))
+		if (!empty($context['error_info']['file']))
 			echo '
 						<tr class="title_bar">
-							<td><strong>', Lang::$txt['file'], '</strong></td>
+							<td><strong>', $txt['error_file'], '</strong></td>
 						</tr>
 						<tr class="windowbg">
-							<td>', Utils::$context['error_info']['file'], '</td>
+							<td>', $context['error_info']['file'], '</td>
 						</tr>';
 
-		if (!empty(Utils::$context['error_info']['line']))
+		if (!empty($context['error_info']['line']))
 			echo '
 						<tr class="title_bar">
-							<td><strong>', Lang::$txt['line'], '</strong></td>
+							<td><strong>', $txt['error_line'], '</strong></td>
 						</tr>
 						<tr class="windowbg">
-							<td>', Utils::$context['error_info']['line'], '</td>
+							<td>', $context['error_info']['line'], '</td>
 						</tr>';
 
-		if (!empty(Utils::$context['error_info']['url']))
+		if (!empty($context['error_info']['url']))
 			echo '
 						<tr class="title_bar">
-							<td><strong>', Lang::$txt['error_url'], '</strong></td>
+							<td><strong>', $txt['error_url'], '</strong></td>
 						</tr>
 						<tr class="windowbg word_break">
-							<td>', Utils::$context['error_info']['url'], '</td>
+							<td>', $context['error_info']['url'], '</td>
 						</tr>';
 
 		echo '
@@ -337,40 +343,28 @@ function template_show_backtrace()
 			</div>';
 	}
 
-	if (!empty(Utils::$context['error_info']['backtrace']))
+	if (!empty($context['error_info']['backtrace']))
 	{
 		echo '
 			<div class="cat_bar">
 				<h3 class="catbg">
-					', Lang::$txt['backtrace_title'], '
+					', $txt['backtrace_title'], '
 				</h3>
 			</div>
 			<div class="windowbg">
 				<ul class="padding">';
 
-		foreach (Utils::$context['error_info']['backtrace'] as $key => $value)
+		foreach ($context['error_info']['backtrace'] as $key => $value)
 		{
 			//Check for existing
 			if (!property_exists($value, 'file') || empty($value->file))
-				$value->file = Lang::$txt['unknown'];
+				$value->file = $txt['unknown'];
 
 			if (!property_exists($value, 'line') || empty($value->line))
 				$value->line = -1;
 
 			echo '
-					<li class="backtrace">',
-					Lang::getTxt(
-						'backtrace_info' . ($value->file == Lang::$txt['unknown'] && $value->line == -1 ? '_internal_function' : ''),
-						[
-							$key,
-							(!empty($value->class) ? $value->class . $value->type : '') . $value->function,
-							$value->file,
-							$value->line,
-							base64_encode($value->file),
-							Config::$scripturl,
-						]
-					),
-					'</li>';
+					<li class="backtrace">', sprintf($txt['backtrace_info'], $key, $value->function, $value->file, $value->line, base64_encode($value->file), $scripturl), '</li>';
 		}
 
 		echo '

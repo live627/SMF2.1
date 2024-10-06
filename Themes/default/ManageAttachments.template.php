@@ -4,16 +4,11 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2024 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 3.0 Alpha 2
+ * @version 2.1.0
  */
-
-use SMF\Config;
-use SMF\Lang;
-use SMF\Theme;
-use SMF\Utils;
 
 /**
  * This template wraps around the simple settings page to add javascript functionality.
@@ -44,128 +39,130 @@ function template_avatar_settings_below()
  */
 function template_maintenance()
 {
+	global $context, $settings, $scripturl, $txt, $modSettings;
+
 	echo '
 	<div id="manage_attachments">
 		<div class="cat_bar">
-			<h3 class="catbg">', Lang::$txt['attachment_stats'], '</h3>
+			<h3 class="catbg">', $txt['attachment_stats'], '</h3>
 		</div>
 		<div class="windowbg">
 			<dl class="settings">
-				<dt><strong>', Lang::$txt['attachment_total'], '</strong></dt>
-				<dd>', Utils::$context['num_attachments'], '</dd>
-				<dt><strong>', Lang::$txt['attachment_manager_total_avatars'], '</strong></dt>
-				<dd>', Utils::$context['num_avatars'], '</dd>
-				<dt><strong>', Lang::$txt['attachmentdir_size'], '</strong></dt>
-				<dd>', Lang::getTxt('size_kilobyte', [Utils::$context['attachment_total_size']]), '</dd>
-				<dt><strong>', Lang::$txt['attach_current_dir'], '</strong></dt>
-				<dd class="word_break">', Config::$modSettings['attachmentUploadDir'][Config::$modSettings['currentAttachmentUploadDir']], '</dd>
-				<dt><strong>', Lang::$txt['attachmentdir_size_current'], '</strong></dt>
-				<dd>', Lang::getTxt('size_kilobyte', [Utils::$context['attachment_current_size']]), '</dd>
-				<dt><strong>', Lang::$txt['attachment_space'], '</strong></dt>
-				<dd>', isset(Utils::$context['attachment_space']) ? Lang::getTxt('size_kilobyte', [Utils::$context['attachment_space']]) : Lang::$txt['attachmentdir_size_not_set'], '</dd>
-				<dt><strong>', Lang::$txt['attachmentdir_files_current'], '</strong></dt>
-				<dd>', Utils::$context['attachment_current_files'], '</dd>
-				<dt><strong>', Lang::$txt['attachment_files'], '</strong></dt>
-				<dd>', isset(Utils::$context['attachment_files']) ? Utils::$context['attachment_files'] : Lang::$txt['attachmentdir_files_not_set'], '</dd>
+				<dt><strong>', $txt['attachment_total'], ':</strong></dt>
+				<dd>', $context['num_attachments'], '</dd>
+				<dt><strong>', $txt['attachment_manager_total_avatars'], ':</strong></dt>
+				<dd>', $context['num_avatars'], '</dd>
+				<dt><strong>', $txt['attachmentdir_size'], ':</strong></dt>
+				<dd>', $context['attachment_total_size'], ' ', $txt['kilobyte'], '</dd>
+				<dt><strong>', $txt['attach_current_dir'], ':</strong></dt>
+				<dd class="word_break">', $modSettings['attachmentUploadDir'][$modSettings['currentAttachmentUploadDir']], '</dd>
+				<dt><strong>', $txt['attachmentdir_size_current'], ':</strong></dt>
+				<dd>', $context['attachment_current_size'], ' ', $txt['kilobyte'], '</dd>
+				<dt><strong>', $txt['attachment_space'], ':</strong></dt>
+				<dd>', isset($context['attachment_space']) ? $context['attachment_space'] . ' ' . $txt['kilobyte'] : $txt['attachmentdir_size_not_set'], '</dd>
+				<dt><strong>', $txt['attachmentdir_files_current'], ':</strong></dt>
+				<dd>', $context['attachment_current_files'], '</dd>
+				<dt><strong>', $txt['attachment_files'], ':</strong></dt>
+				<dd>', isset($context['attachment_files']) ? $context['attachment_files'] : $txt['attachmentdir_files_not_set'], '</dd>
 			</dl>
 		</div>
 		<div class="cat_bar">
-			<h3 class="catbg">', Lang::$txt['attachment_integrity_check'], '</h3>
+			<h3 class="catbg">', $txt['attachment_integrity_check'], '</h3>
 		</div>
 		<div class="windowbg">
-			<form action="', Config::$scripturl, '?action=admin;area=manageattachments;sa=repair;', Utils::$context['session_var'], '=', Utils::$context['session_id'], '" method="post" accept-charset="', Utils::$context['character_set'], '">
-				<p>', Lang::$txt['attachment_integrity_check_desc'], '</p>
-				<input type="submit" name="repair" value="', Lang::$txt['attachment_check_now'], '" class="button">
+			<form action="', $scripturl, '?action=admin;area=manageattachments;sa=repair;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+				<p>', $txt['attachment_integrity_check_desc'], '</p>
+				<input type="submit" name="repair" value="', $txt['attachment_check_now'], '" class="button">
 			</form>
 		</div>
 		<div class="cat_bar">
-			<h3 class="catbg">', Lang::$txt['attachment_pruning'], '</h3>
+			<h3 class="catbg">', $txt['attachment_pruning'], '</h3>
 		</div>
 		<div class="windowbg">
-			<form action="', Config::$scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', Utils::$context['character_set'], '" onsubmit="return confirm(\'', Lang::$txt['attachment_pruning_warning'], '\');">
+			<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['attachment_pruning_warning'], '\');">
 				<dl class="settings">
-					<dt>', Lang::$txt['attachment_remove_old'], '</dt>
-					<dd><input type="number" name="age" value="25" size="4"> ', str_replace('25', '', Lang::getTxt('number_of_days', [25])), '</dd>
-					<dt>', Lang::$txt['attachment_pruning_message'], '</dt>
-					<dd><input type="text" name="notice" value="', Lang::$txt['attachment_delete_admin'], '" size="40"></dd>
-					<input type="submit" name="remove" value="', Lang::$txt['remove'], '" class="button">
+					<dt>', $txt['attachment_remove_old'], '</dt>
+					<dd><input type="number" name="age" value="25" size="4"> ', $txt['days_word'], '</dd>
+					<dt>', $txt['attachment_pruning_message'], '</dt>
+					<dd><input type="text" name="notice" value="', $txt['attachment_delete_admin'], '" size="40"></dd>
+					<input type="submit" name="remove" value="', $txt['remove'], '" class="button">
 					<input type="hidden" name="type" value="attachments">
-					<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
-					<input type="hidden" name="sa" value="byage">
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+					<input type="hidden" name="sa" value="byAge">
 				</dl>
 			</form>
-			<form action="', Config::$scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', Utils::$context['character_set'], '" onsubmit="return confirm(\'', Lang::$txt['attachment_pruning_warning'], '\');">
+			<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['attachment_pruning_warning'], '\');">
 				<dl class="settings">
-					<dt>', Lang::$txt['attachment_remove_size'], '</dt>
-					<dd><input type="number" name="size" id="size" value="100" size="4"> ', Lang::$txt['kilobyte'], '</dd>
-					<dt>', Lang::$txt['attachment_pruning_message'], '</dt>
-					<dd><input type="text" name="notice" value="', Lang::$txt['attachment_delete_admin'], '" size="40"></dd>
-					<input type="submit" name="remove" value="', Lang::$txt['remove'], '" class="button">
+					<dt>', $txt['attachment_remove_size'], '</dt>
+					<dd><input type="number" name="size" id="size" value="100" size="4"> ', $txt['kilobyte'], '</dd>
+					<dt>', $txt['attachment_pruning_message'], '</dt>
+					<dd><input type="text" name="notice" value="', $txt['attachment_delete_admin'], '" size="40"></dd>
+					<input type="submit" name="remove" value="', $txt['remove'], '" class="button">
 					<input type="hidden" name="type" value="attachments">
-					<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
-					<input type="hidden" name="sa" value="bysize">
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+					<input type="hidden" name="sa" value="bySize">
 				</dl>
 			</form>
-			<form action="', Config::$scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', Utils::$context['character_set'], '" onsubmit="return confirm(\'', Lang::$txt['attachment_pruning_warning'], '\');">
+			<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['attachment_pruning_warning'], '\');">
 				<dl class="settings">
-					<dt>', Lang::$txt['attachment_manager_avatars_older'], '</dt>
-					<dd><input type="number" name="age" value="45" size="4"> ', str_replace('45', '', Lang::getTxt('number_of_days', [45])), '</dd>
-					<input type="submit" name="remove" value="', Lang::$txt['remove'], '" class="button">
+					<dt>', $txt['attachment_manager_avatars_older'], '</dt>
+					<dd><input type="number" name="age" value="45" size="4"> ', $txt['days_word'], '</dd>
+					<input type="submit" name="remove" value="', $txt['remove'], '" class="button">
 					<input type="hidden" name="type" value="avatars">
-					<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
-					<input type="hidden" name="sa" value="byage">
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+					<input type="hidden" name="sa" value="byAge">
 				</dl>
 			</form>
 		</div><!-- .windowbg -->
 	</div><!-- #manage_attachments -->';
 
-	if (!empty(Utils::$context['results']))
+	if (!empty($context['results']))
 		echo '
-	<div class="noticebox">', Utils::$context['results'], '</div>';
+	<div class="noticebox">', $context['results'], '</div>';
 
 	echo '
 	<div id="transfer" class="cat_bar">
-		<h3 class="catbg">', Lang::$txt['attachment_transfer'], '</h3>
+		<h3 class="catbg">', $txt['attachment_transfer'], '</h3>
 	</div>
 	<div class="windowbg">
-		<form action="', Config::$scripturl, '?action=admin;area=manageattachments;sa=transfer" method="post" accept-charset="', Utils::$context['character_set'], '">
-			<p>', Lang::$txt['attachment_transfer_desc'], '</p>
+		<form action="', $scripturl, '?action=admin;area=manageattachments;sa=transfer" method="post" accept-charset="', $context['character_set'], '">
+			<p>', $txt['attachment_transfer_desc'], '</p>
 			<dl class="settings">
-				<dt>', Lang::$txt['attachment_transfer_from'], '</dt>
+				<dt>', $txt['attachment_transfer_from'], '</dt>
 				<dd>
 					<select name="from">
-						<option value="0">', Lang::$txt['attachment_transfer_select'], '</option>';
+						<option value="0">', $txt['attachment_transfer_select'], '</option>';
 
-	foreach (Utils::$context['attach_dirs'] as $id => $dir)
+	foreach ($context['attach_dirs'] as $id => $dir)
 		echo '
 						<option value="', $id, '">', $dir, '</option>';
 
 	echo '
 					</select>
 				</dd>
-				<dt>', Lang::$txt['attachment_transfer_auto'], '</dt>
+				<dt>', $txt['attachment_transfer_auto'], '</dt>
 				<dd>
 					<select name="auto">
-						<option value="0">', Lang::$txt['attachment_transfer_auto_select'], '</option>
-						<option value="-1">', Lang::$txt['attachment_transfer_forum_root'], '</option>';
+						<option value="0">', $txt['attachment_transfer_auto_select'], '</option>
+						<option value="-1">', $txt['attachment_transfer_forum_root'], '</option>';
 
-	if (!empty(Utils::$context['base_dirs']))
-		foreach (Utils::$context['base_dirs'] as $id => $dir)
+	if (!empty($context['base_dirs']))
+		foreach ($context['base_dirs'] as $id => $dir)
 			echo '
 						<option value="', $id, '">', $dir, '</option>';
 	else
 		echo '
-						<option value="0" disabled>', Lang::$txt['attachment_transfer_no_base'], '</option>';
+						<option value="0" disabled>', $txt['attachment_transfer_no_base'], '</option>';
 
 	echo '
 					</select>
 				</dd>
-				<dt>', Lang::$txt['attachment_transfer_to'], '</dt>
+				<dt>', $txt['attachment_transfer_to'], '</dt>
 				<dd>
 					<select name="to">
-						<option value="0">', Lang::$txt['attachment_transfer_select'], '</option>';
+						<option value="0">', $txt['attachment_transfer_select'], '</option>';
 
-	foreach (Utils::$context['attach_dirs'] as $id => $dir)
+	foreach ($context['attach_dirs'] as $id => $dir)
 		echo '
 						<option value="', $id, '">', $dir, '</option>';
 
@@ -173,15 +170,15 @@ function template_maintenance()
 					</select>
 				</dd>';
 
-	if (!empty(Config::$modSettings['attachmentDirFileLimit']))
+	if (!empty($modSettings['attachmentDirFileLimit']))
 		echo '
-				<dt>', Lang::$txt['attachment_transfer_empty'], '</dt>
-				<dd><input type="checkbox" name="empty_it"', Utils::$context['checked'] ? ' checked' : '', '></dd>';
+				<dt>', $txt['attachment_transfer_empty'], '</dt>
+				<dd><input type="checkbox" name="empty_it"', $context['checked'] ? ' checked' : '', '></dd>';
 
 	echo '
 			</dl>
-			<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
-			<input type="submit" onclick="start_progress()" name="transfer" value="', Lang::$txt['attachment_transfer_now'], '" class="button">
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
+			<input type="submit" onclick="start_progress()" name="transfer" value="', $txt['attachment_transfer_now'], '" class="button">
 			<div id="progress_msg"></div>
 			<div id="show_progress" class="padding"></div>
 		</form>
@@ -191,7 +188,7 @@ function template_maintenance()
 			}
 
 			function show_msg() {
-				$(\'#progress_msg\').html(\'<div><img src="', Theme::$current->settings['actual_images_url'], '/loading_sm.gif" alt="', Lang::$txt['ajax_in_progress'], '" width="35" height="35"> ', Lang::$txt['attachment_transfer_progress'], '<\/div>\');
+				$(\'#progress_msg\').html(\'<div><img src="', $settings['actual_images_url'], '/loading_sm.gif" alt="', $txt['ajax_in_progress'], '" width="35" height="35"> ', $txt['attachment_transfer_progress'], '<\/div>\');
 				show_progress();
 			}
 
@@ -209,27 +206,29 @@ function template_maintenance()
  */
 function template_attachment_repair()
 {
+	global $context, $txt, $scripturl;
+
 	// If we've completed just let them know!
-	if (Utils::$context['completed'])
+	if ($context['completed'])
 		echo '
 	<div id="manage_attachments">
 		<div class="cat_bar">
-			<h3 class="catbg">', Lang::$txt['repair_attachments_complete'], '</h3>
+			<h3 class="catbg">', $txt['repair_attachments_complete'], '</h3>
 		</div>
 		<div class="windowbg">
-			', Lang::$txt['repair_attachments_complete_desc'], '
+			', $txt['repair_attachments_complete_desc'], '
 		</div>
 	</div>';
 
 	// What about if no errors were even found?
-	elseif (!Utils::$context['errors_found'])
+	elseif (!$context['errors_found'])
 		echo '
 	<div id="manage_attachments">
 		<div class="cat_bar">
-			<h3 class="catbg">', Lang::$txt['repair_attachments_complete'], '</h3>
+			<h3 class="catbg">', $txt['repair_attachments_complete'], '</h3>
 		</div>
 		<div class="windowbg">
-			', Lang::$txt['repair_attachments_no_errors'], '
+			', $txt['repair_attachments_no_errors'], '
 		</div>
 	</div>';
 
@@ -238,24 +237,24 @@ function template_attachment_repair()
 	{
 		echo '
 	<div id="manage_attachments">
-		<form id="admin_form_wrapper" action="', Config::$scripturl, '?action=admin;area=manageattachments;sa=repair;fixErrors=1;step=0;substep=0;', Utils::$context['session_var'], '=', Utils::$context['session_id'], '" method="post" accept-charset="', Utils::$context['character_set'], '">
+		<form id="admin_form_wrapper" action="', $scripturl, '?action=admin;area=manageattachments;sa=repair;fixErrors=1;step=0;substep=0;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 			<div class="cat_bar">
-				<h3 class="catbg">', Lang::$txt['repair_attachments'], '</h3>
+				<h3 class="catbg">', $txt['repair_attachments'], '</h3>
 			</div>
 			<div class="windowbg">
-				<p>', Lang::$txt['repair_attachments_error_desc'], '</p>';
+				<p>', $txt['repair_attachments_error_desc'], '</p>';
 
 		// Loop through each error reporting the status
-		foreach (Utils::$context['repair_errors'] as $error => $number)
+		foreach ($context['repair_errors'] as $error => $number)
 			if (!empty($number))
 				echo '
 				<input type="checkbox" name="to_fix[]" id="', $error, '" value="', $error, '">
-				<label for="', $error, '">', Lang::getTxt('attach_repair_' . $error, [$number]), '</label><br>';
+				<label for="', $error, '">', sprintf($txt['attach_repair_' . $error], $number), '</label><br>';
 
 		echo '
 				<br>
-				<input type="submit" value="', Lang::$txt['repair_attachments_continue'], '" class="button">
-				<input type="submit" name="cancel" value="', Lang::$txt['repair_attachments_cancel'], '" class="button">
+				<input type="submit" value="', $txt['repair_attachments_continue'], '" class="button">
+				<input type="submit" name="cancel" value="', $txt['repair_attachments_cancel'], '" class="button">
 			</div>
 		</form>
 	</div><!-- #manage_attachments -->';
@@ -267,7 +266,9 @@ function template_attachment_repair()
  */
 function template_attachment_paths()
 {
-	if (!empty(Config::$modSettings['attachment_basedirectories']))
+	global $modSettings;
+
+	if (!empty($modSettings['attachment_basedirectories']))
 		template_show_list('base_paths');
 
 	template_show_list('attach_paths');

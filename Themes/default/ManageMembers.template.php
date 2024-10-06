@@ -4,28 +4,26 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2024 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 3.0 Alpha 2
+ * @version 2.1.0
  */
-
-use SMF\Config;
-use SMF\Lang;
-use SMF\Utils;
 
 /**
  * The admin member search form
  */
 function template_search_members()
 {
+	global $context, $scripturl, $txt;
+
 	echo '
-		<form action="', Config::$scripturl, '?action=admin;area=viewmembers" method="post" accept-charset="', Utils::$context['character_set'], '" id="admin_form_wrapper">
+		<form action="', $scripturl, '?action=admin;area=viewmembers" method="post" accept-charset="', $context['character_set'], '" id="admin_form_wrapper">
 			<input type="hidden" name="sa" value="query">
 			<div class="cat_bar">
 				<h3 class="catbg">
-					<span class="floatleft">', Lang::$txt['search_for'], '</span>
-					<span class="smalltext floatright">', Lang::$txt['wild_cards_allowed'], '</span>
+					<span class="floatleft">', $txt['search_for'], '</span>
+					<span class="smalltext floatright">', $txt['wild_cards_allowed'], '</span>
 				</h3>
 			</div>
 			<div class="windowbg">
@@ -33,7 +31,7 @@ function template_search_members()
 					<div class="msearch_details floatleft">
 						<dl class="settings right">
 							<dt class="righttext">
-								<strong><label for="mem_id">', Lang::$txt['member_id'], '</label></strong>
+								<strong><label for="mem_id">', $txt['member_id'], ':</label></strong>
 								<select name="types[mem_id]">
 									<option value="--">&lt;</option>
 									<option value="-">&lt;=</option>
@@ -46,7 +44,7 @@ function template_search_members()
 								<input type="number" name="mem_id" id="mem_id" value="" size="6">
 							</dd>
 							<dt class="righttext">
-								<strong><label for="age">', Lang::$txt['age'], '</label></strong>
+								<strong><label for="age">', $txt['age'], ':</label></strong>
 								<select name="types[age]">
 									<option value="--">&lt;</option>
 									<option value="-">&lt;=</option>
@@ -59,7 +57,7 @@ function template_search_members()
 								<input type="number" name="age" id="age" value="" size="6">
 							</dd>
 							<dt class="righttext">
-								<strong><label for="posts">', Lang::$txt['member_postcount'], '</label></strong>
+								<strong><label for="posts">', $txt['member_postcount'], ':</label></strong>
 								<select name="types[posts]">
 									<option value="--">&lt;</option>
 									<option value="-">&lt;=</option>
@@ -72,7 +70,7 @@ function template_search_members()
 								<input type="number" name="posts" id="posts" value="" size="6">
 							</dd>
 							<dt class="righttext">
-								<strong><label for="reg_date">', Lang::$txt['date_registered'], '</label></strong>
+								<strong><label for="reg_date">', $txt['date_registered'], ':</label></strong>
 								<select name="types[reg_date]">
 									<option value="--">&lt;</option>
 									<option value="-">&lt;=</option>
@@ -85,7 +83,7 @@ function template_search_members()
 								<input type="date" name="reg_date" id="reg_date" value="" size="10"><span class="smalltext"></span>
 							</dd>
 							<dt class="righttext">
-								<strong><label for="last_online">', Lang::$txt['viewmembers_online'], '</label></strong>
+								<strong><label for="last_online">', $txt['viewmembers_online'], ':</label></strong>
 								<select name="types[last_online]">
 									<option value="--">&lt;</option>
 									<option value="-">&lt;=</option>
@@ -102,25 +100,25 @@ function template_search_members()
 					<div class="msearch_details floatright">
 						<dl class="settings right">
 							<dt class="righttext">
-								<strong><label for="membername">', Lang::$txt['username'], '</label></strong>
+								<strong><label for="membername">', $txt['username'], ':</label></strong>
 							</dt>
 							<dd>
 								<input type="text" name="membername" id="membername" value="">
 							</dd>
 							<dt class="righttext">
-								<strong><label for="email">', Lang::$txt['email_address'], '</label></strong>
+								<strong><label for="email">', $txt['email_address'], ':</label></strong>
 							</dt>
 							<dd>
 								<input type="email" name="email" id="email" value="">
 							</dd>
 							<dt class="righttext">
-								<strong><label for="website">', Lang::$txt['website'], '</label></strong>
+								<strong><label for="website">', $txt['website'], ':</label></strong>
 							</dt>
 							<dd>
 								<input type="url" name="website" id="website" value="">
 							</dd>
 							<dt class="righttext">
-								<strong><label for="ip">', Lang::$txt['ip_address'], '</label></strong>
+								<strong><label for="ip">', $txt['ip_address'], ':</label></strong>
 							</dt>
 							<dd>
 								<input type="text" name="ip" id="ip" value="">
@@ -129,27 +127,27 @@ function template_search_members()
 					</div><!-- .msearch_details -->
 					<div class="msearch_details floatright">
 						<fieldset>
-							<legend>', Lang::$txt['activation_status'], '</legend>
-							<label for="activated-0"><input type="checkbox" name="activated[]" value="1" id="activated-0" checked> ', Lang::$txt['activated'], '</label>&nbsp;&nbsp;
-							<label for="activated-1"><input type="checkbox" name="activated[]" value="0" id="activated-1" checked> ', Lang::$txt['not_activated'], '</label>
+							<legend>', $txt['activation_status'], '</legend>
+							<label for="activated-0"><input type="checkbox" name="activated[]" value="1" id="activated-0" checked> ', $txt['activated'], '</label>&nbsp;&nbsp;
+							<label for="activated-1"><input type="checkbox" name="activated[]" value="0" id="activated-1" checked> ', $txt['not_activated'], '</label>
 						</fieldset>
 					</div>
 				</div><!-- .flow_hidden -->
 			</div><!-- ..windowbg -->
 			<div class="cat_bar">
-				<h3 class="catbg">', Lang::$txt['member_part_of_these_membergroups'], '</h3>
+				<h3 class="catbg">', $txt['member_part_of_these_membergroups'], '</h3>
 			</div>
 			<table class="table_grid">
 				<thead>
 					<tr class="title_bar">
-						<th scope="col">', Lang::$txt['membergroups'], '</th>
-						<th scope="col" class="centercol quarter_table">', Lang::$txt['primary'], '</th>
-						<th scope="col" class="centercol quarter_table">', Lang::$txt['additional'], '</th>
+						<th scope="col">', $txt['membergroups'], '</th>
+						<th scope="col" class="centercol quarter_table">', $txt['primary'], '</th>
+						<th scope="col" class="centercol quarter_table">', $txt['additional'], '</th>
 					</tr>
 				</thead>
 				<tbody>';
 
-	foreach (Utils::$context['membergroups'] as $membergroup)
+	foreach ($context['membergroups'] as $membergroup)
 		echo '
 					<tr class="windowbg">
 						<td>', $membergroup['name'], '</td>
@@ -164,7 +162,7 @@ function template_search_members()
 	echo '
 					<tr class="windowbg">
 						<td>
-							<em>', Lang::$txt['check_all'], '</em>
+							<em>', $txt['check_all'], '</em>
 						</td>
 						<td class="centercol">
 							<input type="checkbox" onclick="invertAll(this, this.form, \'membergroups[1]\');" checked>
@@ -179,14 +177,14 @@ function template_search_members()
 				<thead>
 					<tr class="title_bar">
 						<th scope="col">
-							', Lang::$txt['membergroups_postgroups'], '
+							', $txt['membergroups_postgroups'], '
 						</th>
 						<th class="quarter_table"></th>
 					</tr>
 				</thead>
 				<tbody>';
 
-	foreach (Utils::$context['postgroups'] as $postgroup)
+	foreach ($context['postgroups'] as $postgroup)
 		echo '
 					<tr class="windowbg">
 						<td>
@@ -200,7 +198,7 @@ function template_search_members()
 	echo '
 					<tr class="windowbg">
 						<td>
-							<em>', Lang::$txt['check_all'], '</em>
+							<em>', $txt['check_all'], '</em>
 						</td>
 						<td class="centercol">
 							<input type="checkbox" onclick="invertAll(this, this.form, \'postgroups[]\');" checked>
@@ -209,7 +207,7 @@ function template_search_members()
 				</tbody>
 			</table>
 			<br>
-			<input type="submit" value="', Lang::$txt['search'], '" class="button">
+			<input type="submit" value="', $txt['search'], '" class="button">
 		</form>';
 }
 
@@ -218,17 +216,18 @@ function template_search_members()
  */
 function template_admin_browse()
 {
+	global $context, $scripturl, $txt;
+
 	template_show_list('approve_list');
 
-	// If we have lots of outstanding members try to make the admin's life easier.
-	if (Utils::$context['approve_list']['total_num_items'] > -1)
+	// If we have lots of outstanding members try and make the admin's life easier.
+	if ($context['approve_list']['total_num_items'] > 20)
 	{
-		Utils::$context['browse_type'] = 'activate';
 		echo '
 		<br>
-		<form id="admin_form_wrapper" action="', Config::$scripturl, '?action=admin;area=viewmembers" method="post" accept-charset="', Utils::$context['character_set'], '" name="postFormOutstanding" id="postFormOutstanding" onsubmit="return onOutstandingSubmit();">
+		<form id="admin_form_wrapper" action="', $scripturl, '?action=admin;area=viewmembers" method="post" accept-charset="', $context['character_set'], '" name="postFormOutstanding" id="postFormOutstanding" onsubmit="return onOutstandingSubmit();">
 			<div class="cat_bar">
-				<h3 class="catbg">', Lang::$txt['admin_browse_outstanding'], '</h3>
+				<h3 class="catbg">', $txt['admin_browse_outstanding'], '</h3>
 			</div>
 			<script>
 				function onOutstandingSubmit()
@@ -238,15 +237,15 @@ function template_admin_browse()
 
 					var message = "";
 					if (document.forms.postFormOutstanding.todo.value.indexOf("delete") != -1)
-						message = "', Lang::$txt['admin_browse_w_delete'], '";
+						message = "', $txt['admin_browse_w_delete'], '";
 					else if (document.forms.postFormOutstanding.todo.value.indexOf("reject") != -1)
-						message = "', Lang::$txt['admin_browse_w_reject'], '";
+						message = "', $txt['admin_browse_w_reject'], '";
 					else if (document.forms.postFormOutstanding.todo.value == "remind")
-						message = "', Lang::$txt['admin_browse_w_remind'], '";
+						message = "', $txt['admin_browse_w_remind'], '";
 					else
-						message = "', Utils::$context['browse_type'] == 'approve' ? Lang::$txt['admin_browse_w_approve'] : Lang::$txt['admin_browse_w_activate'], '";
+						message = "', $context['browse_type'] == 'approve' ? $txt['admin_browse_w_approve'] : $txt['admin_browse_w_activate'], '";
 
-					if (confirm(message + " ', Lang::$txt['admin_browse_outstanding_warn'], '"))
+					if (confirm(message + " ', $txt['admin_browse_outstanding_warn'], '"))
 						return true;
 					else
 						return false;
@@ -254,43 +253,39 @@ function template_admin_browse()
 			</script>
 
 			<div class="windowbg">
-				<p class="settings">
-					',
-					Lang::getTxt(
-						'admin_browse_outstanding_days',
-						[
-							'input' => '<input type="number" name="time_passed" value="14">',
-							'number' => 14,
-						],
-					), '
-				</p>
 				<dl class="settings">
 					<dt>
-						', Lang::$txt['admin_browse_outstanding_perform'], ':
+						', $txt['admin_browse_outstanding_days_1'], ':
+					</dt>
+					<dd>
+						<input type="text" name="time_passed" value="14" maxlength="4" size="3"> ', $txt['admin_browse_outstanding_days_2'], '.
+					</dd>
+					<dt>
+						', $txt['admin_browse_outstanding_perform'], ':
 					</dt>
 					<dd>
 						<select name="todo">
-							', Utils::$context['browse_type'] == 'activate' ? '
-							<option value="ok">' . Lang::$txt['admin_browse_w_activate'] . '</option>' : '', '
-							<option value="okemail">', Utils::$context['browse_type'] == 'approve' ? Lang::$txt['admin_browse_w_approve_send_email'] : Lang::$txt['admin_browse_w_activate_send_email'], '</option>', Utils::$context['browse_type'] == 'activate' ? '' : '
-							<option value="require_activation">' . Lang::$txt['admin_browse_w_approve_require_activate'] . '</option>', '
-							<option value="reject">', Lang::$txt['admin_browse_w_reject'], '</option>
-							<option value="rejectemail">', Lang::$txt['admin_browse_w_reject_send_email'], '</option>
-							<option value="delete">', Lang::$txt['admin_browse_w_delete'], '</option>
-							<option value="deleteemail">', Lang::$txt['admin_browse_w_delete_send_email'], '</option>', Utils::$context['browse_type'] == 'activate' ? '
-							<option value="remind">' . Lang::$txt['admin_browse_w_remind'] . '</option>' : '', '
+							', $context['browse_type'] == 'activate' ? '
+							<option value="ok">' . $txt['admin_browse_w_activate'] . '</option>' : '', '
+							<option value="okemail">', $context['browse_type'] == 'approve' ? $txt['admin_browse_w_approve'] : $txt['admin_browse_w_activate'], ' ', $txt['admin_browse_w_email'], '</option>', $context['browse_type'] == 'activate' ? '' : '
+							<option value="require_activation">' . $txt['admin_browse_w_approve_require_activate'] . '</option>', '
+							<option value="reject">', $txt['admin_browse_w_reject'], '</option>
+							<option value="rejectemail">', $txt['admin_browse_w_reject'], ' ', $txt['admin_browse_w_email'], '</option>
+							<option value="delete">', $txt['admin_browse_w_delete'], '</option>
+							<option value="deleteemail">', $txt['admin_browse_w_delete'], ' ', $txt['admin_browse_w_email'], '</option>', $context['browse_type'] == 'activate' ? '
+							<option value="remind">' . $txt['admin_browse_w_remind'] . '</option>' : '', '
 						</select>
 					</dd>
 				</dl>
-				<input type="submit" value="', Lang::$txt['admin_browse_outstanding_go'], '" class="button">
-				<input type="hidden" name="type" value="', Utils::$context['browse_type'], '">
-				<input type="hidden" name="sort" value="', Utils::$context['approve_list']['sort']['id'], '">
-				<input type="hidden" name="start" value="', Utils::$context['approve_list']['start'], '">
-				<input type="hidden" name="orig_filter" value="', Utils::$context['current_filter'], '">
-				<input type="hidden" name="sa" value="approve">', !empty(Utils::$context['approve_list']['sort']['desc']) ? '
+				<input type="submit" value="', $txt['admin_browse_outstanding_go'], '" class="button">
+				<input type="hidden" name="type" value="', $context['browse_type'], '">
+				<input type="hidden" name="sort" value="', $context['approve_list']['sort']['id'], '">
+				<input type="hidden" name="start" value="', $context['approve_list']['start'], '">
+				<input type="hidden" name="orig_filter" value="', $context['current_filter'], '">
+				<input type="hidden" name="sa" value="approve">', !empty($context['approve_list']['sort']['desc']) ? '
 				<input type="hidden" name="desc" value="1">' : '', '
 			</div><!-- .windowbg -->
-			<input type="hidden" name="', Utils::$context['session_var'], '" value="', Utils::$context['session_id'], '">
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">
 		</form>';
 	}
 }

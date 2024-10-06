@@ -5,26 +5,20 @@
  *
  * @package SMF
  * @author Simple Machines https://www.simplemachines.org
- * @copyright 2024 Simple Machines and individual contributors
+ * @copyright 2022 Simple Machines and individual contributors
  * @license https://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 3.0 Alpha 2
+ * @version 2.1.2
  */
-
-declare(strict_types=1);
 
 namespace SMF\Cache\APIs;
 
 use Memcached;
 use SMF\Cache\CacheApi;
 use SMF\Cache\CacheApiInterface;
-use SMF\Config;
-use SMF\Lang;
-use SMF\Utils;
 
-if (!defined('SMF')) {
+if (!defined('SMF'))
 	die('No direct access...');
-}
 
 /**
  * Our Cache API class
@@ -33,20 +27,12 @@ if (!defined('SMF')) {
  */
 class MemcachedImplementation extends CacheApi implements CacheApiInterface
 {
-	public const CLASS_KEY = 'cache_memcached';
+	const CLASS_KEY = 'cache_memcached';
 
-	/**
-	 * @var object
-	 *
-	 * The Memcache instance.
-	 */
+	/** @var Memcached The memcache instance. */
 	private $memcached = null;
 
-	/**
-	 * @var array
-	 *
-	 * Known Memcache servers.
-	 */
+	/** @var string[] */
 	private $servers;
 
 	/**
@@ -54,18 +40,21 @@ class MemcachedImplementation extends CacheApi implements CacheApiInterface
 	 */
 	public function __construct()
 	{
+		global $cache_memcached;
+
 		$this->servers = array_map(
-			function ($server) {
-				// Normal host names do not contain slashes, while e.g. unix sockets do. Assume alternative transport pipe with port 0.
-				if (str_contains($server, '/')) {
-					return [$server, 0];
+			function($server)
+			{
+				if (strpos($server, '/') !== false)
+					return array($server, 0);
+
+				else
+				{
+					$server = explode(':', $server);
+					return array($server[0], isset($server[1]) ? (int) $server[1] : 11211);
 				}
-
-				$server = explode(':', $server);
-
-				return [$server[0], isset($server[1]) ? (int) $server[1] : 11211];
 			},
-			explode(',', Config::$cache_memcached),
+			explode(',', $cache_memcached)
 		);
 
 		parent::__construct();
@@ -74,23 +63,24 @@ class MemcachedImplementation extends CacheApi implements CacheApiInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isSupported(bool $test = false): bool
+	public function isSupported($test = false)
 	{
+		global $cache_memcached;
+
 		$supported = class_exists('Memcached');
 
-		if ($test) {
+		if ($test)
 			return $supported;
-		}
 
-		return parent::isSupported() && $supported && !empty($this->servers);
+		return parent::isSupported() && $supported && !empty($cache_memcached);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function connect(): bool
+	public function connect()
 	{
-		$this->memcached = Config::$db_persist ? new Memcached($this->prefix) : new Memcached();
+		$this->memcached = new Memcached;
 
 		return $this->addServers();
 	}
@@ -102,26 +92,26 @@ class MemcachedImplementation extends CacheApi implements CacheApiInterface
 	 *
 	 * @return bool True if there are servers in the daemon, false if not.
 	 */
-	protected function addServers(): bool
+	protected function addServers()
 	{
 		$currentServers = $this->memcached->getServerList();
 		$retVal = !empty($currentServers);
-
-		foreach ($this->servers as $server) {
+		foreach ($this->servers as $server)
+		{
 			// Figure out if we have this server or not
 			$foundServer = false;
-
-			foreach ($currentServers as $currentServer) {
-				if ($server[0] == $currentServer['host'] && $server[1] == $currentServer['port']) {
+			foreach ($currentServers as $currentServer)
+			{
+				if ($server[0] == $currentServer['host'] && $server[1] == $currentServer['port'])
+				{
 					$foundServer = true;
 					break;
 				}
 			}
 
 			// Found it?
-			if (empty($foundServer)) {
+			if (empty($foundServer))
 				$retVal |= $this->memcached->addServer($server[0], $server[1]);
-			}
 		}
 
 		return $retVal;
@@ -130,16 +120,15 @@ class MemcachedImplementation extends CacheApi implements CacheApiInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getData(string $key, ?int $ttl = null): mixed
+	public function getData($key, $ttl = null)
 	{
 		$key = $this->prefix . strtr($key, ':/', '-_');
 
 		$value = $this->memcached->get($key);
 
 		// $value should return either data or false (from failure, key not found or empty array).
-		if ($value === false) {
+		if ($value === false)
 			return null;
-		}
 
 		return $value;
 	}
@@ -147,7 +136,7 @@ class MemcachedImplementation extends CacheApi implements CacheApiInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function putData(string $key, mixed $value, ?int $ttl = null): mixed
+	public function putData($key, $value, $ttl = null)
 	{
 		$key = $this->prefix . strtr($key, ':/', '-_');
 
@@ -157,7 +146,7 @@ class MemcachedImplementation extends CacheApi implements CacheApiInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function cleanCache($type = ''): bool
+	public function cleanCache($type = '')
 	{
 		$this->invalidateCache();
 
@@ -168,7 +157,7 @@ class MemcachedImplementation extends CacheApi implements CacheApiInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function quit(): bool
+	public function quit()
 	{
 		return $this->memcached->quit();
 	}
@@ -176,47 +165,46 @@ class MemcachedImplementation extends CacheApi implements CacheApiInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function cacheSettings(array &$config_vars): void
+	public function cacheSettings(array &$config_vars)
 	{
-		if (!in_array(Lang::$txt[self::CLASS_KEY . '_settings'], $config_vars)) {
-			$config_vars[] = Lang::$txt[self::CLASS_KEY . '_settings'];
-			$config_vars[] = [
+		global $context, $txt;
+
+		if (!in_array($txt[self::CLASS_KEY .'_settings'], $config_vars))
+		{
+			$config_vars[] = $txt[self::CLASS_KEY .'_settings'];
+			$config_vars[] = array(
 				self::CLASS_KEY,
-				Lang::$txt[self::CLASS_KEY . '_servers'],
+				$txt[self::CLASS_KEY .'_servers'],
 				'file',
 				'text',
 				0,
-				'subtext' => Lang::$txt[self::CLASS_KEY . '_servers_subtext']];
+				'subtext' => $txt[self::CLASS_KEY .'_servers_subtext']);
 		}
 
-		if (!isset(Utils::$context['settings_post_javascript'])) {
-			Utils::$context['settings_post_javascript'] = '';
-		}
+		if (!isset($context['settings_post_javascript']))
+			$context['settings_post_javascript'] = '';
 
-		if (empty(Utils::$context['settings_not_writable'])) {
-			Utils::$context['settings_post_javascript'] .= '
+		if (empty($context['settings_not_writable']))
+			$context['settings_post_javascript'] .= '
 			$("#cache_accelerator").change(function (e) {
 				var cache_type = e.currentTarget.value;
-				$("#' . self::CLASS_KEY . '").prop("disabled", cache_type != "MemcacheImplementation" && cache_type != "MemcachedImplementation");
+				$("#'. self::CLASS_KEY .'").prop("disabled", cache_type != "MemcacheImplementation" && cache_type != "MemcachedImplementation");
 			});';
-		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getVersion(): string|bool
+	public function getVersion()
 	{
-		if (!is_object($this->memcached)) {
+		if (!is_object($this->memcached))
 			return false;
-		}
 
 		// This gets called in Subs-Admin getServerVersions when loading up support information.  If we can't get a connection, return nothing.
 		$result = $this->memcached->getVersion();
 
-		if (!empty($result)) {
+		if (!empty($result))
 			return current($result);
-		}
 
 		return false;
 	}
