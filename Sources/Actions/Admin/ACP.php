@@ -19,7 +19,6 @@ use SMF\ActionInterface;
 use SMF\Actions\MessageIndex;
 use SMF\Actions\Notify;
 use SMF\ActionTrait;
-use SMF\BBCodeParser;
 use SMF\Cache\CacheApi;
 use SMF\Config;
 use SMF\Db\DatabaseApi as Db;
@@ -28,6 +27,7 @@ use SMF\IntegrationHook;
 use SMF\Lang;
 use SMF\Mail;
 use SMF\Menu;
+use SMF\Parser;
 use SMF\SecurityToken;
 use SMF\Theme;
 use SMF\Url;
@@ -976,7 +976,7 @@ class ACP implements ActionInterface
 		// What about any BBC selection boxes?
 		if (!empty($bbcChoice)) {
 			// What are the options, eh?
-			$temp = BBCodeParser::getCodes();
+			$temp = Parser::getBBCodes();
 			$bbcTags = [];
 
 			foreach ($temp as $tag) {
@@ -1351,7 +1351,7 @@ class ACP implements ActionInterface
 			elseif ($var[0] == 'bbc') {
 				$bbcTags = [];
 
-				foreach (BBCodeParser::getCodes() as $tag) {
+				foreach (Parser::getBBCodes() as $tag) {
 					$bbcTags[] = $tag['tag'];
 				}
 

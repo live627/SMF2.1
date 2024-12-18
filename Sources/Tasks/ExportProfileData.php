@@ -912,6 +912,7 @@ class ExportProfileData extends BackgroundTask
 
 		// Use some temporary integration hooks to manipulate BBC parsing during export.
 		$hook_methods = [
+			'parser_cache' => 'parser_cache',
 			'pre_parsebbc' => in_array($this->_details['format'], ['HTML', 'XML_XSLT']) ? 'pre_parsebbc_html' : 'pre_parsebbc_xml',
 			'post_parsebbc' => 'post_parsebbc',
 			'bbc_codes' => 'bbc_codes',
@@ -1267,7 +1268,7 @@ class ExportProfileData extends BackgroundTask
 
 		// Determine which files, if any, are ready to be transformed.
 		$export_dir_slash = Config::$modSettings['export_dir'] . DIRECTORY_SEPARATOR;
-		$idhash = hash_hmac('sha1', $this->_details['uid'], Config::getAuthSecret());
+		$idhash = hash_hmac('sha1', (string) $this->_details['uid'], Config::getAuthSecret());
 		$idhash_ext = $idhash . '.' . $this->_details['format_settings']['extension'];
 
 		$new_exportfiles = [];
@@ -1862,14 +1863,21 @@ class ExportProfileData extends BackgroundTask
 	}
 
 	/**
+	 * Adds data to the cache key to distinguish parsing for exports from normal
+	 * parsing.
+	 */
+	public static function parser_cache(array &$cache_key_extras): void
+	{
+		$cache_key_extras[__CLASS__] = 1;
+	}
+
+	/**
 	 * Adjusts some parse_bbc() parameters for the special case of HTML and
 	 * XML_XSLT exports.
 	 */
-	public static function pre_parsebbc_html(string &$message, bool &$smileys, string &$cache_id, array &$parse_tags, array &$cache_key_extras): void
+	public static function pre_parsebbc_html(string &$message, bool &$smileys, string &$cache_id, array &$parse_tags): void
 	{
 		$cache_id = '';
-
-		$cache_key_extras[__CLASS__] = 1;
 
 		foreach (['smileys_url', 'attachmentThumbnails'] as $var) {
 			if (isset(Config::$modSettings[$var])) {
@@ -1884,11 +1892,9 @@ class ExportProfileData extends BackgroundTask
 	/**
 	 * Adjusts some parse_bbc() parameters for the special case of XML exports.
 	 */
-	public static function pre_parsebbc_xml(string &$message, bool &$smileys, string &$cache_id, array &$parse_tags, array &$cache_key_extras): void
+	public static function pre_parsebbc_xml(string &$message, bool &$smileys, string &$cache_id, array &$parse_tags): void
 	{
 		$cache_id = '';
-
-		$cache_key_extras[__CLASS__] = 1;
 
 		$smileys = false;
 

@@ -449,8 +449,12 @@ class Msg implements \ArrayAccess
 			$this->formatted['body'] = Autolinker::load(true)->makeLinks($this->formatted['body']);
 		}
 
-		// Run BBC interpreter on the message.
-		$this->formatted['body'] = BBCodeParser::load()->parse($this->formatted['body'], $this->smileys_enabled, $this->id);
+		// Run BBC and Markdown interpreters on the message.
+		$this->formatted['body'] = Parser::transform(
+			string: $this->formatted['body'],
+			input_types: Parser::INPUT_BBC | Parser::INPUT_MARKDOWN | ($this->smileys_enabled ? Parser::INPUT_SMILEYS : 0),
+			options: ['cache_id' => $this->id],
+		);
 
 		$this->formatted['link'] = '<a href="' . $this->formatted['href'] . '" rel="nofollow">' . $this->formatted['subject'] . '</a>';
 
@@ -583,7 +587,7 @@ class Msg implements \ArrayAccess
 		// passed to the queryData() method.
 		IntegrationHook::call('integrate_query_message', [&$selects, &$joins, &$params, &$where, &$order, &$group, &$limit]);
 
-		foreach(self::queryData($selects, $params, $joins, $where, $order, $group, $limit) as $row) {
+		foreach (self::queryData($selects, $params, $joins, $where, $order, $group, $limit) as $row) {
 			$id = (int) $row['id_msg'];
 
 			yield (new self($id, $row));
@@ -872,7 +876,7 @@ class Msg implements \ArrayAccess
 
 			$tags = [];
 
-			foreach (BBCodeParser::getCodes() as $code) {
+			foreach (Parser::getBBCodes() as $code) {
 				if (!in_array($code['tag'], $allowed_empty)) {
 					$tags[] = $code['tag'];
 				}
