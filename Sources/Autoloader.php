@@ -15,32 +15,79 @@ declare(strict_types=1);
 
 namespace SMF;
 
+use Composer\Autoload\ClassLoader;
 
-$loader = require Config::$vendordir . '/autoload.php';
-$third_party_mappers = [];
+/**
+ * Autoloader class for initializing the SMF autoloader.
+ */
+class Autoloader
+{
+	/**
+	 * @var ClassLoader Composer's class loader instance.
+	 */
+	private ClassLoader $loader;
 
-// Ensure $sourcedir is set to something valid.
-if (class_exists(Config::class, false) && isset(Config::$sourcedir)) {
-	$sourcedir = Config::$sourcedir;
-}
-
-if (empty($sourcedir) || !is_dir($sourcedir)) {
-	$sourcedir = __DIR__;
-}
-
-// Do any third-party scripts want in on the fun?
-if (!defined('SMF_INSTALLING') && class_exists(Config::class, false)) {
-	if (!class_exists(IntegrationHook::class, false) && is_file($sourcedir . '/IntegrationHook.php')) {
-		require_once $sourcedir . '/IntegrationHook.php';
+	/**
+	 * Constructor for the Autoloader class.
+	 *
+	 * @param ClassLoader $loader Composer's class loader instance.
+	 */
+	public function __construct(ClassLoader $loader)
+	{
+		$this->loader = $loader;
 	}
 
-	if (class_exists(IntegrationHook::class, false)) {
-		IntegrationHook::call('integrate_autoload', [&$third_party_mappers]);
-	}
-}
+	/**
+	 * Initializes the autoloader by loading third-party mappers and integration hooks.
+	 * 
+	 * This method sets up the autoloader by building a class map and registering
+	 * namespaces. It first checks if the forum is not in the installation phase 
+	 * and if the `IntegrationHook` class exists. If both conditions are met, it 
+	 * calls the `integrate_autoload` hook which allows third-party integrations 
+	 * to modify the class map.
+	 * 
+	 * The `$classMap` array is built by third-party integrations, where each key
+	 * is a namespace prefix and each value is the corresponding directory path.
+	 * These mappings are then registered with the Composer autoloader.
+	 */
+	public function callIntegrations(): void
+	{
+		$classMap = [];
 
-foreach ($third_party_mappers as $prefix => $dirname) {
-	$loader->addPsr4($prefix, $dirname);
+		// Load third-party integration hooks if necessary
+		if (!defined('SMF_INSTALLING') && class_exists(IntegrationHook::class, false)) {
+			/**
+			 * Calls the integration hook for autoload.
+			 * 
+			 * The `integrate_autoload` hook allows third-party integrations to add
+			 * their own namespace mappings to the autoloader. The integrations can
+			 * modify the `$classMap` array to register their namespaces.
+			 * 
+			 * Example:
+			 * ```
+			 * $classMap['Vendor\\Package\\'] = '/path/to/vendor/package/src';
+			 * ```
+			 * 
+			 * @param array $classMap Reference to the class map array.
+			 */
+			IntegrationHook::call('integrate_autoload', [&$classMap]);
+		}
+
+		// Register third-party namespace mappers
+		foreach ($classMap as $prefix => $dirname) {
+			$this->loader->addPsr4($prefix, $dirname);
+		}
+	}
+
+	/**
+	 * Gets the Composer class loader instance.
+	 *
+	 * @return ClassLoader The Composer class loader instance.
+	 */
+	public function getLoader(): ClassLoader
+	{
+		return $this->loader;
+	}
 }
 
 ?>

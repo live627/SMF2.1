@@ -31,9 +31,6 @@ declare(strict_types=1);
  * 1. Define some constants we need.
  */
 
-use SMF\Config;
-use SMF\IntegrationHook;
-
 if (!defined('SMF')) {
 	define('SMF', 1);
 }
@@ -127,29 +124,33 @@ call_user_func(function () {
 
 	// Ensure $db_last_error is set, too.
 	SMF\Config::getDbLastError();
+
+	// Devs want all error messages, but others don't.
+	if (SMF === 1) {
+		error_reporting(!empty(SMF\Config::$db_show_debug) ? E_ALL : E_ALL & ~E_DEPRECATED);
+	}
+
+	/*
+	 * 3. Load some other essential includes.
+	 */
+
+	$loader = require_once SMF\Config::$vendordir . '/autoload.php';
+
+	// Ensure we don't trip over disabled internal functions
+	require_once SMF\Config::$sourcedir . '/Subs-Compat.php';
+
+
+	/*********************************************************************
+	 * From this point forward, do stuff specific to normal forum loading.
+	 *********************************************************************/
+
+	if (SMF === 1) {
+		$forum = new SMF\Forum();
+		$autoloader = new SMF\Autoloader($loader);
+		$autoloader->callIntegrations();
+		$forum->callIntegrations();
+		$forum->execute();
+	}
 });
-
-// Devs want all error messages, but others don't.
-if (SMF === 1) {
-	error_reporting(!empty(SMF\Config::$db_show_debug) ? E_ALL : E_ALL & ~E_DEPRECATED);
-}
-
-/*
- * 3. Load some other essential includes.
- */
-
-require_once SMF\Config::$sourcedir . '/Autoloader.php';
-
-// Ensure we don't trip over disabled internal functions
-require_once SMF\Config::$sourcedir . '/Subs-Compat.php';
-
-
-/*********************************************************************
- * From this point forward, do stuff specific to normal forum loading.
- *********************************************************************/
-
-if (SMF === 1) {
-	(new SMF\Forum())->execute();
-}
 
 ?>

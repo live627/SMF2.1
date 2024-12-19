@@ -20,7 +20,9 @@ use SMF\Db\DatabaseApi as Db;
 /**
  * The root Forum class. Used when browsing the forum normally.
  *
- * This, as you have probably guessed, is the crux on which SMF functions.
+ * This class acts as the main entry point for forum functionality. It handles
+ * initializing various components, processing user requests, and executing 
+ * the appropriate actions based on the request parameters.
  *
  * The most interesting part of this file for modification authors is the action
  * array. It is formatted as so:
@@ -191,7 +193,10 @@ class Forum
 	 ****************/
 
 	/**
-	 * Constructor
+	 * Constructor for the Forum class.
+	 * 
+	 * Initializes various components of the forum, such as database connection,
+	 * settings, request cleaning, session handling, and output compression.
 	 */
 	public function __construct()
 	{
@@ -238,7 +243,16 @@ class Forum
 
 		// Start the session. (assuming it hasn't already been.)
 		Session::load();
+	}
 
+	/**
+	 * Calls integration hooks to modify actions.
+	 * 
+	 * This method triggers integration hooks to allow third-party modifications
+	 * to the actions, unlogged actions, and guest access actions arrays.
+	 */
+	public function callIntegrations(): void
+	{
 		// Why three different hooks? For historical reasons.
 		// Allow modifying $actions easily.
 		IntegrationHook::call('integrate_actions', [&self::$actions]);
@@ -251,11 +265,10 @@ class Forum
 	}
 
 	/**
-	 * This is the one that gets stuff done.
+	 * Executes the main forum functionality.
 	 *
-	 * Internally, this calls $this->main() to find out what function to call,
-	 * then calls that function, and then calls obExit() in order to send
-	 * results to the browser.
+	 * This method determines the appropriate action to execute based on the request
+	 * parameters, calls the corresponding function, and sends the output to the browser.
 	 */
 	public function execute(): void
 	{
@@ -272,8 +285,10 @@ class Forum
 
 	/**
 	 * Display a message about the forum being in maintenance mode.
-	 * - display a login screen with sub template 'maintenance'.
-	 * - sends a 503 header, so search engines don't bother indexing while we're in maintenance mode.
+	 * 
+	 * This method displays a login screen with the 'maintenance' sub-template,
+	 * sends a 503 header to prevent search engines from indexing the site during
+	 * maintenance, and sets up the template context.
 	 */
 	public static function inMaintenance(): void
 	{
