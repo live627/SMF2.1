@@ -14,12 +14,32 @@ jobs:
     - name: Set current year environment variable
       run: echo "CURRENT_YEAR=$(date +'%Y')" >> $GITHUB_ENV
 
-    - name: Update year in SSI.php, proxy.php, cron.php, and index.php
+    - name: Check if version tag matches any pre-release
+      id: check_version
       run: |
-        sed -i "s/define('SMF_SOFTWARE_YEAR', '[0-9]\{4\}');/define('SMF_SOFTWARE_YEAR', '${{ env.CURRENT_YEAR }}');/" SSI.php
-        sed -i "s/define('SMF_SOFTWARE_YEAR', '[0-9]\{4\}');/define('SMF_SOFTWARE_YEAR', '${{ env.CURRENT_YEAR }}');/" proxy.php
-        sed -i "s/define('SMF_SOFTWARE_YEAR', '[0-9]\{4\}');/define('SMF_SOFTWARE_YEAR', '${{ env.CURRENT_YEAR }}');/" cron.php
-        sed -i "s/define('SMF_SOFTWARE_YEAR', '[0-9]\{4\}');/define('SMF_SOFTWARE_YEAR', '${{ env.CURRENT_YEAR }}');/" index.php
+        str=$(grep -oP "define\('SMF_VERSION', '[^']+" SSI.php)
+        echo $str;
+        re='[0-9]+\.[0-9]+ [A-Za-z]+';
+        if [[ $str =~ $re ]]; then
+          echo "PRE_RELEASE=true" >> $GITHUB_ENV
+        else
+          echo "PRE_RELEASE=false" >> $GITHUB_ENV
+        fi
+
+    - name: Update year in Sources/
+      if: env.PRE_RELEASE == 'true'
+      run: |
+        shopt -s globstar
+        for file in Sources/**/*.php; do
+          sed -i "s/define('SMF_SOFTWARE_YEAR', '[0-9]\{4\}');/define('SMF_SOFTWARE_YEAR', '${{ env.CURRENT_YEAR }}');/" $file
+        done
+
+    - name: Update year in PHP files
+      if: env.PRE_RELEASE == 'false'
+      run: |
+        for file in SSI.php proxy.php cron.php index.php; do
+          sed -i "s/define('SMF_SOFTWARE_YEAR', '[0-9]\{4\}');/define('SMF_SOFTWARE_YEAR', '${{ env.CURRENT_YEAR }}');/" $file
+        done
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v7
@@ -28,4 +48,4 @@ jobs:
         commit-message: Update year to ${{ env.CURRENT_YEAR }}
         branch: 2.1/update-year-${{ env.CURRENT_YEAR }}
         title: "[2.1] Update year to ${{ env.CURRENT_YEAR }}"
-        body: This PR updates the year to ${{ env.CURRENT_YEAR }} in SSI.php, proxy.php, cron.php, and index.php.
+        body: This PR updates the year to ${{ env.CURRENT_YEAR }} in all PHP files in Sources/ if the version tag in SSI.php matches any pre-release.
