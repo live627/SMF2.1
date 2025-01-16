@@ -1,0 +1,24 @@
+name: Update Version Numbers
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version string (optional)'
+        required: false
+
+jobs:
+  update-version-numbers:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Run script
+      run: |
+        if [ -n "${{ github.event.inputs.version }}" ]; then
+          php other/update_version_numbers.php "${{ github.event.inputs.version }}"
+        else
+          php other/update_version_numbers.php
+        fi
