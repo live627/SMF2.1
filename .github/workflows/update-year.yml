@@ -19,6 +19,7 @@ jobs:
         str=$(grep -oP "define\('SMF_VERSION', '[^']+" SSI.php)
         echo $str;
         re='[0-9]+\.[0-9]+ [A-Za-z]+';
+        echo "$(grep -oP "[0-9]+\.[0-9]+")"
         if [[ $str =~ $re ]]; then
           echo "PRE_RELEASE=true" >> $GITHUB_ENV
         else
@@ -29,13 +30,14 @@ jobs:
       if: env.PRE_RELEASE == 'true'
       run: |
         shopt -s globstar
-        for file in Sources/**/*.php; do
-          sed -i "s/define('SMF_SOFTWARE_YEAR', '[0-9]\{4\}');/define('SMF_SOFTWARE_YEAR', '${{ env.CURRENT_YEAR }}');/" $file
+        for file in Sources/**/*.php Themes/default/*.php; do
+          sed -i "s/@copyright [0-9]\{4\}/@copyright ${{ env.CURRENT_YEAR }}/" $file
         done
 
-    - name: Update year in PHP files
+    - name: Update year in PHP files 
       run: |
-        for file in SSI.php proxy.php cron.php index.php; do
+        for file in SSI.php proxy.php cron.php index.php other/*.php; do
+          sed -i "s/@copyright [0-9]\{4\}/@copyright ${{ env.CURRENT_YEAR }}/" $file
           sed -i "s/define('SMF_SOFTWARE_YEAR', '[0-9]\{4\}');/define('SMF_SOFTWARE_YEAR', '${{ env.CURRENT_YEAR }}');/" $file
         done
 
@@ -46,4 +48,4 @@ jobs:
         commit-message: Update year to ${{ env.CURRENT_YEAR }}
         branch: 2.1/update-year-${{ env.CURRENT_YEAR }}
         title: "[2.1] Update year to ${{ env.CURRENT_YEAR }}"
-        body: This PR updates the year to ${{ env.CURRENT_YEAR }} in all PHP files in Sources/ if the version tag in SSI.php matches any pre-release.
+        body: This PR updates the year to ${{ env.CURRENT_YEAR }}. This action was performed by a bot.
