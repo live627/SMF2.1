@@ -15,7 +15,6 @@ jobs:
       run: echo "CURRENT_YEAR=$(date +'%Y')" >> $GITHUB_ENV
 
     - name: Check if version tag matches any pre-release
-      id: check_version
       run: |
         str=$(grep -oP "define\('SMF_VERSION', '[^']+" SSI.php)
         echo $str;
@@ -35,7 +34,6 @@ jobs:
         done
 
     - name: Update year in PHP files
-      if: env.PRE_RELEASE == 'false'
       run: |
         for file in SSI.php proxy.php cron.php index.php; do
           sed -i "s/define('SMF_SOFTWARE_YEAR', '[0-9]\{4\}');/define('SMF_SOFTWARE_YEAR', '${{ env.CURRENT_YEAR }}');/" $file
