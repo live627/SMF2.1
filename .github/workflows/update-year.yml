@@ -19,7 +19,8 @@ jobs:
         str=$(grep -oP "define\('SMF_VERSION', '[^']+" SSI.php)
         echo $str;
         re='[0-9]+\.[0-9]+ [A-Za-z]+';
-        echo "$(grep -oP "[0-9]+\.[0-9]+")"
+        tag=`echo $str | grep -oP "[0-9]+\.[0-9]+"`
+        echo $tag
         if [[ $str =~ $re ]]; then
           echo "PRE_RELEASE=true" >> $GITHUB_ENV
         else
