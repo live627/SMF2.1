@@ -18,11 +18,13 @@ jobs:
       run: |
         str=$(grep -oP "define\('SMF_VERSION', '[^']+" index.php)
         re='[0-9]+\.[0-9]+ ?[A-Za-z]+';
+        tag=`echo $str | grep -oP "[0-9]+\.[0-9]+"`
         if [[ $str =~ $re ]]; then
           echo "PRE_RELEASE=true" >> $GITHUB_ENV
         else
           echo "PRE_RELEASE=false" >> $GITHUB_ENV
         fi
+        echo "TAG=$(tag)" >> $GITHUB_ENV
 
     - name: Update year in Sources/
       if: env.PRE_RELEASE == 'true'
@@ -44,6 +46,6 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         commit-message: Update year to ${{ env.CURRENT_YEAR }}
-        branch: 3.0/update-year-${{ env.CURRENT_YEAR }}
-        title: "[3.0] Update year to ${{ env.CURRENT_YEAR }}"
+        branch: ${{ env.TAG }}/update-year-${{ env.CURRENT_YEAR }}
+        title: "[${{ env.TAG }}] Update year to ${{ env.CURRENT_YEAR }}"
         body: This commit updates `SMF_SOFTWARE_YEAR` to ${{ env.CURRENT_YEAR }}. This action was performed by a bot.
