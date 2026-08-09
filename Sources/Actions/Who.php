@@ -46,64 +46,6 @@ class Who implements ActionInterface, Routable
 	use ActionRouter;
 	use ActionTrait;
 
-	/**************************
-	 * Public static properties
-	 **************************/
-
-	/**
-	 * @var array
-	 *
-	 * Actions that require a specific permission level.
-	 */
-	public static array $allowedActions = [
-		'admin' => ['moderate_forum', 'manage_membergroups', 'manage_bans', 'admin_forum', 'manage_permissions', 'send_mail', 'manage_attachments', 'manage_smileys', 'manage_boards', 'edit_news'],
-		'ban' => ['manage_bans'],
-		'boardrecount' => ['admin_forum'],
-		'calendar' => ['calendar_view'],
-		'corefeatures' => ['admin_forum'],
-		'editnews' => ['edit_news'],
-		'featuresettings' => ['admin_forum'],
-		'languages' => ['admin_forum'],
-		'logs' => ['admin_forum'],
-		'mailing' => ['send_mail'],
-		'mailqueue' => ['admin_forum'],
-		'maintain' => ['admin_forum'],
-		'manageattachments' => ['manage_attachments'],
-		'manageboards' => ['manage_boards'],
-		'managecalendar' => ['admin_forum'],
-		'managesearch' => ['admin_forum'],
-		'managesmileys' => ['manage_smileys'],
-		'membergroups' => ['manage_membergroups'],
-		'mlist' => ['view_mlist'],
-		'moderate' => ['access_mod_center', 'moderate_forum', 'manage_membergroups'],
-		'modsettings' => ['admin_forum'],
-		'news' => ['edit_news', 'send_mail', 'admin_forum'],
-		'optimizetables' => ['admin_forum'],
-		'packages' => ['admin_forum'],
-		'paidsubscribe' => ['admin_forum'],
-		'permissions' => ['manage_permissions'],
-		'postsettings' => ['admin_forum'],
-		'regcenter' => ['admin_forum', 'moderate_forum'],
-		'repairboards' => ['admin_forum'],
-		'reports' => ['admin_forum'],
-		'scheduledtasks' => ['admin_forum'],
-		'search' => ['search_posts'],
-		'search2' => ['search_posts'],
-		'securitysettings' => ['admin_forum'],
-		'sengines' => ['admin_forum'],
-		'serversettings' => ['admin_forum'],
-		'setcensor' => ['moderate_forum'],
-		'setreserve' => ['moderate_forum'],
-		'stats' => ['view_stats'],
-		'theme' => ['admin_forum'],
-		'viewerrorlog' => ['admin_forum'],
-		'viewmembers' => ['moderate_forum'],
-	];
-
-	/****************
-	 * Public methods
-	 ****************/
-
 	/**
 	 * Dispatcher to whichever sub-action method is necessary.
 	 */
@@ -276,7 +218,8 @@ class Who implements ActionInterface, Routable
 				'color' => empty($row['online_color']) ? '' : $row['online_color'],
 			];
 
-			$url_data[$row['session']] = [$row['url'], $row['id_member']];
+			$url_data[$row['session']] = [$row['url'], (int) 
+			$row['id_member']];
 			$member_ids[] = $row['id_member'];
 		}
 		Db::$db->free_result($request);
@@ -364,7 +307,7 @@ class Who implements ActionInterface, Routable
 	 *  - for administrator-only actions, use whoadmin_ACTION.
 	 *  - for actions that should be viewable only with certain permissions,
 	 *    use whoallow_ACTION and add a list of possible permissions to the
-	 *    self::$allowedActions array, using ACTION as the key.
+	 *    self::$allowed_actions array, using ACTION as the key.
 	 *
 	 * @param mixed $urls a single url (string) or an array of arrays, each inner array being (JSON-encoded request data, id_member)
 	 * @param string|bool $preferred_prefix = false
@@ -376,10 +319,28 @@ class Who implements ActionInterface, Routable
 			return [];
 		}
 
-		IntegrationHook::call('integrate_who_allowed', [&self::$allowedActions]);
+		$lookups = [
+			new \SMF\Who\Lookups\AllowedActionsLookup,
+			new \SMF\Who\Lookups\BoardIndexLookup,
+			new \SMF\Who\Lookups\EmptyActionLookup,
+			new \SMF\Who\Lookups\PublicActionLookup($preferred_prefix),
+			new \SMF\Who\Lookups\PublicSubactionLookup($preferred_prefix),
+			new \SMF\Who\Lookups\AdminActionLookup,
+		];
+		$batched_lookups = [
+			new \SMF\Who\Lookups\BoardLookup,
+			new \SMF\Who\Lookups\MemberProfileLookup,
+			new \SMF\Who\Lookups\MsgLookup,
+			new \SMF\Who\Lookups\PostLookup,
+			new \SMF\Who\Lookups\TopicLookup,
+			new \SMF\Who\Lookups\TopicTxtLookup,
+		];
+
+		IntegrationHook::call('integrate_who_lookups', [&$lookups, &$batched_lookups]);
+		IntegrationHook::call('integrate_who_allowed', [&$lookups[0]->allowed_actions]);
 
 		// This hook is depreated because it is missing the corerct prefix.
-		IntegrationHook::call('who_allowed', [&self::$allowedActions]);
+		IntegrationHook::call('who_allowed', [&$lookups[0]->allowed_actions]);
 
 		if (!\is_array($urls)) {
 			$url_list = [[$urls, User::$me->id]];
@@ -388,9 +349,11 @@ class Who implements ActionInterface, Routable
 		}
 
 		// These are done to later query these in large chunks. (instead of one by one.)
-		$topic_ids = [];
-		$profile_ids = [];
-		$board_ids = [];
+		$requested_data = [
+			'topics' => [],
+			'profiles' => [],
+			'boards' => [],
+		];
 
 		$data = [];
 
@@ -403,121 +366,21 @@ class Who implements ActionInterface, Routable
 			}
 
 			// If it's the admin or moderation center, and there is an area set, use that instead.
-			if (isset($actions['action']) && ($actions['action'] == 'admin' || $actions['action'] == 'moderate') && isset($actions['area'])) {
+			if (isset($actions['action']) && ($actions['action'] === 'admin' || $actions['action'] === 'moderate') && isset($actions['area'])) {
 				$actions['action'] = $actions['area'];
 			}
 
-			// Check if there was no action or the action is display.
-			if (!isset($actions['action']) || $actions['action'] == 'display') {
-				// It's a topic!  Must be!
-				if (isset($actions['topic'])) {
-					// Assume they can't view it, and queue it up for later.
-					$data[$k] = ['label' => 'who_hidden', 'class' => 'em'];
-					$topic_ids[(int) $actions['topic']][$k] = Lang::getTxt('who_topic', file: 'Who');
-				}
-				// It's a board!
-				elseif (isset($actions['board'])) {
-					// Hide first, show later.
-					$data[$k] = ['label' => 'who_hidden', 'class' => 'em'];
-					$board_ids[$actions['board']][$k] = Lang::getTxt('who_board', file: 'Who');
-				}
-				// It's the board index!!  It must be!
-				else {
-					$data[$k] = Lang::getTxt('who_index', ['scripturl' => Config::$scripturl, 'forum_name' => Utils::$context['forum_name_html_safe']], file: 'Who');
+			foreach ($lookups as $lookup)
+			{
+				if ($lookup->supports($actions))
+				{
+					$data[$k] = $lookup->getText($actions);
+					break;
 				}
 			}
-			// Probably an error or some goon?
-			elseif ($actions['action'] == '') {
-				$data[$k] = Lang::getTxt('who_index', ['scripturl' => Config::$scripturl, 'forum_name' => Utils::$context['forum_name_html_safe']], file: 'Who');
-			}
-			// Some other normal action...?
-			else {
-				// Viewing/editing a profile.
-				if ($actions['action'] == 'profile') {
-					// Whose?  Their own?
-					if (empty($actions['u'])) {
-						$actions['u'] = $url[1];
-					}
 
-					$data[$k] = ['label' => 'who_hidden', 'class' => 'em'];
-
-					$profile_ids[(int) $actions['u']][$k] = Lang::getTxt($actions['u'] == $url[1] ? 'who_viewownprofile' : 'who_viewprofile', file: 'Who');
-				} elseif (
-					\in_array($actions['action'], ['post', 'post2'])
-					&& empty($actions['topic'])
-					&& isset($actions['board'])
-				) {
-					$data[$k] = ['label' => 'who_hidden', 'class' => 'em'];
-
-					$board_ids[(int) $actions['board']][$k] = Lang::getTxt(isset($actions['poll']) ? 'who_poll' : 'who_post', file: 'Who');
-				}
-				// A subaction anyone can view... if the language string is there, show it.
-				elseif (
-					isset($actions['sa'])
-					&& Lang::txtExists('whoall_' . $actions['action'] . '_' . $actions['sa'], file: 'Who')
-				) {
-					$prefix = ($preferred_prefix && Lang::txtExists($preferred_prefix . $actions['action'] . '_' . $actions['sa'], file: 'Who') ? $preferred_prefix : 'whoall_');
-
-					$data[$k] = Lang::getTxt($prefix . $actions['action'] . '_' . $actions['sa'], ['scripturl' => Config::$scripturl], file: 'Who');
-				}
-				// An action any old fellow can look at. (if ['whoall_' . $action] exists, we know everyone can see it.)
-				elseif (Lang::txtExists('whoall_' . $actions['action'], file: 'Who')) {
-					$prefix = ($preferred_prefix && Lang::txtExists($preferred_prefix . $actions['action'], file: 'Who') ? $preferred_prefix : 'whoall_');
-
-					$data[$k] = Lang::getTxt($prefix . $actions['action'], ['scripturl' => Config::$scripturl], file: 'Who');
-				}
-				// Viewable if and only if they can see the board...
-				elseif (Lang::txtExists('whotopic_' . $actions['action'], file: 'Who')) {
-					// Find out what topic they are accessing.
-					$topic = (int) ($actions['topic'] ?? ($actions['from'] ?? 0));
-
-					$data[$k] = ['label' => 'who_hidden', 'class' => 'em'];
-					$topic_ids[$topic][$k] = Lang::getTxt('whotopic_' . $actions['action'], file: 'Who');
-				} elseif (Lang::txtExists('whopost_' . $actions['action'], file: 'Who')) {
-					// Find out what message they are accessing.
-					$msgid = (int) ($actions['msg'] ?? ($actions['quote'] ?? 0));
-
-					$result = Db::$db->query(
-						'SELECT m.id_topic, m.subject
-						FROM {db_prefix}messages AS m
-							' . (Config::$modSettings['postmod_active'] ? 'INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic AND t.approved = {int:is_approved})' : '') . '
-						WHERE m.id_msg = {int:id_msg}
-							AND {query_see_message_board}' . (Config::$modSettings['postmod_active'] ? '
-							AND m.approved = {int:is_approved}' : '') . '
-						LIMIT 1',
-						[
-							'is_approved' => 1,
-							'id_msg' => $msgid,
-						],
-					);
-					list($id_topic, $subject) = Db::$db->fetch_row($result);
-					Db::$db->free_result($result);
-
-					$data[$k] = Lang::getTxt('whopost_' . $actions['action'], ['id_topic' => $id_topic, 'subject' => $subject, 'scripturl' => Config::$scripturl], file: 'Who');
-
-					if (empty($id_topic)) {
-						$data[$k] = ['label' => 'who_hidden', 'class' => 'em'];
-					}
-				}
-				// Viewable only by administrators.. (if it starts with whoadmin, it's admin only!)
-				elseif (User::$me->allowedTo('moderate_forum') && Lang::txtExists('whoadmin_' . $actions['action'], file: 'Who')) {
-					$data[$k] = Lang::getTxt('whoadmin_' . $actions['action'], ['scripturl' => Config::$scripturl], file: 'Who');
-				}
-				// Viewable by permission level.
-				elseif (isset(self::$allowedActions[$actions['action']])) {
-					if (
-						User::$me->allowedTo(self::$allowedActions[$actions['action']])
-						&& Lang::txtExists('whoallow_' . $actions['action'], file: 'Who')
-					) {
-						$data[$k] = Lang::getTxt('whoallow_' . $actions['action'], ['scripturl' => Config::$scripturl], file: 'Who');
-					} elseif (\in_array('moderate_forum', self::$allowedActions[$actions['action']])) {
-						$data[$k] = Lang::getTxt('who_moderate', file: 'Who');
-					} elseif (\in_array('admin_forum', self::$allowedActions[$actions['action']])) {
-						$data[$k] = Lang::getTxt('who_admin', file: 'Who');
-					} else {
-						$data[$k] = ['label' => 'who_hidden', 'class' => 'em'];
-					}
-				} elseif (!empty($actions['action'])) {
+			if (!isset($data[$k])) {
+				if (!empty($actions['action'])) {
 					$data[$k] = Lang::getTxt('who_generic', $actions, file: 'Who');
 				} else {
 					$data[$k] = ['label' => 'who_unknown', 'class' => 'em'];
@@ -526,7 +389,7 @@ class Who implements ActionInterface, Routable
 
 			if (isset($actions['error'])) {
 				$error_message = Lang::getTxt(
-					$actions['error'],
+					$actions['error'] == 'guest_login' ? 'who_guest_login' : $actions['error'],
 					(array) ($actions['error_params'] ?? []),
 					file: 'Who+Errors',
 				);
@@ -544,22 +407,36 @@ class Who implements ActionInterface, Routable
 				}
 			}
 
+			foreach ($batched_lookups as $lookup)
+			{
+				$name = $lookup::NAME;
+				$id = $lookup->getId($actions, $url[1]);
+
+				if ($id !== null) {
+					// Queue it up for later.
+					$requested_data[$name][$id][$k] = $lookup->getText($actions, $url[1]);
+
+					// Assume they can't view it right now.
+					$data[$k] = ['label' => 'who_hidden', 'class' => 'em'];
+				}
+			}
+
 			// Maybe the action is integrated into another system?
 			if (\count($integrate_actions = IntegrationHook::call('integrate_whos_online', [$actions])) > 0) {
 				foreach ($integrate_actions as $integrate_action) {
 					if (!empty($integrate_action)) {
 						$data[$k] = $integrate_action;
 
-						if (isset($actions['topic'], $topic_ids[(int) $actions['topic']][$k])) {
-							$topic_ids[(int) $actions['topic']][$k] = $integrate_action;
+						if (isset($actions['topic'], $requested_data['topics'][(int) $actions['topic']][$k])) {
+							$requested_data['topics'][(int) $actions['topic']][$k] = $integrate_action;
 						}
 
-						if (isset($actions['board'], $board_ids[(int) $actions['board']][$k])) {
-							$board_ids[(int) $actions['board']][$k] = $integrate_action;
+						if (isset($actions['board'], $requested_data['boards'][(int) $actions['board']][$k])) {
+							$requested_data['boards'][(int) $actions['board']][$k] = $integrate_action;
 						}
 
-						if (isset($actions['u'], $profile_ids[(int) $actions['u']][$k])) {
-							$profile_ids[(int) $actions['u']][$k] = $integrate_action;
+						if (isset($actions['u'], $requested_data['profiles'][(int) $actions['u']][$k])) {
+							$requested_data['profiles'][(int) $actions['u']][$k] = $integrate_action;
 						}
 						break;
 					}
@@ -567,88 +444,30 @@ class Who implements ActionInterface, Routable
 			}
 		}
 
-		// Load topic names.
-		if (!empty($topic_ids)) {
-			$result = Db::$db->query(
-				'SELECT t.id_topic, m.subject
-				FROM {db_prefix}topics AS t
-					INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-				WHERE {query_see_topic_board}
-					AND t.id_topic IN ({array_int:topic_list})' . (Config::$modSettings['postmod_active'] ? '
-					AND t.approved = {int:is_approved}' : '') . '
-				LIMIT {int:limit}',
-				[
-					'topic_list' => array_keys($topic_ids),
-					'is_approved' => 1,
-					'limit' => \count($topic_ids),
-				],
-			);
+		foreach ($batched_lookups as $lookup)
+		{
+			$name = $lookup::NAME;
 
-			while ($row = Db::$db->fetch_assoc($result)) {
-				// Show the topic's subject for each of the actions.
-				foreach ($topic_ids[$row['id_topic']] as $k => $session_text) {
-					$data[$k] = Lang::formatText($session_text, ['id_topic' => $row['id_topic'], 'subject' => Lang::censorText($row['subject']), 'scripturl' => Config::$scripturl]);
+			if (empty($requested_data[$name])) {
+				continue;
+			}
+
+			$records = $lookup->fetch(array_keys($requested_data[$name]));
+
+			// Can we now replace the hidden sessions with something they can see?
+			foreach ($requested_data[$name] as $id => $session_data) {
+				if (isset($records[$id])) {
+					foreach ($session_data as $k => $session_text) {
+						$data[$k] = Lang::formatText($session_text, $lookup->getFormat($records[$id]));
+					}
 				}
 			}
-			Db::$db->free_result($result);
 		}
 
-		// Load board names.
-		if (!empty($board_ids)) {
-			$result = Db::$db->query(
-				'SELECT b.id_board, b.name
-				FROM {db_prefix}boards AS b
-				WHERE {query_see_board}
-					AND b.id_board IN ({array_int:board_list})
-				LIMIT {int:limit}',
-				[
-					'board_list' => array_keys($board_ids),
-					'limit' => \count($board_ids),
-				],
-			);
-
-			while ($row = Db::$db->fetch_assoc($result)) {
-				// Put the board name into the string for each member...
-				foreach ($board_ids[$row['id_board']] as $k => $session_text) {
-					$data[$k] = Lang::formatText($session_text, ['id_board' => $row['id_board'], 'name' => $row['name'], 'scripturl' => Config::$scripturl]);
-				}
-			}
-			Db::$db->free_result($result);
-		}
-
-		// Load member names for the profile. (is_not_guest permission for viewing their own profile)
-		$allow_view_own = User::$me->allowedTo('is_not_guest');
-		$allow_view_any = User::$me->allowedTo('profile_view');
-
-		if (!empty($profile_ids) && ($allow_view_any || $allow_view_own)) {
-			$result = Db::$db->query(
-				'SELECT id_member, real_name
-				FROM {db_prefix}members
-				WHERE id_member IN ({array_int:member_list})
-				LIMIT ' . \count($profile_ids),
-				[
-					'member_list' => array_keys($profile_ids),
-				],
-			);
-
-			while ($row = Db::$db->fetch_assoc($result)) {
-				// If they aren't allowed to view this person's profile, skip it.
-				if (!$allow_view_any && (User::$me->id != $row['id_member'])) {
-					continue;
-				}
-
-				// Set their action on each - session/text to sprintf.
-				foreach ($profile_ids[$row['id_member']] as $k => $session_text) {
-					$data[$k] = vsprintf($session_text, ['id_member' => $row['id_member'], 'name' => $row['real_name'], 'scripturl' => Config::$scripturl]);
-				}
-			}
-			Db::$db->free_result($result);
-		}
-
-		IntegrationHook::call('integrate_whos_online_after', [&$url_list, &$data]);
+		IntegrationHook::call('in0tegrate_whos_online_after', [&$url_list, &$data]);
 
 		// This hook is depreated because it is missing the corerct prefix.
-		IntegrationHook::call('whos_online_after', [&$urls, &$data]);
+		//~ IntegrationHook::call('whos_online_after', [&$urls, &$data]);
 
 		if (!\is_array($urls)) {
 			return $data[0] ?? false;
