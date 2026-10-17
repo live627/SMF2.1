@@ -3128,12 +3128,19 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 									if (isset($disabled['email']))
 										return $url;
 
+									// Quoted local parts are valid per RFC 5322 but nobody needs them
+									// here, and they are how markup sneaks into an address.
+									if (preg_match('~["<>\\\\]|&(?:quot|lt|gt|#0*39);~i', $parsedurl['path']))
+										return $url;
+
 									// Is this version of PHP capable of validating this email address?
 									$can_validate = defined('FILTER_FLAG_EMAIL_UNICODE') || strlen($parsedurl['path']) == strspn(strtolower($parsedurl['path']), 'abcdefghijklmnopqrstuvwxyz0123456789!#$%&\'*+-/=?^_`{|}~.@');
-
+ 
 									$flags = defined('FILTER_FLAG_EMAIL_UNICODE') ? FILTER_FLAG_EMAIL_UNICODE : null;
-
-									if (!$can_validate || (filter_var($parsedurl['path'], FILTER_VALIDATE_EMAIL, $flags) !== false && filter_var($parsedurl['path'], FILTER_SANITIZE_EMAIL) === $parsedurl['path']))
+ 
+									// FILTER_SANITIZE_EMAIL strips non-ASCII characters, so it can only be
+									// used as an extra check when unicode validation isn't available.
+									if (!$can_validate || (filter_var($parsedurl['path'], FILTER_VALIDATE_EMAIL, $flags) !== false && (defined('FILTER_FLAG_EMAIL_UNICODE') || filter_var($parsedurl['path'], FILTER_SANITIZE_EMAIL) === $parsedurl['path'])))
 										return '[email=' . str_replace('mailto:', '', $url) . ']' . $url . '[/email]';
 									else
 										return $url;
