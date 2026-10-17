@@ -6627,15 +6627,17 @@ function sanitizeMSCutPaste($string)
 		chr(148),
 	);
 
-	// safe replacements
-	$replacechars = array(
-		',',	// &sbquo;
-		',,',	// &bdquo;
-		'...',	// &hellip;
-		"'",	// &lsquo;
-		"'",	// &rsquo;
-		'"',	// &ldquo;
-		'"',	// &rdquo;
+	// Safe replacements. Quotes are replaced with the same entities that
+	// htmlspecialchars(..., ENT_QUOTES) produces. Returning raw quotes here
+	// lets a smart quote become a real attribute delimiter later in parse_bbc().
+ 	$replacechars = array(
+		',',         // &sbquo;
+		',,',        // &bdquo;
+		'...',       // &hellip;
+		'&#039;',    // &lsquo;
+		'&#039;',    // &rsquo;
+		'&quot;',    // &ldquo;
+		'&quot;',    // &rdquo;
 	);
 
 	if ($context['utf8'])
