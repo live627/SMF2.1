@@ -30,7 +30,7 @@ $members = [];
 $topics = [];
 
 for ($i = 0; $i < 10; $i++)
-{
+{ 
 	$regOptions = [
 		'interface' => 'guest',
 		'username' => 'user' . $i,
@@ -48,6 +48,9 @@ for ($i = 0; $i < 10; $i++)
 	echo "Regstered user $i\n";
 	$members[$i] = $id_member;
 }
+
+
+var_dump(getTreeOrder());
 
 for ($i = 0; $i < 10; $i++)
 {
