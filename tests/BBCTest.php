@@ -883,10 +883,6 @@ class BBCTest extends TestCase
 				'abc:)def',
 				'abc:)def',
 			],
-			[
-				'[url=mailto:David@bla.com]',
-				'[url=mailto:David@bla.com]',
-			],
 		];
 	}
 
@@ -896,11 +892,14 @@ class BBCTest extends TestCase
 	 */
 	public function testSmiley(string $test, string $expected): void
 	{
+		$result = parse_bbc($test, false);
+		$this->assertEquals($test, $result);
+
+		$result = parse_bbc($test);
+		$this->assertEquals($expected, $result);
+
 		parsesmileys($test);
 		$this->assertEquals($expected, $test);
-
-		//~ $result = parse_bbc($test, false);
-		//~ $this->assertEquals($expected, $result);
 	}
 
 	/**
