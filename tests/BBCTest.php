@@ -989,9 +989,44 @@ class BBCTest extends TestCase
 		$this->assertEquals($expected, $test);
 
 		$this->assertContains($tag, array_column(parse_bbc(false), 'tag'));
+	}
 
-		//~ $result = parse_bbc($test, false);
-		//~ $this->assertEquals($expected, $result);
+	/**
+	 * A URL inside an explicit [url] tag must not be linked a second time.
+	 */
+	public function testAutolinkInsideUrlTagIsNotDoubleLinked(): void
+	{
+		$this->assertEquals(
+			'<a href="http://example.com" class="bbc_link" target="_blank" rel="noopener">http://example.com</a>',
+			parse_bbc('[url=http://example.com]http://example.com[/url]', false)
+		);
+	}
+
+	/**
+	 * The address is placed inside href="mailto:..." so a raw quote reaching
+	 * the parser must not be able to start a new attribute.
+	 *
+	 * @return string[][]
+	 */
+	public function emailBreakoutProvider(): array
+	{
+		return [
+			'email content' => ['[email]x" onmouseover="alert(1)[/email]', '" onmouseover='],
+			'email equals' => ['[email=x" onmouseover="alert(1)]text[/email]', '" onmouseover='],
+		];
+	}
+
+	/**
+	 * @dataProvider emailBreakoutProvider
+	 */
+	public function testEmailNoAttributeBreakout(string $test, string $forbidden): void
+	{
+		$result = parse_bbc($test, false);
+
+		$this->assertFalse(
+			strpos($result, $forbidden),
+			'Attribute breakout found in: ' . $result
+		);
 	}
 
 	/**
