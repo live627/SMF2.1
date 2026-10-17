@@ -456,7 +456,6 @@ function modifyBoard($board_id, &$boardOptions)
 	getBoardTree();
 
 	// Make sure given boards and categories exist.
-	var_dump($board_id,$boardOptions['target_board'],$boards[$boardOptions['target_board']],$boardOptions['target_category'],$cat_tree[$boardOptions['target_category']]);
 	if (!isset($boards[$board_id]) || (isset($boardOptions['target_board']) && !isset($boards[$boardOptions['target_board']])) || (isset($boardOptions['target_category']) && !isset($cat_tree[$boardOptions['target_category']])))
 		fatal_lang_error('no_board');
 
