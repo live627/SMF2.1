@@ -622,7 +622,7 @@ class BBCTest extends TestCase
 			],
 			[
 				'http://www.example.com/a/test?one=for#{all”',
-				'<a href="http://www.example.com/a/test?one=for#%7Ball" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/a/test?one=for#{all</a>"',
+				'<a href="http://www.example.com/a/test?one=for#%7Ball" class="bbc_link" target="_blank" rel="noopener">http://www.example.com/a/test?one=for#{all</a>&quot;',
 			],
 			[
 				'http://www.example.com/a/test?one=for<all>#derp',
@@ -993,6 +993,55 @@ class BBCTest extends TestCase
 
 		//~ $result = parse_bbc($test, false);
 		//~ $this->assertEquals($expected, $result);
+	}
+
+	/**
+	 * Smart quotes must become entities, never raw quote characters, because
+	 * they are introduced after the message was already HTML-escaped.
+	 */
+	public function testSmartQuotesAreEntities(): void
+	{
+		$this->assertEquals(
+			'a &quot;b&quot; c',
+			parse_bbc("a \xE2\x80\x9Cb\xE2\x80\x9D c", false)
+		);
+
+		$this->assertEquals(
+			'it&#039;s',
+			parse_bbc("it\xE2\x80\x99s", false)
+		);
+	}
+
+	/**
+	 * Regression test for GHSA-xf45-gc85-24wh: smart quotes in BBC parameters
+	 * must not be able to break out of an HTML attribute.
+	 *
+	 * @return string[][]
+	 */
+	public function attributeBreakoutProvider(): array
+	{
+		$ldquo = "\xE2\x80\x9C";
+
+		return [
+			'img alt' => ["[img alt={$ldquo} onerror={$ldquo}alert(1)]http://x[/img]", '" onerror='],
+			'img title' => ["[img title={$ldquo} onerror={$ldquo}alert(1)]http://x[/img]", '" onerror='],
+			'abbr' => ["[abbr={$ldquo} onmouseover={$ldquo}alert(1)]x[/abbr]", '" onmouseover='],
+			'acronym' => ["[acronym={$ldquo} onmouseover={$ldquo}alert(1)]x[/acronym]", '" onmouseover='],
+			'member' => ["[member={$ldquo} onmouseover={$ldquo}alert(1)]x[/member]", '" onmouseover='],
+		];
+	}
+
+	/**
+	 * @dataProvider attributeBreakoutProvider
+	 */
+	public function testNoAttributeBreakout(string $test, string $forbidden): void
+	{
+		$result = parse_bbc($test, false);
+
+		$this->assertFalse(
+			strpos($result, $forbidden),
+			'Attribute breakout found in: ' . $result
+		);
 	}
 
 	/**
