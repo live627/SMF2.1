@@ -1381,13 +1381,24 @@ function getBoardTree()
 	$boardOrder = array_unique($boardOrder);
 
 	// Getting all the board and category information you'd ever wanted.
-	$request = $smcFunc['db_query']('', '
+	echo $smcFunc['db_quote']('
 		SELECT
 			' . implode(', ', $boardColumns) . '
 		FROM {db_prefix}categories AS c
 			LEFT JOIN {db_prefix}boards AS b ON (b.id_cat = c.id_cat)' . implode('
 			', $boardJoins) . '
 		WHERE {query_see_board}' . (empty($boardWhere) ? '' : '
+			AND (' . implode(') AND (', $boardWhere) . ')') . '
+		ORDER BY ' . implode(', ', $boardOrder),
+		$boardParameters
+	);
+	$request = $smcFunc['db_query']('', '
+		SELECT
+			' . implode(', ', $boardColumns) . '
+		FROM {db_prefix}categories AS c
+			LEFT JOIN {db_prefix}boards AS b ON (b.id_cat = c.id_cat)' . implode('
+			', $boardJoins) . '
+		WHERE 1=1' . (empty($boardWhere) ? '' : '
 			AND (' . implode(') AND (', $boardWhere) . ')') . '
 		ORDER BY ' . implode(', ', $boardOrder),
 		$boardParameters
