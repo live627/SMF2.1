@@ -95,4 +95,3 @@ jobs:
 
       - name: Run PHPUnit
         run: vendor/phpunit/phpunit/phpunit
-          php ocular.phar code-coverage:upload --format=php-clover coverage.clover.xml
