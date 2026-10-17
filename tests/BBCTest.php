@@ -335,17 +335,17 @@ class BBCTest extends TestCase
 			[
 				'quote',
 				'[quote=[url=https://www.example.com/]Example.com[/url]]The quote[/quote]',
-				'<blockquote class="bbc_standard_quote"><cite>Quote from: [url=https://www.example.com/</cite>Example.com[/url]]The quote</blockquote>',
+				'<blockquote class="bbc_standard_quote"><cite>Quote from: [url=https://www.example.com/</cite><a href="//example.com" class="bbc_link" target="_blank" rel="noopener">Example.com</a>[/url]]The quote</blockquote>',
 			],
 			[
 				'quote',
 				'[quote="[url="https://www.example.com/"]Example.com[/url]"]The quote[/quote]',
-				'<blockquote class="bbc_standard_quote"><cite>Quote from: "[url="https://www.example.com/"</cite>Example.com[/url]"]The quote</blockquote>',
+				'<blockquote class="bbc_standard_quote"><cite>Quote from: [url="https://www.example.com/</cite><a href="//example.com" class="bbc_link" target="_blank" rel="noopener">Example.com</a>[/url]"]The quote</blockquote>',
 			],
 			[
 				'quote',
 				'[quote="[url=https://www.example.com/]Example.com[/url]"]The quote[/quote]',
-				'<blockquote class="bbc_standard_quote"><cite>Quote from: "[url=https://www.example.com/</cite>Example.com[/url]"]The quote</blockquote>',
+				'<blockquote class="bbc_standard_quote"><cite>Quote from: <a href="https://www.example.com/" class="bbc_link" target="_blank" rel="noopener">Example.com</a></cite>The quote</blockquote>',
 			],
 			[
 				'right',

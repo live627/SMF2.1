@@ -49,9 +49,6 @@ for ($i = 0; $i < 10; $i++)
 	$members[$i] = $id_member;
 }
 
-
-var_dump(getTreeOrder());
-
 for ($i = 0; $i < 10; $i++)
 {
 	$boardOptions = [
