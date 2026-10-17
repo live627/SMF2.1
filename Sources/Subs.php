@@ -3448,7 +3448,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 						$params['{' . $key . '}'] = $matches[$i + 1];
 
 					// Just to make sure: replace any $ or { so they can't interpolate wrongly.
-					$params['{' . $key . '}'] = $smcFunc['htmlspecialchars'](strtr($params['{' . $key . '}'], array('$' => '&#036;', '{' => '&#123;')), ENT_QUOTES);
+					$params['{' . $key . '}'] = strtr($params['{' . $key . '}'], array('$' => '&#036;', '{' => '&#123;'));
 				}
 
 				foreach ($possible['parameters'] as $p => $info)
