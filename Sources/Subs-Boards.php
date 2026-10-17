@@ -456,6 +456,7 @@ function modifyBoard($board_id, &$boardOptions)
 	getBoardTree();
 
 	// Make sure given boards and categories exist.
+	var_dump($board_id,$boardOptions['target_board'],$boards,$boardOptions['target_category'],$cat_tree[$boardOptions['target_category']]);
 	if (!isset($boards[$board_id]) || (isset($boardOptions['target_board']) && !isset($boards[$boardOptions['target_board']])) || (isset($boardOptions['target_category']) && !isset($cat_tree[$boardOptions['target_category']])))
 		fatal_lang_error('no_board');
 
@@ -875,7 +876,7 @@ function createBoard($boardOptions)
 		'posts_count' => true,
 		'override_theme' => false,
 		'board_theme' => 0,
-		'access_groups' => array(-1),
+		'access_groups' => array(),
 		'board_description' => '',
 		'profile' => 1,
 		'moderators' => '',
@@ -889,7 +890,7 @@ function createBoard($boardOptions)
 	);
 	$board_parameters = array(
 		$boardOptions['target_category'], $boardOptions['board_name'], '', 0,
-		'', '',
+		'-1', '',
 	);
 
 	call_integration_hook('integrate_create_board', array(&$boardOptions, &$board_columns, &$board_parameters));
