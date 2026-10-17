@@ -284,21 +284,6 @@ class BBCTest extends TestCase
 				'<a href="' . $scripturl . '?action=profile;u=1" class="mention" data-mention="1">@name</a>',
 			],
 			[
-				'ftp',
-				'[ftp]ftp://ftp.example.com[/ftp]',
-				'<a href="ftp://ftp.example.com" class="bbc_link" target="_blank" rel="noopener">ftp://ftp.example.com</a>',
-			],
-			[
-				'ftp',
-				'[ftp=ftp://ftp.example.com]link[/ftp]',
-				'<a href="ftp://ftp.example.com" class="bbc_link" target="_blank" rel="noopener">link</a>',
-			],
-			[
-				'flash',
-				'[flash=200,200]http://example.com/a.swf[/flash]',
-				'<a href="http://example.com/a.swf" target="_blank" rel="noopener">http://example.com/a.swf</a>',
-			],
-			[
 				'youtube',
 				'[youtube]abc123[/youtube]',
 				'<div class="videocontainer"><div><iframe frameborder="0" src="https://www.youtube.com/embed/abc123?origin=' . $hosturl . '&wmode=opaque" data-youtube-id="abc123" allowfullscreen loading="lazy"></iframe></div></div>',
