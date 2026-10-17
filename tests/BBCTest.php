@@ -98,6 +98,10 @@ class BBCTest extends TestCase
 	{
 		global $txt, $scripturl;
 
+		// The YouTube BBC uses the forum's origin in its embed URL.
+		$scripturl_parts = parse_iri($scripturl);
+		$hosturl = $scripturl_parts['scheme'] . '://' . $scripturl_parts['host'];
+
 		return [
 			[
 				'abbr',
@@ -238,6 +242,71 @@ class BBCTest extends TestCase
 				'iurl',
 				'[iurl=http://www.simplemachines.net/]blah[/iurl]',
 				'<a href="http://www.simplemachines.net/" class="bbc_link">blah</a>',
+			],
+			[
+				'iurl',
+				'[iurl=#blah]text[/iurl]',
+				'<a href="#post_blah" class="bbc_link">text</a>',
+			],
+			[
+				'justify',
+				'[justify]text[/justify]',
+				'<div class="justifytext">text</div>',
+			],
+			[
+				'ltr',
+				'[ltr]text[/ltr]',
+				'<bdo dir="ltr">text</bdo>',
+			],
+			[
+				'rtl',
+				'[rtl]text[/rtl]',
+				'<bdo dir="rtl">text</bdo>',
+			],
+			[
+				'float',
+				'[float=left]text[/float]',
+				'<div class="bbc_float floatleft">text</div>',
+			],
+			[
+				'float',
+				'[float=right max=50%]text[/float]',
+				'<div class="bbc_float floatright" style="max-width:50%">text</div>',
+			],
+			[
+				'html',
+				'[html]text[/html]',
+				'<div>text</div>',
+			],
+			[
+				'member',
+				'[member=1]name[/member]',
+				'<a href="' . $scripturl . '?action=profile;u=1" class="mention" data-mention="1">@name</a>',
+			],
+			[
+				'ftp',
+				'[ftp]ftp://ftp.example.com[/ftp]',
+				'<a href="ftp://ftp.example.com" class="bbc_link" target="_blank" rel="noopener">ftp://ftp.example.com</a>',
+			],
+			[
+				'ftp',
+				'[ftp=ftp://ftp.example.com]link[/ftp]',
+				'<a href="ftp://ftp.example.com" class="bbc_link" target="_blank" rel="noopener">link</a>',
+			],
+			[
+				'flash',
+				'[flash=200,200]http://example.com/a.swf[/flash]',
+				'<a href="http://example.com/a.swf" target="_blank" rel="noopener">http://example.com/a.swf</a>',
+			],
+			[
+				'youtube',
+				'[youtube]abc123[/youtube]',
+				'<div class="videocontainer"><div><iframe frameborder="0" src="https://www.youtube.com/embed/abc123?origin=' . $hosturl . '&wmode=opaque" data-youtube-id="abc123" allowfullscreen loading="lazy"></iframe></div></div>',
+			],
+			[
+				'quote',
+				'[quote]a[quote]b[quote]c[/quote][/quote][/quote]',
+				'<blockquote class="bbc_standard_quote"><cite>Quote</cite>a<blockquote class="bbc_alternate_quote"><cite>Quote</cite>b<blockquote class="bbc_standard_quote"><cite>Quote</cite>c</blockquote></blockquote></blockquote>',
 			],
 			[
 				'left',
@@ -939,6 +1008,18 @@ class BBCTest extends TestCase
 
 		//~ $result = parse_bbc($test, false);
 		//~ $this->assertEquals($expected, $result);
+	}
+
+	/**
+	 * Only the tags listed in $parse_tags should be parsed.
+	 */
+	public function testParseTagsRestriction(): void
+	{
+		$result = parse_bbc('[b]x[/b] [i]y[/i]', false, '', ['b']);
+		$this->assertEquals('<b>x</b> [i]y[/i]', $result);
+
+		// A normal parse afterwards must not be affected by the restriction.
+		$this->assertEquals('<b>x</b> <i>y</i>', parse_bbc('[b]x[/b] [i]y[/i]', false));
 	}
 
 	public function te6stMessageCache(): void
