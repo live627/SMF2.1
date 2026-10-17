@@ -1,0 +1,98 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4']
+        db: [mysql, postgres]
+
+    env:
+      DB: ${{ matrix.db }}
+
+    services:
+      memcached:
+        image: memcached:latest
+        ports:
+          - 11211:11211
+
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+          MYSQL_DATABASE: smf
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: smf
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: apcu, memcached, mysqli, pgsql, pdo_pgsql
+          coverage: xdebug
+          ini-values: >-
+            apcu.enabled=1, apcu.enable_cli=1,
+            apc.enabled=1, apc.enable_cli=1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Prepare files
+        run: cp ./other/*.* .
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Install SMF (MySQL)
+        if: matrix.db == 'mysql'
+        run: php -f install.php -- -u test -p test --dbname smf --dbuser root
+
+      - name: Install SMF (PostgreSQL)
+        if: matrix.db == 'postgres'
+        run: php -f install.php -- -u test -p test --dbtype postgresql --dbname smf --dbuser postgres
+
+      - name: Populate test data
+        run: php tests/env/Populate.php
+
+      - name: Start test web server
+        run: |
+          node -v
+          node tests/env/server.js &
+          sleep 1
+
+      - name: Prepare files
+        run: sh other/prepare-files
+
+      - name: Run PHPUnit
+        run: vendor/phpunit/phpunit/phpunit
+          php ocular.phar code-coverage:upload --format=php-clover coverage.clover.xml
