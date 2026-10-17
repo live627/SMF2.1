@@ -875,7 +875,7 @@ function createBoard($boardOptions)
 		'posts_count' => true,
 		'override_theme' => false,
 		'board_theme' => 0,
-		'access_groups' => array(),
+		'access_groups' => array(-1),
 		'board_description' => '',
 		'profile' => 1,
 		'moderators' => '',
