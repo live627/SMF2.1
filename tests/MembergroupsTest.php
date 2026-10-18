@@ -93,7 +93,7 @@ class TestMembergroups extends TestCase
 		$this->assertArrayHasKey($mem, $members);
 		loadLanguage('Modlog');
 		$this->assertEquals(
-			['Added &quot;<a href="http://127.0.0.1/smf/index.php?action=profile;u=677">user0</a>&quot; to the &quot;Global Moderator&quot; group'],
+			['Added &quot;<a href="http://127.0.0.1/smf/index.php?action=profile;u=' . $mem . '">user0</a>&quot; to the &quot;Global Moderator&quot; group'],
 			array_column(
 				list_getModLogEntries(
 					0,

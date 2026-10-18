@@ -1054,27 +1054,53 @@ class BBCTest extends TestCase
 	 */
 	public function attributeBreakoutProvider(): array
 	{
-		$ldquo = "\xE2\x80\x9C";
+		$l = "\xE2\x80\x9C";
+		$r = "\xE2\x80\x9D";
 
 		return [
-			'img alt' => ["[img alt={$ldquo} onerror={$ldquo}alert(1)]http://x[/img]", '" onerror='],
-			'img title' => ["[img title={$ldquo} onerror={$ldquo}alert(1)]http://x[/img]", '" onerror='],
-			'abbr' => ["[abbr={$ldquo} onmouseover={$ldquo}alert(1)]x[/abbr]", '" onmouseover='],
-			'acronym' => ["[acronym={$ldquo} onmouseover={$ldquo}alert(1)]x[/acronym]", '" onmouseover='],
-			'member' => ["[member={$ldquo} onmouseover={$ldquo}alert(1)]x[/member]", '" onmouseover='],
+			'img alt' => ["[img alt={$l} onerror={$l}alert(1)]http://x[/img]"],
+			'img title' => ["[img title={$l} onerror={$l}alert(1)]http://x[/img]"],
+			// These tags take a closing smart quote so the parser actually matches them.
+			'abbr' => ["[abbr={$l}x{$r} onmouseover={$l}alert(1){$r}]x[/abbr]"],
+			'acronym' => ["[acronym={$l}x{$r} onmouseover={$l}alert(1){$r}]x[/acronym]"],
+			'member' => ["[member={$l}x{$r} onmouseover={$l}alert(1){$r}]x[/member]"],
+			'url' => ["[url={$l}http://example.com/{$r} onmouseover={$l}alert(1){$r}]x[/url]"],
+			'iurl' => ["[iurl={$l}http://example.com/{$r} onmouseover={$l}alert(1){$r}]x[/iurl]"],
 		];
 	}
 
 	/**
+	 * Fails if any generated HTML tag contains an injected event handler
+	 * attribute. Quote characters left behind as plain text are harmless
+	 * and are deliberately not flagged.
+	 *
 	 * @dataProvider attributeBreakoutProvider
 	 */
-	public function testNoAttributeBreakout(string $test, string $forbidden): void
+	public function testNoAttributeBreakout(string $test): void
 	{
 		$result = parse_bbc($test, false);
 
-		$this->assertFalse(
-			strpos($result, $forbidden),
+		$this->assertSame(
+			0,
+			preg_match('~<[^<>]*\son\w+\s*=\s*["\']~i', $result),
 			'Attribute breakout found in: ' . $result
+		);
+	}
+
+	/**
+	 * Text that was already escaped when the post was saved must not be
+	 * escaped a second time when it goes into an attribute.
+	 */
+	public function testImgAttributesAreNotDoubleEncoded(): void
+	{
+		$this->assertEquals(
+			'<img src="http://example.com/image.png" alt="Tom &amp; Jerry" class="bbc_img" loading="lazy">',
+			parse_bbc('[img alt=Tom &amp; Jerry]http://example.com/image.png[/img]', false)
+		);
+
+		$this->assertEquals(
+			'<img src="http://example.com/image.png" alt="say &quot;hi&quot;" class="bbc_img" loading="lazy">',
+			parse_bbc('[img alt=say &quot;hi&quot;]http://example.com/image.png[/img]', false)
 		);
 	}
 

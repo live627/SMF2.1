@@ -71,6 +71,129 @@ class PostTest extends TestCase
 	}
 
 	/**
+	 * Posts a reply to topic 1 through Post2(), renders the topic with
+	 * Display(), removes the new message again and returns its rendered body.
+	 */
+	private function postReplyAndGetBody(string $message): string
+	{
+		global $board, $context, $smcFunc, $topic;
+
+		unset($context['post_error']);
+		$board = 1;
+		$topic = 1;
+		loadBoard();
+		$_REQUEST['start'] = '0';
+		$_POST['subject'] = 'Integration test';
+		$_POST['message'] = $message;
+		$_POST[$context['session_var']] = $context['session_id'];
+
+		// If Post2() finds an error it falls back to Post(), which dies when
+		// there are no cookies. PHPUnit has none, so fake one to let the real
+		// error reach the assertion below instead of a cookie error.
+		$fake_cookie = empty($_COOKIE);
+		if ($fake_cookie)
+			$_COOKIE['smf_phpunit'] = '1';
+
+		// Several posts in a row would otherwise trip flood protection.
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_floodcontrol');
+
+		Post2();
+		Display();
+
+		// Leave the topic the way testMakeReplyPost expects to find it.
+		unset($_SESSION['last_read_topic']);
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}topics
+			SET num_views = 0
+			WHERE id_topic = 1');
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_topics
+			WHERE id_topic = 1');
+
+		if ($fake_cookie)
+			unset($_COOKIE['smf_phpunit']);
+
+		// Report why the post was rejected, if it was.
+		$this->assertFalse(
+			isset($context['post_error']),
+			'Post2() rejected the post: ' . print_r($context['post_error'] ?? [], true)
+		);
+		$this->assertNotEquals(1, $context['topic_last_message']);
+		removeMessage($context['topic_last_message']);
+
+		// The new post is the last one displayed.
+		$body = null;
+		while (($displayed = $context['get_message']()) !== false)
+			$body = $displayed['body'];
+
+		unset($GLOBALS['board'], $GLOBALS['topic'], $_POST);
+
+		$this->assertNotNull($body);
+
+		return $body;
+	}
+
+	/**
+	 * @return string[][]
+	 */
+	public function imgAltEncodingProvider(): array
+	{
+		return [
+			'ampersand' => [
+				'[img alt=Tom & Jerry]http://example.com/image.png[/img]',
+				'alt="Tom &amp; Jerry"',
+			],
+			'double quotes' => [
+				'[img alt=say "hi"]http://example.com/image.png[/img]',
+				'alt="say &quot;hi&quot;"',
+			],
+		];
+	}
+
+	/**
+	 * Text is escaped once when the post is saved. Rendering it into an
+	 * attribute must not escape it a second time (no "&amp;amp;").
+	 *
+	 * @dataProvider imgAltEncodingProvider
+	 */
+	public function testPostedImgAltIsEncodedOnce(string $message, string $expected_attribute): void
+	{
+		$body = $this->postReplyAndGetBody($message);
+
+		$this->assertStringContainsString($expected_attribute, $body);
+		$this->assertStringNotContainsString('&amp;amp;', $body);
+		$this->assertStringNotContainsString('&amp;quot;', $body);
+	}
+
+	/**
+	 * Smart quotes pasted from Microsoft Word survive htmlspecialchars() when
+	 * saving and are only converted while rendering. They must come out as
+	 * entities, and must not be able to break out of an attribute.
+	 */
+	public function testPostedMsWordQuotesAreSafe(): void
+	{
+		$ldquo = "\xE2\x80\x9C";
+		$rdquo = "\xE2\x80\x9D";
+		$rsquo = "\xE2\x80\x99";
+
+		$body = $this->postReplyAndGetBody(
+			"Word said {$ldquo}hello{$rdquo} and it{$rsquo}s fine "
+			. "[img alt={$ldquo} onerror={$ldquo}alert(1)]http://example.com/image.png[/img]"
+		);
+
+		// Plain text quotes become entities, not raw quote characters.
+		$this->assertStringContainsString('Word said &quot;hello&quot; and it&#039;s fine', $body);
+
+		// No generated tag may contain an injected event handler.
+		$this->assertSame(
+			0,
+			preg_match('~<[^<>]*\son\w+\s*=\s*["\']~i', $body),
+			'Attribute breakout found in: ' . $body
+		);
+	}
+
+	/**
 	 * Test making a new topic
 	 */
 	public function tesjtMakeNewTopic()
