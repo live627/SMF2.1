@@ -456,7 +456,6 @@ function modifyBoard($board_id, &$boardOptions)
 	getBoardTree();
 
 	// Make sure given boards and categories exist.
-	var_dump($board_id,$boardOptions['target_board'],$boards,$boardOptions['target_category'],$cat_tree[$boardOptions['target_category']]);
 	if (!isset($boards[$board_id]) || (isset($boardOptions['target_board']) && !isset($boards[$boardOptions['target_board']])) || (isset($boardOptions['target_category']) && !isset($cat_tree[$boardOptions['target_category']])))
 		fatal_lang_error('no_board');
 
@@ -1381,17 +1380,6 @@ function getBoardTree()
 	$boardOrder = array_unique($boardOrder);
 
 	// Getting all the board and category information you'd ever wanted.
-	echo $smcFunc['db_quote']('
-		SELECT
-			' . implode(', ', $boardColumns) . '
-		FROM {db_prefix}categories AS c
-			LEFT JOIN {db_prefix}boards AS b ON (b.id_cat = c.id_cat)' . implode('
-			', $boardJoins) . '
-		WHERE {query_see_board}' . (empty($boardWhere) ? '' : '
-			AND (' . implode(') AND (', $boardWhere) . ')') . '
-		ORDER BY ' . implode(', ', $boardOrder),
-		$boardParameters
-	);
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			' . implode(', ', $boardColumns) . '

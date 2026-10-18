@@ -6,8 +6,17 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Needs the fixture server running: node server.js
+ * Override the address with the TEST_SERVER_URL environment variable.
+ */
 class FetchWebdataTest extends TestCase
 {
+	private static function baseUrl(): string
+	{
+		return rtrim(getenv('TEST_SERVER_URL') ?: 'http://localhost:8125', '/');
+	}
+
 	/**
 	 * @return string[][]
 	 */
@@ -15,7 +24,7 @@ class FetchWebdataTest extends TestCase
 	{
 		return [
 			[
-				'https://duckduckgo.com/html',
+				'/html',
 				'q=smf+forum site:simplemachines.org&ia=about',
 				'simplemachines.org',
 			],
@@ -29,7 +38,7 @@ class FetchWebdataTest extends TestCase
 	{
 		return [
 			[
-				'https://www.bing.com',
+				'/bing.html',
 				'Bing',
 			],
 		];
@@ -37,25 +46,27 @@ class FetchWebdataTest extends TestCase
 
 	/**
 	 * @dataProvider getProvider
-	 *
-	 * @group        slow
-	 *
 	 */
-	public function testGet(string $url, string $responseBody): void
+	public function testGet(string $path, string $responseBody): void
 	{
-		if (($data = fetch_web_data($url)) !== false)
-			$this->assertStringContainsString($responseBody, $data);
+		$data = fetch_web_data(self::baseUrl() . $path);
+
+		if ($data === false)
+			$this->markTestSkipped('Could not fetch ' . $path . '; is "node server.js" running?');
+
+		$this->assertStringContainsString($responseBody, $data);
 	}
 
 	/**
 	 * @dataProvider postProvider
-	 *
-	 * @group        slow
-	 *
 	 */
-	public function testPost(string $url, string $postData, string $responseBody): void
+	public function testPost(string $path, string $postData, string $responseBody): void
 	{
-		if (($data = fetch_web_data($url, $postData)) !== false)
-			$this->assertStringContainsString($responseBody, $data);
+		$data = fetch_web_data(self::baseUrl() . $path, $postData);
+
+		if ($data === false)
+			$this->markTestSkipped('Could not post to ' . $path . '; is "node server.js" running?');
+
+		$this->assertStringContainsString($responseBody, $data);
 	}
 }

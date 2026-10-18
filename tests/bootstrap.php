@@ -56,3 +56,10 @@ function SendMailToQueue(&$subject, &$message, &$headers, &$to_array)
 
 	//return true;
 }
+
+// If Post2() finds an error it falls back to Post(), which dies when
+// there are no cookies. PHPUnit has none, so fake one to let the real
+// error reach the assertion below instead of a cookie error.
+$fake_cookie = empty($_COOKIE);
+if ($fake_cookie)
+	$_COOKIE['smf_phpunit'] = '1';

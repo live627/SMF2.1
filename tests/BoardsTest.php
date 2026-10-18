@@ -6,8 +6,6 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-use PHPUnit\Framework\Error\Error as PHPUnitError;
-
 class BoardsTest extends TestCase
 {
 	private $options = [];
@@ -60,22 +58,129 @@ class BoardsTest extends TestCase
 	{
 		global $boards, $boardsTest;
 
+		getBoardTree();
+		$countBefore = count($boards);
+
 		$boardsTest = [];
 
 		foreach ($this->options as $options)
-			$boardsTest[] = createBoard($options);
+			$boardsTest[] = (int) createBoard($options);
+
+		// createBoard() returns 0 when the insert fails.
+		foreach ($boardsTest as $id)
+			$this->assertGreaterThan(0, $id, 'createBoard() returned 0.');
+
+		$this->assertCount(4, array_unique($boardsTest), 'Each board needs its own id.');
 
 		getBoardTree();
 
-		foreach ($boardsTest as $board)
+		// Relative to the fixture rather than a hardcoded total.
+		$this->assertCount($countBefore + 4, $boards);
+
+		// Every board should have the basics from its options.
+		foreach ($boardsTest as $index => $id)
 		{
-			$this->assertArrayHasKey($board, $boards);
-			$this->assertEquals($board, $boards[$board]['id']);
-			$this->assertEquals(1, $boards[$board]['category']);
-			$this->assertIsArray($boards[$board]['member_groups']);
+			$this->assertArrayHasKey($id, $boards);
+			$this->assertSame($id, (int) $boards[$id]['id']);
+			$this->assertSame(1, (int) $boards[$id]['category']);
+			$this->assertSame($this->options[$index]['board_name'], $boards[$id]['name']);
+			$this->assertSame(['1'], $boards[$id]['member_groups']);
 		}
 
-		$this->assertCount(15, $boards);
+		[$top, $child, $redirect, $before] = $boardsTest;
+
+		// 'top': a root board that sorts ahead of the existing root board.
+		$this->assertSame(0, (int) $boards[$top]['parent']);
+		$this->assertSame(0, (int) $boards[$top]['level']);
+		$this->assertLessThan($boards[1]['order'], $boards[$top]['order']);
+
+		// 'child': hangs off board 1, one level deeper.
+		$this->assertSame(1, (int) $boards[$child]['parent']);
+		$this->assertSame((int) $boards[1]['level'] + 1, (int) $boards[$child]['level']);
+		$this->assertArrayHasKey($child, $boards[1]['tree']['children']);
+
+		// 'bottom': a root board that sorts after every other root board.
+		$this->assertSame('test', $boards[$redirect]['redirect']);
+		$this->assertSame(['0'], $boards[$redirect]['deny_groups']);
+		$this->assertSame(0, (int) $boards[$redirect]['parent']);
+		$this->assertSame(0, (int) $boards[$redirect]['level']);
+
+		foreach ($boards as $other_id => $other)
+			if ($other_id !== $redirect && (int) $other['category'] === 1 && (int) $other['level'] === 0)
+				$this->assertLessThan($boards[$redirect]['order'], $other['order'], 'Board ' . $other_id . ' should sort before the bottom board.');
+
+		// 'before': same parent and level as board 1, directly ahead of it.
+		$this->assertSame((int) $boards[1]['parent'], (int) $boards[$before]['parent']);
+		$this->assertSame((int) $boards[1]['level'], (int) $boards[$before]['level']);
+		$this->assertLessThan($boards[1]['order'], $boards[$before]['order']);
+		$this->assertSame(0, (int) $boards[$before]['posts']);
+
+		// reorderBoards() should leave every board with its own position.
+		$orders = array_map('intval', array_column($boards, 'order'));
+		$this->assertCount(count($boards), array_unique($orders), 'board_order values must be unique.');
+	}
+
+	/**
+	 * @dataProvider invalidCreateOptionsProvider
+	 */
+	public function testCreateBoardInvalidOptions(array $options, string $expectedMessage): void
+	{
+		global $boards;
+
+		getBoardTree();
+		$countBefore = count($boards);
+
+		$thrown = null;
+
+		try
+		{
+			createBoard($options);
+		}
+		catch (\Exception $e)
+		{
+			$thrown = $e;
+		}
+
+		$this->assertNotNull($thrown, 'createBoard() should have thrown.');
+		$this->assertSame($expectedMessage, $thrown->getMessage());
+
+		// Nothing should have been inserted.
+		getBoardTree();
+		$this->assertCount($countBefore, $boards);
+	}
+
+	public static function invalidCreateOptionsProvider(): array
+	{
+		return [
+			'no name' => [
+				['move_to' => 'top', 'target_category' => 1],
+				'create_board_missing_options',
+			],
+			'blank name' => [
+				['board_name' => '   ', 'move_to' => 'top', 'target_category' => 1],
+				'create_board_missing_options',
+			],
+			'no move_to' => [
+				['board_name' => 'Invalid', 'target_category' => 1],
+				'create_board_missing_options',
+			],
+			'no target category' => [
+				['board_name' => 'Invalid', 'move_to' => 'top'],
+				'create_board_missing_options',
+			],
+			'child without target board' => [
+				['board_name' => 'Invalid', 'move_to' => 'child', 'target_category' => 1],
+				'move_board_no_target',
+			],
+			'before without target board' => [
+				['board_name' => 'Invalid', 'move_to' => 'before', 'target_category' => 1],
+				'move_board_no_target',
+			],
+			'after without target board' => [
+				['board_name' => 'Invalid', 'move_to' => 'after', 'target_category' => 1],
+				'move_board_no_target',
+			],
+		];
 	}
 
 	public function testBoardIndexController(): void
@@ -125,7 +230,7 @@ class BoardsTest extends TestCase
 		$this->assertEquals('My Community - Index', $context['page_title']);
 		$this->assertArrayHasKey('markread', $context['mark_read_button']);
 
-		$this->assertTrue($db_show_debug === true);
+		$this->assertTrue($db_show_debug);
 		$this->assertContains('integrate_mark_read_button', $context['debug']['hooks']);
 	}
 
@@ -167,11 +272,37 @@ class BoardsTest extends TestCase
 
 	public function testMoveChildError(): void
 	{
+		global $boards, $txt;
+
+		getBoardTree();
+		$keys = array_flip(['parent', 'level', 'order', 'category', 'name']);
+		$snapshot = array_intersect_key($boards[1], $keys);
+
 		$options = [
 			'move_to' => 'test',
 		];
-		$this->expectException(PHPUnitError::class);
-		modifyBoard(1, $options);
+
+		$thrown = null;
+
+		try
+		{
+			modifyBoard(1, $options);
+		}
+		catch (\Exception $e)
+		{
+			$thrown = $e;
+		}
+
+		$this->assertNotNull($thrown, 'modifyBoard() should have thrown for an unknown move_to.');
+
+		// An empty message means the language string was missing, so it must not be blank.
+		$this->assertNotSame('', $thrown->getMessage());
+		$this->assertStringContainsString('test', $thrown->getMessage());
+		$this->assertSame(sprintf($txt['modify_board_incorrect_move_to'], 'test'), $thrown->getMessage());
+
+		// The failed move must not have changed the board.
+		getBoardTree();
+		$this->assertSame($snapshot, array_intersect_key($boards[1], $keys));
 	}
 
 	public function testMarkBoardsRead(): void

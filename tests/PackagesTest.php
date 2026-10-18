@@ -6,6 +6,11 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * testPackageDownload needs the fixture server running: node server.js
+ * (it serves SimpleDesk_2.1.0.tgz from tests/packages).
+ * Override the address with the TEST_SERVER_URL environment variable.
+ */
 class PackagesTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
@@ -20,7 +25,12 @@ class PackagesTest extends TestCase
 		unset($_REQUEST, $_GET);
 	}
 
-	public function testPackageBrowse()
+	private static function baseUrl(): string
+	{
+		return rtrim(getenv('TEST_SERVER_URL') ?: 'http://127.0.0.1:8125', '/');
+	}
+
+	public function testPackageBrowse(): void
 	{
 		global $context;
 
@@ -32,13 +42,18 @@ class PackagesTest extends TestCase
 		$this->assertEquals('packages_lists', $context['default_list']);
 	}
 
-	public function testPackageDownload()
+	public function testPackageDownload(): void
 	{
 		global $context;
 
 		$_GET[$context['session_var']] = $context['session_id'];
 		$_GET[$_SESSION['session_var']] = $_SESSION['session_value'];
-		$_REQUEST['package'] = 'http://127.0.0.1:8125/SimpleDesk_2.1.0.tgz';
+		$url = self::baseUrl() . '/SimpleDesk_2.1.0.tgz';
+		$headers = @get_headers($url);
+		if ($headers === false || strpos($headers[0], '200') === false)
+			$this->markTestSkipped('Could not fetch ' . $url . '; is "node server.js" running?');
+
+		$_REQUEST['package'] = $url;
 		loadLanguage('Packages');
 		PackageDownload();
 		$this->assertEquals('Package downloaded successfully', $context['page_title']);
@@ -48,7 +63,7 @@ class PackagesTest extends TestCase
 	/**
 	 * @depends testPackageDownload
 	 */
-	public function testPackageDownloaded()
+	public function testPackageDownloaded(): void
 	{
 		global $context;
 
@@ -64,7 +79,7 @@ class PackagesTest extends TestCase
 	/**
 	 * @depends testPackageDownload
 	 */
-	public function testActionInstall()
+	public function testActionInstall(): void
 	{
 		global $context;
 
@@ -84,7 +99,7 @@ class PackagesTest extends TestCase
 	/**
 	 * @depends testPackageDownload
 	 */
-	public function testPackageRemove()
+	public function testPackageRemove(): void
 	{
 		global $context;
 

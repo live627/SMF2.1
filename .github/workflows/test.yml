@@ -93,5 +93,20 @@ jobs:
       - name: Prepare files
         run: sh other/prepare-files
 
+      - name: Start SMF web server
+        run: |
+          php -S 127.0.0.1:8080 -t . > php-server.log 2>&1 &
+          for i in $(seq 1 20); do
+            curl -s -o /dev/null http://127.0.0.1:8080/index.php && exit 0
+            sleep 1
+          done
+          echo "SMF web server did not start"
+          cat php-server.log
+          exit 1
+
       - name: Run PHPUnit
         run: vendor/phpunit/phpunit/phpunit
+
+      - name: Show SMF web server log
+        if: failure()
+        run: cat php-server.log

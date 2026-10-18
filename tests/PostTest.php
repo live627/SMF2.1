@@ -87,13 +87,6 @@ class PostTest extends TestCase
 		$_POST['message'] = $message;
 		$_POST[$context['session_var']] = $context['session_id'];
 
-		// If Post2() finds an error it falls back to Post(), which dies when
-		// there are no cookies. PHPUnit has none, so fake one to let the real
-		// error reach the assertion below instead of a cookie error.
-		$fake_cookie = empty($_COOKIE);
-		if ($fake_cookie)
-			$_COOKIE['smf_phpunit'] = '1';
-
 		// Several posts in a row would otherwise trip flood protection.
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_floodcontrol');
@@ -110,9 +103,6 @@ class PostTest extends TestCase
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_topics
 			WHERE id_topic = 1');
-
-		if ($fake_cookie)
-			unset($_COOKIE['smf_phpunit']);
 
 		// Report why the post was rejected, if it was.
 		$this->assertFalse(

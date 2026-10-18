@@ -8,6 +8,10 @@ use PHPUnit\Framework\TestCase;
 
 use gif_file;
 
+/**
+ * Needs the fixture server running: node server.js
+ * Override the address with the TEST_SERVER_URL environment variable.
+ */
 class GraphicsTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
@@ -22,48 +26,42 @@ class GraphicsTest extends TestCase
 		removeAttachments(['id_member' => 1]);
 	}
 
+	private static function baseUrl(): string
+	{
+		return rtrim(getenv('TEST_SERVER_URL') ?: 'http://localhost:8125', '/');
+	}
+
+	/**
+	 * Fixtures live in tests/packages and are served by server.js.
+	 *
+	 * @return array[]  [path, width, height, IMAGETYPE_*]
+	 */
 	public function data(): array
 	{
 		return [
-			[
-				'https://pbs.twimg.com/profile_banners/2420838708/1605797668/1080x360',
-				1080,
-				360,
-				IMAGETYPE_JPEG,
-			],
-			[
-				'url' => 'http://weblogs.us/images/weblogs.us.png',
-				432,
-				78,
-				IMAGETYPE_PNG,
-			],
-			[
-				'url' => 'http://www.google.com/intl/en_ALL/images/logo.gif',
-				276,
-				110,
-				IMAGETYPE_GIF,
-			],
-			[
-				'url' => 'https://raw.githubusercontent.com/recurser/exif-orientation-examples/master/Landscape_5.jpg',
-				1200,
-				1800,
-				IMAGETYPE_PNG,
-			],
+			'jpeg banner' => ['images/profile_banner.jpg', 1080, 360, IMAGETYPE_JPEG],
+			'png logo' => ['images/weblogs.png', 432, 78, IMAGETYPE_PNG],
+			'gif logo' => ['images/logo.gif', 276, 110, IMAGETYPE_GIF],
+			'jpeg portrait' => ['images/Landscape_5.jpg', 1200, 1800, IMAGETYPE_JPEG],
 		];
 	}
 
 	/**
 	 * @dataProvider data
-	 *
-	 * @group        slow
-	 *
 	 */
-	public function test(string $url): void
+	public function test(string $path, int $width, int $height, int $type): void
 	{
 		global $modSettings, $smcFunc;
 
-		if (strpos(get_headers($url)[0], '200') === false)
-			$this->markTestSkipped('Could not fetch from ' . $url . '; skipping this test method');
+		$url = self::baseUrl() . '/' . $path;
+
+		$headers = @get_headers($url);
+		if ($headers === false || strpos($headers[0], '200') === false)
+			$this->markTestSkipped('Could not fetch from ' . $url . '; is "node server.js" running?');
+
+		// Make sure the fixture itself matches what the provider claims.
+		$info = getimagesize(__DIR__ . '/packages/' . $path);
+		$this->assertSame([$width, $height, $type], [$info[0], $info[1], $info[2]]);
 
 		$success = downloadAvatar($url, 1, 100, 100);
 		$this->assertTrue($success);
