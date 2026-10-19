@@ -1,0 +1,67 @@
+{
+  "problemMatcher": [
+    {
+      "owner": "phpunit",
+      "pattern": [
+        { "regexp": "^\\d+\\)\\s.*$" },
+        { "regexp": "^(.*Failed\\sasserting\\sthat.*)$", "message": 1 },
+        { "regexp": "^\\s*$" },
+        { "regexp": "^(.*):(\\d+)$", "file": 1, "line": 2 }
+      ]
+    },
+    {
+      "owner": "phpunit-no-blank",
+      "pattern": [
+        { "regexp": "^\\d+\\)\\s.*$" },
+        { "regexp": "^(.*Failed\\sasserting\\sthat.*)$", "message": 1 },
+        { "regexp": "^(.*):(\\d+)$", "file": 1, "line": 2 }
+      ]
+    },
+    {
+      "owner": "phpunit-custom-message",
+      "pattern": [
+        { "regexp": "^\\d+\\)\\s.*$" },
+        { "regexp": "^(?!.*Failed\\sasserting)(?!.*:\\d+$)(.+)$", "message": 1 },
+        { "regexp": "^.*Failed\\sasserting\\sthat.*$" },
+        { "regexp": "^(.*):(\\d+)$", "file": 1, "line": 2 }
+      ]
+    },
+    {
+      "owner": "phpunit-custom-message-blank",
+      "pattern": [
+        { "regexp": "^\\d+\\)\\s.*$" },
+        { "regexp": "^(?!.*Failed\\sasserting)(?!.*:\\d+$)(.+)$", "message": 1 },
+        { "regexp": "^.*Failed\\sasserting\\sthat.*$" },
+        { "regexp": "^\\s*$" },
+        { "regexp": "^(.*):(\\d+)$", "file": 1, "line": 2 }
+      ]
+    },
+    {
+      "owner": "phpunit-risky",
+      "severity": "warning",
+      "pattern": [
+        { "regexp": "^\\d+\\)\\s.*$" },
+        { "regexp": "^(?!.*Failed\\sasserting)(?!.*:\\d+$)(.+)$", "message": 1 },
+        { "regexp": "^\\s*$" },
+        { "regexp": "^(.*):(\\d+)$", "file": 1, "line": 2 }
+      ]
+    },
+    {
+      "owner": "phpunit-skipped",
+      "severity": "warning",
+      "pattern": [
+        { "regexp": "^\\d+\\)\\s.*$" },
+        { "regexp": "^(?!.*Failed\\sasserting)(?!.*:\\d+$)(.+)$", "message": 1 },
+        { "regexp": "^(.*):(\\d+)$", "file": 1, "line": 2 }
+      ]
+    },
+    {
+      "owner": "phpunit-skipped-no-reason",
+      "severity": "warning",
+      "pattern": [
+        { "regexp": "^(\\d+\\)\\s.*)$", "message": 1 },
+        { "regexp": "^(.*):(\\d+)$", "file": 1, "line": 2 }
+      ]
+    }
+  ]
+}
