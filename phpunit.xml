@@ -7,6 +7,8 @@
 	<testsuites>
 		<testsuite name="My Test Suite">
 			<directory>./tests/</directory>
+			<!-- Needs a running web server; the workflow runs it in its own step. -->
+			<exclude>./tests/OnlineLogTest.php</exclude>
 		</testsuite>
 	</testsuites>
 
@@ -32,4 +34,4 @@
 			</exclude>
 		</whitelist>
 	</filter>
-</phpunit> 
+</phpunit>

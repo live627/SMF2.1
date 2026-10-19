@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.4']
+        php: ['7.4', 8.4]
         db: [mysql, postgres]
 
     env:
@@ -50,7 +50,7 @@ jobs:
           --health-retries=5
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -61,6 +61,12 @@ jobs:
           ini-values: >-
             apcu.enabled=1, apcu.enable_cli=1,
             apc.enabled=1, apc.enable_cli=1
+
+      - name: Setup problem matchers for PHP
+        run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+
+      - name: Setup problem matchers for PHPUnit
+        run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -84,14 +90,25 @@ jobs:
       - name: Populate test data
         run: php tests/env/Populate.php
 
+      # SMF's is_fetch_safe() refuses loopback/private addresses and fetch_web_data()
+      # only uses ports 80/443, so the fixture server gets a routable-looking address
+      # on the loopback interface and listens on port 80.
+      - name: Add fixture server address
+        run: |
+          sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
+          sudo ip addr add 11.0.0.1/32 dev lo
+
       - name: Start test web server
         run: |
           node -v
-          node tests/env/server.js &
-          sleep 1
-
-      - name: Prepare files
-        run: sh other/prepare-files
+          node tests/env/server.js 80 > node-server.log 2>&1 &
+          for i in $(seq 1 10); do
+            curl -s -o /dev/null http://11.0.0.1/ && exit 0
+            sleep 1
+          done
+          echo "Fixture server did not start"
+          cat node-server.log
+          exit 1
 
       - name: Start SMF web server
         run: |
@@ -104,9 +121,21 @@ jobs:
           cat php-server.log
           exit 1
 
+      - name: Run online log test
+        run: vendor/phpunit/phpunit/phpunit tests/OnlineLogTest.php --testdox
+
+      - name: Prepare files
+        if: always()
+        run: sh other/prepare-files
+
       - name: Run PHPUnit
-        run: vendor/phpunit/phpunit/phpunit
+        if: always()
+        run: vendor/phpunit/phpunit/phpunit --colors=never
 
       - name: Show SMF web server log
         if: failure()
         run: cat php-server.log
+
+      - name: Show Node.js request log
+        if: always()
+        run: cat node-server.log

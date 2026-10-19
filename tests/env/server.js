@@ -1,6 +1,10 @@
 // Local fixture server for the SMF tests (replaces live internet requests).
 // Usage: node server.js [port]   (default 8125, or the PORT env var)
 //
+// For the PHPUnit tests run it on port 80 and reach it through a routable-looking
+// address (e.g. 11.0.0.1 added to the loopback interface): SMF's is_fetch_safe()
+// rejects loopback/private targets and fetch_web_data() only uses ports 80/443.
+//
 // GET  /<path>  serves files from tests/packages (e.g. /images/logo.gif)
 // POST /html    echoes the posted body inside an HTML page (for fetch_web_data POST tests)
 const http = require('http');

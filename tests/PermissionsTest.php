@@ -6,6 +6,15 @@ namespace SMF\Tests;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Tests for the permission screens and helpers in Sources/ManagePermissions.php:
+ * the permission list a membergroup (or the guests) gets, and the permissions
+ * that must never be given to certain groups.
+ *
+ * Needs the populated test install with SMF's default membergroups (guests -1,
+ * regular members 0, administrators 1, global moderators 2, moderators 3, and
+ * the post-count groups 4 to 8).
+ */
 class PermissionsTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
@@ -26,7 +35,6 @@ class PermissionsTest extends TestCase
 
 	/**
 	 * @dataProvider permissionsControllerProvider
-	 *
 	 */
 	public function testPermissionsController(int $group): void
 	{
@@ -90,7 +98,7 @@ class PermissionsTest extends TestCase
 		$this->permissionsAssertions();
 	}
 
-	public function testllegalPermissions(): void
+	public function testIllegalPermissions(): void
 	{
 		global $context;
 

@@ -4,10 +4,28 @@ declare(strict_types=1);
 
 namespace SMF\Tests;
 
-use PHPUnit\Framework\TestCase;
+require_once __DIR__ . '/IntegrationTestCase.php';
 
-class PostTest extends TestCase
+/**
+ * Tests for posting through Sources/Post.php: replying to a topic with Post2()
+ * and checking what Display() then shows, including how the post's text is
+ * escaped when it is rendered.
+ *
+ * Needs the populated test install: topic 1 ("Welcome to SMF!", started by
+ * Simple Machines in board 1) and member 1, named "test", as the current user.
+ *
+ * Every test runs in a transaction (see IntegrationTestCase), so the posts,
+ * view counts and flood-control rows it writes are rolled back. Each reply is
+ * also removed with removeMessage(), which puts SMF's in-memory statistics back;
+ * a rollback cannot do that.
+ */
+class PostTest extends IntegrationTestCase
 {
+	/** The database changes each test makes are rolled back. */
+	protected bool $use_transaction = true;
+
+	private array $backup = [];
+
 	public static function setUpBeforeClass(): void
 	{
 		require_once __DIR__ . '/../Sources/Post.php';
@@ -15,22 +33,23 @@ class PostTest extends TestCase
 		require_once __DIR__ . '/../Sources/RemoveTopic.php';
 	}
 
-	public function testMakeReplyPost()
+	public function setUp(): void
 	{
-		global $board, $board_info, $context, $smcFunc, $topic;
+		global $context, $smcFunc;
 
-		unset($context['post_error']);
-		$board = 1;
-		$topic = 1;
-		loadBoard();
-		$_REQUEST['start'] = '0';
-		$_POST['subject'] = 'Welcome';
-		$_POST['message'] = 'Thanks';
-		$_POST[$context['session_var']] = $context['session_id'];
+		parent::setUp();
 
-		Post2();
-		Display();
+		$this->backup = [
+			'request' => $_REQUEST ?? [],
+			'post' => $_POST ?? [],
+			'last_read_topic' => $_SESSION['last_read_topic'] ?? null,
+		];
+		$_REQUEST = $this->backup['request'];
+		$_POST = $this->backup['post'];
+		unset($context['post_error'], $_SESSION['last_read_topic']);
 
+		// Start from a topic nobody has viewed and from no flood-control history,
+		// so a test can post and count views. The transaction undoes this.
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}topics
 			SET num_views = 0
@@ -38,10 +57,78 @@ class PostTest extends TestCase
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_topics
 			WHERE id_topic = 1');
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_floodcontrol');
+	}
 
+	public function tearDown(): void
+	{
+		global $context;
+
+		$_REQUEST = $this->backup['request'];
+		$_POST = $this->backup['post'];
+
+		if ($this->backup['last_read_topic'] === null)
+			unset($_SESSION['last_read_topic']);
+		else
+			$_SESSION['last_read_topic'] = $this->backup['last_read_topic'];
+
+		unset($GLOBALS['board'], $GLOBALS['topic'], $context['post_error'], $context['get_message']);
+
+		// Last, so the transaction is rolled back after everything above.
+		parent::tearDown();
+	}
+
+	/**
+	 * Posts a reply to topic 1 through Post2(), renders the topic with Display()
+	 * and removes the new message again. The rendered topic stays in $context.
+	 */
+	private function postReply(string $subject, string $message): void
+	{
+		global $board, $context, $topic;
+
+		$board = 1;
+		$topic = 1;
+		loadBoard();
+		$_REQUEST['start'] = '0';
+		$_POST['subject'] = $subject;
+		$_POST['message'] = $message;
+		$_POST[$context['session_var']] = $context['session_id'];
+
+		Post2();
+		Display();
+
+		// Report why the post was rejected, if it was.
+		$this->assertFalse(
+			isset($context['post_error']),
+			'Post2() rejected the post: ' . print_r($context['post_error'] ?? [], true)
+		);
 		$this->assertNotEquals(1, $context['topic_last_message']);
-		$this->assertFalse(isset($context['post_error']));
+
 		removeMessage($context['topic_last_message']);
+	}
+
+	/**
+	 * @return string The rendered body of the last message Display() showed
+	 */
+	private function lastDisplayedBody(): string
+	{
+		global $context;
+
+		$body = null;
+		while (($displayed = $context['get_message']()) !== false)
+			$body = $displayed['body'];
+
+		$this->assertNotNull($body);
+
+		return $body;
+	}
+
+	public function testMakeReplyPost(): void
+	{
+		global $context;
+
+		$this->postReply('Welcome', 'Thanks');
 
 		$this->assertEquals(1, $context['num_replies']);
 		$this->assertEquals(1, $context['real_num_replies']);
@@ -53,75 +140,17 @@ class PostTest extends TestCase
 		$this->assertEquals('Welcome to SMF!', $context['subject']);
 
 		$message = $context['get_message']();
-		$this->assertNotFalse($message);
 		$this->assertIsArray($message);
 		$this->assertEquals(1, $message['id']);
 		$this->assertEquals('Welcome to Simple Machines Forum!<br><br>We hope you enjoy using your forum.&nbsp; If you have any problems, please feel free to <a href="https://www.simplemachines.org/community/index.php" class="bbc_link" target="_blank" rel="noopener">ask us for assistance</a>.<br><br>Thanks!<br>Simple Machines', $message['body']);
 		$this->assertEquals('Simple Machines', $message['member']['name']);
 
 		$message = $context['get_message']();
-		$this->assertNotFalse($message);
 		$this->assertIsArray($message);
 		$this->assertEquals('Thanks', $message['body']);
 		$this->assertEquals('test', $message['member']['name']);
 
-		$message = $context['get_message']();
-		$this->assertFalse($message);
-		unset($GLOBALS['board'], $GLOBALS['topic'], $_POST);
-	}
-
-	/**
-	 * Posts a reply to topic 1 through Post2(), renders the topic with
-	 * Display(), removes the new message again and returns its rendered body.
-	 */
-	private function postReplyAndGetBody(string $message): string
-	{
-		global $board, $context, $smcFunc, $topic;
-
-		unset($context['post_error']);
-		$board = 1;
-		$topic = 1;
-		loadBoard();
-		$_REQUEST['start'] = '0';
-		$_POST['subject'] = 'Integration test';
-		$_POST['message'] = $message;
-		$_POST[$context['session_var']] = $context['session_id'];
-
-		// Several posts in a row would otherwise trip flood protection.
-		$smcFunc['db_query']('', '
-			DELETE FROM {db_prefix}log_floodcontrol');
-
-		Post2();
-		Display();
-
-		// Leave the topic the way testMakeReplyPost expects to find it.
-		unset($_SESSION['last_read_topic']);
-		$smcFunc['db_query']('', '
-			UPDATE {db_prefix}topics
-			SET num_views = 0
-			WHERE id_topic = 1');
-		$smcFunc['db_query']('', '
-			DELETE FROM {db_prefix}log_topics
-			WHERE id_topic = 1');
-
-		// Report why the post was rejected, if it was.
-		$this->assertFalse(
-			isset($context['post_error']),
-			'Post2() rejected the post: ' . print_r($context['post_error'] ?? [], true)
-		);
-		$this->assertNotEquals(1, $context['topic_last_message']);
-		removeMessage($context['topic_last_message']);
-
-		// The new post is the last one displayed.
-		$body = null;
-		while (($displayed = $context['get_message']()) !== false)
-			$body = $displayed['body'];
-
-		unset($GLOBALS['board'], $GLOBALS['topic'], $_POST);
-
-		$this->assertNotNull($body);
-
-		return $body;
+		$this->assertFalse($context['get_message']());
 	}
 
 	/**
@@ -149,7 +178,8 @@ class PostTest extends TestCase
 	 */
 	public function testPostedImgAltIsEncodedOnce(string $message, string $expected_attribute): void
 	{
-		$body = $this->postReplyAndGetBody($message);
+		$this->postReply('Integration test', $message);
+		$body = $this->lastDisplayedBody();
 
 		$this->assertStringContainsString($expected_attribute, $body);
 		$this->assertStringNotContainsString('&amp;amp;', $body);
@@ -167,10 +197,12 @@ class PostTest extends TestCase
 		$rdquo = "\xE2\x80\x9D";
 		$rsquo = "\xE2\x80\x99";
 
-		$body = $this->postReplyAndGetBody(
+		$this->postReply(
+			'Integration test',
 			"Word said {$ldquo}hello{$rdquo} and it{$rsquo}s fine "
 			. "[img alt={$ldquo} onerror={$ldquo}alert(1)]http://example.com/image.png[/img]"
 		);
+		$body = $this->lastDisplayedBody();
 
 		// Plain text quotes become entities, not raw quote characters.
 		$this->assertStringContainsString('Word said &quot;hello&quot; and it&#039;s fine', $body);

@@ -8,10 +8,39 @@ use PHPUnit\Framework\TestCase;
 
 class CalendarTest extends TestCase
 {
+	/** Globals the tests below change, put back after each test. */
+	private array $backup = [];
+
 	public static function setUpBeforeClass(): void
 	{
 		require_once __DIR__ . '/../Sources/Calendar.php';
 		require_once __DIR__ . '/../Sources/Subs-Calendar.php';
+	}
+
+	public function setUp(): void
+	{
+		global $txt, $user_info, $context;
+
+		$this->backup = [
+			'post' => $_POST,
+			'txt' => $txt,
+			'user_info' => $user_info,
+			'context_user' => $context['user'] ?? null,
+		];
+	}
+
+	public function tearDown(): void
+	{
+		global $txt, $user_info, $context;
+
+		$_POST = $this->backup['post'];
+		//~ $txt = $this->backup['txt'];
+		$user_info = $this->backup['user_info'];
+
+		if ($this->backup['context_user'] === null)
+			unset($context['user']);
+		else
+			$context['user'] = $this->backup['context_user'];
 	}
 
 	public function timeformatProvider(): array

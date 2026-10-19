@@ -9,7 +9,13 @@ use PHPUnit\Framework\TestCase;
 use gif_file;
 
 /**
- * Needs the fixture server running: node server.js
+ * Needs the fixture server (node server.js) reachable at http://11.0.0.1 on port 80.
+ * SMF's is_fetch_safe() refuses loopback and private addresses, and fetch_web_data()
+ * only talks to ports 80/443, so 127.0.0.1:8125 can never work. Instead:
+ *
+ *     sudo ip addr add 11.0.0.1/32 dev lo      (macOS: sudo ifconfig lo0 alias 11.0.0.1)
+ *     sudo node server.js 80
+ *
  * Override the address with the TEST_SERVER_URL environment variable.
  */
 class GraphicsTest extends TestCase
@@ -28,7 +34,7 @@ class GraphicsTest extends TestCase
 
 	private static function baseUrl(): string
 	{
-		return rtrim(getenv('TEST_SERVER_URL') ?: 'http://localhost:8125', '/');
+		return rtrim(getenv('TEST_SERVER_URL') ?: 'http://11.0.0.1', '/');
 	}
 
 	/**
@@ -57,7 +63,7 @@ class GraphicsTest extends TestCase
 
 		$headers = @get_headers($url);
 		if ($headers === false || strpos($headers[0], '200') === false)
-			$this->markTestSkipped('Could not fetch from ' . $url . '; is "node server.js" running?');
+			$this->markTestSkipped('Could not fetch from ' . $url . '; is 11.0.0.1 set up and "node server.js 80" running? (see the class comment)');
 
 		// Make sure the fixture itself matches what the provider claims.
 		$info = getimagesize(__DIR__ . '/packages/' . $path);
