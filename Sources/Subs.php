@@ -2646,7 +2646,10 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 	}
 
 	$open_tags = array();
-	$message = strtr($message, array("\n" => '<br>'));
+	$scan_message = strtr($message, array("\n" => '<br>'));
+	$message_buffer = '';
+	$last_pos = 0;
+	$search_pos = 0;
 
 	if (!empty($parse_tags))
 	{
@@ -2667,22 +2670,23 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 	$pos = -1;
 	while ($pos !== false)
 	{
-		$last_pos = isset($last_pos) ? max($pos, $last_pos) : $pos;
-		preg_match('~\[/?(?=' . $alltags_regex . ')~i', $message, $matches, PREG_OFFSET_CAPTURE, $pos + 1);
+		preg_match('~\[/?(?=' . $alltags_regex . ')~i', $scan_message, $matches, PREG_OFFSET_CAPTURE, $search_pos);
 		$pos = isset($matches[0][1]) ? $matches[0][1] : false;
 
 		// Failsafe.
 		if ($pos === false || $last_pos > $pos)
-			$pos = strlen($message) + 1;
+			$pos = strlen($scan_message) + 1;
+
+		$search_pos = $pos + 1;
 
 		// Can't have a one letter smiley, URL, or email! (Sorry.)
-		if ($last_pos < $pos - 1)
+		if ($last_pos < $pos)
 		{
 			// Make sure the $last_pos is not negative.
 			$last_pos = max($last_pos, 0);
 
 			// Pick a block of data to do some raw fixing on.
-			$data = substr($message, $last_pos, $pos - $last_pos);
+			$data = substr($scan_message, $last_pos, $pos - $last_pos);
 
 			$placeholders = array();
 			$placeholders_counter = 0;
@@ -3201,31 +3205,39 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 			$data = strtr($data, array("\t" => '&nbsp;&nbsp;&nbsp;'));
 
-			// If it wasn't changed, no copying or other boring stuff has to happen!
-			if ($data != substr($message, $last_pos, $pos - $last_pos))
+			// If the source text changed, update the scan string and revisit any BBC it introduced.
+			if ($data != substr($scan_message, $last_pos, $pos - $last_pos))
 			{
-				$message = substr($message, 0, $last_pos) . $data . substr($message, $pos);
+				$scan_message = substr($scan_message, 0, $last_pos) . $data . substr($scan_message, $pos);
 
-				// Since we changed it, look again in case we added or removed a tag.  But we don't want to skip any.
+				// Since we changed it, look again in case we added or removed a tag. But don't skip any.
 				$old_pos = strlen($data) + $last_pos;
-				$pos = strpos($message, '[', $last_pos);
+				$pos = strpos($scan_message, '[', $last_pos);
 				$pos = $pos === false ? $old_pos : min($pos, $old_pos);
+				$message_buffer .= substr($scan_message, $last_pos, $pos - $last_pos);
+				$last_pos = $pos;
+				$search_pos = $pos + 1;
+			}
+			else
+			{
+				$message_buffer .= $data;
+				$last_pos = $pos;
 			}
 		}
 
 		// Are we there yet?  Are we there yet?
-		if ($pos >= strlen($message) - 1)
+		if ($pos >= strlen($scan_message) - 1)
 			break;
 
-		$tag_character = strtolower($message[$pos + 1]);
+		$tag_character = strtolower($scan_message[$pos + 1]);
 
 		if ($tag_character == '/' && !empty($open_tags))
 		{
-			$pos2 = strpos($message, ']', $pos + 1);
+			$pos2 = strpos($scan_message, ']', $pos + 1);
 			if ($pos2 == $pos + 2)
 				continue;
 
-			$look_for = strtolower(substr($message, $pos + 2, $pos2 - $pos - 2));
+			$look_for = strtolower(substr($scan_message, $pos + 2, $pos2 - $pos - 2));
 			$look_for_is_open = false;
 
 			foreach ($open_tags as $open_tag)
@@ -3308,30 +3320,27 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				}
 			}
 
+			$last_pos = $pos2 + 1;
 			foreach ($to_close as $tag)
 			{
-				$message = substr($message, 0, $pos) . "\n" . $tag['after'] . "\n" . substr($message, $pos2 + 1);
-				$pos += strlen($tag['after']) + 2;
-				$pos2 = $pos - 1;
+				$message_buffer .= "\n" . $tag['after'] . "\n";
 
 				// See the comment at the end of the big loop - just eating whitespace ;).
 				$whitespace_regex = '';
 				if (!empty($tag['block_level']))
 					$whitespace_regex .= '(&nbsp;|\s)*(<br\s*/?' . '>)?';
-				// Trim one line of whitespace after unnested tags, but all of it after nested ones
+				// Trim one line of whitespace after unnested tags, but all of it after nested ones.
 				if (!empty($tag['trim']) && $tag['trim'] != 'inside')
 					$whitespace_regex .= empty($tag['require_parents']) ? '(&nbsp;|\s)*' : '(<br>|&nbsp;|\s)*';
 
-				if (!empty($whitespace_regex) && preg_match('~' . $whitespace_regex . '~', substr($message, $pos), $matches) != 0)
-					$message = substr($message, 0, $pos) . substr($message, $pos + strlen($matches[0]));
+				if (!empty($whitespace_regex) && preg_match('~' . $whitespace_regex . '~', substr($scan_message, $last_pos), $matches) != 0)
+					$last_pos += strlen($matches[0]);
 			}
 
 			if (!empty($to_close))
-			{
 				$to_close = array();
-				$pos--;
-			}
 
+			$search_pos = $last_pos;
 			continue;
 		}
 
@@ -3346,17 +3355,17 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			$pt_strlen = strlen($possible['tag']);
 
 			// Not a match?
-			if (strtolower(substr($message, $pos + 1, $pt_strlen)) != $possible['tag'])
+			if (strtolower(substr($scan_message, $pos + 1, $pt_strlen)) != $possible['tag'])
 				continue;
 
-			$next_c = isset($message[$pos + 1 + $pt_strlen]) ? $message[$pos + 1 + $pt_strlen] : '';
+			$next_c = isset($scan_message[$pos + 1 + $pt_strlen]) ? $scan_message[$pos + 1 + $pt_strlen] : '';
 
 			// A tag is the last char maybe
 			if ($next_c == '')
 				break;
 
 			// A test validation?
-			if (isset($possible['test']) && preg_match('~^' . $possible['test'] . '~', substr($message, $pos + 1 + $pt_strlen + 1)) === 0)
+			if (isset($possible['test']) && preg_match('~^' . $possible['test'] . '~', substr($scan_message, $pos + 1 + $pt_strlen + 1)) === 0)
 				continue;
 			// Do we want parameters?
 			elseif (!empty($possible['parameters']))
@@ -3381,7 +3390,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				if (in_array($possible['type'], array('unparsed_equals', 'unparsed_commas', 'unparsed_commas_content', 'unparsed_equals_content', 'parsed_equals')) && $next_c != '=')
 					continue;
 				// Maybe we just want a /...
-				if ($possible['type'] == 'closed' && $next_c != ']' && substr($message, $pos + 1 + $pt_strlen, 2) != '/]' && substr($message, $pos + 1 + $pt_strlen, 3) != ' /]')
+				if ($possible['type'] == 'closed' && $next_c != ']' && substr($scan_message, $pos + 1 + $pt_strlen, 2) != '/]' && substr($scan_message, $pos + 1 + $pt_strlen, 3) != ' /]')
 					continue;
 				// An immediate ]?
 				if ($possible['type'] == 'unparsed_content' && $next_c != ']')
@@ -3431,7 +3440,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				}
 
 				// Extract the string that potentially holds our parameters.
-				$blob = preg_split('~\[/?(?:' . $alltags_regex . ')~i', substr($message, $pos));
+				$blob = preg_split('~\[/?(?:' . $alltags_regex . ')~i', substr($scan_message, $pos));
 				$blobs = preg_split('~\]~i', $blob[1]);
 
 				$splitters = implode('=|', array_keys($possible['parameters'])) . '=';
@@ -3508,12 +3517,12 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 		}
 
 		// Item codes are complicated buggers... they are implicit [li]s and can make [list]s!
-		if ($smileys !== false && $tag === null && isset($itemcodes[$message[$pos + 1]], $message[$pos + 2]) && $message[$pos + 2] == ']' && !isset($disabled['list']) && !isset($disabled['li']))
+		if ($smileys !== false && $tag === null && isset($itemcodes[$scan_message[$pos + 1]], $scan_message[$pos + 2]) && $scan_message[$pos + 2] == ']' && !isset($disabled['list']) && !isset($disabled['li']))
 		{
-			if ($message[$pos + 1] == '0' && !in_array($message[$pos - 1], array(';', ' ', "\t", "\n", '>')))
+			if ($scan_message[$pos + 1] == '0' && !in_array($scan_message[$pos - 1], array(';', ' ', "\t", "\n", '>')))
 				continue;
 
-			$tag = $itemcodes[$message[$pos + 1]];
+			$tag = $itemcodes[$scan_message[$pos + 1]];
 
 			// First let's set up the tree: it needs to be in a list, or after an li.
 			if ($inside === null || ($inside['tag'] != 'list' && $inside['tag'] != 'li'))
@@ -3547,16 +3556,16 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 			// First, open the tag...
 			$code .= '<li' . ($tag == '' ? '' : ' type="' . $tag . '"') . '>';
-			$message = substr($message, 0, $pos) . "\n" . $code . "\n" . substr($message, $pos + 3);
-			$pos += strlen($code) - 1 + 2;
+			$message_buffer .= "\n" . $code . "\n";
+			$last_pos = $pos + 3;
 
-			// Next, find the next break (if any.)  If there's more itemcode after it, keep it going - otherwise close!
-			$pos2 = strpos($message, '<br>', $pos);
-			$pos3 = strpos($message, '[/', $pos);
+			// Next, find the next break (if any). If there's more itemcode after it, keep it going - otherwise close!
+			$pos2 = strpos($scan_message, '<br>', $last_pos);
+			$pos3 = strpos($scan_message, '[/', $last_pos);
 			if ($pos2 !== false && ($pos2 <= $pos3 || $pos3 === false))
 			{
-				preg_match('~^(<br>|&nbsp;|\s|\[)+~', substr($message, $pos2 + 4), $matches);
-				$message = substr($message, 0, $pos2) . (!empty($matches[0]) && substr($matches[0], -1) == '[' ? '[/li]' : '[/li][/list]') . substr($message, $pos2);
+				preg_match('~^(<br>|&nbsp;|\s|\[)+~', substr($scan_message, $pos2 + 4), $matches);
+				$scan_message = substr($scan_message, 0, $pos2) . (!empty($matches[0]) && substr($matches[0], -1) == '[' ? '[/li]' : '[/li][/list]') . substr($scan_message, $pos2);
 
 				$open_tags[count($open_tags) - 2]['after'] = '</ul>';
 			}
@@ -3568,16 +3577,16 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				$open_tags[count($open_tags) - 2]['after'] = '</li></ul>';
 			}
 
+			$search_pos = $last_pos;
 			continue;
 		}
 
-		// Implicitly close lists and tables if something other than what's required is in them.  This is needed for itemcode.
+		// Implicitly close lists and tables if something other than what's required is in them. This is needed for itemcode.
 		if ($tag === null && $inside !== null && !empty($inside['require_children']))
 		{
 			array_pop($open_tags);
-
-			$message = substr($message, 0, $pos) . "\n" . $inside['after'] . "\n" . substr($message, $pos);
-			$pos += strlen($inside['after']) - 1 + 2;
+			$message_buffer .= "\n" . $inside['after'] . "\n";
+			$search_pos = $pos;
 		}
 
 		// No tag?  Keep looking, then.  Silly people using brackets without actual tags.
@@ -3619,26 +3628,14 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			// Close all the non block level tags so this tag isn't surrounded by them.
 			for ($i = count($open_tags) - 1; $i > $n; $i--)
 			{
-				$message = substr($message, 0, $pos) . "\n" . $open_tags[$i]['after'] . "\n" . substr($message, $pos);
-				$ot_strlen = strlen($open_tags[$i]['after']);
-				$pos += $ot_strlen + 2;
-				$pos1 += $ot_strlen + 2;
-
-				// Trim or eat trailing stuff... see comment at the end of the big loop.
-				$whitespace_regex = '';
-				if (!empty($tag['block_level']))
-					$whitespace_regex .= '(&nbsp;|\s)*(<br>)?';
-				if (!empty($tag['trim']) && $tag['trim'] != 'inside')
-					$whitespace_regex .= empty($tag['require_parents']) ? '(&nbsp;|\s)*' : '(<br>|&nbsp;|\s)*';
-				if (!empty($whitespace_regex) && preg_match('~' . $whitespace_regex . '~', substr($message, $pos), $matches) != 0)
-					$message = substr($message, 0, $pos) . substr($message, $pos + strlen($matches[0]));
+				$message_buffer .= "\n" . $open_tags[$i]['after'] . "\n";
 
 				array_pop($open_tags);
 			}
 		}
 
 		// Can't read past the end of the message
-		$pos1 = min(strlen($message), $pos1);
+		$pos1 = min(strlen($scan_message), $pos1);
 
 		// No type means 'parsed_content'.
 		if (!isset($tag['type']))
@@ -3650,17 +3647,17 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			if (isset($tag['validate']))
 				$tag['validate']($tag, $data, $disabled, $params);
 
-			$message = substr($message, 0, $pos) . "\n" . $tag['before'] . "\n" . substr($message, $pos1);
-			$pos += strlen($tag['before']) - 1 + 2;
+			$message_buffer .= "\n" . $tag['before'] . "\n";
+			$consumed_until = $pos1;
 		}
 		// Don't parse the content, just skip it.
 		elseif ($tag['type'] == 'unparsed_content')
 		{
-			$pos2 = stripos($message, '[/' . substr($message, $pos + 1, $tag_strlen) . ']', $pos1);
+			$pos2 = stripos($scan_message, '[/' . substr($scan_message, $pos + 1, $tag_strlen) . ']', $pos1);
 			if ($pos2 === false)
 				continue;
 
-			$data = substr($message, $pos1, $pos2 - $pos1);
+			$data = substr($scan_message, $pos1, $pos2 - $pos1);
 
 			if (!empty($tag['block_level']) && substr($data, 0, 4) == '<br>')
 				$data = substr($data, 4);
@@ -3669,10 +3666,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				$tag['validate']($tag, $data, $disabled, $params);
 
 			$code = strtr($tag['content'], array('$1' => $data));
-			$message = substr($message, 0, $pos) . "\n" . $code . "\n" . substr($message, $pos2 + 3 + $tag_strlen);
-
-			$pos += strlen($code) - 1 + 2;
-			$last_pos = $pos + 1;
+			$message_buffer .= "\n" . $code . "\n";
+			$consumed_until = $pos2 + 3 + $tag_strlen;
 		}
 		// Don't parse the content, just skip it.
 		elseif ($tag['type'] == 'unparsed_equals_content')
@@ -3682,9 +3677,9 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			{
 				// Anything passed through the preparser will use &quot;,
 				// but we need to handle raw quotation marks too.
-				$quot = substr($message, $pos1, 1) === '"' ? '"' : '&quot;';
+				$quot = substr($scan_message, $pos1, 1) === '"' ? '"' : '&quot;';
 
-				$quoted = substr($message, $pos1, strlen($quot)) == $quot;
+				$quoted = substr($scan_message, $pos1, strlen($quot)) == $quot;
 				if ($tag['quoted'] != 'optional' && !$quoted)
 					continue;
 
@@ -3694,17 +3689,17 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			else
 				$quoted = false;
 
-			$pos2 = strpos($message, $quoted == false ? ']' : $quot . ']', $pos1);
+			$pos2 = strpos($scan_message, $quoted == false ? ']' : $quot . ']', $pos1);
 			if ($pos2 === false)
 				continue;
 
-			$pos3 = stripos($message, '[/' . substr($message, $pos + 1, $tag_strlen) . ']', $pos2);
+			$pos3 = stripos($scan_message, '[/' . substr($scan_message, $pos + 1, $tag_strlen) . ']', $pos2);
 			if ($pos3 === false)
 				continue;
 
 			$data = array(
-				substr($message, $pos2 + ($quoted == false ? 1 : 1 + strlen($quot)), $pos3 - ($pos2 + ($quoted == false ? 1 : 1 + strlen($quot)))),
-				substr($message, $pos1, $pos2 - $pos1)
+				substr($scan_message, $pos2 + ($quoted == false ? 1 : 1 + strlen($quot)), $pos3 - ($pos2 + ($quoted == false ? 1 : 1 + strlen($quot)))),
+				substr($scan_message, $pos1, $pos2 - $pos1)
 			);
 
 			if (!empty($tag['block_level']) && substr($data[0], 0, 4) == '<br>')
@@ -3715,36 +3710,36 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				$tag['validate']($tag, $data, $disabled, $params);
 
 			$code = strtr($tag['content'], array('$1' => $data[0], '$2' => $data[1]));
-			$message = substr($message, 0, $pos) . "\n" . $code . "\n" . substr($message, $pos3 + 3 + $tag_strlen);
-			$pos += strlen($code) - 1 + 2;
+			$message_buffer .= "\n" . $code . "\n";
+			$consumed_until = $pos3 + 3 + $tag_strlen;
 		}
 		// A closed tag, with no content or value.
 		elseif ($tag['type'] == 'closed')
 		{
-			$pos2 = strpos($message, ']', $pos);
+			$pos2 = strpos($scan_message, ']', $pos);
 
 			// Maybe a custom BBC wants to do something special?
 			$data = null;
 			if (isset($tag['validate']))
 				$tag['validate']($tag, $data, $disabled, $params);
 
-			$message = substr($message, 0, $pos) . "\n" . $tag['content'] . "\n" . substr($message, $pos2 + 1);
-			$pos += strlen($tag['content']) - 1 + 2;
+			$message_buffer .= "\n" . $tag['content'] . "\n";
+			$consumed_until = $pos2 + 1;
 		}
 		// This one is sorta ugly... :/.  Unfortunately, it's needed for flash.
 		elseif ($tag['type'] == 'unparsed_commas_content')
 		{
-			$pos2 = strpos($message, ']', $pos1);
+			$pos2 = strpos($scan_message, ']', $pos1);
 			if ($pos2 === false)
 				continue;
 
-			$pos3 = stripos($message, '[/' . substr($message, $pos + 1, $tag_strlen) . ']', $pos2);
+			$pos3 = stripos($scan_message, '[/' . substr($scan_message, $pos + 1, $tag_strlen) . ']', $pos2);
 			if ($pos3 === false)
 				continue;
 
 			// We want $1 to be the content, and the rest to be csv.
-			$data = explode(',', ',' . substr($message, $pos1, $pos2 - $pos1));
-			$data[0] = substr($message, $pos2 + 1, $pos3 - $pos2 - 1);
+			$data = explode(',', ',' . substr($scan_message, $pos1, $pos2 - $pos1));
+			$data[0] = substr($scan_message, $pos2 + 1, $pos3 - $pos2 - 1);
 
 			if (isset($tag['validate']))
 				$tag['validate']($tag, $data, $disabled, $params);
@@ -3752,17 +3747,17 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			$code = $tag['content'];
 			foreach ($data as $k => $d)
 				$code = strtr($code, array('$' . ($k + 1) => trim($d)));
-			$message = substr($message, 0, $pos) . "\n" . $code . "\n" . substr($message, $pos3 + 3 + $tag_strlen);
-			$pos += strlen($code) - 1 + 2;
+			$message_buffer .= "\n" . $code . "\n";
+			$consumed_until = $pos3 + 3 + $tag_strlen;
 		}
 		// This has parsed content, and a csv value which is unparsed.
 		elseif ($tag['type'] == 'unparsed_commas')
 		{
-			$pos2 = strpos($message, ']', $pos1);
+			$pos2 = strpos($scan_message, ']', $pos1);
 			if ($pos2 === false)
 				continue;
 
-			$data = explode(',', substr($message, $pos1, $pos2 - $pos1));
+			$data = explode(',', substr($scan_message, $pos1, $pos2 - $pos1));
 
 			if (isset($tag['validate']))
 				$tag['validate']($tag, $data, $disabled, $params);
@@ -3777,8 +3772,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			$code = $tag['before'];
 			foreach ($data as $k => $d)
 				$code = strtr($code, array('$' . ($k + 1) => trim($d)));
-			$message = substr($message, 0, $pos) . "\n" . $code . "\n" . substr($message, $pos2 + 1);
-			$pos += strlen($code) - 1 + 2;
+			$message_buffer .= "\n" . $code . "\n";
+			$consumed_until = $pos2 + 1;
 		}
 		// A tag set to a value, parsed or not.
 		elseif ($tag['type'] == 'unparsed_equals' || $tag['type'] == 'parsed_equals')
@@ -3787,9 +3782,9 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			if (isset($tag['quoted']))
 			{
 				// Will normally be '&quot;' but might be '"'.
-				$quot = substr($message, $pos1, 1) === '"' ? '"' : '&quot;';
+				$quot = substr($scan_message, $pos1, 1) === '"' ? '"' : '&quot;';
 
-				$quoted = substr($message, $pos1, strlen($quot)) == $quot;
+				$quoted = substr($scan_message, $pos1, strlen($quot)) == $quot;
 				if ($tag['quoted'] != 'optional' && !$quoted)
 					continue;
 
@@ -3801,21 +3796,21 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 			if ($quoted)
 			{
-				$end_of_value = strpos($message, $quot . ']', $pos1);
-				$nested_tag = strpos($message, '=' . $quot, $pos1);
+				$end_of_value = strpos($scan_message, $quot . ']', $pos1);
+				$nested_tag = strpos($scan_message, '=' . $quot, $pos1);
 				// Check so this is not just an quoted url ending with a =
-				if ($nested_tag && substr($message, $nested_tag, 2 + strlen($quot)) == '=' . $quot . ']')
+				if ($nested_tag && substr($scan_message, $nested_tag, 2 + strlen($quot)) == '=' . $quot . ']')
 					$nested_tag = false;
 				if ($nested_tag && $nested_tag < $end_of_value)
 					// Nested tag with quoted value detected, use next end tag
-					$nested_tag_pos = strpos($message, $quoted == false ? ']' : $quot, $pos1) + strlen($quot);
+					$nested_tag_pos = strpos($scan_message, $quoted == false ? ']' : $quot, $pos1) + strlen($quot);
 			}
 
-			$pos2 = strpos($message, $quoted == false ? ']' : $quot . ']', isset($nested_tag_pos) ? $nested_tag_pos : $pos1);
+			$pos2 = strpos($scan_message, $quoted == false ? ']' : $quot . ']', isset($nested_tag_pos) ? $nested_tag_pos : $pos1);
 			if ($pos2 === false)
 				continue;
 
-			$data = substr($message, $pos1, $pos2 - $pos1);
+			$data = substr($scan_message, $pos1, $pos2 - $pos1);
 
 			// Validation for my parking, please!
 			if (isset($tag['validate']))
@@ -3830,22 +3825,31 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			$open_tags[] = $tag;
 
 			$code = strtr($tag['before'], array('$1' => $data));
-			$message = substr($message, 0, $pos) . "\n" . $code . "\n" . substr($message, $pos2 + ($quoted == false ? 1 : 1 + strlen($quot)));
-			$pos += strlen($code) - 1 + 2;
+			$message_buffer .= "\n" . $code . "\n";
+			$consumed_until = $pos2 + ($quoted == false ? 1 : 1 + strlen($quot));
 		}
 
-		// If this is block level, eat any breaks after it.
-		if (!empty($tag['block_level']) && substr($message, $pos + 1, 4) == '<br>')
-			$message = substr($message, 0, $pos + 1) . substr($message, $pos + 5);
+		// Advance past the source tag and any whitespace it consumes.
+		if (isset($consumed_until))
+		{
+			if (!empty($tag['block_level']) && substr($scan_message, $consumed_until, 4) == '<br>')
+				$consumed_until += 4;
 
-		// Are we trimming outside this tag?
-		if (!empty($tag['trim']) && $tag['trim'] != 'outside' && preg_match('~(<br>|&nbsp;|\s)*~', substr($message, $pos + 1), $matches) != 0)
-			$message = substr($message, 0, $pos + 1) . substr($message, $pos + 1 + strlen($matches[0]));
+			// Are we trimming outside this tag?
+			if (!empty($tag['trim']) && $tag['trim'] != 'outside' && preg_match('~(<br>|&nbsp;|\s)*~', substr($scan_message, $consumed_until), $matches) != 0)
+				$consumed_until += strlen($matches[0]);
+
+			$last_pos = $consumed_until;
+			$search_pos = $last_pos;
+			unset($consumed_until);
+		}
 	}
 
 	// Close any remaining tags.
 	while ($tag = array_pop($open_tags))
-		$message .= "\n" . $tag['after'] . "\n";
+		$message_buffer .= "\n" . $tag['after'] . "\n";
+
+	$message = $message_buffer;
 
 	// Parse the smileys within the parts where it can be done safely.
 	if ($smileys === true)
