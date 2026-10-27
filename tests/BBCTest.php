@@ -1105,6 +1105,225 @@ class BBCTest extends TestCase
 	}
 
 	/**
+	 * Regression cases for building parsed BBC output in a buffer.
+	 *
+	 * These cases deliberately put ordinary text before and after tags, and
+	 * combine tags in a single message, to exercise transitions between source
+	 * text and generated markup.
+	 *
+	 * @return string[][]
+	 */
+	public function bufferParserProvider(): array
+	{
+		return [
+			'plain text around an inline tag' => [
+				'before [b]bold[/b] after',
+				'before <b>bold</b> after',
+			],
+			'adjacent tags' => [
+				'[b]bold[/b][i]italic[/i]',
+				'<b>bold</b><i>italic</i>',
+			],
+			'nested inline tags' => [
+				'[b]bold [i]and italic[/i][/b]',
+				'<b>bold <i>and italic</i></b>',
+			],
+			'multiple transitions between text and tags' => [
+				'before [b]bold[/b] between [i]italic[/i] after',
+				'before <b>bold</b> between <i>italic</i> after',
+			],
+			'no spaces around tags' => [
+				'left[b]bold[/b]right',
+				'left<b>bold</b>right',
+			],
+			'consecutive instances of the same tag' => [
+				'[b]first[/b] [b]second[/b] [b]third[/b]',
+				'<b>first</b> <b>second</b> <b>third</b>',
+			],
+			'unclosed inline tag' => [
+				'[b]unclosed',
+				'<b>unclosed</b>',
+			],
+			'nested unclosed inline tags' => [
+				'[b][i]unclosed',
+				'<b><i>unclosed</i></b>',
+			],
+			'empty inline tag' => [
+				'[b][/b]',
+				'<b></b>',
+			],
+			'line breaks in plain text' => [
+				"first\nsecond",
+				'first<br>second',
+			],
+			'closed tags between plain text' => [
+				'before[br]middle[hr]after',
+				'before<br>middle<hr>after',
+			],
+			'quote adjacent to plain text' => [
+				'before[quote]quoted[/quote]after',
+				'before<blockquote class="bbc_standard_quote"><cite>Quote</cite>quoted</blockquote>after',
+			],
+			'list followed by plain text' => [
+				'[list][li]one[/li][li]two[/li][/list]after',
+				'<ul class="bbc_list"><li>one</li><li>two</li></ul>after',
+			],
+			'image followed by plain text' => [
+				'[img]http://example.com/image.png[/img]tail',
+				'<img src="http://example.com/image.png" alt="" class="bbc_img" loading="lazy">tail',
+			],
+			'URL tag followed by plain text' => [
+				'[url=http://www.simplemachines.net/]link[/url]tail',
+				'<a href="http://www.simplemachines.net/" class="bbc_link" target="_blank" rel="noopener">link</a>tail',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider bufferParserProvider
+	 */
+	public function testBufferParser(string $test, string $expected): void
+	{
+		$this->assertSame($expected, parse_bbc($test, false));
+	}
+
+	/**
+	 * URLs and email addresses in source text can be converted into BBC tags
+	 * during parsing. Ensure that their generated tags are scanned and rendered
+	 * correctly when the surrounding message also contains BBC.
+	 *
+	 * @return string[][]
+	 */
+	public function bufferAutolinkProvider(): array
+	{
+		return [
+			'URL before BBC' => [
+				'example.com [b]bold[/b]',
+				'<a href="//example.com" class="bbc_link" target="_blank" rel="noopener">example.com</a> <b>bold</b>',
+			],
+			'URL inside inline BBC' => [
+				'See [b]example.com[/b] now',
+				'See <b><a href="//example.com" class="bbc_link" target="_blank" rel="noopener">example.com</a></b> now',
+			],
+			'URLs on both sides of BBC' => [
+				'http://example.com [b]bold[/b] http://example.net',
+				'<a href="http://example.com" class="bbc_link" target="_blank" rel="noopener">http://example.com</a> <b>bold</b> <a href="http://example.net" class="bbc_link" target="_blank" rel="noopener">http://example.net</a>',
+			],
+			'email before BBC' => [
+				'user@example.com [i]contact[/i]',
+				'<a href="mailto:user@example.com" class="bbc_email">user@example.com</a> <i>contact</i>',
+			],
+			'explicit URL is not linked twice and following domain is linked' => [
+				'[url=http://example.com]http://example.com[/url] example.org',
+				'<a href="http://example.com" class="bbc_link" target="_blank" rel="noopener">http://example.com</a> <a href="//example.org" class="bbc_link" target="_blank" rel="noopener">example.org</a>',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider bufferAutolinkProvider
+	 */
+	public function testBufferAutolink(string $test, string $expected): void
+	{
+		$this->assertSame($expected, parse_bbc($test, false));
+	}
+
+	/**
+	 * Checks that tags generated or repaired by preparsecode() are subsequently
+	 * parsed correctly by parse_bbc().
+	 *
+	 * @return string[][]
+	 */
+	public function preparseBbcBufferProvider(): array
+	{
+		return [
+			'legacy color tag' => [
+				'[black]text[/black]',
+				'[color=black]text[/color]',
+				'<span style="color: black;" class="bbc_color">text</span>',
+			],
+			'multiple legacy color tags' => [
+				'[red]one[/red] [blue]two[/blue]',
+				'[color=red]one[/color] [color=blue]two[/color]',
+				'<span style="color: red;" class="bbc_color">one</span> <span style="color: blue;" class="bbc_color">two</span>',
+			],
+			'empty quote removed between text' => [
+				'left[quote][/quote]right',
+				'leftright',
+				'leftright',
+			],
+			'list item closed before parsing' => [
+				'some open list[list][li]one[/list]',
+				'some open list[list][li]one[/li][/list]',
+				'some open list<ul class="bbc_list"><li>one</li></ul>',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider preparseBbcBufferProvider
+	 */
+	public function testPreparseOutputIsParsedCorrectly(string $test, string $preparsed, string $expected): void
+	{
+		require_once __DIR__ . '/../Sources/Subs-Post.php';
+
+		preparsecode($test);
+		$this->assertSame($preparsed, $test);
+		$this->assertSame($expected, parse_bbc($test, false));
+	}
+
+	/**
+	 * Cases for making sure a restricted parse only processes the requested tags
+	 * and does not affect the next unrestricted parse.
+	 *
+	 * @return array<string, array{string, string[], string, string}>
+	 */
+	public function parseTagsRestrictionProvider(): array
+	{
+		return [
+			'only bold' => [
+				'[b]bold[/b] [i]italic[/i]',
+				['b'],
+				'<b>bold</b> [i]italic[/i]',
+				'<b>bold</b> <i>italic</i>',
+			],
+			'only italic' => [
+				'[i]italic[/i] [b]bold[/b]',
+				['i'],
+				'<i>italic</i> [b]bold[/b]',
+				'<i>italic</i> <b>bold</b>',
+			],
+			'only underline' => [
+				'[u]underlined[/u][s]struck[/s]',
+				['u'],
+				'<u>underlined</u>[s]struck[/s]',
+				'<u>underlined</u><s>struck</s>',
+			],
+			'bold and underline' => [
+				'[b]bold[/b][i]italic[/i][u]underlined[/u]',
+				['b', 'u'],
+				'<b>bold</b>[i]italic[/i]<u>underlined</u>',
+				'<b>bold</b><i>italic</i><u>underlined</u>',
+			],
+			'no matching tags' => [
+				'[b]bold[/b]',
+				['i'],
+				'[b]bold[/b]',
+				'<b>bold</b>',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider parseTagsRestrictionProvider
+	 */
+	public function testParseTagsRestrictionProvider(string $test, array $parse_tags, string $restricted_expected, string $full_expected): void
+	{
+		$this->assertSame($restricted_expected, parse_bbc($test, false, '', $parse_tags));
+		$this->assertSame($full_expected, parse_bbc($test, false));
+	}
+
+	/**
 	 * Only the tags listed in $parse_tags should be parsed.
 	 */
 	public function testParseTagsRestriction(): void
