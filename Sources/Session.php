@@ -306,7 +306,7 @@ class SmfSessionHandler extends SessionHandler implements SessionHandlerInterfac
 			$this->read($id);
 		}
 
-		return $this->data !== '';
+		return $this->data !== null;
 	}
 
 	 /**
