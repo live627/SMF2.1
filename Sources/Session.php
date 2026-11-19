@@ -329,7 +329,7 @@ class SmfSessionHandler extends SessionHandler implements SessionHandlerInterfac
 		}
 
 		// Just call the write.
-		return $this->write($id, data);
+		return $this->write($id, $data);
 	 }
 }
 
