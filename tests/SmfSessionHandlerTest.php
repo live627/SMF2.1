@@ -38,8 +38,6 @@ final class SmfSessionHandlerTest extends TestCase
 			'modSettings' => $modSettings ?? null,
 			'scripturl' => $scripturl ?? null,
 			'context' => $context ?? null,
-			'cookie' => $_COOKIE,
-			'request' => $_REQUEST,
 		];
 
 		$this->queries = [];
@@ -76,8 +74,7 @@ final class SmfSessionHandlerTest extends TestCase
 		$modSettings = $this->savedGlobals['modSettings'];
 		$scripturl = $this->savedGlobals['scripturl'];
 		$context = $this->savedGlobals['context'];
-		$_COOKIE = $this->savedGlobals['cookie'];
-		$_REQUEST = $this->savedGlobals['request'];
+		unset($_COOKIE, $_REQUEST);
 	}
 
 	// ---------------------------------------------------------------- open/close
