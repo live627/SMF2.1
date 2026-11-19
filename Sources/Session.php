@@ -158,7 +158,8 @@ class SmfSessionHandler extends SessionHandler implements SessionHandlerInterfac
 		if (!$this->isValidSessionID($id))
 			return '';
 
-		if ($this->data === null) {
+		if ($this->data === null)
+		{
 			// Look for it in the database.
 			$result = $smcFunc['db_query']('', '
 				SELECT data
@@ -170,11 +171,11 @@ class SmfSessionHandler extends SessionHandler implements SessionHandlerInterfac
 				)
 			);
 
-			if (Db::$db->num_rows($result) !== 0)
-			{
-				list($sess_data) = Db::$db->fetch_row($result);
-				Db::$db->free_result($result);
+			list ($sess_data) = $smcFunc['db_fetch_row']($result);
+			$smcFunc['db_free_result']($result);
 
+			if ($sess_data !== null)
+			{
 				$this->data = $sess_data;
 			}
 		}
